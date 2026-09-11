@@ -18,13 +18,14 @@ function GlobalAnimations() {
       @keyframes traffic-drift { 0%{transform:translateX(-60px);opacity:0;}12%{opacity:0.9;}88%{opacity:0.9;}100%{transform:translateX(60px);opacity:0;} }
       @keyframes embers-drift { 0%{transform:translateY(0);opacity:0;}10%{opacity:0.9;}100%{transform:translateY(-320px);opacity:0;} }
       @keyframes mist-drift { 0%{transform:translateX(-20px);opacity:0;}20%{opacity:0.7;}100%{transform:translateX(20px);opacity:0;} }
+      @keyframes world-obj-pulse { 0%,100%{opacity:0.25;box-shadow:0 0 4px #4ACDFF33;}50%{opacity:0.65;box-shadow:0 0 10px #4ACDFF88;} }
     `}</style>
   );
 }
 
 const TILE = 32;
-const VIEWPORT_COLS = 15;
-const VIEWPORT_ROWS = 11;
+const VIEWPORT_COLS = 20;
+const VIEWPORT_ROWS = 13;
 
 function emptyGrid(w, h) {
   return Array.from({ length: h }, () => Array.from({ length: w }, () => ({ type: 'wall' })));
@@ -41,14 +42,22 @@ const PLANETS = {
     zones: {
       spaceport: {
         id: 'spaceport', name: 'Coruscant Spaceport', subtitle: 'Subsurface Level 2 · Docking Bay 14',
-        width: 30, height: 22, spawnPos: { x: 14, y: 10 }, textureId: 'coruscant',
+        width: 32, height: 22, spawnPos: { x: 14, y: 10 }, textureId: 'coruscant',
         accent: '#8FA6FF', accentGlow: 'rgba(143,166,255,0.25)', accentDim: '#3D4A80',
         floorColor: '#242840', floorAlt: '#2E3350', wallDark: '#0D0E16', wallLight: '#181B2C',
         bg: 'radial-gradient(circle at 30% 20%, #171A2C 0%, #0B0C14 70%)', ambient: 'traffic',
         decor: ['cargo_crate', 'pipe', 'neon_sign'],
-        doors: [{ x: 29, y: 12, targetZone: 'market', targetPos: { x: 1, y: 10 }, label: 'Market District' }],
+        doors: [
+          { x: 31, y: 12, targetZone: 'market', targetPos: { x: 1, y: 10 }, label: 'Market' },
+          { x: 31, y: 13, targetZone: 'market', targetPos: { x: 1, y: 11 }, label: 'Market' },
+        ],
+        worldObjects: [
+          { id: 'customs_terminal', x: 22, y: 9, label: 'Customs Terminal', description: 'A flickering datapad logs your entry. Transit clearance: provisional.', once: false },
+          { id: 'fueling_conduit', x: 8, y: 18, label: 'Fueling Conduit', description: 'The conduit hisses with residual pressurised fuel. Someone left this running.', once: true },
+        ],
         npcs: [
           { id: 'vane', x: 24, y: 11, kind: 'republic_guard', label: 'Officer Vane',
+            repeatPrompt: 'Vane gives you a curt nod. You are already cleared.',
             prompt: 'The officer scans your credentials. "Transit papers in order, but the manifest shows four crates unaccounted for. Walk me through your cargo."',
             choices: [
               { text: 'Show the correct papers. Everything is legitimate.', morality: 10, loyalty: { republic: 8 }, result: 'Vane nods. "Welcome to Coruscant. Move along."' },
@@ -56,6 +65,7 @@ const PLANETS = {
             ],
           },
           { id: 'droid44', x: 13, y: 8, kind: 'droid', label: 'Pit Droid Unit 44',
+            repeatPrompt: 'Unit 44 is deep in a cataloguing cycle. It does not look up.',
             prompt: '"BEEP BOOP. Cargo secured. Ramp deployed. I have also catalogued seventeen new hull scuffs. Seventeen. Do humans not see the hull?"',
             choices: [
               { text: 'Tell it the scuffs give the ship character.', morality: 5, loyalty: {}, result: 'It pauses for 2.4 seconds. "Character. Processing. Logged."' },
@@ -63,6 +73,7 @@ const PLANETS = {
             ],
           },
           { id: 'marlo', x: 4, y: 16, kind: 'smuggler', label: '"Slick" Marlo',
+            repeatPrompt: 'Marlo gives you a lazy two-finger salute. The offer already stands.',
             prompt: 'He leans on the cargo stack without looking at you. "Four unmarked crates in your hold. I can move them past customs clean. Thirty-percent cut."',
             choices: [
               { text: 'Decline. That kind of trouble follows you.', morality: 8, loyalty: { republic: 4 }, result: '"Your loss. Offer stands."' },
@@ -73,7 +84,7 @@ const PLANETS = {
         collectibles: [{ id: 'fuel_cell', x: 7, y: 9, label: 'Salvaged Fuel Cell', reward: 15 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 8, 28, 20, 'floor');
+          carveRect(g, 1, 8, 30, 20, 'floor');
           carveRect(g, 9, 1, 20, 4, 'ship_hull');
           carveRect(g, 7, 2, 9, 4, 'ship_hull');
           carveRect(g, 20, 2, 22, 4, 'ship_hull');
@@ -81,40 +92,318 @@ const PLANETS = {
           [[14,6],[15,6],[14,7],[15,7]].forEach(([x,y]) => pt(g,x,y,'ship_ramp'));
           [[2,10],[3,10],[4,10],[2,11],[3,11],[2,14],[3,14],[2,15],[3,15],[5,10],[5,14],[5,15]].forEach(([x,y]) => pt(g,x,y,'wall'));
           [[22,9],[22,10],[22,12],[22,13]].forEach(([x,y]) => pt(g,x,y,'wall'));
-          pt(g,29,12,'door'); pt(g,29,13,'door');
+          pt(g,31,12,'door'); pt(g,31,13,'door');
           return g;
         },
       },
       market: {
         id: 'market', name: 'Market District', subtitle: 'Coruscant · Lower City Bazaar',
-        width: 26, height: 20, spawnPos: { x: 1, y: 10 }, textureId: 'coruscant',
+        width: 32, height: 22, spawnPos: { x: 1, y: 10 }, textureId: 'coruscant',
         accent: '#8FA6FF', accentGlow: 'rgba(143,166,255,0.25)', accentDim: '#3D4A80',
         floorColor: '#1E2238', floorAlt: '#272D48', wallDark: '#0D0E16', wallLight: '#181B2C',
         bg: 'radial-gradient(circle at 60% 40%, #15182A 0%, #0B0C14 70%)', ambient: 'traffic',
         decor: ['neon_sign', 'archive', 'pillar', 'brazier'],
-        doors: [{ x: 0, y: 10, targetZone: 'spaceport', targetPos: { x: 27, y: 12 }, label: 'Spaceport' }],
+        doors: [
+          { x: 0, y: 10, targetZone: 'spaceport', targetPos: { x: 29, y: 12 }, label: 'Spaceport' },
+          { x: 0, y: 11, targetZone: 'spaceport', targetPos: { x: 29, y: 13 }, label: 'Spaceport' },
+          { x: 16, y: 0, targetZone: 'apartments', targetPos: { x: 14, y: 18 }, label: 'Apartments' },
+          { x: 17, y: 0, targetZone: 'apartments', targetPos: { x: 15, y: 18 }, label: 'Apartments' },
+          { x: 31, y: 10, targetZone: 'plaza', targetPos: { x: 1, y: 10 }, label: 'Plaza' },
+          { x: 31, y: 11, targetZone: 'plaza', targetPos: { x: 1, y: 11 }, label: 'Plaza' },
+        ],
+        worldObjects: [
+          { id: 'wanted_holo', x: 20, y: 4, label: 'Wanted Holo-Poster', description: 'A Republic bounty. The face on the poster looks vaguely familiar.', once: false },
+          { id: 'scrap_bin', x: 6, y: 17, label: 'Scrap Bin', description: 'Buried under junk you find a cracked power cell and a half-eaten protein bar. You take neither.', once: true },
+        ],
         npcs: [
-          { id: 'archivist', x: 18, y: 8, kind: 'jedi', label: 'Jedi Archivist',
+          { id: 'archivist', x: 8, y: 6, kind: 'jedi', label: 'Jedi Archivist Sera',
+            repeatPrompt: 'Sera gives you a meaningful look. She has already said too much.',
             prompt: 'She lowers her voice. "A Senator has flagged three inquiries into shard smuggling as classified. I should not be telling you this."',
             choices: [
               { text: 'Report this to the Jedi Council.', morality: 18, loyalty: { republic: 10 }, result: 'The Council opens a quiet investigation. You feel lighter for it.' },
               { text: 'Offer to bury it deeper, for a price.', morality: -20, loyalty: { underworld: 12 }, result: 'She hesitates, then hands you a datachip.' },
             ],
           },
-          { id: 'market_broker', x: 10, y: 14, kind: 'broker', label: 'Market Broker',
+          { id: 'market_broker', x: 16, y: 14, kind: 'broker', label: 'Market Broker Eliss',
+            repeatPrompt: 'Eliss taps her comm and waves you off. She is with another client.',
             prompt: '"Looking to trade? I have contacts across three systems. Credits talk and everything else is negotiable."',
             choices: [
-              { text: 'Ask about the shard market.', morality: -5, loyalty: { underworld: 5 }, result: 'He leans in. "Careful asking about those in public."' },
+              { text: 'Ask about the shard market.', morality: -5, loyalty: { underworld: 5 }, result: 'She leans in. "Careful asking about those in public."' },
               { text: 'Buy rations for the road.', morality: 3, loyalty: {}, result: '"Smart. Traveling light is traveling alive."' },
+            ],
+          },
+          { id: 'jax', x: 24, y: 10, kind: 'broker', label: 'Scrap Trader Jax',
+            repeatPrompt: 'Jax is counting credits and ignores you.',
+            prompt: 'The Rodian tips his goggles. "You have the look of someone who finds things they are not supposed to find. I pay well for those kinds of finds."',
+            choices: [
+              { text: 'Ask what he is looking for specifically.', morality: -3, loyalty: { underworld: 6 }, result: '"Old Republic code cylinders. Jedi tech. Anything that makes the Senate nervous."' },
+              { text: 'Tell him you are not that kind of person.', morality: 6, loyalty: { republic: 4 }, result: '"Sure you are not. Come back when you change your mind."' },
+            ],
+          },
+          { id: 'sgt_kren', x: 10, y: 17, kind: 'republic_guard', label: 'Sgt. Kren',
+            repeatPrompt: 'Kren is watching the crowd. He does not acknowledge you again.',
+            prompt: '"Move along. Market patrols are doubled after the disturbance in the plaza. Nothing to worry about if you have nothing to hide."',
+            choices: [
+              { text: 'Ask what the disturbance was.', morality: 2, loyalty: { republic: 3 }, result: '"Above your clearance level. Move along."' },
+              { text: 'Slip past without engaging.', morality: 0, loyalty: {}, result: 'He watches you go. You feel his eyes on the back of your neck.' },
+            ],
+          },
+          { id: 'bith_busker', x: 26, y: 17, kind: 'bith', label: 'Bith Busker',
+            repeatPrompt: 'The Bith is lost in the music. The melody pulls at something old in your memory.',
+            prompt: 'The large-headed musician plays a melancholy cantina tune on a kloo horn. He pauses when he notices you. "Request? The first one is free."',
+            choices: [
+              { text: 'Ask for the old Jedi hymn your master used to play.', morality: 8, loyalty: {}, result: 'He plays it slowly. The notes fall through the market noise like stones in water.' },
+              { text: 'Toss him a credit chip and walk on.', morality: 3, loyalty: {}, result: 'He nods, then returns to his melody.' },
             ],
           },
         ],
         collectibles: [{ id: 'datachip', x: 14, y: 5, label: 'Encrypted Datachip', reward: 30 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 24, 18, 'floor');
+          carveRect(g, 1, 1, 30, 20, 'floor');
           [[5,4],[6,4],[7,4],[5,5],[5,8],[6,8],[7,8],[5,9],[14,4],[15,4],[16,4],[14,5],[14,8],[15,8],[16,8],[14,9]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          [[22,4],[23,4],[24,4],[22,5],[22,8],[23,8],[24,8],[22,9]].forEach(([x,y]) => pt(g,x,y,'wall'));
           pt(g,0,10,'door'); pt(g,0,11,'door');
+          pt(g,16,0,'door'); pt(g,17,0,'door');
+          pt(g,31,10,'door'); pt(g,31,11,'door');
+          return g;
+        },
+      },
+      apartments: {
+        id: 'apartments', name: 'Residential Sector West', subtitle: 'Coruscant · Subsurface Level 2',
+        width: 30, height: 22, spawnPos: { x: 14, y: 18 }, textureId: 'coruscant',
+        accent: '#A8B8FF', accentGlow: 'rgba(168,184,255,0.2)', accentDim: '#404880',
+        floorColor: '#1C2034', floorAlt: '#242840', wallDark: '#0C0D14', wallLight: '#161828',
+        bg: 'radial-gradient(circle at 50% 70%, #13162A 0%, #090A12 70%)', ambient: 'traffic',
+        decor: ['pipe', 'neon_sign', 'archive'],
+        doors: [
+          { x: 14, y: 21, targetZone: 'market', targetPos: { x: 16, y: 1 }, label: 'Market' },
+          { x: 15, y: 21, targetZone: 'market', targetPos: { x: 17, y: 1 }, label: 'Market' },
+        ],
+        worldObjects: [
+          { id: 'jon_apt', x: 6, y: 7, label: "Jon's Apartment", description: 'The door is sealed. A handwritten note reads: Gone to Level 1. Do not wait up.', once: true },
+          { id: 'dexter_apt', x: 6, y: 15, label: "Dexter's Apartment", description: 'Smells of grease and something frying. A note on the door: Back in 20. Help yourself to the caf.', once: true },
+          { id: 'zillow_terminal', x: 24, y: 6, label: 'Zillow Housing Terminal', description: 'Vacancy listings for Subsurface Level 2: zero. Vacancy listings for Level 5 and above: three thousand. The price makes your eyes water.', once: false },
+          { id: 'speeder_shell', x: 22, y: 16, label: 'Abandoned Speeder Shell', description: 'The repulsor coils are stripped. Someone was living in here recently. The bedroll is still warm.', once: true },
+        ],
+        npcs: [
+          { id: 'anxious_tenant', x: 12, y: 10, kind: 'smuggler', label: 'Anxious Tenant',
+            repeatPrompt: 'The tenant glances at you, then back at their door. Whatever they know, they have decided not to share more of it.',
+            prompt: 'The human presses against the corridor wall as you pass. "You are not with the inspection team? Good. They have been through three times this week. Something is happening. Something big."',
+            choices: [
+              { text: 'Ask what kind of something.', morality: 0, loyalty: {}, result: '"Heard shouting from the Dexter place. And men in grey coats who are not Republic and not Sith. Something in between."' },
+              { text: 'Reassure them and keep moving.', morality: 5, loyalty: {}, result: '"Easy for you to say." They disappear behind a locked door.' },
+            ],
+          },
+          { id: 'jn7', x: 20, y: 12, kind: 'droid', label: 'Maintenance Droid JN-7',
+            repeatPrompt: 'JN-7 is patching the same wall panel it has been patching for three weeks. Progress: 12 percent.',
+            prompt: '"MAINTENANCE CYCLE: ongoing. Current fault list: 847 items. Estimated completion time: 14 years. Requesting additional allocation of repair foam." It looks at you hopefully.',
+            choices: [
+              { text: 'Tell it that you do not have any repair foam.', morality: 0, loyalty: {}, result: '"Logged as anticipated. Fault 848: insufficient foam allocation." It turns back to the wall.' },
+              { text: 'Ask what the worst fault on the list is.', morality: 2, loyalty: {}, result: '"Fault 1: the building is slowly rotating. 0.04 degrees per standard year. In 9,000 years it will face the wrong way entirely."' },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'apt_key', x: 18, y: 9, label: 'Unclaimed Apt Key', reward: 20 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 28, 20, 'floor');
+          carveRect(g, 3, 3, 10, 11, 'wall');
+          carveRect(g, 4, 4, 9, 10, 'floor');
+          carveRect(g, 3, 13, 10, 19, 'wall');
+          carveRect(g, 4, 14, 9, 18, 'floor');
+          carveRect(g, 19, 3, 27, 9, 'wall');
+          carveRect(g, 20, 4, 26, 8, 'floor');
+          [[6,11],[6,12],[6,13]].forEach(([x,y]) => pt(g,x,y,'floor'));
+          pt(g,14,21,'door'); pt(g,15,21,'door');
+          return g;
+        },
+      },
+      plaza: {
+        id: 'plaza', name: 'Commemorative Plaza', subtitle: 'Coruscant · Subsurface Level 2',
+        width: 32, height: 22, spawnPos: { x: 1, y: 10 }, textureId: 'coruscant',
+        accent: '#7AC8FF', accentGlow: 'rgba(122,200,255,0.22)', accentDim: '#2A5A80',
+        floorColor: '#192030', floorAlt: '#20293A', wallDark: '#0B0F16', wallLight: '#141C26',
+        bg: 'radial-gradient(circle at 50% 50%, #121C2A 0%, #08100A 70%)', ambient: 'traffic',
+        decor: ['pillar', 'brazier', 'neon_sign'],
+        doors: [
+          { x: 0, y: 10, targetZone: 'market', targetPos: { x: 29, y: 10 }, label: 'Market' },
+          { x: 0, y: 11, targetZone: 'market', targetPos: { x: 29, y: 11 }, label: 'Market' },
+          { x: 31, y: 10, targetZone: 'commercial', targetPos: { x: 1, y: 10 }, label: 'Commercial' },
+          { x: 31, y: 11, targetZone: 'commercial', targetPos: { x: 1, y: 11 }, label: 'Commercial' },
+        ],
+        worldObjects: [
+          { id: 'memorial_fountain', x: 15, y: 10, label: 'Memorial Fountain', description: 'The inscription reads: In memory of the Fallen of Malachor. The water runs blue-white, fed from far above.', once: false },
+          { id: 'public_datapad', x: 8, y: 5, label: 'Public Datapad', description: 'The newsfeed headline: SENATE VOTES TO EXTEND EMERGENCY POWERS. Below it, someone has scratched two words in Basic: they know.', once: false },
+          { id: 'graffiti_tag', x: 24, y: 17, label: 'Graffiti Tag', description: 'Spray-etched into the durasteel wall: a stylised flame over a broken chain. The symbol of the Free Coruscant movement.', once: true },
+        ],
+        npcs: [
+          { id: 'calla_ren', x: 10, y: 7, kind: 'jedi', label: "Senator's Aide Calla Ren",
+            repeatPrompt: 'Calla notices you again and smiles thinly. She has nothing more to share in public.',
+            prompt: 'She speaks without looking at you, watching the plaza. "The Senator I work for has received three death threats this week. All three were traced back to a single Level 1 address. All three were dismissed as crank messages."',
+            choices: [
+              { text: 'Offer to look into the address.', morality: 5, loyalty: { republic: 8 }, result: 'She slips you a datachip without changing expression. "I did not give you that."' },
+              { text: 'Tell her the Senate should handle its own security.', morality: -2, loyalty: {}, result: '"The Senate is handling it. That is precisely the problem."' },
+            ],
+          },
+          { id: 'swoop_informant', x: 22, y: 15, kind: 'swoop_gang', label: 'Swoop Gang Informant',
+            repeatPrompt: 'He tilts his head toward a corner. Still watching. Still waiting for something from you.',
+            prompt: 'He is leaning against the memorial base like he owns it. "You want information? Everything costs. But I will tell you this for free: the men in grey coats meet here at third-bell. Every. Night."',
+            choices: [
+              { text: 'Ask what they are meeting about.', morality: -5, loyalty: { underworld: 8 }, result: '"That will cost you. Five hundred credits. Then we talk."' },
+              { text: 'Report this to Sgt. Kren in the market.', morality: 10, loyalty: { republic: 6 }, result: 'He sees the intention in your eyes and melts back into the crowd.' },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'plaza_cred', x: 26, y: 6, label: 'Dropped Credit Chip', reward: 25 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 30, 20, 'floor');
+          carveRect(g, 12, 8, 18, 13, 'water');
+          pt(g, 15, 10, 'floor'); pt(g, 15, 11, 'floor');
+          [[4,4],[5,4],[4,5],[25,4],[26,4],[26,5],[4,16],[5,16],[4,17],[25,16],[26,16],[26,17]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          pt(g,0,10,'door'); pt(g,0,11,'door');
+          pt(g,31,10,'door'); pt(g,31,11,'door');
+          return g;
+        },
+      },
+      commercial: {
+        id: 'commercial', name: 'Commercial Sector', subtitle: 'Coruscant · Entertainment District',
+        width: 30, height: 22, spawnPos: { x: 1, y: 10 }, textureId: 'coruscant',
+        accent: '#FF9ADE', accentGlow: 'rgba(255,154,222,0.2)', accentDim: '#802060',
+        floorColor: '#201828', floorAlt: '#2A2034', wallDark: '#100C18', wallLight: '#1A1424',
+        bg: 'radial-gradient(circle at 40% 30%, #1A1028 0%, #0A0810 70%)', ambient: 'traffic',
+        decor: ['neon_sign', 'pillar', 'brazier'],
+        doors: [
+          { x: 0, y: 10, targetZone: 'plaza', targetPos: { x: 29, y: 10 }, label: 'Plaza' },
+          { x: 0, y: 11, targetZone: 'plaza', targetPos: { x: 29, y: 11 }, label: 'Plaza' },
+          { x: 14, y: 21, targetZone: 'speeder1', targetPos: { x: 13, y: 1 }, label: 'Speeder Bay 1' },
+          { x: 15, y: 21, targetZone: 'speeder1', targetPos: { x: 14, y: 1 }, label: 'Speeder Bay 1' },
+        ],
+        worldObjects: [
+          { id: 'sallys_cantina', x: 10, y: 8, label: "Sally's Cantina", description: 'The neon sign buzzes: SALLYS. No apostrophe. Inside you hear laughter and the clink of glasses. The door is open.', once: false },
+          { id: 'goods_store', x: 24, y: 6, label: 'Goods, Trades and Treasure', description: 'A cluttered shop front. The owner has priced everything at exactly twice what it is worth. Standard practice.', once: false },
+          { id: 'trex_keypad', x: 20, y: 15, label: "Trex's Apt Keypad", description: 'A reinforced door with a seven-digit keypad. Three of the digits are worn smooth from repeated use.', once: true },
+        ],
+        npcs: [
+          { id: 'sally', x: 8, y: 12, kind: 'cantina_owner', label: 'Sally',
+            repeatPrompt: 'Sally slides a drink down the bar without looking at you. She remembers what you ordered.',
+            prompt: '"Sit. Drink. Whatever you are about to ask me, the answer is: I did not see anything, I do not know anything, and my establishment has nothing to do with it. That said." She leans in. "You look like you need to know things."',
+            choices: [
+              { text: 'Ask about the men in grey coats.', morality: 0, loyalty: { underworld: 5 }, result: '"Heard of them. They call themselves the Regulators. Private security. Very private. Very well-paid."' },
+              { text: 'Just order the caf and say nothing.', morality: 3, loyalty: {}, result: 'She nods approvingly. "The smart ones always order caf first."' },
+            ],
+          },
+          { id: 'trex', x: 22, y: 12, kind: 'crime_boss', label: 'Trex',
+            repeatPrompt: 'Trex watches you from across the room. His yellow eyes do not blink.',
+            prompt: 'The Trandoshan crime lord crosses his thick arms. "I know who you are. I know what ship you came in on. And I know you have been asking questions that other people have stopped asking." He smiles. It shows a great many teeth.',
+            choices: [
+              { text: 'Hold his gaze. You are not intimidated.', morality: 0, loyalty: { underworld: 10 }, result: 'He laughs, a low rumbling sound. "Good. Sit. We have business to discuss."' },
+              { text: 'Back away slowly. This is above your weight.', morality: 5, loyalty: {}, result: '"Wise." He does not follow. That is almost worse.' },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'cantina_token', x: 6, y: 5, label: 'Casino Token', reward: 35 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 28, 20, 'floor');
+          carveRect(g, 4, 3, 14, 14, 'wall');
+          carveRect(g, 5, 4, 13, 13, 'floor');
+          carveRect(g, 18, 3, 27, 10, 'wall');
+          carveRect(g, 19, 4, 26, 9, 'floor');
+          [[9,14],[10,14],[11,14],[12,14]].forEach(([x,y]) => pt(g,x,y,'floor'));
+          pt(g,0,10,'door'); pt(g,0,11,'door');
+          pt(g,14,21,'door'); pt(g,15,21,'door');
+          return g;
+        },
+      },
+      speeder1: {
+        id: 'speeder1', name: 'Speeder Docking Bay 1', subtitle: 'Coruscant · Subsurface Level 2',
+        width: 28, height: 20, spawnPos: { x: 13, y: 2 }, textureId: 'coruscant',
+        accent: '#6AFFCC', accentGlow: 'rgba(106,255,204,0.2)', accentDim: '#1A6048',
+        floorColor: '#162028', floorAlt: '#1E2A34', wallDark: '#0A1018', wallLight: '#121C26',
+        bg: 'radial-gradient(circle at 60% 80%, #101820 0%, #080C10 70%)', ambient: 'traffic',
+        decor: ['pipe', 'girder', 'cargo_crate'],
+        doors: [
+          { x: 13, y: 0, targetZone: 'commercial', targetPos: { x: 14, y: 19 }, label: 'Commercial' },
+          { x: 14, y: 0, targetZone: 'commercial', targetPos: { x: 15, y: 19 }, label: 'Commercial' },
+          { x: 27, y: 9, targetZone: 'speeder2', targetPos: { x: 1, y: 9 }, label: 'Bay 2' },
+          { x: 27, y: 10, targetZone: 'speeder2', targetPos: { x: 1, y: 10 }, label: 'Bay 2' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_terminal', x: 11, y: 5, label: 'AirTaxi Terminal', description: 'The schedule board lists forty-seven routes. Twenty-nine are marked SUSPENDED. You wonder what happened on the other twenty-nine.', once: false },
+          { id: 'refuel_kiosk', x: 20, y: 5, label: 'Refueling Kiosk', description: 'Out of order. A handwritten sign reads: Use Bay 2. Bay 2 is also probably out of order.', once: true },
+          { id: 'bay_log', x: 6, y: 14, label: 'Speeder Bay Log', description: 'Last entry: Speeder Unit 7 departed 03:14. Destination: classified. Pilot: classified. Good luck finding that one.', once: true },
+        ],
+        npcs: [
+          { id: 'at9', x: 16, y: 8, kind: 'droid', label: 'AirTaxi Droid AT-9',
+            repeatPrompt: 'AT-9 chirps twice and resumes its departure countdown. It has a job to do.',
+            prompt: '"AIRTAXI UNIT AT-9. DESTINATION QUERY. CURRENT WAIT TIME: 4 MINUTES. CURRENT QUEUE: 0 PASSENGERS. QUERY: ARE YOU A PASSENGER?"',
+            choices: [
+              { text: 'Yes. Take me to the Senate District.', morality: 0, loyalty: { republic: 3 }, result: '"BOOKING CONFIRMED. RATE: 80 CREDITS. DO YOU HAVE 80 CREDITS?" You do not answer.' },
+              { text: 'No. Just browsing.', morality: 0, loyalty: {}, result: '"QUERY: HOW DOES ONE BROWSE A TAXI. LOGGED AS ANOMALOUS BEHAVIOUR."' },
+            ],
+          },
+          { id: 'duvall', x: 24, y: 10, kind: 'mechanic', label: 'Speeder Mechanic Duvall',
+            repeatPrompt: 'Duvall is back under the speeder. Only their boots are visible.',
+            prompt: 'The mechanic slides out from under a battered airspeeder. "If you are here about the stolen coils, I told the guard already: someone took them between second and third bell. I sleep like a rock and I do not apologise for it."',
+            choices: [
+              { text: 'Ask if they saw anyone unusual near the bay.', morality: 3, loyalty: { republic: 4 }, result: '"Grey coat. No insignia. Moved like they had done it before." They slide back under the speeder. Interview over.' },
+              { text: 'Offer to help track down the coils.', morality: 8, loyalty: {}, result: '"Appreciate it. Check the Abandoned Cargo in Bay 2. People dump things there."' },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'speeder_part', x: 8, y: 10, label: 'Stripped Actuator', reward: 20 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 26, 18, 'floor');
+          carveRect(g, 1, 1, 6, 4, 'ship_hull');
+          carveRect(g, 21, 1, 26, 4, 'ship_hull');
+          carveRect(g, 1, 15, 6, 18, 'ship_hull');
+          carveRect(g, 21, 15, 26, 18, 'ship_hull');
+          [[3,7],[4,7],[3,8],[4,8],[3,12],[4,12],[3,13],[4,13]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          [[23,7],[24,7],[23,8],[24,8],[23,12],[24,12],[23,13],[24,13]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          pt(g,13,0,'door'); pt(g,14,0,'door');
+          pt(g,27,9,'door'); pt(g,27,10,'door');
+          return g;
+        },
+      },
+      speeder2: {
+        id: 'speeder2', name: 'Speeder Docking Bay 2', subtitle: 'Coruscant · Subsurface Level 2',
+        width: 28, height: 20, spawnPos: { x: 1, y: 9 }, textureId: 'coruscant',
+        accent: '#6AFFCC', accentGlow: 'rgba(106,255,204,0.2)', accentDim: '#1A6048',
+        floorColor: '#141E28', floorAlt: '#1C2830', wallDark: '#080E14', wallLight: '#101820',
+        bg: 'radial-gradient(circle at 40% 70%, #0E1620 0%, #060C10 70%)', ambient: 'traffic',
+        decor: ['pipe', 'girder', 'cargo_crate'],
+        doors: [
+          { x: 0, y: 9, targetZone: 'speeder1', targetPos: { x: 25, y: 9 }, label: 'Bay 1' },
+          { x: 0, y: 10, targetZone: 'speeder1', targetPos: { x: 25, y: 10 }, label: 'Bay 1' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_terminal2', x: 10, y: 5, label: 'AirTaxi Terminal 2', description: 'This one actually works. The wait time reads: 47 minutes. You decide to walk.', once: false },
+          { id: 'departure_board', x: 18, y: 5, label: 'Departure Board', description: 'One entry is highlighted in red: FLIGHT C-7 OVERDUE. LAST CONTACT: 06:22. That was three days ago.', once: true },
+          { id: 'cargo_container', x: 22, y: 14, label: 'Abandoned Cargo Container', description: 'Duvall was right. Inside you find a set of repulsor coils, a crate of unmarked credit chips, and a datapad with a single message: DO NOT OPEN THIS.', once: true },
+        ],
+        npcs: [
+          { id: 'at11', x: 15, y: 8, kind: 'droid', label: 'AirTaxi Droid AT-11',
+            repeatPrompt: 'AT-11 pulses its running lights at you. You have been logged as a repeat non-passenger.',
+            prompt: '"AIRTAXI UNIT AT-11. NOTE: THIS UNIT IS AWARE IT IS THE LESS POPULAR UNIT. NOTE: THIS UNIT HAS FEELINGS ABOUT THAT. DESTINATION QUERY."',
+            choices: [
+              { text: 'Tell it you prefer AT-11 to AT-9.', morality: 5, loyalty: {}, result: '"LOGGED AS PREFERRED PASSENGER. RATE: STANDARD MINUS FIVE PERCENT. BECAUSE YOU ARE KIND."' },
+              { text: 'Ask about Flight C-7.', morality: 2, loyalty: { republic: 3 }, result: '"FLIGHT C-7 IS A RESTRICTED QUERY. THIS UNIT IS ALSO VERY NERVOUS ABOUT FLIGHT C-7."' },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'bay2_chip', x: 6, y: 14, label: 'Unsigned Credit Chip', reward: 45 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 26, 18, 'floor');
+          carveRect(g, 1, 1, 6, 4, 'ship_hull');
+          carveRect(g, 21, 1, 26, 4, 'ship_hull');
+          carveRect(g, 1, 15, 6, 18, 'ship_hull');
+          carveRect(g, 21, 15, 26, 18, 'ship_hull');
+          [[3,7],[4,7],[3,8],[4,8],[3,12],[4,12],[3,13],[4,13]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          pt(g,0,9,'door'); pt(g,0,10,'door');
           return g;
         },
       },
@@ -365,6 +654,104 @@ function NpcPortrait({ kind, accent }) {
       </svg>
     );
   }
+  if (kind === 'bith') {
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L8 24 L22 24 L23 42 Z" fill="#2A2E4A" />
+        <path d="M9 24 L21 24 L19 16 L11 16 Z" fill="#3C4166" />
+        <ellipse cx="15" cy="10" rx="8" ry="9" fill="#E8E4DC" />
+        <ellipse cx="15" cy="10" rx="6.5" ry="7.5" fill="#F0EDE8" opacity="0.4" />
+        <ellipse cx="11.5" cy="11" rx="2.4" ry="3" fill="#111010" />
+        <ellipse cx="18.5" cy="11" rx="2.4" ry="3" fill="#111010" />
+        <path d="M13 17.5 Q15 18.2 17 17.5" stroke="#BDB9B0" strokeWidth="0.5" fill="none" />
+        <rect x="8" y="23.5" width="14" height="1.5" fill={accent} opacity="0.5" />
+      </svg>
+    );
+  }
+  if (kind === 'swoop_gang') {
+    const skin = '#C8A882', jacket = '#1A1714', scar = '#8A5A4A';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 26 L21 26 L23 42 Z" fill={jacket} />
+        <path d="M9 26 L21 26 L19 13 L11 13 Z" fill={jacket} />
+        <path d="M9 26 C6 26 5 21 7 17 L10 17 L9 26 Z" fill={jacket} />
+        <path d="M21 26 C24 26 25 21 23 17 L20 17 L21 26 Z" fill={jacket} />
+        <ellipse cx="15" cy="9.5" rx="4.8" ry="5.2" fill={skin} />
+        <path d="M10 7 C10 4 12 2 15 2 C18 2 20 4 20 7 Z" fill="#2A2420" />
+        <path d="M12.5 9.5 L14.5 11 L13 12.5" stroke={scar} strokeWidth="0.8" fill="none" opacity="0.85" />
+        <circle cx="12.8" cy="9" r="0.6" fill="#2A2320" />
+        <circle cx="17.2" cy="9" r="0.6" fill="#2A2320" />
+        <ellipse cx="12.8" cy="9" rx="0.9" ry="0.7" fill={skin} style={{ animation: 'npc-blink 5s ease-in-out infinite' }} />
+        <ellipse cx="17.2" cy="9" rx="0.9" ry="0.7" fill={skin} style={{ animation: 'npc-blink 5s ease-in-out infinite' }} />
+        <rect x="18.5" y="22" width="2" height="5" rx="0.7" fill="#2A2420" />
+        <rect x="9" y="25.5" width="12" height="1.5" fill="#FF4444" opacity="0.3" />
+      </svg>
+    );
+  }
+  if (kind === 'cantina_owner') {
+    const skin = '#D4A882', apron = '#C8B89A', shirt = '#4A5068';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M8 42 L9 26 L21 26 L22 42 Z" fill={shirt} />
+        <path d="M9 26 L21 26 L19 14 L11 14 Z" fill={shirt} />
+        <path d="M9 26 C6 26 5 22 7 18 L10 18 L9 26 Z" fill={shirt} />
+        <path d="M21 26 C24 26 25 22 23 18 L20 18 L21 26 Z" fill={shirt} />
+        <path d="M11 14 L19 14 L18 26 L12 26 Z" fill={apron} opacity="0.75" />
+        <ellipse cx="15" cy="9.5" rx="4.5" ry="5" fill={skin} />
+        <path d="M10.5 6 C10.5 3 12.5 2 15 2 C17.5 2 19.5 3 19.5 6 C18 5 16 4.8 15 4.8 C14 4.8 12 5 10.5 6 Z" fill="#2A1E1A" />
+        <path d="M19 6 C20 8 20 12 19 14" stroke="#2A1E1A" strokeWidth="1.5" fill="none" />
+        <circle cx="12.6" cy="9.5" r="0.6" fill="#2A2320" />
+        <circle cx="17.4" cy="9.5" r="0.6" fill="#2A2320" />
+        <ellipse cx="12.6" cy="9.5" rx="0.9" ry="0.7" fill={skin} style={{ animation: 'npc-blink 4.4s ease-in-out infinite' }} />
+        <ellipse cx="17.4" cy="9.5" rx="0.9" ry="0.7" fill={skin} style={{ animation: 'npc-blink 4.4s ease-in-out infinite' }} />
+        <path d="M13 12 Q15 13 17 12" stroke="#8A6E4E" strokeWidth="0.5" fill="none" />
+        <rect x="9" y="25.5" width="12" height="1.5" fill={apron} opacity="0.6" />
+      </svg>
+    );
+  }
+  if (kind === 'crime_boss') {
+    const scales = '#4A7A3A', scalesDark = '#2E5026', eye = '#CCAA00';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M5 42 L8 24 L22 24 L25 42 Z" fill="#2A2018" />
+        <path d="M8 24 L22 24 L20 12 L10 12 Z" fill="#3A2C1A" />
+        <path d="M8 24 C4 24 2 18 5 13 L9 14 L8 24 Z" fill="#2A2018" />
+        <path d="M22 24 C26 24 28 18 25 13 L21 14 L22 24 Z" fill="#2A2018" />
+        <ellipse cx="15" cy="8.5" rx="5.5" ry="6" fill={scales} />
+        <ellipse cx="15" cy="8.5" rx="4" ry="4.5" fill={scalesDark} opacity="0.3" />
+        <ellipse cx="12" cy="7.5" rx="2" ry="2.8" fill="#0A0A0A" />
+        <ellipse cx="18" cy="7.5" rx="2" ry="2.8" fill="#0A0A0A" />
+        <circle cx="12" cy="7" r="0.6" fill={eye} opacity="0.9" />
+        <circle cx="18" cy="7" r="0.6" fill={eye} opacity="0.9" />
+        <path d="M11 12.5 Q15 14 19 12.5" stroke={scalesDark} strokeWidth="0.8" fill="none" />
+        <path d="M13 4 L15 1 L17 4" fill={scalesDark} opacity="0.7" />
+        <rect x="8" y="23.5" width="14" height="1.5" fill={accent} opacity="0.4" />
+      </svg>
+    );
+  }
+  if (kind === 'mechanic') {
+    const skin = '#C9A882', coveralls = '#4A4E58', goggle = '#3A3A42', lens = '#5ABFCC';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M8 42 L9 26 L21 26 L22 42 Z" fill={coveralls} />
+        <path d="M9 26 L21 26 L19 13 L11 13 Z" fill={coveralls} />
+        <path d="M9 26 C6 26 5 21 7 17 L10 17 L9 26 Z" fill={coveralls} />
+        <path d="M21 26 C24 26 25 21 23 17 L20 17 L21 26 Z" fill={coveralls} />
+        <ellipse cx="15" cy="9.5" rx="4.8" ry="5.2" fill={skin} />
+        <path d="M10.5 6.5 C10.5 3.5 12.2 2 15 2 C17.8 2 19.5 3.5 19.5 6.5 Z" fill="#3A2E22" />
+        <rect x="10" y="4.5" width="10" height="3.5" rx="1.5" fill={goggle} />
+        <circle cx="12.5" cy="6" r="1.4" fill={lens} opacity="0.75" />
+        <circle cx="17.5" cy="6" r="1.4" fill={lens} opacity="0.75" />
+        <line x1="14" y1="6" x2="16" y2="6" stroke={goggle} strokeWidth="0.7" />
+        <circle cx="12.8" cy="10" r="0.6" fill="#2A2320" />
+        <circle cx="17.2" cy="10" r="0.6" fill="#2A2320" />
+        <ellipse cx="12.8" cy="10" rx="0.9" ry="0.7" fill={skin} style={{ animation: 'npc-blink 4.2s ease-in-out infinite' }} />
+        <ellipse cx="17.2" cy="10" rx="0.9" ry="0.7" fill={skin} style={{ animation: 'npc-blink 4.2s ease-in-out infinite' }} />
+        <path d="M13.2 12.5 Q15 13.3 16.8 12.5" stroke="#8A6E4E" strokeWidth="0.5" fill="none" />
+        <rect x="9" y="25.5" width="12" height="1.5" fill={accent} opacity="0.4" />
+      </svg>
+    );
+  }
   return null;
 }
 
@@ -532,7 +919,7 @@ function DialogueOverlay({ npc, onChoose }) {
         <div style={{ padding:'14px 18px',borderBottom:'1px solid #2A2A38',color:'#E8C97A',fontSize:13,fontWeight:600 }}>{npc.label}</div>
         <div style={{ padding:'16px 18px',color:'#C9C5BE',fontSize:13,lineHeight:1.6,borderBottom:'1px solid #1C1C26' }}>{npc.prompt}</div>
         {npc.choices.map((choice, i) => (
-          <div key={i} onClick={() => onChoose(choice)} style={{ padding:'14px 18px',borderBottom:i<npc.choices.length-1?'1px solid #1C1C26':'none',cursor:'pointer',fontSize:12.5,color:'#A8ADC0' }}>
+          <div key={i} onClick={() => onChoose(choice, npc.id)} style={{ padding:'14px 18px',borderBottom:i<npc.choices.length-1?'1px solid #1C1C26':'none',cursor:'pointer',fontSize:12.5,color:'#A8ADC0' }}>
             &gt; {choice.text}
           </div>
         ))}
@@ -609,13 +996,16 @@ function StarWarsRPG() {
   const [credits, setCredits] = useState(340);
   const [inventory, setInventory] = useState(['Comlink', 'Field Rations']);
   const [collectedItems, setCollectedItems] = useState(() => new Set());
+  const [completedInteractions, setCompletedInteractions] = useState(() => new Set());
   const [alignment, setAlignment] = useState({ morality: 0, loyalty: { republic: 0, sithEmpire: 0, underworld: 0 } });
   const [showTravel, setShowTravel] = useState(false);
   const [activeDialogue, setActiveDialogue] = useState(null);
-  const [log, setLog] = useState(['Docked at Coruscant Spaceport, Subsurface Level 2. The ramp hisses shut behind you.']);
+  const [actionLog, setActionLog] = useState([{ text: 'Docked at Coruscant Spaceport, Subsurface Level 2. The ramp hisses shut behind you.', zone: 'spaceport' }]);
   const [transitioning, setTransitioning] = useState(false);
 
-  const pushLog = useCallback((msg) => setLog((prev) => [msg, ...prev.slice(0, 7)]), []);
+  const pushActionLog = useCallback((msg, zoneLabel) => {
+    setActionLog((prev) => [{ text: msg, zone: zoneLabel || '' }, ...prev.slice(0, 49)]);
+  }, []);
 
   const travelToZone = useCallback((targetZoneId, targetPos) => {
     setTransitioning(true);
@@ -625,15 +1015,15 @@ function StarWarsRPG() {
       setMap(newZone.buildMap());
       setPos(targetPos);
       setTransitioning(false);
-      pushLog(`Entered ${newZone.name}.`);
+      pushActionLog(`Entered ${newZone.name}.`, targetZoneId);
     }, 400);
-  }, [planetId, pushLog]);
+  }, [planetId, pushActionLog]);
 
   const travelToPlanet = useCallback((destPlanetId) => {
     const destPlanet = PLANETS[destPlanetId];
     const destZone = destPlanet.zones[destPlanet.startZoneId];
     setTransitioning(true);
-    pushLog(`Jumping to hyperspace: ${destPlanet.name}...`);
+    pushActionLog(`Jumping to hyperspace: ${destPlanet.name}...`, zoneId);
     setCredits((c) => c - destPlanet.travelCost);
     setTimeout(() => {
       setPlanetId(destPlanetId);
@@ -642,11 +1032,12 @@ function StarWarsRPG() {
       setPos(destZone.spawnPos);
       setShowTravel(false);
       setTransitioning(false);
-      pushLog(`Arrived at ${destPlanet.name}. ${destPlanet.description}`);
+      pushActionLog(`Arrived at ${destPlanet.name}. ${destPlanet.description}`, destPlanet.startZoneId);
     }, 650);
-  }, [pushLog]);
+  }, [zoneId, pushActionLog]);
 
-  const resolveChoice = useCallback((choice) => {
+  const resolveChoice = useCallback((choice, npcId) => {
+    setCompletedInteractions((prev) => new Set([...prev, npcId]));
     setAlignment((prev) => ({
       morality: Math.max(-100, Math.min(100, prev.morality + choice.morality)),
       loyalty: {
@@ -655,9 +1046,9 @@ function StarWarsRPG() {
         underworld: Math.max(0, Math.min(100, prev.loyalty.underworld + (choice.loyalty.underworld || 0))),
       },
     }));
-    pushLog(choice.result);
+    pushActionLog(choice.result, zoneId);
     setActiveDialogue(null);
-  }, [pushLog]);
+  }, [zoneId, pushActionLog]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -674,10 +1065,10 @@ function StarWarsRPG() {
       if (newFacing !== facing) setFacing(newFacing);
 
       const tile = map[y]?.[x];
-      if (!tile || tile.type === 'wall') { pushLog('Blocked.'); return; }
-      if (tile.type === 'ship_hull') { pushLog('The hull plating is solid. No way through.'); return; }
-      if (tile.type === 'lava') { pushLog('The lava channels are impassable. You can feel the heat from here.'); return; }
-      if (tile.type === 'water') { pushLog('The water runs too deep to wade through.'); return; }
+      if (!tile || tile.type === 'wall') { pushActionLog('Blocked.', zoneId); return; }
+      if (tile.type === 'ship_hull') { pushActionLog('The hull plating is solid. No way through.', zoneId); return; }
+      if (tile.type === 'lava') { pushActionLog('The lava channels are impassable. You can feel the heat from here.', zoneId); return; }
+      if (tile.type === 'water') { pushActionLog('The water runs too deep to wade through.', zoneId); return; }
       if (tile.type === 'ship_ramp') { setShowTravel(true); return; }
       if (tile.type === 'door') {
         const door = zone.doors.find(d => d.x === x && d.y === y);
@@ -685,149 +1076,173 @@ function StarWarsRPG() {
       }
 
       const npcHere = zone.npcs?.find(n => n.x === x && n.y === y);
-      if (npcHere) { setActiveDialogue(npcHere); return; }
+      if (npcHere) {
+        if (completedInteractions.has(npcHere.id)) {
+          pushActionLog(npcHere.repeatPrompt || `${npcHere.label} nods but says nothing new.`, zoneId);
+          return;
+        }
+        setActiveDialogue(npcHere);
+        return;
+      }
+
+      const worldObjHere = zone.worldObjects?.find(wo => wo.x === x && wo.y === y);
+      if (worldObjHere) {
+        const alreadySeen = worldObjHere.once && completedInteractions.has(worldObjHere.id);
+        if (!alreadySeen) {
+          pushActionLog(`[${worldObjHere.label}] ${worldObjHere.description}`, zoneId);
+          if (worldObjHere.once) setCompletedInteractions((prev) => new Set([...prev, worldObjHere.id]));
+        }
+        setPos({ x, y });
+        return;
+      }
 
       const collectible = zone.collectibles?.find(c => c.x === x && c.y === y && !collectedItems.has(c.id));
       if (collectible) {
         setCredits((c) => c + collectible.reward);
         setCollectedItems((prev) => new Set([...prev, collectible.id]));
-        pushLog(`${collectible.label}. (+${collectible.reward} credits)`);
+        pushActionLog(`${collectible.label}. (+${collectible.reward} credits)`, zoneId);
       }
 
       setPos({ x, y });
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [pos, map, zone, facing, showTravel, activeDialogue, transitioning, collectedItems, pushLog, travelToZone]);
+  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, collectedItems, completedInteractions, pushActionLog, travelToZone]);
 
   const camX = Math.max(0, Math.min(zone.width - VIEWPORT_COLS, pos.x - Math.floor(VIEWPORT_COLS / 2)));
   const camY = Math.max(0, Math.min(zone.height - VIEWPORT_ROWS, pos.y - Math.floor(VIEWPORT_ROWS / 2)));
 
-  const collectiblesHeld = collectedItems.size;
-
   return (
-    <div style={{ minHeight:'100vh',background:zone.bg,color:'#C9C5BE',fontFamily:"'IBM Plex Mono',ui-monospace,monospace",display:'flex',flexDirection:'column',gap:16,padding:20,position:'relative',overflow:'hidden',transition:'background 0.6s ease' }}>
+    <div style={{ minHeight:'100vh',background:zone.bg,color:'#C9C5BE',fontFamily:"'IBM Plex Mono',ui-monospace,monospace",display:'flex',flexDirection:'column',gap:10,padding:'16px 16px 20px',position:'relative',overflow:'hidden',transition:'background 0.6s ease' }}>
       <GlobalAnimations />
       {zone.textureId === 'coruscant' && <CoruscantBackdrop accent={zone.accent} accentDim={zone.accentDim} />}
       <AmbientLayer kind={zone.ambient} accent={zone.accent} />
 
       <div style={{ display:'flex',justifyContent:'space-between',alignItems:'baseline',position:'relative',zIndex:2 }}>
         <div>
-          <div style={{ fontSize:18,fontWeight:600,color:zone.accent,textShadow:`0 0 12px ${zone.accentGlow}` }}>{zone.name}</div>
-          <div style={{ fontSize:11,color:'#7A7F94',marginTop:2 }}>{zone.subtitle}</div>
+          <span style={{ fontSize:16,fontWeight:600,color:zone.accent,textShadow:`0 0 12px ${zone.accentGlow}` }}>{zone.name}</span>
+          <span style={{ fontSize:11,color:'#7A7F94',marginLeft:10 }}>{zone.subtitle}</span>
         </div>
-        <div style={{ display:'flex',gap:16,alignItems:'baseline' }}>
-          <div style={{ fontSize:11,color:'#5A5F74' }}>{collectiblesHeld} items found</div>
-          <div style={{ fontSize:13,color:'#E8C97A' }}>{credits} cr</div>
+        <div style={{ fontSize:12,color:'#E8C97A' }}>{credits} cr &nbsp;&middot;&nbsp; <span style={{color:'#6A7090'}}>{collectedItems.size} items</span></div>
+      </div>
+
+      <div style={{ position:'relative',display:'inline-block',alignSelf:'flex-start',zIndex:2 }}>
+        <div style={{ border:`1px solid ${zone.accentDim}`,background:zone.wallDark,boxShadow:`0 0 24px ${zone.accentGlow}` }}>
+          {Array.from({ length: VIEWPORT_ROWS }, (_, vy) => {
+            const ty = camY + vy;
+            return (
+              <div key={ty} style={{ display:'flex' }}>
+                {Array.from({ length: VIEWPORT_COLS }, (_, vx) => {
+                  const tx = camX + vx;
+                  const tile = map[ty]?.[tx] || { type: 'wall' };
+                  const isPlayer = pos.x === tx && pos.y === ty;
+                  const npcHere = zone.npcs?.find(n => n.x === tx && n.y === ty);
+                  const collectibleHere = zone.collectibles?.find(c => c.x === tx && c.y === ty && !collectedItems.has(c.id));
+                  const doorHere = zone.doors?.find(d => d.x === tx && d.y === ty);
+                  const worldObjHere = zone.worldObjects?.find(wo => wo.x === tx && wo.y === ty && !(wo.once && completedInteractions.has(wo.id)));
+                  const npcDone = npcHere && completedInteractions.has(npcHere.id);
+
+                  let bg = zone.wallDark;
+                  if (tile.type === 'floor') bg = floorBackground(zone, tx, ty);
+                  if (tile.type === 'wall') bg = wallBackground(zone, tx, ty);
+                  if (tile.type === 'ship_hull') bg = 'linear-gradient(135deg, #2A2A3A, #1A1A26)';
+                  if (tile.type === 'ship_ramp') bg = 'repeating-linear-gradient(45deg, #2C2C3C, #2C2C3C 4px, #383848 4px, #383848 8px)';
+                  if (tile.type === 'door') bg = `radial-gradient(circle, ${zone.accentDim}88, #0D0E16)`;
+                  if (tile.type === 'lava') bg = 'radial-gradient(circle at 40% 40%, #FF5500, #AA2000)';
+                  if (tile.type === 'water') bg = 'radial-gradient(circle at 60% 60%, #1A4A8A, #0A1E3A)';
+                  if (npcHere || collectibleHere) bg = floorBackground(zone, tx, ty);
+
+                  return (
+                    <div key={tx} style={{ width:TILE,height:TILE,position:'relative',background:bg,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:isPlayer?`inset 0 0 0 1.5px ${zone.accent}`:'none',flexShrink:0 }}>
+                      {tile.type === 'wall' && wallDecorFor(zone, tx, ty) && <DecorIcon kind={wallDecorFor(zone, tx, ty)} accent={zone.accent} />}
+                      {tile.type === 'floor' && !isPlayer && !npcHere && !collectibleHere && decorFor(zone, tx, ty) && <DecorIcon kind={decorFor(zone, tx, ty)} accent={zone.accent} />}
+                      {tile.type === 'ship_hull' && (
+                        <svg viewBox="0 0 32 32" width={TILE} height={TILE} style={{ position:'absolute',inset:0,pointerEvents:'none' }}>
+                          <line x1="0" y1="8" x2="32" y2="8" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.12" />
+                          <line x1="0" y1="16" x2="32" y2="16" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.12" />
+                          <line x1="0" y1="24" x2="32" y2="24" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.12" />
+                          <line x1="8" y1="0" x2="8" y2="32" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.08" />
+                          <line x1="16" y1="0" x2="16" y2="32" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.08" />
+                        </svg>
+                      )}
+                      {tile.type === 'ship_ramp' && (
+                        <div style={{ fontSize:8,color:zone.accent,opacity:0.7,textAlign:'center',lineHeight:1.2 }}>▼<br/>EXIT</div>
+                      )}
+                      {doorHere && !isPlayer && (
+                        <div style={{ animation:'door-pulse 2s ease-in-out infinite',fontSize:9,color:zone.accent,textAlign:'center' }}>▶<br/><span style={{fontSize:7}}>{doorHere.label}</span></div>
+                      )}
+                      {tile.type === 'lava' && (
+                        <svg viewBox="0 0 32 32" width={TILE} height={TILE} style={{ position:'absolute',inset:0,pointerEvents:'none' }}>
+                          <ellipse cx="10" cy="16" rx="6" ry="3" fill="#FF7722" opacity="0.4" style={{ animation:'door-pulse 1.8s ease-in-out infinite' }} />
+                          <ellipse cx="22" cy="20" rx="5" ry="2.5" fill="#FF9944" opacity="0.35" style={{ animation:'door-pulse 2.2s ease-in-out 0.4s infinite' }} />
+                        </svg>
+                      )}
+                      {tile.type === 'water' && (
+                        <svg viewBox="0 0 32 32" width={TILE} height={TILE} style={{ position:'absolute',inset:0,pointerEvents:'none' }}>
+                          <path d="M4 16 Q8 12 12 16 Q16 20 20 16 Q24 12 28 16" stroke="#4488CC" strokeWidth="1" fill="none" opacity="0.5" style={{ animation:'mist-drift 3s ease-in-out infinite' }} />
+                        </svg>
+                      )}
+                      {worldObjHere && !isPlayer && !npcHere && !collectibleHere && (
+                        <div style={{ position:'absolute',inset:3,border:'1px solid #4ACDFF55',borderRadius:2,animation:'world-obj-pulse 2.5s ease-in-out infinite',pointerEvents:'none' }} />
+                      )}
+                      {npcHere && !isPlayer && (
+                        <div style={{ position:'absolute',bottom:0,left:'50%',zIndex:5,animation:'npc-sway 4.2s ease-in-out infinite',filter:npcDone?'grayscale(0.6) brightness(0.7)':'none' }}>
+                          <NpcPortrait kind={npcHere.kind} accent={zone.accent} />
+                        </div>
+                      )}
+                      {collectibleHere && !isPlayer && (
+                        <div style={{ animation:'collectible-bob 2.3s ease-in-out infinite' }}>
+                          <CollectibleIcon />
+                        </div>
+                      )}
+                      {isPlayer && (
+                        <div style={{ position:'absolute',bottom:0,left:'50%',transform:'translateX(-50%)',zIndex:6 }}>
+                          <PlayerMarker accent={zone.accent} facing={facing} />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ position:'absolute',bottom:6,right:6,zIndex:10,background:'rgba(4,4,8,0.80)',padding:4,border:`1px solid ${zone.accentDim}55` }}>
+          <div style={{ fontSize:8,color:'#5A5F74',marginBottom:2 }}>minimap</div>
+          <Minimap zone={zone} map={map} pos={pos} camX={camX} camY={camY} />
         </div>
       </div>
 
-      <div style={{ display:'flex',gap:20,flexWrap:'wrap',position:'relative',zIndex:2 }}>
-        <div>
-          <div style={{ border:`1px solid ${zone.accentDim}`,background:zone.wallDark,boxShadow:`0 0 24px ${zone.accentGlow}`,display:'inline-block' }}>
-            {Array.from({ length: VIEWPORT_ROWS }, (_, vy) => {
-              const ty = camY + vy;
-              return (
-                <div key={ty} style={{ display:'flex' }}>
-                  {Array.from({ length: VIEWPORT_COLS }, (_, vx) => {
-                    const tx = camX + vx;
-                    const tile = map[ty]?.[tx] || { type: 'wall' };
-                    const isPlayer = pos.x === tx && pos.y === ty;
-                    const npcHere = zone.npcs?.find(n => n.x === tx && n.y === ty);
-                    const collectibleHere = zone.collectibles?.find(c => c.x === tx && c.y === ty && !collectedItems.has(c.id));
-                    const doorHere = zone.doors?.find(d => d.x === tx && d.y === ty);
-
-                    let bg = zone.wallDark;
-                    if (tile.type === 'floor') bg = floorBackground(zone, tx, ty);
-                    if (tile.type === 'wall') bg = wallBackground(zone, tx, ty);
-                    if (tile.type === 'ship_hull') bg = `linear-gradient(135deg, #2A2A3A, #1A1A26)`;
-                    if (tile.type === 'ship_ramp') bg = `repeating-linear-gradient(45deg, #2C2C3C, #2C2C3C 4px, #383848 4px, #383848 8px)`;
-                    if (tile.type === 'door') bg = `radial-gradient(circle, ${zone.accentDim}88, #0D0E16)`;
-                    if (tile.type === 'lava') bg = `radial-gradient(circle at 40% 40%, #FF5500, #AA2000)`;
-                    if (tile.type === 'water') bg = `radial-gradient(circle at 60% 60%, #1A4A8A, #0A1E3A)`;
-                    if (npcHere || collectibleHere) bg = floorBackground(zone, tx, ty);
-
-                    return (
-                      <div key={tx} style={{ width:TILE,height:TILE,position:'relative',background:bg,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:isPlayer?`inset 0 0 0 1.5px ${zone.accent}`:'none',flexShrink:0 }}>
-                        {tile.type === 'wall' && wallDecorFor(zone, tx, ty) && <DecorIcon kind={wallDecorFor(zone, tx, ty)} accent={zone.accent} />}
-                        {tile.type === 'floor' && !isPlayer && !npcHere && !collectibleHere && decorFor(zone, tx, ty) && <DecorIcon kind={decorFor(zone, tx, ty)} accent={zone.accent} />}
-                        {tile.type === 'ship_hull' && (
-                          <svg viewBox="0 0 32 32" width={TILE} height={TILE} style={{ position:'absolute',inset:0,pointerEvents:'none' }}>
-                            <line x1="0" y1="8" x2="32" y2="8" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.12" />
-                            <line x1="0" y1="16" x2="32" y2="16" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.12" />
-                            <line x1="0" y1="24" x2="32" y2="24" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.12" />
-                            <line x1="8" y1="0" x2="8" y2="32" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.08" />
-                            <line x1="16" y1="0" x2="16" y2="32" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.08" />
-                          </svg>
-                        )}
-                        {tile.type === 'ship_ramp' && (
-                          <div style={{ fontSize:8,color:zone.accent,opacity:0.7,textAlign:'center',lineHeight:1.2 }}>▼<br/>EXIT</div>
-                        )}
-                        {doorHere && !isPlayer && (
-                          <div style={{ animation:'door-pulse 2s ease-in-out infinite',fontSize:9,color:zone.accent,textAlign:'center' }}>▶<br/><span style={{fontSize:7}}>{doorHere.label}</span></div>
-                        )}
-                        {tile.type === 'lava' && (
-                          <svg viewBox="0 0 32 32" width={TILE} height={TILE} style={{ position:'absolute',inset:0,pointerEvents:'none' }}>
-                            <ellipse cx="10" cy="16" rx="6" ry="3" fill="#FF7722" opacity="0.4" style={{ animation:'door-pulse 1.8s ease-in-out infinite' }} />
-                            <ellipse cx="22" cy="20" rx="5" ry="2.5" fill="#FF9944" opacity="0.35" style={{ animation:'door-pulse 2.2s ease-in-out 0.4s infinite' }} />
-                          </svg>
-                        )}
-                        {tile.type === 'water' && (
-                          <svg viewBox="0 0 32 32" width={TILE} height={TILE} style={{ position:'absolute',inset:0,pointerEvents:'none' }}>
-                            <path d="M4 16 Q8 12 12 16 Q16 20 20 16 Q24 12 28 16" stroke="#4488CC" strokeWidth="1" fill="none" opacity="0.5" style={{ animation:'mist-drift 3s ease-in-out infinite' }} />
-                          </svg>
-                        )}
-                        {npcHere && !isPlayer && (
-                          <div style={{ position:'absolute',bottom:0,left:'50%',zIndex:5,animation:'npc-sway 4.2s ease-in-out infinite' }}>
-                            <NpcPortrait kind={npcHere.kind} accent={zone.accent} />
-                          </div>
-                        )}
-                        {collectibleHere && !isPlayer && (
-                          <div style={{ animation:'collectible-bob 2.3s ease-in-out infinite' }}>
-                            <CollectibleIcon />
-                          </div>
-                        )}
-                        {isPlayer && (
-                          <div style={{ position:'absolute',bottom:0,left:'50%',transform:'translateX(-50%)',zIndex:6 }}>
-                            <PlayerMarker accent={zone.accent} facing={facing} />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
+      <div style={{ display:'flex',gap:10,flexWrap:'wrap',position:'relative',zIndex:2 }}>
+        <div style={{ flex:'0 0 170px',border:'1px solid #24242E',padding:10,fontSize:11 }}>
+          <div style={{ color:'#5A5F74',marginBottom:8,fontSize:10 }}>navigation</div>
+          <div style={{ color:'#A8ADC0',marginBottom:4 }}>WASD / arrows to move</div>
+          <div style={{ color:'#6A6F84',fontSize:10,marginBottom:2 }}>walk ramp to open travel</div>
+          <div style={{ color:'#6A6F84',fontSize:10,marginBottom:8 }}>walk door to change zone</div>
+          <div style={{ color:'#7A7F94',borderTop:'1px solid #1C1C26',paddingTop:8,fontSize:10 }}>
+            <div>zone: <span style={{color:zone.accent}}>{zone.id}</span></div>
+            <div>pos: {pos.x},{pos.y}</div>
           </div>
-          <div style={{ marginTop:8,fontSize:10,color:'#5A5F74' }}>WASD / arrow keys to move &nbsp;&middot;&nbsp; walk ramp to travel &nbsp;&middot;&nbsp; walk door to change zones</div>
         </div>
-
-        <div style={{ flex:1,minWidth:220,display:'flex',flexDirection:'column',gap:12 }}>
+        <div style={{ flex:'1 1 200px',border:'1px solid #24242E',padding:10 }}>
           <AlignmentPanel alignment={alignment} />
-
-          <div style={{ border:'1px solid #24242E',padding:12 }}>
-            <div style={{ fontSize:10,color:'#5A5F74',marginBottom:6 }}>minimap</div>
-            <Minimap zone={zone} map={map} pos={pos} camX={camX} camY={camY} />
-          </div>
-
-          <div style={{ border:'1px solid #24242E',padding:12 }}>
-            <div style={{ fontSize:10,color:'#5A5F74',marginBottom:8 }}>inventory</div>
-            {inventory.map((item, i) => (
-              <div key={i} style={{ fontSize:12,padding:'4px 0',borderBottom:i<inventory.length-1?'1px solid #1C1C26':'none' }}>{item}</div>
-            ))}
-          </div>
-
-          <div style={{ border:'1px solid #24242E',padding:12,flex:1,minHeight:120 }}>
-            <div style={{ fontSize:10,color:'#5A5F74',marginBottom:8 }}>log</div>
-            {log.map((entry, i) => (
-              <div key={i} style={{ fontSize:12,color:i===0?zone.accent:'#6A6F84',padding:'3px 0' }}>{entry}</div>
-            ))}
-          </div>
+        </div>
+        <div style={{ flex:'1 1 150px',border:'1px solid #24242E',padding:10 }}>
+          <div style={{ fontSize:10,color:'#5A5F74',marginBottom:8 }}>inventory</div>
+          {inventory.map((item, i) => (
+            <div key={i} style={{ fontSize:11,padding:'3px 0',borderBottom:i<inventory.length-1?'1px solid #1C1C26':'none',color:'#A8ADC0' }}>{item}</div>
+          ))}
+        </div>
+        <div style={{ flex:'2 1 260px',border:'1px solid #24242E',padding:10,maxHeight:160,overflowY:'auto' }}>
+          <div style={{ fontSize:10,color:'#5A5F74',marginBottom:8 }}>action log</div>
+          {actionLog.map((entry, i) => (
+            <div key={i} style={{ fontSize:11,color:i===0?zone.accent:'#6A6F84',padding:'2px 0',lineHeight:1.5 }}>{entry.text}</div>
+          ))}
         </div>
       </div>
 
       {transitioning && (
-        <div style={{ position:'absolute',inset:0,background:'rgba(4,4,8,0.7)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:30,animation:'door-pulse 0.5s ease-in-out infinite' }}>
+        <div style={{ position:'absolute',inset:0,background:'rgba(4,4,8,0.75)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:30,animation:'door-pulse 0.5s ease-in-out infinite' }}>
           <div style={{ color:zone.accent,fontSize:14,letterSpacing:'0.2em' }}>...</div>
         </div>
       )}
