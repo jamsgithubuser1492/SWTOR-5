@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Star Wars RPG — Zone and Planet data structure. All zone objects in PLANETS must conform to this shape.",
+
+  "Planet": {
+    "id": "string — unique slug (e.g. 'coruscant')",
+    "name": "string — display name",
+    "travelCost": "integer — credits to hyperspace here (0 = starting planet)",
+    "startZoneId": "string — zone id to spawn in on arrival",
+    "description": "string — one-sentence lore blurb shown in action log on arrival",
+    "zones": "object keyed by zone id — each value is a Zone"
+  },
+
+  "Zone": {
+    "id": "string — unique slug within the planet",
+    "name": "string — display name",
+    "subtitle": "string — planet and level info shown in header",
+    "width": "integer — grid columns (no minimum/maximum — use what the design needs)",
+    "height": "integer — grid rows (no minimum/maximum — use what the design needs)",
+    "spawnPos": { "x": "integer", "y": "integer" },
+    "textureId": "string — drives floor/wall rendering palette: 'coruscant' | 'ferrowake' | 'verdanth'",
+    "accent": "string — hex color, primary UI accent (e.g. '#8FA6FF')",
+    "accentGlow": "string — rgba color for glow/shadow (e.g. 'rgba(143,166,255,0.25)')",
+    "accentDim": "string — hex color, dark variant of accent",
+    "floorColor": "string — hex color, primary floor tile",
+    "floorAlt": "string — hex color, alternate floor tile for visual variation",
+    "wallDark": "string — hex color, dark wall stripe",
+    "wallLight": "string — hex color, light wall stripe",
+    "bg": "string — CSS radial-gradient used as full-page background",
+    "ambient": "string — particle effect kind: 'traffic' | 'embers' | 'mist'",
+    "decor": "array of strings — floor decor kinds to scatter: 'cargo_crate' | 'pipe' | 'neon_sign' | 'pillar' | 'brazier' | 'archive' | 'girder' | 'slag' | 'root' | 'moss' | 'rubble'",
+    "doors": "array of Door objects",
+    "worldObjects": "array of WorldObject objects (see quest-schema.json)",
+    "npcs": "array of NPC objects (see dialogue-schema.json)",
+    "collectibles": "array of Collectible objects (see quest-schema.json)",
+    "buildMap": "function() — returns 2D array of { type } tile objects using carveRect() and pt() helpers"
+  },
+
+  "Door": {
+    "x": "integer — grid column of the door tile",
+    "y": "integer — grid row of the door tile",
+    "targetZone": "string — zone id to travel to (must exist in the same planet's zones)",
+    "targetPos": { "x": "integer — must be a floor tile in targetZone", "y": "integer" },
+    "label": "string — short name shown on the door tile"
+  },
+
+  "TileTypes": {
+    "valid": ["wall", "floor", "door", "ship_hull", "ship_ramp", "lava", "water"],
+    "notes": {
+      "wall": "Impassable. Blocks movement. Used for structural barriers.",
+      "floor": "Walkable. Entities (NPCs, collectibles, world objects, doors) must sit on floor tiles.",
+      "door": "Walkable. Triggers zone transition when stepped on. Must have a matching Door entry in zone.doors.",
+      "ship_hull": "Impassable. Steel panel visual. Used for ship interiors.",
+      "ship_ramp": "Walkable. Triggers the hyperspace travel overlay (TravelOverlay).",
+      "lava": "Impassable. Animated orange glow.",
+      "water": "Impassable. Animated blue wave."
+    }
+  },
+
+  "BuildMapHelpers": {
+    "emptyGrid(w, h)": "Returns a w×h grid of wall tiles",
+    "carveRect(g, x1, y1, x2, y2, type)": "Sets all tiles in the rectangle to type (default 'floor')",
+    "pt(g, x, y, type)": "Sets a single tile"
+  }
+}
