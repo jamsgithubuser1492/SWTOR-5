@@ -80,6 +80,15 @@ const PLANETS = {
               { text: 'Shake on it. Thirty percent is fair.', morality: -18, loyalty: { underworld: 15 }, result: '"Smart. Bay seven, after dark."' },
             ],
           },
+          { id: 'jon_spaceport', x: 6, y: 10, kind: 'smuggler', label: 'Jon',
+            repeatPrompt: 'Jon gives you a knowing look. "Head over to my place through the market. You know where I am."',
+            prompt: 'Well, look who finally made it off the transport vector intact. Good to see a face that is not collecting a bounty or issuing a customs citation. I have got a partner opening and something worth your time — but not out here in the landing bay.',
+            choices: [
+              { text: 'Good to see you too. Lead the way.', morality: 5, loyalty: { underworld: 5 }, result: 'Jon claps you on the shoulder. "Follow me through the West Market. Keep your blaster hand loose." He gestures toward the Market District exit.', grants: { flags: ['met_jon_spaceport'] } },
+              { text: 'Skip it. What is the opportunity?', morality: 0, loyalty: {}, result: 'Jon lowers his voice. "Not here — too many ears on the landing pad. My apartment. Through the market." He nods toward the exit.', grants: { flags: ['met_jon_spaceport'] } },
+              { text: 'I work alone. This better be worth my time.', morality: -5, loyalty: { underworld: 3 }, result: 'Jon smirks. "It will be. My place. West Residential, through the market. You will know the door." He walks away first.', grants: { flags: ['met_jon_spaceport'] } },
+            ],
+          },
         ],
         collectibles: [{ id: 'fuel_cell', x: 7, y: 9, label: 'Salvaged Fuel Cell', reward: 15 }],
         buildMap() {
@@ -179,9 +188,10 @@ const PLANETS = {
         doors: [
           { x: 14, y: 21, targetZone: 'market', targetPos: { x: 16, y: 1 }, label: 'Market' },
           { x: 15, y: 21, targetZone: 'market', targetPos: { x: 17, y: 1 }, label: 'Market' },
+          { x: 6, y: 4, targetZone: 'jons_apt_int', targetPos: { x: 9, y: 11 }, label: "Jon's Apt" },
         ],
         worldObjects: [
-          { id: 'jon_apt', x: 6, y: 7, label: "Jon's Apartment", description: 'The door is sealed. A handwritten note reads: Gone to Level 1. Do not wait up.', once: true },
+          { id: 'jon_apt', x: 6, y: 7, label: "Jon's Apartment", description: 'The smell of caf and burnt wiring. The inner door is unlocked.', once: false },
           { id: 'dexter_apt', x: 6, y: 15, label: "Dexter's Apartment", description: 'Smells of grease and something frying. A note on the door: Back in 20. Help yourself to the caf.', once: true },
           { id: 'zillow_terminal', x: 24, y: 6, label: 'Zillow Housing Terminal', description: 'Vacancy listings for Subsurface Level 2: zero. Vacancy listings for Level 5 and above: three thousand. The price makes your eyes water.', once: false },
           { id: 'speeder_shell', x: 22, y: 16, label: 'Abandoned Speeder Shell', description: 'The repulsor coils are stripped. Someone was living in here recently. The bedroll is still warm.', once: true },
@@ -215,7 +225,7 @@ const PLANETS = {
           carveRect(g, 19, 3, 27, 9, 'wall');
           carveRect(g, 20, 4, 26, 8, 'floor');
           [[6,11],[6,12],[6,13]].forEach(([x,y]) => pt(g,x,y,'floor'));
-          pt(g,14,21,'door'); pt(g,15,21,'door');
+          pt(g,14,21,'door'); pt(g,15,21,'door'); pt(g,6,4,'door');
           return g;
         },
       },
@@ -404,6 +414,151 @@ const PLANETS = {
           carveRect(g, 21, 15, 26, 18, 'ship_hull');
           [[3,7],[4,7],[3,8],[4,8],[3,12],[4,12],[3,13],[4,13]].forEach(([x,y]) => pt(g,x,y,'wall'));
           pt(g,0,9,'door'); pt(g,0,10,'door');
+          return g;
+        },
+      },
+      jons_apt_int: {
+        id: 'jons_apt_int', name: "Jon's Apartment", subtitle: "Coruscant · West Residential · Level 2",
+        width: 18, height: 14, spawnPos: { x: 9, y: 11 }, textureId: 'coruscant',
+        accent: '#7AB8E0', accentGlow: 'rgba(122,184,224,0.18)', accentDim: '#2A4A60',
+        floorColor: '#191E30', floorAlt: '#202540', wallDark: '#0A0C14', wallLight: '#141828',
+        bg: 'radial-gradient(circle at 40% 30%, #111622 0%, #080A12 70%)', ambient: 'traffic',
+        decor: ['archive', 'pipe', 'cargo_crate'],
+        doors: [
+          { x: 9, y: 13, targetZone: 'apartments', targetPos: { x: 6, y: 5 }, label: 'Residential Corridor' },
+        ],
+        worldObjects: [
+          { id: 'jon_datapad', x: 12, y: 3, label: 'Encrypted Datapad', description: 'Manifest fragments. Three hub codes, three timestamps, forty-eight hours apart. Someone who knew the routing schedules. The Broken Circle is written in the margin in red.', once: true },
+          { id: 'slicing_bench', x: 14, y: 8, label: 'Slicing Workbench', description: 'A tangle of stripped datachips and bypass leads. Jon apparently does his best work at 0300.', once: false },
+        ],
+        npcs: [
+          { id: 'jon_apartment', x: 5, y: 3, kind: 'smuggler', label: 'Jon',
+            repeatPrompt: 'Jon is studying cargo manifests on his terminal. "Those three hub sites are still open. Find out who coordinated those strikes."',
+            prompt: 'Here is the situation. Someone new is moving through the lower levels — fast, organized, and ruthless. Three major Republic transport hubs got hit in forty-eight hours. They did not steal credits. They took military-grade power converters, encrypted datanodes, and weapons manifests. Black Sun is denying it. The Exchange is rattled. Whoever this is, they are building something. I need eyes on those three hit sites before customs seals them. That is where you come in.',
+            choices: [
+              { text: 'I am in. Give me everything you have on the attack sites.', morality: 0, loyalty: { underworld: 8 }, result: 'Jon slides a datapad across the table and transfers 200 credits. "Speeder clearance codes are on your pad. Hit the Airtaxi terminal in the docking bay — all mid and lower level sectors are open to you now."', grants: { credits: 200, flags: ['speeder_transit_unlocked', 'chapter1_active'] } },
+              { text: 'What is in it for me beyond the credits?', morality: 0, loyalty: { underworld: 5 }, result: 'Jon leans back. "First mover advantage. Whoever hit those hubs left things behind. Cargo, intel, leverage. You get first pick." He transfers 200 credits and uploads the clearance codes.', grants: { credits: 200, flags: ['speeder_transit_unlocked', 'chapter1_active'] } },
+              { text: 'I need more upfront to walk into a war zone.', morality: -8, loyalty: { underworld: 10 }, result: 'Jon sighs and pushes across an extra hundred. "Three hundred. Now get moving before the CSF seals the scene." He uploads the clearance codes.', grants: { credits: 300, flags: ['speeder_transit_unlocked', 'chapter1_active'] } },
+            ],
+          },
+        ],
+        collectibles: [],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 16, 12, 'floor');
+          carveRect(g, 1, 1, 4, 4, 'wall');
+          carveRect(g, 13, 1, 16, 4, 'wall');
+          pt(g, 9, 13, 'door');
+          return g;
+        },
+      },
+      hub_site_alpha: {
+        id: 'hub_site_alpha', name: 'Speeder Docking Bay 1', subtitle: 'Coruscant · Mid-Levels · Sector 4 · CSF Cordon',
+        width: 28, height: 18, spawnPos: { x: 4, y: 10 }, textureId: 'coruscant',
+        accent: '#8FA6FF', accentGlow: 'rgba(143,166,255,0.22)', accentDim: '#3D4A80',
+        floorColor: '#1A1E35', floorAlt: '#222840', wallDark: '#0C0E18', wallLight: '#161A2C',
+        bg: 'radial-gradient(circle at 20% 30%, #141828 0%, #090B14 70%)', ambient: 'traffic',
+        decor: ['cargo_crate', 'pipe', 'neon_sign'],
+        doors: [],
+        worldObjects: [
+          { id: 'airtaxi_hub_alpha', x: 4, y: 14, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Clearance required for restricted sectors.', once: false },
+          { id: 'alpha_manifest', x: 22, y: 7, label: 'Shipping Manifest Terminal', description: 'Power converter units — 40 crates, military spec. Datanodes — encrypted, series 7. Destination redacted. Loading confirmed 48 hours ago. The receiving bay code traces back to a dummy shell corp: Broken Circle Holdings.', once: true },
+        ],
+        npcs: [
+          { id: 'vane_hub', x: 15, y: 12, kind: 'republic_guard', label: 'Officer Vane',
+            repeatPrompt: 'Vane watches the empty bay. "Still nothing. Someone planned this precisely."',
+            prompt: '"You are cleared, but this is an active CSF scene. Whatever you take from that terminal gets logged. Power converters and datanodes — forty crates. Nothing left behind except one partial manifesto with a circle insignia we have never seen before."',
+            choices: [
+              { text: 'Share what I know about the syndicate.', morality: 8, loyalty: { republic: 10 }, result: 'Vane nods slowly. "The Broken Circle. New name. I will flag it. That is useful — thank you."' },
+              { text: 'Keep quiet and take mental notes.', morality: -3, loyalty: { underworld: 5 }, result: 'You note everything without sharing it. Vane watches you go, his expression unreadable.' },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'alpha_credit_chip', x: 20, y: 14, label: 'Confiscated Credit Chip', reward: 30 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 26, 16, 'floor');
+          carveRect(g, 8, 4, 18, 10, 'wall');
+          carveRect(g, 9, 5, 17, 9, 'floor');
+          [[3,3],[4,3],[3,4],[3,5]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          [[23,3],[23,4],[23,5],[24,3]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          return g;
+        },
+      },
+      hub_site_beta: {
+        id: 'hub_site_beta', name: 'Lower Industrial Docks', subtitle: 'Coruscant · Lower Levels · Black Sun Territory',
+        width: 30, height: 20, spawnPos: { x: 2, y: 8 }, textureId: 'coruscant',
+        accent: '#FF7A5A', accentGlow: 'rgba(255,122,90,0.22)', accentDim: '#7A2A1E',
+        floorColor: '#221814', floorAlt: '#2A1E18', wallDark: '#100A08', wallLight: '#1C1210',
+        bg: 'radial-gradient(circle at 60% 80%, #1E1008 0%, #0E0806 70%)', ambient: 'embers',
+        decor: ['cargo_crate', 'pipe', 'slag'],
+        doors: [],
+        worldObjects: [
+          { id: 'airtaxi_hub_beta', x: 2, y: 16, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Clearance required for restricted sectors.', once: false },
+          { id: 'beta_data_terminal', x: 15, y: 8, label: 'Overloaded Data Terminal', description: 'The manifest fragments are scrambled but the routing node prefix is legible: BC-NEXUS-7. The same signature appears on the Sector 4 job. Someone coordinated these hits from the same command channel.', once: true },
+        ],
+        npcs: [
+          { id: 'blacksun_lt', x: 5, y: 10, kind: 'crime_boss', label: 'Black Sun Lieutenant',
+            repeatPrompt: 'The lieutenant narrows their eyes. "I have nothing more to say to you."',
+            prompt: '"My people did not do this. Whoever hit these docks knew our schedules — that takes an inside source or something worse. We are looking too. And if you find them before we do, you bring them to me first."',
+            choices: [
+              { text: 'Agree to bring them the information.', morality: -10, loyalty: { underworld: 15 }, result: '"Smart. Black Sun has a long memory for favors and for debts."' },
+              { text: 'Make no promises.', morality: 2, loyalty: {}, result: '"Then we have nothing further to discuss." They turn away, watching the docks.' },
+            ],
+          },
+          { id: 'beta_dock_worker', x: 27, y: 15, kind: 'mechanic', label: 'Dock Worker',
+            repeatPrompt: 'The worker stares at the floor. They have said everything they are willing to say.',
+            prompt: 'They keep their voice low. "They moved fast. Grey coats, no insignia. Left one crate behind — too hot to carry maybe. I heard one of them say: the Circle needs the third shipment by end of cycle."',
+            choices: [
+              { text: 'Thank them and offer 50 credits for the risk.', morality: 8, loyalty: {}, result: 'They pocket the credits quickly. "Get out of here. If they come back and see you talking to me, we are both done."' },
+              { text: 'Press them for more details.', morality: -5, loyalty: { underworld: 5 }, result: '"That is everything. I swear. Please — just go."' },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'beta_manifest_frag', x: 24, y: 14, label: 'Manifest Fragment', reward: 20 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 28, 18, 'floor');
+          carveRect(g, 10, 5, 20, 12, 'wall');
+          carveRect(g, 11, 6, 19, 11, 'floor');
+          carveRect(g, 25, 1, 28, 8, 'wall');
+          carveRect(g, 26, 2, 27, 7, 'floor');
+          [[2,3],[2,4],[2,5],[3,3]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          return g;
+        },
+      },
+      hub_site_gamma: {
+        id: 'hub_site_gamma', name: 'The Works Sub-Level', subtitle: 'Coruscant · Undercity · Abandoned Processing Plant',
+        width: 26, height: 18, spawnPos: { x: 15, y: 3 }, textureId: 'coruscant',
+        accent: '#FF8C42', accentGlow: 'rgba(255,140,66,0.25)', accentDim: '#7A3C1E',
+        floorColor: '#2A1A0E', floorAlt: '#321E10', wallDark: '#100A06', wallLight: '#1C1008',
+        bg: 'radial-gradient(circle at 50% 60%, #221408 0%, #100C06 70%)', ambient: 'embers',
+        decor: ['pipe', 'slag', 'rubble'],
+        doors: [],
+        worldObjects: [
+          { id: 'airtaxi_hub_gamma', x: 10, y: 14, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Emergency access unit. Clearance required for restricted sectors.', once: false },
+          { id: 'syndicate_cache', x: 12, y: 3, label: 'Syndicate Supply Cache', description: 'Cracked open. Inside: an empty weapons case, a coded frequency tablet, and a patch. A broken circle of white on black. The Broken Circle. They were here. Whatever they built, they have moved it already.', once: true },
+          { id: 'geothermal_junction', x: 3, y: 4, label: 'Geothermal Junction', description: 'Superheated gas vents from the deep processing shafts below. The whole sub-level sits on top of something very hot.', once: false },
+        ],
+        npcs: [
+          { id: 'gamma_loader', x: 12, y: 8, kind: 'warden', label: 'Injured Cargo Loader',
+            repeatPrompt: 'The loader is drifting in and out of consciousness. They have told you everything they can.',
+            prompt: 'They are slumped against the junction housing, one arm badly burned. "They left me. Said I saw too much. The circle — white circle on black. Kept saying the third shipment closes the triangle. Some kind of weapon assembly. They are building it somewhere in the deep infrastructure — somewhere no one goes anymore."',
+            choices: [
+              { text: 'Stabilise them and call for a medic.', morality: 12, loyalty: { republic: 8 }, result: 'You bind the burns and transmit a medical alert. "Thank you," they whisper. "The circle — stop the circle."', grants: { flags: ['syndicate_identified', 'gamma_witness_saved'] } },
+              { text: 'Extract everything useful and leave quickly.', morality: -10, loyalty: { underworld: 8 }, result: 'You get the coordinates of the loading bay they came from. The loader watches you go, too weak to call after you.', grants: { flags: ['syndicate_identified'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'gamma_syndicate_token', x: 20, y: 12, label: 'Broken Circle Token', reward: 10 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 24, 16, 'floor');
+          carveRect(g, 1, 1, 8, 8, 'wall');
+          carveRect(g, 2, 2, 7, 7, 'floor');
+          carveRect(g, 18, 8, 24, 16, 'wall');
+          carveRect(g, 19, 9, 23, 15, 'floor');
+          [[9,1],[10,1],[11,1]].forEach(([x,y]) => pt(g,x,y,'wall'));
           return g;
         },
       },
@@ -984,6 +1139,45 @@ function AlignmentPanel({ alignment }) {
   );
 }
 
+const SPEEDER_DESTINATIONS = [
+  { id: 'spaceport',      name: 'Sub-Surface Spaceport',   level: 'Sub-Surface L2',        cost: 0,  requiredFlag: null,                       targetZone: 'spaceport',      targetPos: { x: 14, y: 10 } },
+  { id: 'market',         name: 'West Market District',     level: 'Sub-Surface L2',        cost: 0,  requiredFlag: null,                       targetZone: 'market',         targetPos: { x: 2,  y: 10 } },
+  { id: 'hub_site_alpha', name: 'Speeder Docking Bay 1',    level: 'Mid-Levels / Sector 4', cost: 25, requiredFlag: 'speeder_transit_unlocked', targetZone: 'hub_site_alpha', targetPos: { x: 4,  y: 10 } },
+  { id: 'hub_site_beta',  name: 'Lower Industrial Docks',   level: 'Lower Levels',          cost: 50, requiredFlag: 'speeder_transit_unlocked', targetZone: 'hub_site_beta',  targetPos: { x: 2,  y: 8  } },
+  { id: 'hub_site_gamma', name: 'The Works Sub-Level',      level: 'Undercity Deep Vector', cost: 75, requiredFlag: 'speeder_transit_unlocked', targetZone: 'hub_site_gamma', targetPos: { x: 15, y: 3  } },
+];
+
+function SpeederOverlay({ credits, questFlags, currentZoneId, onTravel, onClose }) {
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.82)', zIndex: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: '#0a1a2a', border: '2px solid #00e5ff', borderRadius: 8, padding: '28px 36px', minWidth: 420, maxWidth: 560, color: '#d0eaff', fontFamily: 'monospace' }}>
+        <div style={{ color: '#00e5ff', fontWeight: 'bold', fontSize: 17, marginBottom: 6, letterSpacing: 2 }}>CORUSCANT AIRTAXI NETWORK</div>
+        <div style={{ color: '#6fa8c0', fontSize: 12, marginBottom: 20 }}>Select destination. Credits on hand: {credits} CR</div>
+        {SPEEDER_DESTINATIONS.filter(d => d.targetZone !== currentZoneId).map(dest => {
+          const locked = dest.requiredFlag && !questFlags[dest.requiredFlag];
+          const canAfford = credits >= dest.cost;
+          const available = !locked && canAfford;
+          return (
+            <div key={dest.id} onClick={() => available && onTravel(dest)}
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', marginBottom: 8, borderRadius: 5, cursor: available ? 'pointer' : 'not-allowed', background: available ? '#0d2233' : '#0a1218', border: `1px solid ${available ? '#00e5ff44' : '#222'}`, opacity: locked ? 0.45 : canAfford ? 1 : 0.6 }}>
+              <div>
+                <div style={{ color: locked ? '#556' : '#b8e0ff', fontWeight: 'bold', fontSize: 14 }}>{dest.name}</div>
+                <div style={{ color: '#4a7a90', fontSize: 11 }}>{dest.level}</div>
+              </div>
+              <div style={{ textAlign: 'right', fontSize: 13 }}>
+                {locked ? <span style={{ color: '#556' }}>CLEARANCE REQUIRED</span>
+                  : dest.cost === 0 ? <span style={{ color: '#6fd9a0' }}>FREE</span>
+                  : <span style={{ color: canAfford ? '#00e5ff' : '#e57' }}>{dest.cost} CR</span>}
+              </div>
+            </div>
+          );
+        })}
+        <div onClick={onClose} style={{ marginTop: 18, textAlign: 'center', color: '#6fa8c0', fontSize: 12, cursor: 'pointer', letterSpacing: 1 }}>[ CLOSE TERMINAL ]</div>
+      </div>
+    </div>
+  );
+}
+
 function StarWarsRPG() {
   const [planetId, setPlanetId] = useState('coruscant');
   const [zoneId, setZoneId] = useState('spaceport');
@@ -1002,10 +1196,14 @@ function StarWarsRPG() {
   const [activeDialogue, setActiveDialogue] = useState(null);
   const [actionLog, setActionLog] = useState([{ text: 'Docked at Coruscant Spaceport, Subsurface Level 2. The ramp hisses shut behind you.', zone: 'spaceport' }]);
   const [transitioning, setTransitioning] = useState(false);
+  const [questFlags, setQuestFlags] = useState({});
+  const [showSpeeder, setShowSpeeder] = useState(false);
 
   const pushActionLog = useCallback((msg, zoneLabel) => {
     setActionLog((prev) => [{ text: msg, zone: zoneLabel || '' }, ...prev.slice(0, 49)]);
   }, []);
+
+  const setFlag = useCallback((key) => setQuestFlags((prev) => ({ ...prev, [key]: true })), []);
 
   const travelToZone = useCallback((targetZoneId, targetPos) => {
     setTransitioning(true);
@@ -1046,13 +1244,15 @@ function StarWarsRPG() {
         underworld: Math.max(0, Math.min(100, prev.loyalty.underworld + (choice.loyalty.underworld || 0))),
       },
     }));
+    if (choice.grants?.credits) setCredits((c) => c + choice.grants.credits);
+    if (choice.grants?.flags) choice.grants.flags.forEach((f) => setFlag(f));
     pushActionLog(choice.result, zoneId);
     setActiveDialogue(null);
-  }, [zoneId, pushActionLog]);
+  }, [zoneId, pushActionLog, setFlag]);
 
   useEffect(() => {
     const handleKey = (e) => {
-      if (showTravel || activeDialogue || transitioning) return;
+      if (showTravel || activeDialogue || transitioning || showSpeeder) return;
       let { x, y } = pos;
       let newFacing = facing;
       if (e.key === 'w' || e.key === 'ArrowUp') y -= 1;
@@ -1087,6 +1287,10 @@ function StarWarsRPG() {
 
       const worldObjHere = zone.worldObjects?.find(wo => wo.x === x && wo.y === y);
       if (worldObjHere) {
+        if (worldObjHere.id.startsWith('airtaxi_')) {
+          if (!questFlags.speeder_transit_unlocked) { pushActionLog('RESTRICTED TRANSIT: Sector clearance pass required.', zoneId); setPos({ x, y }); return; }
+          setShowSpeeder(true); setPos({ x, y }); return;
+        }
         const alreadySeen = worldObjHere.once && completedInteractions.has(worldObjHere.id);
         if (!alreadySeen) {
           pushActionLog(`[${worldObjHere.label}] ${worldObjHere.description}`, zoneId);
@@ -1107,7 +1311,7 @@ function StarWarsRPG() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, collectedItems, completedInteractions, pushActionLog, travelToZone]);
+  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, questFlags, collectedItems, completedInteractions, pushActionLog, travelToZone]);
 
   const camX = Math.max(0, Math.min(zone.width - VIEWPORT_COLS, pos.x - Math.floor(VIEWPORT_COLS / 2)));
   const camY = Math.max(0, Math.min(zone.height - VIEWPORT_ROWS, pos.y - Math.floor(VIEWPORT_ROWS / 2)));
@@ -1248,6 +1452,7 @@ function StarWarsRPG() {
       )}
       {showTravel && <TravelOverlay currentPlanetId={planetId} credits={credits} onTravel={travelToPlanet} onClose={() => setShowTravel(false)} />}
       {activeDialogue && <DialogueOverlay npc={activeDialogue} onChoose={resolveChoice} />}
+      {showSpeeder && <SpeederOverlay credits={credits} questFlags={questFlags} currentZoneId={zoneId} onTravel={(dest) => { setCredits((c) => c - dest.cost); setShowSpeeder(false); travelToZone(dest.targetZone, dest.targetPos); }} onClose={() => setShowSpeeder(false)} />}
     </div>
   );
 }
