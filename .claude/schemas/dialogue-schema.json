@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Star Wars RPG — NPC and dialogue data structure. All NPC objects in zone.npcs must conform to this shape.",
+
+  "NPC": {
+    "id": "string — globally unique slug across ALL zones and planets (used as key in completedInteractions Set)",
+    "x": "integer — grid column (must be a floor tile in the zone's buildMap)",
+    "y": "integer — grid row (must be a floor tile in the zone's buildMap)",
+    "kind": "string — portrait type, must be registered in NpcPortrait() function",
+    "label": "string — display name shown in dialogue header and action log",
+    "prompt": "string — dialogue text shown to player on first interaction",
+    "repeatPrompt": "string — text shown in action log when player walks into NPC after interaction is complete",
+    "choices": "array of DialogueChoice — minimum 2 choices recommended for moral tension"
+  },
+
+  "DialogueChoice": {
+    "text": "string — option text shown in dialogue UI (prefixed with '>' in render)",
+    "morality": "integer — delta applied to alignment.morality; engine clamps to -100..+100 total; use negative for dark side, positive for light side",
+    "loyalty": {
+      "description": "Object with optional faction keys. Omit keys that have no loyalty change for this choice.",
+      "republic": "integer (optional) — delta applied to loyalty.republic; engine clamps to 0..100",
+      "sithEmpire": "integer (optional) — delta applied to loyalty.sithEmpire; engine clamps to 0..100",
+      "underworld": "integer (optional) — delta applied to loyalty.underworld; engine clamps to 0..100"
+    },
+    "result": "string — outcome text added to action log after choice; this is the only feedback the player gets so make it specific"
+  },
+
+  "PortraitKinds": {
+    "registered": [
+      "republic_guard",
+      "droid",
+      "smuggler",
+      "jedi",
+      "broker",
+      "bith",
+      "cantina_owner",
+      "crime_boss",
+      "mechanic",
+      "swoop_gang",
+      "warden"
+    ],
+    "note": "To add a new kind, ask the Systems Architect to add an SVG branch to NpcPortrait() before writing any NPC that uses it."
+  },
+
+  "MoralityGuidelines": {
+    "light_side": "Typically +5 to +18 per choice. Reporting crimes, helping the vulnerable, refusing bribes, protecting innocents.",
+    "dark_side": "Typically -5 to -20 per choice. Accepting bribes, enabling criminal activity, threats, deception for gain.",
+    "neutral": "0. Purely pragmatic or observational choices with no moral dimension.",
+    "tension": "Each NPC should ideally offer one choice that trends light and one that trends dark. Both choices with the same sign create no moral stakes."
+  }
+}

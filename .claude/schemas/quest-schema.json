@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Star Wars RPG — WorldObject, Collectible, and quest flag conventions. All worldObjects and collectibles in zone arrays must conform to these shapes.",
+
+  "WorldObject": {
+    "id": "string — globally unique slug across ALL zones and planets (used as key in completedInteractions Set when once=true)",
+    "x": "integer — grid column (must be a floor tile in the zone's buildMap)",
+    "y": "integer — grid row (must be a floor tile in the zone's buildMap)",
+    "label": "string — short name shown above the object tile and in action log",
+    "description": "string — text added to action log when player interacts; shown on first interaction OR every interaction if once=false",
+    "once": "boolean — if true, interaction is recorded in completedInteractions and description is not shown again on subsequent visits; if false, description repeats every time"
+  },
+
+  "Collectible": {
+    "id": "string — globally unique slug across ALL zones and planets",
+    "x": "integer — grid column (must be a floor tile in the zone's buildMap)",
+    "y": "integer — grid row (must be a floor tile in the zone's buildMap)",
+    "label": "string — item name shown in action log on pickup",
+    "reward": "integer — credits added to player.credits on pickup; must be >= 0"
+  },
+
+  "QuestFlagConventions": {
+    "storage": "completedInteractions is a Set<string> stored in React state. IDs are added on first interaction with NPCs (after any choice) and on first interaction with worldObjects where once=true.",
+    "checking": "Use completedInteractions.has(id) in dialogue choice rendering to gate follow-up content or block re-interaction.",
+    "naming": "Use kebab-case slugs: planet-zone-entity-role. Example: coruscant-spaceport-guard-bribe, verdanth-ruins-ancient-terminal.",
+    "uniqueness": "IDs must be unique across the entire PLANETS object — not just within a zone. Duplicate IDs cause silent state collisions."
+  },
+
+  "OnceVsRepeat": {
+    "once_true": "Use for story beats, lore reveals, and NPC dialogue flags that should only fire once per playthrough. The object renders but interaction does nothing after the first time.",
+    "once_false": "Use for ambient flavor objects, readable signs, and repeatable information sources. Every visit shows the description."
+  }
+}
