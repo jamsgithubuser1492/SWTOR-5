@@ -64,7 +64,7 @@ const PLANETS = {
               { text: 'Slip him a credit chip. No need to look too closely.', morality: -15, loyalty: { underworld: 10 }, result: 'He pockets it smoothly. "Nothing to declare. Have a pleasant stay."' },
             ],
           },
-          { id: 'droid44', x: 13, y: 8, kind: 'droid', label: 'Pit Droid Unit 44',
+          { id: 'droid44', x: 13, y: 8, kind: 'droid', label: 'Pit Droid Unit 44', mobile: true,
             repeatPrompt: 'Unit 44 is deep in a cataloguing cycle. It does not look up.',
             prompt: '"BEEP BOOP. Cargo secured. Ramp deployed. I have also catalogued seventeen new hull scuffs. Seventeen. Do humans not see the hull?"',
             choices: [
@@ -72,7 +72,7 @@ const PLANETS = {
               { text: 'Ask it to stop cataloguing and get back to work.', morality: 0, loyalty: {}, result: '"Acknowledged. Suppressing visual distress subroutine. For now."' },
             ],
           },
-          { id: 'marlo', x: 4, y: 16, kind: 'smuggler', label: '"Slick" Marlo',
+          { id: 'marlo', x: 4, y: 16, kind: 'smuggler', label: '"Slick" Marlo', mobile: true,
             repeatPrompt: 'Marlo gives you a lazy two-finger salute. The offer already stands.',
             prompt: 'He leans on the cargo stack without looking at you. "Four unmarked crates in your hold. I can move them past customs clean. Thirty-percent cut."',
             choices: [
@@ -80,7 +80,7 @@ const PLANETS = {
               { text: 'Shake on it. Thirty percent is fair.', morality: -18, loyalty: { underworld: 15 }, result: '"Smart. Bay seven, after dark."' },
             ],
           },
-          { id: 'jon_spaceport', x: 6, y: 10, kind: 'smuggler', label: 'Jon',
+          { id: 'jon_spaceport', x: 6, y: 10, kind: 'smuggler', label: 'Jon', questNpc: true,
             repeatPrompt: 'Jon gives you a knowing look. "Head over to my place through the market. You know where I am."',
             prompt: 'Well, look who finally made it off the transport vector intact. Good to see a face that is not collecting a bounty or issuing a customs citation. I have got a partner opening and something worth your time — but not out here in the landing bay.',
             choices: [
@@ -197,7 +197,7 @@ const PLANETS = {
           { id: 'speeder_shell', x: 22, y: 16, label: 'Abandoned Speeder Shell', description: 'The repulsor coils are stripped. Someone was living in here recently. The bedroll is still warm.', once: true },
         ],
         npcs: [
-          { id: 'anxious_tenant', x: 12, y: 10, kind: 'smuggler', label: 'Anxious Tenant',
+          { id: 'anxious_tenant', x: 12, y: 10, kind: 'smuggler', label: 'Anxious Tenant', mobile: true,
             repeatPrompt: 'The tenant glances at you, then back at their door. Whatever they know, they have decided not to share more of it.',
             prompt: 'The human presses against the corridor wall as you pass. "You are not with the inspection team? Good. They have been through three times this week. Something is happening. Something big."',
             choices: [
@@ -205,7 +205,7 @@ const PLANETS = {
               { text: 'Reassure them and keep moving.', morality: 5, loyalty: {}, result: '"Easy for you to say." They disappear behind a locked door.' },
             ],
           },
-          { id: 'jn7', x: 20, y: 12, kind: 'droid', label: 'Maintenance Droid JN-7',
+          { id: 'jn7', x: 20, y: 12, kind: 'droid', label: 'Maintenance Droid JN-7', mobile: true,
             repeatPrompt: 'JN-7 is patching the same wall panel it has been patching for three weeks. Progress: 12 percent.',
             prompt: '"MAINTENANCE CYCLE: ongoing. Current fault list: 847 items. Estimated completion time: 14 years. Requesting additional allocation of repair foam." It looks at you hopefully.',
             choices: [
@@ -346,7 +346,7 @@ const PLANETS = {
           { id: 'bay_log', x: 6, y: 14, label: 'Speeder Bay Log', description: 'Last entry: Speeder Unit 7 departed 03:14. Destination: classified. Pilot: classified. Good luck finding that one.', once: true },
         ],
         npcs: [
-          { id: 'at9', x: 16, y: 8, kind: 'droid', label: 'AirTaxi Droid AT-9',
+          { id: 'at9', x: 16, y: 8, kind: 'droid', label: 'AirTaxi Droid AT-9', triggersOverlay: 'speeder',
             repeatPrompt: 'AT-9 chirps twice and resumes its departure countdown. It has a job to do.',
             prompt: '"AIRTAXI UNIT AT-9. DESTINATION QUERY. CURRENT WAIT TIME: 4 MINUTES. CURRENT QUEUE: 0 PASSENGERS. QUERY: ARE YOU A PASSENGER?"',
             choices: [
@@ -395,7 +395,7 @@ const PLANETS = {
           { id: 'cargo_container', x: 22, y: 14, label: 'Abandoned Cargo Container', description: 'Duvall was right. Inside you find a set of repulsor coils, a crate of unmarked credit chips, and a datapad with a single message: DO NOT OPEN THIS.', once: true },
         ],
         npcs: [
-          { id: 'at11', x: 15, y: 8, kind: 'droid', label: 'AirTaxi Droid AT-11',
+          { id: 'at11', x: 15, y: 8, kind: 'droid', label: 'AirTaxi Droid AT-11', triggersOverlay: 'speeder',
             repeatPrompt: 'AT-11 pulses its running lights at you. You have been logged as a repeat non-passenger.',
             prompt: '"AIRTAXI UNIT AT-11. NOTE: THIS UNIT IS AWARE IT IS THE LESS POPULAR UNIT. NOTE: THIS UNIT HAS FEELINGS ABOUT THAT. DESTINATION QUERY."',
             choices: [
@@ -432,7 +432,7 @@ const PLANETS = {
           { id: 'slicing_bench', x: 14, y: 8, label: 'Slicing Workbench', description: 'A tangle of stripped datachips and bypass leads. Jon apparently does his best work at 0300.', once: false },
         ],
         npcs: [
-          { id: 'jon_apartment', x: 5, y: 3, kind: 'smuggler', label: 'Jon',
+          { id: 'jon_apartment', x: 5, y: 3, kind: 'smuggler', label: 'Jon', questNpc: true,
             repeatPrompt: 'Jon is studying cargo manifests on his terminal. "Those three hub sites are still open. Find out who coordinated those strikes."',
             prompt: 'Here is the situation. Someone new is moving through the lower levels — fast, organized, and ruthless. Three major Republic transport hubs got hit in forty-eight hours. They did not steal credits. They took military-grade power converters, encrypted datanodes, and weapons manifests. Black Sun is denying it. The Exchange is rattled. Whoever this is, they are building something. I need eyes on those three hit sites before customs seals them. That is where you come in.',
             choices: [
@@ -1045,7 +1045,7 @@ function AmbientLayer({ kind, accent }) {
   );
 }
 
-function Minimap({ zone, map, pos, camX, camY }) {
+function Minimap({ zone, map, pos, camX, camY, npcPositions, completedInteractions }) {
   const MS = 3;
   const tileColor = (t) => {
     if (t === 'floor') return zone.floorColor;
@@ -1061,6 +1061,13 @@ function Minimap({ zone, map, pos, camX, camY }) {
       {map.map((row, y) => row.map((tile, x) => (
         <rect key={`${x}-${y}`} x={x*MS} y={y*MS} width={MS} height={MS} fill={tileColor(tile.type)} />
       )))}
+      {zone.npcs?.map((npc) => {
+        const p = (npcPositions && npcPositions[npc.id]) || { x: npc.x, y: npc.y };
+        const done = completedInteractions?.has(npc.id);
+        const isQuest = npc.questNpc && !done;
+        const color = isQuest ? '#FFD700' : done ? '#333' : zone.accentDim;
+        return <rect key={npc.id} x={p.x*MS} y={p.y*MS} width={MS} height={MS} fill={color} />;
+      })}
       <rect x={camX*MS} y={camY*MS} width={VIEWPORT_COLS*MS} height={VIEWPORT_ROWS*MS} fill="none" stroke={zone.accent} strokeWidth="0.8" opacity="0.7" />
       <rect x={pos.x*MS} y={pos.y*MS} width={MS} height={MS} fill={zone.accent} />
     </svg>
@@ -1198,6 +1205,8 @@ function StarWarsRPG() {
   const [transitioning, setTransitioning] = useState(false);
   const [questFlags, setQuestFlags] = useState({});
   const [showSpeeder, setShowSpeeder] = useState(false);
+  const [npcPositions, setNpcPositions] = useState({});
+  const posRef = React.useRef(pos);
 
   const pushActionLog = useCallback((msg, zoneLabel) => {
     setActionLog((prev) => [{ text: msg, zone: zoneLabel || '' }, ...prev.slice(0, 49)]);
@@ -1233,6 +1242,39 @@ function StarWarsRPG() {
       pushActionLog(`Arrived at ${destPlanet.name}. ${destPlanet.description}`, destPlanet.startZoneId);
     }, 650);
   }, [zoneId, pushActionLog]);
+
+  useEffect(() => { posRef.current = pos; }, [pos]);
+  useEffect(() => { setNpcPositions({}); }, [zoneId]);
+  useEffect(() => {
+    const tickId = setInterval(() => {
+      setNpcPositions((prev) => {
+        const next = { ...prev };
+        const playerPos = posRef.current;
+        zone.npcs?.forEach((npc) => {
+          if (!npc.mobile) return;
+          const cur = prev[npc.id] || { x: npc.x, y: npc.y };
+          const dirs = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
+          dirs.sort(() => Math.random() - 0.5);
+          for (const { dx, dy } of dirs) {
+            const nx = cur.x + dx, ny = cur.y + dy;
+            const tile = map[ny]?.[nx];
+            if (!tile || tile.type !== 'floor') continue;
+            if (nx === playerPos.x && ny === playerPos.y) continue;
+            const occupied = zone.npcs.some((n) => {
+              if (n.id === npc.id) return false;
+              const np = prev[n.id] || { x: n.x, y: n.y };
+              return np.x === nx && np.y === ny;
+            });
+            if (occupied) continue;
+            next[npc.id] = { x: nx, y: ny };
+            break;
+          }
+        });
+        return next;
+      });
+    }, 1500);
+    return () => clearInterval(tickId);
+  }, [zone, map]);
 
   const resolveChoice = useCallback((choice, npcId) => {
     setCompletedInteractions((prev) => new Set([...prev, npcId]));
@@ -1275,9 +1317,16 @@ function StarWarsRPG() {
         if (door) { travelToZone(door.targetZone, door.targetPos); return; }
       }
 
-      const npcHere = zone.npcs?.find(n => n.x === x && n.y === y);
+      const npcHere = zone.npcs?.find((n) => {
+        const p = npcPositions[n.id] || { x: n.x, y: n.y };
+        return p.x === x && p.y === y;
+      });
       if (npcHere) {
-        if (completedInteractions.has(npcHere.id)) {
+        if (npcHere.triggersOverlay === 'speeder') {
+          if (!questFlags.speeder_transit_unlocked) { pushActionLog('RESTRICTED TRANSIT: Sector clearance pass required.', zoneId); setPos({ x, y }); return; }
+          setShowSpeeder(true); setPos({ x, y }); return;
+        }
+        if (completedInteractions.has(npcHere.id) && !npcHere.repeatable) {
           pushActionLog(npcHere.repeatPrompt || `${npcHere.label} nods but says nothing new.`, zoneId);
           return;
         }
@@ -1311,7 +1360,7 @@ function StarWarsRPG() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, questFlags, collectedItems, completedInteractions, pushActionLog, travelToZone]);
+  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, questFlags, npcPositions, collectedItems, completedInteractions, pushActionLog, travelToZone]);
 
   const camX = Math.max(0, Math.min(zone.width - VIEWPORT_COLS, pos.x - Math.floor(VIEWPORT_COLS / 2)));
   const camY = Math.max(0, Math.min(zone.height - VIEWPORT_ROWS, pos.y - Math.floor(VIEWPORT_ROWS / 2)));
@@ -1340,7 +1389,7 @@ function StarWarsRPG() {
                   const tx = camX + vx;
                   const tile = map[ty]?.[tx] || { type: 'wall' };
                   const isPlayer = pos.x === tx && pos.y === ty;
-                  const npcHere = zone.npcs?.find(n => n.x === tx && n.y === ty);
+                  const npcHere = zone.npcs?.find((n) => { const p = npcPositions[n.id] || { x: n.x, y: n.y }; return p.x === tx && p.y === ty; });
                   const collectibleHere = zone.collectibles?.find(c => c.x === tx && c.y === ty && !collectedItems.has(c.id));
                   const doorHere = zone.doors?.find(d => d.x === tx && d.y === ty);
                   const worldObjHere = zone.worldObjects?.find(wo => wo.x === tx && wo.y === ty && !(wo.once && completedInteractions.has(wo.id)));
@@ -1413,7 +1462,7 @@ function StarWarsRPG() {
         </div>
         <div style={{ position:'absolute',bottom:6,right:6,zIndex:10,background:'rgba(4,4,8,0.80)',padding:4,border:`1px solid ${zone.accentDim}55` }}>
           <div style={{ fontSize:8,color:'#5A5F74',marginBottom:2 }}>minimap</div>
-          <Minimap zone={zone} map={map} pos={pos} camX={camX} camY={camY} />
+          <Minimap zone={zone} map={map} pos={pos} camX={camX} camY={camY} npcPositions={npcPositions} completedInteractions={completedInteractions} />
         </div>
       </div>
 
