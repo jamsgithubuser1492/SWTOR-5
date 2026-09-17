@@ -452,113 +452,341 @@ const PLANETS = {
           return g;
         },
       },
-      hub_site_alpha: {
-        id: 'hub_site_alpha', name: 'Speeder Docking Bay 1', subtitle: 'Coruscant · Mid-Levels · Sector 4 · CSF Cordon',
-        width: 28, height: 18, spawnPos: { x: 4, y: 10 }, textureId: 'coruscant',
-        accent: '#8FA6FF', accentGlow: 'rgba(143,166,255,0.22)', accentDim: '#3D4A80',
-        floorColor: '#1A1E35', floorAlt: '#222840', wallDark: '#0C0E18', wallLight: '#161A2C',
-        bg: 'radial-gradient(circle at 20% 30%, #141828 0%, #090B14 70%)', ambient: 'traffic',
-        decor: ['cargo_crate', 'pipe', 'neon_sign'],
+      sky_market: {
+        id: 'sky_market', name: 'Sky-Market District', subtitle: 'Coruscant · Upper Mid-Levels · L.1450',
+        width: 38, height: 26, spawnPos: { x: 4, y: 13 }, textureId: 'coruscant',
+        accent: '#FFD580', accentGlow: 'rgba(255,213,128,0.2)', accentDim: '#806020',
+        floorColor: '#2A2618', floorAlt: '#322E1C', wallDark: '#100E06', wallLight: '#1E1A0A',
+        bg: 'radial-gradient(circle at 50% 20%, #1E1A08 0%, #0C0A04 70%)', ambient: 'traffic',
+        decor: ['pillar', 'neon_sign', 'brazier', 'archive'],
         doors: [],
         worldObjects: [
-          { id: 'airtaxi_hub_alpha', x: 4, y: 14, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Clearance required for restricted sectors.', once: false },
-          { id: 'alpha_manifest', x: 22, y: 7, label: 'Shipping Manifest Terminal', description: 'Power converter units — 40 crates, military spec. Datanodes — encrypted, series 7. Destination redacted. Loading confirmed 48 hours ago. The receiving bay code traces back to a dummy shell corp: Broken Circle Holdings.', once: true },
+          { id: 'sky_market_terminal', x: 20, y: 7, once: false, label: 'Trade Exchange Terminal', description: 'Live credit-transfer rates across fourteen systems. One manifest flagged for anomalous routing: SCYLLA FREIGHT. Destination: redacted. Shipper: redacted.' },
+          { id: 'csf_bulletin', x: 28, y: 14, once: false, label: 'CSF Bulletin Board', description: 'Three active investigations listed. Two marked classified. The third — Cargo Anomaly / Bay 14 — shows status: CLOSED. Filed by: Vane, T. Closure date: two days after the incident.' },
+          { id: 'airtaxi_sky_market', x: 35, y: 20, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Departs on demand.' },
         ],
         npcs: [
-          { id: 'vane_hub', x: 15, y: 12, kind: 'republic_guard', label: 'Officer Vane',
-            repeatPrompt: 'Vane watches the empty bay. "Still nothing. Someone planned this precisely."',
-            prompt: '"You are cleared, but this is an active CSF scene. Whatever you take from that terminal gets logged. Power converters and datanodes — forty crates. Nothing left behind except one partial manifesto with a circle insignia we have never seen before."',
+          { id: 'marlo_sky', x: 6, y: 7, kind: 'broker', label: '"Slick" Marlo',
+            repeatPrompt: 'Marlo watches you with one eye over his glass. The offer is still on the table.',
+            prompt: 'He does not look up from his drink. "You have the look of someone who wandered three hundred levels off course. Give me one reason I should not have my guard droids show you the long way down."',
             choices: [
-              { text: 'Share what I know about the syndicate.', morality: 8, loyalty: { republic: 10 }, result: 'Vane nods slowly. "The Broken Circle. New name. I will flag it. That is useful — thank you."' },
-              { text: 'Keep quiet and take mental notes.', morality: -3, loyalty: { underworld: 5 }, result: 'You note everything without sharing it. Vane watches you go, his expression unreadable.' },
+              { text: 'Lay the Scylla manifest on the table. "Because I know what came off Bay 14."', morality: -5, loyalty: { underworld: 15 }, requires: { item: 'stolen_manifest' }, result: 'He leans forward. The bored expression drops. "That alloy is going to Level 005. Someone is building armor down there. Combat-grade. Phrik-plated." He names a buyer.', grants: { items: ['buyers_id'], flags: ['marlo_sky_talked'], codex: ['codex-iron-syndicate'] } },
+              { text: '"Jon sends his regards. We have a mutual interest in the Bay 14 shipment."', morality: -3, loyalty: { underworld: 8 }, result: 'He studies you. "Jon is careful about who he vouches for. Sit down. This conversation just became interesting."', grants: { flags: ['marlo_sky_intro'] } },
+              { text: '"Step aside. I have business with the CSF precinct across the promenade."', morality: 8, loyalty: { republic: 5 }, result: 'He raises an eyebrow. "Bold choice. Enjoy the view from the precinct lockup." He turns back to his drink.' },
+            ],
+          },
+          { id: 'vane_sky', x: 30, y: 7, kind: 'republic_guard', label: 'Officer Vane',
+            repeatPrompt: 'Vane watches the promenade traffic. His hand stays near his weapon.',
+            prompt: 'He is reviewing a holographic flight manifest when you approach. "This precinct is not a tourist stop. State your business or clear the promenade."',
+            choices: [
+              { text: 'Place the Scylla manifest on his holo-table. "Bay 14 was not an accident."', morality: 15, loyalty: { republic: 15 }, requires: { item: 'stolen_manifest' }, result: '"This confirms Phrik alloy logged under false Senate credentials. Inside job." His expression hardens. "Take this CSF Auxiliary Pass. Get into Sector 4 and pull names. Report back to me directly. Welcome aboard, Auxiliary."', grants: { items: ['csf_aux_pass'], flags: ['vane_sky_cooperated', 'republic_path_open'], codex: ['codex-csf-protocol'] } },
+              { text: '"I want to join the CSF. Formally. Whatever the fast track looks like."', morality: 12, loyalty: { republic: 12 }, result: '"You do not join the CSF by walking into a precinct. But I can sponsor an Auxiliary Corps application. Come back when you have evidence to back it up. Then we talk."', grants: { flags: ['vane_sky_intro'] } },
+              { text: '"I am looking into the Bay 14 raid. Freelance."', morality: 0, loyalty: {}, result: '"Freelance investigators are not sanctioned by the Republic. If you find anything relevant you will turn it over to this precinct. Understood?"' },
+            ],
+          },
+          { id: 'promenade_vendor', x: 20, y: 15, kind: 'cantina_owner', label: 'Promenade Vendor Oska',
+            repeatPrompt: 'Oska polishes a glass and pretends not to notice you.',
+            prompt: '"Upper levels, lower prices if you know how to ask. What are you after?"',
+            choices: [
+              { text: 'Ask about the men in grey coats on the promenade.', morality: 0, loyalty: {}, result: '"Grey coats? I know the ones. They spend credits like they have too many of them. Never buy food. Always watching the transit lifts."', grants: { codex: ['codex-iron-syndicate'] } },
+              { text: 'Buy a bottle of Corellian Reserve.', morality: 0, loyalty: { underworld: 2 }, result: 'She produces a bottle from under the cart without a word. "Sixty credits. Do not tell anyone where you got it."', grants: { items: ['item_brandy'] } },
             ],
           },
         ],
-        collectibles: [{ id: 'alpha_credit_chip', x: 20, y: 14, label: 'Confiscated Credit Chip', reward: 30 }],
+        collectibles: [{ id: 'sky_market_datachip', x: 14, y: 19, label: 'Sliced Comm Fragment', reward: 40 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 26, 16, 'floor');
-          carveRect(g, 8, 4, 18, 10, 'wall');
-          carveRect(g, 9, 5, 17, 9, 'floor');
-          [[3,3],[4,3],[3,4],[3,5]].forEach(([x,y]) => pt(g,x,y,'wall'));
-          [[23,3],[23,4],[23,5],[24,3]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          carveRect(g, 1, 1, 36, 24, 'floor');
+          carveRect(g, 1, 3, 12, 11, 'wall');
+          carveRect(g, 2, 4, 11, 10, 'floor');
+          carveRect(g, 26, 3, 36, 11, 'wall');
+          carveRect(g, 27, 4, 35, 10, 'floor');
+          carveRect(g, 34, 18, 36, 22, 'wall');
+          pt(g, 35, 19, 'floor'); pt(g, 35, 20, 'floor'); pt(g, 35, 21, 'floor');
+          pt(g, 12, 7, 'floor');
+          pt(g, 26, 7, 'floor');
           return g;
         },
       },
-      hub_site_beta: {
-        id: 'hub_site_beta', name: 'Lower Industrial Docks', subtitle: 'Coruscant · Lower Levels · Black Sun Territory',
-        width: 30, height: 20, spawnPos: { x: 2, y: 8 }, textureId: 'coruscant',
-        accent: '#FF7A5A', accentGlow: 'rgba(255,122,90,0.22)', accentDim: '#7A2A1E',
-        floorColor: '#221814', floorAlt: '#2A1E18', wallDark: '#100A08', wallLight: '#1C1210',
-        bg: 'radial-gradient(circle at 60% 80%, #1E1008 0%, #0E0806 70%)', ambient: 'embers',
-        decor: ['cargo_crate', 'pipe', 'slag'],
+      freight_hub: {
+        id: 'freight_hub', name: 'Sector 4 Freight Hub', subtitle: 'Coruscant · Industrial Mid-Levels · Sector 4',
+        width: 40, height: 28, spawnPos: { x: 2, y: 14 }, textureId: 'coruscant',
+        accent: '#FF8C42', accentGlow: 'rgba(255,140,66,0.18)', accentDim: '#7A3A10',
+        floorColor: '#1C1A14', floorAlt: '#24221A', wallDark: '#0A0902', wallLight: '#161408',
+        bg: 'radial-gradient(circle at 30% 60%, #181410 0%, #08070A 70%)', ambient: 'embers',
+        decor: ['cargo_crate', 'pipe', 'girder', 'slag'],
         doors: [],
         worldObjects: [
-          { id: 'airtaxi_hub_beta', x: 2, y: 16, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Clearance required for restricted sectors.', once: false },
-          { id: 'beta_data_terminal', x: 15, y: 8, label: 'Overloaded Data Terminal', description: 'The manifest fragments are scrambled but the routing node prefix is legible: BC-NEXUS-7. The same signature appears on the Sector 4 job. Someone coordinated these hits from the same command channel.', once: true },
+          { id: 'bay14_crime_scene', x: 20, y: 6, once: true, label: 'Bay 14 Blast Marks', description: 'The dock wall is scorched. Not from a fuel fire — the scorch pattern is from shaped charges placed against the loading manifest kiosk. Someone destroyed the primary records on the way out.' },
+          { id: 'discarded_keycard', x: 32, y: 18, once: true, label: 'Discarded Passcode', description: 'Half-melted but readable: an underworld bypass key. Grants sub-level transit without checkpoint flags. You pocket it.', grantsItem: 'scrambler_keycard' },
+          { id: 'shipping_crate_b14', x: 10, y: 20, once: true, label: 'Unsealed Shipping Crate', description: 'Marked as "agricultural supplies." Contains Glitterstim vials and unregistered blaster power packs. Clearly staged to be found.', grantsItem: 'item_spice_vial' },
+          { id: 'customs_terminal_088', x: 26, y: 4, once: true, label: 'Customs Manifest Registry', description: 'Three containers marked with Senate sub-committee routing stamps. One flags as anomalous — destination redacted, shipper redacted, authorization code valid. The code traces to a sub-committee that officially does not exist.' },
+          { id: 'crane_node_088', x: 22, y: 4, once: true, label: 'Crane Automation Node', description: 'The bay exterior crane control system. A code input here can drop a heavy repulsor-crate onto the loading yard — opening a breach point into the warehouse without triggering external alarms.' },
+          { id: 'undercity_radio_terminal', x: 4, y: 4, once: false, label: 'Under-Grit Radio Intercept', description: '[Signal 104.9 Sub-Grit — Unauthorized] "They are calling Docking Bay 14 a logistical delay while Black Sun heavy gunners run it like a private toll booth. CSF sent fresh academy blood into Sector 4. Place your bets at Vond\'s shop — three to one the new badge sells out before end of shift..."' },
+          { id: 'vond_vendor', x: 8, y: 24, once: false, label: '"Greasy" Vond — Scrap and Salvage', description: '"If it fell off the back of a freighter, I have it. No warranties. Once you walk off my platform, we do not know each other." Sells: Scrambler Keycard, Blaster Parts, Freighter Repair Kit.' },
+          { id: 'airtaxi_freight_hub', x: 38, y: 6, once: false, label: 'AirTaxi Terminal', description: 'Transit terminal. Level access pending clearance.' },
         ],
         npcs: [
-          { id: 'blacksun_lt', x: 5, y: 10, kind: 'crime_boss', label: 'Black Sun Lieutenant',
-            repeatPrompt: 'The lieutenant narrows their eyes. "I have nothing more to say to you."',
-            prompt: '"My people did not do this. Whoever hit these docks knew our schedules — that takes an inside source or something worse. We are looking too. And if you find them before we do, you bring them to me first."',
+          { id: 'jax_freight', x: 18, y: 6, kind: 'mechanic', label: 'Dock Engineer Jax',
+            repeatPrompt: 'Jax is running diagnostics on a loading claw. He does not acknowledge you.',
+            prompt: '"Whatever you are here for, I did not see anything. Go find someone else."',
             choices: [
-              { text: 'Agree to bring them the information.', morality: -10, loyalty: { underworld: 15 }, result: '"Smart. Black Sun has a long memory for favors and for debts."' },
-              { text: 'Make no promises.', morality: 2, loyalty: {}, result: '"Then we have nothing further to discuss." They turn away, watching the docks.' },
+              { text: '"The CSF sent me. Here is my Auxiliary Pass."', morality: 5, loyalty: { republic: 8 }, requires: { item: 'csf_aux_pass' }, result: 'He glances at the pass and exhales. "Fine. I was in the maintenance shaft when they came through. Fourteen of them. Grey coats. Republic security codes that checked out clean. They loaded the Phrik onto two unmarked lifters and went sub-level."', grants: { flags: ['jax_talked', 'freight_hub_investigated'], codex: ['codex-docking-bay-14'] } },
+              { text: 'Offer him 200 credits and ask what he saw.', morality: -8, loyalty: { underworld: 8 }, result: 'He pockets the credits without counting them. "Two lifters. Unmarked. Grey coats with Republic codes. Went down. That is all I am giving you."', grants: { flags: ['jax_bribed', 'freight_hub_investigated'] } },
+              { text: '"I know you were in the shaft. Tell me what you saw or I will tell them you were."', morality: -15, loyalty: { underworld: 12 }, result: 'His jaw tightens. "You are going to fit right in around here." He tells you what he saw.', grants: { flags: ['jax_intimidated', 'freight_hub_investigated'] } },
             ],
           },
-          { id: 'beta_dock_worker', x: 27, y: 15, kind: 'mechanic', label: 'Dock Worker',
-            repeatPrompt: 'The worker stares at the floor. They have said everything they are willing to say.',
-            prompt: 'They keep their voice low. "They moved fast. Grey coats, no insignia. Left one crate behind — too hot to carry maybe. I heard one of them say: the Circle needs the third shipment by end of cycle."',
+          { id: 'kaelen_freight', x: 6, y: 22, kind: 'swoop_gang', label: 'Kaelen',
+            repeatPrompt: 'Kaelen is tinkering with his swoop\'s repulsor coils.',
+            prompt: '"Your business does not belong down here. Mine does. Those are different things."',
             choices: [
-              { text: 'Thank them and offer 50 credits for the risk.', morality: 8, loyalty: {}, result: 'They pocket the credits quickly. "Get out of here. If they come back and see you talking to me, we are both done."' },
-              { text: 'Press them for more details.', morality: -5, loyalty: { underworld: 5 }, result: '"That is everything. I swear. Please — just go."' },
+              { text: '"You were hired as a distraction during the Bay 14 raid. I am not here to arrest you."', morality: 0, loyalty: { underworld: 6 }, result: '"You are smarter than you look. Yeah, someone paid us to race through the bay and make noise while they loaded up. Paid well. Did not ask questions."', grants: { flags: ['kaelen_talked'] } },
+              { text: 'Challenge him to a race for the information.', morality: 5, loyalty: { underworld: 10 }, result: '"Ha. I like you. We race. You win, you get what you want. You lose, you owe me a favor." He transfers everything he knows. [Race mini-game placeholder]', grants: { flags: ['kaelen_raced'] } },
+            ],
+          },
+          { id: 'corin_088', x: 10, y: 18, kind: 'mechanic', label: '"Fixer" Corin',
+            repeatPrompt: 'Corin is calibrating a blaster power cell. He does not pause when you enter.',
+            prompt: '"You wear that CSF armor like it is supposed to mean something down here. I used to wear the Navy crest. Know what it bought me? A pink slip and a tin eye."',
+            choices: [
+              { text: '"The Navy leaves a lot of good people behind. I am just trying to keep people safe down here."', morality: 5, loyalty: {}, result: '"Safe? In Sector 4? (He sets down his hydrospanner.) You are either brand new or completely soft. If you need your stun-output upgraded, I will not charge top credit."', grants: { flags: ['corin_friendly'] } },
+              { text: '"I need access to restricted Navy frequency relays."', morality: -5, loyalty: { underworld: 8 }, result: '"Now that is dangerous. Two hundred credits and your word you did not hear it from me."', grants: { flags: ['corin_relay_unlocked'] } },
+            ],
+          },
+          { id: 'dax_shipping', x: 10, y: 6, kind: 'mechanic', label: 'Dax — Shipping Clerk',
+            repeatPrompt: 'Dax is checking cargo seals with excessive attention to detail.',
+            prompt: 'He glances past you before speaking. "I have been waiting for someone to come asking. I cannot keep filing phantom manifests. If they find out I talked to you, I am dead."',
+            choices: [
+              { text: '"You are protected under Republic witness protocols. Talk to me."', morality: 8, loyalty: { republic: 10 }, requires: { item: 'csf_aux_badge' }, result: '"Three containers, Platform 09. Logged under Senate clearance codes that trace back to a sub-committee that officially does not exist. I kept a copy of the routing data."', grants: { flags: ['dax_talked', 'phantom_freight_resolved'], codex: ['codex-sector-4-freight-corridors'] } },
+              { text: '"Give me the data and I will make sure your name stays out of the report."', morality: 0, loyalty: { underworld: 5 }, result: '"My name better not appear anywhere. Here." He transfers a file. "Now leave."', grants: { flags: ['dax_talked_unofficial'] } },
             ],
           },
         ],
-        collectibles: [{ id: 'beta_manifest_frag', x: 24, y: 14, label: 'Manifest Fragment', reward: 20 }],
+        collectibles: [
+          { id: 'freight_hub_credit', x: 24, y: 22, label: 'Dropped Pay Chip', reward: 60 },
+          { id: 'stolen_spark_rig', x: 34, y: 18, label: "Jax's Calibration Rig", reward: 0, grantsItem: 'calibrated_hydrospanner' },
+        ],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 28, 18, 'floor');
-          carveRect(g, 10, 5, 20, 12, 'wall');
-          carveRect(g, 11, 6, 19, 11, 'floor');
-          carveRect(g, 25, 1, 28, 8, 'wall');
-          carveRect(g, 26, 2, 27, 7, 'floor');
-          [[2,3],[2,4],[2,5],[3,3]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          carveRect(g, 1, 1, 38, 26, 'floor');
+          carveRect(g, 15, 2, 25, 10, 'wall');
+          carveRect(g, 16, 3, 24, 9, 'floor');
+          carveRect(g, 30, 14, 38, 22, 'wall');
+          carveRect(g, 31, 15, 37, 21, 'floor');
+          pt(g, 30, 18, 'floor');
+          carveRect(g, 37, 4, 39, 8, 'wall');
+          carveRect(g, 38, 5, 38, 7, 'floor');
           return g;
         },
       },
-      hub_site_gamma: {
-        id: 'hub_site_gamma', name: 'The Works Sub-Level', subtitle: 'Coruscant · Undercity · Abandoned Processing Plant',
-        width: 26, height: 18, spawnPos: { x: 15, y: 3 }, textureId: 'coruscant',
-        accent: '#FF8C42', accentGlow: 'rgba(255,140,66,0.25)', accentDim: '#7A3C1E',
-        floorColor: '#2A1A0E', floorAlt: '#321E10', wallDark: '#100A06', wallLight: '#1C1008',
-        bg: 'radial-gradient(circle at 50% 60%, #221408 0%, #100C06 70%)', ambient: 'embers',
-        decor: ['pipe', 'slag', 'rubble'],
+      the_works: {
+        id: 'the_works', name: 'The Works', subtitle: 'Coruscant · Undercity · The Works L.005',
+        width: 36, height: 24, spawnPos: { x: 2, y: 12 }, textureId: 'coruscant',
+        accent: '#FF4444', accentGlow: 'rgba(255,68,68,0.2)', accentDim: '#660000',
+        floorColor: '#14100A', floorAlt: '#1C160E', wallDark: '#060402', wallLight: '#100C06',
+        bg: 'radial-gradient(circle at 50% 80%, #140800 0%, #050302 70%)', ambient: 'embers',
+        decor: ['pipe', 'girder', 'slag', 'rubble', 'brazier'],
         doors: [],
         worldObjects: [
-          { id: 'airtaxi_hub_gamma', x: 10, y: 14, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Emergency access unit. Clearance required for restricted sectors.', once: false },
-          { id: 'syndicate_cache', x: 12, y: 3, label: 'Syndicate Supply Cache', description: 'Cracked open. Inside: an empty weapons case, a coded frequency tablet, and a patch. A broken circle of white on black. The Broken Circle. They were here. Whatever they built, they have moved it already.', once: true },
-          { id: 'geothermal_junction', x: 3, y: 4, label: 'Geothermal Junction', description: 'Superheated gas vents from the deep processing shafts below. The whole sub-level sits on top of something very hot.', once: false },
+          { id: 'syndicate_cargo_cache', x: 18, y: 10, once: true, label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with a stylised iron chain. Inside: Phrik plating cut to pauldron dimensions, half-assembled combat chassis, and one empty Jedi archive canister. Someone opened it already.' },
+          { id: 'plasma_conduit_005', x: 8, y: 18, once: false, label: 'Leaking Plasma Conduit', description: 'The pipe groans under pressure. A slow leak fills the air with acrid chemical haze. This entire sub-level is one spark away from a chain event.' },
+          { id: 'sub_station_terminal', x: 10, y: 20, once: true, label: 'Deep Sub-Station Controls', description: 'Power sub-station 3. Slicing this terminal disables ambient thermal hazards in the surrounding corridor.', grantsItem: null },
+          { id: 'syndicate_relay_node', x: 24, y: 6, once: true, label: 'Syndicate Relay Node', description: 'Iron Syndicate tactical communications. Slicing this intercepts live patrol data — every enemy position in The Works becomes visible on your minimap for the duration of the assault.' },
+          { id: 'plasma_valve_a', x: 4, y: 18, once: true, label: 'Pressure Valve Alpha', description: 'Main coolant line junction. The pressure gauge reads critical. One override and the flow stabilizes.' },
+          { id: 'plasma_valve_b', x: 14, y: 20, once: true, label: 'Pressure Valve Beta', description: 'Secondary coolant junction. Steam vents from the seal around the handle.' },
+          { id: 'plasma_valve_c', x: 8, y: 14, once: true, label: 'Pressure Valve Gamma', description: 'Tertiary coolant junction. Closing this one stabilizes the entire pressure network.' },
+          { id: 'krell_vendor', x: 28, y: 20, once: false, label: 'Krell — Black Market Arms', description: '"The Republic does not come down this far. My blasters hit harder, run hotter, and do not leave serial numbers." Sells: Spice Vial, Plasma Core Overcharger, Environmental Filter.' },
+          { id: 'holonet_official_terminal', x: 30, y: 20, once: false, label: 'HNN Official Feed', description: '[HNN Priority Core Broadcast] "The Senate Committee on Inner-Rim Trade commended the CSF for maintaining unprecedented safety standards across the Mid-Levels. Reports of industrial smuggling near Level 088 have been dismissed as isolated logistical delays." The broadcast loops. The terminal is covered in soot.' },
+          { id: 'airtaxi_the_works', x: 34, y: 12, once: false, label: 'AirTaxi Terminal', description: 'A terminal barely functioning under the heat. Miracle it still works.' },
         ],
         npcs: [
-          { id: 'gamma_loader', x: 12, y: 8, kind: 'warden', label: 'Injured Cargo Loader',
-            repeatPrompt: 'The loader is drifting in and out of consciousness. They have told you everything they can.',
-            prompt: 'They are slumped against the junction housing, one arm badly burned. "They left me. Said I saw too much. The circle — white circle on black. Kept saying the third shipment closes the triangle. Some kind of weapon assembly. They are building it somewhere in the deep infrastructure — somewhere no one goes anymore."',
+          { id: 'vex', x: 22, y: 7, kind: 'crime_boss', label: 'Vex',
+            repeatPrompt: 'Vex watches you from the shadows. His enforcers track your movement.',
+            prompt: '"I do not know how you got this deep. I know you will not be leaving the same way." He signals two enforcers. Then pauses. "Unless you have something worth my time."',
             choices: [
-              { text: 'Stabilise them and call for a medic.', morality: 12, loyalty: { republic: 8 }, result: 'You bind the burns and transmit a medical alert. "Thank you," they whisper. "The circle — stop the circle."', grants: { flags: ['syndicate_identified', 'gamma_witness_saved'] } },
-              { text: 'Extract everything useful and leave quickly.', morality: -10, loyalty: { underworld: 8 }, result: 'You get the coordinates of the loading bay they came from. The loader watches you go, too weak to call after you.', grants: { flags: ['syndicate_identified'] } },
+              { text: 'Reveal that you know about the Phrik armor project.', morality: -10, loyalty: { underworld: 15 }, result: '"Interesting. You have done your homework. The Iron Syndicate builds to last. We are not selling. We are equipping. The question is: which side of that equation do you want to be on?"', grants: { flags: ['vex_met', 'iron_syndicate_known'], codex: ['codex-iron-syndicate'] } },
+              { text: '"I am here to stop whatever you are building."', morality: 18, loyalty: { republic: 15 }, result: '"Bold." He gestures. The enforcers advance. "Bring me their comlink when you are done." [Combat placeholder — dialogue resolves with escape and flag]', grants: { flags: ['vex_hostile', 'iron_syndicate_known'] } },
+            ],
+          },
+          { id: 'unit_7n4', x: 4, y: 5, kind: 'droid', label: 'Archivist Droid 7-N4',
+            repeatPrompt: '7-N4 resumes archiving temperature data. Progress: 94.7 percent.',
+            prompt: '"ARCHIVE ACCESS: corrupted. MEMORY CORE: partially functional. I was left behind when the warehouse was abandoned. QUERY: do you require ambient temperature data?"',
+            choices: [
+              { text: 'Give it the Sith Memory Prism. "Can you decrypt this?"', morality: 0, loyalty: {}, requires: { item: 'encrypted_shard' }, result: '"DECRYPTION: initiating. This is a Sith-era holocron shard. The content describes a weapon design — specifically, a melee platform armored in Phrik that resists both blaster and lightsaber damage. The Iron Syndicate intends to mass-produce this design. ARCHIVE ENTRY CREATED."', grants: { flags: ['shard_decrypted', 'syndicate_weapon_known'], codex: ['codex-iron-syndicate', 'codex-phrik-alloy'] } },
+              { text: 'Ask it what was stored here before the Iron Syndicate arrived.', morality: 5, loyalty: {}, result: '"This facility last logged Republic military materiel eighteen months ago. Current occupants arrived nine months ago with Phrik alloy and Jedi archive canisters. ASSESSMENT: occupation is unauthorized. CONCERN LEVEL: high."', grants: { codex: ['codex-docking-bay-14'] } },
+            ],
+          },
+          { id: 'sula_anvil', x: 20, y: 18, kind: 'mechanic', label: 'Sula "The Anvil"',
+            repeatPrompt: 'Sula is hammering a cooling piece of alloy. She does not stop when you speak.',
+            prompt: '"Phrik is not just metal, officer. It is the bones of the galaxy. The Syndicate thinks they can melt it down with cheap thermal charges to build dirty bombs? It is an insult to the craft."',
+            choices: [
+              { text: '"Can Phrik alloy be stabilized if it is already exposed to plasma heat?"', morality: 5, loyalty: {}, result: '"Not without cryogenic cooling. If they heat that core past three thousand degrees, it is not a shipment anymore — it is a critical melt." She pulls up a schematic. "The emergency coolant valves are in the lower sub-station. Use them before the Syndicate ignites the crucible."', grants: { flags: ['sula_informed', 'coolant_method_known'] } },
+              { text: '"Join us. Help CSF shut down the Syndicate\'s crucible for good."', morality: 8, loyalty: { republic: 8 }, result: '"I do not care about your politics. But I will not let them ruin my foundry. Give me droid cover for my back and I will cut their power lines myself."', grants: { flags: ['sula_allied'] } },
+            ],
+          },
+          { id: 'kaelen_twi', x: 6, y: 20, kind: 'smuggler', label: '"The Ghost" Kaelen',
+            repeatPrompt: 'Kaelen is crouched behind a burned power cell stack, watching both exits.',
+            prompt: '"Do not shoot! I am just wiping terminal logs! The Syndicate took my sister. They said if I did not override the security grid for Docking Bay 14, they would throw her into the thermal vents!"',
+            choices: [
+              { text: '"You aided an armed attack on a CSF perimeter. Come with me."', morality: 3, loyalty: { republic: 10 }, result: '"No! You do not understand — the Syndicate owns the precinct holding cells! I will not last an hour!" His cybernetic optic flickers in genuine fear.', grants: { flags: ['kaelen_twi_arrested'] } },
+              { text: '"Tell me where your sister is. If I save her, you hand over every encryption key you have."', morality: 8, loyalty: { republic: 8 }, result: '"They are keeping her in Sub-Level 3 holding cells! Save her, and I will slice the main door to the Senate transit line for you!"', grants: { flags: ['kaelen_twi_deal', 'sub_level_extraction_available'] } },
+            ],
+          },
+          { id: 'marla_foreman', x: 8, y: 20, kind: 'cantina_owner', label: 'Marla — Sub-Level Foreman',
+            repeatPrompt: 'Marla is directing workers away from the venting steam. She looks exhausted.',
+            prompt: '"Keep your filters tight today. The Syndicate is running the smelters at maximum. There is a pressure valve venting into the residential catwalks — if it ruptures, we lose thirty families."',
+            choices: [
+              { text: '"Point me to the main pressure valves. I will shut them down."', morality: 12, loyalty: { republic: 10 }, result: '"Sub-smelting level, three valves in sequence. The maintenance droids down there have gone rogue — watch yourself."', grants: { flags: ['thermal_leak_active'] } },
+              { text: '"I have got bigger problems than a pipe valve."', morality: -5, loyalty: {}, result: 'She stares at you. "The people living on those catwalks do not."' },
             ],
           },
         ],
-        collectibles: [{ id: 'gamma_syndicate_token', x: 20, y: 12, label: 'Broken Circle Token', reward: 10 }],
+        collectibles: [{ id: 'works_syndicate_token', x: 12, y: 20, label: 'Iron Syndicate Token', reward: 0 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 24, 16, 'floor');
-          carveRect(g, 1, 1, 8, 8, 'wall');
-          carveRect(g, 2, 2, 7, 7, 'floor');
-          carveRect(g, 18, 8, 24, 16, 'wall');
-          carveRect(g, 19, 9, 23, 15, 'floor');
-          [[9,1],[10,1],[11,1]].forEach(([x,y]) => pt(g,x,y,'wall'));
+          carveRect(g, 1, 1, 34, 22, 'floor');
+          carveRect(g, 10, 6, 14, 6, 'lava');
+          carveRect(g, 20, 14, 24, 14, 'lava');
+          carveRect(g, 28, 4, 28, 18, 'lava');
+          carveRect(g, 15, 2, 27, 12, 'wall');
+          carveRect(g, 16, 3, 26, 11, 'floor');
+          carveRect(g, 2, 2, 8, 8, 'wall');
+          carveRect(g, 3, 3, 7, 7, 'floor');
+          pt(g, 5, 8, 'floor');
+          pt(g, 15, 7, 'floor');
+          return g;
+        },
+      },
+      csf_academy: {
+        id: 'csf_academy', name: 'CSF Tactical Training Hub', subtitle: 'Coruscant · Republic District · CSF Precinct Command',
+        width: 42, height: 30, spawnPos: { x: 2, y: 15 }, textureId: 'coruscant',
+        accent: '#4A9FFF', accentGlow: 'rgba(74,159,255,0.2)', accentDim: '#1A4A80',
+        floorColor: '#181C28', floorAlt: '#1E2430', wallDark: '#0A0C14', wallLight: '#141820',
+        bg: 'radial-gradient(circle at 50% 30%, #10182A 0%, #080C14 70%)', ambient: 'traffic',
+        decor: ['archive', 'pillar', 'neon_sign'],
+        doors: [],
+        worldObjects: [
+          { id: 'induction_terminal', x: 10, y: 6, once: true, label: 'CSF Induction Terminal', description: 'Your Auxiliary Corps enrollment is confirmed. Designation: AX-7. Access level: provisional. Supervisor: Vane, T. Welcome to the Coruscant Security Force.', grantsItem: 'csf_aux_badge' },
+          { id: 'drill_holotable', x: 20, y: 6, once: false, label: 'Tactical Holotable', description: 'A 3D grid of Sector 4 showing current patrol routes, Black Sun safe house locations, and three markers labeled UNKNOWN — each in a different sub-level. Someone is mapping something.' },
+          { id: 'holding_cell_log', x: 6, y: 25, once: true, label: 'Cell Block Log', description: 'Entry 847: Detainee refuses to identify employing organization. Grey coat. No ID chip. Transferred off-site per Senate directive 1182-C. Authorized by: [REDACTED].' },
+          { id: 'module_a_terminal', x: 36, y: 12, once: true, label: 'Training Module A: Non-Lethal Combat', description: 'Simulated Iron Syndicate droids in live-fire configuration. Stun your way through the course. Lethal discharges are flagged. Sergeant Torren is watching.', grantsFlag: 'module_a_complete' },
+          { id: 'module_b_terminal', x: 36, y: 16, once: true, label: 'Training Module B: Forensic Slicing', description: 'A reconstructed simulation of Docking Bay 14 — manifest kiosks, scorched terminals, altered shipping logs. Identify the code-trail left by the strike team. CSF Chain of Custody Protocol codex unlocked.', grantsItem: 'forensic_slicing_suite', grantsCodex: 'codex-csf-chain-of-custody', grantsFlag: 'module_b_complete' },
+          { id: 'holding_block_b', x: 6, y: 24, once: true, label: 'Training Module C: High-Stress Interrogation', description: 'A captured Black Sun informant in Holding Block B. You have thirty minutes. No weapons discharges. No civil rights violations on record.' },
+          { id: 'senate_honor_ceremony', x: 20, y: 14, once: true, label: 'Senate Honor Ceremony Terminal', description: 'The Senate Honor Cross is awarded in a formal ceremony. Officer Vane promotes you to Special Lead Investigator of the CSF Auxiliary Division.' },
+        ],
+        npcs: [
+          { id: 'vane_academy', x: 6, y: 6, kind: 'republic_guard', label: 'Officer Vane',
+            repeatPrompt: 'Vane is reviewing case files. He glances up. "Sector 4. We need that name."',
+            prompt: '"You made it. The Auxiliary Corps runs accelerated courses for candidates with field experience. You already have that. Walk through the drill yard and talk to the training sergeant."',
+            choices: [
+              { text: '"I am ready to bring order to the underbelly, Detective."', morality: 8, loyalty: { republic: 10 }, result: '"Good. Start by keeping your eyes open and your mind off credits."', grants: { flags: ['csf_briefed', 'csf_duty_stance'], items: ['csf_aux_badge'] } },
+              { text: '"This badge better give me open access to restricted transport lanes."', morality: 3, loyalty: { republic: 5 }, result: '"It gives you authority — and responsibility. Do not abuse it." He hands you the badge without ceremony.', grants: { flags: ['csf_briefed', 'csf_transit_unlocked'], items: ['csf_aux_badge'] } },
+              { text: '"Does this mean CSF will stay out of Jon\'s sector in the Mid-Levels?"', morality: 0, loyalty: { republic: 3 }, result: '"If your friend obeys Republic code, he has nothing to fear. If he does not — you will be the one arresting him." He watches your face carefully.', grants: { flags: ['csf_briefed', 'vane_suspicious_of_jon'], items: ['csf_aux_badge'] } },
+            ],
+          },
+          { id: 'training_sgt', x: 22, y: 16, kind: 'republic_guard', label: 'Sergeant Torren',
+            repeatPrompt: 'Torren watches the drill yard. He has eyes on everyone simultaneously.',
+            prompt: '"Fresh Auxiliary. Vane vouches for you which is the only reason I am not sending you back up the lift. Run the drill circuit. Keep your hands off the live-fire range until I clear you."',
+            choices: [
+              { text: '"Yes, Sergeant. Where do I start?"', morality: 8, loyalty: { republic: 10 }, result: '"Perimeter first. Then the obstacle rig. Then we see if you can tell the difference between a stun setting and a full discharge." He almost smiles.', grants: { flags: ['drill_accepted'], items: ['csf_patrol_armor'] } },
+              { text: '"I have field experience. Skip the basics."', morality: 0, loyalty: {}, result: '"Everyone has field experience. Nobody has the Republic way. Do the circuit." He turns away. Discussion over.' },
+            ],
+          },
+          { id: 'talo_voren', x: 10, y: 24, kind: 'republic_guard', label: 'Detective Talo Voren',
+            repeatPrompt: 'Voren is annotating a case file. He does not look up.',
+            prompt: 'He leans against the viewport glass watching the interrogation room, chewing a stim-stick. "Look at you — fresh boots, clean badge. You think we are fighting a war down here? It is a plumbing problem. You leak enough credits to the right bosses, the pipe stops bursting."',
+            choices: [
+              { text: '"If we ignore the small crimes, Black Sun controls the entire district."', morality: 8, loyalty: { republic: 5 }, result: '"Black Sun already controls the district. We just negotiate the rent. You will learn." He spits his stim-stick onto the floor and walks.' },
+              { text: '"Where do you draw the line between keeping the peace and corruption?"', morality: 3, loyalty: {}, result: '"When civilians start dying. Until then? It is grease on the gears. Keep that in mind when you are out on Platform 12."', grants: { codex: ['codex-sector-4-freight-corridors'] } },
+            ],
+          },
+          { id: 'kaelen_informant', x: 6, y: 26, kind: 'swoop_gang', label: 'Black Sun Informant "Kaelen"',
+            repeatPrompt: '"I have nothing to add to my statement." He means it.',
+            prompt: 'He sits handcuffed to the interrogation chair, staring at a fixed point on the wall. "I already told the last officer everything I know. Which is nothing."',
+            choices: [
+              { text: '"We recovered your encrypted cylinder from Docking Bay 14."', morality: 5, loyalty: { republic: 10 }, requires: { flag: 'module_b_complete' }, result: 'He flinches. "My cylinder? That is impossible — I dumped it." He pauses. "Fine. Platform 09. Ask for Dax. He logged the phantom manifests."', grants: { flags: ['module_c_complete', 'dax_named', 'phantom_freight_available'] } },
+              { text: '"Talk, and Vane reduces your sentence to mid-level probation."', morality: 8, loyalty: { republic: 8 }, result: '"Probation. Sure. And I grow wings and fly to Naboo." He leans back. "I want it in writing. Then I talk."', grants: { flags: ['module_c_complete', 'legal_pressure_used'] } },
+            ],
+          },
+          { id: 'csf_medic', x: 36, y: 10, kind: 'mechanic', label: 'Field Medic Daya',
+            repeatPrompt: 'Daya is annotating injury reports. There are many.',
+            prompt: '"Injuries are a policy violation in the training center. Which is convenient since I only have bacta patches and sarcasm."',
+            choices: [
+              { text: 'Ask for a medpac for the field.', morality: 3, loyalty: {}, result: '"Sign the requisition form. The form requires clearance. The clearance requires a supervisor signature. The supervisor is at lunch." She hands you one anyway. "This did not happen."' },
+              { text: 'Ask what the injury rate is in the field.', morality: 0, loyalty: {}, result: '"For Auxiliaries? Ask someone who came back." She returns to her datapad.' },
+            ],
+          },
+        ],
+        collectibles: [],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 40, 28, 'floor');
+          carveRect(g, 2, 2, 14, 10, 'wall');
+          carveRect(g, 3, 3, 13, 9, 'floor');
+          carveRect(g, 32, 4, 40, 18, 'wall');
+          carveRect(g, 33, 5, 39, 17, 'floor');
+          carveRect(g, 2, 22, 12, 28, 'wall');
+          carveRect(g, 3, 23, 11, 27, 'floor');
+          pt(g, 14, 6, 'floor');
+          pt(g, 32, 11, 'floor');
+          pt(g, 7, 22, 'floor');
+          return g;
+        },
+      },
+      lower_sky_market: {
+        id: 'lower_sky_market', name: 'Lower Sky-Market Promenade', subtitle: 'Coruscant · Lower Mid-Levels · L.1100',
+        width: 38, height: 26, spawnPos: { x: 2, y: 13 }, textureId: 'coruscant',
+        accent: '#FF3366', accentGlow: 'rgba(255,51,102,0.2)', accentDim: '#660020',
+        floorColor: '#16120E', floorAlt: '#1E1812', wallDark: '#080604', wallLight: '#120E0A',
+        bg: 'radial-gradient(circle at 40% 50%, #160A10 0%, #060408 70%)', ambient: 'embers',
+        decor: ['neon_sign', 'pipe', 'cargo_crate', 'brazier'],
+        doors: [],
+        worldObjects: [
+          { id: 'marlo_hideout_board', x: 4, y: 10, once: false, label: 'Ops Planning Board', description: 'A holographic layout of three Coruscant levels. Marlo\'s territory in red. Rook\'s in blue. Significant overlap. Someone has been drawing lines.' },
+          { id: 'rook_comms_terminal', x: 28, y: 16, once: true, label: "Rook's Comm Array", description: 'The speeder nav system is wired into this terminal. One code cylinder could redirect his entire route.' },
+          { id: 'airtaxi_lower_sky_market', x: 36, y: 13, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Exit from lower promenade.' },
+        ],
+        npcs: [
+          { id: 'marlo_1100', x: 8, y: 8, kind: 'broker', label: '"Slick" Marlo',
+            repeatPrompt: 'Marlo watches the promenade through a one-way panel. He is always watching.',
+            prompt: '"Welcome to the neighborhood. Rook operates out of the east side. He is Black Sun, old guard — thinks the territory is his because it was his father\'s. I disagree. Here is what I need from you."',
+            choices: [
+              { text: '"What exactly are we talking about doing to Rook?"', morality: -5, loyalty: { underworld: 12 }, result: '"Nothing flashy. His speeder runs a fixed route every night cycle. You slice the navcom and redirect it into a traffic barrier. Looks like an accident. Clean."', grants: { flags: ['rook_mission_briefed'] } },
+              { text: '"I will look into it. No promises."', morality: 0, loyalty: { underworld: 5 }, result: '"Promises are for people who have something to lose. Just do it."', grants: { flags: ['rook_mission_observed'] } },
+            ],
+          },
+          { id: 'rook_contact', x: 30, y: 17, kind: 'crime_boss', label: '"Rook"',
+            repeatPrompt: '"Rook" has security droids flanking him now. He has heard enough.',
+            prompt: 'He does not turn around. "You are either very brave or very stupid for coming in here. Which is it?"',
+            choices: [
+              { text: '"Marlo sent me. But I am not here to finish the job he thinks I am here for."', morality: 10, loyalty: { republic: 8 }, result: '"Interesting. You are telling me Marlo wants me removed. You could have just done it and collected. What are you after?"', grants: { flags: ['rook_warned'] } },
+              { text: 'Carry out the mission: slice his comm array to reroute his speeder.', morality: -20, loyalty: { underworld: 20 }, result: 'The job is clean. The report in the morning cycles lists a speeder malfunction. Marlo\'s territory expands by morning. You do not sleep well.', grants: { flags: ['rook_eliminated'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'gang_cred', x: 18, y: 20, label: 'Stashed Credit Brick', reward: 150 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 36, 24, 'floor');
+          carveRect(g, 2, 3, 14, 12, 'wall');
+          carveRect(g, 3, 4, 13, 11, 'floor');
+          carveRect(g, 24, 12, 36, 22, 'wall');
+          carveRect(g, 25, 13, 35, 21, 'floor');
+          pt(g, 14, 8, 'floor');
+          pt(g, 24, 17, 'floor');
+          return g;
+        },
+      },
+      senate_district: {
+        id: 'senate_district', name: 'Senate District Vaults', subtitle: 'Coruscant · Senate Precinct · L.1900',
+        width: 44, height: 32, spawnPos: { x: 2, y: 16 }, textureId: 'coruscant',
+        accent: '#C8A000', accentGlow: 'rgba(200,160,0,0.2)', accentDim: '#604800',
+        floorColor: '#201C10', floorAlt: '#2A2618', wallDark: '#0C0A04', wallLight: '#181408',
+        bg: 'radial-gradient(circle at 50% 50%, #1A1408 0%, #08060A 70%)', ambient: 'traffic',
+        decor: ['pillar', 'archive', 'brazier'],
+        doors: [], worldObjects: [], npcs: [], collectibles: [],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 42, 30, 'floor');
           return g;
         },
       },
@@ -1074,17 +1302,28 @@ function Minimap({ zone, map, pos, camX, camY, npcPositions, completedInteractio
   );
 }
 
-function DialogueOverlay({ npc, onChoose }) {
+function DialogueOverlay({ npc, onChoose, inventory = [], questFlags = {} }) {
+  const meetsRequires = (choice) => {
+    if (!choice.requires) return true;
+    if (choice.requires.item && !inventory.some(i => i.id === choice.requires.item)) return false;
+    if (choice.requires.flag && !questFlags[choice.requires.flag]) return false;
+    return true;
+  };
   return (
     <div style={{ position:'absolute',inset:0,background:'rgba(4,4,8,0.92)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:25 }}>
       <div style={{ width:'min(92%,480px)',border:'1px solid #2A2A38',background:'#0E0E16',fontFamily:"'IBM Plex Mono',ui-monospace,monospace" }}>
         <div style={{ padding:'14px 18px',borderBottom:'1px solid #2A2A38',color:'#E8C97A',fontSize:13,fontWeight:600 }}>{npc.label}</div>
         <div style={{ padding:'16px 18px',color:'#C9C5BE',fontSize:13,lineHeight:1.6,borderBottom:'1px solid #1C1C26' }}>{npc.prompt}</div>
-        {npc.choices.map((choice, i) => (
-          <div key={i} onClick={() => onChoose(choice, npc.id)} style={{ padding:'14px 18px',borderBottom:i<npc.choices.length-1?'1px solid #1C1C26':'none',cursor:'pointer',fontSize:12.5,color:'#A8ADC0' }}>
-            &gt; {choice.text}
-          </div>
-        ))}
+        {npc.choices.map((choice, i) => {
+          const meets = meetsRequires(choice);
+          const reqLabel = !meets && choice.requires?.item ? ` (requires ${ITEMS[choice.requires.item]?.name || choice.requires.item})` : (!meets && choice.requires?.flag ? ` (requires: ${choice.requires.flag})` : '');
+          return (
+            <div key={i} onClick={() => meets && onChoose(choice, npc.id)}
+              style={{ padding:'14px 18px',borderBottom:i<npc.choices.length-1?'1px solid #1C1C26':'none',cursor:meets?'pointer':'not-allowed',fontSize:12.5,color:meets?'#A8ADC0':'#4A4F64',opacity:meets?1:0.5 }}>
+              &gt; {choice.text}<span style={{color:'#E8C97A88',fontSize:11}}>{reqLabel}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -1146,12 +1385,127 @@ function AlignmentPanel({ alignment }) {
   );
 }
 
+const ITEMS = {
+  comlink:                    { id:'comlink',                    name:'Comlink',                               type:'gear',       iconKind:'tool',     value:0,   description:'Encrypted comlink. Jon is on speed-dial.' },
+  field_rations:              { id:'field_rations',              name:'Field Rations',                         type:'consumable', iconKind:'supply',   value:5,   description:'Tasteless. Effective.' },
+  stolen_manifest:            { id:'stolen_manifest',            name:'Scylla Freight Manifest',               type:'quest',      iconKind:'datapad',  value:150, description:'Encrypted cargo log from Docking Bay 14. Lists Phrik alloy and Jedi archive crates as cargo, both reported destroyed in a dock fire. Someone is lying.' },
+  scrambler_keycard:          { id:'scrambler_keycard',          name:'Underworld Passcode',                   type:'quest',      iconKind:'keycard',  value:0,   description:'A blackmarket security bypass. Grants transit access across mid and lower levels without checkpoint flags.' },
+  encrypted_shard:            { id:'encrypted_shard',            name:'Sith Memory Prism',                    type:'quest',      iconKind:'artifact', value:400, description:'A fist-sized crystal that whispers in ancient Sith. It grows warm when near the dark side of the Force.' },
+  forged_clearance:           { id:'forged_clearance',           name:'Blank Senate Transit Pass',             type:'quest',      iconKind:'keycard',  value:0,   description:'An unfilled Republic surface-clearance form. With the right seal it opens the Senate District.' },
+  buyers_id:                  { id:'buyers_id',                  name:"Buyer's Encrypted ID",                 type:'quest',      iconKind:'datapad',  value:0,   description:"A scrambled credit transfer signature. Someone at the top of Coruscant's financial tier is purchasing stolen military alloys." },
+  csf_aux_pass:               { id:'csf_aux_pass',               name:'CSF Auxiliary Pass',                   type:'quest',      iconKind:'keycard',  value:0,   description:'Provisional law-enforcement clearance for Sector 4. Signed by Officer Vane.' },
+  tool_hydrospanner:          { id:'tool_hydrospanner',          name:"Slicer's Hydrospanner",                type:'tool',       iconKind:'tool',     value:60,  description:"Modified to interface with panel-lock bypass ports. Standard issue on every scoundrel's belt." },
+  item_transit_pass:          { id:'item_transit_pass',          name:'Coruscant Transit Pass',               type:'gear',       iconKind:'keycard',  value:0,   description:'Unlimited speeder access between Sub-Surface, Mid-Levels, and Lower Levels. Jon organized it.' },
+  item_spice_vial:            { id:'item_spice_vial',            name:'Glitterstim Spice Vial',               type:'contraband', iconKind:'supply',   value:80,  description:'Highly illegal telepathic booster. Confiscated on sight by any Republic checkpoint.' },
+  item_blaster_parts:         { id:'item_blaster_parts',         name:'Unregistered Blaster Parts',           type:'contraband', iconKind:'gear',     value:120, description:'Scraped serial numbers. Military-grade power packs that should not exist in civilian hands.' },
+  item_code_cylinder:         { id:'item_code_cylinder',         name:'Blank Code Cylinder',                  type:'tool',       iconKind:'tool',     value:40,  description:'High-security key blank. Write any access code into it with the right slicer rig.' },
+  item_brandy:                { id:'item_brandy',                name:'Corellian Reserve Brandy',             type:'consumable', iconKind:'supply',   value:25,  description:'Smooth. Expensive. Opens doors that credits alone cannot.' },
+  csf_patrol_armor:           { id:'csf_patrol_armor',           name:'CSF Patrol Armor',                     type:'gear',       iconKind:'gear',     value:200, description:'Standard Coruscant Security Force tactical plate. Carries the weight of the law.' },
+  republic_badge:             { id:'republic_badge',             name:'Republic Duty Badge',                  type:'gear',       iconKind:'keycard',  value:0,   description:'Your commission as a CSF Auxiliary Agent. Opens checkpoints. Closes doors.' },
+  senate_honor_cross:         { id:'senate_honor_cross',         name:'Senate Honor Cross',                   type:'gear',       iconKind:'artifact', value:0,   description:"The Republic's highest civilian commendation. Costs more than it pays." },
+  surface_clearance:          { id:'surface_clearance',          name:'Surface Landing Clearance',            type:'quest',      iconKind:'keycard',  value:0,   description:"Permanent access to Coruscant's surface levels and the Senate District. Hard-won." },
+  csf_aux_badge:              { id:'csf_aux_badge',              name:'CSF Auxiliary Badge',                  type:'gear',       iconKind:'keycard',  value:0,   description:'Your official commission as a Coruscant Security Force Auxiliary. Designation AX-7. Signed by Officer Vane.' },
+  forensic_slicing_suite:     { id:'forensic_slicing_suite',     name:'Forensic Slicing Suite',               type:'tool',       iconKind:'tool',     value:120, description:'A CSF-issue datapad rig for isolating corrupted code trails, altering customs manifests, and bypassing lower-tier security seals.' },
+  emp_grenade:                { id:'emp_grenade',                name:'EMP Grenade',                          type:'consumable', iconKind:'supply',   value:90,  description:'Republic-issue electromagnetic pulse charge. Disables droid systems and powered locks in a short radius. Non-lethal. Mostly.' },
+  level_088_transit_pass:     { id:'level_088_transit_pass',     name:'Level 088 Priority Transit Pass',      type:'quest',      iconKind:'keycard',  value:0,   description:'CSF-authorized speeder clearance to Level 088 Police Outpost 88. Bypass all mid-level checkpoints.' },
+  encrypted_gang_holo_log:    { id:'encrypted_gang_holo_log',    name:'Encrypted Gang Holo-Log',              type:'quest',      iconKind:'datapad',  value:0,   description:'Black-market credit transactions routed to Level 005. Names, amounts, and Senate authorization stamps that should not exist.' },
+  senate_conspiracy_file:     { id:'senate_conspiracy_file',     name:'Verified Senate Conspiracy File',      type:'quest',      iconKind:'datapad',  value:0,   description:"Authenticated records linking a sitting Senator to the Docking Bay 14 raid and the Iron Syndicate's Phrik operation." },
+  csf_stun_carbine:           { id:'csf_stun_carbine',           name:'Modified Heavy Stun Carbine',          type:'gear',       iconKind:'gear',     value:280, description:'Seized from a Black Sun lieutenant. Modified for high-yield stun delivery. Hits like a wall.' },
+  level_005_keycard:          { id:'level_005_keycard',          name:'Level 005 Security Override',          type:'quest',      iconKind:'keycard',  value:0,   description:'A security terminal keycard from the Sector 4 raid commander. Opens Iron Syndicate blast doors in The Works.' },
+  thermal_vest:               { id:'thermal_vest',               name:'Reinforced Thermal Vest',              type:'gear',       iconKind:'gear',     value:150, description:'Insulated against plasma discharge and steam vent hazards. Required for extended operations in Level 005.' },
+  calibrated_hydrospanner:    { id:'calibrated_hydrospanner',    name:'Calibrated Hydrospanner',              type:'tool',       iconKind:'tool',     value:80,  description:"Jax's custom calibration rig. Grants +1 to all mechanical and repair checks." },
+  decrypted_senate_audio:     { id:'decrypted_senate_audio',     name:'Decrypted Senate Audio Log',           type:'quest',      iconKind:'datapad',  value:0,   description:'A recovered audio record exposing a Senate aide coordinating weapons trafficking through underbelly drop points.' },
+  master_senate_transit_drive:{ id:'master_senate_transit_drive',name:'Master Senate Transit Decryption Drive',type:'quest',      iconKind:'datapad',  value:0,   description:"Kaelen's personal slicer drive. Contains every Syndicate bypass code for the Senate transit line." },
+};
+
+const CODEX_ENTRIES = {
+  'codex-jon-network': {
+    id:'codex-jon-network', title:"Jon's Smuggling Network", category:'dossier',
+    summary:'An old friend operating in the Coruscant underworld.',
+    body:[
+      'Jon served two tours with the Republic Special Forces during the last Sith Wars before a disciplinary discharge that he has never fully explained. He went into private contracting, then cargo running, then something he prefers to call independent logistics.',
+      'His Coruscant operation is small but clean. Three ships, six contacts, one rule: no weapons of mass destruction. Everything else is negotiable.',
+      'He wants a partner he can trust with more than a manifest. He wants someone who will ask the right questions when the cargo stops making sense.',
+    ],
+  },
+  'codex-docking-bay-14': {
+    id:'codex-docking-bay-14', title:'Docking Bay 14 Incident', category:'story',
+    summary:'A cargo hijacking that official records call a dock fire.',
+    body:[
+      'Three standard cycles ago, Docking Bay 14 at the Sub-Surface Spaceport logged a catastrophic fuel line rupture. Two crewmembers listed as casualties. Cargo manifest: destroyed.',
+      'The recovered Scylla Freight shipping log tells a different story. The cargo included seventeen crates of unrefined Phrik alloy and four sealed containers tagged with Jedi Temple archive seals.',
+      'No fuel rupture. A strike team with CSF-grade clearance codes walked the cargo out in broad light.',
+    ],
+  },
+  'codex-phrik-alloy': {
+    id:'codex-phrik-alloy', title:'Phrik Alloy', category:'lore',
+    summary:'A rare metal resistant to lightsaber cuts.',
+    body:[
+      'Phrik is a rare metallic compound found in deep core mining operations. Its molecular structure resists lightsaber plasma, making it one of the few materials in the galaxy that can survive direct contact with an active blade.',
+      'The Old Republic restricted Phrik extraction to licensed military contractors after its use in Mandalorian combat armor during the Sith Wars. Off-book stockpiles exist, but moving them requires either Senate authorization or a very good forger.',
+    ],
+  },
+  'codex-iron-syndicate': {
+    id:'codex-iron-syndicate', title:'The Iron Syndicate', category:'factions',
+    summary:'A rising power in the Coruscant underworld. Motive unknown.',
+    body:[
+      'First surfaced in CSF intelligence reports eight months ago. Initially dismissed as a rebranded Black Sun cell. Current assessment: distinct organization, distinct goals.',
+      'They do not move spice. They do not run protection. They acquire materials with military applications and move them into The Works, where they disappear.',
+      'Three witnesses who saw their operations have filed no follow-up reports. The Republic investigator assigned to the case was transferred off-world.',
+    ],
+  },
+  'codex-csf-protocol': {
+    id:'codex-csf-protocol', title:'Coruscant Security Force', category:'factions',
+    summary:"The Republic's planetary law enforcement arm on Coruscant.",
+    body:[
+      'The CSF maintains order across all publicly accessible levels of Coruscant, from the Sub-Surface transit hubs to the Senate District. They answer to the Republic Senate, which in practice means they answer to whoever controls the appropriations committee.',
+      'Subsurface patrol is understaffed by thirty percent. Officers routinely look the other way on minor contraband to focus resources on organized crime, or on whatever the Senate\'s current priority happens to be.',
+    ],
+  },
+  'codex-csf-chain-of-custody': {
+    id:'codex-csf-chain-of-custody', title:'CSF Chain of Custody Protocol', category:'lore',
+    summary:'Republic law enforcement evidentiary standards.',
+    body:[
+      'The Coruscant Security Force mandates strict documentation for all evidence recovered in active investigations. Each item must be logged, sealed, and countersigned by a supervising officer before it can be used in prosecution.',
+      'Violations of chain-of-custody result in evidence suppression, which is why organizations like the Iron Syndicate specifically target manifest kiosks and archive terminals before withdrawing from a crime scene.',
+    ],
+  },
+  'codex-sector-4-freight-corridors': {
+    id:'codex-sector-4-freight-corridors', title:'Sector 4 Freight Corridors', category:'lore',
+    summary:"The industrial transit network beneath Coruscant's mid-levels.",
+    body:[
+      "Sector 4 serves as the junction point for all heavy freight moving between Coruscant's sub-surface spaceports and the upper manufacturing tiers. Forty-two automated crane platforms and twelve active docking bays process an estimated six million tonnes of cargo per standard day.",
+      'CSF jurisdiction in the sector is technically absolute but practically negotiated. Three different cartel networks pay informal fees to keep their manifests unscanned. The CSF collects revenue from each, reports none of it, and files quarterly commendations for reduced crime rates.',
+    ],
+  },
+  'codex-coruscant-undercity-strata': {
+    id:'codex-coruscant-undercity-strata', title:'Coruscant Undercity Stratification', category:'lore',
+    summary:"The vertical structure of Coruscant's lower levels.",
+    body:[
+      "Coruscant is built upon its own history. Layer upon layer of durasteel, ferro-concrete, and abandoned infrastructure stretch downward over five thousand levels. While the upper thousand levels capture the sun, levels below 100 exist in perpetual twilight.",
+      "Level 088 serves as the structural junction for regional freight lines, a grease-slick cavern spanning hundreds of square kilometers. Republic law is not enforced through courtrooms here, but negotiated through local cartel proxies and overworked CSF outposts.",
+      "Level 005 represents the boundary of sustainable industrial life. Below lies the toxic abyss of Level 001, unmapped ruins, ancient structural pylons, and hazardous chemical runoff. The Works were built for magma-fed smelting foundries. Today they provide refuge for those who wish to disappear entirely from the Republic Census.",
+    ],
+  },
+  'codex-the-works-forges': {
+    id:'codex-the-works-forges', title:"The Works: Coruscant's Forges", category:'lore',
+    summary:"The ancient industrial heart of Coruscant's undercity.",
+    body:[
+      "The Works were among the earliest structures on the planet that would become Coruscant. Generations of deep-core foundry families worked these forges, and their descendants still live in the lower levels, maintaining equipment that the Republic has officially declared decommissioned.",
+      "The Iron Syndicate chose The Works not for its secrecy alone, but for its infrastructure, plasma conduits capable of achieving forge temperatures that commercial smelters cannot reach, and drainage tunnels wide enough to move military hardware without detection.",
+    ],
+  },
+};
+
 const SPEEDER_DESTINATIONS = [
-  { id: 'spaceport',      name: 'Sub-Surface Spaceport',   level: 'Sub-Surface L2',        cost: 0,  requiredFlag: null,                       targetZone: 'spaceport',      targetPos: { x: 14, y: 10 } },
-  { id: 'market',         name: 'West Market District',     level: 'Sub-Surface L2',        cost: 0,  requiredFlag: null,                       targetZone: 'market',         targetPos: { x: 2,  y: 10 } },
-  { id: 'hub_site_alpha', name: 'Speeder Docking Bay 1',    level: 'Mid-Levels / Sector 4', cost: 25, requiredFlag: 'speeder_transit_unlocked', targetZone: 'hub_site_alpha', targetPos: { x: 4,  y: 10 } },
-  { id: 'hub_site_beta',  name: 'Lower Industrial Docks',   level: 'Lower Levels',          cost: 50, requiredFlag: 'speeder_transit_unlocked', targetZone: 'hub_site_beta',  targetPos: { x: 2,  y: 8  } },
-  { id: 'hub_site_gamma', name: 'The Works Sub-Level',      level: 'Undercity Deep Vector', cost: 75, requiredFlag: 'speeder_transit_unlocked', targetZone: 'hub_site_gamma', targetPos: { x: 15, y: 3  } },
+  { id: 'spaceport',         name: 'Sub-Surface Spaceport',       level: 'Sub-Surface L2',        cost: 0,   requiredFlag: null,                       targetZone: 'spaceport',         targetPos: { x: 14, y: 10 } },
+  { id: 'market',            name: 'West Market District',         level: 'Sub-Surface L2',        cost: 0,   requiredFlag: null,                       targetZone: 'market',            targetPos: { x: 2,  y: 10 } },
+  { id: 'sky_market',        name: 'Sky-Market District L.1450',   level: 'Upper Mid-Levels',      cost: 25,  requiredFlag: 'speeder_transit_unlocked', targetZone: 'sky_market',        targetPos: { x: 4,  y: 13 } },
+  { id: 'freight_hub',       name: 'Sector 4 Freight Hub L.088',   level: 'Industrial Mid-Levels', cost: 50,  requiredFlag: 'speeder_transit_unlocked', targetZone: 'freight_hub',       targetPos: { x: 2,  y: 14 } },
+  { id: 'the_works',         name: 'The Works L.005',              level: 'Undercity',             cost: 75,  requiredFlag: 'speeder_transit_unlocked', targetZone: 'the_works',         targetPos: { x: 2,  y: 12 } },
+  { id: 'csf_academy',       name: 'CSF Training Hub L.1222',      level: 'Republic Mid-Levels',   cost: 0,   requiredFlag: 'republic_path_open',       targetZone: 'csf_academy',       targetPos: { x: 2,  y: 15 } },
+  { id: 'lower_sky_market',  name: 'Lower Promenade L.1100',       level: 'Lower Mid-Levels',      cost: 0,   requiredFlag: 'marlo_sky_talked',         targetZone: 'lower_sky_market',  targetPos: { x: 2,  y: 13 } },
+  { id: 'senate_district',   name: 'Senate Precinct L.1900',       level: 'Upper Levels',          cost: 100, requiredFlag: 'rook_eliminated',          targetZone: 'senate_district',   targetPos: { x: 2,  y: 16 } },
 ];
 
 function SpeederOverlay({ credits, questFlags, currentZoneId, onTravel, onClose }) {
@@ -1185,6 +1539,150 @@ function SpeederOverlay({ credits, questFlags, currentZoneId, onTravel, onClose 
   );
 }
 
+function InventoryOverlay({ inventory, onClose, onStorySlotChange }) {
+  const [selectedItem, setSelectedItem] = React.useState(null);
+  const [activeCategory, setActiveCategory] = React.useState('all');
+  const [storySlots, setStorySlots] = React.useState([null, null]);
+
+  React.useEffect(() => {
+    const handler = (e) => { if (e.key === 'i' || e.key === 'I' || e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  const CATEGORIES = ['all', 'gear', 'quest', 'contraband', 'tool', 'consumable'];
+  const filtered = activeCategory === 'all' ? inventory : inventory.filter(it => it.type === activeCategory);
+  const typeColor = { quest:'#E8C97A', tool:'#4ACDFF', gear:'#8FA6FF', contraband:'#FF5555', consumable:'#6FD9A0' };
+  const iconChar = { datapad:'≡', keycard:'◈', tool:'⚙', supply:'◆', gear:'▣', artifact:'◉' };
+
+  const equipToSlot = (si) => {
+    if (!selectedItem) return;
+    const ns = [...storySlots]; ns[si] = selectedItem.id; setStorySlots(ns);
+    onStorySlotChange && onStorySlotChange(ns);
+  };
+
+  return (
+    <div style={{ position:'absolute',inset:0,background:'rgba(0,0,0,0.88)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:28 }}>
+      <div style={{ width:'min(96%,740px)',border:'1px solid #2A2A38',background:'#0A0A12',fontFamily:"'IBM Plex Mono',ui-monospace,monospace",maxHeight:'90vh',display:'flex',flexDirection:'column' }}>
+        <div style={{ padding:'12px 18px',borderBottom:'1px solid #2A2A38',color:'#4ACDFF',fontSize:12,fontWeight:600,letterSpacing:'0.15em' }}>HOLONET INVENTORY SYSTEM</div>
+        <div style={{ display:'flex',flex:1,overflow:'hidden' }}>
+          <div style={{ width:320,borderRight:'1px solid #1C1C26',padding:12,display:'flex',flexDirection:'column',gap:8 }}>
+            <div style={{ fontSize:9,color:'#5A5F74' }}>ACTIVE STORY SLOTS</div>
+            <div style={{ display:'flex',gap:6,marginBottom:4 }}>
+              {[0,1].map(si => {
+                const slotItem = storySlots[si] ? inventory.find(it => it.id === storySlots[si]) : null;
+                return (
+                  <div key={si} onClick={() => equipToSlot(si)}
+                    style={{ flex:1,height:48,border:`1px solid ${selectedItem?'#4ACDFF88':'#2A2A38'}`,background:'#0E0E1A',display:'flex',alignItems:'center',justifyContent:'center',cursor:selectedItem?'pointer':'default',fontSize:10,color:'#5A5F74',borderRadius:2 }}>
+                    {slotItem ? <span style={{color:typeColor[slotItem.type]||'#A8ADC0'}}>{iconChar[slotItem.iconKind]||'?'} {slotItem.name.slice(0,14)}</span> : <span>SLOT {si+1}</span>}
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ display:'flex',flexWrap:'wrap',gap:4,marginBottom:4 }}>
+              {CATEGORIES.map(cat => (
+                <div key={cat} onClick={() => setActiveCategory(cat)}
+                  style={{ padding:'2px 8px',fontSize:9,border:`1px solid ${activeCategory===cat?'#4ACDFF':'#2A2A38'}`,color:activeCategory===cat?'#4ACDFF':'#5A5F74',cursor:'pointer',textTransform:'uppercase' }}>{cat}</div>
+              ))}
+            </div>
+            <div style={{ display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:4,overflowY:'auto' }}>
+              {filtered.map(item => (
+                <div key={item.id} onClick={() => setSelectedItem(item)}
+                  style={{ aspectRatio:'1',border:`1px solid ${selectedItem?.id===item.id?typeColor[item.type]||'#A8ADC0':'#2A2A38'}`,background:selectedItem?.id===item.id?'#141420':'#0E0E18',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',cursor:'pointer',position:'relative',padding:2 }}>
+                  <div style={{ fontSize:16,color:typeColor[item.type]||'#A8ADC0' }}>{iconChar[item.iconKind]||'?'}</div>
+                  {item.qty > 1 && <div style={{ position:'absolute',bottom:2,right:4,fontSize:8,color:'#E8C97A' }}>x{item.qty}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ flex:1,padding:16,display:'flex',flexDirection:'column',gap:10 }}>
+            {selectedItem ? (
+              <>
+                <div style={{ color:typeColor[selectedItem.type]||'#A8ADC0',fontSize:14,fontWeight:600 }}>{selectedItem.name}</div>
+                <div style={{ display:'flex',gap:8,alignItems:'center' }}>
+                  <span style={{ padding:'2px 8px',background:typeColor[selectedItem.type]||'#333',color:'#0A0A12',fontSize:9,fontWeight:700,textTransform:'uppercase',borderRadius:2 }}>{selectedItem.type}</span>
+                  {selectedItem.value > 0 && <span style={{ fontSize:10,color:'#E8C97A' }}>{selectedItem.value} cr</span>}
+                  {selectedItem.qty > 1 && <span style={{ fontSize:10,color:'#6A6F84' }}>qty: {selectedItem.qty}</span>}
+                </div>
+                <div style={{ fontSize:12,color:'#A8ADC0',lineHeight:1.7,borderTop:'1px solid #1C1C26',paddingTop:10 }}>{selectedItem.description}</div>
+                <div style={{ marginTop:'auto',fontSize:10,color:'#4ACDFF88' }}>Click a story slot above to equip.</div>
+              </>
+            ) : (
+              <div style={{ color:'#5A5F74',fontSize:11,marginTop:40,textAlign:'center' }}>Select an item to view details.</div>
+            )}
+          </div>
+        </div>
+        <div style={{ padding:'8px 18px',borderTop:'1px solid #1C1C26',fontSize:9,color:'#5A5F74' }}>[I] or [ESC] to close</div>
+      </div>
+    </div>
+  );
+}
+
+function CodexOverlay({ codex, setCodex, onClose }) {
+  const [activeTab, setActiveTab] = React.useState('story');
+  const [selectedEntry, setSelectedEntry] = React.useState(null);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'c' || e.key === 'C' || e.key === 'Escape') {
+        setCodex(prev => prev.map(en => ({ ...en, unread: false })));
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose, setCodex]);
+
+  const TABS = ['story', 'lore', 'dossier', 'factions'];
+  const tabColor = { story:'#E8C97A', lore:'#8FA6FF', dossier:'#6FD9A0', factions:'#FF8C42' };
+  const filtered = codex.filter(en => en.category === activeTab);
+
+  return (
+    <div style={{ position:'absolute',inset:0,background:'rgba(0,0,0,0.88)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:28 }}>
+      <div style={{ width:'min(96%,740px)',border:'1px solid #2A2A38',background:'#0A0A12',fontFamily:"'IBM Plex Mono',ui-monospace,monospace",maxHeight:'90vh',display:'flex',flexDirection:'column' }}>
+        <div style={{ padding:'12px 18px',borderBottom:'1px solid #2A2A38',color:'#E8C97A',fontSize:12,fontWeight:600,letterSpacing:'0.1em' }}>HOLONET DATAPAD — DECLASSIFIED ARCHIVES</div>
+        <div style={{ display:'flex',flex:1,overflow:'hidden' }}>
+          <div style={{ width:240,borderRight:'1px solid #1C1C26',display:'flex',flexDirection:'column' }}>
+            <div style={{ display:'flex',borderBottom:'1px solid #1C1C26' }}>
+              {TABS.map(tab => (
+                <div key={tab} onClick={() => { setActiveTab(tab); setSelectedEntry(null); }}
+                  style={{ flex:1,padding:'8px 4px',textAlign:'center',fontSize:9,textTransform:'uppercase',cursor:'pointer',color:activeTab===tab?tabColor[tab]:'#5A5F74',borderBottom:activeTab===tab?`2px solid ${tabColor[tab]}`:'2px solid transparent' }}>{tab}</div>
+              ))}
+            </div>
+            <div style={{ flex:1,overflowY:'auto',padding:6 }}>
+              {filtered.length === 0 && <div style={{ color:'#3A3F54',fontSize:10,padding:8 }}>No entries.</div>}
+              {filtered.map(entry => (
+                <div key={entry.id} onClick={() => setSelectedEntry(entry)}
+                  style={{ padding:'8px 10px',borderBottom:'1px solid #14141E',cursor:'pointer',background:selectedEntry?.id===entry.id?'#141420':'transparent',display:'flex',alignItems:'center',gap:6 }}>
+                  {entry.unread && <div style={{ width:6,height:6,borderRadius:'50%',background:'#E8C97A',flexShrink:0 }} />}
+                  <div>
+                    <div style={{ fontSize:11,color:selectedEntry?.id===entry.id?tabColor[entry.category]:'#A8ADC0' }}>{entry.title}</div>
+                    <div style={{ fontSize:9,color:'#5A5F74',marginTop:2 }}>{entry.summary}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ flex:1,padding:16,overflowY:'auto' }}>
+            {selectedEntry ? (
+              <>
+                <div style={{ color:tabColor[selectedEntry.category],fontSize:14,fontWeight:600,marginBottom:6 }}>{selectedEntry.title}</div>
+                <div style={{ display:'inline-block',padding:'2px 8px',background:tabColor[selectedEntry.category]+'22',border:`1px solid ${tabColor[selectedEntry.category]}44`,color:tabColor[selectedEntry.category],fontSize:9,textTransform:'uppercase',marginBottom:12,borderRadius:2 }}>{selectedEntry.category}</div>
+                {selectedEntry.body.map((para, i) => (
+                  <div key={i} style={{ fontSize:12,color:'#A8ADC0',lineHeight:1.8,marginBottom:12 }}>{para}</div>
+                ))}
+              </>
+            ) : (
+              <div style={{ color:'#5A5F74',fontSize:11,marginTop:40,textAlign:'center' }}>Select an entry to read.</div>
+            )}
+          </div>
+        </div>
+        <div style={{ padding:'8px 18px',borderTop:'1px solid #1C1C26',fontSize:9,color:'#5A5F74' }}>[C] or [ESC] to close</div>
+      </div>
+    </div>
+  );
+}
+
 function StarWarsRPG() {
   const [planetId, setPlanetId] = useState('coruscant');
   const [zoneId, setZoneId] = useState('spaceport');
@@ -1195,7 +1693,13 @@ function StarWarsRPG() {
   const [pos, setPos] = useState({ x: 14, y: 10 });
   const [facing, setFacing] = useState(1);
   const [credits, setCredits] = useState(340);
-  const [inventory, setInventory] = useState(['Comlink', 'Field Rations']);
+  const [inventory, setInventory] = useState([
+    { id: 'comlink',       name: 'Comlink',       type: 'gear',       iconKind: 'tool',   qty: 1, value: 0,  description: "Standard-issue encrypted comlink. Jon's frequency is already stored." },
+    { id: 'field_rations', name: 'Field Rations', type: 'consumable', iconKind: 'supply', qty: 2, value: 5,  description: 'Compressed nutrient bars. Tasteless. Effective.' },
+  ]);
+  const [codex, setCodex] = useState([]);
+  const [showInventory, setShowInventory] = useState(false);
+  const [showCodex, setShowCodex] = useState(false);
   const [collectedItems, setCollectedItems] = useState(() => new Set());
   const [completedInteractions, setCompletedInteractions] = useState(() => new Set());
   const [alignment, setAlignment] = useState({ morality: 0, loyalty: { republic: 0, sithEmpire: 0, underworld: 0 } });
@@ -1213,6 +1717,17 @@ function StarWarsRPG() {
   }, []);
 
   const setFlag = useCallback((key) => setQuestFlags((prev) => ({ ...prev, [key]: true })), []);
+
+  const addItem = useCallback((itemDef) => setInventory(prev => {
+    const ex = prev.find(i => i.id === itemDef.id);
+    if (ex) return prev.map(i => i.id === itemDef.id ? { ...i, qty: (i.qty || 1) + 1 } : i);
+    return [...prev, { ...itemDef, qty: 1 }];
+  }), []);
+
+  const unlockCodex = useCallback((entry) => setCodex(prev => {
+    if (prev.find(e => e.id === entry.id)) return prev;
+    return [...prev, { ...entry, unread: true }];
+  }), []);
 
   const travelToZone = useCallback((targetZoneId, targetPos) => {
     setTransitioning(true);
@@ -1288,13 +1803,17 @@ function StarWarsRPG() {
     }));
     if (choice.grants?.credits) setCredits((c) => c + choice.grants.credits);
     if (choice.grants?.flags) choice.grants.flags.forEach((f) => setFlag(f));
+    if (choice.grants?.items) choice.grants.items.forEach(id => { if (ITEMS[id]) addItem(ITEMS[id]); });
+    if (choice.grants?.codex) choice.grants.codex.forEach(id => { if (CODEX_ENTRIES[id]) unlockCodex(CODEX_ENTRIES[id]); });
     pushActionLog(choice.result, zoneId);
     setActiveDialogue(null);
-  }, [zoneId, pushActionLog, setFlag]);
+  }, [zoneId, pushActionLog, setFlag, addItem, unlockCodex]);
 
   useEffect(() => {
     const handleKey = (e) => {
-      if (showTravel || activeDialogue || transitioning || showSpeeder) return;
+      if (showTravel || activeDialogue || transitioning || showSpeeder || showInventory || showCodex) return;
+      if (e.key === 'i' || e.key === 'I') { setShowInventory(v => !v); return; }
+      if (e.key === 'c' || e.key === 'C') { setShowCodex(v => !v); return; }
       let { x, y } = pos;
       let newFacing = facing;
       if (e.key === 'w' || e.key === 'ArrowUp') y -= 1;
@@ -1343,6 +1862,12 @@ function StarWarsRPG() {
         const alreadySeen = worldObjHere.once && completedInteractions.has(worldObjHere.id);
         if (!alreadySeen) {
           pushActionLog(`[${worldObjHere.label}] ${worldObjHere.description}`, zoneId);
+          if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) {
+            addItem(ITEMS[worldObjHere.grantsItem]);
+            pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId);
+          }
+          if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
+          if (worldObjHere.grantsFlag) setFlag(worldObjHere.grantsFlag);
           if (worldObjHere.once) setCompletedInteractions((prev) => new Set([...prev, worldObjHere.id]));
         }
         setPos({ x, y });
@@ -1351,16 +1876,17 @@ function StarWarsRPG() {
 
       const collectible = zone.collectibles?.find(c => c.x === x && c.y === y && !collectedItems.has(c.id));
       if (collectible) {
-        setCredits((c) => c + collectible.reward);
+        if (collectible.reward > 0) setCredits((c) => c + collectible.reward);
         setCollectedItems((prev) => new Set([...prev, collectible.id]));
-        pushActionLog(`${collectible.label}. (+${collectible.reward} credits)`, zoneId);
+        if (collectible.grantsItem && ITEMS[collectible.grantsItem]) { addItem(ITEMS[collectible.grantsItem]); pushActionLog(`${collectible.label}. Acquired: ${ITEMS[collectible.grantsItem].name}`, zoneId); }
+        else pushActionLog(`${collectible.label}.${collectible.reward > 0 ? ` (+${collectible.reward} credits)` : ''}`, zoneId);
       }
 
       setPos({ x, y });
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, questFlags, npcPositions, collectedItems, completedInteractions, pushActionLog, travelToZone]);
+  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, showInventory, showCodex, questFlags, npcPositions, collectedItems, completedInteractions, pushActionLog, travelToZone, addItem, unlockCodex, setFlag]);
 
   const camX = Math.max(0, Math.min(zone.width - VIEWPORT_COLS, pos.x - Math.floor(VIEWPORT_COLS / 2)));
   const camY = Math.max(0, Math.min(zone.height - VIEWPORT_ROWS, pos.y - Math.floor(VIEWPORT_ROWS / 2)));
@@ -1481,9 +2007,20 @@ function StarWarsRPG() {
           <AlignmentPanel alignment={alignment} />
         </div>
         <div style={{ flex:'1 1 150px',border:'1px solid #24242E',padding:10 }}>
-          <div style={{ fontSize:10,color:'#5A5F74',marginBottom:8 }}>inventory</div>
+          <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8 }}>
+            <div style={{ fontSize:10,color:'#5A5F74' }}>inventory</div>
+            <div style={{ display:'flex',gap:6 }}>
+              <div onClick={() => setShowInventory(true)} style={{ fontSize:9,padding:'2px 6px',border:'1px solid #4ACDFF44',color:'#4ACDFF',cursor:'pointer' }}>[I]</div>
+              <div onClick={() => setShowCodex(true)} style={{ fontSize:9,padding:'2px 6px',border:`1px solid ${codex.some(e => e.unread)?'#E8C97A':'#44443A'}`,color:codex.some(e => e.unread)?'#E8C97A':'#6A6F84',cursor:'pointer',position:'relative' }}>
+                [C]{codex.filter(e => e.unread).length > 0 && <span style={{ position:'absolute',top:-4,right:-4,background:'#E8C97A',color:'#0A0A12',fontSize:8,borderRadius:'50%',width:12,height:12,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700 }}>{codex.filter(e => e.unread).length}</span>}
+              </div>
+            </div>
+          </div>
           {inventory.map((item, i) => (
-            <div key={i} style={{ fontSize:11,padding:'3px 0',borderBottom:i<inventory.length-1?'1px solid #1C1C26':'none',color:'#A8ADC0' }}>{item}</div>
+            <div key={item.id} style={{ fontSize:11,padding:'3px 0',borderBottom:i<inventory.length-1?'1px solid #1C1C26':'none',color:'#A8ADC0',display:'flex',justifyContent:'space-between' }}>
+              <span>{item.name}</span>
+              {item.qty > 1 && <span style={{color:'#E8C97A',fontSize:10}}>x{item.qty}</span>}
+            </div>
           ))}
         </div>
         <div style={{ flex:'2 1 260px',border:'1px solid #24242E',padding:10,maxHeight:160,overflowY:'auto' }}>
@@ -1500,8 +2037,10 @@ function StarWarsRPG() {
         </div>
       )}
       {showTravel && <TravelOverlay currentPlanetId={planetId} credits={credits} onTravel={travelToPlanet} onClose={() => setShowTravel(false)} />}
-      {activeDialogue && <DialogueOverlay npc={activeDialogue} onChoose={resolveChoice} />}
+      {activeDialogue && <DialogueOverlay npc={activeDialogue} onChoose={resolveChoice} inventory={inventory} questFlags={questFlags} />}
       {showSpeeder && <SpeederOverlay credits={credits} questFlags={questFlags} currentZoneId={zoneId} onTravel={(dest) => { setCredits((c) => c - dest.cost); setShowSpeeder(false); travelToZone(dest.targetZone, dest.targetPos); }} onClose={() => setShowSpeeder(false)} />}
+      {showInventory && <InventoryOverlay inventory={inventory} onClose={() => setShowInventory(false)} />}
+      {showCodex && <CodexOverlay codex={codex} setCodex={setCodex} onClose={() => setShowCodex(false)} />}
     </div>
   );
 }
