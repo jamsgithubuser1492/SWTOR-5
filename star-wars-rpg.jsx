@@ -461,27 +461,95 @@ const PLANETS = {
         decor: ['pillar', 'neon_sign', 'brazier', 'archive'],
         doors: [],
         worldObjects: [
+          { id: 'jon_arrival_comlink', x: 5, y: 13, once: true, label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
           { id: 'sky_market_terminal', x: 20, y: 7, once: false, label: 'Trade Exchange Terminal', description: 'Live credit-transfer rates across fourteen systems. One manifest flagged for anomalous routing: SCYLLA FREIGHT. Destination: redacted. Shipper: redacted.' },
           { id: 'csf_bulletin', x: 28, y: 14, once: false, label: 'CSF Bulletin Board', description: 'Three active investigations listed. Two marked classified. The third — Cargo Anomaly / Bay 14 — shows status: CLOSED. Filed by: Vane, T. Closure date: two days after the incident.' },
+          { id: 'lounge_bar_terminal', x: 5, y: 5, once: false, label: 'Lounge Drink Terminal', description: 'A rotating holographic menu. Thirty-seven varieties of exotic spirits from fourteen systems. One local special listed as "Bay 14 Blend." Whoever named it has a sense of humor or information you do not.' },
+          { id: 'lounge_private_booth', x: 9, y: 8, once: true, label: 'Occupied Booth', description: 'Two figures in grey coats sit with their backs to the room. Neither is drinking. Both are watching the exit. Iron Syndicate field observers — if they recognize you, they will report your presence at the lounge to Vex.', grantsFlag: 'syndicate_watchers_seen', grantsCodex: 'codex-iron-syndicate' },
+          { id: 'lounge_datapad', x: 3, y: 9, once: true, label: 'Left Behind Datapad', description: 'Encrypted but partially readable. Credit transfers totaling 840,000 credits routed through three shell corporations to a Coruscant financial account. The destination account number matches one field on the Scylla manifest.', grantsFlag: 'credit_trail_found' },
+          { id: 'precinct_evidence_locker', x: 29, y: 6, once: false, label: 'Evidence Locker — Bay 14', description: "CASE STATUS: CLOSED. PRIMARY EVIDENCE: destroyed in dock fire. PHYSICAL SAMPLES: none recovered. WITNESS STATEMENTS: sealed under Senate Directive 1182-C. The locker is padlocked with a standard CSF code seal. Vane's name is on the closure authorization." },
+          { id: 'precinct_comms_station', x: 33, y: 5, once: false, label: 'CSF Dispatch Station', description: 'Twelve active patrol frequencies. Six are handling routine traffic violations. Five are static. One — Sector 4 Channel B — is broadcasting a continuous loop: "All units stand by. Sector 4 incident classified pending Senate review."' },
+          { id: 'precinct_wanted_board', x: 29, y: 9, once: false, label: 'Sector 4 Active Warrants Board', description: 'Fourteen open warrants. Nine are standard Black Sun identifiers. Four are listed as CLASSIFIED with Senate clearance required to view. The fifteenth entry — Bay 14 strike team — shows status: SUSPENDED. Effective date: two days after the incident.' },
           { id: 'airtaxi_sky_market', x: 35, y: 20, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Departs on demand.' },
         ],
         npcs: [
           { id: 'marlo_sky', x: 6, y: 7, kind: 'broker', label: '"Slick" Marlo',
-            repeatPrompt: 'Marlo watches you with one eye over his glass. The offer is still on the table.',
             prompt: 'He does not look up from his drink. "You have the look of someone who wandered three hundred levels off course. Give me one reason I should not have my guard droids show you the long way down."',
-            choices: [
-              { text: 'Lay the Scylla manifest on the table. "Because I know what came off Bay 14."', morality: -5, loyalty: { underworld: 15 }, requires: { item: 'stolen_manifest' }, result: 'He leans forward. The bored expression drops. "That alloy is going to Level 005. Someone is building armor down there. Combat-grade. Phrik-plated." He names a buyer.', grants: { items: ['buyers_id'], flags: ['marlo_sky_talked'], codex: ['codex-iron-syndicate'] } },
-              { text: '"Jon sends his regards. We have a mutual interest in the Bay 14 shipment."', morality: -3, loyalty: { underworld: 8 }, result: 'He studies you. "Jon is careful about who he vouches for. Sit down. This conversation just became interesting."', grants: { flags: ['marlo_sky_intro'] } },
-              { text: '"Step aside. I have business with the CSF precinct across the promenade."', morality: 8, loyalty: { republic: 5 }, result: 'He raises an eyebrow. "Bold choice. Enjoy the view from the precinct lockup." He turns back to his drink.' },
+            repeatPrompt: 'Marlo is watching the exits. His glass stays full.',
+            phases: [
+              {
+                id: 'phase_intro',
+                requiresAllFlags: [],
+                prompt: 'He does not look up from his drink. "You have the look of someone who wandered three hundred levels off course. Give me one reason I should not have my guard droids show you the long way down."',
+                repeatPrompt: 'Marlo is watching the exits. His glass stays full.',
+                choices: [
+                  { text: 'Lay the Scylla manifest on the table. "Because I know what came off Bay 14."', morality: -5, loyalty: { underworld: 15 }, requires: { item: 'stolen_manifest' }, result: 'He leans forward. The bored expression drops. "That alloy is going to Level 005. Someone is building armor down there. Combat-grade. Phrik-plated." He names a buyer. You gain the Buyer\'s Encrypted ID.', grants: { items: ['buyers_id'], flags: ['marlo_sky_talked'], codex: ['codex-iron-syndicate'] } },
+                  { text: '"Jon sends his regards. We have a mutual interest in the Bay 14 shipment."', morality: -3, loyalty: { underworld: 8 }, result: 'He studies you. "Jon is careful about who he vouches for. Sit down. This conversation just became interesting." He does not commit — but he does not call the droids either.', grants: { flags: ['marlo_sky_intro'] } },
+                  { text: '"Step aside. I have business with the CSF precinct across the promenade."', morality: 8, loyalty: { republic: 5 }, result: 'He raises an eyebrow. "Bold choice. Enjoy the view from the precinct lockup." He turns back to his drink.' },
+                ],
+              },
+              {
+                id: 'phase_warmed',
+                requiresAllFlags: ['marlo_sky_intro'],
+                requiresNoneFlags: ['marlo_sky_talked'],
+                prompt: '"Jon vouches. That is something. But vouching is not evidence, and I deal in evidence. You want in on this conversation, you bring me something with teeth."',
+                repeatPrompt: 'Marlo has one eye on you, one on the promenade. He is always measuring something.',
+                choices: [
+                  { text: 'Show him the Scylla manifest. "This has teeth."', morality: -5, loyalty: { underworld: 15 }, requires: { item: 'stolen_manifest' }, result: '"Now we are talking. That alloy is earmarked for The Works, Level 005. The buyer is moving fast. You want the name — you work with me on a distribution problem first." He slides you the Buyer\'s ID. "The Iron Syndicate is the real prize here. Everything else is noise."', grants: { items: ['buyers_id'], flags: ['marlo_sky_talked'], codex: ['codex-iron-syndicate'] } },
+                  { text: '"What distribution problem?"', morality: 0, loyalty: { underworld: 5 }, result: '"Black Sun controls the transit lifts on Levels 1100 to 1300. If I cannot move cargo through that corridor, my entire network stalls. Rook is the problem. You might be the solution." He refills his glass.', grants: { flags: ['marlo_rook_hinted'] } },
+                  { text: '"I am not your fixer. I want the buyer\'s name first."', morality: 0, loyalty: {}, result: '"Names cost trust. Trust costs time. Come back when you have both." He is not angry. He is patient. That is somehow worse.' },
+                ],
+              },
+              {
+                id: 'phase_partner',
+                requiresAllFlags: ['marlo_sky_talked'],
+                prompt: '"The Buyer\'s ID points to a Senate financial sub-account. Someone very senior is very nervous. The alloy is already in transit to Level 005. If you can get to Vex before the crucible fires, you can intercept the entire shipment." He leans back. "Or you work the Senate angle. Your call."',
+                repeatPrompt: 'Marlo is reading a credit ticker on his personal display. He speaks without looking up. "The timer on that crucible is not decorative."',
+                choices: [
+                  { text: '"Tell me everything you know about the Iron Syndicate\'s operation in The Works."', morality: -3, loyalty: { underworld: 10 }, result: '"Three levels of Syndicate security. Plasma channels that double as kill corridors. And a droid archivist that the Syndicate left running by accident — 7-N4. It knows things its masters do not realize it knows."', grants: { flags: ['works_briefed_by_marlo'], codex: ['codex-iron-syndicate'] } },
+                  { text: '"What is your cut of this, Marlo?"', morality: 0, loyalty: {}, result: '"Territory. Not credits. If the Syndicate falls, the mid-level freight routes open up. I get the lanes. You get the glory. Everybody wins." He means every word.', grants: { flags: ['marlo_terms_known'] } },
+                ],
+              },
             ],
           },
           { id: 'vane_sky', x: 30, y: 7, kind: 'republic_guard', label: 'Officer Vane',
-            repeatPrompt: 'Vane watches the promenade traffic. His hand stays near his weapon.',
             prompt: 'He is reviewing a holographic flight manifest when you approach. "This precinct is not a tourist stop. State your business or clear the promenade."',
-            choices: [
-              { text: 'Place the Scylla manifest on his holo-table. "Bay 14 was not an accident."', morality: 15, loyalty: { republic: 15 }, requires: { item: 'stolen_manifest' }, result: '"This confirms Phrik alloy logged under false Senate credentials. Inside job." His expression hardens. "Take this CSF Auxiliary Pass. Get into Sector 4 and pull names. Report back to me directly. Welcome aboard, Auxiliary."', grants: { items: ['csf_aux_pass'], flags: ['vane_sky_cooperated', 'republic_path_open'], codex: ['codex-csf-protocol'] } },
-              { text: '"I want to join the CSF. Formally. Whatever the fast track looks like."', morality: 12, loyalty: { republic: 12 }, result: '"You do not join the CSF by walking into a precinct. But I can sponsor an Auxiliary Corps application. Come back when you have evidence to back it up. Then we talk."', grants: { flags: ['vane_sky_intro'] } },
-              { text: '"I am looking into the Bay 14 raid. Freelance."', morality: 0, loyalty: {}, result: '"Freelance investigators are not sanctioned by the Republic. If you find anything relevant you will turn it over to this precinct. Understood?"' },
+            repeatPrompt: 'Vane watches the promenade traffic. His hand stays near his weapon.',
+            phases: [
+              {
+                id: 'phase_intro',
+                requiresAllFlags: [],
+                prompt: 'He is reviewing a holographic flight manifest when you approach. "This precinct is not a tourist stop. State your business or clear the promenade."',
+                repeatPrompt: 'Vane watches the promenade traffic. His hand stays near his weapon.',
+                choices: [
+                  { text: 'Place the Scylla manifest on his holo-table. "Bay 14 was not an accident."', morality: 15, loyalty: { republic: 15 }, requires: { item: 'stolen_manifest' }, result: '"This confirms Phrik alloy logged under false Senate credentials. Inside job." His expression hardens. "Take this CSF Auxiliary Pass. Get into Sector 4 and pull names. Report back to me directly." He pauses. "Welcome aboard, Auxiliary."', grants: { items: ['csf_aux_pass'], flags: ['vane_sky_cooperated', 'republic_path_open'], codex: ['codex-csf-protocol'] } },
+                  { text: '"I want to join the CSF. Formally. Whatever the fast track looks like."', morality: 12, loyalty: { republic: 12 }, result: '"You do not join the CSF by walking into a precinct on the promenade. But I can sponsor an Auxiliary Corps application. Come back when you have evidence to back it up. Then we talk."', grants: { flags: ['vane_sky_intro'] } },
+                  { text: '"I am looking into the Bay 14 raid. Freelance."', morality: 0, loyalty: {}, result: '"Freelance investigators are not sanctioned by the Republic. If you find anything relevant you will turn it over to this precinct. Understood?" He returns to his manifest without waiting for an answer.', grants: { flags: ['vane_sky_intro'] } },
+                  { text: 'Say nothing and leave.', morality: 0, loyalty: {}, result: 'He does not acknowledge your departure.' },
+                ],
+              },
+              {
+                id: 'phase_returned',
+                requiresAllFlags: ['vane_sky_intro'],
+                requiresNoneFlags: ['vane_sky_cooperated'],
+                prompt: '"You came back. I noted that." He sets his manifest aside. "Most people who come to a CSF precinct on business do not return once I turn them away. That tells me something. What changed?"',
+                repeatPrompt: 'He is watching you now. Not the promenade. You.',
+                choices: [
+                  { text: 'Present the Scylla manifest. "I found what you need."', morality: 15, loyalty: { republic: 15 }, requires: { item: 'stolen_manifest' }, result: 'He takes the manifest and reads it in silence. The promenade noise drops away. "Inside job. Senate-level clearance codes. This is not Black Sun — this is someone with real authority." He stands. "Auxiliary Corps. Provisional commission. Take this pass and get into Sector 4. Names, dates, chain of custody. Everything." A beat. "Do not make me regret this."', grants: { items: ['csf_aux_pass'], flags: ['vane_sky_cooperated', 'republic_path_open'], codex: ['codex-csf-protocol'] } },
+                  { text: '"I know who owns the Bay 14 alloy. But I need a Republic guarantee first."', morality: 5, loyalty: { republic: 5 }, result: '"A guarantee of what?" His eyes narrow. "If you are negotiating immunity for a contact, I need to know the contact\'s name and their exposure before I can commit to anything. I am not in the business of blank pardons."', grants: { flags: ['vane_negotiation_started'] } },
+                  { text: '"I changed my mind. I am not ready to work with the Republic."', morality: 0, loyalty: {}, result: '"Then do not take up my time." He picks up his manifest. But he does not tell you to leave. The offer is still open.' },
+                ],
+              },
+              {
+                id: 'phase_cooperating',
+                requiresAllFlags: ['vane_sky_cooperated'],
+                prompt: '"Sector 4 is the priority. Every hour we wait, the evidence chain degrades. I need a name attached to those Senate clearance codes before the Iron Syndicate buries this deeper."',
+                repeatPrompt: '"Sector 4. Every hour matters, Auxiliary."',
+                choices: [
+                  { text: '"What happens when we get the name?"', morality: 5, loyalty: { republic: 8 }, result: '"We build a file. A proper one. Chain of custody, witness testimony, physical evidence. When it goes to a Senate tribunal, it has to be bulletproof. One procedural error and whoever signed those codes walks free." He taps his badge. "That is not happening on my watch."', grants: { flags: ['vane_procedure_explained'] } },
+                  { text: '"If this goes wrong in Sector 4, what backup do I have?"', morality: 8, loyalty: { republic: 8 }, result: '"Officially, none. Unofficially, I have two units on standby at Level 1088 Outpost. If you light the emergency beacon on your pass, they respond within four minutes." He pauses. "Try not to need them."', grants: { flags: ['vane_backup_revealed'] } },
+                ],
+              },
             ],
           },
           { id: 'promenade_vendor', x: 20, y: 15, kind: 'cantina_owner', label: 'Promenade Vendor Oska',
@@ -536,7 +604,7 @@ const PLANETS = {
               { text: '"I know you were in the shaft. Tell me what you saw or I will tell them you were."', morality: -15, loyalty: { underworld: 12 }, result: 'His jaw tightens. "You are going to fit right in around here." He tells you what he saw.', grants: { flags: ['jax_intimidated', 'freight_hub_investigated'] } },
             ],
           },
-          { id: 'kaelen_freight', x: 6, y: 22, kind: 'swoop_gang', label: 'Kaelen',
+          { id: 'kaelen_freight', x: 6, y: 22, kind: 'swoop_gang', label: 'Kaelen "Breaker" Voss',
             repeatPrompt: 'Kaelen is tinkering with his swoop\'s repulsor coils.',
             prompt: '"Your business does not belong down here. Mine does. Those are different things."',
             choices: [
@@ -1683,6 +1751,24 @@ function CodexOverlay({ codex, setCodex, onClose }) {
   );
 }
 
+function resolveDialoguePhase(npc, questFlags) {
+  if (!npc.phases || npc.phases.length === 0) return npc;
+  let active = npc.phases[0];
+  for (const phase of npc.phases) {
+    const allMet = (phase.requiresAllFlags || []).every(f => questFlags[f]);
+    const noneMet = !(phase.requiresNoneFlags || []).some(f => questFlags[f]);
+    const anyMet = !phase.requiresAnyFlag || phase.requiresAnyFlag.some(f => questFlags[f]);
+    if (allMet && noneMet && anyMet) active = phase;
+  }
+  return {
+    ...npc,
+    prompt: active.prompt ?? npc.prompt,
+    choices: active.choices ?? npc.choices,
+    repeatPrompt: active.repeatPrompt ?? npc.repeatPrompt,
+    _activePhaseId: active.id,
+  };
+}
+
 function StarWarsRPG() {
   const [planetId, setPlanetId] = useState('coruscant');
   const [zoneId, setZoneId] = useState('spaceport');
@@ -1845,11 +1931,16 @@ function StarWarsRPG() {
           if (!questFlags.speeder_transit_unlocked) { pushActionLog('RESTRICTED TRANSIT: Sector clearance pass required.', zoneId); setPos({ x, y }); return; }
           setShowSpeeder(true); setPos({ x, y }); return;
         }
-        if (completedInteractions.has(npcHere.id) && !npcHere.repeatable) {
-          pushActionLog(npcHere.repeatPrompt || `${npcHere.label} nods but says nothing new.`, zoneId);
+        const resolvedNpc = resolveDialoguePhase(npcHere, questFlags);
+        const interactionKey = resolvedNpc._activePhaseId
+          ? resolvedNpc.id + ':' + resolvedNpc._activePhaseId
+          : resolvedNpc.id;
+        if (completedInteractions.has(interactionKey) && !resolvedNpc.repeatable) {
+          pushActionLog(resolvedNpc.repeatPrompt || `${resolvedNpc.label} nods but says nothing new.`, zoneId);
           return;
         }
-        setActiveDialogue(npcHere);
+        setCompletedInteractions((prev) => new Set([...prev, interactionKey]));
+        setActiveDialogue(resolvedNpc);
         return;
       }
 
