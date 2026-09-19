@@ -690,8 +690,10 @@ const PLANETS = {
           carveRect(g, 30, 14, 38, 22, 'wall');
           carveRect(g, 31, 15, 37, 21, 'floor');
           pt(g, 30, 18, 'floor');
+          pt(g, 20, 10, 'floor');
           carveRect(g, 37, 4, 39, 8, 'wall');
           carveRect(g, 38, 5, 38, 7, 'floor');
+          pt(g, 37, 6, 'floor');
           return g;
         },
       },
