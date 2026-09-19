@@ -471,6 +471,15 @@ const PLANETS = {
           { id: 'precinct_comms_station', x: 33, y: 5, once: false, label: 'CSF Dispatch Station', description: 'Twelve active patrol frequencies. Six are handling routine traffic violations. Five are static. One — Sector 4 Channel B — is broadcasting a continuous loop: "All units stand by. Sector 4 incident classified pending Senate review."' },
           { id: 'precinct_wanted_board', x: 29, y: 9, once: false, label: 'Sector 4 Active Warrants Board', description: 'Fourteen open warrants. Nine are standard Black Sun identifiers. Four are listed as CLASSIFIED with Senate clearance required to view. The fifteenth entry — Bay 14 strike team — shows status: SUSPENDED. Effective date: two days after the incident.' },
           { id: 'airtaxi_sky_market', x: 35, y: 20, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Departs on demand.' },
+          { id: 'skyline_vista', x: 19, y: 1, once: false, label: 'Promenade Skyline Overlook', description: 'The promenade edge opens onto open air and three thousand meters of vertical city. Speeders stream in tight formation lanes. Above: the Senate dome, catching the last reflected light from the planet\'s artificial sun cycle. Below: nothing visible. The lower levels begin where the light stops.',
+            worldStateVariant: {
+              lawful: 'The view from the law: the Republic\'s skyline, lit and ordered, everything it protects visible from one glance. The lower levels are down there somewhere, past the point where the light gives up.',
+              underworld: 'The view from the other side: that Senate dome is where the authorization codes came from. Everything clean and lit up top, everything complicated below. You are already on the wrong level for clean.',
+            },
+          },
+          { id: 'holonet_kiosk', x: 14, y: 14, once: false, label: 'HoloNet News Kiosk', description: '[HNN — PRIORITY FEED] "The Coruscant Port Authority today confirmed that a routine fuel-line incident at Sub-Surface Docking Bay 14 has been fully resolved. Port Director Hadras stated that all cargo logs were destroyed in the secondary fire, consistent with standard emergency protocol. Senate Commerce Committee Chair confirmed there is no active investigation." The kiosk screen cycles to a weather advisory. Coruscant does not have weather.' },
+          { id: 'lounge_corner_conversation', x: 7, y: 9, once: true, label: 'Overheard Corner Table', description: 'Two men in expensive suits are speaking just below audible. One places a datacard on the table. The other shakes his head. The first slides it closer. The second looks out the window for a long moment, then pockets it. Neither man acknowledges that you passed. The datacard is gone.', grantsFlag: 'corner_deal_witnessed' },
+          { id: 'promenade_patrol_log', x: 24, y: 18, once: false, label: 'CSF Patrol Route Terminal', description: 'A public-facing transit safety board maintained by the CSF. Patrol schedule for Sector 4: suspended pending Senate review. Patrol schedule for Sky-Market Promenade: reduced to single-officer rotating shift. The reduction took effect two days after the Bay 14 incident. The authorization is signed: Vane, T.' },
         ],
         npcs: [
           { id: 'marlo_sky', x: 6, y: 7, kind: 'broker', label: '"Slick" Marlo',
@@ -558,6 +567,32 @@ const PLANETS = {
             choices: [
               { text: 'Ask about the men in grey coats on the promenade.', morality: 0, loyalty: {}, result: '"Grey coats? I know the ones. They spend credits like they have too many of them. Never buy food. Always watching the transit lifts."', grants: { codex: ['codex-iron-syndicate'] } },
               { text: 'Buy a bottle of Corellian Reserve.', morality: 0, loyalty: { underworld: 2 }, result: 'She produces a bottle from under the cart without a word. "Sixty credits. Do not tell anyone where you got it."', grants: { items: ['item_brandy'] } },
+            ],
+          },
+          { id: 'bith_rumor_broker', x: 8, y: 5, kind: 'bith', label: 'Korvin — Information Broker', mobile: true,
+            repeatPrompt: 'Korvin taps his dome-shaped skull rhythmically. He is processing something. Or composing.',
+            prompt: '"Sound carries further than people assume at this altitude. I have excellent hearing. I sell what I hear. Thirty credits per item. Or you tell me something interesting and I reciprocate."',
+            choices: [
+              { text: 'Pay thirty credits for local intelligence. "What do you know about Bay 14?"', morality: 0, loyalty: {}, result: '"The official story is a dock fire. My ears say otherwise. Fourteen grey coats with Republic clearance codes walked a Phrik shipment out of a sealed dock while the alarms were looped. Two dock hands disappeared that night. One resurfaced on Level 1100. Ask for Rook."', grants: { flags: ['bith_intel_purchased'], codex: ['codex-docking-bay-14'] } },
+              { text: 'Offer information in trade. "The Syndicate has observers in the lounge right now."', morality: 0, loyalty: {}, result: '"I know. I told them where to sit for the best sightlines." He pauses. "I work for everyone. That is how I survive. But I will tell you this for free — the one they are watching is not you. Not yet."', grants: { flags: ['bith_exchange_done'] } },
+              { text: 'Ask him about Marlo.', morality: -2, loyalty: { underworld: 3 }, result: '"Marlo? Brilliant man. Paranoid man. He once had a business rival\'s ship impounded for six months over a missing cargo seal. The cargo seal was not missing. It was Marlo. He makes patience look like aggression."' },
+            ],
+          },
+          { id: 'lounge_patron', x: 4, y: 7, kind: 'cantina_owner', label: 'High-Society Patron Sevra', mobile: false,
+            repeatPrompt: 'Sevra swirls her glass and watches the promenade through the lounge window. She has opinions.',
+            prompt: 'She glances at you sideways. "You do not look like someone with a Sky-Market Exchange account. Are you lost, or are you one of those investigators the Senate keeps sending down here to pretend they care?"',
+            choices: [
+              { text: '"I am looking into a cargo irregularity. Discreetly."', morality: 5, loyalty: {}, result: '"Discreet. From a person who just walked into the most visible bar on Level 1450." She sets down her glass. "The irregularity you mean closed two months ago. Officially. Someone very senior wanted it closed. Everyone on this promenade knows. Nobody says it."', grants: { flags: ['sevra_hinted'] } },
+              { text: '"What is the Bay 14 Blend, exactly?"', morality: 0, loyalty: {}, result: '"That is what we call dark humor around here. The barkeep invented it after the dock fire. Named it before the CSF closed the case. He knew the fire story was false. We all did." She finishes her drink. "It tastes like something burning that should not be burning."' },
+            ],
+          },
+          { id: 'senate_aide_promenade', x: 22, y: 13, kind: 'mechanic', label: 'Senate Aide Parvus', mobile: true,
+            repeatPrompt: 'Parvus is reviewing a datapad with the focused anxiety of someone who knows exactly how much trouble they are in.',
+            prompt: 'He nearly walks into you and flinches back. A Senate aide pin glints on his collar. "I am not here. Officially. If anyone asks, I was at a budget subcommittee hearing all afternoon."',
+            choices: [
+              { text: '"Who sent you down here?"', morality: 5, loyalty: { republic: 5 }, result: '"Nobody. I came voluntarily. Which is worse, legally." He glances over his shoulder. "The sub-account that cleared the Bay 14 cargo passes through my committee. I did not sign off on it. I do not know who did. I came here to find out and I am starting to wish I had not."', grants: { flags: ['senate_aide_met'], codex: ['codex-docking-bay-14'] } },
+              { text: '"If you know something about Bay 14, you should go directly to Officer Vane."', morality: 10, loyalty: { republic: 8 }, result: '"Vane?" He goes pale. "You think Vane is clean? The closure authorization on this case has his name on it. That could mean he was ordered to close it. Or it could mean something worse." He pockets his datapad. "I need to think about this more carefully."', grants: { flags: ['vane_ambiguous_hinted'] } },
+              { text: '"Say nothing. Take his datapad ID and walk away."', morality: -5, loyalty: { underworld: 5 }, result: 'He watches you go with the expression of someone calculating whether to report this or add it to the list of things they are pretending not to know.', grants: { flags: ['aide_id_noted'] } },
             ],
           },
         ],
@@ -1796,7 +1831,32 @@ function StarWarsRPG() {
   const [questFlags, setQuestFlags] = useState({});
   const [showSpeeder, setShowSpeeder] = useState(false);
   const [npcPositions, setNpcPositions] = useState({});
+  const [suspicionMeter, setSuspicionMeter] = useState(0);
+  const [choiceFeedback, setChoiceFeedback] = useState(null);
   const posRef = React.useRef(pos);
+
+  const worldState = React.useMemo(() => {
+    const repTotal = (questFlags.csf_duty_stance ? 1 : 0) + (questFlags.jaxxon_arrested ? 1 : 0)
+      + (questFlags.vane_record_commend ? 1 : 0) + (questFlags.jon_gone_straight_warned ? 1 : 0);
+    const uwTotal = (questFlags.inside_man_path ? 1 : 0) + (questFlags.jaxxon_deal ? 1 : 0)
+      + (questFlags.rook_eliminated ? 1 : 0) + (questFlags.marlo_sky_talked ? 1 : 0);
+    if (repTotal > uwTotal) return 'lawful';
+    if (uwTotal > repTotal) return 'underworld';
+    return 'neutral';
+  }, [questFlags]);
+
+  const currentObjective = React.useMemo(() => {
+    if (questFlags.senate_line_secured) return 'Arc complete. Return to the CSF Academy.';
+    if (questFlags.bomb_reached) return 'Neutralize the weapon on the Senate transit line.';
+    if (questFlags.sector4_raid_complete) return 'Pursue the Iron Syndicate to Level 005. Find Vex.';
+    if (questFlags.csf_training_complete) return 'Report to Vane at Sector 4 Freight Hub.';
+    if (questFlags.csf_briefed) return 'Complete all three training modules at the CSF Academy.';
+    if (questFlags.republic_path_open) return 'Travel to CSF Tactical Command, Level 1222.';
+    if (questFlags.marlo_sky_talked) return 'Follow the Phrik trail to Level 005. Reach The Works.';
+    if (questFlags.marlo_sky_intro || questFlags.vane_sky_intro) return 'Return to Sky-Market District with evidence from Bay 14.';
+    if (questFlags.met_jon_spaceport) return 'Locate the Scylla Freight manifest. Start at Docking Bay 14.';
+    return 'Find your way to Level 1450 — Sky-Market District.';
+  }, [questFlags]);
 
   const pushActionLog = useCallback((msg, zoneLabel) => {
     setActionLog((prev) => [{ text: msg, zone: zoneLabel || '' }, ...prev.slice(0, 49)]);
@@ -1879,16 +1939,34 @@ function StarWarsRPG() {
 
   const resolveChoice = useCallback((choice, npcId) => {
     setCompletedInteractions((prev) => new Set([...prev, npcId]));
+    const moralityDelta = choice.morality || 0;
+    const loyaltyDeltas = choice.loyalty || {};
     setAlignment((prev) => ({
-      morality: Math.max(-100, Math.min(100, prev.morality + choice.morality)),
+      morality: Math.max(-100, Math.min(100, prev.morality + moralityDelta)),
       loyalty: {
-        republic: Math.max(0, Math.min(100, prev.loyalty.republic + (choice.loyalty.republic || 0))),
-        sithEmpire: Math.max(0, Math.min(100, prev.loyalty.sithEmpire + (choice.loyalty.sithEmpire || 0))),
-        underworld: Math.max(0, Math.min(100, prev.loyalty.underworld + (choice.loyalty.underworld || 0))),
+        republic: Math.max(0, Math.min(100, prev.loyalty.republic + (loyaltyDeltas.republic || 0))),
+        sithEmpire: Math.max(0, Math.min(100, prev.loyalty.sithEmpire + (loyaltyDeltas.sithEmpire || 0))),
+        underworld: Math.max(0, Math.min(100, prev.loyalty.underworld + (loyaltyDeltas.underworld || 0))),
       },
     }));
+    const feedbackParts = [];
+    if (moralityDelta > 0) feedbackParts.push(`+${moralityDelta} LIGHT`);
+    else if (moralityDelta < 0) feedbackParts.push(`${moralityDelta} DARK`);
+    if (loyaltyDeltas.republic) feedbackParts.push(`${loyaltyDeltas.republic > 0 ? '+' : ''}${loyaltyDeltas.republic} REPUBLIC`);
+    if (loyaltyDeltas.underworld) feedbackParts.push(`${loyaltyDeltas.underworld > 0 ? '+' : ''}${loyaltyDeltas.underworld} UNDERWORLD`);
+    if (feedbackParts.length > 0) {
+      setChoiceFeedback(feedbackParts.join('  '));
+      setTimeout(() => setChoiceFeedback(null), 2800);
+    }
     if (choice.grants?.credits) setCredits((c) => c + choice.grants.credits);
-    if (choice.grants?.flags) choice.grants.flags.forEach((f) => setFlag(f));
+    if (choice.grants?.flags) {
+      choice.grants.flags.forEach((f) => {
+        setFlag(f);
+        if (f === 'deceiver_path') setSuspicionMeter(prev => Math.min(100, prev + 25));
+        if (f === 'vane_suspicious_raised') setSuspicionMeter(prev => Math.min(100, prev + 20));
+        if (f === 'jaxxon_deal') setSuspicionMeter(prev => Math.min(100, prev + 30));
+      });
+    }
     if (choice.grants?.items) choice.grants.items.forEach(id => { if (ITEMS[id]) addItem(ITEMS[id]); });
     if (choice.grants?.codex) choice.grants.codex.forEach(id => { if (CODEX_ENTRIES[id]) unlockCodex(CODEX_ENTRIES[id]); });
     pushActionLog(choice.result, zoneId);
@@ -1952,7 +2030,8 @@ function StarWarsRPG() {
         }
         const alreadySeen = worldObjHere.once && completedInteractions.has(worldObjHere.id);
         if (!alreadySeen) {
-          pushActionLog(`[${worldObjHere.label}] ${worldObjHere.description}`, zoneId);
+          const woDesc = worldObjHere.worldStateVariant?.[worldState] ?? worldObjHere.description;
+          pushActionLog(`[${worldObjHere.label}] ${woDesc}`, zoneId);
           if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) {
             addItem(ITEMS[worldObjHere.grantsItem]);
             pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId);
@@ -2083,6 +2162,12 @@ function StarWarsRPG() {
         </div>
       </div>
 
+      {choiceFeedback && (
+        <div style={{ position:'fixed',top:24,left:'50%',transform:'translateX(-50%)',zIndex:50,background:'rgba(4,4,8,0.92)',border:`1px solid ${zone.accentDim}`,padding:'6px 18px',fontSize:11,letterSpacing:'0.12em',color:zone.accent,pointerEvents:'none',animation:'door-pulse 0.4s ease-out' }}>
+          {choiceFeedback}
+        </div>
+      )}
+
       <div style={{ display:'flex',gap:10,flexWrap:'wrap',position:'relative',zIndex:2 }}>
         <div style={{ flex:'0 0 170px',border:'1px solid #24242E',padding:10,fontSize:11 }}>
           <div style={{ color:'#5A5F74',marginBottom:8,fontSize:10 }}>navigation</div>
@@ -2093,6 +2178,14 @@ function StarWarsRPG() {
             <div>zone: <span style={{color:zone.accent}}>{zone.id}</span></div>
             <div>pos: {pos.x},{pos.y}</div>
           </div>
+          {suspicionMeter > 0 && (
+            <div style={{ marginTop:8,borderTop:'1px solid #1C1C26',paddingTop:8 }}>
+              <div style={{ fontSize:9,color:'#E8A020',marginBottom:3 }}>SUSPICION</div>
+              <div style={{ height:4,background:'#1C1A12',borderRadius:2 }}>
+                <div style={{ height:'100%',width:`${suspicionMeter}%`,background: suspicionMeter > 60 ? '#FF4422' : '#E8A020',borderRadius:2,transition:'width 0.6s ease' }} />
+              </div>
+            </div>
+          )}
         </div>
         <div style={{ flex:'1 1 200px',border:'1px solid #24242E',padding:10 }}>
           <AlignmentPanel alignment={alignment} />
@@ -2119,6 +2212,11 @@ function StarWarsRPG() {
           {actionLog.map((entry, i) => (
             <div key={i} style={{ fontSize:11,color:i===0?zone.accent:'#6A6F84',padding:'2px 0',lineHeight:1.5 }}>{entry.text}</div>
           ))}
+        </div>
+        <div style={{ flex:'1 1 200px',border:`1px solid ${zone.accentDim}55`,padding:10,alignSelf:'flex-start' }}>
+          <div style={{ fontSize:9,color:'#5A5F74',marginBottom:6,letterSpacing:'0.08em' }}>ACTIVE OBJECTIVE</div>
+          <div style={{ fontSize:11,color:zone.accent,lineHeight:1.6 }}>{currentObjective}</div>
+          <div style={{ marginTop:8,fontSize:9,color:'#3A3F54' }}>world: <span style={{color: worldState==='lawful'?'#4A9FFF':worldState==='underworld'?'#FF3366':'#7A7F94'}}>{worldState}</span></div>
         </div>
       </div>
 
