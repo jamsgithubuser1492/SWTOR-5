@@ -1037,7 +1037,10 @@ const PLANETS = {
         floorColor: '#14100A', floorAlt: '#1C160E', wallDark: '#060402', wallLight: '#100C06',
         bg: 'radial-gradient(circle at 50% 80%, #140800 0%, #050302 70%)', ambient: 'embers',
         decor: ['pipe', 'girder', 'slag', 'rubble', 'brazier'],
-        doors: [],
+        doors: [
+          { x: 20, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 20, y: 1 }, label: 'Cooling Ducts' },
+          { x: 21, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 21, y: 1 }, label: 'Cooling Ducts' },
+        ],
         worldObjects: [
           { id: 'syndicate_cargo_cache', x: 18, y: 10, once: true, label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with a stylised iron chain. Inside: Phrik plating cut to pauldron dimensions, half-assembled combat chassis, and one empty Jedi archive canister. Someone opened it already.' },
           { id: 'plasma_conduit_005', x: 8, y: 18, once: false, label: 'Leaking Plasma Conduit', description: 'The pipe groans under pressure. A slow leak fills the air with acrid chemical haze. This entire sub-level is one spark away from a chain event.' },
@@ -1105,6 +1108,148 @@ const PLANETS = {
           carveRect(g, 3, 3, 7, 7, 'floor');
           pt(g, 5, 8, 'floor');
           pt(g, 15, 7, 'floor');
+          pt(g, 20, 23, 'door'); pt(g, 21, 23, 'door');
+          return g;
+        },
+      },
+      cooling_ducts: {
+        id: 'cooling_ducts', name: 'Cooling Ducts', subtitle: 'Coruscant · Undercity · L.005 Cooling Infrastructure',
+        width: 36, height: 26, spawnPos: { x: 20, y: 2 }, textureId: 'coruscant',
+        accent: '#40B8C0', accentGlow: 'rgba(64,184,192,0.2)', accentDim: '#1A5860',
+        floorColor: '#0E1416', floorAlt: '#141C1E', wallDark: '#040608', wallLight: '#0C1214',
+        bg: 'radial-gradient(circle at 50% 40%, #081214 0%, #040608 70%)', ambient: 'embers',
+        decor: ['pipe', 'girder', 'slag'],
+        doors: [
+          { x: 20, y: 0, targetZone: 'the_works', targetPos: { x: 20, y: 22 }, label: 'The Works' },
+          { x: 21, y: 0, targetZone: 'the_works', targetPos: { x: 21, y: 22 }, label: 'The Works' },
+          { x: 35, y: 13, targetZone: 'syndicate_command', targetPos: { x: 1, y: 13 }, label: 'Syndicate Command' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_cooling_ducts', x: 2, y: 13, label: 'AirTaxi Terminal', description: 'A terminal barely functional in the thermal haze. Emergency transit only.' },
+          { id: 'coolant_manifold', x: 10, y: 13, label: 'Coolant Manifold Junction', description: 'Superchilled gas hisses through cracked seals. The flow rate is wrong — someone has been bleeding coolant toward the smelter cores.' },
+          { id: 'duct_access_panel', x: 20, y: 18, once: true, label: 'Duct Access Panel', description: 'A maintenance crawl route into the syndicate warehouse. Wide enough for a person. The hinges are freshly oiled.', grantsFlag: 'duct_route_found' },
+          { id: 'frost_buildup_terminal', x: 6, y: 5, once: true, label: 'Frost-Coated Terminal', description: 'Temperature logs. The cooling system was deliberately throttled twelve days ago — precisely when the Iron Syndicate began the final stage of their armor production run.', grantsFlag: 'coolant_sabotage_confirmed', grantsCodex: 'codex-the-works-forges' },
+          { id: 'watcher_post', x: 26, y: 5, once: false, label: 'Observation Post', description: 'A crude sentry position overlooking the main duct junction. Scorch marks from a blaster. Someone held this position against something — or someone — coming from the south.' },
+        ],
+        npcs: [
+          { id: 'cooling_tech_ardis', x: 6, y: 7, kind: 'mechanic', label: 'Maintenance Tech Ardis',
+            prompt: '"The cooling systems are failing and nobody topside cares. If the thermal regulation collapses, the entire sub-level vaporizes. I cannot fix this alone."',
+            repeatPrompt: 'Ardis is rerouting coolant lines with improvised patches. The work is never done.',
+            choices: [
+              { text: '"Tell me what you know about the Iron Syndicate using this duct system."', morality: 5, loyalty: { republic: 8 }, result: '"They come through at second shift — always the same route, always twelve of them. They carry plating. Combat weight. Whoever they are building it for, it is not a sport."', grants: { flags: ['duct_syndicate_observed'] } },
+              { text: '"I will help stabilize the cooling flow. Point me to the valves."', morality: 10, loyalty: { republic: 5 }, result: '"The three main junctions are at sub-level four. I have a bypass rig but I cannot hold the pressure alone. If you can reach the east manifold, I can lock the rest."', grants: { flags: ['ardis_allied'] } },
+            ],
+          },
+          { id: 'syndicate_watcher_kael', x: 28, y: 7, kind: 'swoop_gang', label: 'Syndicate Watcher', mobile: true,
+            prompt: '"You are not supposed to be down here. Nobody is supposed to be down here."',
+            repeatPrompt: 'The watcher tracks your movement with cold professional attention.',
+            choices: [
+              { text: '"I am maintenance crew. Checking the thermal seals."', morality: -5, loyalty: { underworld: 5 }, result: '"Maintenance does not wear that look. Move along before I file a report."', grants: { flags: ['watcher_bluffed'] } },
+              { text: '"Stand down. CSF Auxiliary. Step away from the post."', morality: 8, loyalty: { republic: 10 }, result: 'He backs up two steps, hand near his weapon. He does not reach for it. "You have thirty seconds to get out of here before my relief arrives."', grants: { flags: ['watcher_backed_down'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'cooling_chip', x: 30, y: 20, label: 'Cryo-Canister Valve Cap', reward: 50 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 34, 24, 'floor');
+          carveRect(g, 1, 3, 10, 12, 'wall');
+          carveRect(g, 2, 4, 9, 11, 'floor');
+          pt(g, 5, 3, 'floor');
+          carveRect(g, 22, 3, 34, 12, 'wall');
+          carveRect(g, 23, 4, 33, 11, 'floor');
+          pt(g, 28, 3, 'floor');
+          carveRect(g, 12, 5, 12, 20, 'water');
+          carveRect(g, 20, 8, 20, 22, 'water');
+          pt(g, 20, 0, 'door'); pt(g, 21, 0, 'door');
+          pt(g, 35, 13, 'door');
+          return g;
+        },
+      },
+      syndicate_command: {
+        id: 'syndicate_command', name: 'Syndicate Command', subtitle: 'Coruscant · Undercity · Iron Syndicate Operations Hub',
+        width: 38, height: 26, spawnPos: { x: 2, y: 13 }, textureId: 'coruscant',
+        accent: '#C03030', accentGlow: 'rgba(192,48,48,0.2)', accentDim: '#601010',
+        floorColor: '#120A08', floorAlt: '#1A100E', wallDark: '#060202', wallLight: '#0E0806',
+        bg: 'radial-gradient(circle at 40% 60%, #160804 0%, #060202 70%)', ambient: 'embers',
+        decor: ['pipe', 'girder', 'slag', 'rubble'],
+        doors: [
+          { x: 0, y: 13, targetZone: 'cooling_ducts', targetPos: { x: 34, y: 13 }, label: 'Cooling Ducts' },
+          { x: 18, y: 25, targetZone: 'extraction_vault', targetPos: { x: 18, y: 1 }, label: 'Extraction Vault' },
+          { x: 19, y: 25, targetZone: 'extraction_vault', targetPos: { x: 19, y: 1 }, label: 'Extraction Vault' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_syndicate_command', x: 2, y: 13, label: 'AirTaxi Terminal', description: 'Syndicate-rigged transit terminal. The departure codes are wrong — it still works.' },
+          { id: 'command_data_terminal', x: 7, y: 5, once: true, label: 'Iron Syndicate Command Terminal', description: 'Active. Unencrypted. The Syndicate was confident nobody would reach this level. Shipping manifests, crew rotations, and one file simply labeled EXTRACTION TIMETABLE.', grantsFlag: 'syndicate_plans_found', grantsCodex: 'codex-iron-syndicate' },
+          { id: 'armory_rack', x: 28, y: 18, once: true, label: 'Syndicate Armory Rack', description: 'Phrik-composite pauldrons. Six sets, each sized for Republic-standard troopers. The Syndicate is not planning to sell this armor — they are equipping their own people to look like Republic soldiers.', grantsFlag: 'armor_ruse_discovered' },
+          { id: 'comm_relay_hub', x: 18, y: 13, once: false, label: 'Encrypted Comm Relay', description: 'Burst-transmitting on a Senate sub-frequency. The source is Level 1900. Someone very senior is listening to every operation report from this room.' },
+        ],
+        npcs: [
+          { id: 'syndicate_lt_braeven', x: 7, y: 7, kind: 'crime_boss', label: 'Lt. Braeven — Iron Syndicate',
+            prompt: '"You survived the cooling ducts. That is either impressive or a problem. I have not decided." He does not move for his weapon. A subordinate does that for him.',
+            repeatPrompt: 'Braeven has retreated to the back of the command room. His subordinates watch the door.',
+            choices: [
+              { text: '"Stand down. I know about the armor ruse. I know about the Senate contact. This ends here."', morality: 10, loyalty: { republic: 15 }, result: '"You know what you were allowed to know. The armor production is already complete. The extraction is already scheduled. You are three hours too late, officer."', grants: { flags: ['braeven_confronted', 'extraction_timetable_known'] } },
+              { text: '"I want in. The Senate contact, the armor, the full operation. Name your price."', morality: -15, loyalty: { underworld: 20 }, result: 'A long pause. "You have nerve. That is either rare or a trap. The vault below holds the final shipment. If you get it out without CSF interference, we split forty percent." He means it.', grants: { flags: ['braeven_deal', 'extraction_timetable_known'] } },
+              { text: '"Tell me where the prisoners are being held."', morality: 8, loyalty: { republic: 8 }, result: '"Prisoners? We do not keep prisoners. We keep leverage." He gestures south. "The vault. But you will not like what you find there."', grants: { flags: ['vault_location_confirmed'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'syndicate_command_chip', x: 32, y: 6, label: 'Iron Syndicate Access Chip', reward: 0 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 36, 24, 'floor');
+          carveRect(g, 1, 2, 14, 12, 'wall');
+          carveRect(g, 2, 3, 13, 11, 'floor');
+          pt(g, 7, 2, 'floor');
+          carveRect(g, 22, 14, 36, 24, 'wall');
+          carveRect(g, 23, 15, 35, 23, 'floor');
+          pt(g, 28, 14, 'floor');
+          carveRect(g, 18, 4, 18, 20, 'lava');
+          pt(g, 0, 13, 'door');
+          pt(g, 18, 25, 'door'); pt(g, 19, 25, 'door');
+          return g;
+        },
+      },
+      extraction_vault: {
+        id: 'extraction_vault', name: 'Extraction Vault', subtitle: 'Coruscant · Undercity · Iron Syndicate Secure Storage',
+        width: 36, height: 22, spawnPos: { x: 18, y: 2 }, textureId: 'coruscant',
+        accent: '#A04000', accentGlow: 'rgba(160,64,0,0.2)', accentDim: '#501800',
+        floorColor: '#100C08', floorAlt: '#180E0A', wallDark: '#050202', wallLight: '#0C0806',
+        bg: 'radial-gradient(circle at 50% 70%, #120800 0%, #050202 70%)', ambient: 'embers',
+        decor: ['pipe', 'girder', 'slag', 'rubble'],
+        doors: [
+          { x: 18, y: 0, targetZone: 'syndicate_command', targetPos: { x: 18, y: 24 }, label: 'Syndicate Command' },
+          { x: 19, y: 0, targetZone: 'syndicate_command', targetPos: { x: 19, y: 24 }, label: 'Syndicate Command' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_extraction_vault', x: 2, y: 10, label: 'AirTaxi Terminal', description: 'Emergency transit. The Syndicate kept an exit route. Of course they did.' },
+          { id: 'vault_main_door', x: 11, y: 10, once: true, label: 'Vault Main Door', description: 'Phrik-reinforced. A standard slicer rig will not touch it. But the magnetic coupling on the secondary hinge is corroded — a calibrated hydrospanner could shear it clean.', grantsFlag: 'vault_door_assessed' },
+          { id: 'vault_interior_cache', x: 18, y: 10, once: true, label: 'Syndicate Arms Cache', description: 'Twenty completed Phrik pauldrons. Six sets of Republic trooper underarmor, modified for the Syndicate frame. And one sealed Senate diplomatic pouch — addressed to a committee chair, from an account that does not officially exist.', grantsFlag: 'vault_contents_found', grantsItem: 'senate_conspiracy_file' },
+          { id: 'vault_east_access', x: 25, y: 10, once: true, label: 'East Vault Exit', description: 'The secondary egress. A repulsor-lift is rigged to move the armor cache to a waiting transport. Whoever designed this operation planned every detail.', grantsFlag: 'vault_exit_found' },
+          { id: 'syndicate_prisoner_log', x: 22, y: 15, once: true, label: 'Prisoner Transfer Log', description: 'Four detainees. Two transferred to Level 001 — the log does not say why. One released on Senate authority. One still listed as active: RIANNA, T. — Sub-Level 3, Block B.', grantsFlag: 'rianna_location_confirmed' },
+        ],
+        npcs: [
+          { id: 'rianna_vault', x: 18, y: 10, kind: 'warden', label: 'Rianna',
+            prompt: '"Back off! I told your people — I do not know any encryption keys! You burn this cell and you get nothing!"',
+            repeatPrompt: 'Rianna stays pressed against the vault wall, pipe in hand, watching every shadow.',
+            choices: [
+              { text: '"Stand down. CSF Auxiliary. Kaelen sent me."', morality: 8, loyalty: { republic: 8 }, requires: { item: 'csf_aux_badge' }, result: '"CSF? Up on Level 1222 that badge means something. Down here it means you work for a better-funded cartel. Prove it." A pause. "Kaelen. He actually found someone." She lowers the pipe. "Lead the way."', grants: { flags: ['rianna_rescued'] } },
+              { text: '"We have forty seconds before this room goes thermal. Keep the pipe. Walk now."', morality: 5, loyalty: {}, result: '"Clear and direct. I like you better than the goons." She moves.', grants: { flags: ['rianna_rescued'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'vault_credit_chip', x: 30, y: 18, label: 'Syndicate Operational Reserve Chip', reward: 200 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 34, 20, 'floor');
+          carveRect(g, 11, 4, 25, 16, 'wall');
+          carveRect(g, 12, 5, 24, 15, 'floor');
+          pt(g, 11, 10, 'floor');
+          pt(g, 25, 10, 'floor');
+          carveRect(g, 6, 6, 6, 14, 'lava');
+          carveRect(g, 28, 6, 28, 14, 'lava');
+          pt(g, 18, 0, 'door'); pt(g, 19, 0, 'door');
           return g;
         },
       },
