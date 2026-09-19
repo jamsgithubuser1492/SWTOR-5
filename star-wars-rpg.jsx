@@ -797,7 +797,10 @@ const PLANETS = {
         floorColor: '#1C1A14', floorAlt: '#24221A', wallDark: '#0A0902', wallLight: '#161408',
         bg: 'radial-gradient(circle at 30% 60%, #181410 0%, #08070A 70%)', ambient: 'embers',
         decor: ['cargo_crate', 'pipe', 'girder', 'slag'],
-        doors: [],
+        doors: [
+          { x: 20, y: 27, targetZone: 'mag_rail_corridor', targetPos: { x: 20, y: 1 }, label: 'Mag-Rail Corridor' },
+          { x: 21, y: 27, targetZone: 'mag_rail_corridor', targetPos: { x: 21, y: 1 }, label: 'Mag-Rail Corridor' },
+        ],
         worldObjects: [
           { id: 'bay14_crime_scene', x: 20, y: 6, once: true, label: 'Bay 14 Blast Marks', description: 'The dock wall is scorched. Not from a fuel fire — the scorch pattern is from shaped charges placed against the loading manifest kiosk. Someone destroyed the primary records on the way out.' },
           { id: 'discarded_keycard', x: 32, y: 18, once: true, label: 'Discarded Passcode', description: 'Half-melted but readable: an underworld bypass key. Grants sub-level transit without checkpoint flags. You pocket it.', grantsItem: 'scrambler_keycard' },
@@ -859,6 +862,171 @@ const PLANETS = {
           carveRect(g, 37, 4, 39, 8, 'wall');
           carveRect(g, 38, 5, 38, 7, 'floor');
           pt(g, 37, 6, 'floor');
+          pt(g, 20, 27, 'door'); pt(g, 21, 27, 'door');
+          return g;
+        },
+      },
+      mag_rail_corridor: {
+        id: 'mag_rail_corridor', name: 'Sector 4 Mag-Rail Station', subtitle: 'Coruscant · L.088 — Freight Transit Corridor',
+        width: 42, height: 26, spawnPos: { x: 20, y: 2 }, textureId: 'coruscant',
+        accent: '#6090C0', accentGlow: 'rgba(96,144,192,0.22)', accentDim: '#203060',
+        floorColor: '#181614', floorAlt: '#201E1A', wallDark: '#080706', wallLight: '#141210',
+        bg: 'radial-gradient(circle at 50% 50%, #101420 0%, #08090E 70%)', ambient: 'traffic',
+        decor: ['pipe', 'girder', 'cargo_crate', 'neon_sign'],
+        doors: [
+          { x: 20, y: 0, targetZone: 'freight_hub', targetPos: { x: 20, y: 26 }, label: 'Sector 4 Freight Hub' },
+          { x: 21, y: 0, targetZone: 'freight_hub', targetPos: { x: 21, y: 26 }, label: 'Sector 4 Freight Hub' },
+          { x: 41, y: 13, targetZone: 'fueling_depot', targetPos: { x: 1, y: 13 }, label: 'Fueling Depot' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_mag_rail', x: 4, y: 13, once: false, label: 'AirTaxi Terminal', description: 'A CSF-maintained AirTaxi terminal serving the Sector 4 freight corridor. The departure board shows three routes. Two are suspended pending security review.' },
+          { id: 'mag_rail_manifest_board', x: 20, y: 5, once: false, label: 'Cargo Manifest Display Board', description: 'A wall-mounted manifest board listing every freight car scheduled through the Sector 4 mag-rail in the current cycle. Car 14-B is listed twice — once as agricultural supplies, once as cleared industrial equipment. The two entries have different weights. The discrepancy is flagged in amber. The flag has been open for eleven days.' },
+          { id: 'platform_security_scanner', x: 14, y: 13, once: true, label: 'Platform Security Scanner', description: 'A Republic-standard cargo scanner mounted at the platform gate. The scan log shows that three freight cars in the past month were cleared without completing a full scan cycle. Each clearance was manually authorized. The authorization code is the same each time — a Senate-tier override that should not exist at this checkpoint level.', grantsFlag: 'scanner_override_found' },
+          { id: 'north_platform_terminal', x: 8, y: 7, once: false, label: 'North Platform Freight Terminal', description: 'The loading terminal for the north bay platforms. Consignment records go back fourteen months. The system shows no gap in the record sequence — but three consignment numbers have been reused. Reused consignment numbers overwrite the original entry. Whatever moved through those numbers the first time has been erased.' },
+          { id: 'east_cargo_bay_locker', x: 34, y: 7, once: true, label: 'Sealed Cargo Bay Locker', description: 'A standard freight locker with a non-standard lock — the override code is a military-issue cipher, not a Republic transit cipher. Inside: three manifest strips printed on thermal flimsi, each listing the same destination account. The account number matches the shell corporation routing from the Scylla manifest.', grantsFlag: 'freight_chain_confirmed', grantsCodex: 'codex-sector-4-freight-corridors' },
+          { id: 'south_platform_crate_stack', x: 8, y: 19, once: false, label: 'Numbered Cargo Stack — Platform South', description: 'Forty-eight standardized gray containers stacked three high on the south loading platform. Each bears a Senate commerce committee seal. Each seal is from a different committee session. The committees do not overlap in their stated jurisdictions. What they all share: a signature from the same undersecretary, on the same date, for cargoes described as "legislative materials."' },
+          { id: 'rail_junction_box', x: 26, y: 19, once: true, label: 'Rail Junction Control Box', description: 'The mag-rail switching junction for the Sector 4 corridor. The switching schedule shows a recurring twelve-minute hold every fourth cycle — the rail is stopped, the platform cameras are on maintenance loop, and no personnel are scheduled. The hold began eight months ago. It runs like clockwork. Nothing in the official record explains it.', grantsFlag: 'rail_window_found' },
+        ],
+        npcs: [
+          { id: 'checkpoint_officer_drel', x: 20, y: 13, kind: 'republic_guard', label: 'Checkpoint Officer Drel',
+            prompt: '"Transit checkpoint, Sector 4 corridor. State your business and present your transit documentation."',
+            repeatPrompt: 'Officer Drel watches the cargo flow with the practiced attention of someone who has learned to see what he is allowed to see and nothing else.',
+            choices: [
+              { text: '"CSF Auxiliary. I need access to the cargo scan logs."', morality: 8, loyalty: { republic: 8 }, requires: { item: 'csf_aux_pass' }, result: '"Auxiliary clearance. Noted." He steps aside from the terminal. "The logs are current. The anomalies in them are not my jurisdiction. That is what I have been told. Officially." He does not look at you when he says it.', grants: { flags: ['drel_cooperated'] } },
+              { text: '"What is the standard protocol when a Senate override clears cargo without a full scan?"', morality: 5, loyalty: { republic: 5 }, result: '"The standard protocol is to log the override and file a query with the Senate transit authority. Processing time on those queries is eight to twelve weeks. In eight months I have filed twenty-two queries. I have received zero responses." He picks up his datapad. "Standard protocol."', grants: { flags: ['drel_queried'] } },
+              { text: '"What moves through here at the twelve-minute rail hold?"', morality: -3, loyalty: { underworld: 8 }, result: '"I do not work that shift. Neither does anyone else. That is the point." He lowers his voice. "Whatever moves in those twelve minutes has full Senate clearance and leaves no scan record. That is all I can tell you without losing this job."', grants: { flags: ['rail_hold_confirmed'] } },
+            ],
+          },
+          { id: 'cargo_runner_essa', x: 8, y: 18, kind: 'smuggler', label: 'Essa — Cargo Runner', mobile: true,
+            prompt: '"You have that look. CSF adjacent. Not quite official. Working an angle." She props a crate with her shoulder and keeps her hands visible. "I am just moving freight. Legitimate freight. Certified and sealed."',
+            repeatPrompt: 'Essa moves between crates with the efficiency of someone who knows exactly where the cameras are.',
+            choices: [
+              { text: '"What do you know about the twelve-minute rail hold?"', morality: -5, loyalty: { underworld: 10 }, result: '"Who told you about that?" She sets down the crate. "That hold is Syndicate time. Nobody uses those twelve minutes who is not paying the Syndicate for them. I know because I used to be on that schedule. I left. Some opportunities are not worth the company."', grants: { flags: ['essa_talked', 'syndicate_rail_confirmed'] } },
+              { text: '"I am looking for where the Phrik shipment went after Bay 14."', morality: 0, loyalty: {}, result: '"The Works. Level 005. That is not a secret. What is a secret is how it got there without crossing a single checkpoint. Rail hold. Sealed car. Nobody asked questions because nobody who asks questions lasts long in this corridor."', grants: { flags: ['essa_phrik_route'] } },
+              { text: '"Move some of my cargo. Off the record."', morality: -10, loyalty: { underworld: 8 }, result: '"How much? What kind? Where?" She is already doing the math. "If it is anything that glows, I charge double." ', grants: { flags: ['essa_contracted'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'mag_rail_chip', x: 36, y: 19, label: 'Freight Transit Chip', reward: 40 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 40, 24, 'floor');
+          carveRect(g, 1, 3, 14, 12, 'wall');
+          carveRect(g, 2, 4, 13, 11, 'floor');
+          pt(g, 14, 7, 'floor');
+          carveRect(g, 1, 15, 14, 23, 'wall');
+          carveRect(g, 2, 16, 13, 22, 'floor');
+          pt(g, 14, 19, 'floor');
+          carveRect(g, 26, 3, 40, 12, 'wall');
+          carveRect(g, 27, 4, 39, 11, 'floor');
+          pt(g, 26, 7, 'floor');
+          pt(g, 20, 0, 'door'); pt(g, 21, 0, 'door');
+          pt(g, 41, 13, 'door');
+          return g;
+        },
+      },
+      fueling_depot: {
+        id: 'fueling_depot', name: 'Sector 4 Fueling Depot', subtitle: 'Coruscant · L.088 — Repulsor Fueling Station',
+        width: 38, height: 26, spawnPos: { x: 2, y: 13 }, textureId: 'coruscant',
+        accent: '#D06000', accentGlow: 'rgba(208,96,0,0.22)', accentDim: '#602800',
+        floorColor: '#161210', floorAlt: '#1E1814', wallDark: '#060402', wallLight: '#120E08',
+        bg: 'radial-gradient(circle at 30% 70%, #160C04 0%, #080604 70%)', ambient: 'embers',
+        decor: ['pipe', 'cargo_crate', 'slag', 'girder'],
+        doors: [
+          { x: 0, y: 13, targetZone: 'mag_rail_corridor', targetPos: { x: 40, y: 13 }, label: 'Mag-Rail Corridor' },
+          { x: 18, y: 25, targetZone: 'drainage_pipes', targetPos: { x: 18, y: 1 }, label: 'Lower Drainage' },
+          { x: 19, y: 25, targetZone: 'drainage_pipes', targetPos: { x: 19, y: 1 }, label: 'Lower Drainage' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_fueling_depot', x: 16, y: 13, once: false, label: 'AirTaxi Terminal', description: 'A weather-beaten AirTaxi terminal on the depot concourse. The routing display is covered in fuel-transfer grime but functional.' },
+          { id: 'fuel_register_terminal', x: 6, y: 6, once: true, label: 'Fuel Transfer Register', description: 'The bay fuel accounting terminal. Cross-referencing usage logs against departure manifests reveals a forty-liter discrepancy per cycle — consistent for six months. The fuel is not being logged as waste. It is not being logged at all. Forty liters per cycle is enough to run a mid-size repulsor platform continuously for eighteen hours.', grantsFlag: 'fuel_discrepancy_found' },
+          { id: 'bay_b_work_order', x: 26, y: 6, once: true, label: 'Bay B Work Order Clipboard', description: 'A physical clipboard of maintenance work orders. The third sheet from the bottom is printed on different flimsi from the rest — thicker, higher grade, the kind used for official Senate documents. The work order it describes is routine repulsor servicing. The authorization signature at the bottom is not a depot supervisor. It is a Senate sub-committee seal. A fueling depot work order, sealed by the Senate.', grantsFlag: 'bay_b_order_found' },
+          { id: 'maintenance_pit_console', x: 8, y: 19, once: true, label: 'Maintenance Pit Access Console', description: 'The control console for the below-deck maintenance pit. The activity log shows seventeen access events in the past two months. Each entry lists the same user ID: TEMP-TRANSIT. Temp transit IDs are issued for single-use clearance and expire in four hours. These ones were all used on the same day, at the same time, for the same access — which should be impossible for single-use IDs.', grantsFlag: 'temp_id_exploit_found' },
+          { id: 'fuel_drum_stack', x: 28, y: 19, once: false, label: 'Repulsor Fuel Drum Array', description: 'Fifty sealed drums of Type-4 repulsor fuel stacked in the depot\'s overflow area. Each drum is stamped with a Republic Military supply chain code — civilian depots are not authorized to hold military-grade fuel. The authorization exemption on the stack is signed by the same Senate sub-committee that cleared the Bay 14 cargo.' },
+        ],
+        npcs: [
+          { id: 'depot_mechanic_torb', x: 6, y: 5, kind: 'mechanic', label: 'Fuel Tech Torb',
+            prompt: '"Keep clear of the active bays. Republic safety code requires a three-meter buffer during pressurized transfer. Also, who are you and how did you get past the corridor checkpoint?"',
+            repeatPrompt: 'Torb works with the deliberate precision of someone who has seen what fuel fires look like up close.',
+            choices: [
+              { text: '"CSF Auxiliary. I am investigating a fuel accounting discrepancy."', morality: 8, loyalty: { republic: 8 }, requires: { item: 'csf_aux_pass' }, result: '"The register." He exhales. "I flagged that four months ago. Submitted the form to the depot supervisor. She submitted it to the freight authority. They submitted it to the Senate transit liaison. I stopped hearing about it two days later. The form number I submitted? It no longer exists in the system."', grants: { flags: ['torb_talked', 'fuel_flag_buried'] } },
+              { text: '"What is stored in Bay B?"', morality: 0, loyalty: {}, result: '"Military-grade Type-4. We are not supposed to have it. We have had it for six months. I asked about it once. I was reassigned to night shift the next day. I stopped asking."', grants: { flags: ['bay_b_military_fuel'] } },
+              { text: '"Is there a way down to the lower drainage level from here?"', morality: -3, loyalty: { underworld: 5 }, result: '"The south hatch past the maintenance pit. I would not go down there. The drainage runs directly under the fuel storage array. One bad coupling and the whole sub-level goes." He pauses. "People go down anyway."', grants: { flags: ['drainage_access_known'] } },
+            ],
+          },
+          { id: 'smuggler_contact_voss', x: 28, y: 6, kind: 'smuggler', label: 'Voss — Depot Contact',
+            prompt: '"You are in the wrong bay. Unless you are looking for me. In which case: how did you know to look here, and who sent you?"',
+            repeatPrompt: 'Voss watches you with professional patience. He has more information than he is showing.',
+            choices: [
+              { text: '"Essa from the mag-rail corridor pointed me this way."', morality: -5, loyalty: { underworld: 10 }, requires: { flag: 'essa_talked' }, result: '"Essa. She is careful about who she sends." He relaxes a fraction. "Then you already know the shape of the operation. The fuel discrepancy, the Senate work orders, the Syndicate rail window. You are putting it together. Good. Someone should."', grants: { flags: ['voss_depot_talked', '088_operation_shape_known'] } },
+              { text: '"I need a route to Level 005 that does not cross a checkpoint."', morality: -10, loyalty: { underworld: 12 }, result: '"The drainage hatch. South of the maintenance pit. Follow the main channel east until you hit the ventilation junction. Left at the junction, down the service ladder, and you are on Level 005. Do not touch the walls — the drainage carries thermal runoff from the level above. Hot enough to burn through a boot."', grants: { flags: ['drainage_route_to_005'] } },
+              { text: '"What does the Iron Syndicate use this depot for?"', morality: 0, loyalty: {}, result: '"Staging. The Syndicate does not store cargo here. They move it. This is a transit point — cargo in from the mag-rail, transferred to vehicles here, down through the drainage to Level 005. The fuel discrepancy covers the vehicle fuel. Everything else is on paper that is officially perfect."', grants: { flags: ['voss_syndicate_explained'], codex: ['codex-iron-syndicate'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'depot_cred', x: 32, y: 22, label: 'Dropped Fuel Chit', reward: 55 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 36, 24, 'floor');
+          carveRect(g, 1, 2, 12, 11, 'wall');
+          carveRect(g, 2, 3, 11, 10, 'floor');
+          pt(g, 12, 6, 'floor');
+          carveRect(g, 22, 2, 36, 11, 'wall');
+          carveRect(g, 23, 3, 35, 10, 'floor');
+          pt(g, 22, 6, 'floor');
+          carveRect(g, 2, 15, 14, 23, 'wall');
+          carveRect(g, 3, 16, 13, 22, 'floor');
+          pt(g, 14, 19, 'floor');
+          pt(g, 0, 13, 'door');
+          pt(g, 18, 25, 'door'); pt(g, 19, 25, 'door');
+          return g;
+        },
+      },
+      drainage_pipes: {
+        id: 'drainage_pipes', name: 'Sector 4 Lower Drainage', subtitle: 'Coruscant · L.088 — Sub-Level Maintenance Tunnels',
+        width: 36, height: 22, spawnPos: { x: 18, y: 2 }, textureId: 'coruscant',
+        accent: '#208040', accentGlow: 'rgba(32,128,64,0.20)', accentDim: '#0C3020',
+        floorColor: '#0E100C', floorAlt: '#161A12', wallDark: '#040602', wallLight: '#0C0E08',
+        bg: 'radial-gradient(circle at 50% 100%, #0C1408 0%, #060A04 50%, #030502 100%)',
+        ambient: 'embers', decor: ['pipe', 'slag', 'rubble'],
+        doors: [
+          { x: 18, y: 0, targetZone: 'fueling_depot', targetPos: { x: 18, y: 24 }, label: 'Fueling Depot' },
+          { x: 19, y: 0, targetZone: 'fueling_depot', targetPos: { x: 19, y: 24 }, label: 'Fueling Depot' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_drainage', x: 2, y: 11, once: false, label: 'AirTaxi Terminal', description: 'An ancient AirTaxi terminal grafted onto the drainage tunnel wall. It should not work. It does. The destination list shows zones that are no longer accessible from any other terminal.' },
+          { id: 'drainage_channel_main', x: 14, y: 11, once: false, label: 'Main Drainage Channel', description: 'A wide channel cut through the durasteel floor carries thermal runoff from the fueling depot above. The liquid moves slowly, hot enough to steam in the cold tunnel air. The color is the pale amber of industrial lubricant mixed with coolant fluid. Whatever process generates this much waste runs continuously. The channel is not on any Level 088 maintenance map.' },
+          { id: 'syndicate_cache_drainage', x: 6, y: 7, once: true, label: 'Maintenance Alcove Cache', description: 'Behind a false panel in the maintenance alcove wall: a sealed container marked with the iron chain emblem. Inside, three cargo relay chips — each one a transit authorization for a different Level 005 loading dock. Each authorization is blank, ready to be written with any cargo description. A full set of ready-made blank transit passes for The Works.', grantsFlag: 'transit_pass_cache_found', grantsItem: 'scrambler_keycard' },
+          { id: 'drainage_graffiti_wall', x: 24, y: 7, once: false, label: 'Drainage Tunnel Wall', description: 'The tunnel wall is layered with markings going back decades — maintenance crew tallies, territorial tags from three different gang factions, one very detailed Aurebesh map of the drainage system drawn in conductive paint that still faintly glows. The Iron Syndicate\'s iron chain emblem appears four times, each one over a different gang\'s markings. The Syndicate has been here longer than anyone admits.' },
+          { id: 'junction_box_drainage', x: 28, y: 16, once: true, label: 'Ventilation Junction Control', description: 'The junction control box for the Level 088 ventilation spine. The routing table inside has been modified — Level 005 airflow is being vented up through this drainage system instead of out through the designated exhaust ports. The modification is deliberate. Someone is using the drainage vents to circulate air to Level 005 workers without triggering environmental monitoring on that level.', grantsFlag: 'vent_route_005_found' },
+          { id: 'syndicate_marker_drainage', x: 32, y: 18, once: true, label: 'Recent Syndicate Transit Mark', description: 'A fresh iron chain emblem stamp on the tunnel floor — the mark is crisp, the metal around it bright. This route was used within the last forty-eight hours. The cargo moved east along the main channel, turned south at the junction, and went down. Toward Level 005.', grantsFlag: 'fresh_syndicate_trail' },
+        ],
+        npcs: [
+          { id: 'fugitive_mek', x: 30, y: 17, kind: 'mechanic', label: 'Mek — Level 005 Fugitive',
+            prompt: 'He is pressed into a maintenance alcove, coated in drainage grime, and holding a broken hydrospanner like a weapon. "Stay back. I know what you are. Syndicate does not send two." He squints. "You are not dressed like Syndicate."',
+            repeatPrompt: 'Mek keeps one eye on the tunnel behind you. He has not decided whether staying here is worse than moving.',
+            choices: [
+              { text: '"I am not Syndicate. I am investigating them. What do you know?"', morality: 5, loyalty: { republic: 5 }, result: '"Investigating." He laughs, one short sound. "Good luck with that. I worked their Level 005 loading operation for four months before I realized what I was loading. When I tried to stop, they sealed the level. I got out through the drainage. I have been here for six days."', grants: { flags: ['mek_met', 'mek_escaped_005'] } },
+              { text: '"Tell me the layout of the Level 005 loading operation."', morality: 0, loyalty: {}, result: '"Three main bays. Two are Phrik processing — they are smelting it into armor plating. The third is assembly. They are not building weapons. They are building people. Combat exoskeletons. Phrik-plated. Something that can walk through a blaster wall and not stop." He swallows. "I helped build six of them before I understood what they were."', grants: { flags: ['mek_005_layout', 'syndicate_exoskeleton_known'] } },
+              { text: '"I can get you out of the drainage. But you tell me everything first."', morality: 8, loyalty: { republic: 8 }, result: '"Everything. Fine." Over the next twenty minutes, he gives you names, delivery schedules, cargo codes, and the location of every Syndicate guard post on Level 005. "Now get me out of here before the next transit cycle comes through."', grants: { flags: ['mek_full_intel', 'works_layout_known'], codex: ['codex-the-works-forges'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'drainage_cred', x: 14, y: 18, label: 'Waterlogged Credit Chip', reward: 70 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 34, 20, 'floor');
+          carveRect(g, 1, 3, 10, 10, 'wall');
+          carveRect(g, 2, 4, 9, 9, 'floor');
+          pt(g, 10, 6, 'floor');
+          carveRect(g, 20, 3, 34, 10, 'wall');
+          carveRect(g, 21, 4, 33, 9, 'floor');
+          pt(g, 20, 6, 'floor');
+          carveRect(g, 22, 13, 34, 20, 'wall');
+          carveRect(g, 23, 14, 33, 19, 'floor');
+          pt(g, 22, 16, 'floor');
+          carveRect(g, 12, 10, 16, 14, 'water');
+          pt(g, 18, 0, 'door'); pt(g, 19, 0, 'door');
           return g;
         },
       },
