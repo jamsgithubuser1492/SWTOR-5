@@ -649,6 +649,7 @@ const PLANETS = {
           { id: 'caf_stand', x: 6, y: 6, once: false, label: 'Caf Stand — Northwest Concourse', description: 'A battered chrome caf dispenser and a fold-out table. A hand-lettered sign reads: BEST CAF BETWEEN THE LEVELS. A smaller sign below it reads: ONLY CAF BETWEEN THE LEVELS. The proprietor is a tired-looking Duros who refills your cup without being asked and does not charge you for it. "New faces are good for business," he says. "Old faces are bad for my nerves."' },
           { id: 'detention_alcove', x: 6, y: 17, once: false, label: 'CSF Detention Alcove', description: 'A small holding area with two retention rings and a broken binder lock. The cell log shows fourteen detentions in the past six months. Thirteen were released within four hours. The fourteenth — listed only as GREY COAT, NO ID — was transferred off-site per Senate Directive 1182-C. No destination logged. The transfer was authorized by the same officer who filed the Bay 14 closure.' },
           { id: 'flight_control_booth', x: 28, y: 7, once: true, label: 'Flight Control Booth', description: 'The customs concourse flight control station. The arrival log for the night of the Bay 14 incident shows a twelve-minute gap in the record — all arrivals logged, then nothing, then resuming as if the gap does not exist. The station officer filed a "technical malfunction" report for those twelve minutes. The report was accepted without inquiry.', grantsFlag: 'flight_gap_found' },
+          { id: 'siphon_terminal', x: 22, y: 7, once: true, label: 'Cargo Feed Splice Terminal', description: 'A secondary manifest feed terminal. The uplink is live. Splicing into the customs broadcast frequency would expose every clearance override logged in the past six months. The security lock runs on a frequency-keyed cipher.', triggersMinigame: 'signal_siphon', grantsFlag: 'customs_manifest_decrypted', grantsCodex: 'codex-sector-4-freight-corridors' },
         ],
         npcs: [
           { id: 'csf_customs_officer', x: 16, y: 12, kind: 'republic_guard', label: 'CSF Customs Officer Rael',
@@ -886,6 +887,7 @@ const PLANETS = {
           { id: 'east_cargo_bay_locker', x: 34, y: 7, once: true, label: 'Sealed Cargo Bay Locker', description: 'A standard freight locker with a non-standard lock — the override code is a military-issue cipher, not a Republic transit cipher. Inside: three manifest strips printed on thermal flimsi, each listing the same destination account. The account number matches the shell corporation routing from the Scylla manifest.', grantsFlag: 'freight_chain_confirmed', grantsCodex: 'codex-sector-4-freight-corridors' },
           { id: 'south_platform_crate_stack', x: 8, y: 19, once: false, label: 'Numbered Cargo Stack — Platform South', description: 'Forty-eight standardized gray containers stacked three high on the south loading platform. Each bears a Senate commerce committee seal. Each seal is from a different committee session. The committees do not overlap in their stated jurisdictions. What they all share: a signature from the same undersecretary, on the same date, for cargoes described as "legislative materials."' },
           { id: 'rail_junction_box', x: 26, y: 19, once: true, label: 'Rail Junction Control Box', description: 'The mag-rail switching junction for the Sector 4 corridor. The switching schedule shows a recurring twelve-minute hold every fourth cycle — the rail is stopped, the platform cameras are on maintenance loop, and no personnel are scheduled. The hold began eight months ago. It runs like clockwork. Nothing in the official record explains it.', grantsFlag: 'rail_window_found' },
+          { id: 'pursuit_start', x: 34, y: 19, once: true, label: 'Emergency Speeder Bay', description: 'A single repulsor speeder, engine warm, tethered to a quick-release bay mount. A Syndicate courier was spotted boarding the mag-rail three minutes ago heading for The Works. This speeder can intercept if you move now. The rail corridor is active.', triggersMinigame: 'speeder_pursuit', grantsFlag: 'chase_resolved' },
         ],
         npcs: [
           { id: 'checkpoint_officer_drel', x: 20, y: 13, kind: 'republic_guard', label: 'Checkpoint Officer Drel',
@@ -1046,9 +1048,9 @@ const PLANETS = {
           { id: 'plasma_conduit_005', x: 8, y: 18, once: false, label: 'Leaking Plasma Conduit', description: 'The pipe groans under pressure. A slow leak fills the air with acrid chemical haze. This entire sub-level is one spark away from a chain event.' },
           { id: 'sub_station_terminal', x: 10, y: 20, once: true, label: 'Deep Sub-Station Controls', description: 'Power sub-station 3. Slicing this terminal disables ambient thermal hazards in the surrounding corridor.', grantsItem: null },
           { id: 'syndicate_relay_node', x: 24, y: 6, once: true, label: 'Syndicate Relay Node', description: 'Iron Syndicate tactical communications. Slicing this intercepts live patrol data — every enemy position in The Works becomes visible on your minimap for the duration of the assault.' },
-          { id: 'plasma_valve_a', x: 4, y: 18, once: true, label: 'Pressure Valve Alpha', description: 'Main coolant line junction. The pressure gauge reads critical. One override and the flow stabilizes.' },
-          { id: 'plasma_valve_b', x: 14, y: 20, once: true, label: 'Pressure Valve Beta', description: 'Secondary coolant junction. Steam vents from the seal around the handle.' },
-          { id: 'plasma_valve_c', x: 8, y: 14, once: true, label: 'Pressure Valve Gamma', description: 'Tertiary coolant junction. Closing this one stabilizes the entire pressure network.' },
+          { id: 'plasma_valve_a', x: 4, y: 18, once: true, label: 'Pressure Valve Alpha', description: 'Main coolant line junction. The pressure gauge reads critical. One override and the flow stabilizes.', triggersMinigame: 'valve_override', grantsFlag: 'valve_a_closed' },
+          { id: 'plasma_valve_b', x: 14, y: 20, once: true, label: 'Pressure Valve Beta', description: 'Secondary coolant junction. Steam vents from the seal around the handle.', triggersMinigame: 'valve_override', grantsFlag: 'valve_b_closed' },
+          { id: 'plasma_valve_c', x: 8, y: 14, once: true, label: 'Pressure Valve Gamma', description: 'Tertiary coolant junction. Closing this one stabilizes the entire pressure network.', triggersMinigame: 'valve_override', grantsFlag: 'valve_c_closed' },
           { id: 'krell_vendor', x: 28, y: 20, once: false, label: 'Krell — Black Market Arms', description: '"The Republic does not come down this far. My blasters hit harder, run hotter, and do not leave serial numbers." Sells: Spice Vial, Plasma Core Overcharger, Environmental Filter.' },
           { id: 'holonet_official_terminal', x: 30, y: 20, once: false, label: 'HNN Official Feed', description: '[HNN Priority Core Broadcast] "The Senate Committee on Inner-Rim Trade commended the CSF for maintaining unprecedented safety standards across the Mid-Levels. Reports of industrial smuggling near Level 088 have been dismissed as isolated logistical delays." The broadcast loops. The terminal is covered in soot.' },
           { id: 'airtaxi_the_works', x: 34, y: 12, once: false, label: 'AirTaxi Terminal', description: 'A terminal barely functioning under the heat. Miracle it still works.' },
@@ -2301,6 +2303,258 @@ function resolveDialoguePhase(npc, questFlags) {
   };
 }
 
+function SignalSiphonOverlay({ onSuccess, onFailure }) {
+  const [stage, setStage] = React.useState(1);
+  const [selectedFreq, setSelectedFreq] = React.useState(null);
+  const [gridPos, setGridPos] = React.useState({ x: 0, y: 0 });
+  const [timeLeft, setTimeLeft] = React.useState(20);
+  const [message, setMessage] = React.useState('');
+  const timerRef = React.useRef(null);
+  const FREQS = ['108.4 MHz', '114.8 MHz', '121.3 MHz'];
+  const CORRECT_FREQ = '114.8 MHz';
+  const BLOCKED = [[0,2],[2,0],[2,3]];
+  const isBlocked = (x, y) => BLOCKED.some(([bx, by]) => bx === x && by === y);
+
+  React.useEffect(() => {
+    if (stage !== 2) return;
+    timerRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) { clearInterval(timerRef.current); onFailure(); return 0; }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, [stage]);
+
+  const handleFreqSelect = (freq) => {
+    if (selectedFreq) return;
+    setSelectedFreq(freq);
+    if (freq === CORRECT_FREQ) {
+      setMessage('Signal locked. Bypass grid initializing...');
+      setTimeout(() => setStage(2), 900);
+    } else {
+      setMessage('Frequency mismatch. Security ping detected.');
+      setTimeout(onFailure, 1200);
+    }
+  };
+
+  React.useEffect(() => {
+    if (stage !== 2) return;
+    const handler = (e) => {
+      e.preventDefault();
+      setGridPos(prev => {
+        let { x, y } = prev;
+        if (e.key === 'ArrowUp' && y > 0 && !isBlocked(x, y - 1)) y -= 1;
+        else if (e.key === 'ArrowDown' && y < 3 && !isBlocked(x, y + 1)) y += 1;
+        else if (e.key === 'ArrowLeft' && x > 0 && !isBlocked(x - 1, y)) x -= 1;
+        else if (e.key === 'ArrowRight' && x < 3 && !isBlocked(x + 1, y)) x += 1;
+        if (x === 3 && y === 3) { clearInterval(timerRef.current); setTimeout(onSuccess, 200); }
+        return { x, y };
+      });
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [stage]);
+
+  const ov = { position:'fixed', inset:0, background:'rgba(0,0,0,0.93)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', zIndex:50 };
+  const pan = { background:'#080C14', border:'1px solid #4A9FFF', borderRadius:6, padding:28, minWidth:360, color:'#C9C5BE', fontFamily:"'IBM Plex Mono',monospace" };
+
+  if (stage === 1) return (
+    <div style={ov}>
+      <div style={pan}>
+        <div style={{ color:'#4A9FFF', fontSize:13, letterSpacing:'0.15em', marginBottom:18 }}>SIGNAL SIPHON — FREQUENCY LOCK</div>
+        <div style={{ fontSize:11, color:'#8A8F9E', marginBottom:18 }}>Select the active customs uplink frequency.</div>
+        {FREQS.map(f => (
+          <div key={f} onClick={() => handleFreqSelect(f)} style={{ padding:'10px 16px', margin:'6px 0', background:'#101828', border:`1px solid ${selectedFreq===f?'#4A9FFF':'#2A3050'}`, borderRadius:4, cursor:'pointer', color: selectedFreq===f?'#4A9FFF':'#C9C5BE', transition:'border-color 0.2s' }}>
+            {f}
+          </div>
+        ))}
+        {message && <div style={{ marginTop:14, color:'#FF6060', fontSize:11 }}>{message}</div>}
+        <div style={{ marginTop:18, fontSize:10, color:'#404858' }}>Click to select</div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={ov}>
+      <div style={pan}>
+        <div style={{ color:'#4A9FFF', fontSize:13, letterSpacing:'0.15em', marginBottom:8 }}>BYPASS GRID — REACH TARGET</div>
+        <div style={{ fontSize:11, color:'#8A8F9E', marginBottom:6 }}>Arrow keys to move. Avoid [X] nodes. Reach [T].</div>
+        <div style={{ fontSize:11, color:'#E8C97A', marginBottom:14 }}>TIME: {timeLeft}s</div>
+        {[0,1,2,3].map(row => (
+          <div key={row} style={{ display:'flex', gap:6, marginBottom:6 }}>
+            {[0,1,2,3].map(col => {
+              const isPlayer = gridPos.x === col && gridPos.y === row;
+              const isTarget = col === 3 && row === 3;
+              const blocked = isBlocked(col, row);
+              return (
+                <div key={col} style={{ width:52, height:52, border:'1px solid', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, borderColor: blocked?'#442020':isTarget?'#E8C97A':'#2A3050', background: isPlayer?'#1A3A5A':blocked?'#1A0808':isTarget?'#2A2408':'#0E1220', color: isPlayer?'#4A9FFF':isTarget?'#E8C97A':blocked?'#442020':'#6A7090', fontWeight: isPlayer||isTarget?700:400 }}>
+                  {isPlayer ? 'S' : isTarget ? 'T' : blocked ? 'X' : col===0&&row===0&&!isPlayer ? '·' : '·'}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+        <div style={{ marginTop:10, fontSize:10, color:'#404858' }}>Arrow keys · Reach T to complete</div>
+      </div>
+    </div>
+  );
+}
+
+function SpeederPursuitOverlay({ onSuccess, onFailure }) {
+  const gameRef = React.useRef({ lane: 1, distance: 300, shield: 3, turbo: 100, heat: 0, phase: 1, obstacles: [], running: true, tickCount: 0 });
+  const [display, setDisplay] = React.useState({ lane: 1, distance: 300, shield: 3, turbo: 100, phase: 1, obstacles: [], message: '' });
+  const intervalRef = React.useRef(null);
+  const LANE_NAMES = ['LEFT', 'CENTER', 'RIGHT'];
+  const OBS_TYPES = ['freighter', 'laser_gate', 'swoop'];
+
+  React.useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      const g = gameRef.current;
+      if (!g.running) return;
+      g.tickCount++;
+      g.distance = Math.max(0, g.distance - 2);
+      if (g.tickCount % (g.phase === 3 ? 12 : g.phase === 2 ? 15 : 20) === 0) {
+        const type = OBS_TYPES[Math.floor(Math.random() * OBS_TYPES.length)];
+        g.obstacles = [...g.obstacles, { type, lane: Math.floor(Math.random() * 3), pos: 12 }];
+      }
+      g.obstacles = g.obstacles.map(o => ({ ...o, pos: o.pos - 1 }));
+      let message = '';
+      const colliders = g.obstacles.filter(o => o.pos <= 1 && o.lane === g.lane);
+      colliders.forEach(o => {
+        if (o.type === 'freighter') { g.turbo = Math.min(100, g.turbo + 20); message = 'Drafting freighter — turbo charge!'; }
+        else if (o.type === 'laser_gate') { g.shield--; message = 'Laser gate hit! Shield down.'; }
+        else if (o.type === 'swoop') { g.shield--; message = 'Swoop impact! Shield down.'; }
+      });
+      g.obstacles = g.obstacles.filter(o => o.pos > 1 || o.lane !== g.lane);
+      if (g.distance <= 200 && g.phase < 2) { g.phase = 2; message = 'PHASE 2: pursuit intensifying.'; }
+      if (g.distance <= 100 && g.phase < 3) { g.phase = 3; message = 'PHASE 3: final stretch!'; }
+      if (g.shield <= 0) { g.running = false; clearInterval(intervalRef.current); setDisplay(d => ({ ...d, shield: 0, message: 'Shield depleted. Pursuit failed.' })); setTimeout(onFailure, 1400); return; }
+      if (g.distance <= 0) { g.running = false; clearInterval(intervalRef.current); setDisplay(d => ({ ...d, distance: 0, message: 'Target distance reached!' })); setTimeout(onSuccess, 900); return; }
+      setDisplay({ lane: g.lane, distance: g.distance, shield: g.shield, turbo: Math.round(g.turbo), phase: g.phase, obstacles: [...g.obstacles], message });
+    }, 60);
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      const g = gameRef.current;
+      if (!g.running) return;
+      if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') { g.lane = Math.max(0, g.lane - 1); e.preventDefault(); }
+      else if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') { g.lane = Math.min(2, g.lane + 1); e.preventDefault(); }
+      else if (e.key === ' ') { if (g.turbo >= 50) { g.turbo -= 50; g.distance = Math.max(0, g.distance - 30); } e.preventDefault(); }
+      else if (e.key === 'e' || e.key === 'E') { g.obstacles = g.obstacles.filter(o => !(o.type === 'swoop' && o.lane === g.lane)); e.preventDefault(); }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  const ov = { position:'fixed', inset:0, background:'rgba(0,0,0,0.93)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', zIndex:50 };
+  const pan = { background:'#080604', border:'1px solid #FF6030', borderRadius:6, padding:24, minWidth:420, color:'#C9C5BE', fontFamily:"'IBM Plex Mono',monospace" };
+
+  const shieldBar = display.shield > 0 ? '█'.repeat(display.shield) + '░'.repeat(Math.max(0, 3 - display.shield)) : '░░░';
+
+  return (
+    <div style={ov}>
+      <div style={pan}>
+        <div style={{ color:'#FF6030', fontSize:13, letterSpacing:'0.15em', marginBottom:8 }}>SPEEDER PURSUIT — PHASE {display.phase}</div>
+        <div style={{ display:'flex', justifyContent:'space-between', fontSize:11, color:'#8A8F9E', marginBottom:14 }}>
+          <span>DIST: <span style={{ color:'#E8C97A' }}>{display.distance}</span></span>
+          <span>SHIELD: [{shieldBar}]</span>
+          <span>TURBO: {display.turbo}%</span>
+        </div>
+        <div style={{ display:'flex', gap:8, marginBottom:12 }}>
+          {LANE_NAMES.map((lname, i) => {
+            const obsInLane = display.obstacles.filter(o => o.lane === i);
+            const isPlayer = display.lane === i;
+            return (
+              <div key={i} style={{ flex:1, height:110, background: isPlayer?'#1A1006':'#080604', border:`1px solid ${isPlayer?'#FF6030':'#2A1A10'}`, borderRadius:4, display:'flex', flexDirection:'column', justifyContent:'flex-end', padding:'4px 6px', position:'relative', overflow:'hidden' }}>
+                {obsInLane.map((o, idx) => (
+                  <div key={idx} style={{ position:'absolute', top:`${Math.max(2, Math.min(85, (12-o.pos)/12*100))}%`, left:4, right:4, height:14, background: o.type==='freighter'?'#303030':o.type==='laser_gate'?'#6000C0':'#C02020', borderRadius:2, fontSize:9, color:'#DDD', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                    {o.type==='freighter'?'■':o.type==='laser_gate'?'⚡':'◆'}
+                  </div>
+                ))}
+                <div style={{ fontSize:16, color: isPlayer?'#FF6030':'#3A2010', textAlign:'center' }}>▲</div>
+                <div style={{ fontSize:8, color:'#5A3020', textAlign:'center', marginTop:1 }}>{lname}</div>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ fontSize:11, color:'#E8C97A', minHeight:16, marginBottom:8 }}>{display.message}</div>
+        <div style={{ fontSize:10, color:'#4A3020' }}>A/D: lane · Space: turbo burst · E: EMP swoop</div>
+      </div>
+    </div>
+  );
+}
+
+function ValveOverrideOverlay({ onSuccess, onFailure }) {
+  const [pressure, setPressure] = React.useState(50);
+  const [target] = React.useState(() => 65 + Math.floor(Math.random() * 20));
+  const [timeLeft, setTimeLeft] = React.useState(8);
+  const [locked, setLocked] = React.useState(false);
+  const [message, setMessage] = React.useState('');
+  const lockedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) { clearInterval(timer); if (!lockedRef.current) onFailure(); return 0; }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (lockedRef.current) return;
+      if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') { setPressure(p => Math.max(0, p - 5)); e.preventDefault(); }
+      else if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') { setPressure(p => Math.min(100, p + 5)); e.preventDefault(); }
+      else if (e.key === ' ' || e.key === 'Enter') {
+        if (lockedRef.current) return;
+        lockedRef.current = true;
+        setLocked(true);
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  React.useEffect(() => {
+    if (!locked) return;
+    const diff = Math.abs(pressure - target);
+    if (diff <= 8) { setMessage('Pressure stabilized. Valve locked.'); setTimeout(onSuccess, 1000); }
+    else { setMessage(`Off by ${diff} units. Pressure spike detected.`); setTimeout(onFailure, 1200); }
+  }, [locked]);
+
+  const ov = { position:'fixed', inset:0, background:'rgba(0,0,0,0.93)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', zIndex:50 };
+  const pan = { background:'#080402', border:'1px solid #FF4444', borderRadius:6, padding:28, minWidth:360, color:'#C9C5BE', fontFamily:"'IBM Plex Mono',monospace" };
+  const barPct = pressure;
+  const tStart = Math.max(0, target - 8);
+  const inZone = Math.abs(pressure - target) <= 8;
+
+  return (
+    <div style={ov}>
+      <div style={pan}>
+        <div style={{ color:'#FF4444', fontSize:13, letterSpacing:'0.15em', marginBottom:8 }}>PRESSURE VALVE OVERRIDE</div>
+        <div style={{ fontSize:11, color:'#8A8F9E', marginBottom:16 }}>Match pressure to the green target zone, then lock. Timer: {timeLeft}s</div>
+        <div style={{ position:'relative', height:36, background:'#160604', borderRadius:4, marginBottom:8, overflow:'hidden', border:'1px solid #3A1010' }}>
+          <div style={{ position:'absolute', left:`${tStart}%`, width:'16%', height:'100%', background:'rgba(60,180,60,0.2)', borderLeft:'2px solid #40C040', borderRight:'2px solid #40C040' }} />
+          <div style={{ position:'absolute', left:`${barPct}%`, top:0, bottom:0, width:4, background: inZone?'#40C040':'#FF4444', transform:'translateX(-50%)', transition:'left 0.1s, background 0.2s', borderRadius:2 }} />
+        </div>
+        <div style={{ display:'flex', justifyContent:'space-between', fontSize:11, marginBottom:16 }}>
+          <span style={{ color:'#604040' }}>0</span>
+          <span>PRESSURE: <span style={{ color: inZone?'#40C040':'#FF6060', fontWeight:700 }}>{pressure}</span></span>
+          <span style={{ color:'#604040' }}>100</span>
+        </div>
+        {message && <div style={{ fontSize:11, color: message.includes('stabilized')?'#40C040':'#FF6060', marginBottom:10 }}>{message}</div>}
+        <div style={{ fontSize:10, color:'#503030' }}>A/D: adjust · Space or Enter: lock</div>
+      </div>
+    </div>
+  );
+}
+
 function StarWarsRPG() {
   const [planetId, setPlanetId] = useState('coruscant');
   const [zoneId, setZoneId] = useState('spaceport');
@@ -2330,6 +2584,7 @@ function StarWarsRPG() {
   const [npcPositions, setNpcPositions] = useState({});
   const [suspicionMeter, setSuspicionMeter] = useState(0);
   const [choiceFeedback, setChoiceFeedback] = useState(null);
+  const [activeMinigame, setActiveMinigame] = useState(null);
   const posRef = React.useRef(pos);
 
   const worldState = React.useMemo(() => {
@@ -2472,7 +2727,7 @@ function StarWarsRPG() {
 
   useEffect(() => {
     const handleKey = (e) => {
-      if (showTravel || activeDialogue || transitioning || showSpeeder || showInventory || showCodex) return;
+      if (showTravel || activeDialogue || transitioning || showSpeeder || showInventory || showCodex || activeMinigame) return;
       if (e.key === 'i' || e.key === 'I') { setShowInventory(v => !v); return; }
       if (e.key === 'c' || e.key === 'C') { setShowCodex(v => !v); return; }
       let { x, y } = pos;
@@ -2533,6 +2788,23 @@ function StarWarsRPG() {
             addItem(ITEMS[worldObjHere.grantsItem]);
             pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId);
           }
+          if (worldObjHere.triggersMinigame && !completedInteractions.has(worldObjHere.id)) {
+            const successCb = () => {
+              if (worldObjHere.grantsFlag) setFlag(worldObjHere.grantsFlag);
+              if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) { addItem(ITEMS[worldObjHere.grantsItem]); pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId); }
+              if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
+              if (worldObjHere.once) setCompletedInteractions(prev => new Set([...prev, worldObjHere.id]));
+              pushActionLog(`[${worldObjHere.label}] Override successful.`, zoneId);
+              setActiveMinigame(null);
+            };
+            const failCb = () => {
+              pushActionLog(`[${worldObjHere.label}] Attempt failed. Security alert triggered.`, zoneId);
+              setActiveMinigame(null);
+            };
+            setActiveMinigame({ type: worldObjHere.triggersMinigame, context: worldObjHere, onSuccess: successCb, onFailure: failCb });
+            setPos({ x, y });
+            return;
+          }
           if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
           if (worldObjHere.grantsFlag) setFlag(worldObjHere.grantsFlag);
           if (worldObjHere.once) setCompletedInteractions((prev) => new Set([...prev, worldObjHere.id]));
@@ -2553,7 +2825,7 @@ function StarWarsRPG() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, showInventory, showCodex, questFlags, npcPositions, collectedItems, completedInteractions, pushActionLog, travelToZone, addItem, unlockCodex, setFlag]);
+  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, showInventory, showCodex, activeMinigame, questFlags, npcPositions, collectedItems, completedInteractions, pushActionLog, travelToZone, addItem, unlockCodex, setFlag]);
 
   const camX = Math.max(0, Math.min(zone.width - VIEWPORT_COLS, pos.x - Math.floor(VIEWPORT_COLS / 2)));
   const camY = Math.max(0, Math.min(zone.height - VIEWPORT_ROWS, pos.y - Math.floor(VIEWPORT_ROWS / 2)));
@@ -2727,6 +2999,9 @@ function StarWarsRPG() {
       {showSpeeder && <SpeederOverlay credits={credits} questFlags={questFlags} currentZoneId={zoneId} onTravel={(dest) => { setCredits((c) => c - dest.cost); setShowSpeeder(false); travelToZone(dest.targetZone, dest.targetPos); }} onClose={() => setShowSpeeder(false)} />}
       {showInventory && <InventoryOverlay inventory={inventory} onClose={() => setShowInventory(false)} />}
       {showCodex && <CodexOverlay codex={codex} setCodex={setCodex} onClose={() => setShowCodex(false)} />}
+      {activeMinigame && activeMinigame.type === 'signal_siphon' && <SignalSiphonOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {activeMinigame && activeMinigame.type === 'speeder_pursuit' && <SpeederPursuitOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {activeMinigame && activeMinigame.type === 'valve_override' && <ValveOverrideOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
     </div>
   );
 }
