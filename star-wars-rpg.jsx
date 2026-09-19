@@ -81,6 +81,7 @@ const PLANETS = {
             ],
           },
           { id: 'jon_spaceport', x: 6, y: 10, kind: 'smuggler', label: 'Jon', questNpc: true,
+            hideAfterFlags: ['met_jon_spaceport'],
             repeatPrompt: 'Jon gives you a knowing look. "Head over to my place through the market. You know where I am."',
             prompt: 'Well, look who finally made it off the transport vector intact. Good to see a face that is not collecting a bounty or issuing a customs citation. I have got a partner opening and something worth your time — but not out here in the landing bay.',
             choices: [
@@ -430,15 +431,153 @@ const PLANETS = {
         worldObjects: [
           { id: 'jon_datapad', x: 12, y: 3, label: 'Encrypted Datapad', description: 'Manifest fragments. Three hub codes, three timestamps, forty-eight hours apart. Someone who knew the routing schedules. The Broken Circle is written in the margin in red.', once: true },
           { id: 'slicing_bench', x: 14, y: 8, label: 'Slicing Workbench', description: 'A tangle of stripped datachips and bypass leads. Jon apparently does his best work at 0300.', once: false },
+          { id: 'bay14_analysis_board', x: 8, y: 4, once: false, label: 'Bay 14 Analysis Board', description: 'A holographic display pinned with freight logs, blast pattern analyses, and three photographs labeled UNKNOWN. Jon has been working this case longer than he let on. One note in his handwriting reads: "Transit codes -- mine. How?"' },
+          { id: 'faction_tension_chart', x: 3, y: 6, once: false, label: 'Coruscant Faction Chart', description: 'A layered map of Coruscant levels with colored overlays: blue for CSF jurisdiction, red for Iron Syndicate activity, amber for contested freight corridors. The Senate District is circled three times in a different color than the others. No label. Just the circle.' },
         ],
         npcs: [
           { id: 'jon_apartment', x: 5, y: 3, kind: 'smuggler', label: 'Jon', questNpc: true,
-            repeatPrompt: 'Jon is studying cargo manifests on his terminal. "Those three hub sites are still open. Find out who coordinated those strikes."',
-            prompt: 'Here is the situation. Someone new is moving through the lower levels — fast, organized, and ruthless. Three major Republic transport hubs got hit in forty-eight hours. They did not steal credits. They took military-grade power converters, encrypted datanodes, and weapons manifests. Black Sun is denying it. The Exchange is rattled. Whoever this is, they are building something. I need eyes on those three hit sites before customs seals them. That is where you come in.',
+            prompt: 'Here is the situation. Someone is moving stolen Phrik alloy through the lower levels -- military-grade material that has no business being in civilian freight lanes. Docking Bay 14 is the last confirmed point of entry. I need a partner I can trust to find out who is behind it before it disappears into the infrastructure.',
             choices: [
-              { text: 'I am in. Give me everything you have on the attack sites.', morality: 0, loyalty: { underworld: 8 }, result: 'Jon slides a datapad across the table and transfers 200 credits. "Speeder clearance codes are on your pad. Hit the Airtaxi terminal in the docking bay — all mid and lower level sectors are open to you now."', grants: { credits: 200, flags: ['speeder_transit_unlocked', 'chapter1_active'] } },
-              { text: 'What is in it for me beyond the credits?', morality: 0, loyalty: { underworld: 5 }, result: 'Jon leans back. "First mover advantage. Whoever hit those hubs left things behind. Cargo, intel, leverage. You get first pick." He transfers 200 credits and uploads the clearance codes.', grants: { credits: 200, flags: ['speeder_transit_unlocked', 'chapter1_active'] } },
-              { text: 'I need more upfront to walk into a war zone.', morality: -8, loyalty: { underworld: 10 }, result: 'Jon sighs and pushes across an extra hundred. "Three hundred. Now get moving before the CSF seals the scene." He uploads the clearance codes.', grants: { credits: 300, flags: ['speeder_transit_unlocked', 'chapter1_active'] } },
+              { text: 'I am in. Give me everything you have.', morality: 5, loyalty: { underworld: 8 }, result: 'He slides a datapad across the table. "Bay 14. Start at the dock manifest kiosk and work backward. Whatever was moved through there, someone went to great lengths to pretend it did not exist." He pauses. "Be careful. The people who make things disappear do not appreciate witnesses."', grants: { credits: 200, flags: ['chapter1_active', 'speeder_transit_unlocked'] } },
+              { text: 'What is in it for me beyond the credits?', morality: 0, loyalty: { underworld: 5 }, result: '"Answers. If you want to know why the Bay 14 cargo is important enough to kill for, you need to follow the thread. The credits are upfront. The answers are earned."', grants: { credits: 200, flags: ['chapter1_active', 'speeder_transit_unlocked'] } },
+              { text: 'I need more upfront. This sounds dangerous.', morality: -3, loyalty: {}, result: 'He does not blink. "Three hundred. Because you are right. And because I need someone who knows the value of their own skin." He counts out the extra hundred from a lockbox.', grants: { credits: 300, flags: ['chapter1_active', 'speeder_transit_unlocked'] } },
+            ],
+            repeatPrompt: 'Jon is at the terminal running cargo projections. "Bay 14. Start there."',
+            phases: [
+              {
+                id: 'phase_mission_brief',
+                requiresAllFlags: [],
+                requiresNoneFlags: ['chapter1_active'],
+                prompt: 'Here is the situation. Someone is moving stolen Phrik alloy through the lower levels -- military-grade material that has no business being in civilian freight lanes. Docking Bay 14 is the last confirmed point of entry. I need a partner I can trust to find out who is behind it before it disappears into the infrastructure.',
+                choices: [
+                  { text: 'I am in. Give me everything you have.', morality: 5, loyalty: { underworld: 8 }, result: 'He slides a datapad across the table. "Bay 14. Start at the dock manifest kiosk and work backward. Whatever was moved through there, someone went to great lengths to pretend it did not exist." He pauses. "Be careful. The people who make things disappear do not appreciate witnesses."', grants: { credits: 200, flags: ['chapter1_active', 'speeder_transit_unlocked'] } },
+                  { text: 'What is in it for me beyond the credits?', morality: 0, loyalty: { underworld: 5 }, result: '"Answers. If you want to know why the Bay 14 cargo is important enough to kill for, you need to follow the thread. The credits are upfront. The answers are earned."', grants: { credits: 200, flags: ['chapter1_active', 'speeder_transit_unlocked'] } },
+                  { text: 'I need more upfront. This sounds dangerous.', morality: -3, loyalty: {}, result: 'He does not blink. "Three hundred. Because you are right. And because I need someone who knows the value of their own skin." He counts out the extra hundred from a lockbox.', grants: { credits: 300, flags: ['chapter1_active', 'speeder_transit_unlocked'] } },
+                ],
+                repeatPrompt: 'Jon is at the terminal running cargo projections. "Bay 14. Start there."',
+              },
+              {
+                id: 'phase_bay14_direction',
+                requiresAllFlags: ['chapter1_active'],
+                requiresNoneFlags: ['freight_hub_investigated'],
+                prompt: '"You have the transit pass. Sector 4 Freight Hub is your first stop -- that is where Bay 14 logs in and out. Talk to the dock engineer if you can find one willing to say anything. The official record has been sanitized. The physical evidence has not."',
+                choices: [
+                  { text: '"Is there anything in particular I should look for?"', morality: 5, loyalty: { underworld: 5 }, result: '"Blast marks that do not match a fuel fire. Cargo crates logged as agricultural that weigh three times what they should. And anyone who looks like they were paid to be somewhere else when the loading happened."', grants: { flags: ['bay14_method_known'] } },
+                  { text: '"Do you have contacts at the hub who can smooth my entry?"', morality: 0, loyalty: { underworld: 5 }, result: '"One. Corin. He runs a salvage shop on Platform 04. Tell him the hydronspan ratio is off. He will know what it means." He says it like it costs him something.', grants: { flags: ['jax_jon_vouched'] } },
+                  { text: '"I will handle it. No need for contacts."', morality: -3, loyalty: {}, result: '"Your call. Just remember -- down at Level 088, independent only means you have no backup."' },
+                ],
+                repeatPrompt: 'Jon is cross-referencing freight routes on a holographic display. "Level 088 is not going to investigate itself."',
+              },
+              {
+                id: 'phase_bay14_debrief',
+                requiresAllFlags: ['freight_hub_investigated'],
+                requiresNoneFlags: ['jon_bay14_briefed', 'marlo_sky_talked', 'vane_sky_cooperated'],
+                prompt: '"You found something. I can tell. Sit down." He shuts off his terminal and gives you his full attention for the first time.',
+                choices: [
+                  { text: '"Two unmarked lifters. Grey coats. Republic security codes that checked out clean."', morality: 5, loyalty: { underworld: 8 }, result: '"Republic codes in civilian freight lanes. That is an inside job. Someone with Senate access signed those passes." He stands and walks to the viewport. "The alloy is going somewhere specific. Sky-Market Level 1450 is the next thread -- find out who brokered the move. There is a man called Slick Marlo at the Aurebesh Lounge, and an Officer Vane at the precinct across the promenade. Pick your approach. And do not mention my name first -- not to either of them."', grants: { flags: ['jon_bay14_briefed', 'sky_market_direction_given'], codex: ['codex-jon-backstory'] } },
+                  { text: '"The dock was stripped before I arrived. But I found a forged keycard and testimony from the engineer."', morality: 8, loyalty: { republic: 5 }, result: '"Testimony is a start. The keycard is better. Someone forged Republic-grade clearance -- that narrows the suspect pool considerably." He transfers coordinates to your datapad. "Sky-Market District, Level 1450. Two contacts: Marlo at the Aurebesh Lounge and Officer Vane at the CSF precinct. Do not use my name. Let them come to you."', grants: { flags: ['jon_bay14_briefed', 'sky_market_direction_given'], codex: ['codex-jon-backstory'] } },
+                ],
+                repeatPrompt: '"Sky-Market is the next step. Level 1450. And do not use my name up there."',
+              },
+              {
+                id: 'phase_sky_debrief_marlo',
+                requiresAllFlags: ['marlo_sky_talked'],
+                requiresNoneFlags: ['vane_sky_cooperated', 'jon_sky_market_debriefed'],
+                prompt: '"Marlo. Of course it is Marlo." He rubs the back of his neck. "He is good at finding buyers. He is very good at not being the one who ends up in custody. What did he tell you about the Syndicate?"',
+                choices: [
+                  { text: '"The alloy is going to The Works. The buyer has Senate credentials."', morality: -3, loyalty: { underworld: 10 }, result: '"A Senate-backed buyer running Phrik through an underbelly broker. Someone is building something off the books and using the Republic\'s own infrastructure to do it. This is bigger than Bay 14." He opens a new route file. "Marlo\'s connections are useful, but if the Republic traces the alloy, your name is near his. Stay aware of that."', grants: { flags: ['jon_sky_market_debriefed', 'iron_syndicate_senate_link_known'] } },
+                  { text: '"He gave me the Buyer\'s ID. Iron Syndicate is the real operation."', morality: 0, loyalty: { underworld: 8 }, result: '"Iron Syndicate. I have heard that name twice in the last month. Both times from people who stopped talking shortly after." He does not say it lightly. "This goes beyond a freight dispute. Watch yourself."', grants: { flags: ['jon_sky_market_debriefed', 'iron_syndicate_senate_link_known'] } },
+                ],
+                repeatPrompt: '"The Syndicate is the thread. Pull it carefully."',
+              },
+              {
+                id: 'phase_sky_debrief_vane',
+                requiresAllFlags: ['vane_sky_cooperated'],
+                requiresNoneFlags: ['marlo_sky_talked', 'jon_sky_market_debriefed'],
+                prompt: '"You went Republic. I did not see that coming." He is not angry -- he is recalibrating. "Officer Vane is exactly who he looks like: a man who believes the system still works. He is either going to be the best ally you have ever had, or he is going to get you both killed."',
+                choices: [
+                  { text: '"He gave me a CSF Auxiliary Pass and sent me to the Academy. I am going in officially."', morality: 12, loyalty: { republic: 10 }, result: '"Then I am the unofficial version. You will need both." He leans back. "The CSF has access I do not have. I have contacts the CSF cannot touch. We cover more ground this way -- as long as Vane does not find out you are running two ledgers."', grants: { flags: ['jon_sky_market_debriefed', 'jon_republic_aware'] } },
+                  { text: '"I wanted information and the badge was the fastest path. I am not a true believer."', morality: 0, loyalty: { underworld: 5 }, result: '"Good. Believers make bad operators." He almost smiles. "Use the CSF access. Just do not let Vane decide you are his. That conversation gets complicated."', grants: { flags: ['jon_sky_market_debriefed', 'deceiver_path_hinted'] } },
+                ],
+                repeatPrompt: '"You are running with the Republic now. Keep me in the loop."',
+              },
+              {
+                id: 'phase_sky_debrief_both',
+                requiresAllFlags: ['marlo_sky_talked', 'vane_sky_cooperated'],
+                requiresNoneFlags: ['jon_sky_market_debriefed'],
+                prompt: '"You worked both sides at the Sky-Market." He sets down his drink. "That is either very smart or very reckless. With Marlo and Vane both believing you are their contact, you have leverage -- and a very short window before they compare notes."',
+                choices: [
+                  { text: '"I can manage both. The Syndicate is what matters."', morality: 0, loyalty: {}, result: '"Then manage them. But have an exit plan ready. When Marlo and Vane discover each other, you want to be the one holding the manifest, not caught between their arguments."', grants: { flags: ['jon_sky_market_debriefed', 'double_contact_known'] } },
+                ],
+                repeatPrompt: '"Both sides think you are theirs. That clock is ticking."',
+              },
+              {
+                id: 'phase_csf_confrontation',
+                requiresAllFlags: ['csf_briefed'],
+                requiresNoneFlags: ['jon_confrontation_done'],
+                prompt: '"A CSF badge. Are you insane? I brought you in as a partner to run cargo, not to hand my operation over to Republic guards!" He is pacing. This is the angriest you have seen him.',
+                choices: [
+                  { text: '"This badge is the ultimate cover. I can scrub our manifests from inside the CSF database."', morality: -12, loyalty: { underworld: 15 }, result: 'He stops pacing. A long silence. "You are saying you can run our operation from inside the CSF." He works through it. "That is either brilliant or the most dangerous thing I have ever heard you say." He unlocks the Inside Man path.', grants: { flags: ['jon_confrontation_done', 'inside_man_path'] } },
+                  { text: '"The underbelly is collapsing, Jon. Work with me legally or this operation does not survive."', morality: 15, loyalty: { republic: 15, underworld: -20 }, result: 'He looks at you for a long time. Then he locks his workbench and walks to the door. "If you genuinely believe that, then we want different things." He steps out. His shop closes temporarily.', grants: { flags: ['jon_confrontation_done', 'jon_gone_straight_warned', 'jon_shop_closed'] } },
+                  { text: '"Vane is using me to find the alloy location. Once I have it, I drop the badge and we take the score."', morality: -5, loyalty: { underworld: 10 }, result: 'He studies you for a long time. "You are playing a very dangerous game with a man who is good at it." He nods slowly. "Alright. But if Vane gets close enough to see through you, the deal ends. No heroics on my behalf."', grants: { flags: ['jon_confrontation_done', 'deceiver_path'], credits: 200 } },
+                ],
+                repeatPrompt: 'Jon has returned. He is quieter than before. Watching you more carefully.',
+              },
+              {
+                id: 'phase_post_confrontation_inside_man',
+                requiresAllFlags: ['inside_man_path'],
+                requiresNoneFlags: ['sector4_raid_complete'],
+                prompt: '"I have been thinking about what you said. If you genuinely have CSF database access -- and I mean genuine write access, not just read -- then we have an opportunity here that does not come around twice in a career."',
+                choices: [
+                  { text: '"I can scrub manifests before Vane sees them. Which routes are the priority?"', morality: -15, loyalty: { underworld: 20 }, result: '"The Level 088 freight lines are the cleanest to sanitize. Vane never looks past the manifest header." He slides you a list. "Do not be greedy. One route at a time."', grants: { flags: ['inside_man_routes_known'] } },
+                  { text: '"I want to keep this limited to the Bay 14 investigation. Not a permanent arrangement."', morality: -5, loyalty: { underworld: 8 }, result: '"Fair. Bay 14 only. When it is done, the badge goes back and we are what we were." He accepts the limit without argument.', grants: { flags: ['inside_man_limited'] } },
+                ],
+                repeatPrompt: '"Sector 4 is the active operation. Stay focused on the alloy."',
+              },
+              {
+                id: 'phase_post_confrontation_republic',
+                requiresAllFlags: ['jon_gone_straight_warned'],
+                requiresNoneFlags: ['sector4_raid_complete'],
+                prompt: 'He is back. His workbench is unlocked but his manner is different. Careful. Like someone who knows the ground is uncertain and is choosing each step deliberately.',
+                choices: [
+                  { text: '"I did not come back to push you. I came back because you are still my best lead on the Senate connection."', morality: 8, loyalty: { republic: 5 }, result: '"That is the only reason I opened the door." He sits. "What do you need?"', grants: { flags: ['jon_republic_truce'] } },
+                  { text: '"I meant what I said. The Republic path is the only one that ends cleanly."', morality: 15, loyalty: { republic: 10 }, result: '"I know you did. I am still not sure I believe you are right." He looks out the viewport. "But I am still here. That has to count for something."', grants: { flags: ['jon_republic_truce', 'jon_softening'] } },
+                ],
+                repeatPrompt: '"We are still talking. That is something."',
+              },
+              {
+                id: 'phase_post_confrontation_deceiver',
+                requiresAllFlags: ['deceiver_path'],
+                requiresNoneFlags: ['sector4_raid_complete'],
+                prompt: '"How is Vane treating you? Playing along well?" He says it like a test.',
+                choices: [
+                  { text: '"He trusts me. We are close to the Senate authorization codes."', morality: -8, loyalty: { underworld: 12 }, result: '"Good. When you have the codes, we pull the alloy before the CSF even knows where to look. Have a transport on standby."', grants: { flags: ['deceiver_active'] } },
+                  { text: '"I am having second thoughts about burning Vane."', morality: 5, loyalty: { republic: 5 }, result: '"Second thoughts now?" He is very still. "Do not tell Vane anything. But do not commit to the score either until you have decided." He means both halves equally.', grants: { flags: ['deceiver_wavering'] } },
+                ],
+                repeatPrompt: '"Vane is useful until he is not. You know what comes after."',
+              },
+              {
+                id: 'phase_endgame_reveal',
+                requiresAllFlags: ['sector4_raid_complete'],
+                requiresNoneFlags: ['jon_endgame_known'],
+                prompt: '"You walked out of Sector 4 in one piece. I was not certain you would." He pauses. "Sit down. There is something about the Bay 14 route I should have told you at the start."',
+                choices: [
+                  { text: '"Tell me."', morality: 5, loyalty: { underworld: 8, republic: 5 }, result: '"Three years ago I ran cargo on the Scylla route -- before it became a cover operation. I did not know what was in the sealed containers. When I found out, I shut the route down. Someone used my old transit codes to reopen it. Whoever is behind the Bay 14 Syndicate operation did not build from nothing. They built from what I left behind." He does not ask for forgiveness. "The Senate connection means this goes higher than either of us can reach alone. But the Level 005 route ends at a Senate transit terminal. If you can get there before the shipment departs, you can stop it."', grants: { flags: ['jon_endgame_known', 'senate_personal_stake_revealed'], codex: ['codex-jon-backstory'] } },
+                  { text: '"You owe me an explanation. Start talking."', morality: -5, loyalty: {}, result: '"Yes. I do." He tells you. The same information. Without the apology. The obligation is settled. The weight stays.', grants: { flags: ['jon_endgame_known', 'senate_personal_stake_revealed'], codex: ['codex-jon-backstory'] } },
+                ],
+                repeatPrompt: '"The Senate transit terminal is the end of the thread. Go finish it."',
+              },
+              {
+                id: 'phase_finale',
+                requiresAllFlags: ['senate_line_secured'],
+                prompt: '"It is done." He says it quietly. No celebration. Just acknowledgment. "Whatever path you took to get here -- Republic badge, underworld leverage, or something in between -- the alloy is gone and the Senator is exposed." He looks at the viewport. "I am going to close the apartment for a while. Let things settle." A pause. "You did good work."',
+                choices: [
+                  { text: '"What happens to your operation now?"', morality: 0, loyalty: {}, result: '"Smaller. Cleaner. The old routes are burned. But I still know people." He almost smiles. "I will find something."' },
+                  { text: '"It did not have to go this way. But I am glad you were in it."', morality: 8, loyalty: { underworld: 5, republic: 5 }, result: '"Yeah." He picks up his jacket. "Me too." He means it.', grants: { flags: ['jon_farewell_warm'] } },
+                  { text: '"We should talk about what comes next. There is more work to be done."', morality: 5, loyalty: { underworld: 8 }, result: '"There is always more work." He locks the terminal. "Give me a week. Then come back." He walks to the door without turning around. The invitation is open.', grants: { flags: ['jon_future_open'] } },
+                ],
+                repeatPrompt: '"It is done. The rest is the Republic\'s problem now."',
+              },
             ],
           },
         ],
@@ -1875,7 +2014,7 @@ function AmbientLayer({ kind, accent }) {
   );
 }
 
-function Minimap({ zone, map, pos, camX, camY, npcPositions, completedInteractions }) {
+function Minimap({ zone, map, pos, camX, camY, npcPositions, completedInteractions, questFlags = {} }) {
   const MS = 3;
   const tileColor = (t) => {
     if (t === 'floor') return zone.floorColor;
@@ -1891,7 +2030,7 @@ function Minimap({ zone, map, pos, camX, camY, npcPositions, completedInteractio
       {map.map((row, y) => row.map((tile, x) => (
         <rect key={`${x}-${y}`} x={x*MS} y={y*MS} width={MS} height={MS} fill={tileColor(tile.type)} />
       )))}
-      {zone.npcs?.map((npc) => {
+      {zone.npcs?.filter(npc => isNpcVisible(npc, questFlags)).map((npc) => {
         const p = (npcPositions && npcPositions[npc.id]) || { x: npc.x, y: npc.y };
         const done = completedInteractions?.has(npc.id);
         const isQuest = npc.questNpc && !done;
@@ -2028,6 +2167,15 @@ const CODEX_ENTRIES = {
       'Jon served two tours with the Republic Special Forces during the last Sith Wars before a disciplinary discharge that he has never fully explained. He went into private contracting, then cargo running, then something he prefers to call independent logistics.',
       'His Coruscant operation is small but clean. Three ships, six contacts, one rule: no weapons of mass destruction. Everything else is negotiable.',
       'He wants a partner he can trust with more than a manifest. He wants someone who will ask the right questions when the cargo stops making sense.',
+    ],
+  },
+  'codex-jon-backstory': {
+    id:'codex-jon-backstory', title:"Jon's Coruscant History", category:'dossier',
+    summary:'Your contact ran the Scylla route before it became a cover operation.',
+    body:[
+      'Three years before the Bay 14 incident, Jon ran the Scylla Freight route as legitimate cargo transport. He moved sealed containers for a client he knew as a Senate logistics contact. When he discovered one container held Jedi archive materials, he shut the route down and walked away.',
+      'Someone later used his old transit authentication codes to reopen the route under a shell company. The Bay 14 strike team had inside knowledge of his operational patterns because they were built from them.',
+      'Jon has never confirmed to any Republic authority what he carried or who hired him. He would rather carry the guilt privately than subject former crew members to investigation.',
     ],
   },
   'codex-docking-bay-14': {
@@ -2555,6 +2703,12 @@ function ValveOverrideOverlay({ onSuccess, onFailure }) {
   );
 }
 
+function isNpcVisible(npc, questFlags) {
+  if (npc.hideAfterFlags && npc.hideAfterFlags.some(f => questFlags[f])) return false;
+  if (npc.requiresFlag && !questFlags[npc.requiresFlag]) return false;
+  return true;
+}
+
 function StarWarsRPG() {
   const [planetId, setPlanetId] = useState('coruscant');
   const [zoneId, setZoneId] = useState('spaceport');
@@ -2577,7 +2731,7 @@ function StarWarsRPG() {
   const [alignment, setAlignment] = useState({ morality: 0, loyalty: { republic: 0, sithEmpire: 0, underworld: 0 } });
   const [showTravel, setShowTravel] = useState(false);
   const [activeDialogue, setActiveDialogue] = useState(null);
-  const [actionLog, setActionLog] = useState([{ text: 'Docked at Coruscant Spaceport, Subsurface Level 2. The ramp hisses shut behind you.', zone: 'spaceport' }]);
+  const [actionLog, setActionLog] = useState([{ text: 'Docked at Coruscant Spaceport, Subsurface Level 2. Your contact Jon is supposed to be waiting near Docking Bay 14.', zone: 'spaceport' }]);
   const [transitioning, setTransitioning] = useState(false);
   const [questFlags, setQuestFlags] = useState({});
   const [showSpeeder, setShowSpeeder] = useState(false);
@@ -2586,6 +2740,7 @@ function StarWarsRPG() {
   const [choiceFeedback, setChoiceFeedback] = useState(null);
   const [activeMinigame, setActiveMinigame] = useState(null);
   const posRef = React.useRef(pos);
+  const questFlagsRef = React.useRef(questFlags);
 
   const worldState = React.useMemo(() => {
     const repTotal = (questFlags.csf_duty_stance ? 1 : 0) + (questFlags.jaxxon_arrested ? 1 : 0)
@@ -2600,14 +2755,18 @@ function StarWarsRPG() {
   const currentObjective = React.useMemo(() => {
     if (questFlags.senate_line_secured) return 'Arc complete. Return to the CSF Academy.';
     if (questFlags.bomb_reached) return 'Neutralize the weapon on the Senate transit line.';
+    if (questFlags.sector4_raid_complete && !questFlags.jon_endgame_known) return 'Debrief Jon on the raid. He has intel on the Senate connection you need.';
     if (questFlags.sector4_raid_complete) return 'Pursue the Iron Syndicate to Level 005. Find Vex.';
+    if (questFlags.csf_briefed && !questFlags.jon_confrontation_done) return 'Jon needs to see your CSF badge. Return to his apartment now.';
     if (questFlags.csf_training_complete) return 'Report to Vane at Sector 4 Freight Hub.';
     if (questFlags.csf_briefed) return 'Complete all three training modules at the CSF Academy.';
+    if ((questFlags.marlo_sky_talked || questFlags.vane_sky_cooperated) && !questFlags.jon_sky_market_debriefed) return 'Check in with Jon. He will want to know which side you picked at the Sky-Market.';
     if (questFlags.republic_path_open) return 'Travel to CSF Tactical Command, Level 1222.';
     if (questFlags.marlo_sky_talked) return 'Follow the Phrik trail to Level 005. Reach The Works.';
     if (questFlags.marlo_sky_intro || questFlags.vane_sky_intro) return 'Return to Sky-Market District with evidence from Bay 14.';
+    if (questFlags.freight_hub_investigated && !questFlags.jon_bay14_briefed) return 'Report to Jon at his apartment. He needs to know what you found at Bay 14.';
     if (questFlags.met_jon_spaceport) return 'Locate the Scylla Freight manifest. Start at Docking Bay 14.';
-    return 'Find your way to Level 1450 — Sky-Market District.';
+    return 'Find your contact Jon at Coruscant Spaceport, Docking Bay 14.';
   }, [questFlags]);
 
   const pushActionLog = useCallback((msg, zoneLabel) => {
@@ -2657,13 +2816,14 @@ function StarWarsRPG() {
   }, [zoneId, pushActionLog]);
 
   useEffect(() => { posRef.current = pos; }, [pos]);
+  useEffect(() => { questFlagsRef.current = questFlags; }, [questFlags]);
   useEffect(() => { setNpcPositions({}); }, [zoneId]);
   useEffect(() => {
     const tickId = setInterval(() => {
       setNpcPositions((prev) => {
         const next = { ...prev };
         const playerPos = posRef.current;
-        zone.npcs?.forEach((npc) => {
+        zone.npcs?.filter(npc => isNpcVisible(npc, questFlagsRef.current || {})).forEach((npc) => {
           if (!npc.mobile) return;
           const cur = prev[npc.id] || { x: npc.x, y: npc.y };
           const dirs = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
@@ -2752,7 +2912,7 @@ function StarWarsRPG() {
         if (door) { travelToZone(door.targetZone, door.targetPos); return; }
       }
 
-      const npcHere = zone.npcs?.find((n) => {
+      const npcHere = zone.npcs?.filter(n => isNpcVisible(n, questFlags)).find((n) => {
         const p = npcPositions[n.id] || { x: n.x, y: n.y };
         return p.x === x && p.y === y;
       });
@@ -2854,7 +3014,7 @@ function StarWarsRPG() {
                   const tx = camX + vx;
                   const tile = map[ty]?.[tx] || { type: 'wall' };
                   const isPlayer = pos.x === tx && pos.y === ty;
-                  const npcHere = zone.npcs?.find((n) => { const p = npcPositions[n.id] || { x: n.x, y: n.y }; return p.x === tx && p.y === ty; });
+                  const npcHere = zone.npcs?.filter(n => isNpcVisible(n, questFlags)).find((n) => { const p = npcPositions[n.id] || { x: n.x, y: n.y }; return p.x === tx && p.y === ty; });
                   const collectibleHere = zone.collectibles?.find(c => c.x === tx && c.y === ty && !collectedItems.has(c.id));
                   const doorHere = zone.doors?.find(d => d.x === tx && d.y === ty);
                   const worldObjHere = zone.worldObjects?.find(wo => wo.x === tx && wo.y === ty && !(wo.once && completedInteractions.has(wo.id)));
@@ -2927,7 +3087,7 @@ function StarWarsRPG() {
         </div>
         <div style={{ position:'absolute',bottom:6,right:6,zIndex:10,background:'rgba(4,4,8,0.80)',padding:4,border:`1px solid ${zone.accentDim}55` }}>
           <div style={{ fontSize:8,color:'#5A5F74',marginBottom:2 }}>minimap</div>
-          <Minimap zone={zone} map={map} pos={pos} camX={camX} camY={camY} npcPositions={npcPositions} completedInteractions={completedInteractions} />
+          <Minimap zone={zone} map={map} pos={pos} camX={camX} camY={camY} npcPositions={npcPositions} completedInteractions={completedInteractions} questFlags={questFlags} />
         </div>
       </div>
 
