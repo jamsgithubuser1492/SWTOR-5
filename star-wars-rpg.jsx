@@ -605,7 +605,7 @@ const PLANETS = {
           carveRect(g, 26, 3, 36, 11, 'wall');
           carveRect(g, 27, 4, 35, 10, 'floor');
           carveRect(g, 34, 18, 36, 22, 'wall');
-          pt(g, 35, 19, 'floor'); pt(g, 35, 20, 'floor'); pt(g, 35, 21, 'floor');
+          pt(g, 35, 19, 'floor'); pt(g, 35, 20, 'floor'); pt(g, 35, 21, 'floor'); pt(g, 34, 20, 'floor');
           pt(g, 12, 7, 'floor');
           pt(g, 26, 7, 'floor');
           return g;
@@ -775,6 +775,7 @@ const PLANETS = {
           { id: 'module_b_terminal', x: 36, y: 16, once: true, label: 'Training Module B: Forensic Slicing', description: 'A reconstructed simulation of Docking Bay 14 — manifest kiosks, scorched terminals, altered shipping logs. Identify the code-trail left by the strike team. CSF Chain of Custody Protocol codex unlocked.', grantsItem: 'forensic_slicing_suite', grantsCodex: 'codex-csf-chain-of-custody', grantsFlag: 'module_b_complete' },
           { id: 'holding_block_b', x: 6, y: 24, once: true, label: 'Training Module C: High-Stress Interrogation', description: 'A captured Black Sun informant in Holding Block B. You have thirty minutes. No weapons discharges. No civil rights violations on record.' },
           { id: 'senate_honor_ceremony', x: 20, y: 14, once: true, label: 'Senate Honor Ceremony Terminal', description: 'The Senate Honor Cross is awarded in a formal ceremony. Officer Vane promotes you to Special Lead Investigator of the CSF Auxiliary Division.' },
+          { id: 'airtaxi_csf_academy', x: 38, y: 22, once: false, label: 'AirTaxi Terminal', description: 'Republic transit terminal. Authorized personnel only. Connects to the Coruscant AirTaxi Network.' },
         ],
         npcs: [
           { id: 'vane_academy', x: 6, y: 6, kind: 'republic_guard', label: 'Officer Vane',
@@ -846,7 +847,7 @@ const PLANETS = {
         worldObjects: [
           { id: 'marlo_hideout_board', x: 4, y: 10, once: false, label: 'Ops Planning Board', description: 'A holographic layout of three Coruscant levels. Marlo\'s territory in red. Rook\'s in blue. Significant overlap. Someone has been drawing lines.' },
           { id: 'rook_comms_terminal', x: 28, y: 16, once: true, label: "Rook's Comm Array", description: 'The speeder nav system is wired into this terminal. One code cylinder could redirect his entire route.' },
-          { id: 'airtaxi_lower_sky_market', x: 36, y: 13, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Exit from lower promenade.' },
+          { id: 'airtaxi_lower_sky_market', x: 20, y: 24, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Exit from lower promenade.' },
         ],
         npcs: [
           { id: 'marlo_1100', x: 8, y: 8, kind: 'broker', label: '"Slick" Marlo',
@@ -886,7 +887,9 @@ const PLANETS = {
         floorColor: '#201C10', floorAlt: '#2A2618', wallDark: '#0C0A04', wallLight: '#181408',
         bg: 'radial-gradient(circle at 50% 50%, #1A1408 0%, #08060A 70%)', ambient: 'traffic',
         decor: ['pillar', 'archive', 'brazier'],
-        doors: [], worldObjects: [], npcs: [], collectibles: [],
+        doors: [], worldObjects: [
+          { id: 'airtaxi_senate_district', x: 40, y: 28, once: false, label: 'Senate Express Terminal', description: 'A high-security transit terminal. Coruscant AirTaxi Network — Senate District access point.' },
+        ], npcs: [], collectibles: [],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 1, 1, 42, 30, 'floor');
