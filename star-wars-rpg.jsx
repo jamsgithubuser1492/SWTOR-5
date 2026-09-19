@@ -459,7 +459,11 @@ const PLANETS = {
         floorColor: '#2C2016', floorAlt: '#3C2A18', wallDark: '#14100A', wallLight: '#241A0C',
         bg: 'radial-gradient(circle at 50% 0%, #3A2008 0%, #221408 20%, #0E0A06 55%, #080604 100%)', ambient: 'traffic',
         decor: ['pillar', 'neon_sign', 'brazier', 'neon_sign', 'cargo_crate', 'pipe'],
-        doors: [],
+        doors: [
+          { x: 0, y: 12, targetZone: 'sky_customs', targetPos: { x: 33, y: 12 }, label: 'Skyway Customs' },
+          { x: 0, y: 13, targetZone: 'sky_customs', targetPos: { x: 33, y: 13 }, label: 'Skyway Customs' },
+          { x: 15, y: 25, targetZone: 'heat_sink_slums', targetPos: { x: 15, y: 1 }, label: 'Heat Sink Slums' },
+        ],
         worldObjects: [
           { id: 'jon_arrival_comlink', x: 5, y: 13, once: true, label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
           { id: 'sky_market_terminal', x: 20, y: 7, once: false, label: 'Trade Exchange Terminal', description: 'Live credit-transfer rates across fourteen systems. One manifest flagged for anomalous routing: SCYLLA FREIGHT. Destination: redacted. Shipper: redacted.' },
@@ -622,6 +626,167 @@ const PLANETS = {
           pt(g, 26, 7, 'floor');
           carveRect(g, 3, 21, 33, 21, 'wall');
           pt(g, 14, 21, 'floor'); pt(g, 22, 21, 'floor');
+          pt(g, 0, 12, 'door'); pt(g, 0, 13, 'door');
+          pt(g, 15, 25, 'door');
+          return g;
+        },
+      },
+      sky_customs: {
+        id: 'sky_customs', name: 'Skyway Customs & Concourse Dock', subtitle: 'Coruscant · L.1450 — Entry Gate',
+        width: 36, height: 24, spawnPos: { x: 4, y: 12 }, textureId: 'coruscant',
+        accent: '#00C4D4', accentGlow: 'rgba(0,196,212,0.25)', accentDim: '#006070',
+        floorColor: '#1A1E24', floorAlt: '#222830', wallDark: '#0A0C12', wallLight: '#141C24',
+        bg: 'radial-gradient(circle at 50% 30%, #101828 0%, #08090E 70%)', ambient: 'traffic',
+        decor: ['pillar', 'archive', 'neon_sign'],
+        doors: [
+          { x: 35, y: 12, targetZone: 'sky_market', targetPos: { x: 1, y: 12 }, label: 'Sky-Market Promenade' },
+          { x: 35, y: 13, targetZone: 'sky_market', targetPos: { x: 1, y: 13 }, label: 'Sky-Market Promenade' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_sky_customs', x: 2, y: 12, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Level 1450 Customs Concourse departure point.' },
+          { id: 'customs_scanner_archway', x: 12, y: 7, once: false, label: 'Cargo Scanner Archway', description: 'A Republic-standard cargo scan archway. The readout shows the last twelve items processed. Eleven of them are flagged with a yellow query. None have been followed up. The twelfth is flagged red: PHRIK ALLOY TRACE. The flag was manually cleared three months ago. The operator ID on the clearance is: REDACTED.' },
+          { id: 'manifest_kiosk', x: 18, y: 12, once: true, label: 'Cargo Manifest Registry', description: 'A public cargo manifest terminal. Searching "Scylla Freight" returns zero results. Searching the Bay 14 berth number returns a single entry: CASE CLOSED. RECORDS PURGED. AUTHORIZATION: SENATE DIRECTIVE 1182-C. The terminal\'s own activity log shows the purge command was issued from this terminal, from this building, at the same time the dock fire was reported.', grantsFlag: 'customs_manifest_checked' },
+          { id: 'caf_stand', x: 6, y: 6, once: false, label: 'Caf Stand — Northwest Concourse', description: 'A battered chrome caf dispenser and a fold-out table. A hand-lettered sign reads: BEST CAF BETWEEN THE LEVELS. A smaller sign below it reads: ONLY CAF BETWEEN THE LEVELS. The proprietor is a tired-looking Duros who refills your cup without being asked and does not charge you for it. "New faces are good for business," he says. "Old faces are bad for my nerves."' },
+          { id: 'detention_alcove', x: 6, y: 17, once: false, label: 'CSF Detention Alcove', description: 'A small holding area with two retention rings and a broken binder lock. The cell log shows fourteen detentions in the past six months. Thirteen were released within four hours. The fourteenth — listed only as GREY COAT, NO ID — was transferred off-site per Senate Directive 1182-C. No destination logged. The transfer was authorized by the same officer who filed the Bay 14 closure.' },
+          { id: 'flight_control_booth', x: 28, y: 7, once: true, label: 'Flight Control Booth', description: 'The customs concourse flight control station. The arrival log for the night of the Bay 14 incident shows a twelve-minute gap in the record — all arrivals logged, then nothing, then resuming as if the gap does not exist. The station officer filed a "technical malfunction" report for those twelve minutes. The report was accepted without inquiry.', grantsFlag: 'flight_gap_found' },
+        ],
+        npcs: [
+          { id: 'csf_customs_officer', x: 16, y: 12, kind: 'republic_guard', label: 'CSF Customs Officer Rael',
+            prompt: '"This is a controlled transit point. All cargo entering the Sky-Market District must be logged and scanned. Present your manifest or step aside."',
+            repeatPrompt: 'Officer Rael watches the concourse with the patience of someone who has been watching concourses for a very long time.',
+            choices: [
+              { text: '"I am CSF Auxiliary. I need access to the manifest registry."', morality: 8, loyalty: { republic: 8 }, requires: { item: 'csf_aux_pass' }, result: '"Auxiliary clearance noted. The registry terminal is at the center concourse. I would warn you that certain records have been — expunged. Senate directive. I am not permitted to say more." He steps aside.', grants: { flags: ['rael_cooperated'] } },
+              { text: '"What happened to the Bay 14 cargo records?"', morality: 5, loyalty: { republic: 5 }, result: '"I am not authorized to discuss active or closed Senate-directed case files. If you have a formal inquiry, file it with the Port Authority. Processing time is six to eight standard weeks." He does not make eye contact when he says it.', grants: { flags: ['rael_deflected'] } },
+              { text: '"I am looking for someone who was transferred out of your detention alcove."', morality: 3, loyalty: {}, result: '"Transfers off-site are handled by a dedicated Senate liaison. I do not have access to those records, and I would advise you not to press on that topic in this building." He pauses. "I am saying that as a courtesy."', grants: { flags: ['rael_warned'] } },
+            ],
+          },
+          { id: 'ast4_security_droid', x: 28, y: 16, kind: 'droid', label: 'AST-4 Security Droid', mobile: true,
+            prompt: '"SCANNING. CLEARANCE LEVEL: insufficient for restricted concourse areas. RECOMMEND: proceed to public manifest kiosk. THREAT ASSESSMENT: pending."',
+            repeatPrompt: 'AST-4 tracks your movement with its photoreceptor array. The threat assessment percentage has gone up.',
+            choices: [
+              { text: '"Run diagnostic. Who last accessed the flight control booth?"', morality: 0, loyalty: {}, result: '"DIAGNOSTIC REQUEST: access log for Flight Control Booth, past ninety days. RESULT: twenty-two authorized entries. ANOMALY: one entry, one hundred and twelve days ago, logged under a Senate clearance tier that does not correspond to any known customs authority level. CLASSIFICATION: above my pay grade." It resumes scanning.' },
+              { text: '"Stand down. Auxiliary clearance."', morality: 3, loyalty: { republic: 5 }, requires: { item: 'csf_aux_pass' }, result: '"CLEARANCE VERIFIED: Auxiliary Corps provisional. THREAT ASSESSMENT: revised to: unlikely. RECOMMENDATION: try not to do anything that changes that assessment." It pivots away.' },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'customs_chip', x: 30, y: 17, label: 'Dropped Clearance Chip', reward: 25 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 34, 22, 'floor');
+          carveRect(g, 1, 3, 10, 10, 'wall');
+          carveRect(g, 2, 4, 9, 9, 'floor');
+          pt(g, 10, 7, 'floor');
+          carveRect(g, 1, 13, 10, 20, 'wall');
+          carveRect(g, 2, 14, 9, 19, 'floor');
+          pt(g, 10, 16, 'floor');
+          carveRect(g, 22, 3, 34, 10, 'wall');
+          carveRect(g, 23, 4, 33, 9, 'floor');
+          pt(g, 22, 7, 'floor');
+          carveRect(g, 22, 13, 34, 20, 'wall');
+          carveRect(g, 23, 14, 33, 19, 'floor');
+          pt(g, 22, 16, 'floor');
+          pt(g, 35, 12, 'door'); pt(g, 35, 13, 'door');
+          return g;
+        },
+      },
+      heat_sink_slums: {
+        id: 'heat_sink_slums', name: 'Heat Sink Slums & Cantina Alley', subtitle: 'Coruscant · L.1450 — Residential Underbelly',
+        width: 36, height: 28, spawnPos: { x: 15, y: 2 }, textureId: 'coruscant',
+        accent: '#FF5520', accentGlow: 'rgba(255,85,32,0.28)', accentDim: '#802010',
+        floorColor: '#1A1008', floorAlt: '#261606', wallDark: '#0A0602', wallLight: '#160C06',
+        bg: 'radial-gradient(circle at 50% 90%, #2A1008 0%, #160804 30%, #080402 75%, #050202 100%)',
+        ambient: 'embers', decor: ['pipe', 'neon_sign', 'brazier', 'cargo_crate'],
+        doors: [
+          { x: 15, y: 0, targetZone: 'sky_market', targetPos: { x: 15, y: 24 }, label: 'Sky-Market Promenade' },
+          { x: 16, y: 0, targetZone: 'sky_market', targetPos: { x: 16, y: 24 }, label: 'Sky-Market Promenade' },
+          { x: 20, y: 27, targetZone: 'catwalk_underdeck', targetPos: { x: 20, y: 1 }, label: 'Catwalk Underdeck' },
+          { x: 21, y: 27, targetZone: 'catwalk_underdeck', targetPos: { x: 21, y: 1 }, label: 'Catwalk Underdeck' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_heat_sink', x: 16, y: 20, once: false, label: 'AirTaxi Terminal', description: 'A battered AirTaxi terminal mounted to the underdeck support strut. The casing is cracked and the screen flickers, but it works. Barely.' },
+          { id: 'cantina_entrance_sign', x: 8, y: 4, once: false, label: 'Cantina Sign — The Exhaust', description: 'A hand-painted sign above the cantina entrance reads THE EXHAUST in faded Aurebesh. Below, someone has added in smaller lettering: "Est. after the last time this level flooded." The door is open. The smell of grilled protein and something spiced with too much heat wafts out.' },
+          { id: 'cantina_gorg_spit', x: 5, y: 8, once: false, label: 'Gorg Spit — The Exhaust', description: 'A rotating gorg spit occupies the corner of the cantina near the bar. Whatever the gorg ate before it became the gorg, it was clearly living its best life. The fat drips and sizzles. The cantina keep claims the spit has not been turned off in three years. Nobody has contradicted this.' },
+          { id: 'sabacc_table', x: 10, y: 10, once: true, label: 'Sabacc Table — Back Corner', description: 'Four players, a mixed pile of credits and vouchers, and a fifth person watching from behind a column. The watcher is not playing. The watcher is counting cards. Nobody at the table has noticed. You have.', grantsFlag: 'sabacc_observer_seen' },
+          { id: 'hab_capsule_stack', x: 28, y: 8, once: false, label: 'Hab Capsule Block', description: 'Forty-eight stacked sleep capsules in a converted freight container, each one a meter and a half of foam mat and a ventilation slot. The occupancy board shows thirty-nine occupied. Rate: two credits per sleep cycle. The manager\'s station is empty — the manager lives in capsule forty-seven.' },
+          { id: 'exhaust_radiator_vent', x: 32, y: 20, once: false, label: 'Thermal Exhaust Radiator', description: 'A massive heat-sink radiator panel mounted to the outer wall, channeling heat from the manufacturing zones below upward through the residential level. On cold cycles it is a gathering point — a dozen residents crouch near the vents for warmth. The panel is rated for industrial output. The residential zone it is venting through is not.' },
+          { id: 'informant_booth', x: 20, y: 18, once: true, label: 'Curtained Booth', description: 'A makeshift privacy booth constructed from cargo curtain and wire frame. A datapad left on the table inside displays a partial credit transfer log — the same shell corporation chain visible on the lounge datapad upstairs, traced one step further to an account registered under the Senate District financial authority. Someone has been following the same thread you have.', grantsFlag: 'informant_found' },
+        ],
+        npcs: [
+          { id: 'reelo_informant', x: 22, y: 18, kind: 'broker', label: 'Reelo — Street Broker',
+            prompt: '"I do not know you. I do not do business with people I do not know. Unless—" he glances at the booth behind him, "—you are the one who has been following the credit trail. In that case, we have something to discuss."',
+            repeatPrompt: 'Reelo keeps one hand under the table. He has not decided whether he trusts you yet.',
+            choices: [
+              { text: '"I found the same shell accounts. Bay 14. Senate financial authority."', morality: 0, loyalty: { underworld: 8 }, result: '"Then you are either very smart or very stupid for following it this far. The account connects to a sub-committee that does not appear in the public Senate directory. Three people know it exists. Two of them work for the Iron Syndicate." He pauses. "I am not one of those two."', grants: { flags: ['reelo_talked', 'senate_subcommittee_named'] } },
+              { text: '"Who has been sitting in this booth?"', morality: 5, loyalty: {}, result: '"Someone who asks the right questions and leaves before they can be asked back. Like you should be doing right now." He nods at the door.' },
+              { text: '"What do you know about the Catwalk Underdeck?"', morality: -3, loyalty: { underworld: 5 }, result: '"Maintenance access for the levels below. The Syndicate uses it as a route to move cargo without hitting the transit checkpoints. If you go down there, go armed and go quiet."', grants: { flags: ['underdeck_warned'] } },
+            ],
+          },
+          { id: 'cantina_keep_mirra', x: 8, y: 7, kind: 'cantina_owner', label: 'Mirra — Cantina Keep',
+            prompt: '"Food is hot. Caf is strong. The sabacc table in the back is none of my business and has never existed. What do you want?"',
+            repeatPrompt: 'Mirra refills glasses without being asked and forgets faces on purpose.',
+            choices: [
+              { text: '"What do you know about the Iron Syndicate on this level?"', morality: -5, loyalty: { underworld: 5 }, result: '"They do not drink here. They do not eat here. They sit in the hab block and watch the transit corridors. I know this because my cantina is on the transit corridor and they are not subtle." She wipes the bar. "I stopped knowing things a month ago. It is healthier."', grants: { flags: ['mirra_hinted'] } },
+              { text: '"Is there a way down to the Catwalk Underdeck from here?"', morality: 0, loyalty: {}, result: '"South corridor, past the exhaust radiator. Maintenance hatch. You did not hear it from me." She moves to the other end of the bar.', grants: { flags: ['underdeck_access_known'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'slum_cred_chip', x: 14, y: 24, label: 'Stashed Cred Chip', reward: 35 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 34, 26, 'floor');
+          carveRect(g, 1, 3, 14, 14, 'wall');
+          carveRect(g, 2, 4, 13, 13, 'floor');
+          pt(g, 14, 8, 'floor');
+          carveRect(g, 18, 3, 34, 14, 'wall');
+          carveRect(g, 19, 4, 33, 13, 'floor');
+          pt(g, 18, 8, 'floor');
+          pt(g, 15, 0, 'door'); pt(g, 16, 0, 'door');
+          pt(g, 20, 27, 'door'); pt(g, 21, 27, 'door');
+          return g;
+        },
+      },
+      catwalk_underdeck: {
+        id: 'catwalk_underdeck', name: 'Vent Sector 14-Sub — Catwalk Underdeck', subtitle: 'Coruscant · L.1450 — Industrial Substructure',
+        width: 40, height: 22, spawnPos: { x: 20, y: 2 }, textureId: 'coruscant',
+        accent: '#C87800', accentGlow: 'rgba(200,120,0,0.22)', accentDim: '#604000',
+        floorColor: '#0E0C08', floorAlt: '#161208', wallDark: '#060402', wallLight: '#0E0A06',
+        bg: 'radial-gradient(circle at 50% 100%, #180C00 0%, #0C0800 40%, #050402 80%, #030202 100%)',
+        ambient: 'embers', decor: ['pipe', 'girder', 'slag'],
+        doors: [
+          { x: 20, y: 0, targetZone: 'heat_sink_slums', targetPos: { x: 20, y: 26 }, label: 'Heat Sink Slums' },
+          { x: 21, y: 0, targetZone: 'heat_sink_slums', targetPos: { x: 21, y: 26 }, label: 'Heat Sink Slums' },
+        ],
+        worldObjects: [
+          { id: 'airtaxi_underdeck', x: 2, y: 11, once: false, label: 'AirTaxi Terminal', description: 'A stripped-down AirTaxi terminal bolted to the underdeck strut framework. The screen is dark but the interface responds. Someone installed this without filing a permit.' },
+          { id: 'security_junction_box', x: 22, y: 6, once: true, label: 'CSF Patrol Routing Junction', description: 'A Republic-standard security routing node controlling patrol droid movements across the lower freight terraces. The firmware is three cycles out of date. The patrol schedule loaded into memory routes all droids away from Corridor 14-Sub between the third and fifth hour of the sleep cycle — a twelve-minute window, recurring. The window matches the Bay 14 incident timeline exactly.', grantsFlag: 'patrol_window_found', grantsCodex: 'codex-csf-protocol' },
+          { id: 'hydraulic_damper', x: 6, y: 6, once: false, label: 'Hydraulic Damper Array', description: 'The underdeck is held together by a series of hydraulic dampers that absorb the structural vibration from the freight terraces above. Each damper is stamped with a maintenance date. The most recent stamp is eight months old. The recommended interval is thirty days. The noise from above — a constant low throb — makes more sense now.' },
+          { id: 'conduit_tap_node', x: 32, y: 14, once: true, label: 'Unauthorized Power Tap Node', description: 'A jury-rigged power tap drilled directly into the municipal conduit line and drawing a continuous bleed of current to somewhere below. The cable runs down through a floor grate and disappears. The draw is small enough to stay below automated monitoring thresholds. Someone who knew exactly how the monitoring worked installed this.', grantsFlag: 'power_tap_found' },
+          { id: 'drop_shaft_view', x: 7, y: 17, once: false, label: 'Vertical Drop Shaft', description: 'An open maintenance shaft drops straight down from the underdeck floor into the levels below. No safety railing. A flickering work light thirty meters down illuminates a narrow platform, and below that — nothing visible. The shaft connects to the Level 1222 ventilation spine. If you could get down there without falling, you could move between levels without touching a single transit checkpoint.' },
+          { id: 'syndicate_marker', x: 30, y: 18, once: true, label: 'Iron Syndicate Transit Marker', description: 'A small iron chain emblem, stamp-pressed into the conduit housing — the Iron Syndicate\'s territorial marker. This route belongs to them. The stamp is recent: the metal around the impression is still bright, not yet oxidized. They have been using this underdeck as a cargo transit route within the last few days.', grantsFlag: 'syndicate_route_found' },
+        ],
+        npcs: [
+          { id: 'maintenance_droid_14sub', x: 20, y: 14, kind: 'droid', label: 'Maintenance Droid M-7', mobile: true,
+            prompt: '"UNIT M-7. ASSIGNED: underdeck thermal monitoring, Vent Sector 14-Sub. CURRENT STATUS: thermal readings nominal. ANOMALY LOG: seventeen unauthorized access events in the past month. REPORTING STATUS: none filed. Reporting terminal offline for seven months."',
+            repeatPrompt: 'M-7 resumes its patrol route, logging thermal readings that nobody will read.',
+            choices: [
+              { text: '"Who has been accessing this sector without authorization?"', morality: 0, loyalty: {}, result: '"ACCESS LOG: seventeen events. Biometric match: none. Cargo mass estimate per event: substantial. Route: north entry, south conduit access, repeat. ASSESSMENT: organized. CONCERN LEVEL: high. FILED REPORTS: zero. Reporting terminal offline."', grants: { flags: ['underdeck_traffic_logged'] } },
+              { text: '"Are you connected to the CSF patrol routing system?"', morality: 5, loyalty: { republic: 5 }, result: '"CONNECTED: yes, passive monitoring only. LAST PATROL UNIT IN THIS SECTOR: forty-three days ago. PATROL SCHEDULE: modified. REASON FOR MODIFICATION: system-level override, authorization unknown. CONCERN LEVEL: very high. Filed reports: zero. Reporting terminal offline."', grants: { flags: ['patrol_gap_confirmed'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'catwalk_cred_chip', x: 36, y: 10, label: 'Dropped Maintenance Chit', reward: 45 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 38, 20, 'floor');
+          carveRect(g, 15, 2, 25, 10, 'wall');
+          carveRect(g, 16, 3, 24, 9, 'floor');
+          pt(g, 15, 6, 'floor');
+          pt(g, 25, 6, 'floor');
+          carveRect(g, 2, 13, 12, 20, 'wall');
+          carveRect(g, 3, 14, 11, 19, 'floor');
+          pt(g, 7, 13, 'floor');
+          carveRect(g, 28, 12, 28, 18, 'lava');
+          pt(g, 20, 0, 'door'); pt(g, 21, 0, 'door');
           return g;
         },
       },
