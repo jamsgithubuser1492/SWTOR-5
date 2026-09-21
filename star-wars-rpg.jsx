@@ -19,6 +19,9 @@ function GlobalAnimations() {
       @keyframes embers-drift { 0%{transform:translateY(0);opacity:0;}10%{opacity:0.9;}100%{transform:translateY(-320px);opacity:0;} }
       @keyframes mist-drift { 0%{transform:translateX(-20px);opacity:0;}20%{opacity:0.7;}100%{transform:translateX(20px);opacity:0;} }
       @keyframes world-obj-pulse { 0%,100%{opacity:0.25;box-shadow:0 0 4px #4ACDFF33;}50%{opacity:0.65;box-shadow:0 0 10px #4ACDFF88;} }
+      @keyframes scanDown { from{transform:translateY(0);opacity:0.8;}to{transform:translateY(120vh);opacity:0;} }
+      @keyframes drift { from{transform:translate(0,0) scale(1);}to{transform:translate(10px,-8px) scale(1.1);} }
+      @keyframes rise { from{transform:translateY(0);opacity:0.5;}to{transform:translateY(-60px);opacity:0;} }
     `}</style>
   );
 }
@@ -46,7 +49,7 @@ const PLANETS = {
         accent: '#8FA6FF', accentGlow: 'rgba(143,166,255,0.25)', accentDim: '#3D4A80',
         floorColor: '#242840', floorAlt: '#2E3350', wallDark: '#0D0E16', wallLight: '#181B2C',
         bg: 'radial-gradient(circle at 30% 20%, #171A2C 0%, #0B0C14 70%)', ambient: 'traffic',
-        decor: ['cargo_crate', 'pipe', 'neon_sign'],
+        decor: ['cargo_crate', 'pipe', 'neon_sign', 'girder'],
         doors: [
           { x: 31, y: 12, targetZone: 'market', targetPos: { x: 1, y: 10 }, label: 'Market' },
           { x: 31, y: 13, targetZone: 'market', targetPos: { x: 1, y: 11 }, label: 'Market' },
@@ -109,10 +112,10 @@ const PLANETS = {
       market: {
         id: 'market', name: 'Market District', subtitle: 'Coruscant · Lower City Bazaar',
         width: 32, height: 22, spawnPos: { x: 1, y: 10 }, textureId: 'coruscant',
-        accent: '#8FA6FF', accentGlow: 'rgba(143,166,255,0.25)', accentDim: '#3D4A80',
-        floorColor: '#1E2238', floorAlt: '#272D48', wallDark: '#0D0E16', wallLight: '#181B2C',
-        bg: 'radial-gradient(circle at 60% 40%, #15182A 0%, #0B0C14 70%)', ambient: 'traffic',
-        decor: ['neon_sign', 'archive', 'pillar', 'brazier'],
+        accent: '#8FA6FF', accentGlow: 'rgba(143,166,255,0.18)', accentDim: '#3A4880',
+        floorColor: '#1A1C2A', floorAlt: '#222438', wallDark: '#0C0D16', wallLight: '#181A28',
+        bg: 'radial-gradient(circle at 50% 10%, #141628 0%, #080A14 70%)', ambient: 'traffic',
+        decor: ['cargo_crate', 'pipe', 'neon_sign', 'girder'],
         doors: [
           { x: 0, y: 10, targetZone: 'spaceport', targetPos: { x: 29, y: 12 }, label: 'Spaceport' },
           { x: 0, y: 11, targetZone: 'spaceport', targetPos: { x: 29, y: 13 }, label: 'Spaceport' },
@@ -423,7 +426,7 @@ const PLANETS = {
         width: 18, height: 14, spawnPos: { x: 9, y: 11 }, textureId: 'coruscant',
         accent: '#7AB8E0', accentGlow: 'rgba(122,184,224,0.18)', accentDim: '#2A4A60',
         floorColor: '#191E30', floorAlt: '#202540', wallDark: '#0A0C14', wallLight: '#141828',
-        bg: 'radial-gradient(circle at 40% 30%, #111622 0%, #080A12 70%)', ambient: 'traffic',
+        bg: 'radial-gradient(circle at 50% 50%, #141828 0%, #080A14 70%)', ambient: 'mist',
         decor: ['archive', 'pipe', 'cargo_crate'],
         doors: [
           { x: 9, y: 13, targetZone: 'apartments', targetPos: { x: 6, y: 5 }, label: 'Residential Corridor' },
@@ -597,7 +600,7 @@ const PLANETS = {
         accent: '#E8A030', accentGlow: 'rgba(232,160,48,0.30)', accentDim: '#7A4E10',
         floorColor: '#2C2016', floorAlt: '#3C2A18', wallDark: '#14100A', wallLight: '#241A0C',
         bg: 'radial-gradient(circle at 50% 0%, #3A2008 0%, #221408 20%, #0E0A06 55%, #080604 100%)', ambient: 'traffic',
-        decor: ['pillar', 'neon_sign', 'brazier', 'neon_sign', 'cargo_crate', 'pipe'],
+        decor: ['pillar', 'neon_sign', 'brazier', 'neon_sign', 'cargo_crate', 'pipe', 'girder'],
         doors: [
           { x: 0, y: 12, targetZone: 'sky_customs', targetPos: { x: 33, y: 12 }, label: 'Skyway Customs' },
           { x: 0, y: 13, targetZone: 'sky_customs', targetPos: { x: 33, y: 13 }, label: 'Skyway Customs' },
@@ -935,8 +938,8 @@ const PLANETS = {
         width: 40, height: 28, spawnPos: { x: 2, y: 14 }, textureId: 'coruscant',
         accent: '#FF8C42', accentGlow: 'rgba(255,140,66,0.18)', accentDim: '#7A3A10',
         floorColor: '#1C1A14', floorAlt: '#24221A', wallDark: '#0A0902', wallLight: '#161408',
-        bg: 'radial-gradient(circle at 30% 60%, #181410 0%, #08070A 70%)', ambient: 'embers',
-        decor: ['cargo_crate', 'pipe', 'girder', 'slag'],
+        bg: 'radial-gradient(circle at 30% 70%, #181410 0%, #08070A 70%)', ambient: 'steam',
+        decor: ['cargo_crate', 'pipe', 'girder', 'warning_beacon', 'slag'],
         doors: [
           { x: 20, y: 27, targetZone: 'mag_rail_corridor', targetPos: { x: 20, y: 1 }, label: 'Mag-Rail Corridor' },
           { x: 21, y: 27, targetZone: 'mag_rail_corridor', targetPos: { x: 21, y: 1 }, label: 'Mag-Rail Corridor' },
@@ -1176,8 +1179,8 @@ const PLANETS = {
         width: 36, height: 24, spawnPos: { x: 2, y: 12 }, textureId: 'coruscant',
         accent: '#FF4444', accentGlow: 'rgba(255,68,68,0.2)', accentDim: '#660000',
         floorColor: '#14100A', floorAlt: '#1C160E', wallDark: '#060402', wallLight: '#100C06',
-        bg: 'radial-gradient(circle at 50% 80%, #140800 0%, #050302 70%)', ambient: 'embers',
-        decor: ['pipe', 'girder', 'slag', 'rubble', 'brazier'],
+        bg: 'radial-gradient(circle at 50% 80%, #140800 0%, #050302 70%)', ambient: 'steam',
+        decor: ['pipe', 'girder', 'slag', 'rubble', 'warning_beacon', 'brazier'],
         doors: [
           { x: 20, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 20, y: 1 }, label: 'Cooling Ducts' },
           { x: 21, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 21, y: 1 }, label: 'Cooling Ducts' },
@@ -1400,7 +1403,7 @@ const PLANETS = {
         accent: '#4A9FFF', accentGlow: 'rgba(74,159,255,0.2)', accentDim: '#1A4A80',
         floorColor: '#181C28', floorAlt: '#1E2430', wallDark: '#0A0C14', wallLight: '#141820',
         bg: 'radial-gradient(circle at 50% 30%, #10182A 0%, #080C14 70%)', ambient: 'traffic',
-        decor: ['archive', 'pillar', 'neon_sign'],
+        decor: ['archive', 'pillar', 'scan_arch'],
         doors: [],
         worldObjects: [
           { id: 'induction_terminal', x: 10, y: 6, once: true, label: 'CSF Induction Terminal', description: 'Your Auxiliary Corps enrollment is confirmed. Designation: AX-7. Access level: provisional. Supervisor: Vane, T. Welcome to the Coruscant Security Force.', grantsItem: 'csf_aux_badge' },
@@ -1474,10 +1477,10 @@ const PLANETS = {
       lower_sky_market: {
         id: 'lower_sky_market', name: 'Lower Sky-Market Promenade', subtitle: 'Coruscant · Lower Mid-Levels · L.1100',
         width: 38, height: 26, spawnPos: { x: 2, y: 13 }, textureId: 'coruscant',
-        accent: '#FF3366', accentGlow: 'rgba(255,51,102,0.2)', accentDim: '#660020',
-        floorColor: '#16120E', floorAlt: '#1E1812', wallDark: '#080604', wallLight: '#120E0A',
-        bg: 'radial-gradient(circle at 40% 50%, #160A10 0%, #060408 70%)', ambient: 'embers',
-        decor: ['neon_sign', 'pipe', 'cargo_crate', 'brazier'],
+        accent: '#FF0055', accentGlow: 'rgba(255,0,85,0.22)', accentDim: '#660022',
+        floorColor: '#1A0C14', floorAlt: '#22101C', wallDark: '#0C0608', wallLight: '#180C10',
+        bg: 'radial-gradient(circle at 50% 40%, #1A080E 0%, #080406 70%)', ambient: 'neon_haze',
+        decor: ['neon_sign', 'brazier', 'pillar', 'pipe', 'cargo_crate'],
         doors: [],
         worldObjects: [
           { id: 'marlo_hideout_board', x: 4, y: 10, once: false, label: 'Ops Planning Board', description: 'A holographic layout of three Coruscant levels. Marlo\'s territory in red. Rook\'s in blue. Significant overlap. Someone has been drawing lines.' },
@@ -1518,10 +1521,10 @@ const PLANETS = {
       senate_district: {
         id: 'senate_district', name: 'Senate District Vaults', subtitle: 'Coruscant · Senate Precinct · L.1900',
         width: 44, height: 32, spawnPos: { x: 2, y: 16 }, textureId: 'coruscant',
-        accent: '#C8A000', accentGlow: 'rgba(200,160,0,0.2)', accentDim: '#604800',
-        floorColor: '#201C10', floorAlt: '#2A2618', wallDark: '#0C0A04', wallLight: '#181408',
-        bg: 'radial-gradient(circle at 50% 50%, #1A1408 0%, #08060A 70%)', ambient: 'traffic',
-        decor: ['pillar', 'archive', 'brazier'],
+        accent: '#4A9FFF', accentGlow: 'rgba(74,159,255,0.20)', accentDim: '#1A4A80',
+        floorColor: '#181C28', floorAlt: '#1E2430', wallDark: '#0A0C14', wallLight: '#141820',
+        bg: 'radial-gradient(circle at 50% 30%, #10182A 0%, #080C14 70%)', ambient: 'traffic',
+        decor: ['pillar', 'archive', 'scan_arch'],
         doors: [], worldObjects: [
           { id: 'airtaxi_senate_district', x: 40, y: 28, once: false, label: 'Senate Express Terminal', description: 'A high-security transit terminal. Coruscant AirTaxi Network — Senate District access point.' },
         ], npcs: [], collectibles: [],
@@ -1631,7 +1634,15 @@ function wallBackground(zone, x, y) {
   return `repeating-linear-gradient(100deg, ${a}, ${a} 4px, ${zone.wallDark} 4px, ${zone.wallDark} 9px)`;
 }
 
-function decorFor(zone, x, y) {
+function decorFor(zone, x, y, map) {
+  if (map) {
+    const neighbors = [[x-1,y],[x+1,y],[x,y-1],[x,y+1]];
+    const adjacentHazard = neighbors.some(([nx,ny]) => {
+      const t = map[ny]?.[nx];
+      return t && (t.type === 'lava' || t.type === 'water');
+    });
+    if (adjacentHazard && Math.abs(hash(x*3, y*7)) % 2 === 0) return 'hazard_stripe';
+  }
   const kinds = zone.decor;
   if (!kinds || kinds.length === 0) return null;
   const bucket = Math.floor(15 / kinds.length);
@@ -1876,6 +1887,22 @@ function NpcPortrait({ kind, accent }) {
       </svg>
     );
   }
+  if (kind === 'slicer') {
+    return (
+      <svg viewBox="0 0 48 48" style={{ width: '100%', height: '100%' }}>
+        <circle cx="24" cy="18" r="12" fill="#1A2A2A"/>
+        <rect x="14" y="14" width="20" height="10" rx="5" fill="#003040" stroke="#00F0FF" strokeWidth="1.5"/>
+        <rect x="16" y="16" width="7" height="6" rx="3" fill="#00C8D4" opacity="0.7"/>
+        <rect x="25" y="16" width="7" height="6" rx="3" fill="#00C8D4" opacity="0.7"/>
+        <line x1="23" y1="19" x2="25" y2="19" stroke="#00F0FF" strokeWidth="1"/>
+        <line x1="10" y1="17" x2="14" y2="18" stroke="#00C8D4" strokeWidth="1.5"/>
+        <line x1="38" y1="17" x2="34" y2="18" stroke="#00C8D4" strokeWidth="1.5"/>
+        <rect x="18" y="28" width="12" height="14" rx="3" fill="#0C1818"/>
+        <line x1="22" y1="24" x2="21" y2="30" stroke="#00F0FF" strokeWidth="1" opacity="0.7"/>
+        <line x1="26" y1="24" x2="27" y2="30" stroke="#00C8D4" strokeWidth="1" opacity="0.7"/>
+      </svg>
+    );
+  }
   return null;
 }
 
@@ -1921,6 +1948,14 @@ function DecorIcon({ kind, accent }) {
       return (<svg viewBox="0 0 24 24" width="14" height="17" style={s}><rect x="8" y="14" width="8" height="8" rx="1" fill="#00000060" /><rect x="10" y="10" width="4" height="4" fill="#00000060" /><ellipse cx="12" cy="9" rx="3" ry="1.5" fill="#444" opacity="0.8" /><path d="M10 6 Q11 3 10 1" stroke={accent} strokeWidth="1.2" fill="none" opacity="0.5" style={{ animation: 'steam-rise 2s ease-out 0s infinite' }} /><path d="M12 5 Q13 2 12 0" stroke={accent} strokeWidth="1.2" fill="none" opacity="0.5" style={{ animation: 'steam-rise 2s ease-out 0.4s infinite' }} /><path d="M14 6 Q15 3 14 1" stroke={accent} strokeWidth="1.2" fill="none" opacity="0.5" style={{ animation: 'steam-rise 2s ease-out 0.8s infinite' }} /></svg>);
     case 'neon_sign':
       return (<svg viewBox="0 0 32 16" width="22" height="11" style={s}><rect x="1" y="3" width="30" height="10" rx="1" fill="#00000060" /><rect x="1" y="3" width="30" height="10" rx="1" fill="none" stroke={accent} strokeWidth="1" opacity="0.7" style={{ animation: 'door-pulse 2.8s ease-in-out infinite' }} /><rect x="4" y="6" width="6" height="4" fill={accent} opacity="0.25" /><rect x="13" y="6" width="6" height="4" fill={accent} opacity="0.15" /><rect x="22" y="6" width="6" height="4" fill={accent} opacity="0.25" /></svg>);
+    case 'cable_bundle':
+      return (<svg viewBox="0 0 24 24" width="16" height="16" style={s}><g><line x1="8" y1="2" x2="8" y2="22" stroke="#00C8D4" strokeWidth="1.5" opacity="0.7"/><line x1="11" y1="2" x2="11" y2="22" stroke="#00F0FF" strokeWidth="1" opacity="0.5"/><line x1="14" y1="2" x2="14" y2="22" stroke="#00C8D4" strokeWidth="1.5" opacity="0.7"/><rect x="6" y="9" width="10" height="2" rx="1" fill="#005060" opacity="0.8"/><rect x="6" y="15" width="10" height="2" rx="1" fill="#005060" opacity="0.8"/></g></svg>);
+    case 'scan_arch':
+      return (<svg viewBox="0 0 24 24" width="16" height="16" style={s}><g><path d="M4 22 L4 6 Q12 2 20 6 L20 22" stroke="#00CCFF" strokeWidth="2" fill="none" opacity="0.8"/><line x1="4" y1="14" x2="20" y2="14" stroke="#00CCFF" strokeWidth="1" opacity="0.5" strokeDasharray="2,2"/><rect x="2" y="20" width="20" height="3" rx="1" fill="#1A4A80" opacity="0.7"/></g></svg>);
+    case 'warning_beacon':
+      return (<svg viewBox="0 0 24 24" width="16" height="16" style={s}><g><rect x="9" y="14" width="6" height="8" rx="1" fill="#804800"/><ellipse cx="12" cy="12" rx="5" ry="4" fill="#FF9900" opacity="0.9"/><ellipse cx="12" cy="12" rx="3" ry="2.5" fill="#FFCC00"/><rect x="10" y="4" width="4" height="8" rx="1" fill="#606060"/></g></svg>);
+    case 'hazard_stripe':
+      return (<svg viewBox="0 0 24 24" width="16" height="16" style={s}><g><rect x="2" y="18" width="20" height="4" fill="#1A1A00"/><rect x="2" y="18" width="4" height="4" fill="#FF9900" opacity="0.9"/><rect x="10" y="18" width="4" height="4" fill="#FF9900" opacity="0.9"/><rect x="18" y="18" width="4" height="4" fill="#FF9900" opacity="0.9"/></g></svg>);
     default: return null;
   }
 }
@@ -1998,6 +2033,59 @@ function AmbientLayer({ kind, accent }) {
               <circle cx="9" cy="5" r="0.8" fill="#FFFFFF" opacity="0.85" />
             </svg>
           </div>
+        ))}
+      </div>
+    );
+  }
+  if (kind === 'neon_haze') {
+    const neonParticles = Array.from({ length: 10 }, (_, i) => i);
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',opacity:0.7 }}>
+        {neonParticles.map((i) => (
+          <div key={i} style={{
+            position:'absolute',
+            width:`${30+(i*17)%40}px`,height:`${20+(i*13)%30}px`,
+            borderRadius:'50%',
+            background:i%2===0?'rgba(255,0,85,0.12)':'rgba(180,0,100,0.10)',
+            left:`${(i*23)%90}%`,top:`${(i*31)%80}%`,
+            animation:`drift ${6+(i%4)}s ease-in-out ${i*0.7}s infinite alternate`,
+            filter:'blur(8px)',pointerEvents:'none',
+          }} />
+        ))}
+      </div>
+    );
+  }
+  if (kind === 'datastream') {
+    const dsParticles = Array.from({ length: 8 }, (_, i) => i);
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',opacity:0.7 }}>
+        {dsParticles.map((i) => (
+          <div key={i} style={{
+            position:'absolute',width:'1px',
+            height:`${40+(i*19)%40}%`,
+            background:i%3===0?'rgba(0,240,255,0.25)':'rgba(0,180,200,0.15)',
+            left:`${10+i*12}%`,top:'-10%',
+            animation:`scanDown ${3+(i%3)}s linear ${i*0.4}s infinite`,
+            pointerEvents:'none',
+          }} />
+        ))}
+      </div>
+    );
+  }
+  if (kind === 'steam') {
+    const steamParticles = Array.from({ length: 12 }, (_, i) => i);
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',opacity:0.5 }}>
+        {steamParticles.map((i) => (
+          <div key={i} style={{
+            position:'absolute',
+            width:`${8+(i*7)%16}px`,height:`${8+(i*7)%16}px`,
+            borderRadius:'50%',
+            background:'rgba(200,180,160,0.08)',
+            left:`${(i*19)%88}%`,bottom:`${(i*13)%40}%`,
+            animation:`rise ${4+(i%5)}s ease-out ${i*0.5}s infinite`,
+            filter:'blur(4px)',pointerEvents:'none',
+          }} />
         ))}
       </div>
     );
@@ -2709,6 +2797,57 @@ function isNpcVisible(npc, questFlags) {
   return true;
 }
 
+const ZONE_ARCHETYPE_PROFILES = {
+  exterior: {
+    ambient: 'traffic',
+    decor: ['cargo_crate', 'pipe', 'neon_sign', 'girder'],
+    floorColor: '#1A1C2A', floorAlt: '#222438',
+    wallDark: '#0C0D16', wallLight: '#181A28',
+    accent: '#8FA6FF', accentGlow: 'rgba(143,166,255,0.18)', accentDim: '#3A4880',
+    bg: 'radial-gradient(circle at 50% 10%, #141628 0%, #080A14 70%)',
+  },
+  interior_cantina: {
+    ambient: 'neon_haze',
+    decor: ['neon_sign', 'brazier', 'pillar', 'neon_sign'],
+    floorColor: '#1A0C14', floorAlt: '#22101C',
+    wallDark: '#0C0608', wallLight: '#180C10',
+    accent: '#FF0055', accentGlow: 'rgba(255,0,85,0.22)', accentDim: '#660022',
+    bg: 'radial-gradient(circle at 50% 40%, #1A080E 0%, #080406 70%)',
+  },
+  interior_slicer: {
+    ambient: 'datastream',
+    decor: ['archive', 'pipe', 'neon_sign', 'cable_bundle'],
+    floorColor: '#080E0E', floorAlt: '#0C1414',
+    wallDark: '#040808', wallLight: '#0C1010',
+    accent: '#00F0FF', accentGlow: 'rgba(0,240,255,0.20)', accentDim: '#005060',
+    bg: 'radial-gradient(circle at 30% 60%, #060E0E 0%, #040808 70%)',
+  },
+  interior_csf: {
+    ambient: 'traffic',
+    decor: ['pillar', 'archive', 'scan_arch'],
+    floorColor: '#181C28', floorAlt: '#1E2430',
+    wallDark: '#0A0C14', wallLight: '#141820',
+    accent: '#4A9FFF', accentGlow: 'rgba(74,159,255,0.20)', accentDim: '#1A4A80',
+    bg: 'radial-gradient(circle at 50% 30%, #10182A 0%, #080C14 70%)',
+  },
+  interior_warehouse: {
+    ambient: 'steam',
+    decor: ['cargo_crate', 'girder', 'pipe', 'warning_beacon', 'slag'],
+    floorColor: '#1C1A14', floorAlt: '#24221A',
+    wallDark: '#0A0902', wallLight: '#161408',
+    accent: '#FF9900', accentGlow: 'rgba(255,153,0,0.18)', accentDim: '#804800',
+    bg: 'radial-gradient(circle at 30% 70%, #181410 0%, #08070A 70%)',
+  },
+  interior_generic: {
+    ambient: 'mist',
+    decor: ['archive', 'pipe', 'cargo_crate'],
+    floorColor: '#191E30', floorAlt: '#1E2438',
+    wallDark: '#0A0C14', wallLight: '#141820',
+    accent: '#7AB8E0', accentGlow: 'rgba(122,184,224,0.18)', accentDim: '#2A5870',
+    bg: 'radial-gradient(circle at 50% 50%, #141828 0%, #080A14 70%)',
+  },
+};
+
 function StarWarsRPG() {
   const [planetId, setPlanetId] = useState('coruscant');
   const [zoneId, setZoneId] = useState('spaceport');
@@ -3033,7 +3172,7 @@ function StarWarsRPG() {
                   return (
                     <div key={tx} style={{ width:TILE,height:TILE,position:'relative',background:bg,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:isPlayer?`inset 0 0 0 1.5px ${zone.accent}`:'none',flexShrink:0 }}>
                       {tile.type === 'wall' && wallDecorFor(zone, tx, ty) && <DecorIcon kind={wallDecorFor(zone, tx, ty)} accent={zone.accent} />}
-                      {tile.type === 'floor' && !isPlayer && !npcHere && !collectibleHere && decorFor(zone, tx, ty) && <DecorIcon kind={decorFor(zone, tx, ty)} accent={zone.accent} />}
+                      {tile.type === 'floor' && !isPlayer && !npcHere && !collectibleHere && decorFor(zone, tx, ty, map) && <DecorIcon kind={decorFor(zone, tx, ty, map)} accent={zone.accent} />}
                       {tile.type === 'ship_hull' && (
                         <svg viewBox="0 0 32 32" width={TILE} height={TILE} style={{ position:'absolute',inset:0,pointerEvents:'none' }}>
                           <line x1="0" y1="8" x2="32" y2="8" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.12" />
@@ -3045,6 +3184,9 @@ function StarWarsRPG() {
                       )}
                       {tile.type === 'ship_ramp' && (
                         <div style={{ fontSize:8,color:zone.accent,opacity:0.7,textAlign:'center',lineHeight:1.2 }}>▼<br/>EXIT</div>
+                      )}
+                      {tile.type === 'door' && (
+                        <div style={{ position:'absolute',top:0,left:0,right:0,height:'3px',background:zone.accent,opacity:0.7,borderRadius:'1px 1px 0 0' }} />
                       )}
                       {doorHere && !isPlayer && (
                         <div style={{ animation:'door-pulse 2s ease-in-out infinite',fontSize:9,color:zone.accent,textAlign:'center' }}>▶<br/><span style={{fontSize:7}}>{doorHere.label}</span></div>
