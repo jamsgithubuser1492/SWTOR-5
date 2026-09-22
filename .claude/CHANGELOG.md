@@ -1,6 +1,6 @@
 # Star Wars RPG — Agent Changelog
 
-**File:** `star-wars-rpg.jsx` · **Current size:** ~2240 lines  
+**File:** `star-wars-rpg.jsx` · **Current size:** ~2600 lines  
 **Live:** https://jamsgithubuser1492.github.io/SWTOR-5/
 
 ---
@@ -42,6 +42,8 @@
 | System | Location | What it does |
 |---|---|---|
 | `resolveDialoguePhase(npc, questFlags)` | Before StarWarsRPG | Evaluates NPC `phases` array; last matching phase wins; returns merged NPC with `_activePhaseId` |
+| `isNpcVisible(npc, questFlags)` | Before StarWarsRPG | Returns false if any `hideAfterFlags` flag is set, or if `requiresFlag` is not set; used in all 4 NPC processing sites |
+| `ZONE_ARCHETYPE_PROFILES` | Before StarWarsRPG | Six ready-made visual profiles (`exterior`, `interior_cantina`, `interior_slicer`, `interior_csf`, `interior_warehouse`, `interior_generic`); Cartographer copies from here instead of inventing values |
 | `completedInteractions` | State | Uses `npc.id + ':' + phaseId` as key so each phase is a fresh first encounter |
 | `questFlags` | State | All story flags; set via `setFlag(flag)` helper |
 | `worldState` | useMemo | Derives `'lawful'` / `'underworld'` / `'neutral'` from flag counts |
@@ -55,10 +57,14 @@
 | `grantsCodex` | World object field | Unlocks codex entry on interaction |
 | `grantsFlag` | World object field | Sets quest flag on interaction |
 | `requiresFlag` | NPC field | NPC only spawns when flag is set |
+| `hideAfterFlags` | NPC field | NPC becomes invisible once any listed flag is set |
+| `SignalSiphonOverlay` | Component | Hacking puzzle mini-game; triggered by world objects with `triggersOverlay: 'signal_siphon'` |
+| `SpeederPursuitOverlay` | Component | Chase sequence mini-game; triggered by world objects with `triggersOverlay: 'speeder_pursuit'` |
+| `ValveOverrideOverlay` | Component | Timed valve control mini-game; triggered by world objects with `triggersOverlay: 'valve_override'` |
 
 ### NPC Kinds (registered in `NpcPortrait()`)
 
-`jedi`, `broker`, `warden`, `republic_guard`, `droid`, `smuggler`, `bith`, `swoop_gang`, `cantina_owner`, `crime_boss`, `mechanic`
+`jedi`, `broker`, `warden`, `republic_guard`, `droid`, `smuggler`, `bith`, `swoop_gang`, `cantina_owner`, `crime_boss`, `mechanic`, `slicer`
 
 Any kind not on this list renders nothing. New kinds require a Systems Architect SVG branch in `NpcPortrait()`.
 
@@ -73,6 +79,53 @@ World objects whose `id.startsWith('airtaxi_')` trigger the `SpeederOverlay` whe
 ---
 
 ## Session History (newest first)
+
+### Session 9 — Environmental Visual Grammar
+**Commit:** `527b999`
+
+Added the `ZONE_ARCHETYPE_PROFILES` constant (before `StarWarsRPG()`, after `CODEX_ENTRIES`), providing six ready-made visual profiles that the Cartographer copies rather than inventing values from scratch.
+
+New `DecorIcon` kinds: `cable_bundle`, `scan_arch`, `warning_beacon`, `hazard_stripe`.
+
+New `AmbientLayer` modes: `neon_haze` (slow magenta blobs for cantinas), `datastream` (vertical cyan scan lines for slicer dens), `steam` (rising white wisps for industrial zones). CSS keyframes for `drift`, `rise`, and `scanDown` added to the existing `<style>` block.
+
+Door threshold light bar: a 3px accent-colored `div` added at the top of every door tile in the viewport renderer.
+
+`decorFor(zone, x, y, map)`: optional fourth `map` argument enables `hazard_stripe` placement on floor tiles adjacent to `lava` or `water` tiles. Both call sites in the viewport floor renderer updated to pass `map`.
+
+All 9 Coruscant zones updated to match their archetype assignments: `spaceport`, `market`, `sky_market` as exterior; `jons_apt_int` as interior_generic; `freight_hub`, `the_works` as interior_warehouse; `csf_academy`, `senate_district` as interior_csf; `lower_sky_market` as interior_cantina.
+
+---
+
+### Session 8 — Jon as Primary Character Arc
+**Commit:** `0a94526`
+
+Added `isNpcVisible(npc, questFlags)` helper before `StarWarsRPG()`. Checks `npc.hideAfterFlags` (array of flags; NPC hides if any are set) and `npc.requiresFlag` (NPC shows only when flag is set). Applied at all four NPC processing sites: movement tick, keydown find, viewport render find, and minimap map.
+
+Jon removed from the spaceport after `met_jon_spaceport` is set (`hideAfterFlags: ['met_jon_spaceport']`).
+
+7-phase Jon apartment dialogue tree added to `jons_apt_int`: Phase 0 (mission briefing), Phase 1 (Bay 14 direction), Phase 2 (Bay 14 debrief), Phase 3 (sky-market debrief, path-sensitive), Phase 4 (CSF badge confrontation), Phase 5 (post-confrontation resolution), Phase 6 (post-raid endgame reveal), Phase 7 (final resolution). All phases gate via `requiresAllFlags` and `requiresNoneFlags`.
+
+Four story milestone objectives added to the `currentObjective` useMemo chain.
+
+New codex entry: `codex-jon-backstory` (unlocks during Phase 6 debrief).
+
+Two ambient world objects added to `jons_apt_int`: `bay14_analysis_board` (x:8, y:4) and `faction_tension_chart` (x:3, y:6).
+
+---
+
+### Session 7 — Three Mini-Game Overlays
+**Commit:** `9fb4440`
+
+Built three overlay mini-game components, each wired to the existing world object `triggersOverlay` pattern:
+
+- **`SignalSiphonOverlay`**: hacking puzzle triggered by world objects with `triggersOverlay: 'signal_siphon'`. Player intercepts a data stream by matching frequency nodes.
+- **`SpeederPursuitOverlay`**: chase sequence triggered by world objects with `triggersOverlay: 'speeder_pursuit'`. Player navigates a lane-based speeder chase.
+- **`ValveOverrideOverlay`**: timed valve control triggered by world objects with `triggersOverlay: 'valve_override'`. Player sequences three valve toggles against a pressure timer.
+
+Each overlay sets a quest flag on completion and clears itself via the existing overlay dismissal pattern. All three are wired to existing quest flags and world object triggers in the relevant zones.
+
+---
 
 ### Session 6 — Zone Interconnectivity Fix
 **Commit:** `9a9d61d`
