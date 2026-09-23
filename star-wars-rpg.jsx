@@ -573,6 +573,7 @@ const PLANETS = {
               {
                 id: 'phase_finale',
                 requiresAllFlags: ['senate_line_secured'],
+                requiresNoneFlags: ['inheritance_active'],
                 prompt: '"It is done." He says it quietly. No celebration. Just acknowledgment. "Whatever path you took to get here -- Republic badge, underworld leverage, or something in between -- the alloy is gone and the Senator is exposed." He looks at the viewport. "I am going to close the apartment for a while. Let things settle." A pause. "You did good work."',
                 choices: [
                   { text: '"What happens to your operation now?"', morality: 0, loyalty: {}, result: '"Smaller. Cleaner. The old routes are burned. But I still know people." He almost smiles. "I will find something."' },
@@ -580,6 +581,37 @@ const PLANETS = {
                   { text: '"We should talk about what comes next. There is more work to be done."', morality: 5, loyalty: { underworld: 8 }, result: '"There is always more work." He locks the terminal. "Give me a week. Then come back." He walks to the door without turning around. The invitation is open.', grants: { flags: ['jon_future_open'] } },
                 ],
                 repeatPrompt: '"It is done. The rest is the Republic\'s problem now."',
+              },
+              {
+                id: 'phase_inheritance_offer',
+                requiresAllFlags: ['senate_line_secured'],
+                requiresNoneFlags: ['inheritance_active'],
+                prompt: '"The Scylla route is gone. The Senate connection is burned. The CSF knows my name now, and I cannot run freight through the official channels for at least two years." He pours two cups of caf and pushes one across the table without asking. "But the network still exists. The pit, the Alleyway, the warehouse agreements, the bribe schedule. Fifteen years of infrastructure. I need someone I can trust to stand beside me and run half of it. I am asking you." He holds your gaze. "I am not asking for an answer right now. But I am asking."',
+                choices: [
+                  { text: '"I am in. Show me what you have built."', morality: 0, loyalty: { underworld: 10 }, result: '"Good." He opens a drawer and pulls out a sealed cargo manifest. "Start with this. Bay 14. Shipment that was waiting when the blast sealed the bay. Get it. Then we talk about what comes next."', grants: { flags: ['inheritance_active'], codex: ['codex-jon-inheritance'] } },
+                  { text: '"I need to think about it." (defer)', morality: 0, loyalty: {}, result: '"Take your time. The offer does not expire." He turns back to the viewport.' },
+                ],
+                repeatPrompt: '"The offer stands. Bay 14. Manifest. Come back when you have it."',
+              },
+              {
+                id: 'phase_manifest_choice',
+                requiresAllFlags: ['inheritance_active'],
+                requiresNoneFlags: ['cargo_skimmed', 'cargo_delivered_full'],
+                prompt: '"You got it. Good." Jon takes the manifest, scans it, and sets it down. "Level 1312 contact is waiting. Straight delivery, every crate, and you walk in as my Enforcer. Or..." He slides the manifest back toward you with one finger. "...there is a storage alcove at the south end of the arena. You could pull ten crates, lock them there, and I would never know. I would have leverage over you. But you would have leverage over me. Depending on what you want from this arrangement, that might be more useful."',
+                choices: [
+                  { text: '"Full delivery. I do not need leverage over you."', morality: 5, loyalty: { underworld: 5 }, result: '"Good. Go to Shadow Town, Level 1312. Malak will receive the shipment. Tell him I sent you." He marks the destination on your comlink.', grants: { flags: ['cargo_delivered_full', 'enforcer_position_granted'] } },
+                  { text: '"I will take the insurance. Ten crates go in the alcove."', morality: -5, loyalty: { underworld: 8 }, result: '"Smart." He almost sounds like he means it as a compliment. "Cache key is yours. The alcove is third from the south end. No one checks it." He does not ask which ten crates.', grants: { flags: ['cargo_skimmed'], items: ['shadow_arms_cache_key'] } },
+                ],
+              },
+              {
+                id: 'phase_warrant_choice',
+                requiresAllFlags: ['reya_warrant_cleared'],
+                requiresNoneFlags: ['reya_loyal', 'reya_blackmailed'],
+                prompt: '"The warrant is gone." Jon does not seem surprised. "Reya will come around now. One thing, did you keep a copy of the data?" He watches you carefully. "If you did, that is leverage over her. She knows it. It changes the working relationship."',
+                choices: [
+                  { text: '"I deleted it. Clean slate."', morality: 10, loyalty: { republic: 5 }, result: '"Soft." He shrugs. "But she will respect it. Go talk to her." He turns back to his terminal.', grants: { flags: ['reya_loyal'] } },
+                  { text: '"I kept a copy. She works harder knowing I have it."', morality: -10, loyalty: { underworld: 5 }, result: '"There it is." He nods once. "She will hate you for it. But she will show up." He says it without judgment.', grants: { flags: ['reya_blackmailed'] } },
+                ],
               },
             ],
           },
@@ -605,6 +637,7 @@ const PLANETS = {
           { x: 0, y: 12, targetZone: 'sky_customs', targetPos: { x: 33, y: 12 }, label: 'Skyway Customs' },
           { x: 0, y: 13, targetZone: 'sky_customs', targetPos: { x: 33, y: 13 }, label: 'Skyway Customs' },
           { x: 15, y: 25, targetZone: 'heat_sink_slums', targetPos: { x: 15, y: 1 }, label: 'Heat Sink Slums' },
+          { x: 36, y: 0, targetZone: 'penthouse', targetPos: { x: 14, y: 17 }, label: 'Penthouse Elevator' },
         ],
         worldObjects: [
           { id: 'jon_arrival_comlink', x: 5, y: 13, once: true, iconKind: 'comlink', label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
@@ -618,6 +651,9 @@ const PLANETS = {
           { id: 'precinct_comms_station', x: 33, y: 5, once: false, label: 'CSF Dispatch Station', description: 'Twelve active patrol frequencies. Six are handling routine traffic violations. Five are static. One — Sector 4 Channel B — is broadcasting a continuous loop: "All units stand by. Sector 4 incident classified pending Senate review."' },
           { id: 'precinct_wanted_board', x: 29, y: 9, once: false, iconKind: 'board', label: 'Sector 4 Active Warrants Board', description: 'Fourteen open warrants. Nine are standard Black Sun identifiers. Four are listed as CLASSIFIED with Senate clearance required to view. The fifteenth entry — Bay 14 strike team — shows status: SUSPENDED. Effective date: two days after the incident.' },
           { id: 'airtaxi_sky_market', x: 35, y: 20, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Departs on demand.' },
+          { id: 'penthouse_elevator_panel', x: 36, y: 1, once: false, iconKind: 'panel', label: 'Scylla Tower Seven Elevator',
+            requiresFlag: 'inheritance_active',
+            description: 'A private elevator car with no public registration. The panel reads SCYLLA TOWER SEVEN — LEVEL 1452 — AUTHORIZED CLEARANCE ONLY. Your clearance is on file. Step in.' },
           { id: 'skyline_vista', x: 19, y: 1, once: false, iconKind: 'vista', label: 'Promenade Skyline Overlook', description: 'The promenade edge opens onto open air and three thousand meters of vertical city. Speeders stream in tight formation lanes. Above: the Senate dome, catching the last reflected light from the planet\'s artificial sun cycle. Below: nothing visible. The lower levels begin where the light stops.',
             worldStateVariant: {
               lawful: 'The view from the law: the Republic\'s skyline, lit and ordered, everything it protects visible from one glance. The lower levels are down there somewhere, past the point where the light gives up.',
@@ -823,6 +859,7 @@ const PLANETS = {
           pt(g, 14, 21, 'floor'); pt(g, 22, 21, 'floor');
           pt(g, 0, 12, 'door'); pt(g, 0, 13, 'door');
           pt(g, 15, 25, 'door');
+          pt(g, 36, 0, 'door');
           return g;
         },
       },
@@ -1013,6 +1050,11 @@ const PLANETS = {
             grantsFlag: 'syndicate_ledger_found',
             grantsCodex: 'codex-syndicate-ledger',
             requires: { item: 'smugglers_keycard' } },
+          { id: 'bay14_weapon_cache', x: 32, y: 8, once: true, iconKind: 'crate', label: 'Weapons Shipment Cache',
+            requiresFlag: 'inheritance_active',
+            description: 'Thirty-two sealed crates marked AGRICULTURAL EQUIPMENT. The cargo manifest tucked beneath the top lid tells a different story: Merr-Sonn G-8 blasters, thermal detonators, Phrik plating strips. Jon wants this delivered to a contact at Level 1312. The CSF inventory counted boxes. They did not open them.',
+            grantsItem: 'bay14_weapon_manifest',
+            grantsCodex: 'codex-jon-inheritance' },
         ],
         npcs: [
           { id: 'jax_freight', x: 18, y: 6, kind: 'mechanic', label: 'Dock Engineer Jax',
@@ -1489,6 +1531,13 @@ const PLANETS = {
           { id: 'holding_block_b', x: 6, y: 24, once: true, label: 'Training Module C: High-Stress Interrogation', description: 'A captured Black Sun informant in Holding Block B. You have thirty minutes. No weapons discharges. No civil rights violations on record.' },
           { id: 'senate_honor_ceremony', x: 20, y: 14, once: true, label: 'Senate Honor Ceremony Terminal', description: 'The Senate Honor Cross is awarded in a formal ceremony. Officer Vane promotes you to Special Lead Investigator of the CSF Auxiliary Division.' },
           { id: 'airtaxi_csf_academy', x: 38, y: 22, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Republic transit terminal. Authorized personnel only. Connects to the Coruscant AirTaxi Network.' },
+          { id: 'precinct42_warrant_terminal', x: 28, y: 22, once: true, iconKind: 'terminal', label: 'Precinct 42 Remote Terminal',
+            requiresFlag: 'reya_warrant_mission_active',
+            requires: { item: 'reya_warrant_disk' },
+            description: 'A CSF remote access terminal with a clearance tunnel to the Level 1220 warrant archive. The terminal should not be accessible from the training wing, but someone wired it in wrong during the last facility expansion. The warrant ID on your disk matches an active record in the Precinct 42 database.',
+            triggersMinigame: 'signal_siphon',
+            grantsFlag: 'reya_warrant_cleared',
+            grantsCodex: 'codex-reya' },
         ],
         npcs: [
           { id: 'vane_academy', x: 6, y: 6, kind: 'republic_guard', label: 'Officer Vane',
@@ -1654,6 +1703,7 @@ const PLANETS = {
         doors: [
           { x: 1, y: 10, targetZone: 'lower_sky_market', targetPos: { x: 36, y: 13 }, label: 'Lower Promenade' },
           { x: 33, y: 10, targetZone: 'level_1313_subvault', targetPos: { x: 1, y: 9 }, label: 'Level 1313 Access' },
+          { x: 33, y: 6, targetZone: 'shadow_town', targetPos: { x: 2, y: 12 }, label: 'Shadow Town' },
         ],
         worldObjects: [
           { id: 'ancient_broadcast_terminal', x: 8, y: 4, once: true, iconKind: 'terminal', label: 'Derelict Broadcast Terminal',
@@ -1754,6 +1804,7 @@ const PLANETS = {
           pt(g, 16, 11, 'floor');
           pt(g, 1, 10, 'door');
           pt(g, 33, 10, 'door');
+          pt(g, 33, 6, 'door');
           return g;
         },
       },
@@ -1846,6 +1897,266 @@ const PLANETS = {
           // Lower chamber (ancient vault section)
           carveRect(g, 10, 12, 28, 20, 'floor');
           pt(g, 1, 10, 'door');
+          return g;
+        },
+      },
+      shadow_town: {
+        id: 'shadow_town', name: 'Shadow Town', subtitle: 'Coruscant · Level 1312 · The Pits',
+        width: 36, height: 24, spawnPos: { x: 3, y: 12 }, textureId: 'coruscant',
+        accent: '#C03030', accentGlow: 'rgba(192,48,48,0.30)', accentDim: '#600000',
+        floorColor: '#120808', floorAlt: '#1C0C0C', wallDark: '#070202', wallLight: '#180808',
+        bg: 'radial-gradient(circle at 50% 70%, #1A0000 0%, #080000 60%)', ambient: 'embers', floorPattern: 'grate',
+        decor: ['girder', 'slag', 'rubble', 'warning_beacon', 'hazard_stripe'],
+        doors: [
+          { x: 1, y: 12, targetZone: 'slicer_alleyway', targetPos: { x: 32, y: 6 }, label: 'Slicer Alleyway' },
+        ],
+        worldObjects: [
+          { id: 'pit_arena_sands', x: 17, y: 13, once: false, label: 'The Pit Arena', iconKind: 'floor',
+            description: 'Sand packed hard with decades of blood and sweat. A ring of low lights, two meters of drop to the lower tier, and no referees. The only rule is that the winner walks out.' },
+          { id: 'shadow_arms_cache', x: 31, y: 5, once: true, label: 'Skimmed Arms Cache', iconKind: 'crate',
+            requiresFlag: 'cargo_skimmed',
+            requires: { item: 'shadow_arms_cache_key' },
+            description: 'Ten crates of Merr-Sonn hardware you pulled from the Bay 14 manifest. They have been here two days and no one has touched them. That is either because Malak has not looked, or because he already knows and is waiting to see what you do with them.',
+            grantsFlag: 'shadow_cache_confirmed',
+            grantsCodex: 'codex-shadow-town' },
+          { id: 'arena_betting_board', x: 18, y: 3, once: false, label: 'Betting Board', iconKind: 'board',
+            description: "Tonight's card. Twelve bouts, four odds-on favourites, one main event listed only as MALAK vs. TBD. The space under TBD is blank. The odds on Malak are three to one in his favour. Someone has underlined them twice in ink." },
+          { id: 'arena_observation_rail', x: 12, y: 7, once: false, label: 'Observation Rail', iconKind: 'pipe',
+            description: 'Corroded permasteel railing along the upper deck. From here you can see the whole pit floor and everyone on it. Someone with good eyes could watch the exits from here and never be seen watching.' },
+          { id: 'shadow_town_codex_terminal', x: 5, y: 3, once: true, iconKind: 'terminal', label: 'Sub-Level Registry Post',
+            description: 'A cracked terminal running an automated registry loop for sub-level business licences. Level 1312 has forty-three registered businesses. Thirty-seven of them list the same registered agent: IRON SYNDICATE HOLDINGS LLC.',
+            grantsCodex: 'codex-shadow-town' },
+          { id: 'airtaxi_shadow_town', x: 8, y: 20, once: false, iconKind: 'beacon', label: 'Sub-Level Transit Node',
+            description: 'An unofficial transit splice wired into the AirTaxi network three levels above. The routing fee is charged as a food delivery surcharge. Nobody has complained.' },
+        ],
+        npcs: [
+          { id: 'malak_shadow', x: 4, y: 5, kind: 'crime_boss', label: 'Malak',
+            questNpc: true,
+            hideAfterFlags: ['malak_dead'],
+            repeatPrompt: 'Malak watches the pit floor with the detached attention of someone who has seen every outcome.',
+            phases: [
+              {
+                id: 'phase_malak_locked',
+                requiresNoneFlags: ['cargo_skimmed', 'cargo_delivered_full'],
+                prompt: 'Malak looks at you with the flat expression of someone who has not decided whether you are interesting yet. "You are new. Come back when you are not."',
+                choices: [{ text: 'Walk away.', grants: {} }],
+              },
+              {
+                id: 'phase_malak_skimmed_offer',
+                requiresAllFlags: ['cargo_skimmed'],
+                requiresNoneFlags: ['malak_turned', 'malak_dead'],
+                prompt: '"Ten missing crates." He already knows. He looks at you with something that is not quite respect and not quite threat. "Jon does not know. Which means you are either very smart or you are about to be very dead." He watches your face. "Or you are offering them to me."',
+                choices: [
+                  { text: '"They are yours. All ten. And I need you on my side when this moves."', morality: -5, loyalty: { underworld: 15 }, result: '"Done." He nods once. No surprise. No gratitude. Just a transaction that has now been completed. "Tell me when it is time."', grants: { flags: ['malak_turned'], codex: ['codex-malak'] } },
+                  { text: '"Try harder to find out."', morality: 0, loyalty: {}, result: 'He almost smiles. It does not reach his eyes. "Fair enough." He goes back to watching the pit floor.' },
+                ],
+              },
+              {
+                id: 'phase_malak_full_delivery',
+                requiresAllFlags: ['cargo_delivered_full', 'enforcer_position_granted'],
+                requiresNoneFlags: ['malak_turned', 'malak_dead'],
+                prompt: '"So you are the new Enforcer." He says it like a test, flat and measuring. "Jon gives you a title. That does not mean I answer to you. It means you have not earned anything yet. You want respect in this district, you earn it in the pit." He jerks his thumb toward the arena floor below. "Or you do not get it at all."',
+                choices: [
+                  { text: '"Fine. Name the terms."', morality: 0, loyalty: { underworld: 5 }, result: '"You. Me. Pit floor. Best of one. You walk out, you have my word. I walk out, you go back to Jon and tell him his Enforcer tried." He stands. "The pit is waiting."', grants: { flags: ['malak_pit_challenged'] } },
+                  { text: '"Respect is not what I came here for."', morality: 5, loyalty: {}, result: '"Then what did you come for?" He genuinely wants to know. You do not have a good answer for that. Neither does he.' },
+                ],
+              },
+              {
+                id: 'phase_malak_pit_challenged',
+                requiresAllFlags: ['malak_pit_challenged'],
+                requiresNoneFlags: ['malak_turned', 'malak_dead'],
+                prompt: 'Malak stands at the edge of the pit, arms loose at his sides. "Your move. Pit rules: no blasters, no grenades. Hands and blades only. First one down stays down." The betting board updated while you walked over. Someone changed the odds.',
+                choices: [
+                  { text: '[Fight Malak in the pit.]', grants: { flags: ['malak_turned'], codex: ['codex-malak'] }, morality: 0, loyalty: { underworld: 10 }, result: 'The fight is short and conclusive. When it is done, Malak gets up slowly and spits blood onto the arena sand. "All right." That is all he says. All right. He picks up his coat. "What do you need?"' },
+                  { text: '"Call it off. There is a better play here."', grants: {}, morality: 5, loyalty: {}, result: '"You walked up to the pit and blinked." He shakes his head. "Come back when you are ready to finish something." He walks back to his table.' },
+                ],
+              },
+              {
+                id: 'phase_malak_turned',
+                requiresAllFlags: ['malak_turned'],
+                prompt: '"What do you need?" That is all. No pleasantries. That is the highest level of professional courtesy Malak offers to anyone.',
+                choices: [
+                  { text: '"Stay ready. Things are going to move fast."', grants: {} },
+                ],
+                repeatPrompt: 'Malak gives you a flat nod. From him, that means yes.',
+              },
+            ],
+          },
+          { id: 'reya_shadow', x: 28, y: 16, kind: 'slicer', label: 'Reya',
+            questNpc: true,
+            repeatPrompt: 'Reya is running numbers on a datapad. She does not look up.',
+            phases: [
+              {
+                id: 'phase_reya_locked',
+                requiresNoneFlags: ['inheritance_active'],
+                prompt: '"Numbers do not care who is watching." She does not look up.',
+                choices: [{ text: 'Leave her to it.', grants: {} }],
+              },
+              {
+                id: 'phase_reya_intro',
+                requiresAllFlags: ['inheritance_active'],
+                requiresNoneFlags: ['reya_warrant_mission_active', 'reya_loyal', 'reya_blackmailed'],
+                prompt: '"You are Jon\'s new partner." She sets the datapad down. "I will work with you under one condition. There is a CSF murder warrant filed against me. The man I was supposed to have killed was a credit auditor skimming three Senate pension funds. The warrant is fabricated. I have the data to prove it. What I do not have is someone with CSF access and a clean route into the warrant archive." She looks at you steadily. "Clear the warrant and I am yours. Leave it and we work at arm\'s length."',
+                choices: [
+                  { text: '"I will clear the warrant. Where is the Precinct 42 server?"', morality: 5, loyalty: { republic: 3 }, result: '"CSF Academy training wing has a remote terminal with a clearance tunnel to the Level 1220 archive. Someone wired it in wrong during the last expansion. The terminal is live and the security lock runs on a signal-siphon frequency." She hands you a data disc. "The warrant ID and the auditor\'s original transaction data. Both need to go in together or the erase flags as incomplete."', grants: { flags: ['reya_warrant_mission_active'], items: ['reya_warrant_disk'], codex: ['codex-reya'] } },
+                  { text: '"I will consider it." (defer)', grants: {} },
+                ],
+              },
+              {
+                id: 'phase_reya_mission_active',
+                requiresAllFlags: ['reya_warrant_mission_active'],
+                requiresNoneFlags: ['reya_warrant_cleared'],
+                prompt: '"Precinct 42 warrant archive. CSF Academy, training wing. Remote terminal, wrong place in the wall. You have the warrant disk. The signal siphon handles the rest. When the record is gone, come back."',
+                choices: [{ text: '"Understood. I will handle it."', grants: {} }],
+                repeatPrompt: '"Warrant archive is still active. CSF Academy training wing."',
+              },
+              {
+                id: 'phase_reya_cleared_loyal',
+                requiresAllFlags: ['reya_warrant_cleared', 'reya_loyal'],
+                prompt: '"It is done. The record is erased and the auditor\'s transaction data is in the archive as exculpatory evidence." She exhales once, quietly. "I have been carrying that for three years." She opens a desk drawer and sets a keycard on the table without fanfare. "Jon\'s vault. My clearance. I made a copy two months ago when I realised this day was coming. Use it."',
+                choices: [{ text: '"Thank you, Reya."', grants: { items: ['vane_vault_keycard'] } }],
+                repeatPrompt: 'Reya gives you a measured nod. She is not warm. She is committed. There is a difference.',
+              },
+              {
+                id: 'phase_reya_blackmailed',
+                requiresAllFlags: ['reya_blackmailed'],
+                prompt: 'She knows you kept the warrant data copy. She does not say anything about it. She sets the vault keycard on the table with two fingers and does not look at you when she does it.',
+                choices: [{ text: 'Take the keycard.', grants: { items: ['vane_vault_keycard'] } }],
+                repeatPrompt: '"The vault keycard is yours. Do not lose it."',
+              },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'shadow_town_credits', x: 22, y: 20, label: 'Pit Winnings', reward: 80 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 34, 22, 'floor');
+          // Observation deck (north)
+          carveRect(g, 9, 1, 25, 6, 'wall');
+          carveRect(g, 10, 2, 24, 5, 'floor');
+          // Pit arena (center-south, open)
+          carveRect(g, 9, 8, 25, 18, 'wall');
+          carveRect(g, 10, 9, 24, 17, 'floor');
+          // Malak's corner alcove (northwest)
+          carveRect(g, 1, 1, 7, 7, 'floor');
+          // Arms cache alcove (northeast) with door
+          carveRect(g, 28, 1, 34, 7, 'floor');
+          // South corridor
+          carveRect(g, 14, 18, 20, 22, 'floor');
+          // Door tiles
+          pt(g, 1, 12, 'door');
+          return g;
+        },
+      },
+      penthouse: {
+        id: 'penthouse', name: 'Scylla Tower Penthouse', subtitle: 'Coruscant · Sky-Market · Level 1452',
+        width: 30, height: 20, spawnPos: { x: 14, y: 17 }, textureId: 'coruscant',
+        accent: '#C8A000', accentGlow: 'rgba(200,160,0,0.30)', accentDim: '#604800',
+        floorColor: '#1A1608', floorAlt: '#24200E', wallDark: '#0A0800', wallLight: '#1E1A08',
+        bg: 'radial-gradient(circle at 50% 0%, #2A1E00 0%, #181000 30%, #080600 70%)', ambient: 'neon_haze', floorPattern: 'clean',
+        decor: ['pillar', 'neon_sign', 'scan_arch'],
+        doors: [
+          { x: 14, y: 19, targetZone: 'sky_market', targetPos: { x: 35, y: 1 }, label: 'Elevator to Sky-Market' },
+        ],
+        worldObjects: [
+          { id: 'war_table', x: 14, y: 10, once: false, iconKind: 'terminal', label: 'Holo-War Table',
+            requiresFlag: 'syndicateManagement_active',
+            description: 'A holographic tactical display showing your territories, active agents, and contract queue. The Iron Syndicate operational map, rendered in cold blue light over a relief projection of Coruscant sub-levels 800 through 1450.',
+            triggersMinigame: 'syndicate_management' },
+          { id: 'vault_terminal', x: 25, y: 4, once: true, iconKind: 'terminal', label: 'Credit Vault Terminal',
+            requiresFlag: 'inheritance_active',
+            requires: { item: 'vane_vault_keycard' },
+            requiresNoneFlags: ['vault_heist_complete'],
+            description: 'A hardened credit routing terminal behind a biometric panel. Reya\'s keycard overrides the biometric. The system is live and processing tonight\'s payroll distribution: nine named CSF officers receiving hazard pay, thirty-eight warehouse security staff, and eleven anonymous accounts on the bribe schedule. Redirecting the bribe stream means those guards stop receiving payment in forty-eight hours.',
+            triggersMinigame: 'signal_siphon',
+            grantsFlag: 'vault_heist_complete',
+            grantsCodex: 'codex-penthouse' },
+          { id: 'trophy_armory', x: 5, y: 4, once: false, iconKind: 'crate', label: 'Trophy Room',
+            description: 'Weapons, plaques, commendations from fifteen years of operation. Some of them Jon earned. Most of them he took from the person who had them before him.' },
+          { id: 'security_console', x: 25, y: 16, once: false, iconKind: 'terminal', label: 'Security Console',
+            requiresFlag: 'syndicateManagement_active',
+            description: 'Fifteen surveillance feeds across Level 1450. Three CSF patrol routes mapped in real time. One heat meter currently showing a number that will keep climbing as long as the Syndicate operates.' },
+          { id: 'roster_lounge', x: 5, y: 16, once: false, iconKind: 'archive', label: 'Agent Roster',
+            requiresFlag: 'syndicateManagement_active',
+            description: 'Your people. Enforcers, slicers, smugglers, fixers. Each one costs something. Each one is worth something. The question is whether those two numbers ever match.' },
+          { id: 'penthouse_viewport', x: 14, y: 1, once: false, iconKind: 'vista', label: 'Transparisteel Viewport',
+            description: 'Floor-to-ceiling transparisteel. Level 1452. The skylanes run like rivers of light below. The Senate dome is visible on the horizon, white and permanent. From up here, things feel very clear.',
+            worldStateVariant: {
+              underworld: 'Your city. You can see it from here in a way that most people never will. Everything the Syndicate touches, visible at once. It is a remarkable amount of ground to own.',
+              lawful: 'The Republic\'s skyline. The Senate dome in the distance. You are standing in a criminal\'s living room looking at the seat of Republic government and wondering if the view is different from either side.',
+            } },
+          { id: 'airtaxi_penthouse', x: 28, y: 10, once: false, iconKind: 'beacon', label: 'Private Transit Terminal',
+            description: 'A private transit node registered to Scylla Tower Seven Holdings. No destination log. No arrival record. Complete transit discretion for an additional surcharge billed to an account that does not appear in any public registry.' },
+        ],
+        npcs: [
+          { id: 'jon_penthouse', x: 14, y: 5, kind: 'crime_boss', label: 'Jon',
+            questNpc: true,
+            requiresFlag: 'vault_heist_complete',
+            hideAfterFlags: ['jon_status_dead'],
+            repeatPrompt: 'Jon stands at the viewport. He does not turn around when you enter.',
+            phases: [
+              {
+                id: 'phase_confrontation',
+                requiresAllFlags: ['vault_heist_complete'],
+                requiresNoneFlags: ['jon_status_dead', 'jon_status_subjugated', 'jon_status_rival', 'jon_confrontation_path_a_chosen'],
+                prompt: '"Malak told me." Jon finally turns from the viewport. He does not look angry. He looks tired in the way people get when they have already done their calculation and found the result. "The bribe schedule is rerouted. The guards stopped receiving payment at midnight. Malak answers to you. Reya answers to you." He looks at you directly. "You have been thorough." He clasps his hands behind his back. "The question is what comes next."',
+                choices: [
+                  { text: '[Path A] "What comes next is I take all of it. This ends here."', morality: -10, loyalty: { underworld: 5 }, result: '"Then let\'s find out if you are right." His hand moves toward the sidearm at his hip. The same Merr-Sonn he has carried for twelve years. He draws it, and so do you.', grants: { flags: ['jon_confrontation_path_a_chosen'] } },
+                  { text: '[Path B] "I am not here to bury you. I am here to tell you how this works now."', morality: 5, loyalty: { underworld: 15 }, result: '"COO." He says the word like he is trying it on. "I have run this operation for fifteen years. I imagine I can run it for you." He is not bitter. He might even be relieved. "What do you need first?"', grants: { flags: ['jon_status_subjugated', 'syndicateManagement_active'], codex: ['codex-penthouse'] } },
+                  { text: '[Path C] "Bay 14 and Shadow Town are mine. You keep the cantinas. We go our separate ways."', morality: 10, loyalty: { underworld: 10 }, result: '"Bay 14, Shadow Town, the Alleyway." He nods slowly. "I keep the cantinas, the Senate adjacencies, and my personal accounts. The Phrik contacts are mine." He holds out a hand. "We were partners once. We can be neighbours."', grants: { flags: ['jon_status_rival', 'syndicate_1313_founded', 'syndicateManagement_active'], codex: ['codex-1313-syndicate'] } },
+                ],
+              },
+              {
+                id: 'phase_path_a_confirm',
+                requiresAllFlags: ['jon_confrontation_path_a_chosen'],
+                requiresNoneFlags: ['jon_status_dead'],
+                prompt: 'Jon\'s hand moves toward the sidearm at his hip. The Merr-Sonn with the cortosis-inlaid grip that he has carried for twelve years. He draws it. You draw yours. "The operation is worth more than either of us," he says quietly. "Whoever walks out of this room just proved it."',
+                choices: [
+                  { text: '[Fight Jon.]', grants: { flags: ['jon_status_dead', 'trait_crime_lord', 'syndicateManagement_active'], items: ['weapon_vane_custom_blaster'], codex: ['codex-penthouse'] }, morality: -15, loyalty: { underworld: 20 }, result: 'It is over quickly. Jon does not beg and he does not bargain. When it is done he is on the floor with his eyes open, looking at the viewport, and the city is still visible through the transparisteel exactly as it was before. The blaster is on the floor beside him. You pick it up.' },
+                ],
+              },
+              {
+                id: 'phase_subjugated',
+                requiresAllFlags: ['jon_status_subjugated'],
+                prompt: '"COO." He manages the operation with the focused competence of someone who has accepted a new chain of command and decided to be useful within it. "The bribe schedule is yours. The warehouse agreements are yours. The pit income rolls weekly. What do you need first?"',
+                choices: [
+                  { text: '"Tell me everything about the bribe schedule."', grants: { codex: ['codex-penthouse'] } },
+                  { text: '"Get the War Table operational."', grants: {} },
+                ],
+                repeatPrompt: '"The operation runs. What do you need?"',
+              },
+              {
+                id: 'phase_rival',
+                requiresAllFlags: ['jon_status_rival'],
+                prompt: '"Bay 14, Shadow Town, the Alleyway." He nods. "I keep the cantinas, the Senate adjacencies, and my personal accounts. The Phrik contacts are mine, non-negotiable." He holds out a hand. "We were partners once. We can be neighbours, as long as you understand the border."',
+                choices: [
+                  { text: '"The border is clear. Do not cross it."', grants: {} },
+                ],
+                repeatPrompt: '"The border holds. For now."',
+              },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'penthouse_credstick', x: 22, y: 14, label: 'Vault Overflow Credstick', reward: 200 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 28, 18, 'floor');
+          // Trophy alcove (northwest)
+          carveRect(g, 1, 1, 7, 6, 'wall');
+          carveRect(g, 2, 2, 6, 5, 'floor');
+          // Vault alcove (northeast)
+          carveRect(g, 22, 1, 28, 6, 'wall');
+          carveRect(g, 23, 2, 27, 5, 'floor');
+          // Security alcove (southeast)
+          carveRect(g, 22, 14, 28, 18, 'wall');
+          carveRect(g, 23, 15, 27, 17, 'floor');
+          // Roster alcove (southwest)
+          carveRect(g, 1, 14, 7, 18, 'wall');
+          carveRect(g, 2, 15, 6, 17, 'floor');
+          // Center corridor connections
+          pt(g, 14, 1, 'floor'); pt(g, 14, 2, 'floor');
+          pt(g, 14, 17, 'floor'); pt(g, 14, 18, 'floor');
+          pt(g, 14, 19, 'door');
           return g;
         },
       },
@@ -2584,6 +2895,13 @@ const ITEMS = {
   kyber_spore_crystal:       { id:'kyber_spore_crystal',        name:'Kyber-Mutated Spore Crystal',           type:'artifact',   iconKind:'artifact', value:1800, description:'A Kyber crystal warped by centuries of Sith-era biological contamination. It pulses with cold light and smells faintly organic and wrong.' },
   ancient_force_relic:       { id:'ancient_force_relic',        name:'Ruined Jedi Survey Marker',             type:'artifact',   iconKind:'artifact', value:900, description:'A hollow aurodium cylinder bearing pre-Clone Wars Jedi survey glyphs. Whoever placed it here never came back to retrieve it.' },
   prototype_plasma_cutter:   { id:'prototype_plasma_cutter',    name:'Prototype Plasma Cutter',               type:'tool',       iconKind:'tool',     value:180, description:'Recovered from the sub-level vault. Cuts through sealed durasteel doors that standard slicing tools cannot open.' },
+  // The Inheritance of Shadows
+  bay14_weapon_manifest:     { id:'bay14_weapon_manifest',      name:'Bay 14 Cargo Manifest',                 type:'quest',      iconKind:'datapad',  value:0,    description:'A sealed manifest for a weapons shipment Jon diverted through Bay 14. Counts every crate, blaster, and thermal detonator, and where they go.' },
+  shadow_arms_cache_key:     { id:'shadow_arms_cache_key',      name:'Shadow Town Cache Key',                 type:'quest',      iconKind:'keycard',  value:0,    description:'A data spike granting access to the skimmed weapons alcove in Level 1312. Jon does not know this shipment is short.' },
+  reya_warrant_disk:         { id:'reya_warrant_disk',          name:"Reya's Sealed Warrant",                 type:'quest',      iconKind:'datapad',  value:0,    description:"A compressed datadisc containing Reya's CSF murder warrant. She wants it erased. You could erase it, or keep a copy." },
+  vane_vault_keycard:        { id:'vane_vault_keycard',         name:'Penthouse Vault Access Card',           type:'quest',      iconKind:'keycard',  value:0,    description:"Reya's personal keycard for Jon's credit vault terminal. She cut it herself. This is not a gift. It is a transaction." },
+  weapon_vane_custom_blaster:{ id:'weapon_vane_custom_blaster', name:"Jon's Custom Blaster",                 type:'weapon',     iconKind:'gear',     value:4800, description:"Jon's personal sidearm, a Merr-Sonn modified with a cortosis-inlaid grip. He carried it for twelve years. Now it belongs to you." },
+  syndicate_ledger_shadow:   { id:'syndicate_ledger_shadow',    name:'Shadow Town Credit Ledger',             type:'quest',      iconKind:'datapad',  value:1200, description:'Malak kept his own books. Three hundred and twelve transactions, forty percent off the top, every run for two years. Jon never knew.' },
 
 };
 
@@ -2714,6 +3032,61 @@ const CODEX_ENTRIES = {
     body:[
       "The Works were among the earliest structures on the planet that would become Coruscant. Generations of deep-core foundry families worked these forges, and their descendants still live in the lower levels, maintaining equipment that the Republic has officially declared decommissioned.",
       "The Iron Syndicate chose The Works not for its secrecy alone, but for its infrastructure, plasma conduits capable of achieving forge temperatures that commercial smelters cannot reach, and drainage tunnels wide enough to move military hardware without detection.",
+    ],
+  },
+  // The Inheritance of Shadows
+  'codex-malak': {
+    id:'codex-malak', title:'Malak: The Iron Fist', category:'dossier',
+    summary:"Jon's enforcer. Level 1312 arena champion. Loyal to whoever pays the most.",
+    body:[
+      'Malak has no surname on record. CSF files list twelve aliases across four subsectors. He won the Level 1312 pit championship three years running before Jon found him and hired him to break bones professionally.',
+      'His loyalty is transactional rather than personal. He has no particular attachment to Jon beyond a steady salary and the freedom to operate without oversight. That means the right offer from the right person could turn him. It also means he will tell whoever comes after you about this conversation if the price is right.',
+      'He is not unintelligent. He simply has no use for intelligence when strength works.',
+    ],
+  },
+  'codex-reya': {
+    id:'codex-reya', title:'Reya: The Ledger', category:'dossier',
+    summary:"Jon's accountant and slicer. Holds the financial architecture of the entire operation.",
+    body:[
+      "Reya joined the Iron Syndicate after the CSF filed a murder warrant against her for the death of a Republic credit auditor named Torven Sal. She maintains the warrant was fabricated. The auditor had been skimming from three separate Senate pension accounts and she had the data to prove it. The warrant was filed anyway.",
+      "She now keeps Jon's books. Every credit in and out of the Syndicate passes through her terminals. She knows the shell accounts, the off-world deposits, the bribe schedules, and the real names behind the assumed identities.",
+      "She has stayed with Jon because he is the only person with enough leverage to keep CSF from collecting on the warrant. She does not particularly respect him. She is waiting for a better option.",
+    ],
+  },
+  'codex-shadow-town': {
+    id:'codex-shadow-town', title:'Shadow Town: Level 1312', category:'lore',
+    summary:'Sub-level fighting district beneath the Sky-Market towers.',
+    body:[
+      'Level 1312 sits three hundred floors below the Sky-Market promenade, close enough to smell the recycled air from the luxury towers above but far enough that no luxury tower resident has ever thought about it. The district has no official name. Shadow Town is what the residents call it, and the CSF transit charts simply leave that block of levels blank.',
+      'The pit arena at its center has been operating continuously for sixty years. It seats two hundred when full, runs twelve bouts a night, and pays in cash with no questions about the condition of the participants. Iron Syndicate runners collect from the betting boards after every third bout.',
+      "Jon's enforcer Malak holds court in the corner table of the arena observation deck. He is not there to watch the fights. He is there because everyone who comes to him comes through the arena floor, and the arena floor makes everyone uncomfortable.",
+    ],
+  },
+  'codex-penthouse': {
+    id:'codex-penthouse', title:'The Sky-Market Penthouse', category:'lore',
+    summary:"Jon's operational headquarters above Level 1450. Floor-to-ceiling transparisteel over the city.",
+    body:[
+      "The penthouse occupies the top two floors of Scylla Freight Tower Seven. Jon purchased it through a shell company registered to a dead freighter captain twenty years ago. The CSF has no record of the purchase. The building's official tenancy records list a legal archive firm that has never filed a document.",
+      "The penthouse contains a war table, a secure credit vault, a trophy room, and a security console monitoring fifteen active surveillance feeds across Level 1450. It is where the Iron Syndicate's Coruscant operation is actually run, as distinct from the cantinas and freight bays that serve as its public face.",
+      'There is one elevator. It requires a biometric key. Jon is the only person with one, unless someone takes it from him.',
+    ],
+  },
+  'codex-1313-syndicate': {
+    id:'codex-1313-syndicate', title:'The 1313 Syndicate', category:'story',
+    summary:'The breakaway faction founded from the ashes of the Iron Syndicate schism.',
+    body:[
+      'The 1313 Syndicate controls Bay 14, the Shadow Town fighting district, and the Slicer Alleyway data corridor. It takes its name from the sub-level access code Jon used as a distress signal, which is perhaps the most pointed message the founder could have sent.',
+      'Jon keeps the Sky-Market cantina network and the Senate liaison contacts. You keep the freight infrastructure, the pit income, and the financial architecture. The terms of the division were not negotiated. They were presented.',
+      'The CSF has not yet classified the 1313 Syndicate as a distinct criminal organisation. That window is approximately four weeks.',
+    ],
+  },
+  'codex-jon-inheritance': {
+    id:'codex-jon-inheritance', title:"Jon's Network: The Real Picture", category:'story',
+    summary:'What the Iron Syndicate actually is, beneath the Scylla freight operation.',
+    body:[
+      "The Scylla freight route was Jon's legitimate cover and his most defensible asset. With that route severed by the Senate investigation, what remains is the underlying network: the pit arena income stream, the Slicer Alleyway data brokerage, eleven warehouse storage agreements across four freight hubs, a bribery schedule covering nine active CSF officers, and a shell account architecture spanning six banking systems.",
+      "Jon built this over fifteen years. He structured it so no single person knew the whole picture. Malak knew the muscle side. Reya knew the financial side. Jon was the only person who held both ends.",
+      'Until now.',
     ],
   },
 };
@@ -4065,6 +4438,229 @@ function resolveDialoguePhase(npc, questFlags) {
   };
 }
 
+function PitFightOverlay({ onSuccess, onFailure, opponentName, opponentHp, accent }) {
+  const gameRef = React.useRef({ playerHp: 3, opponentHp: opponentHp, phase: 'ready', telegraph: null, tickCount: 0, running: true });
+  const [display, setDisplay] = React.useState({ playerHp: 3, opponentHp: opponentHp, telegraph: null, message: 'The pit is watching. Press A (dodge), D (counter), or S (guard).', outcome: null });
+  const intervalRef = React.useRef(null);
+  const TELEGRAPHS = [
+    { name: 'OVERHEAD', counter: 'S', label: 'Guard (S)' },
+    { name: 'SWEEP',    counter: 'A', label: 'Dodge (A)' },
+    { name: 'LUNGE',    counter: 'D', label: 'Counter (D)' },
+  ];
+  React.useEffect(() => {
+    const ref = gameRef.current;
+    intervalRef.current = setInterval(() => {
+      if (!ref.running) return;
+      ref.tickCount++;
+      if (ref.phase === 'ready' && ref.tickCount % 4 === 0) {
+        const t = TELEGRAPHS[Math.floor(Math.random() * TELEGRAPHS.length)];
+        ref.telegraph = t;
+        ref.phase = 'telegraphed';
+        ref.tickCount = 0;
+        setDisplay(d => ({ ...d, telegraph: t, message: `${opponentName} telegraphs: ${t.name}! Respond with ${t.label}.` }));
+      } else if (ref.phase === 'telegraphed' && ref.tickCount >= 3) {
+        ref.playerHp = Math.max(0, ref.playerHp - 1);
+        ref.telegraph = null;
+        ref.phase = 'ready';
+        ref.tickCount = 0;
+        if (ref.playerHp <= 0) {
+          ref.running = false;
+          clearInterval(intervalRef.current);
+          setDisplay(d => ({ ...d, playerHp: 0, telegraph: null, message: 'You fall back. The pit is unforgiving.', outcome: 'fail' }));
+          setTimeout(() => onFailure && onFailure(), 1800);
+        } else {
+          setDisplay(d => ({ ...d, playerHp: ref.playerHp, telegraph: null, message: 'You took a hit. Stay focused.' }));
+        }
+      }
+    }, 600);
+    const handleKey = (e) => {
+      const ref = gameRef.current;
+      if (!ref.running || ref.phase !== 'telegraphed') return;
+      const key = e.key.toUpperCase();
+      if (!['A','D','S'].includes(key)) return;
+      if (key === ref.telegraph.counter) {
+        ref.opponentHp = Math.max(0, ref.opponentHp - 1);
+        ref.telegraph = null;
+        ref.phase = 'ready';
+        ref.tickCount = 0;
+        if (ref.opponentHp <= 0) {
+          ref.running = false;
+          clearInterval(intervalRef.current);
+          window.removeEventListener('keydown', handleKey);
+          setDisplay(d => ({ ...d, opponentHp: 0, telegraph: null, message: `${opponentName} goes down. The pit made its decision.`, outcome: 'success' }));
+          setTimeout(() => onSuccess && onSuccess(), 1800);
+        } else {
+          setDisplay(d => ({ ...d, opponentHp: ref.opponentHp, telegraph: null, message: 'Clean counter. Keep going.' }));
+        }
+      } else {
+        ref.playerHp = Math.max(0, ref.playerHp - 1);
+        ref.telegraph = null;
+        ref.phase = 'ready';
+        ref.tickCount = 0;
+        if (ref.playerHp <= 0) {
+          ref.running = false;
+          clearInterval(intervalRef.current);
+          window.removeEventListener('keydown', handleKey);
+          setDisplay(d => ({ ...d, playerHp: 0, telegraph: null, message: 'Wrong call. You are down.', outcome: 'fail' }));
+          setTimeout(() => onFailure && onFailure(), 1800);
+        } else {
+          setDisplay(d => ({ ...d, playerHp: ref.playerHp, telegraph: null, message: 'Wrong counter. You took damage.' }));
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => { ref.running = false; clearInterval(intervalRef.current); window.removeEventListener('keydown', handleKey); };
+  }, []);
+  const barColor = accent || '#C03030';
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.92)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', zIndex:200, fontFamily:'monospace', color:'#EEE' }}>
+      <div style={{ fontSize:'1.1rem', color: barColor, marginBottom:'1.2rem', letterSpacing:2 }}>PIT ARENA — {opponentName.toUpperCase()}</div>
+      <div style={{ display:'flex', gap:'3rem', marginBottom:'1.2rem' }}>
+        <div style={{ textAlign:'center' }}>
+          <div style={{ fontSize:'0.75rem', color:'#888', marginBottom:'0.3rem' }}>YOU</div>
+          <div style={{ display:'flex', gap:'4px' }}>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} style={{ width:18, height:18, background: i < display.playerHp ? '#4A9FFF' : '#222', border:'1px solid #444' }} />
+            ))}
+          </div>
+        </div>
+        <div style={{ textAlign:'center' }}>
+          <div style={{ fontSize:'0.75rem', color:'#888', marginBottom:'0.3rem' }}>{opponentName.toUpperCase()}</div>
+          <div style={{ display:'flex', gap:'4px' }}>
+            {Array.from({ length: opponentHp }).map((_, i) => (
+              <div key={i} style={{ width:18, height:18, background: i < display.opponentHp ? barColor : '#222', border:'1px solid #444' }} />
+            ))}
+          </div>
+        </div>
+      </div>
+      {display.telegraph && (
+        <div style={{ fontSize:'1.4rem', color: barColor, fontWeight:'bold', marginBottom:'0.8rem', letterSpacing:3 }}>
+          {display.telegraph.name}
+        </div>
+      )}
+      <div style={{ maxWidth:400, textAlign:'center', color:'#CCC', fontSize:'0.85rem', lineHeight:1.6, marginBottom:'1rem' }}>{display.message}</div>
+      {display.outcome === 'fail' && <div style={{ color:'#888', fontSize:'0.8rem' }}>Walk away and try again later.</div>}
+      <div style={{ marginTop:'1rem', fontSize:'0.75rem', color:'#555' }}>A: Dodge &nbsp; D: Counter &nbsp; S: Guard</div>
+    </div>
+  );
+}
+
+function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, activeContracts, setActiveContracts, heat, setHeat, territories, credits, setCredits }) {
+  const [panel, setPanel] = React.useState('contracts');
+  const [log, setLog] = React.useState([]);
+  const addLog = (msg) => setLog(l => [`> ${msg}`, ...l].slice(0, 20));
+  const passiveIncome = territories.length * 120;
+  const availableAgents = roster.filter(a => a.status === 'available');
+
+  const advanceTime = () => {
+    const resolved = [];
+    const updated = activeContracts.map(ac => {
+      const t = ac.turnsRemaining - 1;
+      if (t <= 0) { resolved.push(ac); return null; }
+      return { ...ac, turnsRemaining: t };
+    }).filter(Boolean);
+    setActiveContracts(updated);
+    resolved.forEach(ac => {
+      const roll = Math.random();
+      if (roll > 0.3) {
+        setCredits(c => c + ac.reward);
+        addLog(`${ac.title}: SUCCESS. +${ac.reward} credits.`);
+      } else {
+        setRoster(r => r.map(a => ac.agents.includes(a.id) ? { ...a, status: 'injured' } : a));
+        addLog(`${ac.title}: FAILED. Agents injured.`);
+      }
+      setHeat(h => Math.min(100, h + ac.heatGenerated));
+    });
+    setCredits(c => c + passiveIncome);
+    setHeat(h => Math.max(0, h - 2));
+    addLog(`Passive income: +${passiveIncome} credits. Heat: ${Math.max(0, heat - 2 + resolved.reduce((s, ac) => s + ac.heatGenerated, 0))}.`);
+  };
+
+  const dispatch = (contract) => {
+    if (availableAgents.length === 0) { addLog('No available agents.'); return; }
+    const agent = availableAgents[0];
+    setRoster(r => r.map(a => a.id === agent.id ? { ...a, status: 'active' } : a));
+    setActiveContracts(ac => [...ac, { ...contract, agents: [agent.id], turnsRemaining: contract.duration }]);
+    setHeat(h => Math.min(100, h + Math.floor(contract.heatGenerated * 0.3)));
+    addLog(`${agent.name} dispatched: ${contract.title}.`);
+  };
+
+  const heatColor = heat < 40 ? '#4A9FFF' : heat < 70 ? '#E8A030' : '#C03030';
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.94)', zIndex:200, display:'flex', flexDirection:'column', fontFamily:'monospace', color:'#DDD', padding:'1.5rem' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1rem' }}>
+        <div style={{ color:'#C8A000', fontSize:'1.1rem', letterSpacing:2 }}>WAR TABLE — SYNDICATE OPERATIONS</div>
+        <div style={{ display:'flex', gap:'0.8rem', alignItems:'center' }}>
+          <div style={{ fontSize:'0.8rem', color: heatColor }}>HEAT: {heat}/100</div>
+          <div style={{ fontSize:'0.8rem', color:'#888' }}>INCOME: {passiveIncome}cr/turn</div>
+          <button onClick={advanceTime} style={{ background:'#C8A000', color:'#000', border:'none', padding:'0.3rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Advance Time</button>
+          <button onClick={onClose} style={{ background:'#333', color:'#EEE', border:'none', padding:'0.3rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Close</button>
+        </div>
+      </div>
+      <div style={{ display:'flex', gap:'0.5rem', marginBottom:'1rem' }}>
+        {['contracts','roster','log'].map(p => (
+          <button key={p} onClick={() => setPanel(p)} style={{ background: panel===p ? '#C8A000' : '#222', color: panel===p ? '#000' : '#888', border:'1px solid #444', padding:'0.2rem 0.7rem', cursor:'pointer', fontSize:'0.8rem', textTransform:'uppercase' }}>{p}</button>
+        ))}
+      </div>
+      <div style={{ flex:1, overflowY:'auto' }}>
+        {panel === 'contracts' && (
+          <div>
+            <div style={{ color:'#888', fontSize:'0.75rem', marginBottom:'0.5rem' }}>AVAILABLE CONTRACTS</div>
+            {contracts.map(c => (
+              <div key={c.id} style={{ background:'#111', border:'1px solid #333', padding:'0.6rem', marginBottom:'0.4rem', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                <div>
+                  <div style={{ color:'#EEE', fontSize:'0.85rem' }}>{c.title}</div>
+                  <div style={{ color:'#666', fontSize:'0.75rem' }}>{c.contractType} · Difficulty {c.difficulty} · {c.duration} turns · +{c.heatGenerated} heat · {c.primaryClass}</div>
+                </div>
+                <div style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
+                  <div style={{ color:'#C8A000', fontSize:'0.85rem' }}>{c.reward}cr</div>
+                  <button onClick={() => dispatch(c)} disabled={availableAgents.length === 0} style={{ background: availableAgents.length > 0 ? '#C8A000' : '#333', color: availableAgents.length > 0 ? '#000' : '#666', border:'none', padding:'0.2rem 0.6rem', cursor: availableAgents.length > 0 ? 'pointer' : 'default', fontSize:'0.75rem' }}>Dispatch</button>
+                </div>
+              </div>
+            ))}
+            {activeContracts.length > 0 && (
+              <div style={{ marginTop:'1rem' }}>
+                <div style={{ color:'#888', fontSize:'0.75rem', marginBottom:'0.5rem' }}>ACTIVE OPERATIONS</div>
+                {activeContracts.map(ac => (
+                  <div key={ac.id + ac.turnsRemaining} style={{ background:'#0A1008', border:'1px solid #2A4020', padding:'0.5rem', marginBottom:'0.3rem', display:'flex', justifyContent:'space-between' }}>
+                    <div style={{ color:'#CCC', fontSize:'0.8rem' }}>{ac.title}</div>
+                    <div style={{ color:'#4A9FFF', fontSize:'0.8rem' }}>{ac.turnsRemaining} turn{ac.turnsRemaining !== 1 ? 's' : ''} remaining</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {panel === 'roster' && (
+          <div>
+            <div style={{ color:'#888', fontSize:'0.75rem', marginBottom:'0.5rem' }}>AGENT ROSTER</div>
+            {roster.map(a => (
+              <div key={a.id} style={{ background:'#111', border:'1px solid #333', padding:'0.6rem', marginBottom:'0.4rem', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                <div>
+                  <div style={{ color:'#EEE', fontSize:'0.85rem' }}>{a.name} <span style={{ color:'#888', fontSize:'0.75rem' }}>— {a.agentClass}</span></div>
+                  <div style={{ color:'#666', fontSize:'0.75rem' }}>Skill {a.skill} · Loyalty {a.loyalty} · {a.traits.join(', ')}</div>
+                </div>
+                <div style={{ color: a.status === 'available' ? '#4A9FFF' : a.status === 'active' ? '#C8A000' : '#C03030', fontSize:'0.8rem', textTransform:'uppercase' }}>{a.status}</div>
+              </div>
+            ))}
+          </div>
+        )}
+        {panel === 'log' && (
+          <div>
+            <div style={{ color:'#888', fontSize:'0.75rem', marginBottom:'0.5rem' }}>OPERATIONS LOG</div>
+            {log.length === 0 && <div style={{ color:'#444', fontSize:'0.8rem' }}>No operations yet. Advance time to process contracts.</div>}
+            {log.map((l, i) => <div key={i} style={{ color:'#AAA', fontSize:'0.8rem', marginBottom:'0.2rem' }}>{l}</div>)}
+          </div>
+        )}
+      </div>
+      <div style={{ marginTop:'0.5rem', fontSize:'0.75rem', color:'#555' }}>
+        Territories: {territories.length > 0 ? territories.join(', ') : 'none'} · Available agents: {availableAgents.length}
+      </div>
+    </div>
+  );
+}
+
 function SignalSiphonOverlay({ onSuccess, onFailure }) {
   const [stage, setStage] = React.useState(1);
   const [selectedFreq, setSelectedFreq] = React.useState(null);
@@ -4523,6 +5119,60 @@ const STORY_CHECKPOINTS = [
       body: ['Jon ran the Scylla route three years ago before it became a cover operation. He did not know what was in the sealed containers. When he found out, he shut it down. Someone later used his old transit authentication codes to reopen the route. The Bay 14 strike team built their operation from what Jon left behind.'],
     },
   },
+  {
+    flag: 'inheritance_active',
+    entry: {
+      id: 'story-inheritance-begins', title: 'The Inheritance', category: 'story',
+      summary: "Jon has offered you the other half of his operation. The question is what you plan to do with it.",
+      body: ["Jon's Scylla route is gone and the Senate connection burned. But the network beneath it still exists: pit income, data brokerage, warehouse agreements, a bribe schedule covering nine CSF officers. Fifteen years of infrastructure. He is asking you to stand beside him and run half of it. You said yes."],
+    },
+  },
+  {
+    flag: 'vault_heist_complete',
+    entry: {
+      id: 'story-vault-heist', title: 'The Vault', category: 'story',
+      summary: "Jon's financial architecture is yours. His guards stopped receiving hazard pay at midnight.",
+      body: ["You accessed the penthouse vault terminal using Reya's keycard and rerouted the Iron Syndicate's payroll credit stream. The bribe schedule that kept nine CSF officers looking the other way was cut off at midnight. Jon's operational security dissolved in forty-eight hours. He is now alone in the penthouse with no guards, no allies, and no leverage."],
+    },
+  },
+  {
+    flag: 'jon_status_dead',
+    entry: {
+      id: 'story-inheritance-path-a', title: 'The Betrayal', category: 'story',
+      summary: "Jon is dead. The Iron Syndicate has a new director. The city does not know it yet.",
+      body: ["Jon is gone. His custom blaster is in your hand and his operation belongs to you entirely. The Iron Syndicate's Coruscant network, the pit arena, the warehouse agreements, the bribe schedule, the financial architecture, all of it. The city does not know it yet. That window is yours to use."],
+    },
+  },
+  {
+    flag: 'jon_status_subjugated',
+    entry: {
+      id: 'story-inheritance-path-b', title: 'The Subjugation', category: 'story',
+      summary: "Jon runs your operations. He answers to you. He has not yet decided if that is worse than death.",
+      body: ["Jon accepted the COO role with the flat competence of someone who knows when to cut their losses. He manages the day-to-day. He handles the contacts he spent fifteen years building. He reports to you. The Syndicate is intact and twice as efficient now that one person holds both ends of it."],
+    },
+  },
+  {
+    flag: 'jon_status_rival',
+    entry: {
+      id: 'story-inheritance-path-c', title: 'The Schism', category: 'story',
+      summary: "Two organisations. Two territories. Jon's cantinas against your freight network. The war is quiet for now.",
+      body: ["The Iron Syndicate split along the seam you created. You took Bay 14, Shadow Town, and the Slicer Alleyway. Jon kept the Sky-Market cantinas and the Senate adjacencies. You are neighbours now. The border between your territories is clear. Neither side is shooting yet. Both sides are counting."],
+    },
+  },
+];
+
+const INITIAL_ROSTER = [
+  { id: 'agent_mira',  name: 'Mira',  agentClass: 'Enforcer', skill: 2, loyalty: 70, traits: ['street_fighter'], status: 'available', turnsRemaining: 0 },
+  { id: 'agent_tak',   name: 'Tak',   agentClass: 'Slicer',   skill: 3, loyalty: 60, traits: ['clean_breach'],   status: 'available', turnsRemaining: 0 },
+  { id: 'agent_vonna', name: 'Vonna', agentClass: 'Smuggler', skill: 2, loyalty: 80, traits: ['cargo_runner'],   status: 'available', turnsRemaining: 0 },
+  { id: 'agent_dresh', name: 'Dresh', agentClass: 'Fixer',    skill: 1, loyalty: 55, traits: ['fast_talker'],    status: 'available', turnsRemaining: 0 },
+];
+
+const BASE_CONTRACTS = [
+  { id: 'contract_spice_run',  title: 'Spice Run: Level 800',     contractType: 'Smuggling',  difficulty: 2, reward: 600,  duration: 2, heatGenerated: 5,  primaryClass: 'Smuggler' },
+  { id: 'contract_data_heist', title: 'Data Heist: Senate Annex', contractType: 'Data Heist', difficulty: 4, reward: 1800, duration: 3, heatGenerated: 20, primaryClass: 'Slicer'   },
+  { id: 'contract_protection', title: 'Protection: Bay 14',       contractType: 'Extortion',  difficulty: 2, reward: 400,  duration: 1, heatGenerated: 8,  primaryClass: 'Enforcer' },
+  { id: 'contract_bribe_run',  title: 'Bribe: Precinct 22',       contractType: 'Negotiation',difficulty: 3, reward: 900,  duration: 2, heatGenerated: 3,  primaryClass: 'Fixer'    },
 ];
 
 function StarWarsRPG() {
@@ -4557,6 +5207,11 @@ function StarWarsRPG() {
   const [activeMinigame, setActiveMinigame] = useState(null);
   const [showVendor, setShowVendor] = useState(false);
   const [activeVendorNpc, setActiveVendorNpc] = useState(null);
+  const [syndicateRoster, setSyndicateRoster] = useState([]);
+  const [syndicateContracts] = useState(BASE_CONTRACTS);
+  const [syndicateActiveContracts, setSyndicateActiveContracts] = useState([]);
+  const [syndicateHeat, setSyndicateHeat] = useState(0);
+  const [syndicateTerritories, setSyndicateTerritories] = useState([]);
   const posRef = React.useRef(pos);
   const questFlagsRef = React.useRef(questFlags);
 
@@ -4564,7 +5219,9 @@ function StarWarsRPG() {
     const repTotal = (questFlags.csf_duty_stance ? 1 : 0) + (questFlags.jaxxon_arrested ? 1 : 0)
       + (questFlags.vane_record_commend ? 1 : 0) + (questFlags.jon_gone_straight_warned ? 1 : 0);
     const uwTotal = (questFlags.inside_man_path ? 1 : 0) + (questFlags.jaxxon_deal ? 1 : 0)
-      + (questFlags.rook_eliminated ? 1 : 0) + (questFlags.marlo_sky_talked ? 1 : 0);
+      + (questFlags.rook_eliminated ? 1 : 0) + (questFlags.marlo_sky_talked ? 1 : 0)
+      + (questFlags.jon_status_dead ? 2 : 0) + (questFlags.syndicate_1313_founded ? 2 : 0)
+      + (questFlags.syndicateManagement_active ? 1 : 0);
     if (repTotal > uwTotal) return 'lawful';
     if (uwTotal > repTotal) return 'underworld';
     return 'neutral';
@@ -4572,6 +5229,14 @@ function StarWarsRPG() {
 
   const currentObjective = React.useMemo(() => {
     if (questFlags.senate_line_secured) return 'Arc complete. Return to the CSF Academy.';
+    if (questFlags.syndicateManagement_active && !questFlags.syndicate_first_contract_run) return '[SYNDICATE] Open the War Table at the Penthouse and run your first contract.';
+    if (questFlags.vault_heist_complete && !questFlags.jon_status_dead && !questFlags.jon_status_subjugated && !questFlags.jon_status_rival) return '[INHERITANCE] Go to the Penthouse. Your lieutenants are ready. Jon has nowhere to run.';
+    if ((questFlags.malak_turned || questFlags.malak_dead) && (questFlags.reya_loyal || questFlags.reya_blackmailed) && !questFlags.vault_heist_complete) return '[INHERITANCE] Use Reya\'s keycard at the Penthouse vault terminal. Freeze the payroll.';
+    if ((questFlags.malak_turned || questFlags.malak_dead) && !questFlags.reya_loyal && !questFlags.reya_blackmailed && !questFlags.reya_warrant_mission_active) return '[INHERITANCE] Speak with Reya in Shadow Town. She has a condition.';
+    if (questFlags.reya_warrant_mission_active && !questFlags.reya_warrant_cleared) return '[INHERITANCE] Slice Precinct 42 at the CSF Academy and clear Reya\'s warrant.';
+    if ((questFlags.cargo_skimmed || questFlags.cargo_delivered_full) && !questFlags.malak_turned && !questFlags.malak_dead) return '[INHERITANCE] Find Malak at Shadow Town, Level 1312. Turn him or remove him.';
+    if (questFlags.inheritance_active && !questFlags.cargo_skimmed && !questFlags.cargo_delivered_full) return '[INHERITANCE] Retrieve the Bay 14 weapons cache and bring the manifest back to Jon.';
+    if (questFlags.senate_line_secured && !questFlags.inheritance_active) return 'Jon has a new proposition. Return to his apartment.';
     if (questFlags.bomb_reached) return 'Neutralize the weapon on the Senate transit line.';
     if (questFlags.sector4_raid_complete && !questFlags.jon_endgame_known) return 'Debrief Jon on the raid. He has intel on the Senate connection you need.';
     if (questFlags.sector4_raid_complete) return 'Pursue the Iron Syndicate to Level 005. Find Vex.';
@@ -4617,6 +5282,10 @@ function StarWarsRPG() {
   }), []);
 
   const travelToZone = useCallback((targetZoneId, targetPos) => {
+    if (targetZoneId === 'penthouse' && !questFlagsRef.current.inheritance_active) {
+      pushActionLog('The elevator requires authorization. Come back when you have it.', zoneId);
+      return;
+    }
     setTransitioning(true);
     setTimeout(() => {
       const newZone = PLANETS[planetId].zones[targetZoneId];
@@ -4691,7 +5360,21 @@ function StarWarsRPG() {
     if (questFlags.echo7_dominant && !questFlags.trait_ai_overlord) setFlag('trait_ai_overlord');
     if (questFlags.sabacc_won && questFlags.ledger_leaked && !questFlags.trait_extortionist) setFlag('trait_extortionist');
     if (questFlags.spore_chamber_entered && inventory.some(i => i.id === 'kyber_spore_crystal') && !questFlags.trait_mutated_scavenger) setFlag('trait_mutated_scavenger');
+    if (questFlags.jon_status_dead && !questFlags.trait_crime_lord) setFlag('trait_crime_lord');
   }, [questFlags, inventory]);
+
+  useEffect(() => {
+    if (questFlags.syndicateManagement_active && syndicateRoster.length === 0) {
+      setSyndicateRoster(INITIAL_ROSTER);
+      const territories = [];
+      if (questFlags.jon_status_dead || questFlags.syndicate_1313_founded) {
+        territories.push('bay_14', 'shadow_town', 'slicer_alleyway');
+      } else if (questFlags.jon_status_subjugated) {
+        territories.push('shadow_town', 'slicer_alleyway');
+      }
+      setSyndicateTerritories(territories);
+    }
+  }, [questFlags, syndicateRoster.length]);
 
   useEffect(() => {
     STORY_CHECKPOINTS.forEach(({ flag, entry }) => {
@@ -5052,6 +5735,8 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'speeder_pursuit' && <SpeederPursuitOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'valve_override' && <ValveOverrideOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'willpower_override' && <WillpowerOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {activeMinigame && activeMinigame.type === 'pit_fight' && <PitFightOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} opponentName={activeMinigame.opponentName ?? 'Opponent'} opponentHp={activeMinigame.opponentHp ?? 5} accent={activeMinigame.accent ?? '#C03030'} />}
+      {activeMinigame && activeMinigame.type === 'syndicate_management' && <SyndicateManagementOverlay onClose={activeMinigame.onSuccess} roster={syndicateRoster} setRoster={setSyndicateRoster} contracts={syndicateContracts} activeContracts={syndicateActiveContracts} setActiveContracts={setSyndicateActiveContracts} heat={syndicateHeat} setHeat={setSyndicateHeat} territories={syndicateTerritories} credits={credits} setCredits={setCredits} />}
     </div>
   );
 }
