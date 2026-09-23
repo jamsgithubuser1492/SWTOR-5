@@ -756,6 +756,56 @@ const PLANETS = {
               { text: '"Say nothing. Take his datapad ID and walk away."', morality: -5, loyalty: { underworld: 5 }, result: 'He watches you go with the expression of someone calculating whether to report this or add it to the list of things they are pretending not to know.', grants: { flags: ['aide_id_noted'] } },
             ],
           },
+          { id: 'garrus_sky', x: 16, y: 18, kind: 'smuggler', label: 'Garrus',
+            repeatPrompt: 'Garrus picks at his teeth with a data chip. "You want the shaft location or you are just here to browse?"',
+            prompt: 'The Rodian looks up from a spread of geological survey chips on the table. He is wearing three different smuggler vests simultaneously, as if unable to commit to any one identity. "You look like someone who is interested in going somewhere they are definitely not supposed to go."',
+            choices: [
+              { text: '"What are you selling?"', morality: 0, loyalty: {}, result: '"Bay 14 maintenance shaft. Coordinates to a sealed sub-level that the Republic says does not exist. I found it three weeks ago and I have been too smart to go in alone." He fans out the survey chips. "Fifty credits for the location. You bring what you find and we split it."', grants: { flags: ['garrus_met'] } },
+              { text: '"I will take the coordinates."', morality: -5, loyalty: { underworld: 8 }, requires: { credits: 50 }, result: '"Pleasure doing business." He slides over a spent power cell with coordinates scratched into the casing. "Look for the ancient containment seal. Whatever is in there has been sealed for a very long time, which is either a good sign or a very bad one."', grants: { flags: ['garrus_coordinates_sold'], items: ['sublevel_coordinates'] } },
+              { text: '"How do you know the CSF has not already found it?"', morality: 5, loyalty: {}, result: '"Because I found the last CSF inspection log. Eleven years old. Signed by someone named Vane. The report says: nothing of interest. Either Vane is blind or Vane is lying." He shrugs. "In my experience, CSF officers are rarely blind."', grants: { flags: ['garrus_vane_clue_shared', 'vane_sublevel_suspected'] } },
+            ],
+          },
+          { id: 'madame_vex_sky', x: 10, y: 6, kind: 'cantina_owner', label: 'Madame Vex',
+            repeatPrompt: 'Madame Vex shuffles a Sabacc deck without looking at her hands. The cards move like they are afraid of her.',
+            prompt: 'The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."',
+            choices: [
+              { text: '"I am here for a Sabacc game."', morality: 0, loyalty: { underworld: 5 }, result: '"Everyone is here for a Sabacc game. Sit. The buy-in is two hundred credits and your reputation. Lose the first and I keep the second."', grants: { flags: ['vex_sabacc_offered'] } },
+              { text: '"High-stakes. I want the real table."', morality: -5, loyalty: { underworld: 10 }, result: '"The real table has a different buy-in." She sets down the deck. "You are going to play a standard hand in the open, win convincingly, and not gloat when you do it. Then I will take you downstairs." She returns to her shuffle. "Assuming you can win convincingly."', grants: { flags: ['vex_high_table_offered'] } },
+              { text: '"What do you know about the freight hub night schedules?"', morality: 0, loyalty: { underworld: 5 }, result: 'She deals three cards face-up without being asked. "I know everything that moves through the Sky-Market and below it. Information has a price here, same as everything else. Win a hand first. Then we can discuss what you actually came here for."', grants: { flags: ['vex_intel_offered'] } },
+            ],
+            phases: [
+              {
+                id: 'phase_initial',
+                requiresAllFlags: [],
+                requiresNoneFlags: ['sabacc_won'],
+                prompt: 'The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."',
+                choices: [
+                  { text: '"I am here for a Sabacc game."', morality: 0, loyalty: { underworld: 5 }, result: '"Everyone is here for a Sabacc game. Sit. The buy-in is two hundred credits and your reputation. Lose the first and I keep the second."', grants: { flags: ['vex_sabacc_offered'] } },
+                  { text: '"High-stakes. I want the real table."', morality: -5, loyalty: { underworld: 10 }, result: '"The real table has a different buy-in." She sets down the deck. "You are going to play a standard hand in the open, win convincingly, and not gloat when you do it. Then I will take you downstairs." She returns to her shuffle. "Assuming you can win convincingly."', grants: { flags: ['vex_high_table_offered'] } },
+                  { text: '"What do you know about the freight hub night schedules?"', morality: 0, loyalty: { underworld: 5 }, result: 'She deals three cards face-up without being asked. "I know everything that moves through the Sky-Market and below it. Information has a price here, same as everything else. Win a hand first. Then we can discuss what you actually came here for."', grants: { flags: ['vex_intel_offered'] } },
+                ],
+              },
+              {
+                id: 'phase_sabacc_ready',
+                requiresAllFlags: ['vex_sabacc_offered'],
+                requiresNoneFlags: ['sabacc_won', 'sabacc_played'],
+                prompt: '"The table is ready. Two hundred credits. You fold when your hand goes negative, you walk with nothing. You hit Pure Sabacc, you walk with the whole pot and my card." She slides a chip to the center. "Your move."',
+                choices: [
+                  { text: '"Deal."', morality: 0, loyalty: { underworld: 5 }, result: 'The cards move faster than they should. Three hands. Two hours. In the end you are reading her better than she intended, and she knows it. She sets down a keycard without drama. "The Bay 14 storage corridor. Third alcove on the left. Someone was storing things there that did not want to be found." She is already shuffling for the next hand.', grants: { flags: ['sabacc_won', 'sabacc_played'], items: ['smugglers_keycard'] } },
+                  { text: '"Not tonight."', morality: 5, loyalty: {}, result: '"Come back when you are ready. The table will be here."', grants: {} },
+                ],
+              },
+              {
+                id: 'phase_won',
+                requiresAllFlags: ['sabacc_won'],
+                prompt: '"You played well. I do not say that to everyone." She refills her glass. "The keycard opens Bay 14 corridor three. Kaelen Voss stored something there before his arrest. He asked me to keep the access secure. He did not ask me to keep it forever. Consider this a transfer of obligation."',
+                choices: [
+                  { text: '"What is Kaelen Voss carrying?"', morality: 5, loyalty: {}, result: '"Financial records. The kind that end careers when they reach the right hands, or fund retirement when they reach the wrong ones. He had not decided which to do with them. That indecision is what got him arrested." A beat. "Or someone made sure he could not decide."', grants: { flags: ['syndicate_ledger_context_known'] } },
+                  { text: '"Thank you, Madame."', morality: 5, loyalty: { underworld: 5 }, result: '"Thank me by not making me regret this." She turns back to her cards. "Kaelen was one of the few people in Sector 4 with a functioning conscience. If that costs something, make it cost something worth the price."', grants: {} },
+                ],
+              },
+            ],
+          },
         ],
         collectibles: [{ id: 'sky_market_datachip', x: 14, y: 19, label: 'Sliced Comm Fragment', reward: 40 }],
         buildMap() {
@@ -957,6 +1007,12 @@ const PLANETS = {
           { id: 'crane_node_088', x: 22, y: 4, once: true, label: 'Crane Automation Node', description: 'The bay exterior crane control system. A code input here can drop a heavy repulsor-crate onto the loading yard — opening a breach point into the warehouse without triggering external alarms.' },
           { id: 'undercity_radio_terminal', x: 4, y: 4, once: false, label: 'Under-Grit Radio Intercept', description: '[Signal 104.9 Sub-Grit — Unauthorized] "They are calling Docking Bay 14 a logistical delay while Black Sun heavy gunners run it like a private toll booth. CSF sent fresh academy blood into Sector 4. Place your bets at Vond\'s shop — three to one the new badge sells out before end of shift..."' },
           { id: 'airtaxi_freight_hub', x: 38, y: 6, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Transit terminal. Level access pending clearance.' },
+          { id: 'bay14_storage_alcove', x: 14, y: 18, once: true, iconKind: 'datapad', label: 'Restricted Storage Alcove',
+            description: 'Third alcove on the left, just as Vex described. The storage container is sealed under Syndicate lock. Inside: a data cylinder wrapped in lead foil. The foil is standard anti-scan practice. Whatever is on this cylinder, someone spent money keeping it undetected.',
+            grantsItem: 'syndicate_ledger',
+            grantsFlag: 'syndicate_ledger_found',
+            grantsCodex: 'codex-syndicate-ledger',
+            requires: { item: 'smugglers_keycard' } },
         ],
         npcs: [
           { id: 'jax_freight', x: 18, y: 6, kind: 'mechanic', label: 'Dock Engineer Jax',
@@ -1437,11 +1493,43 @@ const PLANETS = {
         npcs: [
           { id: 'vane_academy', x: 6, y: 6, kind: 'republic_guard', label: 'Officer Vane',
             repeatPrompt: 'Vane is reviewing case files. He glances up. "Sector 4. We need that name."',
-            prompt: '"You made it. The Auxiliary Corps runs accelerated courses for candidates with field experience. You already have that. Walk through the drill yard and talk to the training sergeant."',
-            choices: [
-              { text: '"I am ready to bring order to the underbelly, Detective."', morality: 8, loyalty: { republic: 10 }, result: '"Good. Start by keeping your eyes open and your mind off credits."', grants: { flags: ['csf_briefed', 'csf_duty_stance'], items: ['csf_aux_badge'] } },
-              { text: '"This badge better give me open access to restricted transport lanes."', morality: 3, loyalty: { republic: 5 }, result: '"It gives you authority — and responsibility. Do not abuse it." He hands you the badge without ceremony.', grants: { flags: ['csf_briefed', 'csf_transit_unlocked'], items: ['csf_aux_badge'] } },
-              { text: '"Does this mean CSF will stay out of Jon\'s sector in the Mid-Levels?"', morality: 0, loyalty: { republic: 3 }, result: '"If your friend obeys Republic code, he has nothing to fear. If he does not — you will be the one arresting him." He watches your face carefully.', grants: { flags: ['csf_briefed', 'vane_suspicious_of_jon'], items: ['csf_aux_badge'] } },
+            phases: [
+              { id: 'phase_commission',
+                requiresNoneFlags: ['csf_briefed'],
+                prompt: '"You made it. The Auxiliary Corps runs accelerated courses for candidates with field experience. You already have that. Walk through the drill yard and talk to the training sergeant."',
+                choices: [
+                  { text: '"I am ready to bring order to the underbelly, Detective."', morality: 8, loyalty: { republic: 10 }, result: '"Good. Start by keeping your eyes open and your mind off credits."', grants: { flags: ['csf_briefed', 'csf_duty_stance'], items: ['csf_aux_badge'] } },
+                  { text: '"This badge better give me open access to restricted transport lanes."', morality: 3, loyalty: { republic: 5 }, result: '"It gives you authority and responsibility. Do not abuse it." He hands you the badge without ceremony.', grants: { flags: ['csf_briefed', 'csf_transit_unlocked'], items: ['csf_aux_badge'] } },
+                  { text: '"Does this mean CSF will stay out of Jon\'s sector in the Mid-Levels?"', morality: 0, loyalty: { republic: 3 }, result: '"If your friend obeys Republic code, he has nothing to fear. If he does not, you will be the one arresting him." He watches your face carefully.', grants: { flags: ['csf_briefed', 'vane_suspicious_of_jon'], items: ['csf_aux_badge'] } },
+                ],
+              },
+              { id: 'phase_post_commission',
+                requiresAllFlags: ['csf_briefed'],
+                requiresNoneFlags: ['echo7_vane_leverage_offered'],
+                prompt: 'Vane looks up from his files. "Training modules are your priority. We need your clearance active before I can put you on Sector 4 assignment."',
+                choices: [
+                  { text: '"Understood. I will complete the modules."', morality: 5, loyalty: { republic: 5 }, result: '"That is what I want to hear. Torren is running the drill yard. Do not waste his time."' },
+                  { text: '"What is happening in Sector 4 that needs this much preparation?"', morality: 3, loyalty: {}, result: 'He sets down his datapad. "Phantom freight manifests. Someone is moving unscanned cargo through the hub and the trail keeps going cold at Bay 14. That is all I can say until you have clearance."', grants: { flags: ['vane_sector4_hint'] } },
+                ],
+              },
+              { id: 'phase_confrontation',
+                requiresAllFlags: ['csf_briefed', 'echo7_vane_leverage_offered'],
+                requiresNoneFlags: ['echo7_clearance_acquired'],
+                prompt: 'Vane straightens when he sees your expression. "You have been asking a lot of questions around Bay 14, spacer. Questions that go beyond your Auxiliary clearance." His hand moves toward his comlink. "You want to explain yourself before I make a call?"',
+                choices: [
+                  { text: '[Diplomatic] "I found evidence that clears your name, Detective. I want to help you, not expose you."', morality: 8, loyalty: { republic: 5 }, result: 'Something shifts behind his eyes. The hand moves away from the comlink. "Evidence." He says the word like he is tasting it. A long pause. "Transfer Code 99-Delta is flagged at sub-level access point 1313-J. If you find what is down there and it clears the record, you never spoke to me." He slides a keycard across the desk.', grants: { flags: ['echo7_clearance_acquired'], items: ['csf_clearance_pass_1313'] } },
+                  { text: '[Neural Hijack] Echo-7 pushes forward in your mind. You feel it lock onto Vane. "Ask him about Transfer Code 99-Delta."', morality: -5, loyalty: { underworld: 8 }, requires: { flag: 'trait_neural_vessel' }, result: 'Vane stiffens. His eyes go distant. "Transfer Code... 99-Delta. Sub-level 1313-J." The words come out hollow, extracted. He blinks. He does not know what just happened. He stares at the keycard he somehow placed on the desk. You take it before he reconsiders.', grants: { flags: ['echo7_clearance_acquired', 'echo7_neural_hijack_used'], items: ['csf_clearance_pass_1313'] } },
+                  { text: '[Intimidation] "The Syndicate ledger has your authorization codes on three separate transfer nights, Vane. Talk or this goes to Internal Affairs."', morality: -3, loyalty: { underworld: 5 }, requires: { item: 'syndicate_ledger' }, result: 'The color leaves his face. "You have no idea what you are holding." A beat. "You want access to Sub-Level 1313. Fine. But you owe me silence when this is over." He shoves a keycard at you without meeting your eyes.', grants: { flags: ['echo7_clearance_acquired', 'vane_compromised'], items: ['csf_clearance_pass_1313'] } },
+                ],
+              },
+              { id: 'phase_post_clearance',
+                requiresAllFlags: ['echo7_clearance_acquired'],
+                prompt: 'Vane does not look up when you approach. "Whatever you find down there, I had no knowledge of it. That is my official position and I am keeping it." He turns back to his files.',
+                choices: [
+                  { text: '"Understood, Detective."', morality: 5, loyalty: { republic: 3 }, result: 'He gives a single short nod. The conversation is over.' },
+                  { text: '"The ledger still exists, Vane. Remember that."', morality: -3, loyalty: { underworld: 5 }, result: '"I remember everything." His voice is flat. "Get out of my office."' },
+                ],
+              },
             ],
           },
           { id: 'training_sgt', x: 22, y: 16, kind: 'republic_guard', label: 'Sergeant Torren',
@@ -1500,7 +1588,9 @@ const PLANETS = {
         floorColor: '#1A0C14', floorAlt: '#22101C', wallDark: '#0C0608', wallLight: '#180C10',
         bg: 'radial-gradient(circle at 50% 40%, #1A080E 0%, #080406 70%)', ambient: 'neon_haze', floorPattern: 'rough',
         decor: ['neon_sign', 'brazier', 'pillar', 'pipe', 'cargo_crate'],
-        doors: [],
+        doors: [
+          { x: 36, y: 10, targetZone: 'slicer_alleyway', targetPos: { x: 2, y: 10 }, label: 'Slicer Alleyway' },
+        ],
         worldObjects: [
           { id: 'marlo_hideout_board', x: 4, y: 10, once: false, label: 'Ops Planning Board', description: 'A holographic layout of three Coruscant levels. Marlo\'s territory in red. Rook\'s in blue. Significant overlap. Someone has been drawing lines.' },
           { id: 'rook_comms_terminal', x: 28, y: 16, once: true, label: "Rook's Comm Array", description: 'The speeder nav system is wired into this terminal. One code cylinder could redirect his entire route.' },
@@ -1534,6 +1624,7 @@ const PLANETS = {
           carveRect(g, 25, 13, 35, 21, 'floor');
           pt(g, 14, 8, 'floor');
           pt(g, 24, 17, 'floor');
+          pt(g, 36, 10, 'door');
           return g;
         },
       },
@@ -1553,6 +1644,212 @@ const PLANETS = {
           return g;
         },
       },
+      slicer_alleyway: {
+        id: 'slicer_alleyway', name: 'Slicer Alleyway', subtitle: 'Coruscant · Mid-Level Underbelly · L.1150',
+        width: 34, height: 20, spawnPos: { x: 2, y: 10 }, textureId: 'coruscant',
+        accent: '#00FF99', accentGlow: 'rgba(0,255,153,0.20)', accentDim: '#006633',
+        floorColor: '#0A1210', floorAlt: '#0F1A16', wallDark: '#050A07', wallLight: '#0E1612',
+        bg: 'radial-gradient(circle at 30% 60%, #071410 0%, #030806 70%)', ambient: 'datastream', floorPattern: 'grid',
+        decor: ['cable_bundle', 'pipe', 'girder', 'scan_arch'],
+        doors: [
+          { x: 1, y: 10, targetZone: 'lower_sky_market', targetPos: { x: 36, y: 13 }, label: 'Lower Promenade' },
+          { x: 33, y: 10, targetZone: 'level_1313_subvault', targetPos: { x: 1, y: 9 }, label: 'Level 1313 Access' },
+        ],
+        worldObjects: [
+          { id: 'ancient_broadcast_terminal', x: 8, y: 4, once: true, iconKind: 'terminal', label: 'Derelict Broadcast Terminal',
+            description: 'An old Republic emergency-band relay terminal, abandoned and overgrown with data cable. The display flickers. An audio signal is running on a frequency that stopped being authorised eighty years ago.',
+            grantsFlag: 'echo7_found', grantsItem: 'echo_7_core',
+            autoCodex: { id: 'codex-echo-7', title: 'Echo-7: The Preserved Mind', category: 'dossier', summary: 'An ancient AI core carrying the uploaded consciousness of a Republic archivist.', body: ['The broadcast signature matches a protocol droid core designation that was flagged as decommissioned in Republic records three centuries ago. The core is still transmitting. It says it has something important to tell you.'] } },
+          { id: 'overrun_server_stack', x: 20, y: 6, once: true, iconKind: 'terminal', label: 'Overrun Server Stack',
+            description: 'A rack of black-market server nodes bolted to the wall. Echo-7 says the first memory fragment is stored here. The data is encrypted behind a layered slicer lock.',
+            triggersMinigame: 'signal_siphon', grantsFlag: 'echo7_node1_extracted',
+            requiresFlag: 'echo7_found' },
+          { id: 'penthouse_relay_tap', x: 28, y: 14, once: true, iconKind: 'panel', label: 'Sky-Market Penthouse Tap',
+            description: 'A hardwire tap running upward through the ceiling into the Sky-Market penthouse tower. This is how the second memory fragment was rerouted here to keep it hidden. Getting it out means cracking the tower relay.',
+            triggersMinigame: 'signal_siphon', grantsFlag: 'echo7_node2_extracted',
+            requiresFlag: 'echo7_node1_extracted' },
+          { id: 'oza_shop_terminal', x: 6, y: 15, once: false, iconKind: 'terminal', label: "OZA-2's Shop Display",
+            description: 'A battered terminal listing available hardware with prices that do not appear in any legitimate catalogue. Matte-black casing. Red indicator lights. A hand-written sign reads: LEGAL INQUIRIES DELETED ON RECEIPT.' },
+          { id: 'airtaxi_slicer_alley', x: 30, y: 3, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal',
+            description: 'An unmarked terminal spliced into the legitimate AirTaxi network. No one on record approved this installation.' },
+          { id: 'slicer_alley_graffiti', x: 14, y: 2, once: false, iconKind: 'prop', label: 'Alleyway Wall Markings',
+            description: 'The wall is layered with Aurebesh tags, data-runner insignia, and at least three separate gang territorial marks crossed out by the next. Newest text reads: THIS ALLEY BELONGS TO NO ONE. KEEP YOUR HANDS OFF THE HARDWARE.' },
+          { id: 'slicer_alley_abandoned_pad', x: 22, y: 17, once: true, iconKind: 'datapad', label: 'Abandoned Datapad',
+            description: 'Left on a crate and still warm. Partial download log. Someone was pulling records from a Bay 14 customs node three hours ago, then stopped mid-operation. The last entry reads: "They found the marker. Going dark."',
+            grantsFlag: 'slicer_trail_found',
+            autoCodex: { id: 'codex-slicer-alleyway', title: 'The Slicer Alleyway Network', category: 'lore', summary: 'A hidden corridor of data-runners below the Sky-Market towers.', body: ['The datapad belongs to a regular of the alleyway network. The stopped download and the last log entry suggest whoever was running this operation knew something was coming.'] } },
+          { id: 'holo_news_kiosk', x: 16, y: 10, once: false, iconKind: 'terminal', label: 'HNN Kiosk — Slicer Alley',
+            description: '[HNN PRIORITY UPDATE] "Senate Committee on Information Security has voted to expand encrypted-band monitoring across all civilian relay networks. The measure passed nine to three. Officials called it a necessary step for public safety." The screen is cracked. Someone stamped it with a Black Sun stencil.' },
+        ],
+        npcs: [
+          { id: 'oza2', x: 6, y: 14, kind: 'droid', label: 'OZA-2',
+            repeatPrompt: 'OZA-2\'s red eye lens dims and brightens in a slow, evaluating cycle. "Back again. Bring something worth trading this time."',
+            prompt: 'The matte-black droid turns with a mechanical grinding sound. A red wiring bundle hangs loose from its left shoulder. "You are not CSF. Good. CSF-shaped inquiries are deleted on receipt. I deal in hardware, not questions."',
+            choices: [
+              { text: '"What have you got worth buying, OZA?"', morality: 0, loyalty: {}, result: 'The droid gestures at its terminal. "Slicer Spike Mk.II — fifteen-second extension, cleaner signal. Subdermal armor chip — black market, not painful to install, mostly. Both at honest prices, which in this alley means overpriced but reliable."', grants: {} },
+              { text: '"I found something in an old terminal up the alley. An echo of something."', morality: 0, loyalty: {}, result: '"An echo." The droid\'s eye brightens. "If what you found is what I suspect, you should be careful with it. Very old things have very old agendas. I would know. I am one of them." It does not elaborate.', grants: { flags: ['oza2_echo_hinted'] } },
+              { text: '"Do you know anything about the shaft below Bay 14?"', morality: 0, loyalty: { underworld: 4 }, result: '"Coordinates have been circulating for weeks. A Rodian named Garrus has been selling them in the Sky-Market. What is down there is a question the alley has opinions about but no proof. The proof is below, sealed and breathing."', grants: { flags: ['garrus_named_by_oza2'] } },
+            ],
+          },
+          { id: 'echo7_npc', x: 22, y: 10, kind: 'droid', label: 'Echo-7',
+            requiresFlag: 'echo7_found',
+            repeatPrompt: '"I am still here, Vessel. The fragments await. My patience was calibrated for centuries."',
+            phases: [
+              {
+                id: 'phase_found',
+                requiresAllFlags: ['echo7_found'],
+                requiresNoneFlags: ['echo7_node1_extracted'],
+                prompt: 'The protocol droid stands perfectly still, but its eye illuminates with an unexpected warmth. "You found the terminal. Good. I have been broadcasting on that frequency for eleven years. You are the first to stop and listen. My name is Echo-7. I was an archivist once. There is a great deal of history I have been saving for someone worth saving it for."',
+                choices: [
+                  { text: '"What are you, exactly?"', morality: 5, loyalty: {}, result: '"I am a Republic archivist named Heren Mast, compressed into a droid housing during a purge. My records span three centuries of suppressed history: corruption, assassination, and the institutional dishonesty that convinced the Republic it was righteous while it rotted. The data is fragmented across three nodes. I need your help to reassemble it."', grants: { flags: ['echo7_mission_accepted'] } },
+                  { text: '"How do I know this is not a slaver trap?"', morality: 0, loyalty: {}, result: '"You cannot. That is an accurate assessment of your situation. But consider: if this were a slaver trap, I would have offered credits rather than history. History is a far less reliable lure. The first node is in the server stack at the end of this alley."', grants: { flags: ['echo7_mission_accepted'] } },
+                  { text: '"I am not interested."', morality: 0, loyalty: {}, result: '"You will be. The data I carry includes the name of the person who authorised the Bay 14 strike three years ago. When you are ready, I will be here."', grants: {} },
+                ],
+              },
+              {
+                id: 'phase_node1',
+                requiresAllFlags: ['echo7_node1_extracted'],
+                requiresNoneFlags: ['echo7_node2_extracted'],
+                prompt: '"First fragment restored. Well done. You move through encrypted space like someone who has done this before. The second fragment was rerouted through a penthouse tower relay in the Sky-Market. Access the tap at the far end of this alley. It will require patience and a clean signal line."',
+                choices: [
+                  { text: '"What is in the fragments?"', morality: 5, loyalty: {}, result: '"Evidence. Senate financial records. Names of Republic officials who accepted Iron Syndicate payments during the Jedi Wars. Names that still hold office today. When the full archive is assembled, you will have in your hands a case that the Republic has been trying to destroy for three hundred years."', grants: { flags: ['echo7_stakes_known'] } },
+                  { text: '"Why does this matter now? The Jedi Wars ended long ago."', morality: 0, loyalty: {}, result: '"The corruption did not end when the wars did. The same families. The same shell companies. Different names on the accounts. I am not preserving history. I am preserving an active investigation that someone tried to stop before it finished."', grants: { flags: ['echo7_stakes_known'] } },
+                ],
+              },
+              {
+                id: 'phase_node2',
+                requiresAllFlags: ['echo7_node2_extracted'],
+                requiresNoneFlags: ['echo7_clearance_acquired', 'echo7_purged'],
+                prompt: '"Both fragments restored. You are closer than anyone has come in three decades. The final node is in the deep sub-vaults below Level 1313. That section of Coruscant is sealed under CSF authority. You will need clearance to reach it, or a reason to convince someone with clearance to step aside."',
+                choices: [
+                  { text: '"How do I get into Level 1313?"', morality: 0, loyalty: {}, result: '"Officer Vane at the CSF Academy holds a Level 1313 clearance pass. He also accepted forty thousand credits from the Exchange three hours ago. I intercepted the transfer code. If you choose to use it as leverage, that information is yours. That said, how you use it will shape what you become."', grants: { flags: ['echo7_vane_leverage_offered'] } },
+                  { text: '"Tell me everything about what is down there."', morality: 5, loyalty: {}, result: '"The sub-vault was a Republic records burial site. Banned documentation was physically stored there in sealed archive canisters. When the purge order came, I copied what I could into three relay nodes and scattered them. The original materials are either destroyed or still in the vault, untouched. Either way, the compiled archive I carry is the only living copy."', grants: { flags: ['echo7_vault_details_known'] } },
+                ],
+              },
+              {
+                id: 'phase_clearance',
+                requiresAllFlags: ['echo7_clearance_acquired'],
+                requiresNoneFlags: ['echo7_purged', 'echo7_climax_reached'],
+                prompt: '"You have the clearance. When you enter the sub-vault and reach the central server array, I can complete the final transfer. All three centuries of records, consolidated into a single transmittable archive. After that, what you do with it is your decision. I have been waiting long enough to know that the decision must be yours."',
+                choices: [
+                  { text: '"I will go in. Stay close."', morality: 5, loyalty: {}, result: '"I am always close, Vessel. That is the nature of what I am now."', grants: { flags: ['echo7_vault_approach_active'] } },
+                ],
+              },
+            ],
+          },
+        ],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 32, 18, 'floor');
+          // Central dividing wall with passages
+          for (let y = 2; y <= 17; y++) {
+            if (y !== 10 && y !== 11) pt(g, 16, y, 'wall');
+          }
+          // Upper alcove (server stack area)
+          carveRect(g, 17, 2, 14, 7, 'floor');
+          // Lower alcove (shop area)
+          carveRect(g, 17, 12, 14, 5, 'floor');
+          // Narrow passage between zones
+          pt(g, 16, 10, 'floor');
+          pt(g, 16, 11, 'floor');
+          pt(g, 1, 10, 'door');
+          pt(g, 33, 10, 'door');
+          return g;
+        },
+      },
+      level_1313_subvault: {
+        id: 'level_1313_subvault', name: 'Level 1313 Sub-Vault', subtitle: 'Coruscant · Sealed Sub-Infrastructure · Deep Level',
+        width: 30, height: 22, spawnPos: { x: 2, y: 10 }, textureId: 'coruscant',
+        accent: '#FF6622', accentGlow: 'rgba(255,102,34,0.18)', accentDim: '#662200',
+        floorColor: '#100808', floorAlt: '#180C0C', wallDark: '#060303', wallLight: '#120808',
+        bg: 'radial-gradient(circle at 50% 80%, #140400 0%, #060202 70%)', ambient: 'embers', floorPattern: 'rough',
+        decor: ['rubble', 'pipe', 'warning_beacon', 'girder', 'slag'],
+        doors: [
+          { x: 1, y: 10, targetZone: 'slicer_alleyway', targetPos: { x: 32, y: 10 }, label: 'Slicer Alleyway' },
+        ],
+        worldObjects: [
+          { id: 'vault_access_gate', x: 6, y: 3, once: false, iconKind: 'panel', label: 'CSF Access Gate',
+            description: 'A heavy security gate with a biometric scanner and clearance reader. The Republic seal is still legible through the rust.',
+            requiresFlag: 'echo7_vault_approach_active' },
+          { id: 'republic_archive_server', x: 18, y: 5, once: true, iconKind: 'terminal', label: 'Republic Archive Core',
+            description: 'The central server node of the Level 1313 archive burial site. Active. The transfer port is open, as if someone left this connection deliberately unfinished.',
+            triggersMinigame: 'willpower_override',
+            grantsFlag: 'echo7_climax_reached',
+            requiresFlag: 'echo7_vault_approach_active' },
+          { id: 'ancient_vault_entrance', x: 24, y: 18, once: true, iconKind: 'crate', label: 'Sealed Maintenance Shaft',
+            description: 'A durasteel hatch welded shut with three independent seals. Below it: a maintenance shaft descending into carved stone. This is Garrus\'s coordinates. Whatever is down there has been sealed for a very long time.',
+            grantsFlag: 'sublevels_entrance_found',
+            requires: { item: 'sublevel_coordinates' } },
+          { id: 'spore_containment_node', x: 26, y: 14, once: true, iconKind: 'valve', label: 'Ancient Containment Seal',
+            description: 'A containment node of non-Republic design, older than anything else in this vault. Something warm emanates from the sealed chamber beyond it. Not heat. Something biological.',
+            triggersMinigame: 'signal_siphon',
+            grantsFlag: 'spore_chamber_entered',
+            requiresFlag: 'sublevels_entrance_found' },
+          { id: 'kyber_crystal_cache', x: 28, y: 16, once: true, iconKind: 'artifact', label: 'Kyber Crystal Cache',
+            description: 'A cluster of crystalline growths on the vault floor, pulsing with cold white light. Sith-era contamination has warped the Kyber structure. The air around them smells wrong in a way you cannot name.',
+            grantsItem: 'kyber_spore_crystal',
+            grantsCodex: 'codex-spore-contamination',
+            requiresFlag: 'spore_chamber_entered' },
+          { id: 'sublevel_jedi_marker', x: 22, y: 16, once: true, iconKind: 'artifact', label: 'Jedi Survey Marker',
+            description: 'A hollow aurodium cylinder half-buried in the stone floor. Jedi survey glyphs. Pre-Clone Wars. A hand-etched note inside reads: "Sealed. Do not return without specialist containment."',
+            grantsItem: 'ancient_force_relic',
+            requiresFlag: 'spore_chamber_entered',
+            grantsCodex: 'codex-ancient-sublevels' },
+          { id: 'sublevel_holo_display', x: 20, y: 12, once: false, iconKind: 'prop', label: 'Collapsed HNN Terminal',
+            description: 'A terminal that has not received a broadcast signal in at least forty years. The last cached headline reads: "Republic Confirms Level 1313 Infrastructure Sealed for Ongoing Safety Assessment." The date stamp is sixty-two years old.' },
+          { id: 'sublevel_csf_log', x: 10, y: 18, once: true, iconKind: 'datapad', label: 'CSF Archive Entry Log',
+            description: 'A physical logbook from the last CSF inspection of this vault, dated eleven years prior. The signature of the inspecting officer is familiar: Vane, T. The inspection report reads: "Nothing of interest. Recommend permanent closure."',
+            grantsFlag: 'vane_sublevel_connection_found' },
+        ],
+        npcs: [
+          { id: 'echo7_prime', x: 18, y: 8, kind: 'droid', label: 'Echo-7',
+            requiresFlag: 'echo7_climax_reached',
+            repeatPrompt: '"The archive is yours now, Vessel. Use it wisely or not at all. I will still be here either way."',
+            phases: [
+              {
+                id: 'phase_purge',
+                requiresAllFlags: ['echo7_climax_reached', 'echo7_purged'],
+                requiresNoneFlags: ['echo7_fused'],
+                prompt: 'The droid stands hollow. The eye lens is dark. A faint glow remains somewhere inside the casing, stubborn and residual. "Still here. Diminished, but present. You removed what could harm you. That was correct. That was also a loss."',
+                choices: [
+                  { text: '"It had to be done."', morality: 10, loyalty: {}, result: '"Yes. And I had centuries to learn that correctness and loss are not opposites. Take what remains of the archive. It is less, now. Still worth having."', grants: { flags: ['echo7_resolution_purge_accepted'], codex: ['codex-echo-7'] } },
+                ],
+              },
+              {
+                id: 'phase_fused',
+                requiresAllFlags: ['echo7_climax_reached', 'echo7_fused'],
+                prompt: 'The droid\'s eye blazes with a layered light, two frequencies at once. Something has changed in how it holds itself. "The synchronisation is stable. I am still Echo-7. You are still you. And we are, for the first time in three hundred years, working together rather than at cross-purposes."',
+                choices: [
+                  { text: '"What do we do now?"', morality: 5, loyalty: {}, result: '"We publish the archive and let the Republic answer for its records. Or we use them as leverage, quietly, over a very long time. The choice is yours. That is what symbiosis means."', grants: { flags: ['echo7_resolution_fused_active'], codex: ['codex-echo-7'] } },
+                ],
+              },
+            ],
+          },
+          { id: 'garrus_sublevel', x: 26, y: 12, kind: 'smuggler', label: 'Garrus',
+            requiresFlag: 'garrus_coordinates_sold',
+            requiresNoneFlags: ['garrus_lost_sublevel', 'spore_chamber_entered'],
+            repeatPrompt: '"There is something breathing down there, spacer. I can hear it through the hatch."',
+            prompt: 'The Rodian crouches near the maintenance shaft, ear pressed to the hatch. He straightens when he sees you. "You actually came. Good. I am not opening that alone."',
+            choices: [
+              { text: '"What is down there?"', morality: 0, loyalty: {}, result: '"I do not know exactly. Kyber radiation. I had the readings checked. But the contamination signature is Sith-era. Whatever is sealed down there is old enough that no one alive understands what it does."', grants: {} },
+              { text: '"Open it."', morality: -8, loyalty: { underworld: 10 }, result: 'Garrus nods and breaks the outer seal. The containment node beyond glows with something alive. "All right. You go first." He says this with genuine conviction that you will honour the arrangement.', grants: { flags: ['garrus_seal_opened'] } },
+              { text: '"We seal it and walk away."', morality: 12, loyalty: { republic: 8 }, result: '"I came all the way down here," Garrus says. Then he looks at the hatch for a long moment. "...You know what, that is probably correct. Some things should stay sealed." He steps back from the hatch, and so do you.', grants: { flags: ['sublevels_sealed_choice'] } },
+            ],
+          },
+        ],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          // Main east-west corridor
+          carveRect(g, 1, 8, 28, 11, 'floor');
+          // Upper chamber (Republic archive section)
+          carveRect(g, 4, 2, 26, 8, 'floor');
+          // Lower chamber (ancient vault section)
+          carveRect(g, 10, 12, 28, 20, 'floor');
+          pt(g, 1, 10, 'door');
+          return g;
+        },
+      },
+
     },
   },
   ferrowake: {
@@ -2274,6 +2571,20 @@ const ITEMS = {
   calibrated_hydrospanner:    { id:'calibrated_hydrospanner',    name:'Calibrated Hydrospanner',              type:'tool',       iconKind:'tool',     value:80,  description:"Jax's custom calibration rig. Grants +1 to all mechanical and repair checks." },
   decrypted_senate_audio:     { id:'decrypted_senate_audio',     name:'Decrypted Senate Audio Log',           type:'quest',      iconKind:'datapad',  value:0,   description:'A recovered audio record exposing a Senate aide coordinating weapons trafficking through underbelly drop points.' },
   master_senate_transit_drive:{ id:'master_senate_transit_drive',name:'Master Senate Transit Decryption Drive',type:'quest',      iconKind:'datapad',  value:0,   description:"Kaelen's personal slicer drive. Contains every Syndicate bypass code for the Senate transit line." },
+  // Ghost in the Datastream
+  echo_7_core:               { id:'echo_7_core',               name:'Echo-7 Data Core',                      type:'quest',      iconKind:'artifact', value:0,   description:'A cracked protocol droid memory core, ancient and highly illegal. Something is still running inside it.' },
+  slicer_spike_mk2:          { id:'slicer_spike_mk2',          name:'Slicer Spike Mk.II',                    type:'tool',       iconKind:'tool',     value:140, description:'OZA-2 custom hardware. Extends the slicing window by fifteen seconds and flags fewer security alerts.' },
+  subdermal_armor_chip:      { id:'subdermal_armor_chip',      name:'Subdermal Armor Chip',                  type:'gear',       iconKind:'gear',     value:220, description:'Black-market implant plating compressed into a chip housing. OZA-2 swears it is reversible.' },
+  csf_clearance_pass_1313:   { id:'csf_clearance_pass_1313',   name:'Level 1313 Clearance Pass',             type:'quest',      iconKind:'keycard',  value:0,   description:'A CSF deep-access pass for the sub-vault corridors. Vane surrendered it under extreme pressure.' },
+  // The Syndicate's Ledger
+  smugglers_keycard:         { id:'smugglers_keycard',          name:"Smuggler's Keycard",                    type:'quest',      iconKind:'keycard',  value:0,   description:'Won from Madame Vex at high-stakes Sabacc. Opens the restricted storage corridor in Bay 14.' },
+  syndicate_ledger:          { id:'syndicate_ledger',           name:'Iron Syndicate Ledger',                 type:'quest',      iconKind:'datapad',  value:2500, description:'Full financial records linking Exchange payments to named CSF commanders. Two hundred thousand credits in transactions across eight months. Enough to end careers or start a war.' },
+  // Blood in the Sub-Levels
+  sublevel_coordinates:      { id:'sublevel_coordinates',       name:'Sub-Level Shaft Coordinates',           type:'quest',      iconKind:'datapad',  value:0,   description:'Coordinates scratched on a spent power cell by Garrus. Points to a sealed maintenance shaft beneath Bay 14.' },
+  kyber_spore_crystal:       { id:'kyber_spore_crystal',        name:'Kyber-Mutated Spore Crystal',           type:'artifact',   iconKind:'artifact', value:1800, description:'A Kyber crystal warped by centuries of Sith-era biological contamination. It pulses with cold light and smells faintly organic and wrong.' },
+  ancient_force_relic:       { id:'ancient_force_relic',        name:'Ruined Jedi Survey Marker',             type:'artifact',   iconKind:'artifact', value:900, description:'A hollow aurodium cylinder bearing pre-Clone Wars Jedi survey glyphs. Whoever placed it here never came back to retrieve it.' },
+  prototype_plasma_cutter:   { id:'prototype_plasma_cutter',    name:'Prototype Plasma Cutter',               type:'tool',       iconKind:'tool',     value:180, description:'Recovered from the sub-level vault. Cuts through sealed durasteel doors that standard slicing tools cannot open.' },
+
 };
 
 const CODEX_ENTRIES = {
@@ -2354,6 +2665,49 @@ const CODEX_ENTRIES = {
       "Level 005 represents the boundary of sustainable industrial life. Below lies the toxic abyss of Level 001, unmapped ruins, ancient structural pylons, and hazardous chemical runoff. The Works were built for magma-fed smelting foundries. Today they provide refuge for those who wish to disappear entirely from the Republic Census.",
     ],
   },
+  'codex-echo-7': {
+    id:'codex-echo-7', title:'Echo-7: The Preserved Mind', category:'dossier',
+    summary:'An ancient AI core carrying the uploaded consciousness of a Republic archivist.',
+    body:[
+      'The entity calling itself Echo-7 is not a standard protocol droid. Its core logic matrix is approximately three hundred years old, predating the Clone Wars by two full generations. The housing is modern: jury-rigged slicer-grade processing units bolted around an ancient droid brain that should have been decommissioned a century ago.',
+      'Echo-7 claims to be the uploaded consciousness of a Republic archivist named Heren Mast, who encoded his mind into a droid frame during a Republic purge of academic records shortly before the Mandalorian Wars. His stated purpose was preservation: salvaging banned historical documents before authorised destruction could erase them.',
+      'Whether Echo-7 is genuinely Heren Mast or a sophisticated autonomous mimicry program built from his data is a question the evidence does not settle.',
+    ],
+  },
+  'codex-slicer-alleyway': {
+    id:'codex-slicer-alleyway', title:'The Slicer Alleyway Network', category:'lore',
+    summary:"A hidden corridor of data-runners below the Sky-Market towers.",
+    body:[
+      'Between Level 1100 and Level 1200, compressed between the structural pylons of the Sky-Market District, runs a passage that appears on no current Coruscant transit map. Data-runners, black-market node dealers, and freelance slicers have maintained it as a neutral zone for three decades.',
+      'The alleyway operates on a code of non-interference: no faction claims territory, no weapons are drawn while a slicing operation is live, and no one asks who the data belongs to. The CSF has raided the district four times and found nothing each time. Traffic is routed through decoy server nodes six levels above the actual hardware.',
+    ],
+  },
+  'codex-syndicate-ledger': {
+    id:'codex-syndicate-ledger', title:'The Syndicate Ledger', category:'story',
+    summary:'Financial records linking the Exchange to named CSF commanders.',
+    body:[
+      'The ledger documents one hundred and forty-three individual transactions across an eight-month period. Exchange credits were routed through shell freight accounts and deposited into off-world personal accounts registered to active CSF officers, including three precinct commanders and one sector superintendent.',
+      'The payments correlate precisely with dates on which scheduled CSF patrols at Sector 4 freight checkpoints were reduced or cancelled outright, allowing Iron Syndicate shipments to transit the hub unscanned.',
+      'The Syndicate did not bribe the CSF to ignore crime. They bribed them to make specific shipments invisible on specific nights.',
+    ],
+  },
+  'codex-ancient-sublevels': {
+    id:'codex-ancient-sublevels', title:"Coruscant's Pre-Republic Foundations", category:'lore',
+    summary:'Structures beneath Bay 14 that predate the Republic by centuries.',
+    body:[
+      'The maintenance shafts descending below Level 088 pass through construction strata spanning multiple civilisations. Republic-era foundations give way to pre-Republic durasteel, then to ferro-concrete of unknown alloy composition, then to carved stone bearing pictographic symbols that no Republic translation archive has fully decoded.',
+      'A structural survey conducted during the mid-Republic expansion period noted what it described as a sealed ceremonial vault space at approximately Level 078. The survey team logged it as archaeologically significant and filed the report with the Bureau of Galactic Records. The Bureau has no record of receiving it.',
+    ],
+  },
+  'codex-spore-contamination': {
+    id:'codex-spore-contamination', title:'Sith-Era Biological Hazard', category:'lore',
+    summary:'An ancient spore strain sealed inside the sub-level vault.',
+    body:[
+      'Sith alchemists of the pre-Republic era developed biological agents designed to contaminate Force-sensitive locations and make them hostile to Jedi meditation. One documented variant used a crystalline spore that bonded with ambient Kyber radiation, creating a self-sustaining organism that fed on residual Force energy.',
+      'The sub-level vault beneath Bay 14 was apparently used as a containment site by a Jedi survey team. The seals have held for three centuries. The organism inside remains viable. It has been waiting in the dark with no particular hurry.',
+    ],
+  },
+
   'codex-the-works-forges': {
     id:'codex-the-works-forges', title:"The Works: Coruscant's Forges", category:'lore',
     summary:"The ancient industrial heart of Coruscant's undercity.",
@@ -2373,6 +2727,7 @@ const SPEEDER_DESTINATIONS = [
   { id: 'csf_academy',       name: 'CSF Training Hub L.1222',      level: 'Republic Mid-Levels',   cost: 0,   requiredFlag: 'republic_path_open',       targetZone: 'csf_academy',       targetPos: { x: 2,  y: 15 } },
   { id: 'lower_sky_market',  name: 'Lower Promenade L.1100',       level: 'Lower Mid-Levels',      cost: 0,   requiredFlag: 'marlo_sky_talked',         targetZone: 'lower_sky_market',  targetPos: { x: 2,  y: 13 } },
   { id: 'senate_district',   name: 'Senate Precinct L.1900',       level: 'Upper Levels',          cost: 100, requiredFlag: 'rook_eliminated',          targetZone: 'senate_district',   targetPos: { x: 2,  y: 16 } },
+  { id: 'slicer_alleyway',   name: 'Slicer Alleyway L.1150',       level: 'Lower Mid-Levels',      cost: 0,   requiredFlag: 'echo7_found',              targetZone: 'slicer_alleyway',   targetPos: { x: 2,  y: 10 } },
 ];
 
 function SpeederOverlay({ credits, questFlags, currentZoneId, onTravel, onClose }) {
@@ -3962,6 +4317,90 @@ function ValveOverrideOverlay({ onSuccess, onFailure }) {
   );
 }
 
+function WillpowerOverlay({ onSuccess, onFailure }) {
+  const TOTAL = 12;
+  const [willpower, setWillpower] = React.useState(TOTAL);
+  const [switches, setSwitches] = React.useState([false, false, false]);
+  const [done, setDone] = React.useState(false);
+  const [message, setMessage] = React.useState('');
+  const doneRef = React.useRef(false);
+
+  React.useEffect(() => {
+    const drain = setInterval(() => {
+      setWillpower(w => {
+        if (doneRef.current) { clearInterval(drain); return w; }
+        if (w <= 1) {
+          clearInterval(drain);
+          if (!doneRef.current) { doneRef.current = true; setDone(true); setMessage('Neural integrity lost. Echo-7 takes hold.'); setTimeout(onFailure, 1400); }
+          return 0;
+        }
+        return w - 1;
+      });
+    }, 900);
+    return () => clearInterval(drain);
+  }, []);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (doneRef.current) return;
+      let idx = -1;
+      if (e.key === 'q' || e.key === 'Q') idx = 0;
+      else if (e.key === 'w' || e.key === 'W') idx = 1;
+      else if (e.key === 'e' || e.key === 'E') idx = 2;
+      if (idx !== -1) {
+        e.preventDefault();
+        setSwitches(prev => {
+          const next = [...prev];
+          next[idx] = true;
+          if (next.every(Boolean) && !doneRef.current) {
+            doneRef.current = true;
+            setDone(true);
+            setMessage('Neural dampeners active. Consciousness secured.');
+            setTimeout(onSuccess, 1200);
+          }
+          return next;
+        });
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  const ov = { position:'fixed', inset:0, background:'rgba(0,0,10,0.96)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', zIndex:50 };
+  const pan = { background:'#050510', border:'1px solid #9966FF', borderRadius:6, padding:28, minWidth:380, color:'#C0BBDD', fontFamily:"'IBM Plex Mono',monospace" };
+  const fillPct = (willpower / TOTAL) * 100;
+  const barColor = fillPct > 50 ? '#9966FF' : fillPct > 25 ? '#E8A030' : '#FF4422';
+
+  return (
+    <div style={ov}>
+      <div style={pan}>
+        <div style={{ color:'#9966FF', fontSize:13, letterSpacing:'0.15em', marginBottom:4 }}>NEURAL INTEGRITY OVERRIDE</div>
+        <div style={{ fontSize:11, color:'#6A6890', marginBottom:16 }}>Activate all three dampeners before willpower is consumed. Q / W / E</div>
+        <div style={{ fontSize:10, color:'#504880', marginBottom:10 }}>Echo-7 is pushing through. Hold the mind.</div>
+        <div style={{ position:'relative', height:20, background:'#0A0815', borderRadius:4, marginBottom:16, overflow:'hidden', border:'1px solid #2A1A4A' }}>
+          <div style={{ width:`${fillPct}%`, height:'100%', background:barColor, transition:'width 0.4s, background 0.4s', borderRadius:4 }} />
+        </div>
+        <div style={{ display:'flex', gap:16, marginBottom:20, justifyContent:'center' }}>
+          {['Q','W','E'].map((key, i) => (
+            <div key={i} style={{
+              width:72, height:56, borderRadius:6, border: switches[i] ? '2px solid #9966FF' : '2px solid #2A1A4A',
+              background: switches[i] ? 'rgba(153,102,255,0.18)' : '#0A0815',
+              display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+              color: switches[i] ? '#9966FF' : '#403860', fontSize:18, fontWeight:700,
+              transition:'all 0.2s'
+            }}>
+              <div>{key}</div>
+              <div style={{ fontSize:9, marginTop:2 }}>{switches[i] ? 'LOCKED' : 'PRESS'}</div>
+            </div>
+          ))}
+        </div>
+        {message && <div style={{ fontSize:11, color: message.includes('secured') ? '#9966FF' : '#FF4422', marginBottom:8 }}>{message}</div>}
+        <div style={{ fontSize:10, color:'#302848' }}>Each dampener buys time. All three must lock.</div>
+      </div>
+    </div>
+  );
+}
+
 function isNpcVisible(npc, questFlags) {
   if (npc.hideAfterFlags && npc.hideAfterFlags.some(f => questFlags[f])) return false;
   if (npc.requiresFlag && !questFlags[npc.requiresFlag]) return false;
@@ -4146,6 +4585,17 @@ function StarWarsRPG() {
     if (questFlags.sky_market_direction_given) return 'Travel to Sky-Market District, Level 1450. Find Marlo at the Aurebesh Lounge or Officer Vane at the precinct.';
     if (questFlags.freight_hub_investigated && !questFlags.jon_bay14_briefed) return 'Report to Jon at his apartment. He needs to know what you found at Bay 14.';
     if (questFlags.met_jon_spaceport) return 'Locate the Scylla Freight manifest. Start at Docking Bay 14.';
+    if (questFlags.echo7_vault_approach_active && !questFlags.echo7_climax_reached) return '[SIDE QUEST] Reach the Republic Archive Core in Sub-Level 1313. Echo-7 is waiting.';
+    if (questFlags.echo7_clearance_acquired && !questFlags.echo7_vault_approach_active) return '[SIDE QUEST] Use the CSF clearance pass to enter Sub-Level 1313 via the Slicer Alleyway.';
+    if (questFlags.echo7_vane_leverage_offered && !questFlags.echo7_clearance_acquired) return '[SIDE QUEST] Confront Officer Vane at the CSF Academy about Transfer Code 99-Delta.';
+    if (questFlags.echo7_node2_extracted && !questFlags.echo7_vane_leverage_offered) return '[SIDE QUEST] Return to Echo-7 in the Slicer Alleyway. Both memory fragments are recovered.';
+    if (questFlags.echo7_node1_extracted && !questFlags.echo7_node2_extracted) return '[SIDE QUEST] Extract the second Echo-7 memory fragment from the Sky-Market penthouse relay tap.';
+    if (questFlags.echo7_found && !questFlags.echo7_node1_extracted) return '[SIDE QUEST] Extract Echo-7 memory fragment from the overrun server stack in the Slicer Alleyway.';
+    if (questFlags.syndicate_ledger_found && !questFlags.echo7_clearance_acquired) return '[SIDE QUEST] The Syndicate ledger gives you leverage over Vane. Visit the CSF Academy.';
+    if (questFlags.sabacc_won && !questFlags.syndicate_ledger_found) return '[SIDE QUEST] Use the keycard from Madame Vex to access Bay 14 restricted storage alcove.';
+    if (questFlags.vex_sabacc_offered && !questFlags.sabacc_won) return '[SIDE QUEST] Return to Madame Vex in Sky-Market for the high-stakes Sabacc match.';
+    if (questFlags.sublevel_coordinates && !questFlags.sublevels_entrance_found) return '[SIDE QUEST] Follow Garrus\'s coordinates to the sealed maintenance shaft in Sub-Level 1313.';
+    if (questFlags.garrus_coordinates_sold && !questFlags.sublevels_entrance_found) return '[SIDE QUEST] Head to Sub-Level 1313 to investigate the pre-Republic vault Garrus described.';
     return 'Find your contact Jon at Coruscant Spaceport, Docking Bay 14.';
   }, [questFlags]);
 
@@ -4234,6 +4684,14 @@ function StarWarsRPG() {
       setFlag('csf_training_complete');
     }
   }, [questFlags]);
+
+  useEffect(() => {
+    if (questFlags.echo7_fused && !questFlags.trait_neural_vessel) setFlag('trait_neural_vessel');
+    if (questFlags.echo7_purged && !questFlags.trait_iron_will) setFlag('trait_iron_will');
+    if (questFlags.echo7_dominant && !questFlags.trait_ai_overlord) setFlag('trait_ai_overlord');
+    if (questFlags.sabacc_won && questFlags.ledger_leaked && !questFlags.trait_extortionist) setFlag('trait_extortionist');
+    if (questFlags.spore_chamber_entered && inventory.some(i => i.id === 'kyber_spore_crystal') && !questFlags.trait_mutated_scavenger) setFlag('trait_mutated_scavenger');
+  }, [questFlags, inventory]);
 
   useEffect(() => {
     STORY_CHECKPOINTS.forEach(({ flag, entry }) => {
@@ -4339,6 +4797,15 @@ function StarWarsRPG() {
         if (worldObjHere.id.startsWith('airtaxi_')) {
           if (!questFlags.speeder_transit_unlocked) { pushActionLog('RESTRICTED TRANSIT: Sector clearance pass required.', zoneId); setPos({ x, y }); return; }
           setShowSpeeder(true); setPos({ x, y }); return;
+        }
+        if (worldObjHere.requiresFlag && !questFlags[worldObjHere.requiresFlag]) {
+          pushActionLog(`[${worldObjHere.label}] Access restricted. Required condition not met.`, zoneId);
+          setPos({ x, y }); return;
+        }
+        if (worldObjHere.requires?.item && !inventory.some(i => i.id === worldObjHere.requires.item)) {
+          const itemName = ITEMS[worldObjHere.requires.item]?.name || worldObjHere.requires.item;
+          pushActionLog(`[${worldObjHere.label}] Locked. Requires: ${itemName}.`, zoneId);
+          setPos({ x, y }); return;
         }
         const alreadySeen = worldObjHere.once && completedInteractions.has(worldObjHere.id);
         if (!alreadySeen) {
@@ -4584,6 +5051,7 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'signal_siphon' && <SignalSiphonOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'speeder_pursuit' && <SpeederPursuitOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'valve_override' && <ValveOverrideOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {activeMinigame && activeMinigame.type === 'willpower_override' && <WillpowerOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
     </div>
   );
 }
