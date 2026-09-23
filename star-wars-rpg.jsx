@@ -4230,6 +4230,12 @@ function StarWarsRPG() {
   }, [zone, map]);
 
   useEffect(() => {
+    if (questFlags.module_a_complete && questFlags.module_b_complete && questFlags.module_c_complete && !questFlags.csf_training_complete) {
+      setFlag('csf_training_complete');
+    }
+  }, [questFlags]);
+
+  useEffect(() => {
     STORY_CHECKPOINTS.forEach(({ flag, entry }) => {
       if (questFlags[flag] && !codex.find(e => e.id === entry.id)) {
         unlockCodex(entry);
