@@ -611,7 +611,8 @@ const PLANETS = {
           { id: 'sky_market_terminal', x: 20, y: 7, once: false, label: 'Trade Exchange Terminal', description: 'Live credit-transfer rates across fourteen systems. One manifest flagged for anomalous routing: SCYLLA FREIGHT. Destination: redacted. Shipper: redacted.' },
           { id: 'csf_bulletin', x: 28, y: 14, once: false, label: 'CSF Bulletin Board', description: 'Three active investigations listed. Two marked classified. The third — Cargo Anomaly / Bay 14 — shows status: CLOSED. Filed by: Vane, T. Closure date: two days after the incident.' },
           { id: 'lounge_bar_terminal', x: 5, y: 5, once: false, label: 'Lounge Drink Terminal', description: 'A rotating holographic menu. Thirty-seven varieties of exotic spirits from fourteen systems. One local special listed as "Bay 14 Blend." Whoever named it has a sense of humor or information you do not.' },
-          { id: 'lounge_private_booth', x: 9, y: 8, once: true, label: 'Occupied Booth', description: 'Two figures in grey coats sit with their backs to the room. Neither is drinking. Both are watching the exit. Iron Syndicate field observers — if they recognize you, they will report your presence at the lounge to Vex.', grantsFlag: 'syndicate_watchers_seen', grantsCodex: 'codex-iron-syndicate' },
+          { id: 'lounge_private_booth', x: 9, y: 8, once: true, label: 'Occupied Booth', description: 'Two figures in grey coats, backs to the room. Neither is drinking. Both are watching the exit.', grantsFlag: 'syndicate_watchers_seen', grantsCodex: 'codex-iron-syndicate',
+            autoCodex: { id: 'discovery-lounge-booth-watchers', title: 'Iron Syndicate Watchers', category: 'discoveries', summary: 'Field observers in the Aurebesh Lounge.', body: ['Two figures in grey coats sit with their backs to the room. Neither is drinking. Both are watching the exit. Iron Syndicate field observers — if they recognize you, they will report your presence at the lounge to Vex.', 'Their positioning covers the main entrance and the transit lift. This is a professional surveillance configuration, not a casual meeting.'] } },
           { id: 'lounge_datapad', x: 3, y: 9, once: true, label: 'Left Behind Datapad', description: 'Encrypted but partially readable. Credit transfers totaling 840,000 credits routed through three shell corporations to a Coruscant financial account. The destination account number matches one field on the Scylla manifest.', grantsFlag: 'credit_trail_found' },
           { id: 'precinct_evidence_locker', x: 29, y: 6, once: false, label: 'Evidence Locker — Bay 14', description: "CASE STATUS: CLOSED. PRIMARY EVIDENCE: destroyed in dock fire. PHYSICAL SAMPLES: none recovered. WITNESS STATEMENTS: sealed under Senate Directive 1182-C. The locker is padlocked with a standard CSF code seal. Vane's name is on the closure authorization." },
           { id: 'precinct_comms_station', x: 33, y: 5, once: false, label: 'CSF Dispatch Station', description: 'Twelve active patrol frequencies. Six are handling routine traffic violations. Five are static. One — Sector 4 Channel B — is broadcasting a continuous loop: "All units stand by. Sector 4 incident classified pending Senate review."' },
@@ -720,6 +721,8 @@ const PLANETS = {
             ],
           },
           { id: 'promenade_vendor', x: 20, y: 15, kind: 'cantina_owner', label: 'Promenade Vendor Oska',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true,
+            vendorStock: ['item_brandy', 'field_rations', 'item_spice_vial'],
             repeatPrompt: 'Oska polishes a glass and pretends not to notice you.',
             prompt: '"Upper levels, lower prices if you know how to ask. What are you after?"',
             choices: [
@@ -945,13 +948,13 @@ const PLANETS = {
           { x: 21, y: 27, targetZone: 'mag_rail_corridor', targetPos: { x: 21, y: 1 }, label: 'Mag-Rail Corridor' },
         ],
         worldObjects: [
-          { id: 'bay14_crime_scene', x: 20, y: 6, once: true, label: 'Bay 14 Blast Marks', description: 'The dock wall is scorched. Not from a fuel fire — the scorch pattern is from shaped charges placed against the loading manifest kiosk. Someone destroyed the primary records on the way out.' },
+          { id: 'bay14_crime_scene', x: 20, y: 6, once: true, label: 'Bay 14 Blast Marks', description: 'Scorch marks on the dock wall. The pattern is from shaped charges, not a fuel fire.',
+            autoCodex: { id: 'discovery-bay14-blast-marks', title: 'Bay 14: Blast Evidence', category: 'discoveries', summary: 'Shaped charges destroyed the loading manifest records.', body: ['The dock wall is scorched. Not from a fuel fire — the scorch pattern is from shaped charges placed against the loading manifest kiosk. Someone destroyed the primary records on the way out. Whoever did this knew exactly which terminal held the cargo authorization log.'] } },
           { id: 'discarded_keycard', x: 32, y: 18, once: true, label: 'Discarded Passcode', description: 'Half-melted but readable: an underworld bypass key. Grants sub-level transit without checkpoint flags. You pocket it.', grantsItem: 'scrambler_keycard' },
           { id: 'shipping_crate_b14', x: 10, y: 20, once: true, label: 'Unsealed Shipping Crate', description: 'Marked as "agricultural supplies." Contains Glitterstim vials and unregistered blaster power packs. Clearly staged to be found.', grantsItem: 'item_spice_vial' },
           { id: 'customs_terminal_088', x: 26, y: 4, once: true, label: 'Customs Manifest Registry', description: 'Three containers marked with Senate sub-committee routing stamps. One flags as anomalous — destination redacted, shipper redacted, authorization code valid. The code traces to a sub-committee that officially does not exist.' },
           { id: 'crane_node_088', x: 22, y: 4, once: true, label: 'Crane Automation Node', description: 'The bay exterior crane control system. A code input here can drop a heavy repulsor-crate onto the loading yard — opening a breach point into the warehouse without triggering external alarms.' },
           { id: 'undercity_radio_terminal', x: 4, y: 4, once: false, label: 'Under-Grit Radio Intercept', description: '[Signal 104.9 Sub-Grit — Unauthorized] "They are calling Docking Bay 14 a logistical delay while Black Sun heavy gunners run it like a private toll booth. CSF sent fresh academy blood into Sector 4. Place your bets at Vond\'s shop — three to one the new badge sells out before end of shift..."' },
-          { id: 'vond_vendor', x: 8, y: 24, once: false, label: '"Greasy" Vond — Scrap and Salvage', description: '"If it fell off the back of a freighter, I have it. No warranties. Once you walk off my platform, we do not know each other." Sells: Scrambler Keycard, Blaster Parts, Freighter Repair Kit.' },
           { id: 'airtaxi_freight_hub', x: 38, y: 6, once: false, label: 'AirTaxi Terminal', description: 'Transit terminal. Level access pending clearance.' },
         ],
         npcs: [
@@ -987,6 +990,13 @@ const PLANETS = {
               { text: '"You are protected under Republic witness protocols. Talk to me."', morality: 8, loyalty: { republic: 10 }, requires: { item: 'csf_aux_badge' }, result: '"Three containers, Platform 09. Logged under Senate clearance codes that trace back to a sub-committee that officially does not exist. I kept a copy of the routing data."', grants: { flags: ['dax_talked', 'phantom_freight_resolved'], codex: ['codex-sector-4-freight-corridors'] } },
               { text: '"Give me the data and I will make sure your name stays out of the report."', morality: 0, loyalty: { underworld: 5 }, result: '"My name better not appear anywhere. Here." He transfers a file. "Now leave."', grants: { flags: ['dax_talked_unofficial'] } },
             ],
+          },
+          { id: 'vond_vendor', x: 8, y: 24, kind: 'mechanic', label: '"Greasy" Vond — Scrap and Salvage',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true,
+            vendorStock: ['scrambler_keycard', 'item_blaster_parts', 'item_code_cylinder'],
+            repeatPrompt: 'Vond is cataloguing a crate of questionable components.',
+            prompt: '"If it fell off the back of a freighter, I have it. No warranties. Once you walk off my platform, we do not know each other."',
+            choices: [],
           },
         ],
         collectibles: [
@@ -1186,14 +1196,15 @@ const PLANETS = {
           { x: 21, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 21, y: 1 }, label: 'Cooling Ducts' },
         ],
         worldObjects: [
-          { id: 'syndicate_cargo_cache', x: 18, y: 10, once: true, label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with a stylised iron chain. Inside: Phrik plating cut to pauldron dimensions, half-assembled combat chassis, and one empty Jedi archive canister. Someone opened it already.' },
+          { id: 'syndicate_cargo_cache', x: 18, y: 10, once: true, label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with an iron chain. Phrik plating, combat chassis, and an empty Jedi archive canister.',
+            autoCodex: { id: 'discovery-works-syndicate-cache', title: 'Iron Syndicate Cache', category: 'discoveries', summary: 'Phrik plating cut to pauldron dimensions.', body: ['Stacked crates stamped with a stylised iron chain. Inside: Phrik plating cut to pauldron dimensions, half-assembled combat chassis, and one empty Jedi archive canister. Someone opened it already.'] } },
           { id: 'plasma_conduit_005', x: 8, y: 18, once: false, label: 'Leaking Plasma Conduit', description: 'The pipe groans under pressure. A slow leak fills the air with acrid chemical haze. This entire sub-level is one spark away from a chain event.' },
-          { id: 'sub_station_terminal', x: 10, y: 20, once: true, label: 'Deep Sub-Station Controls', description: 'Power sub-station 3. Slicing this terminal disables ambient thermal hazards in the surrounding corridor.', grantsItem: null },
+          { id: 'sub_station_terminal', x: 10, y: 20, once: true, label: 'Deep Sub-Station Controls', description: 'Power sub-station 3. Controls ambient thermal hazards in the surrounding corridor.', grantsItem: null,
+            autoCodex: { id: 'discovery-sub-station-3', title: 'Sub-Station 3: Thermal Grid', category: 'discoveries', summary: 'The Works thermal hazard routing mapped.', body: ['Power sub-station 3 controls the thermal vent routing for the Level 005 lower corridor. The hazard configuration is non-standard — vents have been aimed laterally rather than exhausting upward. Someone reconfigured this intentionally. The most likely purpose: to discourage unauthorized access to the smelter corridor without triggering alarms that would appear on Republic monitoring feeds.'] } },
           { id: 'syndicate_relay_node', x: 24, y: 6, once: true, label: 'Syndicate Relay Node', description: 'Iron Syndicate tactical communications. Slicing this intercepts live patrol data — every enemy position in The Works becomes visible on your minimap for the duration of the assault.' },
           { id: 'plasma_valve_a', x: 4, y: 18, once: true, label: 'Pressure Valve Alpha', description: 'Main coolant line junction. The pressure gauge reads critical. One override and the flow stabilizes.', triggersMinigame: 'valve_override', grantsFlag: 'valve_a_closed' },
           { id: 'plasma_valve_b', x: 14, y: 20, once: true, label: 'Pressure Valve Beta', description: 'Secondary coolant junction. Steam vents from the seal around the handle.', triggersMinigame: 'valve_override', grantsFlag: 'valve_b_closed' },
           { id: 'plasma_valve_c', x: 8, y: 14, once: true, label: 'Pressure Valve Gamma', description: 'Tertiary coolant junction. Closing this one stabilizes the entire pressure network.', triggersMinigame: 'valve_override', grantsFlag: 'valve_c_closed' },
-          { id: 'krell_vendor', x: 28, y: 20, once: false, label: 'Krell — Black Market Arms', description: '"The Republic does not come down this far. My blasters hit harder, run hotter, and do not leave serial numbers." Sells: Spice Vial, Plasma Core Overcharger, Environmental Filter.' },
           { id: 'holonet_official_terminal', x: 30, y: 20, once: false, label: 'HNN Official Feed', description: '[HNN Priority Core Broadcast] "The Senate Committee on Inner-Rim Trade commended the CSF for maintaining unprecedented safety standards across the Mid-Levels. Reports of industrial smuggling near Level 088 have been dismissed as isolated logistical delays." The broadcast loops. The terminal is covered in soot.' },
           { id: 'airtaxi_the_works', x: 34, y: 12, once: false, label: 'AirTaxi Terminal', description: 'A terminal barely functioning under the heat. Miracle it still works.' },
         ],
@@ -1229,6 +1240,13 @@ const PLANETS = {
               { text: '"You aided an armed attack on a CSF perimeter. Come with me."', morality: 3, loyalty: { republic: 10 }, result: '"No! You do not understand — the Syndicate owns the precinct holding cells! I will not last an hour!" His cybernetic optic flickers in genuine fear.', grants: { flags: ['kaelen_twi_arrested'] } },
               { text: '"Tell me where your sister is. If I save her, you hand over every encryption key you have."', morality: 8, loyalty: { republic: 8 }, result: '"They are keeping her in Sub-Level 3 holding cells! Save her, and I will slice the main door to the Senate transit line for you!"', grants: { flags: ['kaelen_twi_deal', 'sub_level_extraction_available'] } },
             ],
+          },
+          { id: 'krell_vendor', x: 28, y: 20, kind: 'crime_boss', label: 'Krell — Black Market Arms',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true,
+            vendorStock: ['item_spice_vial', 'tool_hydrospanner', 'emp_grenade'],
+            repeatPrompt: 'Krell watches you from behind the display case.',
+            prompt: '"The Republic does not come down this far. My blasters hit harder, run hotter, and do not leave serial numbers. What do you need?"',
+            choices: [],
           },
           { id: 'marla_foreman', x: 8, y: 20, kind: 'cantina_owner', label: 'Marla — Sub-Level Foreman',
             repeatPrompt: 'Marla is directing workers away from the venting steam. She looks exhausted.',
@@ -2471,8 +2489,8 @@ function CodexOverlay({ codex, setCodex, onClose }) {
     return () => window.removeEventListener('keydown', handler);
   }, [onClose, setCodex]);
 
-  const TABS = ['story', 'lore', 'dossier', 'factions'];
-  const tabColor = { story:'#E8C97A', lore:'#8FA6FF', dossier:'#6FD9A0', factions:'#FF8C42' };
+  const TABS = ['story', 'discoveries', 'lore', 'dossier', 'factions'];
+  const tabColor = { story:'#E8C97A', discoveries:'#8FA6FF', lore:'#6FD9A0', dossier:'#B896FF', factions:'#FF8C42' };
   const filtered = codex.filter(en => en.category === activeTab);
 
   return (
@@ -2516,6 +2534,120 @@ function CodexOverlay({ codex, setCodex, onClose }) {
           </div>
         </div>
         <div style={{ padding:'8px 18px',borderTop:'1px solid #1C1C26',fontSize:9,color:'#5A5F74' }}>[C] or [ESC] to close</div>
+      </div>
+    </div>
+  );
+}
+
+function VendorOverlay({ npc, inventory, credits, alignment, onBuy, onSell, onClose }) {
+  const [activeTab, setActiveTab] = React.useState('buy');
+  const [selectedItem, setSelectedItem] = React.useState(null);
+  const [feedback, setFeedback] = React.useState('');
+
+  React.useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  const faction = npc.vendorFaction || 'underworld';
+  const rep = alignment?.loyalty?.[faction] || 0;
+  const tier = rep >= 41 ? 'honored' : rep >= 11 ? 'favored' : rep <= -51 ? 'hostile' : 'neutral';
+  const discount = tier === 'honored' ? 0.70 : tier === 'favored' ? 0.85 : 1.0;
+
+  const stock = (npc.vendorStock || []).map(id => typeof id === 'string' ? ITEMS[id] : id).filter(Boolean);
+
+  const handleBuy = (item) => {
+    if (tier === 'hostile') { setFeedback('They refuse to deal with you.'); return; }
+    const price = Math.floor(item.value * discount);
+    if (credits < price) { setFeedback('Insufficient credits.'); return; }
+    onBuy(item, price);
+    setFeedback(`Purchased ${item.name} for ${price} cr.`);
+  };
+
+  const handleSell = (item) => {
+    const sellPrice = Math.floor((item.value || 0) * 0.5);
+    onSell(item, sellPrice);
+    setFeedback(`Sold ${item.name} for ${sellPrice} cr.`);
+  };
+
+  const tierColor = { honored: '#E8C97A', favored: '#8FA6FF', neutral: '#888', hostile: '#FF4444' };
+
+  return (
+    <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.88)', zIndex:28, display:'flex', flexDirection:'column', padding:'24px', fontFamily:'monospace' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'16px' }}>
+        <div>
+          <div style={{ color:'#E8C97A', fontSize:'18px', fontWeight:'bold' }}>{npc.label}</div>
+          <div style={{ color: tierColor[tier], fontSize:'12px', marginTop:'4px' }}>
+            Reputation: {tier.toUpperCase()} {tier !== 'neutral' && tier !== 'hostile' && `(${Math.round((1 - discount) * 100)}% discount)`}
+          </div>
+        </div>
+        <div style={{ color:'#E8C97A' }}>Credits: {credits}</div>
+      </div>
+
+      <div style={{ display:'flex', gap:'8px', marginBottom:'16px' }}>
+        {['buy', 'sell'].map(tab => (
+          <div key={tab} onClick={() => { setActiveTab(tab); setSelectedItem(null); setFeedback(''); }}
+            style={{ padding:'6px 18px', background: activeTab === tab ? '#1A2A1A' : 'transparent',
+              border: `1px solid ${activeTab === tab ? '#4CAF50' : '#333'}`, color: activeTab === tab ? '#4CAF50' : '#666',
+              cursor:'pointer', borderRadius:'4px', textTransform:'uppercase', fontSize:'12px' }}>
+            {tab}
+          </div>
+        ))}
+        <div onClick={onClose} style={{ marginLeft:'auto', padding:'6px 18px', background:'transparent',
+          border:'1px solid #333', color:'#666', cursor:'pointer', borderRadius:'4px', fontSize:'12px' }}>
+          [ESC] Close
+        </div>
+      </div>
+
+      {tier === 'hostile' && (
+        <div style={{ color:'#FF4444', padding:'12px', border:'1px solid #FF4444', marginBottom:'12px', textAlign:'center' }}>
+          They refuse to deal with you. Your reputation here is too low.
+        </div>
+      )}
+
+      <div style={{ display:'flex', gap:'16px', flex:1, overflow:'hidden' }}>
+        <div style={{ flex:1, overflowY:'auto', display:'flex', flexDirection:'column', gap:'4px' }}>
+          {activeTab === 'buy' && stock.map((item, i) => {
+            const price = Math.floor(item.value * discount);
+            return (
+              <div key={i} onClick={() => setSelectedItem(item)}
+                style={{ padding:'8px 12px', background: selectedItem?.id === item.id ? '#1A2A1A' : 'transparent',
+                  border: `1px solid ${selectedItem?.id === item.id ? '#4CAF50' : '#222'}`,
+                  cursor:'pointer', display:'flex', justifyContent:'space-between', borderRadius:'4px' }}>
+                <span style={{ color:'#CCC' }}>{item.name}</span>
+                <span style={{ color:'#E8C97A' }}>{price} cr</span>
+              </div>
+            );
+          })}
+          {activeTab === 'sell' && inventory.filter(i => i.type !== 'quest').map((item, idx) => (
+            <div key={idx} onClick={() => setSelectedItem(item)}
+              style={{ padding:'8px 12px', background: selectedItem?.id === item.id ? '#1A1A2A' : 'transparent',
+                border: `1px solid ${selectedItem?.id === item.id ? '#8FA6FF' : '#222'}`,
+                cursor:'pointer', display:'flex', justifyContent:'space-between', borderRadius:'4px' }}>
+              <span style={{ color:'#CCC' }}>{item.name}</span>
+              <span style={{ color:'#8FA6FF' }}>{Math.floor((item.value || 0) * 0.5)} cr</span>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ width:'200px', borderLeft:'1px solid #222', paddingLeft:'16px' }}>
+          {selectedItem && (
+            <div>
+              <div style={{ color:'#E8C97A', marginBottom:'8px', fontWeight:'bold' }}>{selectedItem.name}</div>
+              <div style={{ color:'#888', fontSize:'12px', marginBottom:'12px', lineHeight:'1.5' }}>{selectedItem.description}</div>
+              <button onClick={() => activeTab === 'buy' ? handleBuy(selectedItem) : handleSell(selectedItem)}
+                disabled={tier === 'hostile'}
+                style={{ width:'100%', padding:'8px', background: tier === 'hostile' ? '#333' : activeTab === 'buy' ? '#1A2A1A' : '#1A1A2A',
+                  border: `1px solid ${tier === 'hostile' ? '#444' : activeTab === 'buy' ? '#4CAF50' : '#8FA6FF'}`,
+                  color: tier === 'hostile' ? '#444' : activeTab === 'buy' ? '#4CAF50' : '#8FA6FF',
+                  cursor: tier === 'hostile' ? 'not-allowed' : 'pointer', borderRadius:'4px', fontFamily:'monospace' }}>
+                {activeTab === 'buy' ? `Buy ${Math.floor(selectedItem.value * discount)} cr` : `Sell ${Math.floor((selectedItem.value || 0) * 0.5)} cr`}
+              </button>
+            </div>
+          )}
+          {feedback && <div style={{ color:'#E8C97A', marginTop:'12px', fontSize:'12px', padding:'8px', border:'1px solid #333', borderRadius:'4px' }}>{feedback}</div>}
+        </div>
       </div>
     </div>
   );
@@ -2848,6 +2980,73 @@ const ZONE_ARCHETYPE_PROFILES = {
   },
 };
 
+const STORY_CHECKPOINTS = [
+  {
+    flag: 'chapter1_active',
+    entry: {
+      id: 'story-chapter1-start', title: 'Chapter 1: Bay 14', category: 'story',
+      summary: 'Jon has pointed you toward Docking Bay 14.',
+      body: ['Jon briefed you on the Bay 14 incident. Phrik alloy moved under false Senate credentials. Your first stop is Sector 4 Freight Hub, Level 088. Find out who walked that cargo out.'],
+    },
+  },
+  {
+    flag: 'freight_hub_investigated',
+    entry: {
+      id: 'story-bay14-investigated', title: 'Bay 14: Evidence Found', category: 'story',
+      summary: 'The dock investigation is complete.',
+      body: ['You gathered testimony and physical evidence from Docking Bay 14. Two unmarked lifters, Republic security codes that checked out clean, and blast marks that were not from any fuel fire. Someone with Senate access walked the Phrik alloy out in broad daylight.'],
+    },
+  },
+  {
+    flag: 'marlo_sky_talked',
+    entry: {
+      id: 'story-marlo-contacted', title: 'Contact: Slick Marlo', category: 'story',
+      summary: "The broker has given you the buyer's identity.",
+      body: ['Marlo confirmed the alloy is bound for The Works, Level 005. He handed over the Buyer\'s Encrypted ID and a warning: the Iron Syndicate is the real operation. Everything else is noise.'],
+    },
+  },
+  {
+    flag: 'vane_sky_cooperated',
+    entry: {
+      id: 'story-vane-allied', title: 'Contact: Officer Vane', category: 'story',
+      summary: 'You are operating as a CSF Auxiliary.',
+      body: ['Officer Vane accepted your evidence and issued a provisional Auxiliary Corps commission. You are now operating inside the Republic law enforcement structure. Your designation is AX-7. Supervisor: Vane, T.'],
+    },
+  },
+  {
+    flag: 'csf_training_complete',
+    entry: {
+      id: 'story-training-complete', title: 'CSF Training: Certified', category: 'story',
+      summary: 'All three training modules passed. Sector 4 deployment cleared.',
+      body: ['You completed the non-lethal combat module, the forensic slicing simulation, and the high-stress interrogation exercise. Sergeant Torren has cleared you for Sector 4 deployment. You have been issued an EMP grenade kit and Level 088 priority transit clearance.'],
+    },
+  },
+  {
+    flag: 'sector4_raid_complete',
+    entry: {
+      id: 'story-raid-complete', title: 'Sector 4: Raid Resolved', category: 'story',
+      summary: 'The Docking Bay 14 operation has been shut down.',
+      body: ['The Sector 4 raid is complete. The Iron Syndicate staging operation at Docking Bay 14 has been disrupted. The thread leads deeper: the alloy is already en route to The Works. The Senate connection is now confirmed.'],
+    },
+  },
+  {
+    flag: 'senate_line_secured',
+    entry: {
+      id: 'story-senate-line-secured', title: 'Senate Line: Secured', category: 'story',
+      summary: 'The transit bomb has been neutralised.',
+      body: ['The seismic charge aboard the Senate transit car has been jettisoned into the incinerator shaft. The Senate Plaza is intact. Whatever path you took to reach this point, the alloy is gone and the Senator\'s operation is exposed.'],
+    },
+  },
+  {
+    flag: 'jon_endgame_known',
+    entry: {
+      id: 'story-jon-backstory-revealed', title: 'Jon: The Scylla Route', category: 'story',
+      summary: 'Jon revealed his connection to the Bay 14 operation.',
+      body: ['Jon ran the Scylla route three years ago before it became a cover operation. He did not know what was in the sealed containers. When he found out, he shut it down. Someone later used his old transit authentication codes to reopen the route. The Bay 14 strike team built their operation from what Jon left behind.'],
+    },
+  },
+];
+
 function StarWarsRPG() {
   const [planetId, setPlanetId] = useState('coruscant');
   const [zoneId, setZoneId] = useState('spaceport');
@@ -2878,6 +3077,8 @@ function StarWarsRPG() {
   const [suspicionMeter, setSuspicionMeter] = useState(0);
   const [choiceFeedback, setChoiceFeedback] = useState(null);
   const [activeMinigame, setActiveMinigame] = useState(null);
+  const [showVendor, setShowVendor] = useState(false);
+  const [activeVendorNpc, setActiveVendorNpc] = useState(null);
   const posRef = React.useRef(pos);
   const questFlagsRef = React.useRef(questFlags);
 
@@ -2988,6 +3189,14 @@ function StarWarsRPG() {
     return () => clearInterval(tickId);
   }, [zone, map]);
 
+  useEffect(() => {
+    STORY_CHECKPOINTS.forEach(({ flag, entry }) => {
+      if (questFlags[flag] && !codex.find(e => e.id === entry.id)) {
+        unlockCodex(entry);
+      }
+    });
+  }, [questFlags, codex, unlockCodex]);
+
   const resolveChoice = useCallback((choice, npcId) => {
     setCompletedInteractions((prev) => new Set([...prev, npcId]));
     const moralityDelta = choice.morality || 0;
@@ -3026,7 +3235,7 @@ function StarWarsRPG() {
 
   useEffect(() => {
     const handleKey = (e) => {
-      if (showTravel || activeDialogue || transitioning || showSpeeder || showInventory || showCodex || activeMinigame) return;
+      if (showTravel || activeDialogue || transitioning || showSpeeder || showInventory || showCodex || activeMinigame || showVendor) return;
       if (e.key === 'i' || e.key === 'I') { setShowInventory(v => !v); return; }
       if (e.key === 'c' || e.key === 'C') { setShowCodex(v => !v); return; }
       let { x, y } = pos;
@@ -3069,6 +3278,12 @@ function StarWarsRPG() {
           return;
         }
         setCompletedInteractions((prev) => new Set([...prev, interactionKey]));
+        if (resolvedNpc.isVendor) {
+          setActiveVendorNpc(resolvedNpc);
+          setShowVendor(true);
+          setPos({ x, y });
+          return;
+        }
         setActiveDialogue(resolvedNpc);
         return;
       }
@@ -3081,8 +3296,13 @@ function StarWarsRPG() {
         }
         const alreadySeen = worldObjHere.once && completedInteractions.has(worldObjHere.id);
         if (!alreadySeen) {
-          const woDesc = worldObjHere.worldStateVariant?.[worldState] ?? worldObjHere.description;
-          pushActionLog(`[${worldObjHere.label}] ${woDesc}`, zoneId);
+          if (worldObjHere.autoCodex) {
+            unlockCodex({ ...worldObjHere.autoCodex, unread: true });
+            pushActionLog(`[DISCOVERED] ${worldObjHere.label} — logged to Codex.`, zoneId);
+          } else {
+            const woDesc = worldObjHere.worldStateVariant?.[worldState] ?? worldObjHere.description;
+            pushActionLog(`[${worldObjHere.label}] ${woDesc}`, zoneId);
+          }
           if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) {
             addItem(ITEMS[worldObjHere.grantsItem]);
             pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId);
@@ -3124,7 +3344,7 @@ function StarWarsRPG() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, showInventory, showCodex, activeMinigame, questFlags, npcPositions, collectedItems, completedInteractions, pushActionLog, travelToZone, addItem, unlockCodex, setFlag]);
+  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, showInventory, showCodex, activeMinigame, showVendor, questFlags, npcPositions, collectedItems, completedInteractions, pushActionLog, travelToZone, addItem, unlockCodex, setFlag]);
 
   const camX = Math.max(0, Math.min(zone.width - VIEWPORT_COLS, pos.x - Math.floor(VIEWPORT_COLS / 2)));
   const camY = Math.max(0, Math.min(zone.height - VIEWPORT_ROWS, pos.y - Math.floor(VIEWPORT_ROWS / 2)));
@@ -3301,6 +3521,17 @@ function StarWarsRPG() {
       {showSpeeder && <SpeederOverlay credits={credits} questFlags={questFlags} currentZoneId={zoneId} onTravel={(dest) => { setCredits((c) => c - dest.cost); setShowSpeeder(false); travelToZone(dest.targetZone, dest.targetPos); }} onClose={() => setShowSpeeder(false)} />}
       {showInventory && <InventoryOverlay inventory={inventory} onClose={() => setShowInventory(false)} />}
       {showCodex && <CodexOverlay codex={codex} setCodex={setCodex} onClose={() => setShowCodex(false)} />}
+      {showVendor && activeVendorNpc && (
+        <VendorOverlay
+          npc={activeVendorNpc}
+          inventory={inventory}
+          credits={credits}
+          alignment={alignment}
+          onBuy={(item, price) => { setCredits(c => c - price); addItem(item); }}
+          onSell={(item, price) => { setCredits(c => c + price); setInventory(prev => { const idx = prev.findIndex(i => i.id === item.id); if (idx === -1) return prev; const updated = [...prev]; if (updated[idx].qty > 1) { updated[idx] = { ...updated[idx], qty: updated[idx].qty - 1 }; } else { updated.splice(idx, 1); } return updated; }); }}
+          onClose={() => { setShowVendor(false); setActiveVendorNpc(null); }}
+        />
+      )}
       {activeMinigame && activeMinigame.type === 'signal_siphon' && <SignalSiphonOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'speeder_pursuit' && <SpeederPursuitOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'valve_override' && <ValveOverrideOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
