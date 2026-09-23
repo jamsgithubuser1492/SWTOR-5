@@ -949,7 +949,8 @@ const PLANETS = {
         ],
         worldObjects: [
           { id: 'bay14_crime_scene', x: 20, y: 6, once: true, iconKind: 'evidence', label: 'Bay 14 Blast Marks', description: 'Scorch marks on the dock wall. The pattern is from shaped charges, not a fuel fire.',
-            autoCodex: { id: 'discovery-bay14-blast-marks', title: 'Bay 14: Blast Evidence', category: 'discoveries', summary: 'Shaped charges destroyed the loading manifest records.', body: ['The dock wall is scorched. Not from a fuel fire — the scorch pattern is from shaped charges placed against the loading manifest kiosk. Someone destroyed the primary records on the way out. Whoever did this knew exactly which terminal held the cargo authorization log.'] } },
+            grantsItem: 'stolen_manifest',
+            autoCodex: { id: 'discovery-bay14-blast-marks', title: 'Bay 14: Blast Evidence', category: 'discoveries', summary: 'Shaped charges destroyed the loading manifest records.', body: ['The dock wall is scorched. Not from a fuel fire — the scorch pattern is from shaped charges placed against the loading manifest kiosk. Someone destroyed the primary records on the way out. Whoever did this knew exactly which terminal held the cargo authorization log. One cargo disk survives in the debris — partially melted, but the freight entries are still readable.'] } },
           { id: 'discarded_keycard', x: 32, y: 18, once: true, label: 'Discarded Passcode', description: 'Half-melted but readable: an underworld bypass key. Grants sub-level transit without checkpoint flags. You pocket it.', grantsItem: 'scrambler_keycard' },
           { id: 'shipping_crate_b14', x: 10, y: 20, once: true, label: 'Unsealed Shipping Crate', description: 'Marked as "agricultural supplies." Contains Glitterstim vials and unregistered blaster power packs. Clearly staged to be found.', grantsItem: 'item_spice_vial' },
           { id: 'customs_terminal_088', x: 26, y: 4, once: true, label: 'Customs Manifest Registry', description: 'Three containers marked with Senate sub-committee routing stamps. One flags as anomalous — destination redacted, shipper redacted, authorization code valid. The code traces to a sub-committee that officially does not exist.' },
@@ -972,7 +973,7 @@ const PLANETS = {
             prompt: '"Your business does not belong down here. Mine does. Those are different things."',
             choices: [
               { text: '"You were hired as a distraction during the Bay 14 raid. I am not here to arrest you."', morality: 0, loyalty: { underworld: 6 }, result: '"You are smarter than you look. Yeah, someone paid us to race through the bay and make noise while they loaded up. Paid well. Did not ask questions."', grants: { flags: ['kaelen_talked'] } },
-              { text: 'Challenge him to a race for the information.', morality: 5, loyalty: { underworld: 10 }, result: '"Ha. I like you. We race. You win, you get what you want. You lose, you owe me a favor." He transfers everything he knows. [Race mini-game placeholder]', grants: { flags: ['kaelen_raced'] } },
+              { text: 'Challenge him to a race for the information.', morality: 5, loyalty: { underworld: 10 }, result: '"Ha. I like you." He kicks the speeder to life and points at the service corridor. Three minutes through maintenance shafts, around a plasma conduit junction, and past a security gate you both should not have fit through. You beat him by six meters. He catches his breath, then hands over a data chip. "Grey coats. Republic codes. They paid us to run hot through the bay and keep the dock workers watching the wrong direction. Never asked their names. That is the whole job." The information is legitimate — an eyewitness account of the distraction that covered the Phrik transfer.', grants: { flags: ['kaelen_raced', 'freight_hub_investigated'] } },
             ],
           },
           { id: 'corin_088', x: 10, y: 18, kind: 'mechanic', label: '"Fixer" Corin',
@@ -1214,7 +1215,7 @@ const PLANETS = {
             prompt: '"I do not know how you got this deep. I know you will not be leaving the same way." He signals two enforcers. Then pauses. "Unless you have something worth my time."',
             choices: [
               { text: 'Reveal that you know about the Phrik armor project.', morality: -10, loyalty: { underworld: 15 }, result: '"Interesting. You have done your homework. The Iron Syndicate builds to last. We are not selling. We are equipping. The question is: which side of that equation do you want to be on?"', grants: { flags: ['vex_met', 'iron_syndicate_known'], codex: ['codex-iron-syndicate'] } },
-              { text: '"I am here to stop whatever you are building."', morality: 18, loyalty: { republic: 15 }, result: '"Bold." He gestures. The enforcers advance. "Bring me their comlink when you are done." [Combat placeholder — dialogue resolves with escape and flag]', grants: { flags: ['vex_hostile', 'iron_syndicate_known'] } },
+              { text: '"I am here to stop whatever you are building."', morality: 18, loyalty: { republic: 15 }, result: '"Bold." He gestures. The two enforcers advance without a word. The forge floor is hot, narrow, and full of cover. You draw them toward the plasma vents — the heat plays havoc with their sensor goggles — and break for the drainage exit on the south wall before they can regroup. Vex watches you go without calling more guards. He does not need to hurry. He has already decided you are interesting rather than dangerous.', grants: { flags: ['vex_hostile', 'iron_syndicate_known'] } },
             ],
           },
           { id: 'unit_7n4', x: 4, y: 5, kind: 'droid', label: 'Archivist Droid 7-N4',
@@ -3346,7 +3347,8 @@ function StarWarsRPG() {
     if ((questFlags.marlo_sky_talked || questFlags.vane_sky_cooperated) && !questFlags.jon_sky_market_debriefed) return 'Check in with Jon. He will want to know which side you picked at the Sky-Market.';
     if (questFlags.republic_path_open) return 'Travel to CSF Tactical Command, Level 1222.';
     if (questFlags.marlo_sky_talked) return 'Follow the Phrik trail to Level 005. Reach The Works.';
-    if (questFlags.marlo_sky_intro || questFlags.vane_sky_intro) return 'Return to Sky-Market District with evidence from Bay 14.';
+    if (questFlags.marlo_sky_intro || questFlags.vane_sky_intro) return 'Present the Scylla manifest to your Sky-Market contact. If you do not have it, return to Docking Bay 14.';
+    if (questFlags.sky_market_direction_given) return 'Travel to Sky-Market District, Level 1450. Find Marlo at the Aurebesh Lounge or Officer Vane at the precinct.';
     if (questFlags.freight_hub_investigated && !questFlags.jon_bay14_briefed) return 'Report to Jon at his apartment. He needs to know what you found at Bay 14.';
     if (questFlags.met_jon_spaceport) return 'Locate the Scylla Freight manifest. Start at Docking Bay 14.';
     return 'Find your contact Jon at Coruscant Spaceport, Docking Bay 14.';
