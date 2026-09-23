@@ -2571,7 +2571,802 @@ function getWorldObjIconKind(id) {
   return 'terminal';
 }
 
-function WorldObjectSprite({ kind, accent }) {
+const WORLD_OBJECT_SPRITES = {
+  customs_terminal: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="6" y="3" width="16" height="18" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <rect x="7.5" y="4.5" width="13" height="12" fill={a} opacity="0.12"/>
+      <line x1="8" y1="7" x2="20" y2="7" stroke={a} strokeWidth="0.6" opacity="0.5"/>
+      <line x1="8" y1="9.5" x2="20" y2="9.5" stroke={a} strokeWidth="0.6" opacity="0.4"/>
+      <line x1="8" y1="12" x2="20" y2="12" stroke={a} strokeWidth="0.6" opacity="0.3"/>
+      <rect x="8" y="14" width="12" height="3.5" fill="#E8A030" opacity="0.85" rx="0.5"/>
+      <rect x="9" y="14.7" width="3" height="0.7" fill="#000" opacity="0.5"/>
+      <rect x="13" y="14.7" width="4" height="0.7" fill="#000" opacity="0.5"/>
+      <rect x="9" y="16.2" width="5" height="0.7" fill="#000" opacity="0.5"/>
+      <circle cx="19.5" cy="4.5" r="1" fill="#E8A030" opacity="0.9" style={{animation:'lens-flicker 1.8s ease-in-out infinite'}}/>
+      <rect x="9" y="22" width="10" height="2" rx="1" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.6"/>
+    </svg>
+  ),
+  fueling_conduit: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="11" width="8" height="6" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="10" y="13" width="8" height="3" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="18" y="8" width="8" height="6" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <circle cx="12" cy="14" r="2.5" fill="none" stroke={a} strokeWidth="1" opacity="0.6"/>
+      <line x1="10.5" y1="14" x2="13.5" y2="14" stroke={a} strokeWidth="0.8" opacity="0.5"/>
+      <line x1="12" y1="12.5" x2="12" y2="15.5" stroke={a} strokeWidth="0.8" opacity="0.5"/>
+      <line x1="6" y1="18" x2="7.5" y2="21" stroke={a} strokeWidth="0.7" opacity="0.4"/>
+      <line x1="8" y1="18" x2="9.5" y2="21" stroke={a} strokeWidth="0.7" opacity="0.4"/>
+      <circle cx="22" cy="11" r="3.5" fill={a} opacity="0.07"/>
+    </svg>
+  ),
+  jon_datapad: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="5" y="3" width="18" height="22" rx="2" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <rect x="7" y="5" width="14" height="16" fill={a} opacity="0.1"/>
+      <line x1="7.5" y1="8" x2="20.5" y2="8" stroke={a} strokeWidth="0.7" opacity="0.5"/>
+      <line x1="7.5" y1="11" x2="20.5" y2="11" stroke={a} strokeWidth="0.7" opacity="0.4"/>
+      <line x1="7.5" y1="14" x2="20.5" y2="14" stroke="#FF4444" strokeWidth="0.9" opacity="0.8"/>
+      <line x1="7.5" y1="17" x2="16" y2="17" stroke={a} strokeWidth="0.7" opacity="0.3"/>
+      <circle cx="9" cy="22" r="1" fill={a} opacity="0.5"/>
+      <path d="M19 5.5 L21 5.5 L21 7.5 L19.5 7.5" stroke={a} strokeWidth="0.5" fill="none" opacity="0.4"/>
+    </svg>
+  ),
+  slicing_bench: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="14" width="24" height="10" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="4" y="11" width="5" height="4" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <rect x="11" y="10" width="4" height="4" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <rect x="17" y="12" width="6" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <path d="M7 18 Q9 16 11 18 Q13 20 15 17" stroke={a} strokeWidth="0.8" fill="none" opacity="0.6"/>
+      <circle cx="19" cy="16" r="1.2" fill={a} opacity="0.7" style={{animation:'lens-flicker 2.1s ease-in-out infinite'}}/>
+      <line x1="19" y1="13" x2="19" y2="14.8" stroke={a} strokeWidth="0.6" opacity="0.5"/>
+    </svg>
+  ),
+  bay14_analysis_board: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="2" width="24" height="22" rx="1" fill="#5A4020" opacity="0.7"/>
+      <rect x="2" y="2" width="24" height="22" rx="1" fill="none" stroke={a} strokeWidth="0.7" opacity="0.6"/>
+      <rect x="4" y="4" width="8" height="6" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.5" opacity="0.7"/>
+      <rect x="14" y="4" width="10" height="7" rx="0.5" fill="#00000050" stroke="#FF4422" strokeWidth="1" opacity="0.9"/>
+      <circle cx="14.5" cy="4.5" r="1" fill="#FF4422" opacity="0.8"/>
+      <rect x="4" y="12" width="8" height="5" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.5" opacity="0.7"/>
+      <rect x="14" y="13" width="10" height="3" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+      <rect x="4" y="20" width="20" height="2" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+    </svg>
+  ),
+  faction_tension_chart: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <circle cx="14" cy="14" r="10" fill="none" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <circle cx="14" cy="14" r="7" fill="none" stroke={a} strokeWidth="0.4" opacity="0.25"/>
+      <circle cx="14" cy="14" r="4" fill="none" stroke={a} strokeWidth="0.4" opacity="0.2"/>
+      <ellipse cx="10" cy="13" rx="4" ry="3" fill="#4A9FFF" opacity="0.25"/>
+      <ellipse cx="17" cy="15" rx="4" ry="3" fill="#FF4444" opacity="0.25"/>
+      <ellipse cx="13" cy="18" rx="3" ry="2" fill="#E8A030" opacity="0.3"/>
+      <circle cx="8" cy="8" r="3" fill="none" stroke="#9966FF" strokeWidth="1.2" opacity="0.7"/>
+    </svg>
+  ),
+  csf_bulletin: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="#6B5030" opacity="0.7"/>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="none" stroke={a} strokeWidth="0.7" opacity="0.5"/>
+      <rect x="4" y="4" width="9" height="6" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.4" opacity="0.6"/>
+      <rect x="15" y="4" width="9" height="6" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.4" opacity="0.6"/>
+      <rect x="4" y="12" width="20" height="9" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.4" opacity="0.5"/>
+      <line x1="6" y1="14" x2="22" y2="22" stroke="#FF4422" strokeWidth="2" opacity="0.8"/>
+      <line x1="6" y1="22" x2="22" y2="14" stroke="#FF4422" strokeWidth="2" opacity="0.8"/>
+      <rect x="4" y="22" width="6" height="2" rx="0.3" fill={a} opacity="0.3"/>
+    </svg>
+  ),
+  lounge_bar_terminal: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="18" width="24" height="8" rx="1" fill="#00000070" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="4" y="6" width="20" height="13" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <rect x="5.5" y="7.5" width="17" height="9" fill={a} opacity="0.1"/>
+      <circle cx="9" cy="12" r="1.5" fill={a} opacity="0.4"/>
+      <circle cx="14" cy="12" r="1.5" fill={a} opacity="0.6" style={{animation:'lens-flicker 1.5s ease-in-out infinite'}}/>
+      <circle cx="19" cy="12" r="1.5" fill={a} opacity="0.4"/>
+      <line x1="5.5" y1="9.5" x2="22.5" y2="9.5" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <rect x="11" y="21" width="6" height="3" rx="0.5" fill={a} opacity="0.2"/>
+    </svg>
+  ),
+  lounge_private_booth: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <path d="M3 22 Q3 6 14 4 Q25 6 25 22 Z" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <ellipse cx="9" cy="17" rx="3" ry="5" fill="#505060" opacity="0.8"/>
+      <ellipse cx="19" cy="17" rx="3" ry="5" fill="#505060" opacity="0.8"/>
+      <ellipse cx="8" cy="12" rx="2" ry="2.2" fill="#505060" opacity="0.7"/>
+      <ellipse cx="20" cy="12" rx="2" ry="2.2" fill="#505060" opacity="0.7"/>
+    </svg>
+  ),
+  lounge_datapad: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="3" y="4" width="22" height="20" rx="2" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <rect x="5" y="6" width="18" height="14" fill={a} opacity="0.08"/>
+      <line x1="5" y1="9" x2="23" y2="9" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+      <polygon points="6,12 10,10 10,14" fill={a} opacity="0.5"/>
+      <polygon points="11,12 15,10 15,14" fill={a} opacity="0.5"/>
+      <polygon points="16,12 20,10 20,14" fill={a} opacity="0.5"/>
+      <rect x="19" y="10" width="4" height="4" rx="0.5" fill="#E8A030" opacity="0.6"/>
+      <rect x="5" y="17" width="12" height="2" fill="#00000060" stroke={a} strokeWidth="0.4" opacity="0.5"/>
+      <rect x="5" y="20" width="8" height="1.5" fill="#00000070" opacity="0.7"/>
+    </svg>
+  ),
+  precinct_evidence_locker: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="5" y="2" width="18" height="24" rx="1" fill="#00000060" stroke={a} strokeWidth="0.8" opacity="0.8"/>
+      <rect x="6" y="2" width="16" height="2" fill="#FF4422" opacity="0.7"/>
+      <circle cx="14" cy="14" r="3" fill="#00000070" stroke={a} strokeWidth="0.8" opacity="0.8"/>
+      <circle cx="14" cy="14" r="1.5" fill="#00000090"/>
+      <line x1="14" y1="11" x2="14" y2="14" stroke={a} strokeWidth="0.8" opacity="0.6"/>
+      <rect x="12" y="20" width="4" height="1.5" rx="0.5" fill={a} opacity="0.3"/>
+      <path d="M9 22 Q9.5 23 14 23.5 Q18.5 23 19 22" stroke={a} strokeWidth="0.5" fill="none" opacity="0.4"/>
+    </svg>
+  ),
+  precinct_comms_station: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="6" width="24" height="18" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <line x1="4" y1="22" x2="4" y2="12" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="6" y1="22" x2="6" y2="10" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="8" y1="22" x2="8" y2="8" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="10" y1="22" x2="10" y2="9" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="12" y1="22" x2="12" y2="7" stroke={a} strokeWidth="1.2" opacity="0.6"/>
+      <line x1="14" y1="22" x2="14" y2="16" stroke={a} strokeWidth="1.2" opacity="0.3"/>
+      <line x1="16" y1="22" x2="16" y2="15" stroke={a} strokeWidth="1.2" opacity="0.3"/>
+      <line x1="18" y1="22" x2="18" y2="17" stroke={a} strokeWidth="1.2" opacity="0.3"/>
+      <line x1="20" y1="22" x2="20" y2="16" stroke={a} strokeWidth="1.2" opacity="0.3"/>
+      <line x1="22" y1="22" x2="22" y2="14" stroke={a} strokeWidth="1.2" opacity="0.3"/>
+      <line x1="24" y1="22" x2="24" y2="13" stroke="#E8A030" strokeWidth="1.4" opacity="0.9" style={{animation:'lens-flicker 1.2s ease-in-out infinite'}}/>
+    </svg>
+  ),
+  precinct_wanted_board: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="#4A3020" opacity="0.7"/>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="none" stroke={a} strokeWidth="0.7" opacity="0.5"/>
+      <circle cx="5" cy="4.5" r="1" fill="#FF6622" opacity="0.7"/>
+      <rect x="8" y="4" width="14" height="1.5" rx="0.3" fill={a} opacity="0.3"/>
+      <circle cx="5" cy="7.5" r="1" fill="#FF6622" opacity="0.7"/>
+      <rect x="8" y="7" width="14" height="1.5" rx="0.3" fill={a} opacity="0.3"/>
+      <circle cx="5" cy="10.5" r="1" fill="#FF6622" opacity="0.7"/>
+      <rect x="8" y="10" width="14" height="1.5" rx="0.3" fill={a} opacity="0.3"/>
+      <circle cx="5" cy="13.5" r="1" fill="#FF6622" opacity="0.7"/>
+      <rect x="8" y="13" width="14" height="1.5" rx="0.3" fill={a} opacity="0.3"/>
+      <circle cx="5" cy="16.5" r="1" fill="#FF6622" opacity="0.5"/>
+      <rect x="8" y="16" width="8" height="1.5" rx="0.3" fill="#FF4422" opacity="0.7"/>
+      <circle cx="5" cy="19.5" r="1" fill="#FF6622" opacity="0.5"/>
+      <rect x="8" y="19" width="8" height="1.5" rx="0.3" fill="#FF4422" opacity="0.7"/>
+      <circle cx="5" cy="22.5" r="1" fill="#888" opacity="0.5"/>
+      <rect x="8" y="22" width="10" height="1.5" rx="0.3" fill="#888" opacity="0.4"/>
+    </svg>
+  ),
+  airtaxi_sky_market: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="11" y="3" width="6" height="22" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="7" y="12" width="14" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <rect x="8" y="10" width="4" height="3" fill={a} opacity="0.15"/>
+      <rect x="16" y="10" width="4" height="3" fill={a} opacity="0.15"/>
+      <circle cx="14" cy="4" r="2" fill={a} opacity="0.8" style={{animation:'lens-flicker 1.8s ease-in-out infinite'}}/>
+      <rect x="6" y="24" width="16" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+      <line x1="7" y1="24" x2="21" y2="24" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+    </svg>
+  ),
+  skyline_vista: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="1" y="1" width="26" height="26" rx="1" fill="#000020" opacity="0.9"/>
+      <rect x="1" y="1" width="26" height="26" rx="1" fill="none" stroke={a} strokeWidth="0.8" opacity="0.7"/>
+      <rect x="1" y="1" width="26" height="8" fill="#E8C060" opacity="0.06"/>
+      <rect x="3" y="12" width="3" height="14" fill="#101820" opacity="0.9"/>
+      <rect x="7" y="8" width="2" height="18" fill="#101820" opacity="0.9"/>
+      <rect x="10" y="10" width="4" height="16" fill="#101820" opacity="0.9"/>
+      <rect x="15" y="6" width="2" height="20" fill="#101820" opacity="0.9"/>
+      <rect x="18" y="9" width="3" height="17" fill="#101820" opacity="0.9"/>
+      <rect x="22" y="11" width="4" height="15" fill="#101820" opacity="0.9"/>
+      <line x1="1" y1="15" x2="27" y2="15" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.25"/>
+      <line x1="1" y1="18" x2="27" y2="18" stroke="#FFFFFF" strokeWidth="0.3" opacity="0.15"/>
+    </svg>
+  ),
+  holonet_kiosk: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="8" y="18" width="12" height="9" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="10" y="5" width="8" height="14" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <polygon points="14,7 16,10 14,13 12,10" fill="none" stroke={a} strokeWidth="0.8" opacity="0.6"/>
+      <line x1="10" y1="21" x2="18" y2="21" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <line x1="10" y1="23" x2="16" y2="23" stroke={a} strokeWidth="0.5" opacity="0.2"/>
+      <path d="M7 5 Q14 2 21 5" stroke={a} strokeWidth="0.6" fill="none" opacity="0.4"/>
+      <path d="M5 4 Q14 0 23 4" stroke={a} strokeWidth="0.5" fill="none" opacity="0.25"/>
+    </svg>
+  ),
+  lounge_corner_conversation: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="2" width="4" height="24" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+      <rect x="2" y="2" width="24" height="4" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+      <ellipse cx="9" cy="18" rx="3" ry="5" fill="#404050" opacity="0.7"/>
+      <ellipse cx="8.5" cy="13" rx="2.5" ry="2.5" fill="#404050" opacity="0.7"/>
+      <ellipse cx="19" cy="14" rx="3" ry="5" fill="#404050" opacity="0.7"/>
+      <ellipse cx="19.5" cy="9" rx="2.5" ry="2.5" fill="#404050" opacity="0.7"/>
+      <circle cx="14" cy="16" r="1.5" fill={a} opacity="0.7"/>
+    </svg>
+  ),
+  promenade_patrol_log: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="5" width="24" height="18" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <line x1="4" y1="9" x2="24" y2="9" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+      <rect x="4" y="10" width="8" height="2" rx="0.3" fill={a} opacity="0.4"/>
+      <rect x="4" y="13" width="8" height="2" rx="0.3" fill={a} opacity="0.4"/>
+      <line x1="4" y1="15" x2="14" y2="15" stroke="#FF4444" strokeWidth="0.8" opacity="0.6"/>
+      <line x1="4" y1="18" x2="14" y2="18" stroke="#FF4444" strokeWidth="0.8" opacity="0.6"/>
+      <rect x="14" y="10" width="9" height="11" fill="#000010" opacity="0.4"/>
+      <rect x="18" y="20" width="6" height="2" rx="0.5" fill={a} opacity="0.35"/>
+    </svg>
+  ),
+  bith_exchange: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="3" y="14" width="22" height="10" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="7" y="12" width="8" height="4" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <ellipse cx="7" cy="10" rx="4" ry="5" fill="#00000040" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+      <path d="M5 17 L7 14 L9 17" fill="none" stroke={a} strokeWidth="0.7" opacity="0.5"/>
+      <circle cx="20" cy="17" r="1.5" fill={a} opacity="0.4"/>
+      <circle cx="22" cy="19" r="1" fill={a} opacity="0.35"/>
+      <circle cx="20" cy="21" r="0.8" fill={a} opacity="0.3"/>
+    </svg>
+  ),
+  jon_comlink: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <ellipse cx="14" cy="17" rx="9" ry="7" fill="#00000060" stroke={a} strokeWidth="0.8" opacity="0.8"/>
+      <line x1="14" y1="10" x2="14" y2="4" stroke={a} strokeWidth="0.8" opacity="0.7"/>
+      <circle cx="14" cy="17" r="1.5" fill={a} opacity="0.7" style={{animation:'lens-flicker 2s ease-in-out infinite'}}/>
+      <path d="M8 12 Q11 10 14 12" stroke={a} strokeWidth="0.6" fill="none" strokeDasharray="1.5,1.5" opacity="0.5"/>
+      <path d="M6 10 Q10 7 14 10" stroke={a} strokeWidth="0.5" fill="none" strokeDasharray="1.5,1.5" opacity="0.35"/>
+      <path d="M4 8 Q9 4 14 8" stroke={a} strokeWidth="0.5" fill="none" strokeDasharray="1.5,1.5" opacity="0.2"/>
+    </svg>
+  ),
+  airtaxi_sky_customs: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="3" y="6" width="22" height="16" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <line x1="5" y1="14" x2="11" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <polygon points="11,12 14,14 11,16" fill={a} opacity="0.7"/>
+      <polygon points="14,12 17,14 14,16" fill={a} opacity="0.7"/>
+      <line x1="17" y1="14" x2="23" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <rect x="5" y="8" width="18" height="3" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.4" opacity="0.5"/>
+      <rect x="5" y="18" width="18" height="3" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.4" opacity="0.4"/>
+      <rect x="6" y="18.5" width="10" height="2" fill="#888" opacity="0.2"/>
+      <rect x="11" y="23" width="6" height="2" rx="0.5" fill={a} opacity="0.3" style={{animation:'lens-flicker 2.5s ease-in-out infinite'}}/>
+    </svg>
+  ),
+  customs_scanner_archway: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <path d="M5 26 L5 8 Q5 3 14 3 Q23 3 23 8 L23 26" fill="none" stroke={a} strokeWidth="1" opacity="0.7"/>
+      <rect x="5" y="24" width="18" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+      <line x1="9" y1="8" x2="9" y2="24" stroke={a} strokeWidth="0.6" opacity="0.3"/>
+      <line x1="12" y1="6" x2="12" y2="24" stroke={a} strokeWidth="0.6" opacity="0.3"/>
+      <line x1="16" y1="6" x2="16" y2="24" stroke="#FF4422" strokeWidth="1" opacity="0.9"/>
+      <line x1="19" y1="8" x2="19" y2="24" stroke={a} strokeWidth="0.6" opacity="0.3"/>
+      <rect x="5" y="21" width="18" height="2" fill="#808080" opacity="0.2"/>
+    </svg>
+  ),
+  caf_stand: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <ellipse cx="14" cy="10" rx="5" ry="7" fill="#C0C0C0" opacity="0.3" stroke={a} strokeWidth="0.7"/>
+      <rect x="9" y="10" width="10" height="4" fill="#C0C0C0" opacity="0.2"/>
+      <rect x="4" y="14" width="20" height="6" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <ellipse cx="10" cy="14" rx="2" ry="2.5" fill="#C0C0C0" opacity="0.2" stroke={a} strokeWidth="0.4"/>
+      <ellipse cx="18" cy="14" rx="2" ry="2.5" fill="#C0C0C0" opacity="0.2" stroke={a} strokeWidth="0.4"/>
+      <path d="M5 7 Q14 5 23 7" stroke={a} strokeWidth="0.5" fill="none" opacity="0.4"/>
+    </svg>
+  ),
+  detention_alcove: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="#00000070" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <circle cx="8" cy="9" r="1.5" fill="none" stroke={a} strokeWidth="0.8" opacity="0.6"/>
+      <circle cx="8" cy="16" r="1.5" fill="none" stroke={a} strokeWidth="0.8" opacity="0.6"/>
+      <line x1="8" y1="9" x2="8" y2="16" stroke={a} strokeWidth="0.6" opacity="0.5"/>
+      <line x1="9.5" y1="10.5" x2="12" y2="13" stroke={a} strokeWidth="0.6" opacity="0.4"/>
+      <circle cx="12" cy="23" r="1.5" fill="none" stroke="#888" strokeWidth="0.7" opacity="0.5"/>
+      <line x1="11" y1="22" x2="13" y2="24" stroke="#888" strokeWidth="0.6" opacity="0.4"/>
+      <rect x="16" y="8" width="9" height="14" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.5" opacity="0.6"/>
+      <line x1="17" y1="12" x2="24" y2="12" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <line x1="17" y1="14" x2="24" y2="14" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <line x1="17" y1="16" x2="24" y2="16" stroke={a} strokeWidth="0.8" opacity="0.6"/>
+    </svg>
+  ),
+  flight_control_booth: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="6" width="24" height="16" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <rect x="4" y="8" width="20" height="10" fill={a} opacity="0.07"/>
+      <line x1="4" y1="10" x2="24" y2="10" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <line x1="4" y1="13" x2="24" y2="13" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <line x1="4" y1="16" x2="24" y2="16" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <rect x="10" y="10.5" width="8" height="5" fill="#FFFFFF" opacity="0.04"/>
+      <rect x="10" y="10.5" width="8" height="5" fill="none" stroke="#FF4422" strokeWidth="0.6" opacity="0.6"/>
+      <line x1="10" y1="10.5" x2="18" y2="15.5" stroke="#FF4422" strokeWidth="0.5" opacity="0.5"/>
+      <rect x="4" y="22" width="20" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+    </svg>
+  ),
+  siphon_terminal: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="7" y="16" width="14" height="10" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <line x1="14" y1="16" x2="14" y2="2" stroke={a} strokeWidth="0.8" opacity="0.6"/>
+      <circle cx="14" cy="5" r="1.2" fill={a} opacity="0.5"/>
+      <circle cx="14" cy="9" r="1.2" fill={a} opacity="0.4"/>
+      <circle cx="14" cy="13" r="1.5" fill={a} opacity="0.7" style={{animation:'lens-flicker 1.6s ease-in-out infinite'}}/>
+      <circle cx="9" cy="22" r="1.5" fill="#00000070" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <circle cx="9" cy="22" r="0.7" fill="#00000090"/>
+      <line x1="9" y1="20.5" x2="9" y2="22" stroke={a} strokeWidth="0.6" opacity="0.5"/>
+    </svg>
+  ),
+  bay14_crime_scene: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <polygon points="14,10 15.5,7 17,10 20,10.5 17.5,13 18.5,16 14,14 9.5,16 10.5,13 8,10.5 11,10 12.5,7" fill="#FF6622" opacity="0.35"/>
+      <line x1="14" y1="10" x2="14" y2="3" stroke="#FF6622" strokeWidth="0.6" opacity="0.4"/>
+      <line x1="14" y1="10" x2="21" y2="6" stroke="#FF6622" strokeWidth="0.6" opacity="0.35"/>
+      <line x1="14" y1="10" x2="22" y2="12" stroke="#FF6622" strokeWidth="0.6" opacity="0.35"/>
+      <line x1="14" y1="10" x2="7" y2="6" stroke="#FF6622" strokeWidth="0.6" opacity="0.35"/>
+      <line x1="14" y1="10" x2="6" y2="12" stroke="#FF6622" strokeWidth="0.6" opacity="0.35"/>
+      <ellipse cx="14" cy="22" rx="7" ry="3" fill="#00000050" stroke={a} strokeWidth="0.6" opacity="0.5"/>
+      <rect x="11" y="20" width="4" height="3" rx="0.3" fill="#404040" opacity="0.5"/>
+      <line x1="4" y1="19" x2="24" y2="26" stroke="#FFB800" strokeWidth="1.5" opacity="0.6"/>
+    </svg>
+  ),
+  discarded_keycard: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="4" y="9" width="20" height="12" rx="1.5" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="4" y="17" width="8" height="4" rx="0" fill="#00000080" opacity="0.8"/>
+      <line x1="4" y1="17" x2="12" y2="21" stroke="#FF4422" strokeWidth="0.5" opacity="0.4"/>
+      <rect x="6" y="11" width="4" height="3" rx="0.5" fill={a} opacity="0.3"/>
+      <rect x="12" y="11" width="2" height="8" rx="0.3" fill={a} opacity="0.2"/>
+      <rect x="15" y="11" width="2" height="8" rx="0.3" fill={a} opacity="0.2"/>
+      <rect x="18" y="11" width="2" height="8" rx="0.3" fill={a} opacity="0.2"/>
+      <path d="M5 21 Q7 18 9 21" stroke="#FF6622" strokeWidth="0.5" fill="none" opacity="0.6"/>
+    </svg>
+  ),
+  shipping_crate_b14: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="4" y="10" width="20" height="16" rx="1" fill="#00000060" stroke={a} strokeWidth="0.8" opacity="0.7"/>
+      <line x1="14" y1="10" x2="14" y2="26" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <line x1="4" y1="18" x2="24" y2="18" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <polygon points="4,10 14,5 24,10" fill="#00000050" stroke={a} strokeWidth="0.7" opacity="0.6"/>
+      <line x1="4" y1="13" x2="11" y2="13" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <rect x="14" y="19" width="8" height="5" rx="0.5" fill="#00000080" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+      <rect x="15" y="20" width="3" height="3" rx="0.3" fill="#7FFF44" opacity="0.6"/>
+      <circle cx="21" cy="22" r="1.2" fill={a} opacity="0.3"/>
+    </svg>
+  ),
+  airtaxi_mag_rail: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="11" y="3" width="6" height="22" rx="1" fill="#00000060" stroke={a} strokeWidth="0.8" opacity="0.7"/>
+      <rect x="6" y="12" width="16" height="4" rx="0.5" fill="#00000070" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <rect x="3" y="22" width="22" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <rect x="5" y="23" width="6" height="2" rx="0.3" fill={a} opacity="0.15"/>
+      <rect x="13" y="23" width="6" height="2" rx="0.3" fill="#888" opacity="0.2"/>
+      <rect x="8" y="8" width="12" height="5" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+      <line x1="10" y1="10" x2="18" y2="10" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <line x1="10" y1="11.5" x2="16" y2="11.5" stroke="#888" strokeWidth="0.5" opacity="0.4"/>
+      <circle cx="14" cy="4.5" r="1.5" fill={a} opacity="0.6" style={{animation:'lens-flicker 2.2s ease-in-out infinite'}}/>
+    </svg>
+  ),
+  mag_rail_manifest_board: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <line x1="14" y1="2" x2="14" y2="26" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <rect x="3" y="5" width="10" height="2" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="15" y="5" width="10" height="2" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="3" y="9" width="10" height="2" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="15" y="9" width="10" height="2" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="3" y="13" width="10" height="2" rx="0.3" fill={a} opacity="0.6"/>
+      <rect x="15" y="13" width="10" height="2" rx="0.3" fill="#E8A030" opacity="0.7"/>
+      <rect x="3" y="17" width="10" height="2" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="15" y="17" width="10" height="2" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="24" y="13" width="3" height="2" rx="0.5" fill="#E8A030" opacity="0.8"/>
+    </svg>
+  ),
+  platform_security_scanner: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <path d="M4 26 L4 8 Q4 3 14 3 Q24 3 24 8 L24 26" fill="none" stroke={a} strokeWidth="1" opacity="0.7"/>
+      <line x1="4" y1="18" x2="24" y2="18" stroke={a} strokeWidth="0.6" opacity="0.4"/>
+      <rect x="6" y="19" width="5" height="6" rx="0.5" fill="#4A9FFF" opacity="0.4"/>
+      <rect x="12" y="19" width="5" height="6" rx="0.5" fill="#4A9FFF" opacity="0.4"/>
+      <rect x="18" y="19" width="5" height="6" rx="0.5" fill="#4A9FFF" opacity="0.3"/>
+      <rect x="10" y="13" width="8" height="3" rx="0.5" fill="#E8A030" opacity="0.6" style={{animation:'lens-flicker 1.8s ease-in-out infinite'}}/>
+    </svg>
+  ),
+  north_platform_terminal: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="3" y="3" width="22" height="22" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <rect x="5" y="5" width="18" height="16" fill={a} opacity="0.07"/>
+      <rect x="5" y="6" width="4" height="1.5" rx="0.3" fill="#FF4422" opacity="0.7"/>
+      <rect x="10" y="6" width="12" height="1.5" rx="0.3" fill="#FF4422" opacity="0.5"/>
+      <rect x="5" y="9" width="4" height="1.5" rx="0.3" fill="#FF4422" opacity="0.7"/>
+      <rect x="10" y="9" width="12" height="1.5" rx="0.3" fill="#FF4422" opacity="0.5"/>
+      <rect x="5" y="12" width="4" height="1.5" rx="0.3" fill="#FF4422" opacity="0.7"/>
+      <rect x="10" y="12" width="12" height="1.5" rx="0.3" fill="#FF4422" opacity="0.5"/>
+      <rect x="5" y="15" width="4" height="1.5" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="10" y="15" width="12" height="1.5" rx="0.3" fill={a} opacity="0.2"/>
+      <rect x="5" y="18" width="4" height="1.5" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="10" y="18" width="12" height="1.5" rx="0.3" fill={a} opacity="0.2"/>
+      <rect x="5" y="21" width="18" height="1.5" rx="0.3" fill="#00000050" opacity="0.5"/>
+    </svg>
+  ),
+  rail_junction_box: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="4" y="6" width="20" height="18" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <circle cx="14" cy="15" r="7" fill="none" stroke={a} strokeWidth="0.6" opacity="0.4"/>
+      <line x1="14" y1="8" x2="14" y2="15" stroke={a} strokeWidth="0.8" opacity="0.6"/>
+      <line x1="14" y1="15" x2="19" y2="12" stroke="#FF4422" strokeWidth="0.8" opacity="0.7"/>
+      <circle cx="14" cy="15" r="1.5" fill={a} opacity="0.6"/>
+      <rect x="6" y="3" width="7" height="4" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.4" opacity="0.5"/>
+    </svg>
+  ),
+  pursuit_start: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="12" width="22" height="8" rx="3" fill="#00000060" stroke={a} strokeWidth="0.8" opacity="0.8"/>
+      <rect x="6" y="9" width="12" height="5" rx="2" fill="#00000070" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <ellipse cx="7" cy="21" rx="3" ry="3" fill="#00000070" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <ellipse cx="19" cy="21" rx="3" ry="3" fill="#00000070" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="22" y="13" width="5" height="5" rx="1" fill={a} opacity="0.3"/>
+      <ellipse cx="24.5" cy="15.5" rx="1.5" ry="1.5" fill={a} opacity="0.5" style={{animation:'lens-flicker 1.4s ease-in-out infinite'}}/>
+      <rect x="21" y="16" width="2" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.4" opacity="0.5"/>
+    </svg>
+  ),
+  airtaxi_fueling_depot: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="11" y="3" width="6" height="22" rx="1" fill="#00000060" stroke={a} strokeWidth="0.8" opacity="0.6"/>
+      <rect x="7" y="12" width="14" height="4" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <rect x="9" y="16" width="10" height="2" rx="0.3" fill="#00000050" stroke={a} strokeWidth="0.4" opacity="0.4"/>
+      <rect x="12" y="16" width="4" height="2" fill={a} opacity="0.3"/>
+      <circle cx="14" cy="4.5" r="1.5" fill={a} opacity="0.6" style={{animation:'lens-flicker 2s ease-in-out infinite'}}/>
+      <circle cx="4" cy="9" r="0.6" fill="#404040" opacity="0.4"/>
+      <circle cx="7" cy="13" r="0.6" fill="#404040" opacity="0.4"/>
+      <circle cx="22" cy="7" r="0.6" fill="#404040" opacity="0.4"/>
+      <circle cx="20" cy="18" r="0.6" fill="#404040" opacity="0.4"/>
+      <rect x="4" y="24" width="20" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+    </svg>
+  ),
+  fuel_register_terminal: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="3" y="4" width="22" height="20" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <rect x="5" y="6" width="18" height="10" fill={a} opacity="0.07"/>
+      <rect x="5" y="10" width="4" height="2" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="10" y="10" width="12" height="2" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="5" y="13" width="4" height="2" rx="0.3" fill={a} opacity="0.3"/>
+      <rect x="10" y="13" width="8" height="2" rx="0.3" fill="#E8A030" opacity="0.6"/>
+      <rect x="10" y="13" width="12" height="2" fill="none" stroke="#E8A030" strokeWidth="0.5" opacity="0.4"/>
+      <rect x="5" y="17" width="18" height="5" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+      <rect x="6" y="18" width="4" height="3" fill={a} opacity="0.15"/>
+      <rect x="15" y="18" width="7" height="3" fill="#E8A030" opacity="0.25"/>
+    </svg>
+  ),
+  bay_b_work_order: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="5" y="2" width="18" height="24" rx="1" fill="#F0E8D0" opacity="0.25"/>
+      <rect x="5" y="2" width="18" height="24" rx="1" fill="none" stroke={a} strokeWidth="0.7" opacity="0.6"/>
+      <line x1="7" y1="6" x2="21" y2="6" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+      <line x1="7" y1="9" x2="21" y2="9" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <rect x="5" y="13" width="18" height="5" rx="0" fill="#D0D8E8" opacity="0.15"/>
+      <rect x="5" y="13" width="18" height="5" fill="none" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <line x1="7" y1="15" x2="21" y2="15" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <circle cx="8" cy="24" r="1.5" fill="#9966FF" opacity="0.5"/>
+      <rect x="10" y="23" width="8" height="1" rx="0.3" fill="#9966FF" opacity="0.3"/>
+    </svg>
+  ),
+  maintenance_pit_console: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="6" width="24" height="18" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <circle cx="8" cy="11" r="4" fill="none" stroke={a} strokeWidth="0.7" opacity="0.6"/>
+      <circle cx="8" cy="11" r="2" fill={a} opacity="0.1"/>
+      <line x1="8" y1="7" x2="8" y2="15" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <line x1="4" y1="11" x2="12" y2="11" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <rect x="14" y="7" width="11" height="14" fill={a} opacity="0.06"/>
+      <rect x="15" y="8" width="6" height="1.2" rx="0.3" fill={a} opacity="0.2"/>
+      <rect x="15" y="10" width="9" height="1.2" rx="0.3" fill={a} opacity="0.2"/>
+      <rect x="15" y="12" width="6" height="1.2" rx="0.3" fill={a} opacity="0.2"/>
+      <rect x="15" y="14" width="9" height="1.2" rx="0.3" fill={a} opacity="0.2"/>
+      <rect x="15" y="16" width="9" height="1.2" rx="0.3" fill={a} opacity="0.5"/>
+      <rect x="15" y="18" width="6" height="1.2" rx="0.3" fill={a} opacity="0.2"/>
+      <rect x="4" y="19" width="20" height="4" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.4" opacity="0.5"/>
+    </svg>
+  ),
+  fuel_drum_stack: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="3" y="2" width="7" height="11" rx="1" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.7"/>
+      <line x1="4" y1="5" x2="9" y2="5" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <line x1="4" y1="9" x2="9" y2="9" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <rect x="11" y="2" width="7" height="11" rx="1" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.7"/>
+      <line x1="12" y1="5" x2="17" y2="5" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <line x1="12" y1="9" x2="17" y2="9" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <rect x="19" y="2" width="7" height="11" rx="1" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.7"/>
+      <line x1="20" y1="5" x2="25" y2="5" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <line x1="20" y1="9" x2="25" y2="9" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <rect x="3" y="14" width="7" height="11" rx="1" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.7"/>
+      <line x1="4" y1="17" x2="9" y2="17" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <line x1="4" y1="21" x2="9" y2="21" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <rect x="11" y="14" width="7" height="11" rx="1" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.7"/>
+      <line x1="12" y1="17" x2="17" y2="17" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <line x1="12" y1="21" x2="17" y2="21" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <rect x="19" y="14" width="7" height="11" rx="1" fill="#00000060" stroke={a} strokeWidth="0.6" opacity="0.7"/>
+      <line x1="20" y1="17" x2="25" y2="17" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <line x1="20" y1="21" x2="25" y2="21" stroke={a} strokeWidth="0.4" opacity="0.3"/>
+      <rect x="3" y="25" width="22" height="1" fill="#9966FF" opacity="0.3"/>
+    </svg>
+  ),
+  airtaxi_drainage: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="11" y="2" width="6" height="24" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.6"/>
+      <rect x="7" y="12" width="14" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+      <line x1="7" y1="14" x2="5" y2="18" stroke={a} strokeWidth="0.8" opacity="0.4"/>
+      <rect x="3" y="17" width="5" height="8" rx="0.5" fill="#00000050" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+      <rect x="4" y="19" width="3" height="1" rx="0.2" fill={a} opacity="0.2"/>
+      <rect x="4" y="21" width="3" height="1" rx="0.2" fill="#888" opacity="0.2"/>
+      <rect x="4" y="23" width="3" height="1" rx="0.2" fill="#888" opacity="0.15"/>
+      <rect x="11" y="1" width="6" height="3" rx="0.5" fill="#00000070" stroke="#888" strokeWidth="0.5" opacity="0.5"/>
+      <circle cx="14" cy="2.5" r="1" fill="#888" opacity="0.4"/>
+    </svg>
+  ),
+  drainage_channel_main: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="8" width="24" height="16" rx="1" fill="#00000070" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="3" y="16" width="22" height="6" rx="0.5" fill="#C88040" opacity="0.25"/>
+      <path d="M3 19 Q7 17 11 19 Q15 21 19 19 Q23 17 25 19" stroke="#C88040" strokeWidth="0.8" fill="none" opacity="0.5"/>
+      <line x1="5" y1="13" x2="5" y2="9" stroke={a} strokeWidth="0.5" opacity="0.3" style={{animation:'mist-drift 4s ease-in-out infinite'}}/>
+      <line x1="10" y1="14" x2="10" y2="10" stroke={a} strokeWidth="0.5" opacity="0.25" style={{animation:'mist-drift 3.5s ease-in-out infinite'}}/>
+      <line x1="18" y1="13" x2="18" y2="9" stroke={a} strokeWidth="0.5" opacity="0.2" style={{animation:'mist-drift 4.5s ease-in-out infinite'}}/>
+      <rect x="22" y="9" width="3" height="5" rx="0.3" fill="#FF4444" opacity="0.3"/>
+    </svg>
+  ),
+  syndicate_cache_drainage: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="4" width="24" height="20" rx="1" fill="#00000060" opacity="0.7"/>
+      <path d="M2 4 Q14 3 26 4" stroke="#404040" strokeWidth="1" opacity="0.5"/>
+      <rect x="5" y="8" width="18" height="13" rx="1" fill="#00000070" stroke="#40C840" strokeWidth="0.8" opacity="0.7"/>
+      <path d="M12 13 L14 10 L16 13 L14 16 Z" fill="none" stroke="#40C840" strokeWidth="0.8" opacity="0.6"/>
+      <line x1="12" y1="13" x2="16" y2="13" stroke="#40C840" strokeWidth="0.5" opacity="0.4"/>
+      <rect x="7" y="16" width="3" height="4" rx="0.3" fill={a} opacity="0.25"/>
+      <rect x="11" y="16" width="3" height="4" rx="0.3" fill={a} opacity="0.25"/>
+      <rect x="15" y="16" width="3" height="4" rx="0.3" fill={a} opacity="0.25"/>
+    </svg>
+  ),
+  drainage_graffiti_wall: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="1" y="1" width="26" height="26" fill="#202028" opacity="0.8"/>
+      <rect x="1" y="1" width="26" height="26" fill="none" stroke={a} strokeWidth="0.5" opacity="0.3"/>
+      <path d="M3 8 Q5 6 7 9 Q9 12 11 8" stroke="#405060" strokeWidth="0.8" fill="none" opacity="0.6"/>
+      <path d="M4 14 Q7 11 10 15 Q13 19 16 13" stroke="#405060" strokeWidth="0.8" fill="none" opacity="0.5"/>
+      <path d="M2 20 Q5 17 8 21 Q11 25 14 19" stroke="#405060" strokeWidth="0.7" fill="none" opacity="0.5"/>
+      <path d="M14 15 L16 12 L18 15 L16 18 Z" fill="none" stroke="#40C840" strokeWidth="1.2" opacity="0.8"/>
+      <line x1="14" y1="15" x2="18" y2="15" stroke="#40C840" strokeWidth="0.7" opacity="0.6"/>
+      <circle cx="16" cy="15" r="0.8" fill="#40C840" opacity="0.5"/>
+    </svg>
+  ),
+  junction_box_drainage: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="4" y="6" width="20" height="18" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.7"/>
+      <rect x="6" y="8" width="16" height="12" fill={a} opacity="0.06"/>
+      <line x1="6" y1="11" x2="22" y2="11" stroke={a} strokeWidth="0.4" opacity="0.25"/>
+      <line x1="6" y1="14" x2="22" y2="14" stroke={a} strokeWidth="0.4" opacity="0.25"/>
+      <line x1="14" y1="8" x2="14" y2="20" stroke={a} strokeWidth="0.4" opacity="0.25"/>
+      <polygon points="6,17 14,17 14,20 6,17" fill={a} opacity="0.3"/>
+      <polygon points="14,17 22,20 22,17" fill={a} opacity="0.2"/>
+      <circle cx="20" cy="21" r="1.5" fill="#FF4444" opacity="0.4"/>
+    </svg>
+  ),
+  syndicate_marker_drainage: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="#00000050" opacity="0.5"/>
+      <path d="M10 14 L14 10 L18 14 L14 18 Z" fill="none" stroke="#40C840" strokeWidth="1.5" opacity="0.8"/>
+      <line x1="10" y1="14" x2="18" y2="14" stroke="#40C840" strokeWidth="0.8" opacity="0.5"/>
+      <circle cx="14" cy="14" r="2" fill="#40C840" opacity="0.15"/>
+      <circle cx="14" cy="14" r="3.5" fill="none" stroke="#40C840" strokeWidth="0.4" opacity="0.4"/>
+      <polygon points="18,14 22,14 22,16 20,17" fill={a} opacity="0.4"/>
+      <polygon points="22,16 22,20 20,18" fill={a} opacity="0.3"/>
+    </svg>
+  ),
+  syndicate_cargo_cache: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="12" width="12" height="14" rx="1" fill="#00000060" stroke="#40C840" strokeWidth="0.8" opacity="0.8"/>
+      <path d="M5 15 L7 13 L9 15 L7 17 Z" fill="none" stroke="#40C840" strokeWidth="0.7" opacity="0.6"/>
+      <rect x="14" y="10" width="12" height="16" rx="1" fill="#00000060" stroke="#40C840" strokeWidth="0.8" opacity="0.7"/>
+      <rect x="15" y="12" width="5" height="4" rx="0.5" fill={a} opacity="0.25"/>
+      <rect x="20" y="11" width="5" height="2" rx="0.3" fill="#808080" opacity="0.3"/>
+      <rect x="20" y="14" width="5" height="2" rx="0.3" fill="#808080" opacity="0.3"/>
+      <ellipse cx="7" cy="9" rx="4" ry="3" fill="none" stroke="#808080" strokeWidth="0.6" opacity="0.4"/>
+      <line x1="5" y1="9" x2="9" y2="9" stroke="#808080" strokeWidth="0.4" opacity="0.3"/>
+    </svg>
+  ),
+  plasma_conduit_005: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="10" width="24" height="8" rx="2" fill="#00000060" stroke={a} strokeWidth="0.9" opacity="0.8"/>
+      <rect x="4" y="12" width="20" height="4" fill={a} opacity="0.08"/>
+      <path d="M10 10 Q12 8 14 10 Q16 12 18 10" stroke={a} strokeWidth="0.6" fill="none" opacity="0.5" style={{animation:'mist-drift 2.5s ease-in-out infinite'}}/>
+      <rect x="12" y="8" width="4" height="4" rx="0.5" fill="#FF4422" opacity="0.15"/>
+      <line x1="13" y1="8" x2="14" y2="6" stroke="#FF4422" strokeWidth="0.5" opacity="0.4"/>
+      <line x1="15" y1="8" x2="16" y2="6" stroke="#FF4422" strokeWidth="0.5" opacity="0.3"/>
+      <circle cx="22" cy="14" r="1.5" fill="#FF4422" opacity="0.5"/>
+      <circle cx="6" cy="14" r="1.5" fill="#FF4422" opacity="0.4"/>
+    </svg>
+  ),
+  sub_station_terminal: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="4" width="24" height="20" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <rect x="4" y="6" width="10" height="8" fill={a} opacity="0.07"/>
+      <line x1="4" y1="9" x2="9" y2="9" stroke={a} strokeWidth="0.6" opacity="0.4"/>
+      <line x1="4" y1="11" x2="14" y2="11" stroke={a} strokeWidth="0.6" opacity="0.4"/>
+      <polygon points="5,14 10,6 13,14" fill="none" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+      <line x1="10" y1="6" x2="10" y2="8" stroke={a} strokeWidth="0.7" opacity="0.5"/>
+      <rect x="15" y="6" width="10" height="16" fill={a} opacity="0.05"/>
+      <rect x="16" y="7" width="8" height="1" rx="0.2" fill={a} opacity="0.2"/>
+      <rect x="16" y="9" width="5" height="1" rx="0.2" fill={a} opacity="0.2"/>
+      <rect x="16" y="11" width="8" height="1" rx="0.2" fill={a} opacity="0.2"/>
+      <rect x="16" y="13" width="5" height="1" rx="0.2" fill={a} opacity="0.2"/>
+      <rect x="16" y="15" width="8" height="1" rx="0.2" fill={a} opacity="0.2"/>
+      <rect x="16" y="17" width="5" height="1" rx="0.2" fill="#FF4444" opacity="0.6"/>
+      <rect x="16" y="19" width="8" height="1" rx="0.2" fill={a} opacity="0.2"/>
+    </svg>
+  ),
+  syndicate_relay_node: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <circle cx="14" cy="16" r="8" fill="#00000060" stroke="#40C840" strokeWidth="0.8" opacity="0.7"/>
+      <circle cx="14" cy="16" r="5" fill="none" stroke="#40C840" strokeWidth="0.4" opacity="0.4"/>
+      <circle cx="14" cy="16" r="2" fill="#40C840" opacity="0.2"/>
+      <path d="M8 10 Q14 8 20 10" stroke="#40C840" strokeWidth="0.6" fill="none" opacity="0.4"/>
+      <path d="M6 7 Q14 4 22 7" stroke="#40C840" strokeWidth="0.5" fill="none" opacity="0.25"/>
+      <circle cx="7" cy="14" r="1" fill={a} opacity="0.5"/>
+      <circle cx="21" cy="13" r="1" fill={a} opacity="0.5"/>
+      <circle cx="12" cy="22" r="1" fill={a} opacity="0.4"/>
+      <line x1="18" y1="19" x2="21" y2="22" stroke="#40C840" strokeWidth="0.7" opacity="0.5"/>
+      <circle cx="21" cy="22" r="1" fill="#40C840" opacity="0.4"/>
+    </svg>
+  ),
+  plasma_valve_a: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <circle cx="14" cy="14" r="10" fill="#00000060" stroke={a} strokeWidth="0.9" opacity="0.8"/>
+      <line x1="14" y1="4" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="24" y1="14" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="14" y1="24" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="4" y1="14" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <circle cx="14" cy="14" r="3" fill="#00000080" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <rect x="4" y="5" width="8" height="4" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.6"/>
+      <line x1="5" y1="7" x2="11" y2="7" stroke="#FF4422" strokeWidth="2" opacity="0.7"/>
+    </svg>
+  ),
+  plasma_valve_b: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <circle cx="14" cy="14" r="10" fill="#00000060" stroke={a} strokeWidth="0.9" opacity="0.8"/>
+      <line x1="14" y1="4" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="24" y1="14" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="14" y1="24" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="4" y1="14" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <circle cx="14" cy="14" r="3" fill="#00000080" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <line x1="5" y1="6" x2="7" y2="4" stroke={a} strokeWidth="0.5" opacity="0.3" style={{animation:'mist-drift 2s ease-in-out infinite'}}/>
+      <line x1="8" y1="5" x2="10" y2="3" stroke={a} strokeWidth="0.5" opacity="0.25" style={{animation:'mist-drift 2.5s ease-in-out infinite'}}/>
+      <line x1="20" y1="5" x2="22" y2="3" stroke={a} strokeWidth="0.5" opacity="0.2" style={{animation:'mist-drift 3s ease-in-out infinite'}}/>
+      <rect x="4" y="22" width="8" height="4" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+    </svg>
+  ),
+  plasma_valve_c: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <circle cx="14" cy="14" r="10" fill="#00000060" stroke={a} strokeWidth="0.9" opacity="0.8"/>
+      <line x1="14" y1="4" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="24" y1="14" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="14" y1="24" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <line x1="4" y1="14" x2="14" y2="14" stroke={a} strokeWidth="1.2" opacity="0.7"/>
+      <circle cx="14" cy="14" r="3" fill="#00000080" stroke={a} strokeWidth="0.7" opacity="0.8"/>
+      <circle cx="5" cy="5" r="2" fill="none" stroke={a} strokeWidth="0.6" opacity="0.5"/>
+      <line x1="5" y1="5" x2="14" y2="14" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+      <circle cx="23" cy="5" r="2" fill="none" stroke={a} strokeWidth="0.6" opacity="0.5"/>
+      <line x1="23" y1="5" x2="14" y2="14" stroke={a} strokeWidth="0.5" opacity="0.4"/>
+    </svg>
+  ),
+  holonet_official_terminal: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="3" y="4" width="22" height="20" rx="1" fill="#00000070" stroke="#808080" strokeWidth="0.8" opacity="0.7"/>
+      <rect x="5" y="6" width="18" height="12" fill={a} opacity="0.1"/>
+      <rect x="5" y="6" width="18" height="12" fill="none" stroke={a} strokeWidth="0.6" opacity="0.6"/>
+      <rect x="6" y="7" width="16" height="10" fill="#001020" opacity="0.5"/>
+      <polygon points="11,10 17,13 11,16" fill={a} opacity="0.5"/>
+      <circle cx="5" cy="6" r="0.5" fill="#808080" opacity="0.4"/>
+      <circle cx="9" cy="7" r="0.5" fill="#808080" opacity="0.35"/>
+      <circle cx="14" cy="5" r="0.5" fill="#808080" opacity="0.3"/>
+      <circle cx="19" cy="8" r="0.5" fill="#808080" opacity="0.35"/>
+      <circle cx="23" cy="6" r="0.5" fill="#808080" opacity="0.4"/>
+      <rect x="5" y="19" width="18" height="4" rx="0.5" fill="#00000060" stroke="#808080" strokeWidth="0.5" opacity="0.5"/>
+    </svg>
+  ),
+  airtaxi_the_works: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="11" y="2" width="6" height="22" rx="1" fill="#00000060" stroke="#808080" strokeWidth="0.7" opacity="0.6"/>
+      <rect x="7" y="11" width="14" height="4" rx="0.5" fill="#00000060" stroke="#808080" strokeWidth="0.5" opacity="0.5"/>
+      <rect x="10" y="2" width="8" height="3" rx="0.5" fill="#FF4422" opacity="0.6"/>
+      <rect x="4" y="24" width="20" height="3" rx="0.5" fill="#00000060" stroke="#808080" strokeWidth="0.4" opacity="0.5"/>
+      <line x1="7" y1="8" x2="9" y2="6" stroke={a} strokeWidth="0.5" opacity="0.3" style={{animation:'mist-drift 2s ease-in-out infinite'}}/>
+      <line x1="14" y1="7" x2="16" y2="5" stroke={a} strokeWidth="0.5" opacity="0.3" style={{animation:'mist-drift 2.5s ease-in-out infinite'}}/>
+      <circle cx="14" cy="3.5" r="1.5" fill="#FF4422" opacity="0.6" style={{animation:'lens-flicker 1.5s ease-in-out infinite'}}/>
+    </svg>
+  ),
+  airtaxi_csf_academy: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="11" y="3" width="6" height="22" rx="1" fill="#00000060" stroke="#4A9FFF" strokeWidth="0.8" opacity="0.8"/>
+      <rect x="7" y="12" width="14" height="3" rx="0.5" fill="#00000060" stroke="#4A9FFF" strokeWidth="0.6" opacity="0.6"/>
+      <rect x="8" y="10" width="4" height="3" fill="#4A9FFF" opacity="0.2"/>
+      <rect x="16" y="10" width="4" height="3" fill="#4A9FFF" opacity="0.2"/>
+      <circle cx="14" cy="4.5" r="2" fill="#4A9FFF" opacity="0.8" style={{animation:'lens-flicker 2s ease-in-out infinite'}}/>
+      <rect x="9" y="18" width="10" height="4" rx="0.5" fill="#00000060" stroke="#4A9FFF" strokeWidth="0.5" opacity="0.6"/>
+      <rect x="10" y="19" width="3" height="2" rx="0.3" fill="#4A9FFF" opacity="0.25"/>
+      <rect x="4" y="24" width="20" height="3" rx="0.5" fill="#00000060" stroke="#4A9FFF" strokeWidth="0.5" opacity="0.5"/>
+    </svg>
+  ),
+  module_a_terminal: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="3" y="4" width="22" height="18" rx="1" fill="#00000060" stroke="#4A9FFF" strokeWidth="0.7" opacity="0.8"/>
+      <rect x="5" y="6" width="18" height="10" fill="#4A9FFF" opacity="0.08"/>
+      <circle cx="14" cy="9" r="4" fill="none" stroke="#4A9FFF" strokeWidth="0.7" opacity="0.5"/>
+      <path d="M12 9 L13.5 7 L15.5 11 L17 8" stroke="#4A9FFF" strokeWidth="0.6" fill="none" opacity="0.5"/>
+      <rect x="5" y="17" width="18" height="4" rx="0.5" fill="#00000060" stroke="#4A9FFF" strokeWidth="0.4" opacity="0.5"/>
+      <rect x="20" y="17.5" width="2" height="3" rx="0.3" fill="#4A9FFF" opacity="0.4"/>
+    </svg>
+  ),
+  module_b_terminal: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="3" y="4" width="22" height="18" rx="1" fill="#00000060" stroke="#4A9FFF" strokeWidth="0.7" opacity="0.8"/>
+      <rect x="5" y="6" width="10" height="10" fill="#4A9FFF" opacity="0.07"/>
+      <rect x="5" y="6" width="10" height="10" fill="none" stroke="#4A9FFF" strokeWidth="0.5" opacity="0.4"/>
+      <line x1="5" y1="9" x2="15" y2="9" stroke="#4A9FFF" strokeWidth="0.4" opacity="0.3"/>
+      <line x1="5" y1="12" x2="15" y2="12" stroke="#4A9FFF" strokeWidth="0.4" opacity="0.3"/>
+      <ellipse cx="20.5" cy="10" rx="2.5" ry="3" fill="none" stroke="#4A9FFF" strokeWidth="0.6" opacity="0.4"/>
+      <rect x="5" y="17" width="18" height="4" rx="0.5" fill="#00000060" stroke="#4A9FFF" strokeWidth="0.4" opacity="0.5"/>
+    </svg>
+  ),
+  holding_block_b: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="#00000070" stroke={a} strokeWidth="0.8" opacity="0.8"/>
+      <rect x="9" y="8" width="10" height="14" rx="0.5" fill="#00000080" stroke={a} strokeWidth="0.6" opacity="0.7"/>
+      <ellipse cx="14" cy="13" rx="3" ry="4" fill="#404050" opacity="0.5"/>
+      <ellipse cx="14" cy="10" rx="2" ry="2" fill="#404050" opacity="0.5"/>
+      <rect x="18" y="10" width="5" height="8" rx="0.3" fill="#00000060" stroke={a} strokeWidth="0.4" opacity="0.5"/>
+      <line x1="10" y1="8" x2="10" y2="22" stroke={a} strokeWidth="0.4" opacity="0.2"/>
+      <line x1="12" y1="8" x2="12" y2="22" stroke={a} strokeWidth="0.4" opacity="0.2"/>
+      <line x1="16" y1="8" x2="16" y2="22" stroke={a} strokeWidth="0.4" opacity="0.2"/>
+      <line x1="18" y1="8" x2="18" y2="22" stroke={a} strokeWidth="0.4" opacity="0.2"/>
+    </svg>
+  ),
+  senate_honor_ceremony: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="8" y="18" width="12" height="8" rx="1" fill="#00000060" stroke="#9966FF" strokeWidth="0.7" opacity="0.7"/>
+      <rect x="10" y="6" width="8" height="13" rx="0.5" fill="#9966FF" opacity="0.1"/>
+      <rect x="10" y="6" width="8" height="13" rx="0.5" fill="none" stroke="#9966FF" strokeWidth="0.5" opacity="0.5"/>
+      <path d="M14 8 L14.7 10 L17 10 L15.3 11.2 L15.9 13.5 L14 12 L12.1 13.5 L12.7 11.2 L11 10 L13.3 10 Z" fill="#9966FF" opacity="0.5"/>
+      <circle cx="14" cy="22" r="2" fill="none" stroke="#9966FF" strokeWidth="0.7" opacity="0.5"/>
+      <line x1="12" y1="22" x2="16" y2="22" stroke="#9966FF" strokeWidth="0.5" opacity="0.4"/>
+      <line x1="14" y1="20" x2="14" y2="24" stroke="#9966FF" strokeWidth="0.5" opacity="0.4"/>
+    </svg>
+  ),
+  airtaxi_lower_sky_market: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="11" y="3" width="6" height="22" rx="1" fill="#00000060" stroke={a} strokeWidth="0.7" opacity="0.6"/>
+      <rect x="7" y="12" width="14" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+      <path d="M4 8 Q6 6 8 8 Q10 10 12 8" stroke="#404050" strokeWidth="0.7" fill="none" opacity="0.5"/>
+      <path d="M3 13 Q5 11 7 13 Q9 15 11 13" stroke="#404050" strokeWidth="0.6" fill="none" opacity="0.4"/>
+      <path d="M14 18 L16 15 L18 18 L16 21 Z" fill="none" stroke="#FF6622" strokeWidth="0.5" opacity="0.3"/>
+      <circle cx="14" cy="4.5" r="1.5" fill={a} opacity="0.5" style={{animation:'lens-flicker 2.2s ease-in-out infinite'}}/>
+      <rect x="4" y="24" width="20" height="3" rx="0.5" fill="#00000060" stroke={a} strokeWidth="0.5" opacity="0.5"/>
+    </svg>
+  ),
+  airtaxi_senate_district: (a) => (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}>
+      <rect x="11" y="4" width="6" height="20" rx="0.5" fill="#00000060" stroke="#9966FF" strokeWidth="0.8" opacity="0.8"/>
+      <rect x="8" y="3" width="12" height="4" rx="0.5" fill="#00000060" stroke="#9966FF" strokeWidth="0.7" opacity="0.7"/>
+      <rect x="9" y="2" width="10" height="3" rx="0.3" fill="#9966FF" opacity="0.25"/>
+      <rect x="7" y="12" width="14" height="3" rx="0.5" fill="#00000060" stroke="#9966FF" strokeWidth="0.5" opacity="0.6"/>
+      <rect x="8" y="10" width="4" height="3" fill="#9966FF" opacity="0.15"/>
+      <rect x="16" y="10" width="4" height="3" fill="#9966FF" opacity="0.15"/>
+      <circle cx="14" cy="5" r="2" fill="#9966FF" opacity="0.7" style={{animation:'lens-flicker 2.3s ease-in-out infinite'}}/>
+      <rect x="9" y="18" width="10" height="4" rx="0.5" fill="#00000060" stroke="#9966FF" strokeWidth="0.4" opacity="0.5"/>
+      <rect x="4" y="23" width="20" height="4" rx="0.5" fill="#00000060" stroke="#9966FF" strokeWidth="0.6" opacity="0.6"/>
+    </svg>
+  ),
+};
+
+function WorldObjectSprite({ kind, accent, id }) {
+  if (id && WORLD_OBJECT_SPRITES[id]) return WORLD_OBJECT_SPRITES[id](accent);
   const s = { pointerEvents: 'none' };
   const dim = '#00000060';
   if (kind === 'terminal') return (
@@ -3670,7 +4465,7 @@ function StarWarsRPG() {
                       )}
                       {worldObjHere && !isPlayer && !npcHere && !collectibleHere && (
                         <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',pointerEvents:'none',zIndex:2 }}>
-                          <WorldObjectSprite kind={worldObjHere.iconKind ?? getWorldObjIconKind(worldObjHere.id)} accent={zone.accent} />
+                          <WorldObjectSprite kind={worldObjHere.iconKind ?? getWorldObjIconKind(worldObjHere.id)} accent={zone.accent} id={worldObjHere.id} />
                         </div>
                       )}
                       {npcHere && !isPlayer && (
