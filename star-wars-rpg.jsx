@@ -434,8 +434,8 @@ const PLANETS = {
         worldObjects: [
           { id: 'jon_datapad', x: 12, y: 3, label: 'Encrypted Datapad', description: 'Manifest fragments. Three hub codes, three timestamps, forty-eight hours apart. Someone who knew the routing schedules. The Broken Circle is written in the margin in red.', once: true },
           { id: 'slicing_bench', x: 14, y: 8, label: 'Slicing Workbench', description: 'A tangle of stripped datachips and bypass leads. Jon apparently does his best work at 0300.', once: false },
-          { id: 'bay14_analysis_board', x: 8, y: 4, once: false, label: 'Bay 14 Analysis Board', description: 'A holographic display pinned with freight logs, blast pattern analyses, and three photographs labeled UNKNOWN. Jon has been working this case longer than he let on. One note in his handwriting reads: "Transit codes -- mine. How?"' },
-          { id: 'faction_tension_chart', x: 3, y: 6, once: false, label: 'Coruscant Faction Chart', description: 'A layered map of Coruscant levels with colored overlays: blue for CSF jurisdiction, red for Iron Syndicate activity, amber for contested freight corridors. The Senate District is circled three times in a different color than the others. No label. Just the circle.' },
+          { id: 'bay14_analysis_board', x: 8, y: 4, once: false, iconKind: 'board', label: 'Bay 14 Analysis Board', description: 'A holographic display pinned with freight logs, blast pattern analyses, and three photographs labeled UNKNOWN. Jon has been working this case longer than he let on. One note in his handwriting reads: "Transit codes -- mine. How?"' },
+          { id: 'faction_tension_chart', x: 3, y: 6, once: false, iconKind: 'board', label: 'Coruscant Faction Chart', description: 'A layered map of Coruscant levels with colored overlays: blue for CSF jurisdiction, red for Iron Syndicate activity, amber for contested freight corridors. The Senate District is circled three times in a different color than the others. No label. Just the circle.' },
         ],
         npcs: [
           { id: 'jon_apartment', x: 5, y: 3, kind: 'smuggler', label: 'Jon', questNpc: true,
@@ -597,9 +597,9 @@ const PLANETS = {
       sky_market: {
         id: 'sky_market', name: 'Sky-Market District', subtitle: 'Coruscant · Upper Mid-Levels · L.1450',
         width: 38, height: 26, spawnPos: { x: 4, y: 13 }, textureId: 'coruscant',
-        accent: '#E8A030', accentGlow: 'rgba(232,160,48,0.30)', accentDim: '#7A4E10',
-        floorColor: '#2C2016', floorAlt: '#3C2A18', wallDark: '#14100A', wallLight: '#241A0C',
-        bg: 'radial-gradient(circle at 50% 0%, #3A2008 0%, #221408 20%, #0E0A06 55%, #080604 100%)', ambient: 'traffic',
+        accent: '#E8A030', accentGlow: 'rgba(232,160,48,0.35)', accentDim: '#C09040',
+        floorColor: '#2A2418', floorAlt: '#38321E', wallDark: '#1E1A0E', wallLight: '#3A3220',
+        bg: 'radial-gradient(circle at 50% 0%, #3A2808 0%, #241A08 20%, #0E0A06 55%, #080604 100%)', ambient: 'sky_high', floorPattern: 'marble',
         decor: ['pillar', 'neon_sign', 'brazier', 'neon_sign', 'cargo_crate', 'pipe', 'girder'],
         doors: [
           { x: 0, y: 12, targetZone: 'sky_customs', targetPos: { x: 33, y: 12 }, label: 'Skyway Customs' },
@@ -607,30 +607,30 @@ const PLANETS = {
           { x: 15, y: 25, targetZone: 'heat_sink_slums', targetPos: { x: 15, y: 1 }, label: 'Heat Sink Slums' },
         ],
         worldObjects: [
-          { id: 'jon_arrival_comlink', x: 5, y: 13, once: true, label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
+          { id: 'jon_arrival_comlink', x: 5, y: 13, once: true, iconKind: 'comlink', label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
           { id: 'sky_market_terminal', x: 20, y: 7, once: false, label: 'Trade Exchange Terminal', description: 'Live credit-transfer rates across fourteen systems. One manifest flagged for anomalous routing: SCYLLA FREIGHT. Destination: redacted. Shipper: redacted.' },
-          { id: 'csf_bulletin', x: 28, y: 14, once: false, label: 'CSF Bulletin Board', description: 'Three active investigations listed. Two marked classified. The third — Cargo Anomaly / Bay 14 — shows status: CLOSED. Filed by: Vane, T. Closure date: two days after the incident.' },
+          { id: 'csf_bulletin', x: 28, y: 14, once: false, iconKind: 'board', label: 'CSF Bulletin Board', description: 'Three active investigations listed. Two marked classified. The third — Cargo Anomaly / Bay 14 — shows status: CLOSED. Filed by: Vane, T. Closure date: two days after the incident.' },
           { id: 'lounge_bar_terminal', x: 5, y: 5, once: false, label: 'Lounge Drink Terminal', description: 'A rotating holographic menu. Thirty-seven varieties of exotic spirits from fourteen systems. One local special listed as "Bay 14 Blend." Whoever named it has a sense of humor or information you do not.' },
-          { id: 'lounge_private_booth', x: 9, y: 8, once: true, label: 'Occupied Booth', description: 'Two figures in grey coats, backs to the room. Neither is drinking. Both are watching the exit.', grantsFlag: 'syndicate_watchers_seen', grantsCodex: 'codex-iron-syndicate',
+          { id: 'lounge_private_booth', x: 9, y: 8, once: true, iconKind: 'booth', label: 'Occupied Booth', description: 'Two figures in grey coats, backs to the room. Neither is drinking. Both are watching the exit.', grantsFlag: 'syndicate_watchers_seen', grantsCodex: 'codex-iron-syndicate',
             autoCodex: { id: 'discovery-lounge-booth-watchers', title: 'Iron Syndicate Watchers', category: 'discoveries', summary: 'Field observers in the Aurebesh Lounge.', body: ['Two figures in grey coats sit with their backs to the room. Neither is drinking. Both are watching the exit. Iron Syndicate field observers — if they recognize you, they will report your presence at the lounge to Vex.', 'Their positioning covers the main entrance and the transit lift. This is a professional surveillance configuration, not a casual meeting.'] } },
           { id: 'lounge_datapad', x: 3, y: 9, once: true, label: 'Left Behind Datapad', description: 'Encrypted but partially readable. Credit transfers totaling 840,000 credits routed through three shell corporations to a Coruscant financial account. The destination account number matches one field on the Scylla manifest.', grantsFlag: 'credit_trail_found' },
-          { id: 'precinct_evidence_locker', x: 29, y: 6, once: false, label: 'Evidence Locker — Bay 14', description: "CASE STATUS: CLOSED. PRIMARY EVIDENCE: destroyed in dock fire. PHYSICAL SAMPLES: none recovered. WITNESS STATEMENTS: sealed under Senate Directive 1182-C. The locker is padlocked with a standard CSF code seal. Vane's name is on the closure authorization." },
+          { id: 'precinct_evidence_locker', x: 29, y: 6, once: false, iconKind: 'safe', label: 'Evidence Locker — Bay 14', description: "CASE STATUS: CLOSED. PRIMARY EVIDENCE: destroyed in dock fire. PHYSICAL SAMPLES: none recovered. WITNESS STATEMENTS: sealed under Senate Directive 1182-C. The locker is padlocked with a standard CSF code seal. Vane's name is on the closure authorization." },
           { id: 'precinct_comms_station', x: 33, y: 5, once: false, label: 'CSF Dispatch Station', description: 'Twelve active patrol frequencies. Six are handling routine traffic violations. Five are static. One — Sector 4 Channel B — is broadcasting a continuous loop: "All units stand by. Sector 4 incident classified pending Senate review."' },
-          { id: 'precinct_wanted_board', x: 29, y: 9, once: false, label: 'Sector 4 Active Warrants Board', description: 'Fourteen open warrants. Nine are standard Black Sun identifiers. Four are listed as CLASSIFIED with Senate clearance required to view. The fifteenth entry — Bay 14 strike team — shows status: SUSPENDED. Effective date: two days after the incident.' },
-          { id: 'airtaxi_sky_market', x: 35, y: 20, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Departs on demand.' },
-          { id: 'skyline_vista', x: 19, y: 1, once: false, label: 'Promenade Skyline Overlook', description: 'The promenade edge opens onto open air and three thousand meters of vertical city. Speeders stream in tight formation lanes. Above: the Senate dome, catching the last reflected light from the planet\'s artificial sun cycle. Below: nothing visible. The lower levels begin where the light stops.',
+          { id: 'precinct_wanted_board', x: 29, y: 9, once: false, iconKind: 'board', label: 'Sector 4 Active Warrants Board', description: 'Fourteen open warrants. Nine are standard Black Sun identifiers. Four are listed as CLASSIFIED with Senate clearance required to view. The fifteenth entry — Bay 14 strike team — shows status: SUSPENDED. Effective date: two days after the incident.' },
+          { id: 'airtaxi_sky_market', x: 35, y: 20, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Departs on demand.' },
+          { id: 'skyline_vista', x: 19, y: 1, once: false, iconKind: 'vista', label: 'Promenade Skyline Overlook', description: 'The promenade edge opens onto open air and three thousand meters of vertical city. Speeders stream in tight formation lanes. Above: the Senate dome, catching the last reflected light from the planet\'s artificial sun cycle. Below: nothing visible. The lower levels begin where the light stops.',
             worldStateVariant: {
               lawful: 'The view from the law: the Republic\'s skyline, lit and ordered, everything it protects visible from one glance. The lower levels are down there somewhere, past the point where the light gives up.',
               underworld: 'The view from the other side: that Senate dome is where the authorization codes came from. Everything clean and lit up top, everything complicated below. You are already on the wrong level for clean.',
             },
           },
-          { id: 'holonet_kiosk', x: 14, y: 14, once: false, label: 'HoloNet News Kiosk', description: '[HNN — PRIORITY FEED] "The Coruscant Port Authority today confirmed that a routine fuel-line incident at Sub-Surface Docking Bay 14 has been fully resolved. Port Director Hadras stated that all cargo logs were destroyed in the secondary fire, consistent with standard emergency protocol. Senate Commerce Committee Chair confirmed there is no active investigation." The kiosk screen cycles to a weather advisory. Coruscant does not have weather.' },
-          { id: 'lounge_corner_conversation', x: 7, y: 9, once: true, label: 'Overheard Corner Table', description: 'Two men in expensive suits are speaking just below audible. One places a datacard on the table. The other shakes his head. The first slides it closer. The second looks out the window for a long moment, then pockets it. Neither man acknowledges that you passed. The datacard is gone.', grantsFlag: 'corner_deal_witnessed' },
+          { id: 'holonet_kiosk', x: 14, y: 14, once: false, iconKind: 'hologram', label: 'HoloNet News Kiosk', description: '[HNN — PRIORITY FEED] "The Coruscant Port Authority today confirmed that a routine fuel-line incident at Sub-Surface Docking Bay 14 has been fully resolved. Port Director Hadras stated that all cargo logs were destroyed in the secondary fire, consistent with standard emergency protocol. Senate Commerce Committee Chair confirmed there is no active investigation." The kiosk screen cycles to a weather advisory. Coruscant does not have weather.' },
+          { id: 'lounge_corner_conversation', x: 7, y: 9, once: true, iconKind: 'booth', label: 'Overheard Corner Table', description: 'Two men in expensive suits are speaking just below audible. One places a datacard on the table. The other shakes his head. The first slides it closer. The second looks out the window for a long moment, then pockets it. Neither man acknowledges that you passed. The datacard is gone.', grantsFlag: 'corner_deal_witnessed' },
           { id: 'promenade_patrol_log', x: 24, y: 18, once: false, label: 'CSF Patrol Route Terminal', description: 'A public-facing transit safety board maintained by the CSF. Patrol schedule for Sector 4: suspended pending Senate review. Patrol schedule for Sky-Market Promenade: reduced to single-officer rotating shift. The reduction took effect two days after the Bay 14 incident. The authorization is signed: Vane, T.' },
           { id: 'overhead_traffic_lanes', x: 18, y: 2, once: false, label: 'Open-Air Promenade Edge', description: 'The skyway opens above you. Repulsorlift traffic moves in tight formation lanes a hundred meters overhead — freight skiffs, executive speeders, municipal transports. The lanes are color-coded by altitude and clearance tier. A constant low-frequency vibration moves through the durasteel walkway beneath your feet. Somewhere below, Level 1222 looks up through the same open air.' },
           { id: 'aurebesh_neon_sign', x: 16, y: 11, once: false, label: 'Aurebesh Neon Sign Array', description: 'A bank of hand-lettered Aurebesh signs in electric blue and deep crimson mark the vendors along the concourse edge. EXCHANGE CERTIFIED. PHRIK-FREE MATERIALS. SENATE-APPROVED TRANSIT. BEST RATES BETWEEN THE LEVELS. One sign at the end of the row has been unplugged. It read: SCYLLA FREIGHT — REGISTERED CARRIER. The housing still glows faintly from residual charge.' },
-          { id: 'vendor_stall_twi', x: 10, y: 15, once: false, label: "Twi'lek Fruit Stand", description: "A canopied stall made from canvas weave and a repurposed cargo-crate frame. Lelani, a green-lekku Twi'lek vendor, is arguing cheerfully in three languages with a Ishi Tib buyer over the price of something that glows orange. The canopy overhead is patched in four places with a different fabric each time. It has survived longer than the district's last three CSF precinct commanders." },
-          { id: 'droid_repair_kiosk', x: 22, y: 17, once: false, label: 'Droid Repair Kiosk', description: 'A narrow stall crammed with disassembled photoreceptors, motivator housings, and at least three different droid torsos in various states of rebuild. The proprietor — a pair of heavily tattooed human hands, the rest of the body hidden behind a parts rack — is precision-soldering a restraining bolt without looking up. A handwritten sign reads: NO DROIDS REFUSED. NO QUESTIONS ASKED. PAYMENT UPFRONT.' },
+          { id: 'vendor_stall_twi', x: 10, y: 15, once: false, iconKind: 'stall', label: "Twi'lek Fruit Stand", description: "A canopied stall made from canvas weave and a repurposed cargo-crate frame. Lelani, a green-lekku Twi'lek vendor, is arguing cheerfully in three languages with a Ishi Tib buyer over the price of something that glows orange. The canopy overhead is patched in four places with a different fabric each time. It has survived longer than the district's last three CSF precinct commanders." },
+          { id: 'droid_repair_kiosk', x: 22, y: 17, once: false, iconKind: 'stall', label: 'Droid Repair Kiosk', description: 'A narrow stall crammed with disassembled photoreceptors, motivator housings, and at least three different droid torsos in various states of rebuild. The proprietor — a pair of heavily tattooed human hands, the rest of the body hidden behind a parts rack — is precision-soldering a restraining bolt without looking up. A handwritten sign reads: NO DROIDS REFUSED. NO QUESTIONS ASKED. PAYMENT UPFRONT.' },
           { id: 'freight_crane_alpha', x: 30, y: 20, once: false, label: 'Freight Terrace Crane Arm', description: 'A heavy industrial crane arm extends from the terrace edge over the open air, weighted with a repulsor counterbalance. Below, on a cantilevered platform you can only partially see, a cargo skiff is being unloaded by two astromech units stacking standardized Czerka containers. The crane arm bears three inspection seals, none of which match the current registration cycle.' },
           { id: 'landing_pad_beacon', x: 14, y: 21, once: false, label: 'Landing Pad 1450 Beacon', description: 'A red collision beacon mounted to the terrace railing flashes in three-second intervals, keeping skiff pilots on approach path. The pad below is rated for two medium-class freighters simultaneously. Currently: four skiffs, two of them unmarked, parked in a configuration that leaves no room for a legitimate arrival. Nobody has filed a complaint with the port authority in six days.' },
           { id: 'repulsor_fluid_slick', x: 22, y: 20, once: false, label: 'Repulsor Fluid Slick', description: 'A wide iridescent puddle has spread from a leaking repulsor stall fitting across the walkway surface. The fluid catches every neon sign in the concourse and renders them in elongated reflections across the durasteel: electric blue, magenta, amber. Standing in it, you can read the entire Aurebesh sign row backwards in the ground beneath your feet.' },
@@ -941,21 +941,21 @@ const PLANETS = {
         width: 40, height: 28, spawnPos: { x: 2, y: 14 }, textureId: 'coruscant',
         accent: '#FF8C42', accentGlow: 'rgba(255,140,66,0.18)', accentDim: '#7A3A10',
         floorColor: '#1C1A14', floorAlt: '#24221A', wallDark: '#0A0902', wallLight: '#161408',
-        bg: 'radial-gradient(circle at 30% 70%, #181410 0%, #08070A 70%)', ambient: 'steam',
+        bg: 'radial-gradient(circle at 30% 70%, #181410 0%, #08070A 70%)', ambient: 'steam', floorPattern: 'grate',
         decor: ['cargo_crate', 'pipe', 'girder', 'warning_beacon', 'slag'],
         doors: [
           { x: 20, y: 27, targetZone: 'mag_rail_corridor', targetPos: { x: 20, y: 1 }, label: 'Mag-Rail Corridor' },
           { x: 21, y: 27, targetZone: 'mag_rail_corridor', targetPos: { x: 21, y: 1 }, label: 'Mag-Rail Corridor' },
         ],
         worldObjects: [
-          { id: 'bay14_crime_scene', x: 20, y: 6, once: true, label: 'Bay 14 Blast Marks', description: 'Scorch marks on the dock wall. The pattern is from shaped charges, not a fuel fire.',
+          { id: 'bay14_crime_scene', x: 20, y: 6, once: true, iconKind: 'evidence', label: 'Bay 14 Blast Marks', description: 'Scorch marks on the dock wall. The pattern is from shaped charges, not a fuel fire.',
             autoCodex: { id: 'discovery-bay14-blast-marks', title: 'Bay 14: Blast Evidence', category: 'discoveries', summary: 'Shaped charges destroyed the loading manifest records.', body: ['The dock wall is scorched. Not from a fuel fire — the scorch pattern is from shaped charges placed against the loading manifest kiosk. Someone destroyed the primary records on the way out. Whoever did this knew exactly which terminal held the cargo authorization log.'] } },
           { id: 'discarded_keycard', x: 32, y: 18, once: true, label: 'Discarded Passcode', description: 'Half-melted but readable: an underworld bypass key. Grants sub-level transit without checkpoint flags. You pocket it.', grantsItem: 'scrambler_keycard' },
           { id: 'shipping_crate_b14', x: 10, y: 20, once: true, label: 'Unsealed Shipping Crate', description: 'Marked as "agricultural supplies." Contains Glitterstim vials and unregistered blaster power packs. Clearly staged to be found.', grantsItem: 'item_spice_vial' },
           { id: 'customs_terminal_088', x: 26, y: 4, once: true, label: 'Customs Manifest Registry', description: 'Three containers marked with Senate sub-committee routing stamps. One flags as anomalous — destination redacted, shipper redacted, authorization code valid. The code traces to a sub-committee that officially does not exist.' },
           { id: 'crane_node_088', x: 22, y: 4, once: true, label: 'Crane Automation Node', description: 'The bay exterior crane control system. A code input here can drop a heavy repulsor-crate onto the loading yard — opening a breach point into the warehouse without triggering external alarms.' },
           { id: 'undercity_radio_terminal', x: 4, y: 4, once: false, label: 'Under-Grit Radio Intercept', description: '[Signal 104.9 Sub-Grit — Unauthorized] "They are calling Docking Bay 14 a logistical delay while Black Sun heavy gunners run it like a private toll booth. CSF sent fresh academy blood into Sector 4. Place your bets at Vond\'s shop — three to one the new badge sells out before end of shift..."' },
-          { id: 'airtaxi_freight_hub', x: 38, y: 6, once: false, label: 'AirTaxi Terminal', description: 'Transit terminal. Level access pending clearance.' },
+          { id: 'airtaxi_freight_hub', x: 38, y: 6, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Transit terminal. Level access pending clearance.' },
         ],
         npcs: [
           { id: 'jax_freight', x: 18, y: 6, kind: 'mechanic', label: 'Dock Engineer Jax',
@@ -1189,24 +1189,24 @@ const PLANETS = {
         width: 36, height: 24, spawnPos: { x: 2, y: 12 }, textureId: 'coruscant',
         accent: '#FF4444', accentGlow: 'rgba(255,68,68,0.2)', accentDim: '#660000',
         floorColor: '#14100A', floorAlt: '#1C160E', wallDark: '#060402', wallLight: '#100C06',
-        bg: 'radial-gradient(circle at 50% 80%, #140800 0%, #050302 70%)', ambient: 'steam',
+        bg: 'radial-gradient(circle at 50% 80%, #140800 0%, #050302 70%)', ambient: 'steam', floorPattern: 'rough',
         decor: ['pipe', 'girder', 'slag', 'rubble', 'warning_beacon', 'brazier'],
         doors: [
           { x: 20, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 20, y: 1 }, label: 'Cooling Ducts' },
           { x: 21, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 21, y: 1 }, label: 'Cooling Ducts' },
         ],
         worldObjects: [
-          { id: 'syndicate_cargo_cache', x: 18, y: 10, once: true, label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with an iron chain. Phrik plating, combat chassis, and an empty Jedi archive canister.',
+          { id: 'syndicate_cargo_cache', x: 18, y: 10, once: true, iconKind: 'crate', label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with an iron chain. Phrik plating, combat chassis, and an empty Jedi archive canister.',
             autoCodex: { id: 'discovery-works-syndicate-cache', title: 'Iron Syndicate Cache', category: 'discoveries', summary: 'Phrik plating cut to pauldron dimensions.', body: ['Stacked crates stamped with a stylised iron chain. Inside: Phrik plating cut to pauldron dimensions, half-assembled combat chassis, and one empty Jedi archive canister. Someone opened it already.'] } },
           { id: 'plasma_conduit_005', x: 8, y: 18, once: false, label: 'Leaking Plasma Conduit', description: 'The pipe groans under pressure. A slow leak fills the air with acrid chemical haze. This entire sub-level is one spark away from a chain event.' },
-          { id: 'sub_station_terminal', x: 10, y: 20, once: true, label: 'Deep Sub-Station Controls', description: 'Power sub-station 3. Controls ambient thermal hazards in the surrounding corridor.', grantsItem: null,
+          { id: 'sub_station_terminal', x: 10, y: 20, once: true, iconKind: 'panel', label: 'Deep Sub-Station Controls', description: 'Power sub-station 3. Controls ambient thermal hazards in the surrounding corridor.', grantsItem: null,
             autoCodex: { id: 'discovery-sub-station-3', title: 'Sub-Station 3: Thermal Grid', category: 'discoveries', summary: 'The Works thermal hazard routing mapped.', body: ['Power sub-station 3 controls the thermal vent routing for the Level 005 lower corridor. The hazard configuration is non-standard — vents have been aimed laterally rather than exhausting upward. Someone reconfigured this intentionally. The most likely purpose: to discourage unauthorized access to the smelter corridor without triggering alarms that would appear on Republic monitoring feeds.'] } },
           { id: 'syndicate_relay_node', x: 24, y: 6, once: true, label: 'Syndicate Relay Node', description: 'Iron Syndicate tactical communications. Slicing this intercepts live patrol data — every enemy position in The Works becomes visible on your minimap for the duration of the assault.' },
-          { id: 'plasma_valve_a', x: 4, y: 18, once: true, label: 'Pressure Valve Alpha', description: 'Main coolant line junction. The pressure gauge reads critical. One override and the flow stabilizes.', triggersMinigame: 'valve_override', grantsFlag: 'valve_a_closed' },
-          { id: 'plasma_valve_b', x: 14, y: 20, once: true, label: 'Pressure Valve Beta', description: 'Secondary coolant junction. Steam vents from the seal around the handle.', triggersMinigame: 'valve_override', grantsFlag: 'valve_b_closed' },
-          { id: 'plasma_valve_c', x: 8, y: 14, once: true, label: 'Pressure Valve Gamma', description: 'Tertiary coolant junction. Closing this one stabilizes the entire pressure network.', triggersMinigame: 'valve_override', grantsFlag: 'valve_c_closed' },
+          { id: 'plasma_valve_a', x: 4, y: 18, once: true, iconKind: 'valve', label: 'Pressure Valve Alpha', description: 'Main coolant line junction. The pressure gauge reads critical. One override and the flow stabilizes.', triggersMinigame: 'valve_override', grantsFlag: 'valve_a_closed' },
+          { id: 'plasma_valve_b', x: 14, y: 20, once: true, iconKind: 'valve', label: 'Pressure Valve Beta', description: 'Secondary coolant junction. Steam vents from the seal around the handle.', triggersMinigame: 'valve_override', grantsFlag: 'valve_b_closed' },
+          { id: 'plasma_valve_c', x: 8, y: 14, once: true, iconKind: 'valve', label: 'Pressure Valve Gamma', description: 'Tertiary coolant junction. Closing this one stabilizes the entire pressure network.', triggersMinigame: 'valve_override', grantsFlag: 'valve_c_closed' },
           { id: 'holonet_official_terminal', x: 30, y: 20, once: false, label: 'HNN Official Feed', description: '[HNN Priority Core Broadcast] "The Senate Committee on Inner-Rim Trade commended the CSF for maintaining unprecedented safety standards across the Mid-Levels. Reports of industrial smuggling near Level 088 have been dismissed as isolated logistical delays." The broadcast loops. The terminal is covered in soot.' },
-          { id: 'airtaxi_the_works', x: 34, y: 12, once: false, label: 'AirTaxi Terminal', description: 'A terminal barely functioning under the heat. Miracle it still works.' },
+          { id: 'airtaxi_the_works', x: 34, y: 12, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'A terminal barely functioning under the heat. Miracle it still works.' },
         ],
         npcs: [
           { id: 'vex', x: 22, y: 7, kind: 'crime_boss', label: 'Vex',
@@ -1420,7 +1420,7 @@ const PLANETS = {
         width: 42, height: 30, spawnPos: { x: 2, y: 15 }, textureId: 'coruscant',
         accent: '#4A9FFF', accentGlow: 'rgba(74,159,255,0.2)', accentDim: '#1A4A80',
         floorColor: '#181C28', floorAlt: '#1E2430', wallDark: '#0A0C14', wallLight: '#141820',
-        bg: 'radial-gradient(circle at 50% 30%, #10182A 0%, #080C14 70%)', ambient: 'traffic',
+        bg: 'radial-gradient(circle at 50% 30%, #10182A 0%, #080C14 70%)', ambient: 'traffic', floorPattern: 'polished',
         decor: ['archive', 'pillar', 'scan_arch'],
         doors: [],
         worldObjects: [
@@ -1431,7 +1431,7 @@ const PLANETS = {
           { id: 'module_b_terminal', x: 36, y: 16, once: true, label: 'Training Module B: Forensic Slicing', description: 'A reconstructed simulation of Docking Bay 14 — manifest kiosks, scorched terminals, altered shipping logs. Identify the code-trail left by the strike team. CSF Chain of Custody Protocol codex unlocked.', grantsItem: 'forensic_slicing_suite', grantsCodex: 'codex-csf-chain-of-custody', grantsFlag: 'module_b_complete' },
           { id: 'holding_block_b', x: 6, y: 24, once: true, label: 'Training Module C: High-Stress Interrogation', description: 'A captured Black Sun informant in Holding Block B. You have thirty minutes. No weapons discharges. No civil rights violations on record.' },
           { id: 'senate_honor_ceremony', x: 20, y: 14, once: true, label: 'Senate Honor Ceremony Terminal', description: 'The Senate Honor Cross is awarded in a formal ceremony. Officer Vane promotes you to Special Lead Investigator of the CSF Auxiliary Division.' },
-          { id: 'airtaxi_csf_academy', x: 38, y: 22, once: false, label: 'AirTaxi Terminal', description: 'Republic transit terminal. Authorized personnel only. Connects to the Coruscant AirTaxi Network.' },
+          { id: 'airtaxi_csf_academy', x: 38, y: 22, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Republic transit terminal. Authorized personnel only. Connects to the Coruscant AirTaxi Network.' },
         ],
         npcs: [
           { id: 'vane_academy', x: 6, y: 6, kind: 'republic_guard', label: 'Officer Vane',
@@ -1497,13 +1497,13 @@ const PLANETS = {
         width: 38, height: 26, spawnPos: { x: 2, y: 13 }, textureId: 'coruscant',
         accent: '#FF0055', accentGlow: 'rgba(255,0,85,0.22)', accentDim: '#660022',
         floorColor: '#1A0C14', floorAlt: '#22101C', wallDark: '#0C0608', wallLight: '#180C10',
-        bg: 'radial-gradient(circle at 50% 40%, #1A080E 0%, #080406 70%)', ambient: 'neon_haze',
+        bg: 'radial-gradient(circle at 50% 40%, #1A080E 0%, #080406 70%)', ambient: 'neon_haze', floorPattern: 'rough',
         decor: ['neon_sign', 'brazier', 'pillar', 'pipe', 'cargo_crate'],
         doors: [],
         worldObjects: [
           { id: 'marlo_hideout_board', x: 4, y: 10, once: false, label: 'Ops Planning Board', description: 'A holographic layout of three Coruscant levels. Marlo\'s territory in red. Rook\'s in blue. Significant overlap. Someone has been drawing lines.' },
           { id: 'rook_comms_terminal', x: 28, y: 16, once: true, label: "Rook's Comm Array", description: 'The speeder nav system is wired into this terminal. One code cylinder could redirect his entire route.' },
-          { id: 'airtaxi_lower_sky_market', x: 20, y: 24, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Exit from lower promenade.' },
+          { id: 'airtaxi_lower_sky_market', x: 20, y: 24, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Exit from lower promenade.' },
         ],
         npcs: [
           { id: 'marlo_1100', x: 8, y: 8, kind: 'broker', label: '"Slick" Marlo',
@@ -1541,10 +1541,10 @@ const PLANETS = {
         width: 44, height: 32, spawnPos: { x: 2, y: 16 }, textureId: 'coruscant',
         accent: '#4A9FFF', accentGlow: 'rgba(74,159,255,0.20)', accentDim: '#1A4A80',
         floorColor: '#181C28', floorAlt: '#1E2430', wallDark: '#0A0C14', wallLight: '#141820',
-        bg: 'radial-gradient(circle at 50% 30%, #10182A 0%, #080C14 70%)', ambient: 'traffic',
+        bg: 'radial-gradient(circle at 50% 30%, #10182A 0%, #080C14 70%)', ambient: 'traffic', floorPattern: 'marble',
         decor: ['pillar', 'archive', 'scan_arch'],
         doors: [], worldObjects: [
-          { id: 'airtaxi_senate_district', x: 40, y: 28, once: false, label: 'Senate Express Terminal', description: 'A high-security transit terminal. Coruscant AirTaxi Network — Senate District access point.' },
+          { id: 'airtaxi_senate_district', x: 40, y: 28, once: false, iconKind: 'beacon', label: 'Senate Express Terminal', description: 'A high-security transit terminal. Coruscant AirTaxi Network — Senate District access point.' },
         ], npcs: [], collectibles: [],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
@@ -2108,6 +2108,16 @@ function AmbientLayer({ kind, accent }) {
       </div>
     );
   }
+  if (kind === 'sky_high') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:1 }}>
+        <div style={{ position:'absolute',top:'-20%',left:'10%',width:'4px',height:'140%',background:'linear-gradient(180deg,transparent,rgba(255,240,180,0.07),transparent)',transform:'rotate(15deg)',animation:'scanDown 8s linear infinite' }} />
+        <div style={{ position:'absolute',top:'-20%',left:'55%',width:'3px',height:'140%',background:'linear-gradient(180deg,transparent,rgba(255,240,180,0.05),transparent)',transform:'rotate(10deg)',animation:'scanDown 11s linear infinite 3s' }} />
+        <div style={{ position:'absolute',top:'20%',left:'-10%',width:'140%',height:'6px',background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)',animation:'drift 14s ease-in-out infinite' }} />
+        <div style={{ position:'absolute',top:'60%',left:'-10%',width:'140%',height:'4px',background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.03),transparent)',animation:'drift 18s ease-in-out infinite 5s' }} />
+      </div>
+    );
+  }
   return (
     <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',opacity:0.5 }}>
       {particles.map((_,i) => {
@@ -2537,6 +2547,239 @@ function CodexOverlay({ codex, setCodex, onClose }) {
       </div>
     </div>
   );
+}
+
+function getWorldObjIconKind(id) {
+  if (!id) return 'terminal';
+  const s = id.toLowerCase();
+  if (s.includes('terminal') || s.includes('comms') || s.includes('datacore') || s.includes('datapad')) return 'terminal';
+  if (s.includes('cache') || s.includes('crate') || s.includes('cargo') || s.includes('storage')) return 'crate';
+  if (s.includes('booth') || s.includes('lounge')) return 'booth';
+  if (s.includes('evidence') || s.includes('crime') || s.includes('blast')) return 'evidence';
+  if (s.includes('vista') || s.includes('overlook') || s.includes('window')) return 'vista';
+  if (s.includes('valve') || s.includes('coupling') || s.includes('smelter')) return 'valve';
+  if (s.includes('panel') || s.includes('console') || s.includes('module')) return 'panel';
+  if (s.includes('comlink') || s.includes('radio') || s.includes('relay')) return 'comlink';
+  if (s.includes('locker') || s.includes('safe')) return 'safe';
+  if (s.includes('board') || s.includes('chart') || s.includes('wanted') || s.includes('log')) return 'board';
+  if (s.includes('holo') || s.includes('kiosk') || s.includes('billboard')) return 'hologram';
+  if (s.includes('airtaxi') || s.includes('beacon')) return 'beacon';
+  if (s.includes('stall') || s.includes('vendor') || s.includes('exchange')) return 'stall';
+  if (s.includes('barrel') || s.includes('drum')) return 'barrel';
+  if (s.includes('lamp') || s.includes('lantern')) return 'lamp';
+  return 'terminal';
+}
+
+function WorldObjectSprite({ kind, accent }) {
+  const s = { pointerEvents: 'none' };
+  const dim = '#00000060';
+  if (kind === 'terminal') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="4" y="4" width="20" height="14" rx="1.5" fill={dim} />
+      <rect x="4" y="4" width="20" height="14" rx="1.5" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.7" />
+      <rect x="6" y="6" width="16" height="9" fill={accent} opacity="0.18" />
+      <line x1="6" y1="8.5" x2="22" y2="8.5" stroke={accent} strokeWidth="0.5" opacity="0.5" />
+      <line x1="6" y1="11" x2="22" y2="11" stroke={accent} strokeWidth="0.5" opacity="0.35" />
+      <line x1="6" y1="13.5" x2="16" y2="13.5" stroke={accent} strokeWidth="0.5" opacity="0.25" />
+      <rect x="10" y="18" width="8" height="1.5" rx="0.5" fill={accent} opacity="0.5" />
+      <rect x="6" y="20" width="16" height="3" rx="0.8" fill={dim} />
+      <rect x="6" y="20" width="16" height="3" rx="0.8" fill="none" stroke={accent} strokeWidth="0.6" opacity="0.4" />
+      <circle cx="22" cy="5.5" r="0.8" fill={accent} opacity="0.8" style={{ animation: 'lens-flicker 2.4s ease-in-out infinite' }} />
+    </svg>
+  );
+  if (kind === 'crate') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="4" y="11" width="20" height="14" rx="1" fill={dim} />
+      <rect x="4" y="11" width="20" height="14" rx="1" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.6" />
+      <line x1="14" y1="11" x2="14" y2="25" stroke={accent} strokeWidth="0.6" opacity="0.35" />
+      <line x1="4" y1="18" x2="24" y2="18" stroke={accent} strokeWidth="0.6" opacity="0.35" />
+      <polygon points="4,11 14,5 24,11" fill={dim} />
+      <polygon points="4,11 14,5 24,11" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.5" />
+      <line x1="4" y1="11" x2="14" y2="5" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+      <line x1="24" y1="11" x2="14" y2="5" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+      <circle cx="8" cy="11" r="0.8" fill={accent} opacity="0.6" />
+      <circle cx="20" cy="11" r="0.8" fill={accent} opacity="0.6" />
+      <circle cx="4" cy="25" r="0.7" fill={accent} opacity="0.5" />
+      <circle cx="24" cy="25" r="0.7" fill={accent} opacity="0.5" />
+    </svg>
+  );
+  if (kind === 'booth') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <path d="M4 26 L4 14 Q4 8 14 8 Q24 8 24 14 L24 26 Z" fill={dim} />
+      <path d="M4 26 L4 14 Q4 8 14 8 Q24 8 14 8" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.5" />
+      <rect x="5" y="14" width="18" height="2" rx="0.5" fill={accent} opacity="0.4" />
+      <rect x="7" y="17" width="14" height="8" rx="0.5" fill={accent} opacity="0.1" />
+      <rect x="6" y="25" width="16" height="1.5" rx="0.5" fill={accent} opacity="0.5" />
+      <circle cx="10" cy="19" r="1.2" fill={accent} opacity="0.4" />
+      <circle cx="14" cy="19" r="1.2" fill={accent} opacity="0.4" />
+      <circle cx="18" cy="19" r="1.2" fill={accent} opacity="0.4" />
+    </svg>
+  );
+  if (kind === 'evidence') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <circle cx="14" cy="14" r="6" fill="#FF6622" opacity="0.18" />
+      <path d="M14 5 L15.2 11 L21 8 L17 13 L23 14 L17 15 L21 20 L15.2 17 L14 23 L12.8 17 L7 20 L11 15 L5 14 L11 13 L7 8 L12.8 11 Z" fill="#FF6622" opacity="0.5" />
+      <circle cx="14" cy="14" r="2" fill="#FF8844" opacity="0.7" />
+      <circle cx="8" cy="8" r="0.7" fill="#FF6622" opacity="0.6" />
+      <circle cx="20" cy="9" r="0.5" fill="#FF6622" opacity="0.5" />
+      <circle cx="19" cy="20" r="0.6" fill="#FF6622" opacity="0.5" />
+      <rect x="4" y="24" width="20" height="2" rx="0.5" fill="#E8A020" opacity="0.5" />
+    </svg>
+  );
+  if (kind === 'vista') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="2" width="24" height="24" rx="1.5" fill={dim} />
+      <path d="M2 20 Q8 12 14 16 Q20 20 26 10 L26 26 L2 26 Z" fill={accent} opacity="0.12" />
+      <path d="M2 20 Q8 12 14 16 Q20 20 26 10" stroke={accent} strokeWidth="0.8" fill="none" opacity="0.5" />
+      <line x1="9" y1="2" x2="6" y2="10" stroke={accent} strokeWidth="0.7" opacity="0.35" />
+      <line x1="19" y1="2" x2="22" y2="9" stroke={accent} strokeWidth="0.7" opacity="0.3" />
+      <ellipse cx="14" cy="8" rx="3" ry="1.5" fill={accent} opacity="0.25" />
+    </svg>
+  );
+  if (kind === 'valve') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <circle cx="14" cy="14" r="9" fill={dim} />
+      <circle cx="14" cy="14" r="9" fill="none" stroke={accent} strokeWidth="1" opacity="0.6" />
+      <circle cx="14" cy="14" r="5" fill="none" stroke={accent} strokeWidth="0.7" opacity="0.4" />
+      <circle cx="14" cy="14" r="2" fill={accent} opacity="0.5" />
+      <line x1="14" y1="5" x2="14" y2="12" stroke={accent} strokeWidth="1.5" opacity="0.7" />
+      <line x1="23" y1="14" x2="16" y2="14" stroke={accent} strokeWidth="1.5" opacity="0.7" />
+      <line x1="14" y1="23" x2="14" y2="16" stroke={accent} strokeWidth="1.5" opacity="0.7" />
+      <line x1="5" y1="14" x2="12" y2="14" stroke={accent} strokeWidth="1.5" opacity="0.7" />
+      <path d="M14 10 L16 12" stroke="#FF6622" strokeWidth="1" opacity="0.8" />
+    </svg>
+  );
+  if (kind === 'panel') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="3" y="4" width="22" height="20" rx="1.5" fill={dim} />
+      <rect x="3" y="4" width="22" height="20" rx="1.5" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.6" />
+      <rect x="3" y="4" width="22" height="4" rx="1" fill="#FF442260" />
+      <rect x="3" y="4" width="22" height="4" fill="none" stroke="#FF4422" strokeWidth="0.5" opacity="0.5" />
+      {[6,10,14,18,22].map((x,i) => <circle key={i} cx={x} cy="10.5" r="1.2" fill={i%3===0?accent:i%3===1?'#FF4422':'#6FD9A0'} opacity="0.7" />)}
+      {[6,10,14,18,22].map((x,i) => <rect key={i} x={x-1.5} y="14" width="3" height="5" rx="0.8" fill={accent} opacity={i%2===0?0.5:0.2} />)}
+    </svg>
+  );
+  if (kind === 'comlink') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <ellipse cx="14" cy="17" rx="8" ry="6" fill={dim} />
+      <ellipse cx="14" cy="17" rx="8" ry="6" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.6" />
+      <line x1="14" y1="11" x2="14" y2="4" stroke={accent} strokeWidth="1" opacity="0.7" />
+      <circle cx="14" cy="3.5" r="0.8" fill={accent} opacity="0.8" />
+      <path d="M9 10 Q11 8 14 8 Q17 8 19 10" stroke={accent} strokeWidth="0.8" fill="none" opacity="0.5" style={{ animation: 'door-pulse 2s ease-in-out infinite' }} />
+      <path d="M7 12 Q10 9 14 9 Q18 9 21 12" stroke={accent} strokeWidth="0.6" fill="none" opacity="0.3" style={{ animation: 'door-pulse 2s ease-in-out 0.5s infinite' }} />
+      <circle cx="14" cy="17" r="2.5" fill={accent} opacity="0.25" />
+      <circle cx="14" cy="17" r="1" fill={accent} opacity="0.6" />
+    </svg>
+  );
+  if (kind === 'safe') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="3" y="4" width="22" height="20" rx="1.5" fill={dim} />
+      <rect x="3" y="4" width="22" height="20" rx="1.5" fill="none" stroke={accent} strokeWidth="1" opacity="0.7" />
+      <circle cx="14" cy="14" r="5" fill="none" stroke={accent} strokeWidth="1.2" opacity="0.6" />
+      <circle cx="14" cy="14" r="2.5" fill={accent} opacity="0.3" />
+      <line x1="14" y1="9" x2="14" y2="11" stroke={accent} strokeWidth="1.5" opacity="0.7" />
+      <line x1="19" y1="14" x2="17" y2="14" stroke={accent} strokeWidth="1.5" opacity="0.7" />
+      <circle cx="20" cy="8" r="1.5" fill={accent} opacity="0.5" />
+      <rect x="19" y="8" width="3" height="5" rx="0.5" fill={accent} opacity="0.3" />
+      <circle cx="5" cy="5.5" r="0.8" fill={accent} opacity="0.5" />
+      <circle cx="23" cy="5.5" r="0.8" fill={accent} opacity="0.5" />
+      <circle cx="5" cy="22.5" r="0.8" fill={accent} opacity="0.5" />
+      <circle cx="23" cy="22.5" r="0.8" fill={accent} opacity="0.5" />
+    </svg>
+  );
+  if (kind === 'board') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="3" y="3" width="22" height="22" rx="1" fill={dim} />
+      <rect x="3" y="3" width="22" height="22" rx="1" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.5" />
+      <rect x="5" y="5" width="10" height="7" rx="0.5" fill={accent} opacity="0.3" />
+      <rect x="16" y="5" width="7" height="4" rx="0.5" fill={accent} opacity="0.15" />
+      <rect x="16" y="10" width="7" height="4" rx="0.5" fill={accent} opacity="0.2" />
+      <rect x="5" y="13" width="7" height="4" rx="0.5" fill={accent} opacity="0.2" />
+      <rect x="5" y="18" width="18" height="4" rx="0.5" fill="#FF882240" />
+      <line x1="7" y1="19.5" x2="21" y2="19.5" stroke="#FF8822" strokeWidth="0.6" opacity="0.6" />
+      <circle cx="10" cy="6" r="0.8" fill="#FF4422" opacity="0.7" />
+      <circle cx="21" cy="7" r="0.7" fill={accent} opacity="0.7" />
+    </svg>
+  );
+  if (kind === 'hologram') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="9" y="22" width="10" height="3" rx="0.8" fill={dim} />
+      <rect x="9" y="22" width="10" height="3" rx="0.8" fill="none" stroke={accent} strokeWidth="0.7" opacity="0.5" />
+      <line x1="14" y1="22" x2="14" y2="18" stroke={accent} strokeWidth="0.8" opacity="0.5" />
+      <polygon points="14,5 20,15 14,19 8,15" fill={accent} opacity="0.2" style={{ animation: 'door-pulse 2.2s ease-in-out infinite' }} />
+      <polygon points="14,5 20,15 14,19 8,15" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.6" style={{ animation: 'door-pulse 2.2s ease-in-out infinite' }} />
+      <circle cx="14" cy="12" r="1.5" fill={accent} opacity="0.5" style={{ animation: 'lens-flicker 1.8s ease-in-out infinite' }} />
+    </svg>
+  );
+  if (kind === 'beacon') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="11" y="10" width="6" height="16" rx="0.8" fill={dim} />
+      <rect x="11" y="10" width="6" height="16" rx="0.8" fill="none" stroke={accent} strokeWidth="0.7" opacity="0.5" />
+      <rect x="9" y="24" width="10" height="3" rx="0.5" fill={dim} />
+      <circle cx="14" cy="7" r="3.5" fill={accent} opacity="0.25" style={{ animation: 'door-pulse 1.4s ease-in-out infinite' }} />
+      <circle cx="14" cy="7" r="2" fill={accent} opacity="0.7" style={{ animation: 'door-pulse 1.4s ease-in-out infinite' }} />
+      <path d="M8 10 Q10 8 14 7" stroke={accent} strokeWidth="0.6" fill="none" opacity="0.4" />
+      <path d="M20 10 Q18 8 14 7" stroke={accent} strokeWidth="0.6" fill="none" opacity="0.4" />
+      <path d="M5 13 Q8 9 14 7" stroke={accent} strokeWidth="0.5" fill="none" opacity="0.25" />
+    </svg>
+  );
+  if (kind === 'stall') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <path d="M2 12 L14 6 L26 12 L26 13 L2 13 Z" fill={dim} />
+      <path d="M2 12 L14 6 L26 12" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.6" />
+      <rect x="2" y="13" width="24" height="2" fill={accent} opacity="0.3" />
+      <rect x="4" y="15" width="20" height="10" rx="0.5" fill={dim} />
+      <rect x="6" y="17" width="4" height="4" rx="0.5" fill={accent} opacity="0.25" />
+      <rect x="12" y="16" width="4" height="3" rx="0.5" fill={accent} opacity="0.2" />
+      <rect x="18" y="17" width="4" height="4" rx="0.5" fill={accent} opacity="0.3" />
+      <line x1="14" y1="4" x2="14" y2="13" stroke={accent} strokeWidth="0.8" opacity="0.4" />
+      <line x1="8" y1="5.5" x2="8" y2="13" stroke={accent} strokeWidth="0.5" opacity="0.25" />
+      <line x1="20" y1="5.5" x2="20" y2="13" stroke={accent} strokeWidth="0.5" opacity="0.25" />
+    </svg>
+  );
+  if (kind === 'barrel') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <ellipse cx="14" cy="8" rx="8" ry="3" fill={dim} />
+      <ellipse cx="14" cy="8" rx="8" ry="3" fill="none" stroke={accent} strokeWidth="0.7" opacity="0.5" />
+      <rect x="6" y="8" width="16" height="15" fill={dim} />
+      <rect x="6" y="8" width="16" height="15" fill="none" stroke={accent} strokeWidth="0.7" opacity="0.5" />
+      <ellipse cx="14" cy="23" rx="8" ry="3" fill={dim} />
+      <ellipse cx="14" cy="23" rx="8" ry="3" fill="none" stroke={accent} strokeWidth="0.7" opacity="0.5" />
+      <line x1="6" y1="12" x2="22" y2="12" stroke={accent} strokeWidth="0.8" opacity="0.4" />
+      <line x1="6" y1="18" x2="22" y2="18" stroke={accent} strokeWidth="0.8" opacity="0.4" />
+      <circle cx="10" cy="10" r="0.8" fill="#FF4422" opacity="0.6" />
+      <circle cx="18" cy="10" r="0.8" fill="#FF4422" opacity="0.6" />
+    </svg>
+  );
+  if (kind === 'lamp') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <line x1="14" y1="6" x2="14" y2="20" stroke={accent} strokeWidth="1" opacity="0.5" />
+      <line x1="14" y1="6" x2="20" y2="9" stroke={accent} strokeWidth="1" opacity="0.5" />
+      <circle cx="20" cy="9" r="2.5" fill={accent} opacity="0.7" style={{ animation: 'lens-flicker 3s ease-in-out infinite' }} />
+      <ellipse cx="20" cy="13" rx="5" ry="3" fill={accent} opacity="0.12" />
+      <ellipse cx="20" cy="16" rx="7" ry="4" fill={accent} opacity="0.07" />
+      <rect x="11" y="20" width="6" height="5" rx="0.5" fill={dim} />
+    </svg>
+  );
+  return (
+    <div style={{ position:'absolute',inset:3,border:`1px solid ${accent}55`,borderRadius:2,animation:'world-obj-pulse 2.5s ease-in-out infinite',pointerEvents:'none' }} />
+  );
+}
+
+function FloorTilePattern({ kind }) {
+  if (kind === 'marble') return (
+    <div style={{ position:'absolute',inset:0,background:'linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.06) 50%, transparent 70%)',pointerEvents:'none',zIndex:1 }} />
+  );
+  if (kind === 'grate') return (
+    <div style={{ position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(0deg,rgba(0,0,0,0.18) 0px,rgba(0,0,0,0.18) 1px,transparent 1px,transparent 8px),repeating-linear-gradient(90deg,rgba(0,0,0,0.18) 0px,rgba(0,0,0,0.18) 1px,transparent 1px,transparent 8px)',pointerEvents:'none',zIndex:1 }} />
+  );
+  if (kind === 'polished') return (
+    <div style={{ position:'absolute',inset:0,background:'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 60%)',pointerEvents:'none',zIndex:1 }} />
+  );
+  if (kind === 'rough') return (
+    <div style={{ position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(45deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 2px, transparent 2px, transparent 6px)',pointerEvents:'none',zIndex:1 }} />
+  );
+  return null;
 }
 
 function VendorOverlay({ npc, inventory, credits, alignment, onBuy, onSell, onClose }) {
@@ -3392,6 +3635,7 @@ function StarWarsRPG() {
                   return (
                     <div key={tx} style={{ width:TILE,height:TILE,position:'relative',background:bg,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:isPlayer?`inset 0 0 0 1.5px ${zone.accent}`:'none',flexShrink:0 }}>
                       {tile.type === 'wall' && wallDecorFor(zone, tx, ty) && <DecorIcon kind={wallDecorFor(zone, tx, ty)} accent={zone.accent} />}
+                      {tile.type === 'floor' && zone.floorPattern && <FloorTilePattern kind={zone.floorPattern} />}
                       {tile.type === 'floor' && !isPlayer && !npcHere && !collectibleHere && decorFor(zone, tx, ty, map) && <DecorIcon kind={decorFor(zone, tx, ty, map)} accent={zone.accent} />}
                       {tile.type === 'ship_hull' && (
                         <svg viewBox="0 0 32 32" width={TILE} height={TILE} style={{ position:'absolute',inset:0,pointerEvents:'none' }}>
@@ -3423,7 +3667,9 @@ function StarWarsRPG() {
                         </svg>
                       )}
                       {worldObjHere && !isPlayer && !npcHere && !collectibleHere && (
-                        <div style={{ position:'absolute',inset:3,border:'1px solid #4ACDFF55',borderRadius:2,animation:'world-obj-pulse 2.5s ease-in-out infinite',pointerEvents:'none' }} />
+                        <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',pointerEvents:'none',zIndex:2 }}>
+                          <WorldObjectSprite kind={worldObjHere.iconKind ?? getWorldObjIconKind(worldObjHere.id)} accent={zone.accent} />
+                        </div>
                       )}
                       {npcHere && !isPlayer && (
                         <div style={{ position:'absolute',bottom:0,left:'50%',zIndex:5,animation:'npc-sway 4.2s ease-in-out infinite',filter:npcDone?'grayscale(0.6) brightness(0.7)':'none' }}>
