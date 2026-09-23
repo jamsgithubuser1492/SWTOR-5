@@ -1,6 +1,6 @@
 # Star Wars RPG — Agent Changelog
 
-**File:** `star-wars-rpg.jsx` · **Current size:** ~2600 lines  
+**File:** `star-wars-rpg.jsx` · **Current size:** ~4500 lines  
 **Live:** https://jamsgithubuser1492.github.io/SWTOR-5/
 
 ---
@@ -79,6 +79,46 @@ World objects whose `id.startsWith('airtaxi_')` trigger the `SpeederOverlay` whe
 ---
 
 ## Session History (newest first)
+
+### Session 11 — Custom World Object Sprite Registry
+**Commit:** `cf08856`
+
+Added `WORLD_OBJECT_SPRITES` registry constant (before `WorldObjectSprite`, line 2574). The registry maps world object IDs to `(accent) => <svg>` render functions. 55 hand-crafted 28x28 SVG sprites across all zones: spaceport, jons_apt_int, sky_market, freight_hub, fueling_depot, drainage_pipes, the_works, csf_academy, lower_sky_market, senate_district. Each sprite visually encodes the specific narrative detail of that world object rather than a generic category icon (blast starburst at bay14_crime_scene; two grey-coated silhouettes in lounge_private_booth; pressure needle at CRITICAL on plasma_valve_a; etc.).
+
+`WorldObjectSprite` signature updated to `{ kind, accent, id }`. Registry check runs first: `if (id && WORLD_OBJECT_SPRITES[id]) return WORLD_OBJECT_SPRITES[id](accent);`. Existing kind-based logic is the unchanged fallback for any unlisted object.
+
+Tile renderer updated to pass `id={worldObjHere.id}`.
+
+**Sprite design method (reusable procedure for future world-building passes):**
+1. Read the world object's `description` and `autoCodex.body`. Identify the two or three most visually distinctive story-specific elements (the PROVISIONAL stamp, the two grey-coated figures, the pressure gauge at CRITICAL).
+2. The SVG is 28x28. Use `opacity` layers to build depth: a dark base fill, a faint fill accent, then strokes and details on top.
+3. Story-specific elements get hardcoded fixed colors (see color conventions below). Zone-integrated elements (glows, screen lights, signal arcs) use `a`.
+4. Use the existing CSS animation names: `lens-flicker` for pulsing dots and status lights; `mist-drift` for rising steam or haze wisps. These are already defined in the game's `<style>` block.
+5. Keep shapes simple and legible at 26px rendered size. Silhouettes, outlines, and diagonal stamps read better than fine detail.
+
+**Color conventions established for this registry:**
+- `a` (accent) = zone ambient color; glows, highlights, interactive elements
+- `#E8A030` = amber; warnings, discrepancies, provisional/flagged status
+- `#FF4422` = danger red; CRITICAL readings, CLOSED/SUSPENDED stamps, blast marks
+- `#40C840` = syndicate green; iron chain markings and Syndicate-owned objects
+- `#9966FF` = Senate purple; all Republic Senate objects and seals
+- `#4A9FFF` = CSF blue; Republic/CSF official objects
+- `#FFB800` = warning tape amber; crime scene and hazard tape
+
+---
+
+### Session 10 — Bay 14 Soft-Lock Fix and Dialogue Placeholders
+**Commit:** `37d0aa5`
+
+Fixed three gameplay blockers:
+
+1. `stolen_manifest` was never grantable. The item was defined in `ITEMS` but no world object or NPC dialogue granted it. Marlo and Vane's `phase_warmed` / `phase_returned` both gate on `{ item: 'stolen_manifest' }`, creating a permanent soft-lock after `marlo_sky_intro` or `vane_sky_intro`. Fix: added `grantsItem: 'stolen_manifest'` to `bay14_crime_scene` in freight_hub. The world object handler checks `grantsItem` independently from `autoCodex` so both run.
+
+2. Objective wording created a navigation dead-end. "Return to Sky-Market District with evidence from Bay 14" showed even when the player was already at sky_market, and no intermediate objective existed for `sky_market_direction_given`. Fix: updated objective after `marlo_sky_intro || vane_sky_intro` to say "Present the Scylla manifest to your Sky-Market contact. If you do not have it, return to Docking Bay 14." Added a new intermediate objective for `sky_market_direction_given`.
+
+3. Two dialogue result strings were placeholder text (`[Race mini-game placeholder]` and `[Combat placeholder]`). Both replaced with full narrative prose. Kaelen's race result now also grants `freight_hub_investigated`, making Kaelen a legitimate alternate investigation path.
+
+---
 
 ### Session 9 — Environmental Visual Grammar
 **Commit:** `527b999`

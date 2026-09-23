@@ -168,6 +168,10 @@ When `senate_line_timer_active` is set, display a countdown in the HUD ("Senate 
 
 ## Completed Since Last ROADMAP Update
 
+**Custom World Object Sprite Registry** `[COMPLETE — commit cf08856]`: 55 bespoke SVGs across all zones; `WORLD_OBJECT_SPRITES` registry; `WorldObjectSprite` id prop and registry lookup; tile renderer id passthrough. See Session 11 in `CHANGELOG.md`.
+
+**Bay 14 Soft-Lock Fix and Dialogue Pass** `[COMPLETE — commit 37d0aa5]`: `stolen_manifest` now granted at `bay14_crime_scene`; objective wording fixed; Kaelen race and Vex combat dialogue filled. See Session 10 in `CHANGELOG.md`.
+
 **Environmental Visual Grammar** `[COMPLETE — commit 527b999]`: `ZONE_ARCHETYPE_PROFILES` constant added; four new `DecorIcon` kinds; three new `AmbientLayer` modes; door threshold light bar; `decorFor` updated with `map` parameter for hazard stripes near lava/water; all 9 zones updated to archetype profiles. See Session 9 in `CHANGELOG.md`.
 
 **Jon Apartment Dialogue Arc** `[COMPLETE — commit 0a94526]`: `isNpcVisible()` helper; Jon removed from spaceport after meeting; 7-phase Jon apartment dialogue tree; four story milestone objectives; `codex-jon-backstory`; two ambient world objects in `jons_apt_int`. See Session 8 in `CHANGELOG.md`.

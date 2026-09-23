@@ -24,11 +24,32 @@ These are the four hooks where new capabilities are added. Read the surrounding 
 
 **`DecorIcon({ kind, accent })`** — inline SVG switch statement for floor decor. Add new `kind` cases before the closing `default: return null`. Registered kinds: `cargo_crate`, `pipe`, `neon_sign`, `pillar`, `brazier`, `archive`, `girder`, `slag`, `root`, `moss`, `rubble`, `cable_bundle`, `scan_arch`, `warning_beacon`, `hazard_stripe`.
 
-**`AmbientLayer({ zone })`** — particle background layer. Add new `ambient` mode branches (if/else blocks that populate a `particles` array) alongside the existing `traffic`, `embers`, `mist`, `neon_haze`, `datastream`, and `steam` branches. New CSS keyframes go inside the `<style>` block already present in this component.
+**`AmbientLayer({ zone })`** — particle background layer. Add new `ambient` mode branches (if/else blocks that populate a `particles` array) alongside the existing `traffic`, `embers`, `mist`, `neon_haze`, `datastream`, `steam`, and `sky_high` branches. New CSS keyframes go inside the `<style>` block already present in this component.
 
 **`NpcPortrait({ kind, ... })`** — SVG portrait registry. Add a new kind's SVG branch before the closing `return null`. A kind not registered here renders nothing and produces no error, making missing registrations a silent bug to test for.
 
 **`ZONE_ARCHETYPE_PROFILES`** — constant defined before `function StarWarsRPG()`. When the Cartographer creates a new zone, they copy visual properties from this constant. When you add a new archetype, add it here so the Cartographer can find it.
+
+**`WORLD_OBJECT_SPRITES` registry** — constant defined before `WorldObjectSprite()`. Maps world object IDs to `(accent) => <svg>` functions. When a new world object needs a custom sprite instead of a generic category icon, add one entry here keyed by the object's `id` field.
+
+SVG spec: `viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}`. Use `a` for zone-integrated glows and highlights; use fixed hardcoded colors for story-specific elements:
+- `#E8A030` = amber; warnings, discrepancies, provisional/flagged status
+- `#FF4422` = danger red; CRITICAL readings, CLOSED stamps, blast marks
+- `#40C840` = syndicate green; iron chain markings
+- `#9966FF` = Senate purple; Republic Senate objects and seals
+- `#4A9FFF` = CSF blue; Republic/CSF official objects
+- `#FFB800` = warning tape amber; crime scene and hazard tape
+
+CSS animation names available (already defined in `<style>` block): `lens-flicker` (pulsing dots and status lights), `mist-drift` (rising steam or haze wisps).
+
+`WorldObjectSprite` checks this registry first via `if (id && WORLD_OBJECT_SPRITES[id]) return WORLD_OBJECT_SPRITES[id](accent);`; the kind-based fallback handles any unlisted object unchanged. The tile renderer passes `id={worldObjHere.id}` to enable the lookup.
+
+**Sprite derivation procedure (how to go from narrative text to SVG):**
+1. Read the world object's `description` and `autoCodex.body` if present. Identify the two or three most visually distinctive story-specific elements.
+2. SVG is 28x28. Use `opacity` layers for depth: dark base fill, faint accent fill, then strokes and details on top.
+3. Story-specific elements get the fixed hardcoded colors above. Zone-integrated elements use `a`.
+4. Use `lens-flicker` for pulsing status lights and `mist-drift` for steam or haze.
+5. Keep shapes simple and legible at 26px rendered size. Silhouettes, outlines, and diagonal stamps read better than fine detail.
 
 ## Workflow
 
