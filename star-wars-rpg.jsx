@@ -804,7 +804,7 @@ const PLANETS = {
           },
           { id: 'madame_vex_sky', x: 10, y: 6, kind: 'cantina_owner', label: 'Madame Vex',
             repeatPrompt: 'Madame Vex shuffles a Sabacc deck without looking at her hands. The cards move like they are afraid of her.',
-            prompt: 'The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."',
+            prompt: `The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."`,
             choices: [
               { text: '"I am here for a Sabacc game."', morality: 0, loyalty: { underworld: 5 }, result: '"Everyone is here for a Sabacc game. Sit. The buy-in is two hundred credits and your reputation. Lose the first and I keep the second."', grants: { flags: ['vex_sabacc_offered'] } },
               { text: '"High-stakes. I want the real table."', morality: -5, loyalty: { underworld: 10 }, result: '"The real table has a different buy-in." She sets down the deck. "You are going to play a standard hand in the open, win convincingly, and not gloat when you do it. Then I will take you downstairs." She returns to her shuffle. "Assuming you can win convincingly."', grants: { flags: ['vex_high_table_offered'] } },
@@ -815,7 +815,7 @@ const PLANETS = {
                 id: 'phase_initial',
                 requiresAllFlags: [],
                 requiresNoneFlags: ['sabacc_won'],
-                prompt: 'The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."',
+                prompt: `The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."`,
                 choices: [
                   { text: '"I am here for a Sabacc game."', morality: 0, loyalty: { underworld: 5 }, result: '"Everyone is here for a Sabacc game. Sit. The buy-in is two hundred credits and your reputation. Lose the first and I keep the second."', grants: { flags: ['vex_sabacc_offered'] } },
                   { text: '"High-stakes. I want the real table."', morality: -5, loyalty: { underworld: 10 }, result: '"The real table has a different buy-in." She sets down the deck. "You are going to play a standard hand in the open, win convincingly, and not gloat when you do it. Then I will take you downstairs." She returns to her shuffle. "Assuming you can win convincingly."', grants: { flags: ['vex_high_table_offered'] } },
