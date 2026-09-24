@@ -638,6 +638,7 @@ const PLANETS = {
           { x: 0, y: 13, targetZone: 'sky_customs', targetPos: { x: 33, y: 13 }, label: 'Skyway Customs' },
           { x: 15, y: 25, targetZone: 'heat_sink_slums', targetPos: { x: 15, y: 1 }, label: 'Heat Sink Slums' },
           { x: 36, y: 0, targetZone: 'penthouse', targetPos: { x: 14, y: 17 }, label: 'Penthouse Elevator' },
+          { x: 5, y: 0, targetZone: 'senatorial_lounges', targetPos: { x: 16, y: 18 }, label: 'Senatorial Sky-Lounges' },
         ],
         worldObjects: [
           { id: 'jon_arrival_comlink', x: 5, y: 13, once: true, iconKind: 'comlink', label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
@@ -1293,6 +1294,7 @@ const PLANETS = {
         doors: [
           { x: 20, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 20, y: 1 }, label: 'Cooling Ducts' },
           { x: 21, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 21, y: 1 }, label: 'Cooling Ducts' },
+          { x: 34, y: 12, targetZone: 'undercity_outskirts', targetPos: { x: 1, y: 12 }, label: 'Undercity Outskirts' },
         ],
         worldObjects: [
           { id: 'syndicate_cargo_cache', x: 18, y: 10, once: true, iconKind: 'crate', label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with an iron chain. Phrik plating, combat chassis, and an empty Jedi archive canister.',
@@ -1817,6 +1819,7 @@ const PLANETS = {
         decor: ['rubble', 'pipe', 'warning_beacon', 'girder', 'slag'],
         doors: [
           { x: 1, y: 10, targetZone: 'slicer_alleyway', targetPos: { x: 32, y: 10 }, label: 'Slicer Alleyway' },
+          { x: 28, y: 10, targetZone: 'spice_refining_vaults', targetPos: { x: 1, y: 11 }, label: 'Spice Refinery' },
         ],
         worldObjects: [
           { id: 'vault_access_gate', x: 6, y: 3, once: false, iconKind: 'panel', label: 'CSF Access Gate',
@@ -1923,6 +1926,14 @@ const PLANETS = {
             description: "Tonight's card. Twelve bouts, four odds-on favourites, one main event listed only as MALAK vs. TBD. The space under TBD is blank. The odds on Malak are three to one in his favour. Someone has underlined them twice in ink." },
           { id: 'arena_observation_rail', x: 12, y: 7, once: false, label: 'Observation Rail', iconKind: 'pipe',
             description: 'Corroded permasteel railing along the upper deck. From here you can see the whole pit floor and everyone on it. Someone with good eyes could watch the exits from here and never be seen watching.' },
+          { id: 'malak_pit_entrance', x: 10, y: 13, once: true, label: 'Enter the Arena', iconKind: 'floor',
+            requiresFlag: 'malak_pit_challenged',
+            requiresNoneFlags: ['malak_turned', 'malak_dead'],
+            description: 'The pit floor. Sand hard underfoot from decades of use. Malak is waiting at the center. This settles it.',
+            triggersMinigame: 'pit_fight',
+            minigameConfig: { opponentName: 'Malak', opponentHp: 5, accent: '#C03030' },
+            grantsFlag: 'malak_turned',
+            grantsCodex: 'codex-malak' },
           { id: 'shadow_town_codex_terminal', x: 5, y: 3, once: true, iconKind: 'terminal', label: 'Sub-Level Registry Post',
             description: 'A cracked terminal running an automated registry loop for sub-level business licences. Level 1312 has forty-three registered businesses. Thirty-seven of them list the same registered agent: IRON SYNDICATE HOLDINGS LLC.',
             grantsCodex: 'codex-shadow-town' },
@@ -1965,9 +1976,9 @@ const PLANETS = {
                 id: 'phase_malak_pit_challenged',
                 requiresAllFlags: ['malak_pit_challenged'],
                 requiresNoneFlags: ['malak_turned', 'malak_dead'],
-                prompt: 'Malak stands at the edge of the pit, arms loose at his sides. "Your move. Pit rules: no blasters, no grenades. Hands and blades only. First one down stays down." The betting board updated while you walked over. Someone changed the odds.',
+                prompt: 'Malak stands at the edge of the pit, arms loose at his sides. "Your move. Pit rules: no blasters, no grenades. Hands and blades only. First one down stays down." He steps back and waits. The arena sand is just below. Step into it.',
                 choices: [
-                  { text: '[Fight Malak in the pit.]', grants: { flags: ['malak_turned'], codex: ['codex-malak'] }, morality: 0, loyalty: { underworld: 10 }, result: 'The fight is short and conclusive. When it is done, Malak gets up slowly and spits blood onto the arena sand. "All right." That is all he says. All right. He picks up his coat. "What do you need?"' },
+                  { text: '[Step into the pit. The fight starts now.]', grants: {}, morality: 0, loyalty: {}, result: 'You drop into the pit. The crowd shifts. The light is low and the sand is hard under your boots. Malak follows. No referee. No rules beyond the ones already stated.' },
                   { text: '"Call it off. There is a better play here."', grants: {}, morality: 5, loyalty: {}, result: '"You walked up to the pit and blinked." He shakes his head. "Come back when you are ready to finish something." He walks back to his table.' },
                 ],
               },
@@ -2085,6 +2096,15 @@ const PLANETS = {
               underworld: 'Your city. You can see it from here in a way that most people never will. Everything the Syndicate touches, visible at once. It is a remarkable amount of ground to own.',
               lawful: 'The Republic\'s skyline. The Senate dome in the distance. You are standing in a criminal\'s living room looking at the seat of Republic government and wondering if the view is different from either side.',
             } },
+          { id: 'jon_fight_start', x: 14, y: 7, once: true, label: 'Confront Jon', iconKind: 'floor',
+            requiresFlag: 'jon_confrontation_path_a_chosen',
+            requiresNoneFlags: ['jon_status_dead'],
+            description: 'The space between you and Jon Vane. Twelve years of operation about to end. You have both made your calculation.',
+            triggersMinigame: 'pit_fight',
+            minigameConfig: { opponentName: 'Jon Vane', opponentHp: 8, accent: '#C8A000' },
+            grantsFlag: 'jon_status_dead',
+            grantsItem: 'weapon_vane_custom_blaster',
+            grantsCodex: 'codex-penthouse' },
           { id: 'airtaxi_penthouse', x: 28, y: 10, once: false, iconKind: 'beacon', label: 'Private Transit Terminal',
             description: 'A private transit node registered to Scylla Tower Seven Holdings. No destination log. No arrival record. Complete transit discretion for an additional surcharge billed to an account that does not appear in any public registry.' },
         ],
@@ -2110,9 +2130,9 @@ const PLANETS = {
                 id: 'phase_path_a_confirm',
                 requiresAllFlags: ['jon_confrontation_path_a_chosen'],
                 requiresNoneFlags: ['jon_status_dead'],
-                prompt: 'Jon\'s hand moves toward the sidearm at his hip. The Merr-Sonn with the cortosis-inlaid grip that he has carried for twelve years. He draws it. You draw yours. "The operation is worth more than either of us," he says quietly. "Whoever walks out of this room just proved it."',
+                prompt: 'Jon\'s hand moves toward the sidearm at his hip. The Merr-Sonn with the cortosis-inlaid grip that he has carried for twelve years. He draws it. You draw yours. "The operation is worth more than either of us," he says quietly. "Whoever walks out of this room just proved it." The viewport is behind him. The city is visible. This is where it ends.',
                 choices: [
-                  { text: '[Fight Jon.]', grants: { flags: ['jon_status_dead', 'trait_crime_lord', 'syndicateManagement_active'], items: ['weapon_vane_custom_blaster'], codex: ['codex-penthouse'] }, morality: -15, loyalty: { underworld: 20 }, result: 'It is over quickly. Jon does not beg and he does not bargain. When it is done he is on the floor with his eyes open, looking at the viewport, and the city is still visible through the transparisteel exactly as it was before. The blaster is on the floor beside him. You pick it up.' },
+                  { text: '[Draw your weapon. The fight begins.]', grants: {}, morality: 0, loyalty: {}, result: 'Your hand goes to your weapon. Jon does not flinch. He has been here before. The only question now is who walks out. The fight starts here, in the viewport light, with the city as witness.' },
                 ],
               },
               {
@@ -2157,6 +2177,310 @@ const PLANETS = {
           pt(g, 14, 1, 'floor'); pt(g, 14, 2, 'floor');
           pt(g, 14, 17, 'floor'); pt(g, 14, 18, 'floor');
           pt(g, 14, 19, 'door');
+          return g;
+        },
+      },
+
+      senatorial_lounges: {
+        id: 'senatorial_lounges', name: 'Senatorial Sky-Lounges', subtitle: 'Coruscant · Senate District · L.5100',
+        width: 32, height: 20, spawnPos: { x: 16, y: 18 }, textureId: 'coruscant',
+        accent: '#4A7FBF', accentGlow: 'rgba(74,127,191,0.3)', accentDim: '#2A5080',
+        floorColor: '#181C28', floorAlt: '#202838', wallDark: '#0E1018', wallLight: '#282C40',
+        bg: 'radial-gradient(circle at 50% 0%, #101828 0%, #080C18 30%, #040810 100%)', ambient: 'neon_haze', floorPattern: 'marble',
+        decor: ['pillar', 'neon_sign', 'neon_sign', 'brazier', 'panel'],
+        doors: [
+          { x: 16, y: 19, targetZone: 'sky_market', targetPos: { x: 5, y: 1 }, label: 'Return to Sky-Market' },
+        ],
+        worldObjects: [
+          { id: 'senator_conversation', x: 10, y: 5, once: true, label: 'Overhear Senate Conversation', iconKind: 'booth',
+            requiresFlag: 'syndicateManagement_active',
+            description: 'Two senators speaking in undertones. Procurement codes. Defense budget line items. Words that should not be said here. You catch enough to know this is leverage.',
+            triggersMinigame: 'interrogation',
+            grantsFlag: 'senate_intel_acquired',
+            grantsCodex: 'codex-black-sun' },
+          { id: 'landspeeder_showroom', x: 25, y: 5, once: true, label: 'Ubrikkian Lux-Skiff Showroom', iconKind: 'panel',
+            description: 'A Lux-Skiff configured for Senate-district transit. The permit alone is worth 200 credits to the right broker. The owner is currently in session. The registration terminal is unattended.',
+            grantsItem: 'luxury_landspeeder_permit' },
+          { id: 'shipping_authority_terminal', x: 16, y: 10, once: false, label: 'Coruscant Shipping Authority Terminal', iconKind: 'terminal',
+            triggersMinigame: 'signal_siphon',
+            grantsFlag: 'manifest_falsified',
+            description: 'The Senate-adjacent manifest clearance terminal. Freight routes, Senate supply chains, diplomatic cargo exemptions. Access requires a slicing run.' },
+          { id: 'airtaxi_senatorial', x: 16, y: 18, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Senate District AirTaxi terminal.' },
+          { id: 'senate_slush_funds', x: 28, y: 15, once: true, label: 'Discretionary Fund Terminal', iconKind: 'panel',
+            description: 'A discretionary account terminal left unlocked between sessions. The authorization window is still open.',
+            grantsItem: null },
+        ],
+        collectibles: [{ id: 'senate_slush_funds', x: 28, y: 15, label: 'Senate Slush Fund Transfer', reward: 150 }],
+        npcs: [
+          {
+            id: 'senator_aide', x: 8, y: 5, kind: 'republic_guard', label: 'Senate Aide',
+            phases: [
+              { prompt: 'The aide holds a datapad at parade rest. They assess you once and look away. "This floor is for registered Senate personnel and cleared guests. I assume your clearance is in order."',
+                choices: [
+                  { text: '"Of course."', grants: {} },
+                  { text: '"I have business with one of the senators."', grants: {} },
+                  { text: '[Offer a bribe.]', grants: { questFlags: 'senate_aide_bribed' }, morality: -5, result: 'The datapad shifts slightly. Their expression does not. After a pause, they say nothing and step aside. The silence costs you 300 credits.' },
+                ] },
+            ],
+          },
+          {
+            id: 'black_sun_vigo', x: 22, y: 5, kind: 'crime_boss', label: 'Malis',
+            phases: [
+              { requiresNoneFlags: ['black_sun_allied', 'black_sun_hostile'],
+                prompt: 'A woman in Senate-blue finery. No datapad. No aide. Just her and the view of the landing pad below. She turns when you approach. "You have been making noise. I appreciate noise, when it points in the right direction. My name is Malis. I represent certain interests that extend considerably further than this level."',
+                choices: [
+                  { text: '"What interests?"', grants: {} },
+                  { text: '"Black Sun."', grants: {}, result: 'The corner of her mouth moves. "Close enough. We prefer \'extended trade network.\' Our attorneys are very particular."' },
+                  { text: '"I am not interested in partners."', grants: { questFlags: 'black_sun_hostile' }, morality: 0 },
+                ] },
+              { requiresAllFlags: ['black_sun_hostile'],
+                prompt: '"You are still breathing, which means you are still useful." Malis examines her nails. "My offer stands. Even enemies can have working arrangements."',
+                choices: [
+                  { text: '"Working arrangement. Define terms."', grants: { questFlags: 'black_sun_allied' }, morality: -5 },
+                  { text: '"We are done here."', grants: {} },
+                ] },
+              { requiresAllFlags: ['black_sun_allied'],
+                prompt: '"Our channels are open." She inclines her head fractionally. "Your recent work in the sub-levels was noted. Clean. Efficient. We have a contract that would suit your capabilities."',
+                choices: [
+                  { text: '"I am listening."', grants: { questFlags: 'black_sun_contract_offered' }, morality: -5 },
+                  { text: '"Not today."', grants: {} },
+                ] },
+            ],
+          },
+        ],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 30, 18, 'floor');
+          carveRect(g, 1, 1, 8, 8, 'wall'); carveRect(g, 2, 2, 7, 7, 'floor');
+          carveRect(g, 23, 1, 30, 8, 'wall'); carveRect(g, 24, 2, 29, 7, 'floor');
+          carveRect(g, 1, 12, 8, 18, 'wall'); carveRect(g, 2, 13, 7, 17, 'floor');
+          carveRect(g, 23, 12, 30, 18, 'wall'); carveRect(g, 24, 13, 29, 17, 'floor');
+          pt(g, 16, 18, 'door'); pt(g, 16, 19, 'door');
+          return g;
+        },
+      },
+
+      spice_refining_vaults: {
+        id: 'spice_refining_vaults', name: 'Spice-Refining Sub-Vaults', subtitle: 'Coruscant · Mid-Level Infrastructure · L.900',
+        width: 38, height: 22, spawnPos: { x: 2, y: 11 }, textureId: 'coruscant',
+        accent: '#9B59B6', accentGlow: 'rgba(155,89,182,0.3)', accentDim: '#5A2A7A',
+        floorColor: '#1A0A28', floorAlt: '#220E38', wallDark: '#0C0414', wallLight: '#1E0C2C',
+        bg: 'radial-gradient(circle at 30% 60%, #1A0428 0%, #0A0214 60%, #050208 100%)', ambient: 'embers', floorPattern: 'grate',
+        decor: ['pipe', 'girder', 'warning_beacon', 'slag', 'cargo_crate', 'rubble'],
+        doors: [
+          { x: 1, y: 11, targetZone: 'level_1313_subvault', targetPos: { x: 27, y: 10 }, label: 'Level 1313 Sub-Vault' },
+        ],
+        worldObjects: [
+          { id: 'black_market_exchange', x: 30, y: 5, once: false, label: 'Black Market Commodity Exchange', iconKind: 'terminal',
+            triggersMinigame: 'contraband_market',
+            description: 'A hidden trading node embedded in the refinery control interface. Five commodities. Live prices. No customs declaration required.' },
+          { id: 'refinery_control', x: 10, y: 10, once: false, label: 'Refinery Valve Array', iconKind: 'panel',
+            triggersMinigame: 'valve_override',
+            grantsFlag: 'spice_batch_diverted',
+            description: 'Manual valve controls for the spice processing line. Divert a batch. Adjust the flow. The foreman is three levels up.' },
+          { id: 'droid_arena_entrance', x: 20, y: 18, once: false, label: 'Underground Droid Arena', iconKind: 'beacon',
+            triggersMinigame: 'droid_arena',
+            description: 'A converted pressurization chamber. The betting slips are still warm. Step in.' },
+          { id: 'airtaxi_vaults', x: 19, y: 21, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Return to the sub-level transit network.' },
+          { id: 'vault_stash', x: 35, y: 18, once: true, label: 'Hidden Vault Stash', iconKind: 'crate',
+            description: 'A durasteel box welded behind a coolant drum. Someone did not come back for this.' },
+        ],
+        collectibles: [{ id: 'vault_stash', x: 35, y: 18, label: 'Vault Hidden Stash', reward: 120 }],
+        npcs: [
+          {
+            id: 'exchange_tariff_lord', x: 6, y: 4, kind: 'broker', label: 'Karrn',
+            phases: [
+              { requiresNoneFlags: ['karrn_hostile', 'karrn_deal'],
+                prompt: 'A heavyset Mirialan seated at a portable accounting station, surrounded by datapads. He looks up without surprise. "You are not an Exchange auditor. That means you are either a competitor or a customer. I charge the same rate for both services, but the service is different."',
+                choices: [
+                  { text: '"What do you control here?"', grants: {} },
+                  { text: '"I want a cut of the tariff lane."', grants: { questFlags: 'karrn_negotiating' }, morality: -5 },
+                  { text: '"The Exchange is done in this sector."', grants: { questFlags: 'karrn_hostile' }, morality: -5 },
+                ] },
+              { requiresAllFlags: ['karrn_negotiating'],
+                prompt: '"A cut." He sets down his stylus. "The tariff lane moves eighty thousand credits per cycle. I pay the right people, I keep three percent. You want in, you bring me access to the Senate shipping registry and we discuss numbers."',
+                choices: [
+                  { text: '"I have a manifest falsification key. Yours for twenty percent."', grants: { questFlags: 'karrn_deal' }, morality: -10 },
+                  { text: '"Not yet. I need more information."', grants: {} },
+                ] },
+              { requiresAllFlags: ['karrn_deal'],
+                prompt: '"Our arrangement is on record." Karrn nods once. "A pleasure doing business. Do not bring CSF into this sector."',
+                choices: [{ text: '"Understood."', grants: {} }],
+                repeatPrompt: '"Twenty percent, as agreed. Do not be late."',
+              },
+              { requiresAllFlags: ['karrn_hostile'],
+                prompt: '"You declared war on the Exchange with that statement." He picks up his stylus again. "I have auditors. I have contacts. I have patience. Leave."',
+                choices: [{ text: '"Noted."', grants: {} }],
+              },
+            ],
+          },
+          {
+            id: 'devaronian_captain', x: 32, y: 5, kind: 'smuggler', label: 'Grix',
+            phases: [
+              { requiresNoneFlags: ['grix_recruited'],
+                prompt: 'A Devaronian with filed-down horns and a scarred chin leans against the wall, cleaning a blaster component with practiced disinterest. "Grix. Import-export specialist. You look like someone who moves things that should not be moved. We might have things to discuss."',
+                choices: [
+                  { text: '"What kind of specialist?"', grants: {} },
+                  { text: '"I run a network. I need people with contacts."', grants: { questFlags: 'grix_negotiating' }, morality: -5 },
+                  { text: '"Not interested."', grants: {} },
+                ] },
+              { requiresAllFlags: ['grix_negotiating'],
+                prompt: '"A network." The blaster component disappears into a pocket. "I have contacts on fourteen freight routes and three Senate-adjacent cargo exemption brokers. All off the books. You pay fair and I deliver on schedule. You have a network worth joining, I am interested. You do not, I walk."',
+                choices: [
+                  { text: '"The network is real. You are in."', grants: { questFlags: 'grix_recruited' }, morality: 0, result: 'Grix holds out a scarred hand. You shake it. The agreement is immediate and professional.' },
+                  { text: '"I need to think on it."', grants: {} },
+                ] },
+              { requiresAllFlags: ['grix_recruited'],
+                prompt: '"Your network, your call." He nods. "I report when the cargo clears. Not before."',
+                choices: [{ text: '"Understood."', grants: {} }],
+                repeatPrompt: '"All routes nominal. I report when it clears."',
+              },
+            ],
+          },
+          {
+            id: 'ex_sis_slicer', x: 18, y: 8, kind: 'slicer', label: 'Vael',
+            phases: [
+              { requiresNoneFlags: ['vael_recruited'],
+                prompt: 'A slight figure in a thermal hood, fingers moving over a portable console. They do not look up. "You are generating a lot of activity in the city networks. Interesting routing. Someone taught you to hide, but not well enough. I was SIS. I noticed." They pause. "Past tense."',
+                choices: [
+                  { text: '"What do you want?"', grants: {} },
+                  { text: '"I could use someone with SIS training."', grants: { questFlags: 'vael_negotiating' }, morality: 0 },
+                  { text: '"Who are you working for now?"', grants: {} },
+                ] },
+              { requiresAllFlags: ['vael_negotiating'],
+                prompt: '"Someone with a network." The console folds with a click. "I left the SIS because of what I found in their files. What they authorize. I am selective now about who I work with. Show me the operation. If it has a purpose beyond pure credits, I am in."',
+                choices: [
+                  { text: '"The operation has purpose. The Iron Syndicate is finished."', grants: { questFlags: 'vael_recruited' }, morality: 5, result: 'A pause. A nod. "Then I am in. I work best offline, but I will stay in range."' },
+                  { text: '"Credits are the purpose. That is the only purpose."', grants: {} },
+                ] },
+              { requiresAllFlags: ['vael_recruited'],
+                prompt: '"I am in range." They glance up once. "Ask me what you need."',
+                choices: [{ text: '"Stay sharp."', grants: {} }],
+                repeatPrompt: '"Ready."',
+              },
+            ],
+          },
+        ],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 36, 20, 'floor');
+          carveRect(g, 1, 1, 12, 5, 'wall'); carveRect(g, 2, 2, 11, 4, 'floor');
+          carveRect(g, 25, 1, 36, 5, 'wall'); carveRect(g, 26, 2, 35, 4, 'floor');
+          carveRect(g, 14, 13, 24, 20, 'wall'); carveRect(g, 15, 14, 23, 19, 'floor');
+          pt(g, 1, 11, 'door');
+          return g;
+        },
+      },
+
+      undercity_outskirts: {
+        id: 'undercity_outskirts', name: 'Undercity Outskirts', subtitle: 'Coruscant · Undercity · Ancient Infrastructure',
+        width: 40, height: 24, spawnPos: { x: 2, y: 12 }, textureId: 'coruscant',
+        accent: '#5C3A1E', accentGlow: 'rgba(92,58,30,0.3)', accentDim: '#3A200C',
+        floorColor: '#150C08', floorAlt: '#1C1008', wallDark: '#080402', wallLight: '#100806',
+        bg: 'radial-gradient(circle at 50% 80%, #180A04 0%, #060402 70%)', ambient: 'embers', floorPattern: 'grate',
+        decor: ['rubble', 'pipe', 'girder', 'slag', 'warning_beacon', 'brazier'],
+        doors: [
+          { x: 1, y: 12, targetZone: 'the_works', targetPos: { x: 33, y: 12 }, label: 'The Works' },
+        ],
+        worldObjects: [
+          { id: 'jedi_ruin_fragment', x: 10, y: 5, once: true, label: 'Ancient Jedi Temple Outskirt', iconKind: 'panel',
+            description: 'Moss-covered stone that does not match the architecture around it. Older. The Force does not speak here, but something resonates faintly under the weight of centuries. Whoever built this was speaking to something larger than themselves.',
+            grantsItem: 'ancient_force_relic',
+            grantsCodex: 'codex-jedi-ruins' },
+          { id: 'toxic_waste_terminal', x: 30, y: 10, once: false, label: 'Reclamation Facility Controls', iconKind: 'panel',
+            triggersMinigame: 'valve_override',
+            grantsFlag: 'waste_reclamation_diverted',
+            description: 'Waste processing controls for the undercity reclamation facility. The overflow valve is stuck open. Someone locked it intentionally.' },
+          { id: 'arms_bench_station', x: 35, y: 5, once: false, label: 'Black-Market Arms Bench', iconKind: 'crate',
+            triggersMinigame: 'arms_bench',
+            description: 'A bench covered in components, tools, and two unfinished weapons. Whoever built this station knows what they are doing. The equipment is unlocked.' },
+          { id: 'outcast_camp_fire', x: 8, y: 18, once: true, label: 'Outcast Settlement', iconKind: 'brazier',
+            description: 'A cluster of shelters built from scavenged hull plating. Survivors of forgotten levels. Some arrived by accident. Some by design. All of them are waiting.',
+            grantsCodex: 'codex-undercity-outcasts' },
+          { id: 'airtaxi_undercity', x: 20, y: 23, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Undercity transit beacon. Rarely maintained.' },
+          { id: 'ruin_scavenge', x: 10, y: 8, once: true, label: 'Temple Scavenge Cache', iconKind: 'crate',
+            description: 'Fragments of pre-Republic stonework pried loose by earlier explorers. The pieces are worth something to the right collector.' },
+        ],
+        collectibles: [{ id: 'ruin_scavenge', x: 10, y: 8, label: 'Temple Ruin Fragments', reward: 100 }],
+        npcs: [
+          {
+            id: 'disgraced_csf_inspector', x: 6, y: 18, kind: 'republic_guard', label: 'Marro',
+            phases: [
+              { requiresNoneFlags: ['marro_recruited'], requiresAllFlags: ['syndicateManagement_active'],
+                prompt: 'A man in a faded CSF jacket, no insignia remaining. He sits at the edge of the outcast camp with a bottle he is not drinking from. "Inspector Marro. Former. The Bureau revoked my clearance when I filed a report they did not like. Fourteen years on the force and that is what I get." He looks up. "You are not from the camp."',
+                choices: [
+                  { text: '"What report?"', grants: {} },
+                  { text: '"I run an operation. I could use someone with your contacts."', grants: { questFlags: 'marro_negotiating' }, morality: 0 },
+                  { text: '"None of my business."', grants: {} },
+                ] },
+              { requiresAllFlags: ['marro_negotiating'],
+                prompt: '"An operation." He sets the bottle down. "I know how CSF monitors black-market networks. I know which frequencies they watch and which they ignore. I know how to route activity so the heat accumulates slower." He meets your eyes. "I am not going to pretend this is legal. I need work that matters. Is yours?"',
+                choices: [
+                  { text: '"It matters. The Iron Syndicate is finished. We are what comes after."', grants: { questFlags: 'marro_recruited' }, morality: 0, result: 'He stands. The bottle stays. "Tell me where you need me."' },
+                  { text: '"I cannot make that promise."', grants: {} },
+                ] },
+              { requiresAllFlags: ['marro_recruited'],
+                prompt: '"I am watching the frequencies. You will know when CSF shifts attention."',
+                choices: [{ text: '"Good."', grants: {} }],
+                repeatPrompt: '"Nothing unusual on the grid. So far."',
+              },
+              { requiresNoneFlags: ['syndicateManagement_active'],
+                prompt: 'A man in a faded CSF jacket sits at the edge of an outcast camp. He does not look up.',
+                choices: [{ text: '"Keep to yourself."', grants: {} }],
+              },
+            ],
+          },
+          {
+            id: 'rogue_sith_apprentice', x: 28, y: 6, kind: 'jedi', label: 'Kesh',
+            phases: [
+              { requiresNoneFlags: ['sith_contact', 'sith_rejected'],
+                prompt: 'Pale face. Dark eyes. Robes that were once Sith Academy grey. The figure does not move as you approach. "You feel it too." A statement, not a question. "The city has eyes and none of them are friendly. I left my order for the same reason you left yours — or will. The dark side is not philosophy. It is infrastructure."',
+                choices: [
+                  { text: '"What do you want from me?"', grants: {} },
+                  { text: '"I am listening."', grants: { questFlags: 'sith_contact' }, morality: -10 },
+                  { text: '"I do not deal with Sith."', grants: { questFlags: 'sith_rejected' }, morality: 5 },
+                ] },
+              { requiresAllFlags: ['sith_contact'],
+                prompt: '"A contact who can move between the underworld and the Senate without notice." Kesh tilts their head. "I have resources. I have training. I lack the local network you appear to be building. We help each other. Simple."',
+                choices: [
+                  { text: '"A working arrangement. What do you need?"', grants: { questFlags: 'sith_contract_offered' }, morality: -10 },
+                  { text: '"I need to know more about who you answer to."', grants: {} },
+                ] },
+              { requiresAllFlags: ['sith_rejected'],
+                prompt: '"A line you will cross eventually." Kesh does not move. "I will be here when that happens."',
+                choices: [{ text: '"Do not hold your breath."', grants: {} }],
+              },
+            ],
+          },
+          {
+            id: 'anzati_assassin', x: 20, y: 10, kind: 'assassin', label: 'The Anzati',
+            phases: [
+              { requiresNoneFlags: ['anzati_contracted', 'anzati_declined'],
+                prompt: 'You almost walked past them. They are simply there when they were not a moment ago. No sound. No approach. A face that is difficult to look at directly — features arranged correctly but wrong somehow, with two vertical slits below the cheekbones that do not quite match the rest. "You run the new network." Their voice is soft and even. "I have heard. I have a particular skill. You have targets. I propose an arrangement."',
+                choices: [
+                  { text: '"What skill?"', grants: {}, result: '"I remove specific problems. Quietly. Permanently. I have been doing this for longer than Coruscant has had a Senate. My terms are simple: discretion and payment. I do not negotiate on method."' },
+                  { text: '"I accept. You work for the network."', grants: { questFlags: 'anzati_contracted' }, morality: -15, result: 'A nod so slight you almost miss it. "I will make contact when a contract is available. You will not find me otherwise."' },
+                  { text: '"I do not hire assassins."', grants: { questFlags: 'anzati_declined' }, morality: 5 },
+                ] },
+              { requiresAllFlags: ['anzati_contracted'],
+                prompt: '"The network runs clean." A pause. "That is because of what I removed. You are welcome."',
+                choices: [{ text: '"Stay available."', grants: {} }],
+                repeatPrompt: '"Available."',
+              },
+              { requiresAllFlags: ['anzati_declined'],
+                prompt: 'The figure is present but says nothing.',
+                choices: [{ text: '"Move on."', grants: {} }],
+              },
+            ],
+          },
+        ],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 38, 22, 'floor');
+          carveRect(g, 1, 1, 15, 10, 'wall'); carveRect(g, 2, 2, 14, 9, 'floor');
+          carveRect(g, 22, 1, 38, 10, 'wall'); carveRect(g, 23, 2, 37, 9, 'floor');
+          carveRect(g, 12, 14, 30, 22, 'wall'); carveRect(g, 13, 15, 29, 21, 'floor');
+          pt(g, 1, 12, 'door'); pt(g, 20, 23, 'door');
           return g;
         },
       },
@@ -2527,6 +2851,25 @@ function NpcPortrait({ kind, accent }) {
         <rect x="18" y="28" width="12" height="14" rx="3" fill="#0C1818"/>
         <line x1="22" y1="24" x2="21" y2="30" stroke="#00F0FF" strokeWidth="1" opacity="0.7"/>
         <line x1="26" y1="24" x2="27" y2="30" stroke="#00C8D4" strokeWidth="1" opacity="0.7"/>
+      </svg>
+    );
+  }
+  if (kind === 'assassin') {
+    return (
+      <svg viewBox="0 0 48 48" style={{ width: '100%', height: '100%' }}>
+        <ellipse cx="24" cy="15" rx="10" ry="11" fill="#0A0A0A"/>
+        <ellipse cx="24" cy="15" rx="10" ry="11" fill="none" stroke="#1A1A1A" strokeWidth="1.5"/>
+        <rect x="14" y="20" width="20" height="12" rx="4" fill="#0D0D0D"/>
+        <rect x="14" y="28" width="20" height="16" rx="2" fill="#0A0808"/>
+        <ellipse cx="20" cy="14" rx="2.5" ry="1.8" fill="#D4A000" opacity="0.9" style={{ animation: 'npc-blink 6s ease-in-out infinite' }}/>
+        <ellipse cx="28" cy="14" rx="2.5" ry="1.8" fill="#D4A000" opacity="0.9" style={{ animation: 'npc-blink 6s ease-in-out infinite' }}/>
+        <circle cx="20" cy="14" r="1.1" fill="#7A3000"/>
+        <circle cx="28" cy="14" r="1.1" fill="#7A3000"/>
+        <path d="M14 23 Q10 22 9 19 Q10 17 13 18" stroke="#1A1A1A" strokeWidth="1.5" fill="none" opacity="0.7"/>
+        <path d="M34 23 Q38 22 39 19 Q38 17 35 18" stroke="#1A1A1A" strokeWidth="1.5" fill="none" opacity="0.7"/>
+        <rect x="16" y="19" width="16" height="3" rx="1.5" fill="#0A0A0A" stroke="#1A1A1A" strokeWidth="0.8"/>
+        <line x1="14" y1="28" x2="18" y2="44" stroke="#0A0808" strokeWidth="6" strokeLinecap="round"/>
+        <line x1="34" y1="28" x2="30" y2="44" stroke="#0A0808" strokeWidth="6" strokeLinecap="round"/>
       </svg>
     );
   }
@@ -2902,6 +3245,10 @@ const ITEMS = {
   vane_vault_keycard:        { id:'vane_vault_keycard',         name:'Penthouse Vault Access Card',           type:'quest',      iconKind:'keycard',  value:0,    description:"Reya's personal keycard for Jon's credit vault terminal. She cut it herself. This is not a gift. It is a transaction." },
   weapon_vane_custom_blaster:{ id:'weapon_vane_custom_blaster', name:"Jon's Custom Blaster",                 type:'weapon',     iconKind:'gear',     value:4800, description:"Jon's personal sidearm, a Merr-Sonn modified with a cortosis-inlaid grip. He carried it for twelve years. Now it belongs to you." },
   syndicate_ledger_shadow:   { id:'syndicate_ledger_shadow',    name:'Shadow Town Credit Ledger',             type:'quest',      iconKind:'datapad',  value:1200, description:'Malak kept his own books. Three hundred and twelve transactions, forty percent off the top, every run for two years. Jon never knew.' },
+  luxury_landspeeder_permit: { id:'luxury_landspeeder_permit',  name:'Luxury Landspeeder Permit',             type:'quest',      iconKind:'keycard',  value:200,  description:'A Senate-registered permit for a Ubrikkian Lux-Skiff. Someone in the Sky-Lounges left their access codes in the registry.' },
+  crafted_blaster_pistol:    { id:'crafted_blaster_pistol',     name:'Fabricated Blaster Pistol',             type:'weapon',     iconKind:'gear',     value:800,  description:'A custom DL-44 variant assembled at the arms bench. Untraceable, slightly unstable, and worth considerably more than its components.' },
+  crafted_carbine:           { id:'crafted_carbine',            name:'Fabricated Carbine',                    type:'weapon',     iconKind:'gear',     value:1200, description:'An illegal Czerka-pattern carbine assembled from stolen components. The receiver has been filed smooth.' },
+  crafted_thermal_det:       { id:'crafted_thermal_det',        name:'Fabricated Thermal Detonator',          type:'supply',     iconKind:'supply',   value:1500, description:'Custom-fabricated from military components. The detonator circuit is non-standard.' },
 
 };
 
@@ -3089,6 +3436,51 @@ const CODEX_ENTRIES = {
       'Until now.',
     ],
   },
+  'codex-jedi-ruins': {
+    id:'codex-jedi-ruins', title:'Undercity Temple Outskirts', category:'lore',
+    summary:'Pre-Republic stonework in the lowest accessible levels of Coruscant.',
+    body:[
+      'The stones are wrong for their surroundings. Older. Cut to dimensions no current fabrication system recognizes. The Republic Archaeology Bureau filed a survey in 3,653 BBY that classified the site as pre-Republic Jedi construction, noted its inaccessibility, and recommended it for reassessment when lower-level transit improved.',
+      'That reassessment was never scheduled. The Bureau was dissolved two years later in post-war restructuring.',
+      'The Force does not speak clearly here. But the stones remember what was built on them, and what was built on them was something large and purposeful, something that saw the city rise around it and kept its silence.',
+    ],
+  },
+  'codex-undercity-outcasts': {
+    id:'codex-undercity-outcasts', title:'Undercity Outcast Communities', category:'lore',
+    summary:'Communities formed in the unreachable levels below working infrastructure.',
+    body:[
+      'They arrived by different routes. Debtors who fled creditors downward until creditors stopped following. Survivors of industrial accidents whose medical records were sealed under liability clauses. Former infrastructure workers who stayed when maintenance contracts ended. Force-sensitive fugitives whose trail grew cold at level 200.',
+      'They share no organization and no hierarchy. What they share is location: the levels below where the CSF patrols, below where the transit network reaches, below where anyone with options would choose to live.',
+      'They are not a community of criminals. They are a community of people who have run out of other options.',
+    ],
+  },
+  'codex-black-sun': {
+    id:'codex-black-sun', title:'Black Sun: Senate-Level Operations', category:'dossier',
+    summary:'Black Sun activities at the Senate-district tier.',
+    body:[
+      'Black Sun maintains a quiet presence at Senate level through proxies registered as legitimate trade advocates. Malis operates as a Vigo, overseeing Senate-adjacent procurement contracts, transportation exemptions, and discretionary fund routing.',
+      'The organization does not bribe senators directly. It identifies senators with debt structures, professional liabilities, or supply-chain dependencies, then makes itself useful to the people those senators trust. The senator never meets anyone named Black Sun.',
+      'At the level where Malis operates, the distinction between criminal enterprise and political infrastructure is largely procedural.',
+    ],
+  },
+  'codex-exchange-tariff': {
+    id:'codex-exchange-tariff', title:'The Exchange: Tariff Enforcement', category:'dossier',
+    summary:'How the Exchange maintains its trade monopoly through tariff enforcement.',
+    body:[
+      'The Exchange does not compete with freight networks. It certifies them. Any cargo moving through the mid-level infrastructure without an Exchange transit certification is subject to seizure by Exchange-affiliated assessors who operate with full legal authority under a Senate trade compact signed in 3,700 BBY.',
+      'The tariff is twelve percent of declared cargo value. The undeclared value is assessed at the assessor\'s discretion. Karrn holds the assessor certification for sectors 4 through 9, which covers the spice-refining district, the sub-vault infrastructure, and six freight staging areas.',
+      'The certification was never revoked. The Exchange continues to collect.',
+    ],
+  },
+  'codex-anzati': {
+    id:'codex-anzati', title:'The Anzati', category:'lore',
+    summary:'An ancient near-human species, patient predators with a centuries-long lifespan.',
+    body:[
+      'The Anzati are old. Older than the Republic, older than most civilizations that remember themselves as old. They look human at a distance, but the vertical slits below the cheekbones are proboscises, coiled when not in use, which they call a secret they keep from everyone they intend to survive.',
+      'They feed on what they call soup: the cerebral fluid and Force-essence of their prey. The feeding is careful and slow. Prey rarely understands what is happening until it has already happened.',
+      'An Anzati assassin is not a hired killer in the conventional sense. They do not need the money. They take contracts because the contract specifies a target, and a specified target is permission they have already decided to collect.',
+    ],
+  },
 };
 
 const SPEEDER_DESTINATIONS = [
@@ -3101,6 +3493,8 @@ const SPEEDER_DESTINATIONS = [
   { id: 'lower_sky_market',  name: 'Lower Promenade L.1100',       level: 'Lower Mid-Levels',      cost: 0,   requiredFlag: 'marlo_sky_talked',         targetZone: 'lower_sky_market',  targetPos: { x: 2,  y: 13 } },
   { id: 'senate_district',   name: 'Senate Precinct L.1900',       level: 'Upper Levels',          cost: 100, requiredFlag: 'rook_eliminated',          targetZone: 'senate_district',   targetPos: { x: 2,  y: 16 } },
   { id: 'slicer_alleyway',   name: 'Slicer Alleyway L.1150',       level: 'Lower Mid-Levels',      cost: 0,   requiredFlag: 'echo7_found',              targetZone: 'slicer_alleyway',   targetPos: { x: 2,  y: 10 } },
+  { id: 'senatorial_lounges', name: 'Senatorial Sky-Lounges L.5100', level: 'Senate District',       cost: 150, requiredFlag: 'syndicateManagement_active', targetZone: 'senatorial_lounges', targetPos: { x: 16, y: 18 } },
+  { id: 'undercity_outskirts', name: 'Undercity Outskirts',          level: 'Undercity',            cost: 100, requiredFlag: 'speeder_transit_unlocked',  targetZone: 'undercity_outskirts', targetPos: { x: 2,  y: 12 } },
 ];
 
 function SpeederOverlay({ credits, questFlags, currentZoneId, onTravel, onClose }) {
@@ -4571,6 +4965,7 @@ function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, act
       }
       setHeat(h => Math.min(100, h + ac.heatGenerated));
     });
+    setRoster(r => r.map(a => a.status === 'injured' && Math.random() > 0.5 ? { ...a, status: 'available' } : a));
     setCredits(c => c + passiveIncome);
     setHeat(h => Math.max(0, h - 2));
     addLog(`Passive income: +${passiveIncome} credits. Heat: ${Math.max(0, heat - 2 + resolved.reduce((s, ac) => s + ac.heatGenerated, 0))}.`);
@@ -4657,6 +5052,732 @@ function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, act
       <div style={{ marginTop:'0.5rem', fontSize:'0.75rem', color:'#555' }}>
         Territories: {territories.length > 0 ? territories.join(', ') : 'none'} · Available agents: {availableAgents.length}
       </div>
+    </div>
+  );
+}
+
+// ── Sabacc Card Game ──────────────────────────────────────────────────────────
+const SABACC_DECK_DEF = (() => {
+  const suits = ['Sabers','Staves','Flasks','Coins'];
+  const cards = [];
+  suits.forEach(s => {
+    for (let v = 1; v <= 11; v++) {
+      const names = { 11:'Ace', 10:'Master', 9:'Mistress', 8:'Commander' };
+      cards.push({ id: `${s}_${v}`, name: names[v] || String(v), value: v, suit: s });
+    }
+  });
+  [['Idiot',0],['Fair One',-2],['Demise',-8],['Balance',-11],['Endurance',-13],['Queen',-14],['Eclipse',-15],['The Star',-17]].forEach(([n,v]) => {
+    cards.push({ id:`spec_${n}1`, name:n, value:v, suit:null });
+    cards.push({ id:`spec_${n}2`, name:n, value:v, suit:null });
+  });
+  return cards;
+})();
+
+function shuffleDeck() { return [...SABACC_DECK_DEF].sort(() => Math.random() - 0.5); }
+
+function evaluateHand(hand) {
+  const total = hand.reduce((s,c) => s + c.value, 0);
+  const vals = hand.map(c => c.value).sort((a,b) => a-b);
+  if (vals.length === 3 && vals[0]===0 && vals[1]===2 && vals[2]===3) return { rank:'IDIOTS_ARRAY', label:"Idiot's Array", total:0 };
+  if (total === 24 || total === -24) return { rank:'PURE_SABACC', label:'Pure Sabacc', total };
+  if (total > 24 || total < -24) return { rank:'BOMBOUT', label:'Bomb-Out', total };
+  return { rank:'STANDARD', label:`Sum: ${total}`, total };
+}
+
+function SabaccOverlay({ onSuccess, onFailure }) {
+  const [deck, setDeck] = React.useState(() => shuffleDeck());
+  const [playerHand, setPlayerHand] = React.useState([]);
+  const [npcHand, setNpcHand] = React.useState([]);
+  const [heldCards, setHeldCards] = React.useState(new Set());
+  const [handPot, setHandPot] = React.useState(0);
+  const [sabaccPot, setSabaccPot] = React.useState(0);
+  const [phase, setPhase] = React.useState('ante');
+  const [message, setMessage] = React.useState('Place your ante to begin the match.');
+  const [result, setResult] = React.useState(null);
+
+  const ante = 500;
+
+  const deal = (d) => {
+    const p = [d.pop(), d.pop()];
+    const n = [d.pop(), d.pop()];
+    setPlayerHand(p); setNpcHand(n); setDeck([...d]);
+    setHandPot(ante * 1.4 | 0); setSabaccPot(ante * 0.6 | 0);
+    setPhase('betting'); setMessage('Cards dealt. Lock a card to protect it from the Sabacc Shift, then Shift or Reveal.');
+  };
+
+  const handleAnte = () => {
+    const d = shuffleDeck();
+    deal(d);
+  };
+
+  const toggleHold = (idx) => {
+    setHeldCards(prev => { const s = new Set(prev); s.has(idx) ? s.delete(idx) : s.add(idx); return s; });
+  };
+
+  const doShift = () => {
+    const d1 = Math.ceil(Math.random()*6), d2 = Math.ceil(Math.random()*6);
+    const shifted = d1 === d2;
+    if (shifted) {
+      const d = [...deck];
+      const newHand = playerHand.map((c, i) => heldCards.has(i) ? c : d.pop());
+      const newNpc = npcHand.map((c, i) => d.pop());
+      setPlayerHand(newHand); setNpcHand(newNpc); setDeck(d);
+      setMessage(`⚡ Sabacc Shift! Dice: [${d1}][${d2}]. Unlocked cards reshuffled.`);
+    } else {
+      setMessage(`Dice: [${d1}][${d2}]. No shift. Hands stable.`);
+    }
+  };
+
+  const cheat = () => {
+    const caught = Math.random() < 0.25;
+    if (caught) {
+      setPhase('done'); setResult('loss');
+      setMessage('🚨 Caught cheating! The match is forfeit and the table erupts. Heat +10.');
+      return;
+    }
+    const d = [...deck];
+    const best = d.splice(Math.floor(Math.random()*d.length), 1)[0];
+    const worst = playerHand.reduce((wi, c, i) => Math.abs(c.value) > Math.abs(playerHand[wi].value) ? i : wi, 0);
+    const newHand = [...playerHand]; newHand[worst] = best;
+    setPlayerHand(newHand); setDeck(d);
+    setMessage('You slipped a card from your sleeve. The table does not notice.');
+  };
+
+  const reveal = () => {
+    const pe = evaluateHand(playerHand);
+    const ne = evaluateHand(npcHand);
+    if (pe.rank === 'BOMBOUT' && ne.rank === 'BOMBOUT') {
+      setSabaccPot(s => s + handPot); setHandPot(0);
+      setMessage(`Both bombed out! Hand pot rolls into Sabacc pot (${sabaccPot + handPot} cr). All hands bust.`);
+      setPhase('done'); setResult('draw');
+    } else if (pe.rank === 'BOMBOUT') {
+      setMessage(`You bombed out (${pe.total}). Vex takes the hand pot.`);
+      setPhase('done'); setResult('loss');
+    } else if (ne.rank === 'BOMBOUT') {
+      setMessage(`Vex bombed out! You win the hand pot (+${handPot} cr).`);
+      setPhase('done'); setResult('win');
+    } else {
+      const rankOrder = { IDIOTS_ARRAY:3, PURE_SABACC:2, STANDARD:1 };
+      const pr = rankOrder[pe.rank], nr = rankOrder[ne.rank];
+      if (pr > nr) {
+        const prize = handPot + (pe.rank !== 'STANDARD' ? sabaccPot : 0);
+        setMessage(`${pe.label} beats ${ne.label}! You win ${prize} cr.`);
+        setPhase('done'); setResult('win');
+      } else if (nr > pr) {
+        setMessage(`${ne.label} beats ${pe.label}. Vex takes the pot.`);
+        setPhase('done'); setResult('loss');
+      } else {
+        const pd = Math.min(Math.abs(pe.total - 24), Math.abs(pe.total + 24));
+        const nd = Math.min(Math.abs(ne.total - 24), Math.abs(ne.total + 24));
+        if (pd < nd) { setMessage(`Closer to 24: ${pe.total} vs ${ne.total}. You win the hand pot (+${handPot} cr).`); setResult('win'); }
+        else if (nd < pd) { setMessage(`Vex is closer: ${ne.total} vs ${pe.total}. You lose.`); setResult('loss'); }
+        else { setSabaccPot(s => s + handPot); setHandPot(0); setMessage(`Tie! Hand pot rolls. Sabacc pot grows.`); setResult('draw'); }
+        setPhase('done');
+      }
+    }
+  };
+
+  const cardStyle = (locked) => ({ display:'inline-block', background: locked ? '#1A3A1A' : '#111', border:`1px solid ${locked ? '#4A8' : '#444'}`, borderRadius:4, padding:'0.25rem 0.4rem', margin:'0.2rem', fontSize:'0.8rem', cursor: phase==='betting'?'pointer':'default', minWidth:60, textAlign:'center' });
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.96)', zIndex:200, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', fontFamily:'monospace', color:'#DDD', padding:'2rem' }}>
+      <div style={{ color:'#C8A000', fontSize:'1.1rem', letterSpacing:2, marginBottom:'0.5rem' }}>HIGH-STAKES SABACC</div>
+      <div style={{ fontSize:'0.75rem', color:'#888', marginBottom:'1rem' }}>Hand Pot: {handPot} cr &nbsp;|&nbsp; Sabacc Pot: {sabaccPot} cr</div>
+      {phase === 'ante' && <button onClick={handleAnte} style={{ background:'#C8A000', color:'#000', border:'none', padding:'0.5rem 1.5rem', cursor:'pointer', fontSize:'0.9rem' }}>Ante Up ({ante} cr)</button>}
+      {phase !== 'ante' && phase !== 'done' && (
+        <>
+          <div style={{ marginBottom:'0.5rem', fontSize:'0.75rem', color:'#888' }}>YOUR HAND (click to lock/unlock)</div>
+          <div style={{ marginBottom:'1rem' }}>
+            {playerHand.map((c,i) => (
+              <span key={c.id+i} style={cardStyle(heldCards.has(i))} onClick={() => toggleHold(i)}>
+                {c.name}{c.suit ? ` / ${c.suit[0]}` : ''} ({c.value > 0 ? '+' : ''}{c.value}) {heldCards.has(i) ? '🔒' : ''}
+              </span>
+            ))}
+          </div>
+          <div style={{ display:'flex', gap:'0.5rem', marginBottom:'1rem' }}>
+            <button onClick={doShift} style={{ background:'#333', color:'#EEE', border:'1px solid #555', padding:'0.3rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Roll Shift Dice</button>
+            <button onClick={cheat} style={{ background:'#2A1A00', color:'#C8A000', border:'1px solid #604800', padding:'0.3rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Sleeve Swap (Risk)</button>
+            <button onClick={reveal} style={{ background:'#C8A000', color:'#000', border:'none', padding:'0.3rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Reveal Hands</button>
+          </div>
+        </>
+      )}
+      {phase === 'done' && (
+        <div style={{ marginBottom:'1rem' }}>
+          <div style={{ fontSize:'0.8rem', color:'#888', marginBottom:'0.4rem' }}>OPPONENT HAND:</div>
+          <div>{npcHand.map((c,i) => <span key={c.id+i} style={cardStyle(false)}>{c.name}{c.suit ? ` / ${c.suit[0]}` : ''} ({c.value > 0 ? '+' : ''}{c.value})</span>)}</div>
+        </div>
+      )}
+      <div style={{ maxWidth:420, textAlign:'center', color:'#CCC', fontSize:'0.85rem', marginBottom:'1rem', lineHeight:1.6 }}>{message}</div>
+      {phase === 'done' && (
+        <div style={{ display:'flex', gap:'0.8rem' }}>
+          {result === 'win' && <button onClick={onSuccess} style={{ background:'#C8A000', color:'#000', border:'none', padding:'0.4rem 1rem', cursor:'pointer', fontSize:'0.85rem' }}>Collect Winnings</button>}
+          {result !== 'win' && <button onClick={onFailure} style={{ background:'#333', color:'#EEE', border:'none', padding:'0.4rem 1rem', cursor:'pointer', fontSize:'0.85rem' }}>Leave Table</button>}
+          {result === 'win' && <button onClick={onFailure} style={{ background:'#222', color:'#888', border:'none', padding:'0.4rem 0.8rem', cursor:'pointer', fontSize:'0.75rem' }}>Decline winnings</button>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Contraband Market ─────────────────────────────────────────────────────────
+const CONTRABAND_GOODS = [
+  { id:'glitterstim', name:'Glitterstim Spice', base:1200, vol:0.35 },
+  { id:'mil_blasters', name:'Military Blasters', base:2500, vol:0.20 },
+  { id:'slicer_chips', name:'Slicer Chips', base:800, vol:0.15 },
+  { id:'bacta_vials', name:'Bacta Vials', base:450, vol:0.10 },
+  { id:'cybernetics', name:'Black-Market Cybernetics', base:3200, vol:0.25 },
+];
+
+function ContrabandMarketOverlay({ onSuccess, onFailure, credits, setCredits, heat, setHeat }) {
+  const [prices, setPrices] = React.useState(() => Object.fromEntries(CONTRABAND_GOODS.map(g => [g.id, g.base])));
+  const [prev, setPrev] = React.useState(() => Object.fromEntries(CONTRABAND_GOODS.map(g => [g.id, g.base])));
+  const [portfolio, setPortfolio] = React.useState(() => Object.fromEntries(CONTRABAND_GOODS.map(g => [g.id, 0])));
+  const [pnl, setPnl] = React.useState(0);
+  const [msg, setMsg] = React.useState('');
+
+  const tick = () => {
+    setPrev({ ...prices });
+    setPrices(p => {
+      const n = {};
+      CONTRABAND_GOODS.forEach(g => {
+        const chg = p[g.id] * (Math.random() * g.vol * 2 - g.vol);
+        n[g.id] = Math.round(Math.max(g.base * 0.2, Math.min(g.base * 4, p[g.id] + chg)));
+      });
+      return n;
+    });
+    setMsg('Market shifted. Prices updated.');
+  };
+
+  const buy = (id) => {
+    const price = prices[id];
+    if (credits < price) { setMsg('Insufficient credits.'); return; }
+    if (Object.values(portfolio).reduce((s,v) => s+v, 0) >= 20) { setMsg('Inventory full. Max 20 units.'); return; }
+    setCredits(c => c - price);
+    setPortfolio(p => ({ ...p, [id]: p[id]+1 }));
+    setPnl(n => n - price);
+    setMsg(`Bought 1 unit. Paid ${price} cr.`);
+  };
+
+  const sell = (id) => {
+    if (portfolio[id] <= 0) { setMsg('None to sell.'); return; }
+    const price = prices[id];
+    setCredits(c => c + price);
+    setPortfolio(p => ({ ...p, [id]: p[id]-1 }));
+    setPnl(n => n + price);
+    if (heat >= 40) setHeat(h => Math.min(100, h + 2));
+    setMsg(`Sold 1 unit for ${price} cr.${heat >= 40 ? ' Heat +2 (CSF watching).' : ''}`);
+  };
+
+  const dump = (id) => {
+    if (portfolio[id] < 5) { setMsg('Need 5 units to dump.'); return; }
+    const price = Math.max(prices[id] - 20, 50);
+    const total = price * 5;
+    setCredits(c => c + total);
+    setPortfolio(p => ({ ...p, [id]: p[id]-5 }));
+    setPnl(n => n + total);
+    setPrices(p => ({ ...p, [id]: Math.max(50, p[id] - 20) }));
+    setMsg(`Dumped 5 units. Crashed price by 20. Received ${total} cr.`);
+  };
+
+  const trendArrow = (id) => {
+    if (prices[id] > prev[id]) return '▲';
+    if (prices[id] < prev[id]) return '▼';
+    return '▬';
+  };
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.96)', zIndex:200, display:'flex', flexDirection:'column', fontFamily:'monospace', color:'#DDD', padding:'1.5rem' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1rem' }}>
+        <div style={{ color:'#9B59B6', fontSize:'1.0rem', letterSpacing:2 }}>CONTRABAND MARKET INDEX</div>
+        <div style={{ display:'flex', gap:'1rem', alignItems:'center', fontSize:'0.8rem' }}>
+          <span style={{ color: pnl >= 0 ? '#4A8' : '#C33' }}>P&L: {pnl >= 0 ? '+' : ''}{pnl} cr</span>
+          <span style={{ color:'#888' }}>Holdings: {Object.values(portfolio).reduce((s,v) => s+v,0)}/20</span>
+          <button onClick={tick} style={{ background:'#9B59B6', color:'#FFF', border:'none', padding:'0.3rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Market Tick</button>
+          <button onClick={onSuccess} style={{ background:'#333', color:'#EEE', border:'none', padding:'0.3rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Exit</button>
+        </div>
+      </div>
+      <div style={{ overflowY:'auto', flex:1 }}>
+        {CONTRABAND_GOODS.map(g => (
+          <div key={g.id} style={{ background:'#111', border:'1px solid #333', padding:'0.6rem', marginBottom:'0.4rem', display:'flex', alignItems:'center', gap:'1rem' }}>
+            <div style={{ flex:1 }}>
+              <div style={{ fontSize:'0.85rem', color:'#EEE' }}>{g.name}</div>
+              <div style={{ fontSize:'0.75rem', color:'#666' }}>Base: {g.base} cr · Volatile: {(g.vol*100|0)}%</div>
+            </div>
+            <div style={{ color: prices[g.id] > prev[g.id] ? '#4A8' : prices[g.id] < prev[g.id] ? '#C33' : '#888', minWidth:100, textAlign:'right' }}>
+              {trendArrow(g.id)} {prices[g.id]} cr
+            </div>
+            <div style={{ fontSize:'0.8rem', color:'#888' }}>Held: {portfolio[g.id]}</div>
+            <button onClick={() => buy(g.id)} style={{ background:'#1A3A1A', color:'#4A8', border:'1px solid #2A5A2A', padding:'0.2rem 0.6rem', cursor:'pointer', fontSize:'0.75rem' }}>Buy</button>
+            <button onClick={() => sell(g.id)} disabled={portfolio[g.id]===0} style={{ background: portfolio[g.id]>0?'#3A1A1A':'#1A1A1A', color: portfolio[g.id]>0?'#C33':'#555', border:'1px solid #5A2A2A', padding:'0.2rem 0.6rem', cursor: portfolio[g.id]>0?'pointer':'default', fontSize:'0.75rem' }}>Sell</button>
+            <button onClick={() => dump(g.id)} disabled={portfolio[g.id]<5} style={{ background:'#2A1A00', color:'#C8A000', border:'1px solid #604800', padding:'0.2rem 0.5rem', cursor: portfolio[g.id]>=5?'pointer':'default', fontSize:'0.7rem' }}>Dump×5</button>
+          </div>
+        ))}
+      </div>
+      {msg && <div style={{ color:'#AAA', fontSize:'0.8rem', marginTop:'0.5rem', borderTop:'1px solid #333', paddingTop:'0.5rem' }}>{msg}</div>}
+    </div>
+  );
+}
+
+// ── Interrogation Matrix ──────────────────────────────────────────────────────
+const SUSPECT_TRAITS = ['Greedy','Fanatical','Cowardly','Deceptive','Loyal'];
+
+function InterrogationMatrixOverlay({ onSuccess, onFailure }) {
+  const [target] = React.useState(() => ({
+    name: ['Vex Informant','CSF Double Agent','Exchange Courier','Black Sun Runner'][Math.floor(Math.random()*4)],
+    trait: SUSPECT_TRAITS[Math.floor(Math.random()*SUSPECT_TRAITS.length)],
+    fear: 0,
+    resistance: 80 + Math.floor(Math.random()*20),
+    stress: 0,
+  }));
+  const [state, setState] = React.useState({ fear:0, resistance: target.resistance, stress:0 });
+  const [round, setRound] = React.useState(1);
+  const [msg, setMsg] = React.useState(`${target.name} sits across from you. Trait detected on profile: ${target.trait}. 8 rounds before they lawyer up.`);
+  const [done, setDone] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const [bribeCount, setBribeCount] = React.useState(0);
+
+  const MAX_ROUNDS = 8;
+
+  const applyTactic = (tactic) => {
+    if (done) return;
+    let fearGain = 0, resLoss = 0, stressGain = 0;
+    let narrative = '';
+
+    switch(tactic) {
+      case 'INTIMIDATE':
+        if (target.trait === 'Cowardly') { fearGain=30+Math.random()*15|0; resLoss=15+Math.random()*10|0; stressGain=20; }
+        else if (target.trait === 'Fanatical') { fearGain=5; resLoss=5; stressGain=35; }
+        else { fearGain=15+Math.random()*10|0; resLoss=10; stressGain=20; }
+        narrative = 'You lean forward. The temperature in the room drops.';
+        break;
+      case 'BRIBE':
+        setBribeCount(b => b+1);
+        if (target.trait === 'Greedy') { fearGain=5; resLoss=35+Math.random()*15|0; stressGain=5; }
+        else { fearGain=0; resLoss=10; stressGain=5; }
+        narrative = 'You slide credits across the table.';
+        break;
+      case 'LOGIC':
+        if (target.trait === 'Fanatical' || target.trait === 'Deceptive') { fearGain=5; resLoss=30+Math.random()*15|0; stressGain=10; }
+        else { fearGain=5; resLoss=15; stressGain=10; }
+        narrative = 'You lay out the evidence. Each piece is irrefutable.';
+        break;
+      case 'SILENCE':
+        stressGain=10+Math.random()*10|0; fearGain=5;
+        narrative = 'You say nothing. The silence is its own kind of pressure.';
+        break;
+      case 'EVIDENCE':
+        resLoss=20+Math.random()*10|0; fearGain=10; stressGain=5;
+        narrative = 'You drop a data chip on the table. Transaction logs. Their name is on every one.';
+        break;
+    }
+
+    const newState = {
+      fear: Math.min(100, state.fear + fearGain),
+      resistance: Math.max(0, state.resistance - resLoss),
+      stress: Math.min(100, state.stress + stressGain),
+    };
+    setState(newState);
+
+    let result = `${narrative} [Fear: ${newState.fear} / Resistance: ${newState.resistance} / Stress: ${newState.stress}]`;
+
+    if (newState.stress >= 100) {
+      setDone(true); setSuccess(false);
+      setMsg('The target shut down completely under pressure. No intel recovered. Medical incident report filed.');
+      return;
+    }
+    if (newState.resistance <= 0) {
+      if (target.trait === 'Greedy' && bribeCount >= 2) {
+        result += `\n\n${target.name} breaks and immediately offers to become a double agent inside the rival faction. You have a source.`;
+      } else {
+        result += `\n\n${target.name} breaks. Vault codes, contact names, drop schedules. All of it. You have what you came for.`;
+      }
+      setDone(true); setSuccess(true);
+      setMsg(result);
+      return;
+    }
+    if (round >= MAX_ROUNDS) {
+      setDone(true); setSuccess(false);
+      setMsg(result + '\n\nRound limit reached. The target lawyered up. Zero intel recovered.');
+      return;
+    }
+    setRound(r => r+1);
+    setMsg(result);
+  };
+
+  const barStyle = (val, color) => ({ width: `${val}%`, background: color, height:8, borderRadius:4, transition:'width 0.3s' });
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.96)', zIndex:200, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', fontFamily:'monospace', color:'#DDD', padding:'2rem' }}>
+      <div style={{ color:'#E8A030', fontSize:'1.0rem', letterSpacing:2, marginBottom:'0.3rem' }}>INTERROGATION MATRIX</div>
+      <div style={{ color:'#888', fontSize:'0.8rem', marginBottom:'1rem' }}>{target.name} · Round {round}/{MAX_ROUNDS} · Trait: {target.trait}</div>
+      <div style={{ width:'100%', maxWidth:420, marginBottom:'1rem' }}>
+        {[['Fear', state.fear,'#C03030'],['Resistance',state.resistance,'#4A7FBF'],['Stress',state.stress,'#9B59B6']].map(([label,val,color]) => (
+          <div key={label} style={{ marginBottom:'0.4rem' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', fontSize:'0.75rem', marginBottom:2 }}><span>{label}</span><span>{val}/100</span></div>
+            <div style={{ background:'#222', borderRadius:4, overflow:'hidden' }}><div style={barStyle(val, color)}/></div>
+          </div>
+        ))}
+      </div>
+      {!done && (
+        <div style={{ display:'flex', gap:'0.5rem', flexWrap:'wrap', justifyContent:'center', marginBottom:'1rem' }}>
+          {[['INTIMIDATE','Intimidate'],['BRIBE','Bribe'],['LOGIC','Logic'],['SILENCE','Silence'],['EVIDENCE','Present Evidence']].map(([t,l]) => (
+            <button key={t} onClick={() => applyTactic(t)} style={{ background:'#1A1A1A', color:'#CCC', border:'1px solid #444', padding:'0.3rem 0.7rem', cursor:'pointer', fontSize:'0.8rem' }}>{l}</button>
+          ))}
+        </div>
+      )}
+      <div style={{ maxWidth:420, textAlign:'center', color:'#AAA', fontSize:'0.82rem', lineHeight:1.6, marginBottom:'1rem', whiteSpace:'pre-line' }}>{msg}</div>
+      {done && (
+        <button onClick={success ? onSuccess : onFailure} style={{ background: success ? '#C8A000' : '#333', color: success ? '#000' : '#EEE', border:'none', padding:'0.4rem 1.2rem', cursor:'pointer', fontSize:'0.85rem' }}>
+          {success ? 'Extract the Intel' : 'End Session'}
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ── Droid Arena ───────────────────────────────────────────────────────────────
+const DROID_FRAMES = [
+  { id:'bx', name:'BX Commando', hp:100, dmg:20, armor:3, spd:18, desc:'High speed and damage.' },
+  { id:'hk', name:'HK Assassin', hp:90, dmg:35, armor:1, spd:12, desc:'Maximum firepower, light armor.' },
+  { id:'ig', name:'IG War Droid', hp:140, dmg:15, armor:9, spd:6, desc:'Heavy armor, low speed.' },
+];
+const DROID_MODS = [
+  { id:'cannon', name:'Repeating Cannon', slot:'WEAPON', dmg:20, armor:0, spd:-2, cost:600 },
+  { id:'plating', name:'Durasteel Plating', slot:'ARMOR', dmg:0, armor:7, spd:-1, cost:500 },
+  { id:'overclock', name:'Overclock Actuators', slot:'OVERCLOCK', dmg:5, armor:0, spd:4, cost:400 },
+];
+
+function DroidArenaOverlay({ onSuccess, onFailure, credits, setCredits }) {
+  const [frame, setFrame] = React.useState(DROID_FRAMES[0]);
+  const [installedMod, setInstalledMod] = React.useState(null);
+  const [bet, setBet] = React.useState(200);
+  const [sabotaged, setSabotaged] = React.useState(false);
+  const [phase, setPhase] = React.useState('prep');
+  const [log, setLog] = React.useState([]);
+  const [result, setResult] = React.useState(null);
+
+  const opponentFrames = DROID_FRAMES.filter(f => f.id !== frame.id);
+  const opponent = opponentFrames[Math.floor(Math.random()*opponentFrames.length)];
+
+  const playerStats = () => {
+    const m = installedMod || { dmg:0, armor:0, spd:0 };
+    return { hp:frame.hp, dmg:frame.dmg+m.dmg, armor:frame.armor+m.armor, spd:frame.spd+m.spd };
+  };
+
+  const simulateFight = () => {
+    if (credits < bet) { setLog(['Insufficient credits for bet.']); return; }
+    setCredits(c => c - bet);
+    const ps = playerStats();
+    const os = { hp: sabotaged ? opponent.hp * 0.75 | 0 : opponent.hp, dmg:opponent.dmg, armor:opponent.armor, spd:opponent.spd };
+    let pHp = ps.hp, oHp = os.hp;
+    const newLog = [];
+    if (sabotaged) newLog.push('Sabotage successful. Opponent starts at 75% HP.');
+    for (let t = 1; t <= 20 && pHp > 0 && oHp > 0; t++) {
+      const pFirst = ps.spd >= os.spd;
+      if (pFirst) {
+        const d = Math.max(1, ps.dmg - os.armor + (Math.random()*6|0) - 3);
+        oHp -= d;
+        if (oHp <= 0) break;
+        const d2 = Math.max(1, os.dmg - ps.armor + (Math.random()*6|0) - 3);
+        pHp -= d2;
+      } else {
+        const d = Math.max(1, os.dmg - ps.armor + (Math.random()*6|0) - 3);
+        pHp -= d;
+        if (pHp <= 0) break;
+        const d2 = Math.max(1, ps.dmg - os.armor + (Math.random()*6|0) - 3);
+        oHp -= d2;
+      }
+      if (t <= 5 || pHp <= 0 || oHp <= 0) newLog.push(`Turn ${t}: Your droid ${pHp} HP / Opponent ${Math.max(0,oHp)} HP`);
+    }
+    const win = oHp <= 0;
+    newLog.push(win ? `Your ${frame.name} wins! Payout: ${bet * 2} cr.` : `Opponent wins. ${frame.name} defeated.`);
+    if (win) setCredits(c => c + bet * 2);
+    setLog(newLog);
+    setResult(win ? 'win' : 'loss');
+    setPhase('done');
+  };
+
+  const installMod = (mod) => {
+    if (credits < mod.cost) { setLog([`Need ${mod.cost} cr to install ${mod.name}.`]); return; }
+    setCredits(c => c - mod.cost);
+    setInstalledMod(mod);
+    setLog([`Installed ${mod.name}. Cost: ${mod.cost} cr.`]);
+  };
+
+  const doSabotage = () => {
+    const success = Math.random() > 0.4;
+    if (success) { setSabotaged(true); setLog(['Sabotage planted. Opponent starts at 75% HP.']); }
+    else { setLog(['Sabotage detected! CSF notified. Heat +5.']); }
+  };
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.96)', zIndex:200, display:'flex', flexDirection:'column', fontFamily:'monospace', color:'#DDD', padding:'1.5rem' }}>
+      <div style={{ color:'#C03030', fontSize:'1.0rem', letterSpacing:2, marginBottom:'1rem' }}>DROID PIT-FIGHT ARENA</div>
+      {phase === 'prep' && (
+        <>
+          <div style={{ marginBottom:'0.8rem' }}>
+            <div style={{ color:'#888', fontSize:'0.75rem', marginBottom:'0.3rem' }}>SELECT FRAME</div>
+            <div style={{ display:'flex', gap:'0.5rem' }}>
+              {DROID_FRAMES.map(f => (
+                <button key={f.id} onClick={() => setFrame(f)} style={{ background: frame.id===f.id ? '#3A0000' : '#111', border:`1px solid ${frame.id===f.id ? '#C03030' : '#444'}`, color:'#DDD', padding:'0.4rem 0.6rem', cursor:'pointer', fontSize:'0.75rem' }}>
+                  {f.name}<br/><span style={{ color:'#888', fontSize:'0.7rem' }}>{f.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ marginBottom:'0.8rem' }}>
+            <div style={{ color:'#888', fontSize:'0.75rem', marginBottom:'0.3rem' }}>INSTALL MOD</div>
+            <div style={{ display:'flex', gap:'0.5rem' }}>
+              {DROID_MODS.map(m => (
+                <button key={m.id} onClick={() => installMod(m)} disabled={installedMod?.id===m.id} style={{ background: installedMod?.id===m.id ? '#1A3A1A' : '#111', border:`1px solid ${installedMod?.id===m.id ? '#4A8' : '#444'}`, color:'#DDD', padding:'0.3rem 0.5rem', cursor:'pointer', fontSize:'0.75rem' }}>
+                  {m.name} ({m.cost}cr)
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ display:'flex', gap:'1rem', alignItems:'center', marginBottom:'0.8rem' }}>
+            <div style={{ fontSize:'0.8rem', color:'#888' }}>Bet: <input type="number" value={bet} onChange={e=>setBet(+e.target.value)} min={100} max={2000} style={{ background:'#111', color:'#EEE', border:'1px solid #444', padding:'0.2rem 0.4rem', width:80, fontFamily:'monospace' }}/> cr</div>
+            <button onClick={doSabotage} disabled={sabotaged} style={{ background:'#2A1A00', color:'#C8A000', border:'1px solid #604800', padding:'0.2rem 0.6rem', cursor:'pointer', fontSize:'0.8rem' }}>Sabotage Opponent (40% risk)</button>
+            <button onClick={simulateFight} style={{ background:'#C03030', color:'#FFF', border:'none', padding:'0.3rem 1rem', cursor:'pointer', fontSize:'0.85rem' }}>FIGHT</button>
+          </div>
+        </>
+      )}
+      <div style={{ flex:1, overflowY:'auto', fontSize:'0.8rem', color:'#AAA', lineHeight:1.8 }}>
+        {log.map((l,i) => <div key={i}>{l}</div>)}
+      </div>
+      {phase === 'done' && (
+        <div style={{ display:'flex', gap:'0.8rem', marginTop:'0.8rem' }}>
+          <button onClick={result==='win' ? onSuccess : onFailure} style={{ background: result==='win' ? '#C8A000' : '#333', color: result==='win' ? '#000' : '#EEE', border:'none', padding:'0.4rem 1rem', cursor:'pointer', fontSize:'0.85rem' }}>
+            {result === 'win' ? 'Collect Winnings' : 'Exit Arena'}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Arms Bench ────────────────────────────────────────────────────────────────
+const ARMS_BLUEPRINTS = [
+  { id:'pistol', name:'Heavy DL-44 Variant', dmg:35, heatRisk:15, cost:1200, itemId:'crafted_blaster_pistol' },
+  { id:'rifle', name:'Czerka Disruptor', dmg:75, heatRisk:40, cost:3500, itemId:'crafted_disruptor_rifle' },
+  { id:'repeater', name:'Mando Heavy Repeater', dmg:55, heatRisk:30, cost:2200, itemId:'crafted_repeater' },
+];
+const ARMS_MODS = [
+  { id:'heatsink', name:'Heat Sink', heatBonus:-20, dmgBonus:0, valueMult:1.0, cost:300 },
+  { id:'powercell', name:'Power Cell', heatBonus:10, dmgBonus:10, valueMult:1.3, cost:400 },
+  { id:'grip', name:'Cortosis Grip', heatBonus:0, dmgBonus:5, valueMult:1.5, cost:500 },
+];
+
+function ArmsBenchOverlay({ onSuccess, onFailure, credits, setCredits, addItem }) {
+  const [bp, setBp] = React.useState(null);
+  const [mod, setMod] = React.useState(null);
+  const [msg, setMsg] = React.useState('Select a blueprint and optional mod, then craft.');
+  const [done, setDone] = React.useState(false);
+
+  const craft = () => {
+    if (!bp) { setMsg('Select a blueprint first.'); return; }
+    const totalCost = bp.cost + (mod ? mod.cost : 0);
+    if (credits < totalCost) { setMsg(`Need ${totalCost} cr to craft.`); return; }
+    setCredits(c => c - totalCost);
+    const totalHeat = bp.heatRisk + (mod ? mod.heatBonus : 0);
+    if (totalHeat > 50 && Math.random() < (totalHeat - 30) / 100) {
+      setMsg('💥 Thermal chamber ruptured! Components destroyed. Heat risk was too high.');
+      setDone(true); return;
+    }
+    const finalDmg = bp.dmg + (mod ? mod.dmgBonus : 0);
+    const resale = Math.round(totalCost * 1.8 * (mod ? mod.valueMult : 1.0) * (1 + finalDmg / 100));
+    setMsg(`✨ ${bp.name}${mod ? ` (+${mod.name})` : ''} fabricated. Damage: ${finalDmg}. Estimated resale: ${resale} cr. Weapon added to inventory.`);
+    setDone(true);
+  };
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.96)', zIndex:200, display:'flex', flexDirection:'column', fontFamily:'monospace', color:'#DDD', padding:'1.5rem' }}>
+      <div style={{ color:'#888', fontSize:'1.0rem', letterSpacing:2, marginBottom:'1rem' }}>BLACK-MARKET ARMS BENCH</div>
+      <div style={{ marginBottom:'0.8rem' }}>
+        <div style={{ color:'#666', fontSize:'0.75rem', marginBottom:'0.3rem' }}>BLUEPRINTS</div>
+        <div style={{ display:'flex', gap:'0.5rem' }}>
+          {ARMS_BLUEPRINTS.map(b => (
+            <button key={b.id} onClick={() => setBp(b)} style={{ background: bp?.id===b.id ? '#1A1A2A' : '#111', border:`1px solid ${bp?.id===b.id ? '#4A7FBF' : '#444'}`, color:'#DDD', padding:'0.4rem 0.6rem', cursor:'pointer', fontSize:'0.75rem', textAlign:'left' }}>
+              {b.name}<br/><span style={{ color:'#888', fontSize:'0.7rem' }}>DMG:{b.dmg} Heat:{b.heatRisk}% Cost:{b.cost}cr</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{ marginBottom:'0.8rem' }}>
+        <div style={{ color:'#666', fontSize:'0.75rem', marginBottom:'0.3rem' }}>MODS (optional)</div>
+        <div style={{ display:'flex', gap:'0.5rem' }}>
+          {ARMS_MODS.map(m => (
+            <button key={m.id} onClick={() => setMod(prev => prev?.id===m.id ? null : m)} style={{ background: mod?.id===m.id ? '#1A2A1A' : '#111', border:`1px solid ${mod?.id===m.id ? '#4A8' : '#444'}`, color:'#DDD', padding:'0.3rem 0.5rem', cursor:'pointer', fontSize:'0.75rem' }}>
+              {m.name}<br/><span style={{ color:'#888', fontSize:'0.7rem' }}>Heat:{m.heatBonus>0?'+':''}{m.heatBonus}% Value:×{m.valueMult}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      {bp && <div style={{ fontSize:'0.8rem', color:'#888', marginBottom:'0.8rem' }}>Total cost: {bp.cost + (mod ? mod.cost : 0)} cr · Heat risk: {bp.heatRisk + (mod ? mod.heatBonus : 0)}%{bp.heatRisk + (mod ? mod.heatBonus : 0) > 50 ? ' ⚠️ HIGH' : ''}</div>}
+      <div style={{ maxWidth:420, color:'#AAA', fontSize:'0.82rem', lineHeight:1.6, marginBottom:'1rem' }}>{msg}</div>
+      <div style={{ display:'flex', gap:'0.8rem' }}>
+        {!done && <button onClick={craft} style={{ background:'#C8A000', color:'#000', border:'none', padding:'0.4rem 1.2rem', cursor:'pointer', fontSize:'0.85rem' }}>Fabricate</button>}
+        <button onClick={done ? onSuccess : onFailure} style={{ background:'#333', color:'#EEE', border:'none', padding:'0.4rem 1rem', cursor:'pointer', fontSize:'0.85rem' }}>{done ? 'Done' : 'Cancel'}</button>
+      </div>
+    </div>
+  );
+}
+
+// ── Protection Shakedown ──────────────────────────────────────────────────────
+function ProtectionShakedownOverlay({ onSuccess, onFailure }) {
+  const targets = [
+    { name:'The Onyx Cantina', type:'Cantina', tribute:1500 },
+    { name:'Level 1313 Cyber-Lab', type:'Clinic', tribute:2500 },
+    { name:'Czerka Pawn & Arms', type:'Pawn Shop', tribute:1200 },
+  ];
+  const [target] = React.useState(() => targets[Math.floor(Math.random()*targets.length)]);
+  const [fear, setFear] = React.useState(10+Math.floor(Math.random()*20));
+  const [resistance, setResistance] = React.useState(50+Math.floor(Math.random()*30));
+  const [csfNotices, setCsfNotices] = React.useState(0);
+  const [msg, setMsg] = React.useState(`${target.name} (${target.type}). Weekly tribute: ${target.tribute} cr. Break their resistance before they call CSF.`);
+  const [done, setDone] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+
+  const act = (action) => {
+    if (done) return;
+    let fearGain = 0, resLoss = 0, csfRisk = 0;
+    let narrative = '';
+    switch(action) {
+      case 'VERBAL':
+        fearGain=10+Math.random()*10|0; resLoss=5; csfRisk=0.1;
+        narrative='You remind them of what happens to establishments that lack adequate protection.';
+        break;
+      case 'SMASH':
+        fearGain=25+Math.random()*15|0; resLoss=20; csfRisk=0.35;
+        narrative='Your enforcers break two tables and a display case. The owner goes pale.';
+        break;
+      case 'OFFER':
+        fearGain=8; resLoss=25+Math.random()*10|0; csfRisk=0.05;
+        narrative='You explain the value you provide. Guaranteed security. Peace of mind.';
+        break;
+    }
+    const newFear = Math.min(100, fear+fearGain);
+    const newRes = Math.max(0, resistance-resLoss);
+    setFear(newFear); setResistance(newRes);
+    if (Math.random() < csfRisk) {
+      setCsfNotices(n => {
+        const nc = n+1;
+        if (nc >= 3) { setDone(true); setSuccess(false); setMsg(`${narrative} — but CSF arrives before the deal is sealed. Three reports. You are made. Retreat.`); }
+        else setMsg(`${narrative} [CSF Alert ${nc}/3]`);
+        return nc;
+      });
+    } else {
+      setMsg(`${narrative} [Fear: ${newFear} | Resistance: ${newRes}]`);
+    }
+    if (newRes <= 0 && !done) {
+      setDone(true); setSuccess(true);
+      setMsg(`${target.name} capitulates. Weekly tribute: ${target.tribute} cr. The establishment is now under Syndicate protection.`);
+    }
+  };
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.96)', zIndex:200, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', fontFamily:'monospace', color:'#DDD', padding:'2rem' }}>
+      <div style={{ color:'#C8A000', fontSize:'1.0rem', letterSpacing:2, marginBottom:'0.3rem' }}>DISTRICT PROTECTION SHAKEDOWN</div>
+      <div style={{ color:'#888', fontSize:'0.8rem', marginBottom:'1rem' }}>CSF Notices: {csfNotices}/3</div>
+      <div style={{ width:'100%', maxWidth:360, marginBottom:'1rem' }}>
+        {[['Fear',fear,'#C03030'],['Resistance',resistance,'#4A7FBF']].map(([label,val,color]) => (
+          <div key={label} style={{ marginBottom:'0.5rem' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', fontSize:'0.75rem', marginBottom:2 }}><span>{label}</span><span>{val}/100</span></div>
+            <div style={{ background:'#222', borderRadius:4, overflow:'hidden' }}><div style={{ width:`${val}%`, background:color, height:10, borderRadius:4, transition:'width 0.3s' }}/></div>
+          </div>
+        ))}
+      </div>
+      {!done && (
+        <div style={{ display:'flex', gap:'0.5rem', marginBottom:'1rem' }}>
+          <button onClick={() => act('VERBAL')} style={{ background:'#1A1A1A', color:'#CCC', border:'1px solid #444', padding:'0.4rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Verbal Threat</button>
+          <button onClick={() => act('SMASH')} style={{ background:'#2A0000', color:'#C03030', border:'1px solid #600', padding:'0.4rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Smash Property</button>
+          <button onClick={() => act('OFFER')} style={{ background:'#1A2A1A', color:'#4A8', border:'1px solid #2A5A2A', padding:'0.4rem 0.8rem', cursor:'pointer', fontSize:'0.8rem' }}>Offer Protection</button>
+        </div>
+      )}
+      <div style={{ maxWidth:420, textAlign:'center', color:'#AAA', fontSize:'0.82rem', lineHeight:1.6, marginBottom:'1rem' }}>{msg}</div>
+      {done && <button onClick={success ? onSuccess : onFailure} style={{ background: success ? '#C8A000' : '#333', color: success ? '#000' : '#EEE', border:'none', padding:'0.4rem 1.2rem', cursor:'pointer', fontSize:'0.85rem' }}>{success ? 'Seal the Deal' : 'Withdraw'}</button>}
+    </div>
+  );
+}
+
+// ── Sky-Lane Evasion ──────────────────────────────────────────────────────────
+function SkyLaneEvasionOverlay({ onSuccess, onFailure }) {
+  const LANES = 5;
+  const [lane, setLane] = React.useState(2);
+  const [csfLane, setCsfLane] = React.useState(0);
+  const [tick, setTick] = React.useState(0);
+  const [distance, setDistance] = React.useState(20);
+  const [hull, setHull] = React.useState(5);
+  const [cargo, setCargo] = React.useState(3);
+  const [msg, setMsg] = React.useState('CSF interceptors on your tail. Dodge traffic. Drop cargo to create distance.');
+  const [done, setDone] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const intervalRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (done) { clearInterval(intervalRef.current); return; }
+    intervalRef.current = setInterval(() => {
+      setTick(t => t + 1);
+      setCsfLane(l => {
+        const opts = [];
+        for (let i = 0; i < LANES; i++) opts.push(i);
+        return opts[Math.floor(Math.random() * opts.length)];
+      });
+      setDistance(d => {
+        const nd = d - 1;
+        if (nd <= 0) { setDone(true); setSuccess(false); setMsg('CSF interceptors achieved weapons lock. You are boarded. Run failed.'); return 0; }
+        return nd;
+      });
+    }, 900);
+    return () => clearInterval(intervalRef.current);
+  }, [done]);
+
+  React.useEffect(() => {
+    if (done) return;
+    if (hull <= 0) { setDone(true); setSuccess(false); setMsg('Hull breached. Speeder goes down in the mid-levels. Capture imminent.'); return; }
+    if (distance >= 20) { setDone(true); setSuccess(true); setMsg('Lost them in the undercity traffic. CSF interceptors broke off pursuit. You are clear.'); return; }
+    if (lane === csfLane && tick > 0) {
+      setHull(h => h - 1);
+      setMsg(`Collision! Hull integrity: ${hull - 1}/5`);
+    }
+  }, [tick, csfLane, lane]);
+
+  const dodge = (dir) => {
+    if (done) return;
+    setLane(l => Math.max(0, Math.min(LANES - 1, l + dir)));
+  };
+
+  const dropCargo = () => {
+    if (cargo <= 0) { setMsg('No cargo remaining to drop.'); return; }
+    setCargo(c => c - 1);
+    setDistance(d => Math.min(20, d + 5));
+    setMsg(`Cargo container deployed. CSF slows to investigate. Distance gained.`);
+  };
+
+  const laneBar = (n) => n === lane ? '[YOU]' : n === csfLane ? '[CSF]' : '[ · ]';
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.96)', zIndex:200, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', fontFamily:'monospace', color:'#DDD', padding:'2rem' }}>
+      <div style={{ color:'#4A7FBF', fontSize:'1.0rem', letterSpacing:2, marginBottom:'0.5rem' }}>SKY-LANE EVASION</div>
+      <div style={{ fontSize:'0.8rem', color:'#888', marginBottom:'1rem' }}>
+        Distance to clear: {distance}/20 &nbsp;|&nbsp; Hull: {hull}/5 &nbsp;|&nbsp; Cargo: {cargo}
+      </div>
+      <div style={{ display:'flex', gap:'0.3rem', marginBottom:'1rem' }}>
+        {Array.from({ length: LANES }, (_, i) => (
+          <div key={i} style={{ width:60, height:32, background: i===lane ? '#1A3A6A' : i===csfLane ? '#3A0000' : '#111', border:`1px solid ${i===lane ? '#4A7FBF' : i===csfLane ? '#C03030' : '#333'}`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.7rem', color: i===lane ? '#4A7FBF' : i===csfLane ? '#C03030' : '#555' }}>
+            {laneBar(i)}
+          </div>
+        ))}
+      </div>
+      {!done && (
+        <div style={{ display:'flex', gap:'0.8rem', marginBottom:'1rem' }}>
+          <button onClick={() => dodge(-1)} style={{ background:'#111', color:'#EEE', border:'1px solid #444', padding:'0.4rem 0.8rem', cursor:'pointer', fontSize:'0.85rem' }}>◀ Left</button>
+          <button onClick={dropCargo} disabled={cargo<=0} style={{ background: cargo>0 ? '#2A1A00' : '#111', color: cargo>0 ? '#C8A000' : '#555', border:`1px solid ${cargo>0 ? '#604800' : '#333'}`, padding:'0.4rem 0.8rem', cursor: cargo>0 ? 'pointer' : 'default', fontSize:'0.85rem' }}>Drop Cargo ({cargo})</button>
+          <button onClick={() => dodge(1)} style={{ background:'#111', color:'#EEE', border:'1px solid #444', padding:'0.4rem 0.8rem', cursor:'pointer', fontSize:'0.85rem' }}>Right ▶</button>
+        </div>
+      )}
+      <div style={{ maxWidth:400, textAlign:'center', color:'#AAA', fontSize:'0.82rem', lineHeight:1.6, marginBottom:'1rem' }}>{msg}</div>
+      {done && <button onClick={success ? onSuccess : onFailure} style={{ background: success ? '#C8A000' : '#333', color: success ? '#000' : '#EEE', border:'none', padding:'0.4rem 1.2rem', cursor:'pointer', fontSize:'0.85rem' }}>{success ? 'Disappear into the city' : 'Accept Capture'}</button>}
     </div>
   );
 }
@@ -5217,18 +6338,20 @@ function StarWarsRPG() {
 
   const worldState = React.useMemo(() => {
     const repTotal = (questFlags.csf_duty_stance ? 1 : 0) + (questFlags.jaxxon_arrested ? 1 : 0)
-      + (questFlags.vane_record_commend ? 1 : 0) + (questFlags.jon_gone_straight_warned ? 1 : 0);
+      + (questFlags.vane_record_commend ? 1 : 0) + (questFlags.jon_gone_straight_warned ? 1 : 0)
+      + (questFlags.marro_recruited ? 1 : 0) + (questFlags.ambush_survived ? 1 : 0);
     const uwTotal = (questFlags.inside_man_path ? 1 : 0) + (questFlags.jaxxon_deal ? 1 : 0)
       + (questFlags.rook_eliminated ? 1 : 0) + (questFlags.marlo_sky_talked ? 1 : 0)
       + (questFlags.jon_status_dead ? 2 : 0) + (questFlags.syndicate_1313_founded ? 2 : 0)
-      + (questFlags.syndicateManagement_active ? 1 : 0);
+      + (questFlags.syndicateManagement_active ? 1 : 0)
+      + (questFlags.sith_contact ? 1 : 0) + (questFlags.grix_recruited ? 1 : 0)
+      + (questFlags.vael_recruited ? 1 : 0) + (questFlags.black_sun_allied ? 2 : 0);
     if (repTotal > uwTotal) return 'lawful';
     if (uwTotal > repTotal) return 'underworld';
     return 'neutral';
   }, [questFlags]);
 
   const currentObjective = React.useMemo(() => {
-    if (questFlags.senate_line_secured) return 'Arc complete. Return to the CSF Academy.';
     if (questFlags.syndicateManagement_active && !questFlags.syndicate_first_contract_run) return '[SYNDICATE] Open the War Table at the Penthouse and run your first contract.';
     if (questFlags.vault_heist_complete && !questFlags.jon_status_dead && !questFlags.jon_status_subjugated && !questFlags.jon_status_rival) return '[INHERITANCE] Go to the Penthouse. Your lieutenants are ready. Jon has nowhere to run.';
     if ((questFlags.malak_turned || questFlags.malak_dead) && (questFlags.reya_loyal || questFlags.reya_blackmailed) && !questFlags.vault_heist_complete) return '[INHERITANCE] Use Reya\'s keycard at the Penthouse vault terminal. Freeze the payroll.';
@@ -5377,6 +6500,22 @@ function StarWarsRPG() {
   }, [questFlags, syndicateRoster.length]);
 
   useEffect(() => {
+    const additions = [];
+    if (questFlags.grix_recruited && !syndicateRoster.find(a => a.id === 'agent_grix'))
+      additions.push({ id:'agent_grix', name:'Grix', agentClass:'Smuggler', skill:4, loyalty:65, traits:['devaronian_contacts'], status:'available', turnsRemaining:0 });
+    if (questFlags.vael_recruited && !syndicateRoster.find(a => a.id === 'agent_vael'))
+      additions.push({ id:'agent_vael', name:'Vael', agentClass:'Slicer', skill:4, loyalty:70, traits:['sis_training'], status:'available', turnsRemaining:0 });
+    if (questFlags.marro_recruited && !syndicateRoster.find(a => a.id === 'agent_marro'))
+      additions.push({ id:'agent_marro', name:'Marro', agentClass:'Fixer', skill:3, loyalty:75, traits:['csf_contacts','heat_reduction'], status:'available', turnsRemaining:0 });
+    if (additions.length > 0) setSyndicateRoster(r => [...r, ...additions]);
+  }, [questFlags, syndicateRoster]);
+
+  useEffect(() => {
+    if (syndicateHeat >= 70 && !questFlags.heat_high_active) setFlag('heat_high_active');
+    else if (syndicateHeat >= 40 && !questFlags.heat_mid_active) setFlag('heat_mid_active');
+  }, [syndicateHeat, questFlags]);
+
+  useEffect(() => {
     STORY_CHECKPOINTS.forEach(({ flag, entry }) => {
       if (questFlags[flag] && !codex.find(e => e.id === entry.id)) {
         unlockCodex(entry);
@@ -5516,7 +6655,7 @@ function StarWarsRPG() {
               pushActionLog(`[${worldObjHere.label}] Attempt failed. Security alert triggered.`, zoneId);
               setActiveMinigame(null);
             };
-            setActiveMinigame({ type: worldObjHere.triggersMinigame, context: worldObjHere, onSuccess: successCb, onFailure: failCb });
+            setActiveMinigame({ type: worldObjHere.triggersMinigame, ...(worldObjHere.minigameConfig ?? {}), context: worldObjHere, onSuccess: successCb, onFailure: failCb });
             setPos({ x, y });
             return;
           }
@@ -5737,6 +6876,13 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'willpower_override' && <WillpowerOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'pit_fight' && <PitFightOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} opponentName={activeMinigame.opponentName ?? 'Opponent'} opponentHp={activeMinigame.opponentHp ?? 5} accent={activeMinigame.accent ?? '#C03030'} />}
       {activeMinigame && activeMinigame.type === 'syndicate_management' && <SyndicateManagementOverlay onClose={activeMinigame.onSuccess} roster={syndicateRoster} setRoster={setSyndicateRoster} contracts={syndicateContracts} activeContracts={syndicateActiveContracts} setActiveContracts={setSyndicateActiveContracts} heat={syndicateHeat} setHeat={setSyndicateHeat} territories={syndicateTerritories} credits={credits} setCredits={setCredits} />}
+      {activeMinigame && activeMinigame.type === 'sabacc' && <SabaccOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {activeMinigame && activeMinigame.type === 'contraband_market' && <ContrabandMarketOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} heat={syndicateHeat} setHeat={setSyndicateHeat} credits={credits} setCredits={setCredits} />}
+      {activeMinigame && activeMinigame.type === 'interrogation' && <InterrogationMatrixOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {activeMinigame && activeMinigame.type === 'droid_arena' && <DroidArenaOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} credits={credits} setCredits={setCredits} />}
+      {activeMinigame && activeMinigame.type === 'arms_bench' && <ArmsBenchOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} credits={credits} setCredits={setCredits} />}
+      {activeMinigame && activeMinigame.type === 'shakedown' && <ProtectionShakedownOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {activeMinigame && activeMinigame.type === 'sky_evasion' && <SkyLaneEvasionOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
     </div>
   );
 }
