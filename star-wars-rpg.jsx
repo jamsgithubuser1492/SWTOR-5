@@ -3483,6 +3483,57 @@ const CODEX_ENTRIES = {
   },
 };
 
+// ── Debug Stage-Jump Cheat Codes ─────────────────────────────────────────────
+// Toggle the panel with backtick (`). Jump to a stage with 1–9.
+// Shift+C injects 5000 credits. Shift+Z resets all flags.
+const DEBUG_STAGES = [
+  {
+    key: '1', label: 'Fresh Start',
+    zone: 'spaceport', pos: { x: 14, y: 10 }, credits: 340,
+    flags: {},
+  },
+  {
+    key: '2', label: 'CSF Intro Done',
+    zone: 'sky_market', pos: { x: 4, y: 13 }, credits: 600,
+    flags: { speeder_transit_unlocked: true, csf_duty_stance: true, jaxxon_arrested: true, vane_record_commend: true, marlo_sky_talked: true },
+  },
+  {
+    key: '3', label: 'Senate Arc Complete',
+    zone: 'sky_market', pos: { x: 4, y: 13 }, credits: 900,
+    flags: { speeder_transit_unlocked: true, csf_duty_stance: true, jaxxon_arrested: true, marlo_sky_talked: true, credit_trail_found: true, senate_line_secured: true, vex_sabacc_offered: true, echo7_found: true, republic_path_open: true },
+  },
+  {
+    key: '4', label: 'Inheritance Arc Started',
+    zone: 'shadow_town', pos: { x: 4, y: 12 }, credits: 1200,
+    flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, republic_path_open: true, inheritance_active: true, jon_apartment_visited: true, marlo_sky_talked: true, credit_trail_found: true },
+  },
+  {
+    key: '5', label: 'Malak Resolved',
+    zone: 'shadow_town', pos: { x: 4, y: 12 }, credits: 1500,
+    flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, republic_path_open: true, inheritance_active: true, cargo_skimmed: true, malak_pit_challenged: true, malak_turned: true, inside_man_path: true },
+  },
+  {
+    key: '6', label: 'Vault Approach Ready',
+    zone: 'penthouse', pos: { x: 14, y: 10 }, credits: 2000,
+    flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, echo7_vault_approach_active: true, vault_approach_active: true },
+  },
+  {
+    key: '7', label: 'Vault Heist Complete',
+    zone: 'penthouse', pos: { x: 14, y: 10 }, credits: 3000,
+    flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, vault_heist_complete: true, rook_eliminated: true, inside_man_path: true },
+  },
+  {
+    key: '8', label: 'Jon Eliminated — Syndicate Active',
+    zone: 'penthouse', pos: { x: 14, y: 10 }, credits: 5000,
+    flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, vault_heist_complete: true, rook_eliminated: true, jon_confrontation_path_a_chosen: true, jon_status_dead: true, syndicateManagement_active: true, syndicate_1313_founded: true, trait_crime_lord: true },
+  },
+  {
+    key: '9', label: 'Full Endgame — All Lieutenants',
+    zone: 'spice_refining_vaults', pos: { x: 2, y: 11 }, credits: 8000,
+    flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, vault_heist_complete: true, rook_eliminated: true, jon_status_dead: true, syndicateManagement_active: true, syndicate_1313_founded: true, trait_crime_lord: true, grix_recruited: true, vael_recruited: true, marro_recruited: true, anzati_contracted: true, black_sun_allied: true, sith_contact: true, manifest_falsified: true, senate_intel_acquired: true },
+  },
+];
+
 const SPEEDER_DESTINATIONS = [
   { id: 'spaceport',         name: 'Sub-Surface Spaceport',       level: 'Sub-Surface L2',        cost: 0,   requiredFlag: null,                       targetZone: 'spaceport',         targetPos: { x: 14, y: 10 } },
   { id: 'market',            name: 'West Market District',         level: 'Sub-Surface L2',        cost: 0,   requiredFlag: null,                       targetZone: 'market',            targetPos: { x: 2,  y: 10 } },
@@ -6333,6 +6384,7 @@ function StarWarsRPG() {
   const [syndicateActiveContracts, setSyndicateActiveContracts] = useState([]);
   const [syndicateHeat, setSyndicateHeat] = useState(0);
   const [syndicateTerritories, setSyndicateTerritories] = useState([]);
+  const [showDebug, setShowDebug] = useState(false);
   const posRef = React.useRef(pos);
   const questFlagsRef = React.useRef(questFlags);
 
@@ -6561,6 +6613,14 @@ function StarWarsRPG() {
 
   useEffect(() => {
     const handleKey = (e) => {
+      if (e.key === '`') { setShowDebug(v => !v); return; }
+      if (showDebug) {
+        const stage = DEBUG_STAGES.find(s => s.key === e.key);
+        if (stage) { setQuestFlags(stage.flags); setCredits(stage.credits); travelToZone(stage.zone, stage.pos); setShowDebug(false); return; }
+        if (e.key === 'C' && e.shiftKey) { setCredits(c => c + 5000); setShowDebug(false); return; }
+        if (e.key === 'Z' && e.shiftKey) { setQuestFlags({}); setShowDebug(false); return; }
+        setShowDebug(false); return;
+      }
       if (showTravel || activeDialogue || transitioning || showSpeeder || showInventory || showCodex || activeMinigame || showVendor) return;
       if (e.key === 'i' || e.key === 'I') { setShowInventory(v => !v); return; }
       if (e.key === 'c' || e.key === 'C') { setShowCodex(v => !v); return; }
@@ -6883,6 +6943,27 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'arms_bench' && <ArmsBenchOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} credits={credits} setCredits={setCredits} />}
       {activeMinigame && activeMinigame.type === 'shakedown' && <ProtectionShakedownOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'sky_evasion' && <SkyLaneEvasionOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {showDebug && (
+        <div style={{ position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.82)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'monospace' }}>
+          <div style={{ background:'#0A0A12',border:'1px solid #4ACDFF44',padding:24,minWidth:480,maxWidth:620 }}>
+            <div style={{ color:'#4ACDFF',fontSize:13,letterSpacing:'0.15em',marginBottom:4 }}>DEBUG STAGE SELECT</div>
+            <div style={{ color:'#3A3F54',fontSize:10,marginBottom:16 }}>Press a number to jump to that checkpoint. Any other key closes this panel.</div>
+            {DEBUG_STAGES.map(s => (
+              <div key={s.key} style={{ display:'flex',gap:12,alignItems:'baseline',padding:'4px 0',borderBottom:'1px solid #14141E' }}>
+                <div style={{ color:'#E8C97A',fontSize:13,width:16,textAlign:'right',flexShrink:0 }}>[{s.key}]</div>
+                <div style={{ color:'#C8CDD8',fontSize:11,flex:1 }}>{s.label}</div>
+                <div style={{ color:'#3A3F54',fontSize:10 }}>{s.zone}</div>
+                <div style={{ color:'#5A9F6A',fontSize:10 }}>{s.credits}cr</div>
+              </div>
+            ))}
+            <div style={{ marginTop:16,display:'flex',gap:24 }}>
+              <div style={{ fontSize:10,color:'#5A5F74' }}>[Shift+C] +5000 credits</div>
+              <div style={{ fontSize:10,color:'#5A5F74' }}>[Shift+Z] reset all flags</div>
+              <div style={{ fontSize:10,color:'#5A5F74' }}>[` ] close panel</div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
