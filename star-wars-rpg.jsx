@@ -2010,8 +2010,8 @@ const PLANETS = {
             requiresFlag: 'malak_pit_challenged',
             requiresNoneFlags: ['malak_turned', 'malak_dead'],
             description: 'The pit floor. Sand hard underfoot from decades of use. Malak is waiting at the center. This settles it.',
-            triggersMinigame: 'pit_fight',
-            minigameConfig: { opponentName: 'Malak', opponentHp: 5, accent: '#C03030' },
+            triggersMinigame: 'tactical_combat',
+            minigameConfig: { opponentProfile: 'malak_enforcer', flavorText: 'The pit floor is hard sand, worn smooth by decades of use. Malak stands at the center — massive, unreadable, blaster already clear of its holster. The crowd above is silent. This is the only way through.' },
             grantsFlag: 'malak_turned',
             grantsCodex: 'codex-malak' },
           { id: 'shadow_town_codex_terminal', x: 5, y: 3, once: true, iconKind: 'terminal', label: 'Sub-Level Registry Post',
@@ -2180,8 +2180,8 @@ const PLANETS = {
             requiresFlag: 'jon_confrontation_path_a_chosen',
             requiresNoneFlags: ['jon_status_dead'],
             description: 'The space between you and Jon Vane. Twelve years of operation about to end. You have both made your calculation.',
-            triggersMinigame: 'pit_fight',
-            minigameConfig: { opponentName: 'Jon Vane', opponentHp: 8, accent: '#C8A000' },
+            triggersMinigame: 'tactical_combat',
+            minigameConfig: { opponentProfile: 'jon_vane', flavorText: "Jon Vane draws the Merr-Sonn with the cortosis-inlaid grip — twelve years in operation ending in a penthouse overlooking the entire city. He looks almost relieved. 'Whoever walks out of this room just proved it.' The viewport is behind him. This is where it ends." },
             grantsFlag: 'jon_status_dead',
             grantsItem: 'weapon_vane_custom_blaster',
             grantsCodex: 'codex-penthouse' },
@@ -5928,13 +5928,19 @@ const AI_COMBAT_PROFILES = {
 };
 
 const ENCOUNTER_TABLE = {
-  shadow_town:      ['black_sun_striker','black_sun_striker','syndicate_thug','exchange_bounty_hunter'],
-  slicer_alleyway:  ['csf_scout','black_sun_striker','syndicate_thug'],
-  freight_hub:      ['csf_swat','csf_swat','syndicate_thug'],
-  the_works:        ['syndicate_thug','black_sun_striker'],
-  sky_market:       ['csf_scout','exchange_bounty_hunter'],
-  market:           ['syndicate_thug','csf_scout'],
-  lower_sky_market: ['black_sun_striker','exchange_bounty_hunter'],
+  shadow_town:         ['black_sun_striker','black_sun_striker','syndicate_thug','exchange_bounty_hunter','black_sun_vigo_guard'],
+  slicer_alleyway:     ['csf_scout','black_sun_striker','syndicate_thug','exchange_bounty_hunter'],
+  freight_hub:         ['csf_swat','csf_swat','syndicate_thug','csf_scout','exchange_bounty_hunter'],
+  the_works:           ['syndicate_thug','black_sun_striker','anzati_assassin'],
+  undercity_outskirts: ['syndicate_thug','black_sun_striker','anzati_assassin','kesh_sith'],
+};
+
+const ENCOUNTER_RATES = {
+  undercity_outskirts: 22,
+  the_works:           20,
+  freight_hub:         18,
+  shadow_town:         15,
+  slicer_alleyway:     15,
 };
 
 const ENCOUNTER_FLAVOR = {
@@ -5967,6 +5973,12 @@ const ENCOUNTER_FLAVOR = {
   lower_sky_market: {
     black_sun_striker: ["Black Sun has been expanding into this level. You stepped into their newest block without realizing it.","A Black Sun runner made you for an underworld rival. The striker behind them does not negotiate."],
     exchange_bounty_hunter: ["The Exchange posted a bounty on anyone disrupting their lower-market routes. You qualify."],
+  },
+  undercity_outskirts: {
+    syndicate_thug: ["Three shapes drop from the overhead pipes. This far down, there are no witnesses. They know it.","A salvage crew decides your equipment is worth more than the finder's fee they are owed. Old math."],
+    black_sun_striker: ["A Black Sun patrol has pushed its territory all the way to the Undercity edge. You are standing in their newest claim.","Word of your operations reached the Black Sun network. A striker intercepted your route before you knew you were being tracked."],
+    anzati_assassin: ["Something moved in the dark ahead of you. Then stopped. Then was somewhere else entirely. You have been stalked since you entered this level.","An Anzati has been hired. You are the contract."],
+    kesh_sith: ["The Force stirs here. Something ancient and wrong. A figure emerges from the ruin entrance, pale eyes burning in the dark. 'You should not be here.'","The Sith acolyte felt you before you saw them. They have been waiting at the ruin threshold. They do not intend to let you pass."],
   },
 };
 
@@ -6024,125 +6036,490 @@ function genCombatMap() {
   return { cover, objs };
 }
 
-function PlayerSprite({ w = 36, h = 48 }) {
+function PlayerSprite({ w = 48, h = 64 }) {
   return (
-    <svg width={w} height={h} viewBox="0 0 12 16" style={{ imageRendering: 'pixelated', display: 'block' }}>
-      <rect x="3" y="0" width="6" height="2" fill="#1A0E05"/>
-      <rect x="3" y="1" width="6" height="4" fill="#C8956A"/>
-      <rect x="4" y="3" width="1" height="1" fill="#1A1A2A"/>
-      <rect x="8" y="3" width="1" height="1" fill="#1A1A2A"/>
-      <rect x="5" y="5" width="2" height="1" fill="#2A2A3A"/>
-      <rect x="2" y="6" width="8" height="5" fill="#0E0E1A"/>
-      <rect x="4" y="6" width="4" height="4" fill="#1A1A2A"/>
-      <rect x="3" y="7" width="1" height="1" fill="#4A9FFF"/>
-      <rect x="2" y="11" width="8" height="1" fill="#3A2A1A"/>
-      <rect x="2" y="12" width="3" height="3" fill="#1A1A2A"/>
-      <rect x="7" y="12" width="3" height="3" fill="#1A1A2A"/>
-      <rect x="2" y="14" width="3" height="2" fill="#0A0808"/>
-      <rect x="7" y="14" width="3" height="2" fill="#0A0808"/>
-      <rect x="10" y="8" width="2" height="1" fill="#555"/>
-      <rect x="11" y="9" width="1" height="2" fill="#555"/>
+    <svg width={w} height={h} viewBox="0 0 20 32" style={{ imageRendering: 'pixelated', display: 'block' }}>
+      {/* Hair */}
+      <rect x="6" y="0" width="8" height="2" fill="#1A0E05"/>
+      <rect x="5" y="1" width="10" height="1" fill="#1A0E05"/>
+      {/* Face */}
+      <rect x="6" y="2" width="8" height="4" fill="#C8956A"/>
+      {/* Eyes */}
+      <rect x="7" y="3" width="2" height="1" fill="#2A2040"/>
+      <rect x="11" y="3" width="2" height="1" fill="#2A2040"/>
+      {/* Nose shadow */}
+      <rect x="9" y="4" width="2" height="1" fill="#B07848"/>
+      {/* Mouth / jaw */}
+      <rect x="8" y="5" width="4" height="1" fill="#9A6040"/>
+      {/* Neck */}
+      <rect x="8" y="6" width="4" height="2" fill="#C8956A"/>
+      {/* Collar */}
+      <rect x="6" y="6" width="2" height="1" fill="#0E0E1A"/>
+      <rect x="12" y="6" width="2" height="1" fill="#0E0E1A"/>
+      {/* Tactical vest / torso */}
+      <rect x="3" y="8" width="14" height="11" fill="#0E0E1A"/>
+      {/* Chest inner panel */}
+      <rect x="6" y="9" width="8" height="7" fill="#1A1A2A"/>
+      {/* Chest rib lines */}
+      <rect x="7" y="10" width="6" height="1" fill="#252535"/>
+      <rect x="7" y="12" width="6" height="1" fill="#252535"/>
+      {/* Badge left breast */}
+      <rect x="4" y="10" width="2" height="1" fill="#4A9FFF"/>
+      <rect x="4" y="11" width="2" height="1" fill="#2A7ADF"/>
+      {/* Utility pouches on sides */}
+      <rect x="3" y="14" width="2" height="3" fill="#252535"/>
+      <rect x="15" y="14" width="2" height="3" fill="#252535"/>
+      {/* Belt */}
+      <rect x="3" y="19" width="14" height="2" fill="#3A2A1A"/>
+      <rect x="9" y="19" width="2" height="2" fill="#5A4A2A"/>
+      {/* Left arm */}
+      <rect x="1" y="8" width="3" height="8" fill="#0E0E1A"/>
+      {/* Left hand */}
+      <rect x="0" y="15" width="3" height="3" fill="#C8956A"/>
+      {/* Right arm */}
+      <rect x="16" y="8" width="3" height="8" fill="#0E0E1A"/>
+      {/* Blaster (right hand) */}
+      <rect x="17" y="13" width="3" height="2" fill="#888"/>
+      <rect x="19" y="11" width="1" height="4" fill="#666"/>
+      {/* Left leg */}
+      <rect x="3" y="21" width="6" height="7" fill="#1A1A2A"/>
+      {/* Right leg */}
+      <rect x="11" y="21" width="6" height="7" fill="#1A1A2A"/>
+      {/* Left boot */}
+      <rect x="3" y="28" width="6" height="4" fill="#0A0808"/>
+      <rect x="3" y="28" width="6" height="1" fill="#1A1510"/>
+      {/* Right boot */}
+      <rect x="11" y="28" width="6" height="4" fill="#0A0808"/>
+      <rect x="11" y="28" width="6" height="1" fill="#1A1510"/>
     </svg>
   );
 }
 
-function EnemySprite({ kind, w = 36, h = 48 }) {
-  const vb = '0 0 12 16';
+function EnemySprite({ kind, w = 48, h = 64 }) {
+  const vb = '0 0 20 32';
   const px = { imageRendering: 'pixelated', display: 'block' };
-  if (kind === 'csf_swat' || kind === 'csf_scout') {
-    const blue = kind === 'csf_swat' ? '#1E3A6A' : '#2A5A8A';
-    const visor = kind === 'csf_swat' ? '#4A9FFF' : '#6ABFFF';
+
+  if (kind === 'csf_swat') {
     return <svg width={w} height={h} viewBox={vb} style={px}>
-      <rect x="2" y="0" width="8" height="3" fill={blue}/><rect x="2" y="1" width="8" height="2" fill={visor}/>
-      <rect x="3" y="3" width="6" height="2" fill="#C8956A"/><rect x="2" y="5" width="8" height="1" fill={blue}/>
-      <rect x="0" y="6" width="3" height="3" fill={blue}/><rect x="9" y="6" width="3" height="3" fill={blue}/>
-      <rect x="2" y="6" width="8" height="5" fill={blue}/><rect x="4" y="7" width="4" height="2" fill="#0A1428"/>
-      <rect x="2" y="11" width="8" height="1" fill="#1A2A4A"/>
-      <rect x="2" y="12" width="3" height="3" fill={blue}/><rect x="7" y="12" width="3" height="3" fill={blue}/>
-      <rect x="2" y="14" width="3" height="2" fill="#0A1020"/><rect x="7" y="14" width="3" height="2" fill="#0A1020"/>
-      {kind === 'csf_swat' && <rect x="10" y="7" width="2" height="1" fill="#888"/>}
+      {/* Helmet shell */}
+      <rect x="5" y="0" width="10" height="7" fill="#1E3A6A"/>
+      {/* Full visor glow */}
+      <rect x="6" y="2" width="8" height="3" fill="#4A9FFF"/>
+      <rect x="7" y="3" width="6" height="1" fill="#8ACFFF"/>
+      <rect x="5" y="6" width="10" height="1" fill="#0A1428"/>
+      {/* Neck collar */}
+      <rect x="7" y="7" width="6" height="1" fill="#1E3A6A"/>
+      {/* Shoulder pauldrons */}
+      <rect x="1" y="8" width="5" height="3" fill="#2A4A7A"/>
+      <rect x="14" y="8" width="5" height="3" fill="#2A4A7A"/>
+      {/* Torso plate armor */}
+      <rect x="3" y="8" width="14" height="12" fill="#1E3A6A"/>
+      <rect x="5" y="9" width="10" height="8" fill="#0A1428"/>
+      <rect x="6" y="10" width="8" height="3" fill="#1A2A4A"/>
+      <rect x="6" y="14" width="8" height="2" fill="#1A2A4A"/>
+      {/* CSF badge */}
+      <rect x="7" y="11" width="2" height="1" fill="#4A9FFF"/>
+      {/* Belt */}
+      <rect x="3" y="20" width="14" height="2" fill="#0A1020"/>
+      {/* Arms */}
+      <rect x="1" y="11" width="3" height="7" fill="#1E3A6A"/>
+      <rect x="16" y="11" width="3" height="7" fill="#1E3A6A"/>
+      {/* Gloves */}
+      <rect x="1" y="18" width="3" height="2" fill="#0A1020"/>
+      <rect x="16" y="18" width="3" height="2" fill="#0A1020"/>
+      {/* Blaster rifle */}
+      <rect x="17" y="14" width="3" height="2" fill="#777"/>
+      <rect x="19" y="12" width="1" height="4" fill="#555"/>
+      {/* Legs */}
+      <rect x="3" y="22" width="6" height="6" fill="#1E3A6A"/>
+      <rect x="11" y="22" width="6" height="6" fill="#1E3A6A"/>
+      {/* Kneepads */}
+      <rect x="3" y="24" width="6" height="2" fill="#2A4A7A"/>
+      <rect x="11" y="24" width="6" height="2" fill="#2A4A7A"/>
+      {/* Boots */}
+      <rect x="3" y="28" width="6" height="4" fill="#0A1020"/>
+      <rect x="11" y="28" width="6" height="4" fill="#0A1020"/>
     </svg>;
   }
-  if (kind === 'black_sun_striker' || kind === 'black_sun_vigo_guard') {
-    const isV = kind === 'black_sun_vigo_guard';
+
+  if (kind === 'csf_scout') {
     return <svg width={w} height={h} viewBox={vb} style={px}>
-      <rect x="2" y="0" width="8" height="4" fill="#0A0808"/><rect x="3" y="2" width="6" height="2" fill="#6A5040"/>
-      <rect x="3" y="4" width="6" height="1" fill="#0A0808"/>
-      {isV && <><rect x="0" y="5" width="3" height="3" fill="#1A0808"/><rect x="9" y="5" width="3" height="3" fill="#1A0808"/></>}
-      <rect x="2" y="5" width="8" height="6" fill="#0A0808"/><rect x="4" y="6" width="4" height="5" fill="#8B0000"/>
-      <rect x="2" y="11" width="8" height="1" fill="#4A1010"/>
-      <rect x="2" y="12" width={isV?'4':'3'} height="3" fill="#0A0808"/><rect x={isV?'6':'7'} y="12" width={isV?'4':'3'} height="3" fill="#0A0808"/>
-      <rect x="2" y="14" width={isV?'4':'3'} height="2" fill="#050505"/><rect x={isV?'6':'7'} y="14" width={isV?'4':'3'} height="2" fill="#050505"/>
-      <rect x="0" y="7" width="2" height="1" fill="#555"/>
+      {/* Scout cap */}
+      <rect x="6" y="0" width="8" height="2" fill="#1E3A6A"/>
+      {/* Half visor */}
+      <rect x="6" y="1" width="8" height="2" fill="#2A5A8A"/>
+      <rect x="7" y="2" width="6" height="1" fill="#6ABFFF"/>
+      {/* Face exposed lower half */}
+      <rect x="7" y="3" width="6" height="3" fill="#C8956A"/>
+      <rect x="8" y="3" width="1" height="1" fill="#2A2040"/>
+      <rect x="11" y="3" width="1" height="1" fill="#2A2040"/>
+      {/* Comm unit on jaw */}
+      <rect x="12" y="5" width="2" height="1" fill="#6ABFFF"/>
+      {/* Neck */}
+      <rect x="8" y="6" width="4" height="2" fill="#C8956A"/>
+      {/* Light armor vest */}
+      <rect x="4" y="8" width="12" height="10" fill="#2A5A8A"/>
+      <rect x="6" y="9" width="8" height="7" fill="#1E3A6A"/>
+      <rect x="7" y="10" width="6" height="1" fill="#2A5A8A"/>
+      <rect x="7" y="12" width="6" height="1" fill="#2A5A8A"/>
+      {/* Lighter shoulder pads */}
+      <rect x="2" y="8" width="3" height="2" fill="#2A5A8A"/>
+      <rect x="15" y="8" width="3" height="2" fill="#2A5A8A"/>
+      {/* Belt */}
+      <rect x="4" y="18" width="12" height="2" fill="#0A1020"/>
+      {/* Arms */}
+      <rect x="2" y="9" width="3" height="7" fill="#2A5A8A"/>
+      <rect x="15" y="9" width="3" height="7" fill="#2A5A8A"/>
+      {/* Pistol (lighter scout loadout) */}
+      <rect x="17" y="12" width="3" height="2" fill="#888"/>
+      {/* Legs */}
+      <rect x="4" y="20" width="5" height="8" fill="#1E3A6A"/>
+      <rect x="11" y="20" width="5" height="8" fill="#1E3A6A"/>
+      {/* Boots */}
+      <rect x="4" y="28" width="5" height="4" fill="#0A1020"/>
+      <rect x="11" y="28" width="5" height="4" fill="#0A1020"/>
     </svg>;
   }
+
+  if (kind === 'black_sun_striker') {
+    return <svg width={w} height={h} viewBox={vb} style={px}>
+      {/* Balaclava head, partial face exposed */}
+      <rect x="6" y="0" width="8" height="7" fill="#080808"/>
+      {/* Face */}
+      <rect x="7" y="2" width="6" height="3" fill="#7A5040"/>
+      <rect x="8" y="3" width="2" height="1" fill="#1A1030"/>
+      <rect x="11" y="3" width="2" height="1" fill="#1A1030"/>
+      {/* Red Black Sun tattoo lines at jaw */}
+      <rect x="7" y="6" width="2" height="1" fill="#C03030"/>
+      <rect x="11" y="6" width="2" height="1" fill="#C03030"/>
+      {/* Black combat jacket */}
+      <rect x="3" y="7" width="14" height="12" fill="#080808"/>
+      {/* Red gang marking on chest */}
+      <rect x="9" y="8" width="2" height="8" fill="#8B0000"/>
+      <rect x="7" y="11" width="6" height="1" fill="#8B0000"/>
+      {/* Weapon side holster */}
+      <rect x="3" y="16" width="3" height="3" fill="#333"/>
+      {/* Belt */}
+      <rect x="3" y="19" width="14" height="2" fill="#1A0808"/>
+      {/* Arms */}
+      <rect x="1" y="7" width="3" height="9" fill="#080808"/>
+      <rect x="16" y="7" width="3" height="9" fill="#080808"/>
+      {/* Blaster raised right hand */}
+      <rect x="17" y="12" width="3" height="2" fill="#666"/>
+      <rect x="19" y="10" width="1" height="4" fill="#444"/>
+      {/* Legs */}
+      <rect x="3" y="21" width="6" height="7" fill="#080808"/>
+      <rect x="11" y="21" width="6" height="7" fill="#080808"/>
+      {/* Red stripe boots */}
+      <rect x="3" y="28" width="6" height="4" fill="#050505"/>
+      <rect x="3" y="28" width="6" height="1" fill="#8B0000"/>
+      <rect x="11" y="28" width="6" height="4" fill="#050505"/>
+      <rect x="11" y="28" width="6" height="1" fill="#8B0000"/>
+    </svg>;
+  }
+
+  if (kind === 'black_sun_vigo_guard') {
+    return <svg width={w} height={h} viewBox={vb} style={px}>
+      {/* Heavy armored helmet */}
+      <rect x="5" y="0" width="10" height="7" fill="#0A0808"/>
+      <rect x="6" y="2" width="8" height="2" fill="#4A0808"/>
+      <rect x="7" y="3" width="6" height="1" fill="#8B0000"/>
+      {/* Face plate cutouts (eyes) */}
+      <rect x="7" y="4" width="2" height="2" fill="#1A0808"/>
+      <rect x="11" y="4" width="2" height="2" fill="#1A0808"/>
+      {/* Wide armored shoulders */}
+      <rect x="0" y="7" width="5" height="5" fill="#0A0808"/>
+      <rect x="15" y="7" width="5" height="5" fill="#0A0808"/>
+      <rect x="1" y="7" width="3" height="2" fill="#1A0808"/>
+      <rect x="16" y="7" width="3" height="2" fill="#1A0808"/>
+      {/* Gold trim on shoulder tops */}
+      <rect x="0" y="7" width="5" height="1" fill="#C8A000"/>
+      <rect x="15" y="7" width="5" height="1" fill="#C8A000"/>
+      {/* Heavy chest plate */}
+      <rect x="3" y="7" width="14" height="13" fill="#0A0808"/>
+      <rect x="5" y="8" width="10" height="9" fill="#111"/>
+      {/* Black Sun faction sigil */}
+      <rect x="9" y="9" width="2" height="6" fill="#8B0000"/>
+      <rect x="7" y="12" width="6" height="1" fill="#8B0000"/>
+      {/* Gold trim stripe on armor */}
+      <rect x="3" y="7" width="14" height="1" fill="#C8A000"/>
+      <rect x="0" y="12" width="20" height="1" fill="#C8A000"/>
+      {/* Belt */}
+      <rect x="3" y="20" width="14" height="2" fill="#1A0808"/>
+      {/* Arms */}
+      <rect x="1" y="12" width="3" height="6" fill="#0A0808"/>
+      <rect x="16" y="12" width="3" height="6" fill="#0A0808"/>
+      {/* Blaster */}
+      <rect x="17" y="14" width="3" height="2" fill="#666"/>
+      {/* Legs greaves */}
+      <rect x="3" y="22" width="6" height="6" fill="#0A0808"/>
+      <rect x="11" y="22" width="6" height="6" fill="#0A0808"/>
+      {/* Gold boot trim */}
+      <rect x="3" y="28" width="6" height="4" fill="#050505"/>
+      <rect x="3" y="28" width="6" height="1" fill="#C8A000"/>
+      <rect x="11" y="28" width="6" height="4" fill="#050505"/>
+      <rect x="11" y="28" width="6" height="1" fill="#C8A000"/>
+    </svg>;
+  }
+
   if (kind === 'exchange_bounty_hunter') {
     return <svg width={w} height={h} viewBox={vb} style={px}>
-      <rect x="2" y="0" width="8" height="2" fill="#2A2A3A"/><rect x="2" y="1" width="8" height="2" fill="#9B59B6"/>
-      <rect x="3" y="3" width="6" height="2" fill="#C8956A"/><rect x="2" y="5" width="8" height="1" fill="#2A2A3A"/>
-      <rect x="1" y="6" width="10" height="5" fill="#2A2A3A"/><rect x="4" y="6" width="4" height="5" fill="#9B59B6"/>
-      <rect x="2" y="11" width="8" height="1" fill="#6A4A7A"/>
-      <rect x="2" y="12" width="3" height="3" fill="#1A1A2A"/><rect x="7" y="12" width="3" height="3" fill="#1A1A2A"/>
-      <rect x="2" y="14" width="3" height="2" fill="#0A0808"/><rect x="7" y="14" width="3" height="2" fill="#0A0808"/>
-      <rect x="10" y="7" width="2" height="1" fill="#888"/><rect x="11" y="8" width="1" height="2" fill="#888"/>
+      {/* Bounty hunter helmet, T-visor */}
+      <rect x="5" y="0" width="10" height="7" fill="#2A2A3A"/>
+      <rect x="6" y="2" width="8" height="2" fill="#9B59B6"/>
+      <rect x="7" y="3" width="6" height="1" fill="#C07AE6"/>
+      <rect x="5" y="5" width="10" height="1" fill="#1A1A2A"/>
+      {/* Rangefinder */}
+      <rect x="14" y="0" width="2" height="3" fill="#555"/>
+      <rect x="15" y="2" width="1" height="1" fill="#9B59B6"/>
+      {/* Neck */}
+      <rect x="7" y="7" width="6" height="1" fill="#2A2A3A"/>
+      {/* Beskar chest plate */}
+      <rect x="4" y="8" width="12" height="11" fill="#2A2A3A"/>
+      <rect x="6" y="9" width="8" height="8" fill="#1A1A2A"/>
+      {/* Exchange purple cross markings */}
+      <rect x="9" y="9" width="2" height="7" fill="#9B59B6"/>
+      <rect x="7" y="12" width="6" height="1" fill="#9B59B6"/>
+      {/* Shoulder pauldrons with purple marks */}
+      <rect x="1" y="8" width="4" height="4" fill="#2A2A3A"/>
+      <rect x="15" y="8" width="4" height="4" fill="#2A2A3A"/>
+      <rect x="2" y="8" width="2" height="1" fill="#9B59B6"/>
+      <rect x="16" y="8" width="2" height="1" fill="#9B59B6"/>
+      {/* Belt / ammo pack */}
+      <rect x="4" y="19" width="12" height="2" fill="#1A1A2A"/>
+      <rect x="8" y="19" width="4" height="2" fill="#555"/>
+      {/* Arms */}
+      <rect x="1" y="12" width="3" height="6" fill="#2A2A3A"/>
+      <rect x="16" y="12" width="3" height="6" fill="#2A2A3A"/>
+      {/* Large blaster carbine */}
+      <rect x="17" y="13" width="3" height="2" fill="#888"/>
+      <rect x="19" y="11" width="1" height="5" fill="#666"/>
+      {/* Legs */}
+      <rect x="4" y="21" width="5" height="7" fill="#2A2A3A"/>
+      <rect x="11" y="21" width="5" height="7" fill="#2A2A3A"/>
+      {/* Purple stripe boots */}
+      <rect x="4" y="28" width="5" height="4" fill="#1A1A2A"/>
+      <rect x="4" y="28" width="5" height="1" fill="#9B59B6"/>
+      <rect x="11" y="28" width="5" height="4" fill="#1A1A2A"/>
+      <rect x="11" y="28" width="5" height="1" fill="#9B59B6"/>
     </svg>;
   }
+
   if (kind === 'anzati_assassin') {
     return <svg width={w} height={h} viewBox={vb} style={px}>
-      <rect x="1" y="0" width="10" height="5" fill="#080808"/><rect x="3" y="3" width="6" height="4" fill="#080808"/>
-      <rect x="4" y="4" width="1" height="1" fill="#C8A000"/><rect x="7" y="4" width="1" height="1" fill="#C8A000"/>
-      <rect x="1" y="5" width="10" height="9" fill="#080808"/>
-      <rect x="2" y="6" width="1" height="6" fill="#111"/><rect x="9" y="6" width="1" height="6" fill="#111"/>
-      <rect x="3" y="11" width="2" height="4" fill="#080808"/><rect x="7" y="11" width="2" height="4" fill="#080808"/>
-      <rect x="3" y="14" width="2" height="2" fill="#050505"/><rect x="7" y="14" width="2" height="2" fill="#050505"/>
+      {/* Wide enveloping hood */}
+      <rect x="3" y="0" width="14" height="8" fill="#080808"/>
+      <rect x="5" y="1" width="10" height="5" fill="#101010"/>
+      {/* Pallid near-human face */}
+      <rect x="6" y="3" width="8" height="5" fill="#D4D0CC"/>
+      {/* Amber eyes - the only color */}
+      <rect x="7" y="4" width="2" height="2" fill="#C8A000"/>
+      <rect x="8" y="4" width="1" height="1" fill="#FFD040"/>
+      <rect x="11" y="4" width="2" height="2" fill="#C8A000"/>
+      <rect x="11" y="4" width="1" height="1" fill="#FFD040"/>
+      {/* Featureless lower face, proboscides tucked */}
+      <rect x="7" y="6" width="6" height="2" fill="#C0BCA8"/>
+      <rect x="8" y="7" width="1" height="1" fill="#A8A498"/>
+      <rect x="11" y="7" width="1" height="1" fill="#A8A498"/>
+      {/* Dark flowing cloak body */}
+      <rect x="2" y="8" width="16" height="14" fill="#080808"/>
+      <rect x="4" y="9" width="12" height="11" fill="#101010"/>
+      {/* Cloak fold shadow lines */}
+      <rect x="6" y="9" width="1" height="10" fill="#080808"/>
+      <rect x="10" y="9" width="1" height="10" fill="#080808"/>
+      <rect x="14" y="9" width="1" height="10" fill="#080808"/>
+      {/* Hidden blades barely visible at sides */}
+      <rect x="2" y="14" width="2" height="6" fill="#555"/>
+      <rect x="16" y="14" width="2" height="6" fill="#555"/>
+      {/* Legs hidden under cloak */}
+      <rect x="2" y="22" width="16" height="10" fill="#080808"/>
+      <rect x="5" y="22" width="4" height="10" fill="#0A0A0A"/>
+      <rect x="11" y="22" width="4" height="10" fill="#0A0A0A"/>
+      {/* Foot shadows */}
+      <rect x="5" y="30" width="4" height="2" fill="#050505"/>
+      <rect x="11" y="30" width="4" height="2" fill="#050505"/>
     </svg>;
   }
+
   if (kind === 'malak_enforcer') {
     return <svg width={w} height={h} viewBox={vb} style={px}>
-      <rect x="1" y="0" width="10" height="4" fill="#111"/><rect x="2" y="1" width="8" height="2" fill="#C03030"/>
-      <rect x="2" y="3" width="8" height="1" fill="#111"/>
-      <rect x="0" y="4" width="12" height="7" fill="#0A0A0A"/>
-      <rect x="3" y="5" width="6" height="6" fill="#8B0000"/>
-      <rect x="0" y="4" width="2" height="4" fill="#111"/><rect x="10" y="4" width="2" height="4" fill="#111"/>
-      <rect x="2" y="11" width="8" height="1" fill="#222"/>
-      <rect x="2" y="12" width="4" height="3" fill="#0A0A0A"/><rect x="6" y="12" width="4" height="3" fill="#0A0A0A"/>
-      <rect x="2" y="14" width="4" height="2" fill="#050508"/><rect x="6" y="14" width="4" height="2" fill="#050508"/>
+      {/* Bald skull */}
+      <rect x="6" y="0" width="8" height="4" fill="#8A6A58"/>
+      <rect x="5" y="1" width="10" height="3" fill="#8A6A58"/>
+      {/* Sith-touched red eyes */}
+      <rect x="7" y="2" width="2" height="1" fill="#FF2020"/>
+      <rect x="8" y="2" width="1" height="1" fill="#FF6040"/>
+      <rect x="11" y="2" width="2" height="1" fill="#FF2020"/>
+      <rect x="12" y="2" width="1" height="1" fill="#FF6040"/>
+      {/* Metal jaw plate - the iconic Malak detail */}
+      <rect x="5" y="4" width="10" height="3" fill="#7A8A9A"/>
+      <rect x="6" y="5" width="8" height="2" fill="#8A9AAA"/>
+      <rect x="6" y="5" width="1" height="1" fill="#5A6A7A"/>
+      <rect x="9" y="5" width="1" height="1" fill="#5A6A7A"/>
+      <rect x="13" y="5" width="1" height="1" fill="#5A6A7A"/>
+      <rect x="7" y="4" width="6" height="1" fill="#6A7A8A"/>
+      {/* Massive shoulder armor */}
+      <rect x="0" y="7" width="6" height="6" fill="#0A0A0A"/>
+      <rect x="14" y="7" width="6" height="6" fill="#0A0A0A"/>
+      <rect x="1" y="8" width="4" height="1" fill="#1A0808"/>
+      <rect x="15" y="8" width="4" height="1" fill="#1A0808"/>
+      {/* Heavy Sith chest armor */}
+      <rect x="3" y="7" width="14" height="13" fill="#0A0A0A"/>
+      <rect x="5" y="8" width="10" height="10" fill="#111"/>
+      {/* Red energy vein lines */}
+      <rect x="9" y="8" width="2" height="10" fill="#C03030"/>
+      <rect x="9" y="9" width="2" height="1" fill="#FF4040"/>
+      <rect x="9" y="12" width="2" height="1" fill="#FF4040"/>
+      <rect x="5" y="11" width="10" height="1" fill="#8B0000"/>
+      <rect x="5" y="14" width="10" height="1" fill="#8B0000"/>
+      {/* Sternum node glow */}
+      <rect x="9" y="11" width="2" height="1" fill="#FF6060"/>
+      {/* Belt */}
+      <rect x="3" y="20" width="14" height="2" fill="#0A0A0A"/>
+      <rect x="7" y="20" width="6" height="2" fill="#8B0000"/>
+      {/* Gauntlets */}
+      <rect x="1" y="13" width="3" height="5" fill="#0A0A0A"/>
+      <rect x="16" y="13" width="3" height="5" fill="#0A0A0A"/>
+      <rect x="0" y="18" width="4" height="3" fill="#555"/>
+      <rect x="16" y="18" width="4" height="3" fill="#555"/>
+      {/* Legs wide stance */}
+      <rect x="2" y="22" width="7" height="6" fill="#0A0A0A"/>
+      <rect x="11" y="22" width="7" height="6" fill="#0A0A0A"/>
+      {/* Red energy vein on legs */}
+      <rect x="5" y="22" width="1" height="6" fill="#8B0000"/>
+      <rect x="14" y="22" width="1" height="6" fill="#8B0000"/>
+      {/* Boots */}
+      <rect x="2" y="28" width="7" height="4" fill="#050508"/>
+      <rect x="11" y="28" width="7" height="4" fill="#050508"/>
     </svg>;
   }
+
   if (kind === 'jon_vane') {
     return <svg width={w} height={h} viewBox={vb} style={px}>
-      <rect x="3" y="0" width="6" height="2" fill="#1A0E05"/><rect x="3" y="1" width="6" height="4" fill="#C8956A"/>
-      <rect x="4" y="3" width="1" height="1" fill="#1A1A2A"/><rect x="7" y="3" width="1" height="1" fill="#1A1A2A"/>
-      <rect x="5" y="4" width="2" height="1" fill="#A07040"/><rect x="4" y="5" width="4" height="1" fill="#C8A000"/>
-      <rect x="2" y="6" width="8" height="5" fill="#080808"/>
-      <rect x="2" y="6" width="1" height="5" fill="#C8A000"/><rect x="9" y="6" width="1" height="5" fill="#C8A000"/>
-      <rect x="4" y="6" width="4" height="3" fill="#E8E0CC"/>
-      <rect x="2" y="11" width="8" height="1" fill="#C8A000"/>
-      <rect x="2" y="12" width="3" height="3" fill="#080808"/><rect x="7" y="12" width="3" height="3" fill="#080808"/>
-      <rect x="2" y="14" width="3" height="2" fill="#1A0808"/><rect x="7" y="14" width="3" height="2" fill="#1A0808"/>
+      {/* Slicked hair, grey temples */}
+      <rect x="6" y="0" width="8" height="2" fill="#1A0E05"/>
+      <rect x="5" y="1" width="10" height="1" fill="#1A0E05"/>
+      <rect x="14" y="1" width="2" height="2" fill="#8A8088"/>
+      {/* Face - sharp, calculating */}
+      <rect x="6" y="2" width="8" height="5" fill="#C8956A"/>
+      <rect x="7" y="3" width="2" height="1" fill="#1A1030"/>
+      <rect x="11" y="3" width="2" height="1" fill="#1A1030"/>
+      {/* Strong jaw, stubble shadow */}
+      <rect x="7" y="6" width="6" height="1" fill="#A07040"/>
+      <rect x="8" y="6" width="4" height="1" fill="#9A6A38"/>
+      {/* Neck */}
+      <rect x="8" y="7" width="4" height="1" fill="#C8956A"/>
+      {/* Gold-trimmed dark suit jacket */}
+      <rect x="3" y="8" width="14" height="12" fill="#080808"/>
+      {/* Suit lapels */}
+      <rect x="8" y="8" width="4" height="10" fill="#1A1A1A"/>
+      {/* Gold trim on lapels */}
+      <rect x="7" y="8" width="1" height="10" fill="#C8A000"/>
+      <rect x="12" y="8" width="1" height="10" fill="#C8A000"/>
+      {/* White shirt */}
+      <rect x="9" y="9" width="2" height="7" fill="#E8E0CC"/>
+      {/* Gold buttons */}
+      <rect x="9" y="10" width="2" height="1" fill="#C8A000"/>
+      <rect x="9" y="13" width="2" height="1" fill="#C8A000"/>
+      {/* Gold shoulder trim */}
+      <rect x="3" y="8" width="14" height="1" fill="#C8A000"/>
+      {/* Belt - fine leather */}
+      <rect x="3" y="20" width="14" height="2" fill="#4A3010"/>
+      <rect x="9" y="20" width="2" height="2" fill="#C8A000"/>
+      {/* Arms */}
+      <rect x="1" y="8" width="3" height="9" fill="#080808"/>
+      <rect x="16" y="8" width="3" height="9" fill="#080808"/>
+      {/* Gold cufflinks */}
+      <rect x="1" y="17" width="3" height="1" fill="#C8A000"/>
+      <rect x="16" y="17" width="3" height="1" fill="#C8A000"/>
+      {/* Merr-Sonn blaster with cortosis grip */}
+      <rect x="17" y="12" width="3" height="2" fill="#8A8878"/>
+      <rect x="19" y="10" width="1" height="4" fill="#6A6858"/>
+      <rect x="18" y="13" width="2" height="1" fill="#C8A000"/>
+      {/* Trousers with gold stripe */}
+      <rect x="3" y="22" width="6" height="6" fill="#1A1010"/>
+      <rect x="11" y="22" width="6" height="6" fill="#1A1010"/>
+      <rect x="6" y="22" width="1" height="6" fill="#C8A000"/>
+      <rect x="13" y="22" width="1" height="6" fill="#C8A000"/>
+      {/* Polished boots */}
+      <rect x="3" y="28" width="6" height="4" fill="#1A0808"/>
+      <rect x="3" y="28" width="6" height="1" fill="#3A2818"/>
+      <rect x="11" y="28" width="6" height="4" fill="#1A0808"/>
+      <rect x="11" y="28" width="6" height="1" fill="#3A2818"/>
     </svg>;
   }
+
   if (kind === 'kesh_sith') {
     return <svg width={w} height={h} viewBox={vb} style={px}>
-      <rect x="2" y="0" width="8" height="3" fill="#0A0808"/><rect x="3" y="2" width="6" height="3" fill="#D4D0C8"/>
-      <rect x="4" y="3" width="1" height="1" fill="#FF2020"/><rect x="7" y="3" width="1" height="1" fill="#FF2020"/>
-      <rect x="3" y="5" width="6" height="1" fill="#0A0808"/>
-      <rect x="1" y="6" width="10" height="8" fill="#0A0808"/>
-      <rect x="1" y="6" width="1" height="8" fill="#8B0000"/><rect x="10" y="6" width="1" height="8" fill="#8B0000"/>
-      <rect x="3" y="12" width="2" height="3" fill="#0A0808"/><rect x="7" y="12" width="2" height="3" fill="#0A0808"/>
-      <rect x="3" y="14" width="2" height="2" fill="#050508"/><rect x="7" y="14" width="2" height="2" fill="#050508"/>
-      <rect x="11" y="8" width="1" height="5" fill="#FF2020"/>
+      {/* Sith hood, partially concealing */}
+      <rect x="4" y="0" width="12" height="5" fill="#0A0808"/>
+      <rect x="5" y="1" width="10" height="3" fill="#111"/>
+      {/* Pallid Sith-corrupted face */}
+      <rect x="6" y="2" width="8" height="5" fill="#D0C8BC"/>
+      {/* Bright red Sith eyes */}
+      <rect x="7" y="3" width="2" height="2" fill="#FF2020"/>
+      <rect x="8" y="3" width="1" height="1" fill="#FF6060"/>
+      <rect x="11" y="3" width="2" height="2" fill="#FF2020"/>
+      <rect x="11" y="3" width="1" height="1" fill="#FF6060"/>
+      {/* Dark side vein corruption on face */}
+      <rect x="7" y="5" width="1" height="2" fill="#5A1010"/>
+      <rect x="12" y="5" width="1" height="2" fill="#5A1010"/>
+      {/* Layered Sith robes */}
+      <rect x="2" y="7" width="16" height="14" fill="#0A0808"/>
+      <rect x="4" y="8" width="12" height="12" fill="#111"/>
+      <rect x="5" y="9" width="10" height="10" fill="#0D0808"/>
+      {/* Robe fold lines */}
+      <rect x="7" y="9" width="1" height="10" fill="#0A0808"/>
+      <rect x="12" y="9" width="1" height="10" fill="#0A0808"/>
+      {/* Red sash belt */}
+      <rect x="4" y="16" width="12" height="2" fill="#8B0000"/>
+      <rect x="4" y="17" width="12" height="1" fill="#C03030"/>
+      {/* Arms in robes */}
+      <rect x="1" y="8" width="4" height="9" fill="#0A0808"/>
+      <rect x="15" y="8" width="4" height="9" fill="#0A0808"/>
+      {/* Red lightsaber blade */}
+      <rect x="17" y="3" width="2" height="5" fill="#5A4040"/>
+      <rect x="17" y="8" width="2" height="8" fill="#C03030"/>
+      <rect x="18" y="8" width="1" height="7" fill="#FF4040"/>
+      {/* Legs under robes */}
+      <rect x="4" y="21" width="5" height="11" fill="#0A0808"/>
+      <rect x="11" y="21" width="5" height="11" fill="#0A0808"/>
+      {/* Boot tips */}
+      <rect x="4" y="29" width="5" height="3" fill="#050508"/>
+      <rect x="11" y="29" width="5" height="3" fill="#050508"/>
     </svg>;
   }
+
   return <svg width={w} height={h} viewBox={vb} style={px}>
-    <rect x="3" y="0" width="6" height="2" fill="#333"/><rect x="3" y="1" width="6" height="4" fill="#B07850"/>
-    <rect x="4" y="3" width="1" height="1" fill="#1A1A2A"/><rect x="7" y="3" width="1" height="1" fill="#1A1A2A"/>
-    <rect x="3" y="5" width="6" height="1" fill="#555"/>
-    <rect x="2" y="6" width="8" height="5" fill="#333"/><rect x="6" y="6" width="2" height="3" fill="#1A1A1A"/>
-    <rect x="2" y="11" width="8" height="1" fill="#4A3A2A"/>
-    <rect x="2" y="12" width="3" height="3" fill="#2A2A2A"/><rect x="7" y="12" width="3" height="3" fill="#2A2A2A"/>
-    <rect x="2" y="14" width="3" height="2" fill="#111"/><rect x="7" y="14" width="3" height="2" fill="#111"/>
-    <rect x="0" y="7" width="2" height="1" fill="#666"/>
+    {/* Syndicate thug - worn street clothes, scar, basic blaster */}
+    <rect x="6" y="0" width="8" height="2" fill="#2A1A0A"/>
+    <rect x="6" y="1" width="8" height="5" fill="#B07850"/>
+    <rect x="8" y="3" width="1" height="1" fill="#2A2020"/>
+    <rect x="11" y="3" width="1" height="1" fill="#2A2020"/>
+    {/* Scar on face */}
+    <rect x="12" y="3" width="1" height="3" fill="#8A5030"/>
+    {/* Neck */}
+    <rect x="8" y="6" width="4" height="2" fill="#B07850"/>
+    {/* Worn jacket */}
+    <rect x="3" y="8" width="14" height="12" fill="#333"/>
+    <rect x="8" y="8" width="4" height="10" fill="#1A1A1A"/>
+    <rect x="4" y="9" width="3" height="8" fill="#2A2A2A"/>
+    <rect x="13" y="9" width="3" height="8" fill="#2A2A2A"/>
+    {/* Belt and holster */}
+    <rect x="3" y="20" width="14" height="2" fill="#2A1A08"/>
+    <rect x="4" y="18" width="3" height="4" fill="#1A1A1A"/>
+    {/* Arms */}
+    <rect x="1" y="8" width="3" height="10" fill="#333"/>
+    <rect x="16" y="8" width="3" height="10" fill="#333"/>
+    {/* Blaster raised */}
+    <rect x="17" y="13" width="3" height="2" fill="#666"/>
+    <rect x="19" y="11" width="1" height="4" fill="#444"/>
+    {/* Worn trousers */}
+    <rect x="3" y="22" width="6" height="6" fill="#2A2A2A"/>
+    <rect x="11" y="22" width="6" height="6" fill="#2A2A2A"/>
+    {/* Boots */}
+    <rect x="3" y="28" width="6" height="4" fill="#111"/>
+    <rect x="11" y="28" width="6" height="4" fill="#111"/>
   </svg>;
 }
 
@@ -7399,12 +7776,14 @@ function StarWarsRPG() {
             pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId);
           }
           if (worldObjHere.triggersMinigame && !completedInteractions.has(worldObjHere.id)) {
-            const successCb = () => {
+            const successCb = (loot) => {
               if (worldObjHere.grantsFlag) setFlag(worldObjHere.grantsFlag);
               if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) { addItem(ITEMS[worldObjHere.grantsItem]); pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId); }
               if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
               if (worldObjHere.once) setCompletedInteractions(prev => new Set([...prev, worldObjHere.id]));
-              pushActionLog(`[${worldObjHere.label}] Override successful.`, zoneId);
+              if (loot && loot.credits) { setCredits(c => c + loot.credits); pushActionLog(`+${loot.credits} credits recovered from the engagement.`, zoneId); }
+              if (loot && loot.item) { addItem(loot.item); pushActionLog(`Salvaged: ${loot.item.name}`, zoneId); }
+              pushActionLog(`[${worldObjHere.label}] Engagement concluded.`, zoneId);
               setActiveMinigame(null);
             };
             const failCb = () => {
@@ -7434,7 +7813,8 @@ function StarWarsRPG() {
       const _ePool = ENCOUNTER_TABLE[zoneId];
       if (_ePool && !questFlags[`enc_cd_${zoneId}`] && !activeMinigame) {
         const _hBonus = Math.floor((syndicateHeat || 0) * 0.4);
-        if (Math.random() * 100 < (15 + _hBonus)) {
+        const _baseRate = ENCOUNTER_RATES[zoneId] || 15;
+        if (Math.random() * 100 < (_baseRate + _hBonus)) {
           const _pKey = _ePool[Math.floor(Math.random() * _ePool.length)];
           const _flavor = getEncounterFlavor(zoneId, _pKey);
           setFlag(`enc_cd_${zoneId}`);
