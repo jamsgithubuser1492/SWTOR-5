@@ -5937,33 +5937,232 @@ const ENCOUNTER_TABLE = {
   lower_sky_market: ['black_sun_striker','exchange_bounty_hunter'],
 };
 
-function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
+const ENCOUNTER_FLAVOR = {
+  shadow_town: {
+    black_sun_striker: ["A Black Sun enforcer clocks your face on their wanted holo. Blaster drawn before you can step back.","You round a corner into a patrol. One of them recognizes you from Malak's description."],
+    syndicate_thug: ["A street enforcer has been watching you for three blocks. The loading bay has no other exit.","Somebody put a price on your head. Word travels fast down here."],
+    exchange_bounty_hunter: ["A tracker in Exchange contract gear drops from a maintenance gantry. Professional. Prepared."],
+  },
+  slicer_alleyway: {
+    csf_scout: ["A CSF scout drone flags your position. The handler is two intersections away and closing.","You trip a micro-surveillance wire. A plainclothes unit converges from both ends of the alley."],
+    black_sun_striker: ["A Black Sun data thief does not appreciate the competition. They make that clear with a raised blaster."],
+    syndicate_thug: ["Two enforcers spot your slicer kit. In their logic, you are cutting into their territory."],
+  },
+  freight_hub: {
+    csf_swat: ["Red strobes. A CSF tactical team seals the freight corridor. Someone burned your route.","The manifest you were carrying matches a flagged shipment. A SWAT unit comes through the service door."],
+    syndicate_thug: ["A dockworkers crew has been skimming this bay for months. They are not interested in witnesses."],
+  },
+  the_works: {
+    syndicate_thug: ["The pipe network goes quiet. Then three shapes detach from the scaffolding above you.","Maintenance drones scatter. The crew behind them was using them as mobile cover."],
+    black_sun_striker: ["Black Sun runs a distribution node somewhere in this industrial maze. You just crossed their perimeter."],
+  },
+  sky_market: {
+    csf_scout: ["A CSF plainclothes agent flags your ID at a market terminal. They signal their partner across the promenade.","You made a purchase that triggered a pattern-match in the surveillance net. The scout is already moving."],
+    exchange_bounty_hunter: ["An Exchange contractor hands your dossier to a hunter across the promenade. The hunter reads it and walks toward you."],
+  },
+  market: {
+    syndicate_thug: ["A protection crew decides your credits belong to them. The market clears fast when weapons come out."],
+    csf_scout: ["Your face matches a warrant flag in the precinct system. The officer clocks the alert and reaches for their comm."],
+  },
+  lower_sky_market: {
+    black_sun_striker: ["Black Sun has been expanding into this level. You stepped into their newest block without realizing it.","A Black Sun runner made you for an underworld rival. The striker behind them does not negotiate."],
+    exchange_bounty_hunter: ["The Exchange posted a bounty on anyone disrupting their lower-market routes. You qualify."],
+  },
+};
+
+function getEncounterFlavor(zoneId, profileKey) {
+  const zoneFlavors = ENCOUNTER_FLAVOR[zoneId] || {};
+  const options = zoneFlavors[profileKey] || Object.values(zoneFlavors).flat();
+  const pool = options.length > 0 ? options : ['A hostile contact corners you. There is no talking your way out of this.'];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+const COMBAT_LOOT = {
+  csf_swat:             { credits:[90,160],  itemChance:0.45, items:[{id:'loot_csf_stun_baton',name:'CSF Stun Baton',type:'weapon',iconKind:'gear',value:200,description:'Regulation CSF close-quarters weapon. Still carries a charge.'},{id:'loot_csf_access_chip',name:'CSF Access Chip',type:'gear',iconKind:'keycard',value:350,description:'Biometric-coded to a SWAT officer. Crackable.'},{id:'loot_tactical_stim',name:'Tactical Stim',type:'consumable',iconKind:'supply',value:120,description:'Military-grade stim. Restores combat readiness fast.'}] },
+  csf_scout:            { credits:[60,110],  itemChance:0.35, items:[{id:'loot_scout_earpiece',name:'CSF Scout Earpiece',type:'gear',iconKind:'gear',value:180,description:'Encrypted channel. 48-hour window before they rotate the key.'},{id:'loot_det_round',name:'Det Round x2',type:'consumable',iconKind:'supply',value:90,description:'Compact explosive rounds. Useful.'}] },
+  black_sun_striker:    { credits:[70,140],  itemChance:0.40, items:[{id:'loot_vibro_knife',name:'Vibro-Knife',type:'weapon',iconKind:'gear',value:250,description:'Black Sun manufacture. Serrated edge still carries a charge.'},{id:'loot_black_sun_sigil',name:'Black Sun Sigil',type:'quest',iconKind:'keycard',value:150,description:'Proof of gang membership. Useful for bluffing at checkpoints.'}] },
+  black_sun_vigo_guard: { credits:[100,180], itemChance:0.45, items:[{id:'loot_heavy_pistol',name:'Heavy Blaster Pistol',type:'weapon',iconKind:'gear',value:400,description:'Modified for stopping power. Black Sun guard-issue.'},{id:'loot_vigo_access_card',name:'Vigo Access Card',type:'quest',iconKind:'keycard',value:500,description:'Opens restricted Black Sun safehouses.'}] },
+  exchange_bounty_hunter:{credits:[110,200], itemChance:0.50, items:[{id:'loot_bounty_contract',name:'Blank Bounty Contract',type:'quest',iconKind:'keycard',value:300,description:'An Exchange authorization seal, unsigned. Could issue counter-contracts.'},{id:'loot_tracking_device',name:'Tracking Device',type:'gear',iconKind:'gear',value:200,description:'Designed to tag targets through crowded levels. One target loaded.'},{id:'loot_dura_weave_vest',name:'Dura-Weave Vest',type:'gear',iconKind:'supply',value:450,description:'Exchange-issue light armor. Absorbs one hit cleanly.'}] },
+  anzati_assassin:      { credits:[80,160],  itemChance:0.50, items:[{id:'loot_memory_toxin',name:'Memory Toxin Vial',type:'consumable',iconKind:'supply',value:600,description:'Anzati-brewed. Disorients target utterly. Handle with care.'},{id:'loot_cipher_thread',name:'Cipher Thread',type:'gear',iconKind:'keycard',value:350,description:'Encrypted data line the Anzati was using. Someone hired them.'}] },
+  malak_enforcer:       { credits:[150,250], itemChance:0.65, items:[{id:'loot_malak_comlink',name:"Malak's Comlink",type:'gear',iconKind:'gear',value:500,description:"Malak's encrypted channel. Other contacts are stored in it."},{id:'loot_cartel_ledger',name:'Cartel Ledger Chip',type:'quest',iconKind:'keycard',value:700,description:'Records of dealings. Names the Black Sun principals.'}] },
+  jon_vane:             { credits:[200,350], itemChance:0.80, items:[{id:'loot_vane_blaster',name:"Jon's Custom Blaster",type:'weapon',iconKind:'gear',value:800,description:"Jon Vane's personal sidearm. Modified barrel and grip. Unmistakable."},{id:'loot_senate_account',name:'Senate Account Key',type:'quest',iconKind:'keycard',value:1000,description:'Access to a laundered Senate credit account. This is what he was protecting.'}] },
+  syndicate_thug:       { credits:[40,90],   itemChance:0.30, items:[{id:'loot_street_cred_chip',name:'Street Cred Chip',type:'quest',iconKind:'keycard',value:100,description:'Gang token. Buys passage through one checkpoint without questions.'},{id:'loot_contraband_stash',name:'Contraband Sample',type:'consumable',iconKind:'supply',value:150,description:'Whatever they were carrying. Sell it quietly.'}] },
+  kesh_sith:            { credits:[120,220], itemChance:0.60, items:[{id:'loot_sith_amulet',name:'Sith Amulet',type:'gear',iconKind:'gear',value:600,description:'Dark side artifact. Force-sensitive users report unease. Sells for a premium.'},{id:'loot_kesh_holocron',name:"Kesh's Holocron Fragment",type:'quest',iconKind:'keycard',value:900,description:'Shattered piece of a Sith teaching device. Dangerous intel.'}] },
+};
+
+function rollLoot(profileKey) {
+  const table = COMBAT_LOOT[profileKey] || COMBAT_LOOT.syndicate_thug;
+  const credits = table.credits[0] + Math.floor(Math.random() * (table.credits[1] - table.credits[0]));
+  const item = Math.random() < table.itemChance ? { ...table.items[Math.floor(Math.random() * table.items.length)], qty: 1 } : null;
+  return { credits, item };
+}
+
+function genCombatMap() {
+  const GW = 8, GH = 6;
+  const cover = Array.from({ length: GH }, () => Array(GW).fill(0));
+  const objs = [];
+  const taken = new Set(['2,1', '2,6', '1,1', '3,1', '1,6', '3,6']);
+  function tryPlace(r, c, val) {
+    const k = `${r},${c}`;
+    if (r < 0 || r >= GH || c < 0 || c >= GW || taken.has(k)) return false;
+    cover[r][c] = val; taken.add(k); return true;
+  }
+  const fullTarget = 2 + Math.floor(Math.random() * 2);
+  for (let a = 0; a < 40 && cover.flat().filter(v => v === 2).length < fullTarget; a++) tryPlace(Math.floor(Math.random() * GH), 2 + Math.floor(Math.random() * 4), 2);
+  const halfTarget = 3 + Math.floor(Math.random() * 3);
+  for (let a = 0; a < 50 && cover.flat().filter(v => v === 1).length < halfTarget; a++) tryPlace(Math.floor(Math.random() * GH), 1 + Math.floor(Math.random() * 6), 1);
+  const candidates = [];
+  for (let r = 0; r < GH; r++) for (let c = 1; c < GW - 1; c++) { if (!taken.has(`${r},${c}`) && cover[r][c] === 0) candidates.push([r, c]); }
+  candidates.sort(() => Math.random() - 0.5);
+  const plan = ['barrel'];
+  if (Math.random() > 0.35) plan.push('barrel');
+  if (Math.random() > 0.45) plan.push('steam');
+  if (Math.random() > 0.5)  plan.push('turret');
+  plan.forEach((type, i) => {
+    if (i < candidates.length) { const [r, c] = candidates[i]; taken.add(`${r},${c}`); objs.push({ id: `o${i}`, type, row: r, col: c, active: true, ...(type === 'turret' ? { hacked: false } : {}) }); }
+  });
+  return { cover, objs };
+}
+
+function PlayerSprite({ w = 36, h = 48 }) {
+  return (
+    <svg width={w} height={h} viewBox="0 0 12 16" style={{ imageRendering: 'pixelated', display: 'block' }}>
+      <rect x="3" y="0" width="6" height="2" fill="#1A0E05"/>
+      <rect x="3" y="1" width="6" height="4" fill="#C8956A"/>
+      <rect x="4" y="3" width="1" height="1" fill="#1A1A2A"/>
+      <rect x="8" y="3" width="1" height="1" fill="#1A1A2A"/>
+      <rect x="5" y="5" width="2" height="1" fill="#2A2A3A"/>
+      <rect x="2" y="6" width="8" height="5" fill="#0E0E1A"/>
+      <rect x="4" y="6" width="4" height="4" fill="#1A1A2A"/>
+      <rect x="3" y="7" width="1" height="1" fill="#4A9FFF"/>
+      <rect x="2" y="11" width="8" height="1" fill="#3A2A1A"/>
+      <rect x="2" y="12" width="3" height="3" fill="#1A1A2A"/>
+      <rect x="7" y="12" width="3" height="3" fill="#1A1A2A"/>
+      <rect x="2" y="14" width="3" height="2" fill="#0A0808"/>
+      <rect x="7" y="14" width="3" height="2" fill="#0A0808"/>
+      <rect x="10" y="8" width="2" height="1" fill="#555"/>
+      <rect x="11" y="9" width="1" height="2" fill="#555"/>
+    </svg>
+  );
+}
+
+function EnemySprite({ kind, w = 36, h = 48 }) {
+  const vb = '0 0 12 16';
+  const px = { imageRendering: 'pixelated', display: 'block' };
+  if (kind === 'csf_swat' || kind === 'csf_scout') {
+    const blue = kind === 'csf_swat' ? '#1E3A6A' : '#2A5A8A';
+    const visor = kind === 'csf_swat' ? '#4A9FFF' : '#6ABFFF';
+    return <svg width={w} height={h} viewBox={vb} style={px}>
+      <rect x="2" y="0" width="8" height="3" fill={blue}/><rect x="2" y="1" width="8" height="2" fill={visor}/>
+      <rect x="3" y="3" width="6" height="2" fill="#C8956A"/><rect x="2" y="5" width="8" height="1" fill={blue}/>
+      <rect x="0" y="6" width="3" height="3" fill={blue}/><rect x="9" y="6" width="3" height="3" fill={blue}/>
+      <rect x="2" y="6" width="8" height="5" fill={blue}/><rect x="4" y="7" width="4" height="2" fill="#0A1428"/>
+      <rect x="2" y="11" width="8" height="1" fill="#1A2A4A"/>
+      <rect x="2" y="12" width="3" height="3" fill={blue}/><rect x="7" y="12" width="3" height="3" fill={blue}/>
+      <rect x="2" y="14" width="3" height="2" fill="#0A1020"/><rect x="7" y="14" width="3" height="2" fill="#0A1020"/>
+      {kind === 'csf_swat' && <rect x="10" y="7" width="2" height="1" fill="#888"/>}
+    </svg>;
+  }
+  if (kind === 'black_sun_striker' || kind === 'black_sun_vigo_guard') {
+    const isV = kind === 'black_sun_vigo_guard';
+    return <svg width={w} height={h} viewBox={vb} style={px}>
+      <rect x="2" y="0" width="8" height="4" fill="#0A0808"/><rect x="3" y="2" width="6" height="2" fill="#6A5040"/>
+      <rect x="3" y="4" width="6" height="1" fill="#0A0808"/>
+      {isV && <><rect x="0" y="5" width="3" height="3" fill="#1A0808"/><rect x="9" y="5" width="3" height="3" fill="#1A0808"/></>}
+      <rect x="2" y="5" width="8" height="6" fill="#0A0808"/><rect x="4" y="6" width="4" height="5" fill="#8B0000"/>
+      <rect x="2" y="11" width="8" height="1" fill="#4A1010"/>
+      <rect x="2" y="12" width={isV?'4':'3'} height="3" fill="#0A0808"/><rect x={isV?'6':'7'} y="12" width={isV?'4':'3'} height="3" fill="#0A0808"/>
+      <rect x="2" y="14" width={isV?'4':'3'} height="2" fill="#050505"/><rect x={isV?'6':'7'} y="14" width={isV?'4':'3'} height="2" fill="#050505"/>
+      <rect x="0" y="7" width="2" height="1" fill="#555"/>
+    </svg>;
+  }
+  if (kind === 'exchange_bounty_hunter') {
+    return <svg width={w} height={h} viewBox={vb} style={px}>
+      <rect x="2" y="0" width="8" height="2" fill="#2A2A3A"/><rect x="2" y="1" width="8" height="2" fill="#9B59B6"/>
+      <rect x="3" y="3" width="6" height="2" fill="#C8956A"/><rect x="2" y="5" width="8" height="1" fill="#2A2A3A"/>
+      <rect x="1" y="6" width="10" height="5" fill="#2A2A3A"/><rect x="4" y="6" width="4" height="5" fill="#9B59B6"/>
+      <rect x="2" y="11" width="8" height="1" fill="#6A4A7A"/>
+      <rect x="2" y="12" width="3" height="3" fill="#1A1A2A"/><rect x="7" y="12" width="3" height="3" fill="#1A1A2A"/>
+      <rect x="2" y="14" width="3" height="2" fill="#0A0808"/><rect x="7" y="14" width="3" height="2" fill="#0A0808"/>
+      <rect x="10" y="7" width="2" height="1" fill="#888"/><rect x="11" y="8" width="1" height="2" fill="#888"/>
+    </svg>;
+  }
+  if (kind === 'anzati_assassin') {
+    return <svg width={w} height={h} viewBox={vb} style={px}>
+      <rect x="1" y="0" width="10" height="5" fill="#080808"/><rect x="3" y="3" width="6" height="4" fill="#080808"/>
+      <rect x="4" y="4" width="1" height="1" fill="#C8A000"/><rect x="7" y="4" width="1" height="1" fill="#C8A000"/>
+      <rect x="1" y="5" width="10" height="9" fill="#080808"/>
+      <rect x="2" y="6" width="1" height="6" fill="#111"/><rect x="9" y="6" width="1" height="6" fill="#111"/>
+      <rect x="3" y="11" width="2" height="4" fill="#080808"/><rect x="7" y="11" width="2" height="4" fill="#080808"/>
+      <rect x="3" y="14" width="2" height="2" fill="#050505"/><rect x="7" y="14" width="2" height="2" fill="#050505"/>
+    </svg>;
+  }
+  if (kind === 'malak_enforcer') {
+    return <svg width={w} height={h} viewBox={vb} style={px}>
+      <rect x="1" y="0" width="10" height="4" fill="#111"/><rect x="2" y="1" width="8" height="2" fill="#C03030"/>
+      <rect x="2" y="3" width="8" height="1" fill="#111"/>
+      <rect x="0" y="4" width="12" height="7" fill="#0A0A0A"/>
+      <rect x="3" y="5" width="6" height="6" fill="#8B0000"/>
+      <rect x="0" y="4" width="2" height="4" fill="#111"/><rect x="10" y="4" width="2" height="4" fill="#111"/>
+      <rect x="2" y="11" width="8" height="1" fill="#222"/>
+      <rect x="2" y="12" width="4" height="3" fill="#0A0A0A"/><rect x="6" y="12" width="4" height="3" fill="#0A0A0A"/>
+      <rect x="2" y="14" width="4" height="2" fill="#050508"/><rect x="6" y="14" width="4" height="2" fill="#050508"/>
+    </svg>;
+  }
+  if (kind === 'jon_vane') {
+    return <svg width={w} height={h} viewBox={vb} style={px}>
+      <rect x="3" y="0" width="6" height="2" fill="#1A0E05"/><rect x="3" y="1" width="6" height="4" fill="#C8956A"/>
+      <rect x="4" y="3" width="1" height="1" fill="#1A1A2A"/><rect x="7" y="3" width="1" height="1" fill="#1A1A2A"/>
+      <rect x="5" y="4" width="2" height="1" fill="#A07040"/><rect x="4" y="5" width="4" height="1" fill="#C8A000"/>
+      <rect x="2" y="6" width="8" height="5" fill="#080808"/>
+      <rect x="2" y="6" width="1" height="5" fill="#C8A000"/><rect x="9" y="6" width="1" height="5" fill="#C8A000"/>
+      <rect x="4" y="6" width="4" height="3" fill="#E8E0CC"/>
+      <rect x="2" y="11" width="8" height="1" fill="#C8A000"/>
+      <rect x="2" y="12" width="3" height="3" fill="#080808"/><rect x="7" y="12" width="3" height="3" fill="#080808"/>
+      <rect x="2" y="14" width="3" height="2" fill="#1A0808"/><rect x="7" y="14" width="3" height="2" fill="#1A0808"/>
+    </svg>;
+  }
+  if (kind === 'kesh_sith') {
+    return <svg width={w} height={h} viewBox={vb} style={px}>
+      <rect x="2" y="0" width="8" height="3" fill="#0A0808"/><rect x="3" y="2" width="6" height="3" fill="#D4D0C8"/>
+      <rect x="4" y="3" width="1" height="1" fill="#FF2020"/><rect x="7" y="3" width="1" height="1" fill="#FF2020"/>
+      <rect x="3" y="5" width="6" height="1" fill="#0A0808"/>
+      <rect x="1" y="6" width="10" height="8" fill="#0A0808"/>
+      <rect x="1" y="6" width="1" height="8" fill="#8B0000"/><rect x="10" y="6" width="1" height="8" fill="#8B0000"/>
+      <rect x="3" y="12" width="2" height="3" fill="#0A0808"/><rect x="7" y="12" width="2" height="3" fill="#0A0808"/>
+      <rect x="3" y="14" width="2" height="2" fill="#050508"/><rect x="7" y="14" width="2" height="2" fill="#050508"/>
+      <rect x="11" y="8" width="1" height="5" fill="#FF2020"/>
+    </svg>;
+  }
+  return <svg width={w} height={h} viewBox={vb} style={px}>
+    <rect x="3" y="0" width="6" height="2" fill="#333"/><rect x="3" y="1" width="6" height="4" fill="#B07850"/>
+    <rect x="4" y="3" width="1" height="1" fill="#1A1A2A"/><rect x="7" y="3" width="1" height="1" fill="#1A1A2A"/>
+    <rect x="3" y="5" width="6" height="1" fill="#555"/>
+    <rect x="2" y="6" width="8" height="5" fill="#333"/><rect x="6" y="6" width="2" height="3" fill="#1A1A1A"/>
+    <rect x="2" y="11" width="8" height="1" fill="#4A3A2A"/>
+    <rect x="2" y="12" width="3" height="3" fill="#2A2A2A"/><rect x="7" y="12" width="3" height="3" fill="#2A2A2A"/>
+    <rect x="2" y="14" width="3" height="2" fill="#111"/><rect x="7" y="14" width="3" height="2" fill="#111"/>
+    <rect x="0" y="7" width="2" height="1" fill="#666"/>
+  </svg>;
+}
+
+function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flavorText }) {
   const GW = 8, GH = 6, CELL = 52;
   const profile = AI_COMBAT_PROFILES[opponentProfile] || AI_COMBAT_PROFILES.syndicate_thug;
 
-  const initCover = () => {
-    const c = Array.from({ length: GH }, () => Array(GW).fill(0));
-    c[1][3] = 1; c[2][3] = 2; c[3][3] = 1;
-    c[0][5] = 1; c[2][5] = 1;
-    c[3][2] = 1; c[5][2] = 2;
-    return c;
-  };
+  const { cover: _initCover, objs: _initObjs } = genCombatMap();
 
   const INIT = {
     pRow: 2, pCol: 1, eRow: 2, eCol: 6,
     pHp: 8, pSh: 3, eHp: profile.hp, eSh: profile.shield,
-    ap: 3, phase: 'player', outcome: null,
+    ap: 3, phase: 'intro', outcome: null, loot: null,
     pOW: false, eOW: false, eBlind: 0,
     gadgets: { thermal: 2, flash: 2, shield: 1, glitch: 2 },
     selGadget: null,
-    log: ['Ambush! WASD=Move  E=Attack/Gadget  Tab=Overwatch  Q=Cycle Gadget  Space=End Turn'],
+    log: ['Tactical engagement! WASD=Move  E=Attack/Gadget  Tab=Overwatch  Q=Cycle Gadget  Space=End Turn'],
     turn: 1,
-    cover: initCover(),
-    objs: [
-      { id: 'b1', type: 'barrel', row: 1, col: 4, active: true },
-      { id: 's1', type: 'steam',  row: 4, col: 3, active: true },
-      { id: 't1', type: 'turret', row: 2, col: 6, active: true, hacked: false },
-    ],
+    cover: _initCover,
+    objs: _initObjs,
     steam: {},
   };
 
@@ -6024,7 +6223,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
     const hit = Math.random() * 100 < calcHit(g.pRow, g.pCol, g.eRow, g.eCol, false);
     let nESh = g.eSh, nEHp = g.eHp, nPSh = g.pSh, nPHp = g.pHp;
     let nCov = g.cover, nObjs = g.objs;
-    let msg = '', nPhase = g.phase, nOut = g.outcome;
+    let msg = '', nPhase = g.phase, nOut = g.outcome, nLoot = null;
 
     if (hit) {
       const dmg = fl ? 3 : 2;
@@ -6043,12 +6242,12 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
         if (cdist(g.pRow, g.pCol, brl.row, brl.col) <= 1) { const r3 = applyDmg(nPSh, nPHp, 3); nPSh = r3.sh; nPHp = r3.hp; }
         msg += ' BARREL EXPLODES!';
       }
-      if (nEHp <= 0) { nPhase = 'outcome'; nOut = 'win'; msg += ` ${profile.name} eliminated!`; }
+      if (nEHp <= 0) { nPhase = 'outcome'; nOut = 'win'; nLoot = rollLoot(opponentProfile); msg += ` ${profile.name} eliminated!`; }
       if (nPHp <= 0 && nPhase !== 'outcome') { nPhase = 'outcome'; nOut = 'loss'; msg += ' You are critically hit!'; }
     } else {
       msg = `Miss! ${getCv(g.eRow, g.eCol) > 0 ? 'Cover held.' : 'Shot went wide.'}`;
     }
-    upd({ ap: g.ap - 1, eSh: nESh, eHp: nEHp, pSh: nPSh, pHp: nPHp, cover: nCov, objs: nObjs, log: [...g.log.slice(-4), msg], phase: nPhase, outcome: nOut });
+    upd({ ap: g.ap - 1, eSh: nESh, eHp: nEHp, pSh: nPSh, pHp: nPHp, cover: nCov, objs: nObjs, log: [...g.log.slice(-4), msg], phase: nPhase, outcome: nOut, loot: nLoot });
   }
 
   function useGadget() {
@@ -6067,7 +6266,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
       for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) { const rr = g.eRow + dr, cc = g.eCol + dc; if (rr >= 0 && rr < GH && cc >= 0 && cc < GW) nC[rr][cc] = 0; }
       patch.cover = nC;
       msg = 'Thermal Detonator! 5 area damage, cover destroyed in blast radius.';
-      if (r.hp <= 0) { patch.phase = 'outcome'; patch.outcome = 'win'; msg += ` ${profile.name} eliminated!`; }
+      if (r.hp <= 0) { patch.phase = 'outcome'; patch.outcome = 'win'; patch.loot = rollLoot(opponentProfile); msg += ` ${profile.name} eliminated!`; }
     } else if (sel === 'flash') {
       if (cdist(g.pRow, g.pCol, g.eRow, g.eCol) > 3) { upd({ log: [...g.log.slice(-4), 'Enemy too far for Flashbang.'] }); return; }
       patch.eBlind = 2; patch.eOW = false;
@@ -6129,7 +6328,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
       const r = applyDmg(eSh, eHp, 2); eSh = r.sh; eHp = r.hp;
       logs.push('Allied turret fires on the enemy — 2 damage!');
       if (eHp <= 0) {
-        upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW: false, steam: newSteam, phase: 'outcome', outcome: 'win', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs, `${profile.name} destroyed by the hacked turret!`] });
+        upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW: false, steam: newSteam, phase: 'outcome', outcome: 'win', loot: rollLoot(opponentProfile), turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs, `${profile.name} destroyed by the hacked turret!`] });
         return;
       }
     }
@@ -6159,7 +6358,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
           const r = applyDmg(eSh, eHp, 2); eSh = r.sh; eHp = r.hp;
           logs.push(`Overwatch reaction! Hit ${profile.name} for 2 damage.`);
           if (eHp <= 0) {
-            upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW, steam: newSteam, pOW: false, phase: 'outcome', outcome: 'win', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs, 'Enemy eliminated!'] });
+            upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW, steam: newSteam, pOW: false, phase: 'outcome', outcome: 'win', loot: rollLoot(opponentProfile), turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs, 'Enemy eliminated!'] });
             return;
           }
         }
@@ -6196,6 +6395,12 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
     function handle(e) {
       const g = gRef.current;
       if (g.phase === 'outcome') return;
+      if (g.phase === 'intro') {
+        const k2 = e.key.toLowerCase();
+        if (k2 === 'f' || k2 === 'enter' || k2 === ' ') { e.preventDefault(); upd({ phase: 'player' }); }
+        else if (k2 === 'escape') { e.preventDefault(); onFailure(); }
+        return;
+      }
       const k = e.key.toLowerCase();
       if (k === 'arrowup' || k === 'w') { e.preventDefault(); movePlayer(-1, 0); }
       else if (k === 'arrowdown' || k === 's') { e.preventDefault(); movePlayer(1, 0); }
@@ -6227,8 +6432,8 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
       const obj = g.objs.find(o => o.active && o.row === r && o.col === c);
       const bg = hasSteam ? '#1A2A1A' : cv === 2 ? '#161622' : cv === 1 ? '#12121C' : '#0A0A14';
       let inner = null;
-      if (isP) inner = <span style={{ color: '#4A9FFF', fontWeight: 'bold', fontSize: '0.75rem' }}>[P]</span>;
-      else if (isE) inner = <span style={{ color: profile.accent, fontWeight: 'bold', fontSize: '0.75rem' }}>[E]</span>;
+      if (isP) inner = <PlayerSprite w={40} h={40} />;
+      else if (isE) inner = <EnemySprite kind={opponentProfile} w={40} h={40} />;
       else if (hasSteam) inner = <span style={{ color: '#5A8A5A', fontSize: '0.85rem' }}>≈</span>;
       else if (obj) inner = <span style={{ fontSize: '0.9rem' }}>{obj.type === 'barrel' ? '⚡' : obj.type === 'steam' ? '💨' : obj.hacked ? '★' : '⊙'}</span>;
       else if (cv === 2) inner = <span style={{ color: '#334', fontSize: '0.8rem' }}>█</span>;
@@ -6239,6 +6444,32 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
         </div>
       );
     }
+  }
+
+  if (g.phase === 'intro') {
+    return (
+      <div style={{ position: 'fixed', inset: 0, background: '#000', zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: "'IBM Plex Mono',monospace", gap: 20, padding: 24 }}>
+        <div style={{ color: '#C8A000', fontSize: '0.6rem', letterSpacing: '0.3em' }}>TACTICAL ENCOUNTER</div>
+        <div style={{ display: 'flex', gap: 56, alignItems: 'flex-end', width: '100%', maxWidth: 480, justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+            <PlayerSprite w={48} h={64} />
+            <div style={{ color: '#4A9FFF', fontSize: '0.5rem' }}>YOU</div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+            <EnemySprite kind={opponentProfile} w={96} h={128} />
+            <div style={{ color: profile.accent, fontSize: '0.5rem' }}>{profile.name}</div>
+          </div>
+        </div>
+        <div style={{ color: '#AAA', fontSize: '0.65rem', maxWidth: 440, textAlign: 'center', lineHeight: 1.9, border: '1px solid #1A1A2A', background: '#06060F', padding: '12px 16px' }}>
+          {flavorText || 'A hostile contact has you cornered. There is no talking your way out of this.'}
+        </div>
+        <div style={{ display: 'flex', gap: 16 }}>
+          <button onClick={() => upd({ phase: 'player' })} style={{ background: '#C8A000', color: '#000', border: 'none', padding: '0.5rem 2.5rem', cursor: 'pointer', fontSize: '0.8rem', fontFamily: "'IBM Plex Mono',monospace", fontWeight: 'bold' }}>FIGHT!</button>
+          <button onClick={onFailure} style={{ background: '#1A0A0A', color: '#888', border: '1px solid #333', padding: '0.5rem 2rem', cursor: 'pointer', fontSize: '0.8rem', fontFamily: "'IBM Plex Mono',monospace" }}>Run</button>
+        </div>
+        <div style={{ color: '#333', fontSize: '0.5rem' }}>F / Enter = Fight  |  Esc = Run</div>
+      </div>
+    );
   }
 
   return (
@@ -6282,11 +6513,17 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
         {g.log.slice(-4).map((l, i) => <div key={i} style={{ color: i === g.log.slice(-4).length - 1 ? '#BBB' : '#555', fontSize: '0.58rem', lineHeight: 1.6 }}>{l}</div>)}
       </div>
       <div style={{ color: '#333', fontSize: '0.52rem', marginTop: 2 }}>WASD/Arrows: Move  |  E: Attack or use selected Gadget  |  Tab: Overwatch  |  Q: Cycle Gadget  |  Space: End Turn</div>
-      {g.phase === 'outcome' && (
-        <button onClick={g.outcome === 'win' ? onSuccess : onFailure}
-          style={{ marginTop: 10, background: g.outcome === 'win' ? '#C8A000' : '#1A0A0A', color: g.outcome === 'win' ? '#000' : '#EEE', border: 'none', padding: '0.5rem 2rem', cursor: 'pointer', fontSize: '0.8rem' }}>
-          {g.outcome === 'win' ? 'Hold the Field' : 'Fall Back'}
-        </button>
+      {g.phase === 'outcome' && g.outcome === 'win' && g.loot && (
+        <div style={{ marginTop: 10, border: '1px solid #C8A000', background: '#080800', padding: '10px 20px', textAlign: 'center', minWidth: 260 }}>
+          <div style={{ color: '#C8A000', fontSize: '0.65rem', letterSpacing: '0.2em', marginBottom: 6 }}>FIELD SECURED</div>
+          <div style={{ color: '#EEE', fontSize: '0.7rem', marginBottom: 4 }}>Credits recovered: <span style={{ color: '#C8A000' }}>{g.loot.credits}</span></div>
+          {g.loot.item && <div style={{ color: '#9B59B6', fontSize: '0.65rem', marginBottom: 2 }}>Item found: {g.loot.item.name}</div>}
+          {g.loot.item && <div style={{ color: '#555', fontSize: '0.55rem', marginBottom: 6 }}>{g.loot.item.description}</div>}
+          <button onClick={() => onSuccess(g.loot)} style={{ marginTop: 6, background: '#C8A000', color: '#000', border: 'none', padding: '0.4rem 1.8rem', cursor: 'pointer', fontSize: '0.75rem', fontFamily: "'IBM Plex Mono',monospace", fontWeight: 'bold' }}>Collect</button>
+        </div>
+      )}
+      {g.phase === 'outcome' && g.outcome === 'loss' && (
+        <button onClick={onFailure} style={{ marginTop: 10, background: '#1A0A0A', color: '#EEE', border: '1px solid #333', padding: '0.5rem 2rem', cursor: 'pointer', fontSize: '0.8rem', fontFamily: "'IBM Plex Mono',monospace" }}>Fall Back</button>
       )}
     </div>
   );
@@ -7199,11 +7436,19 @@ function StarWarsRPG() {
         const _hBonus = Math.floor((syndicateHeat || 0) * 0.4);
         if (Math.random() * 100 < (15 + _hBonus)) {
           const _pKey = _ePool[Math.floor(Math.random() * _ePool.length)];
+          const _flavor = getEncounterFlavor(zoneId, _pKey);
           setFlag(`enc_cd_${zoneId}`);
           setActiveMinigame({
             type: 'tactical_combat',
             opponentProfile: _pKey,
-            onSuccess: () => { pushActionLog('You held the field. Threat neutralized.', zoneId); setCredits(c => c + 150); setActiveMinigame(null); },
+            flavorText: _flavor,
+            onSuccess: (loot) => {
+              const _cr = loot ? loot.credits : 100;
+              pushActionLog(`You held the field. +${_cr} credits recovered.`, zoneId);
+              setCredits(c => c + _cr);
+              if (loot && loot.item) addItem(loot.item);
+              setActiveMinigame(null);
+            },
             onFailure: () => { pushActionLog('You fell back under fire. CSF heat spikes.', zoneId); setSyndicateHeat(h => Math.min(100, h + 10)); setActiveMinigame(null); },
           });
           setPos({ x, y });
@@ -7419,7 +7664,7 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'arms_bench' && <ArmsBenchOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} credits={credits} setCredits={setCredits} />}
       {activeMinigame && activeMinigame.type === 'shakedown' && <ProtectionShakedownOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'sky_evasion' && <SkyLaneEvasionOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
-      {activeMinigame && activeMinigame.type === 'tactical_combat' && <TacticalGridCombatOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} opponentProfile={activeMinigame.opponentProfile ?? 'syndicate_thug'} />}
+      {activeMinigame && activeMinigame.type === 'tactical_combat' && <TacticalGridCombatOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} opponentProfile={activeMinigame.opponentProfile ?? 'syndicate_thug'} flavorText={activeMinigame.flavorText} />}
       {showDebug && (
         <div style={{ position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.82)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'monospace' }}>
           <div style={{ background:'#0A0A12',border:'1px solid #4ACDFF44',padding:24,minWidth:480,maxWidth:620 }}>
