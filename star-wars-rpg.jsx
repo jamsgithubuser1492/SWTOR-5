@@ -5914,6 +5914,384 @@ function SkyLaneEvasionOverlay({ onSuccess, onFailure }) {
   );
 }
 
+const AI_COMBAT_PROFILES = {
+  csf_swat:             { aggression:30, cover:90, flank:30, overwatch:85, optRange:4, name:'CSF SWAT Operative',   hp:6, shield:3, accent:'#4A9FFF' },
+  csf_scout:            { aggression:55, cover:55, flank:70, overwatch:50, optRange:3, name:'CSF Scout',            hp:4, shield:2, accent:'#4A9FFF' },
+  black_sun_striker:    { aggression:85, cover:30, flank:75, overwatch:20, optRange:2, name:'Black Sun Striker',    hp:5, shield:1, accent:'#C03030' },
+  black_sun_vigo_guard: { aggression:60, cover:65, flank:55, overwatch:55, optRange:3, name:'Black Sun Guard',      hp:7, shield:2, accent:'#C03030' },
+  exchange_bounty_hunter:{ aggression:60, cover:65, flank:85, overwatch:70, optRange:3, name:'Exchange Bounty Hunter',hp:6,shield:2, accent:'#9B59B6' },
+  anzati_assassin:      { aggression:90, cover:20, flank:95, overwatch:10, optRange:1, name:'Anzati Assassin',      hp:5, shield:0, accent:'#C8A000' },
+  malak_enforcer:       { aggression:70, cover:50, flank:60, overwatch:40, optRange:2, name:'Malak',                hp:8, shield:2, accent:'#C03030' },
+  jon_vane:             { aggression:55, cover:70, flank:65, overwatch:60, optRange:3, name:'Jon Vane',             hp:10, shield:3, accent:'#C8A000' },
+  syndicate_thug:       { aggression:75, cover:25, flank:40, overwatch:15, optRange:2, name:'Syndicate Thug',       hp:4, shield:0, accent:'#808080' },
+  kesh_sith:            { aggression:80, cover:30, flank:70, overwatch:30, optRange:2, name:'Kesh',                 hp:8, shield:0, accent:'#8B0000' },
+};
+
+const ENCOUNTER_TABLE = {
+  shadow_town:      ['black_sun_striker','black_sun_striker','syndicate_thug','exchange_bounty_hunter'],
+  slicer_alleyway:  ['csf_scout','black_sun_striker','syndicate_thug'],
+  freight_hub:      ['csf_swat','csf_swat','syndicate_thug'],
+  the_works:        ['syndicate_thug','black_sun_striker'],
+  sky_market:       ['csf_scout','exchange_bounty_hunter'],
+  market:           ['syndicate_thug','csf_scout'],
+  lower_sky_market: ['black_sun_striker','exchange_bounty_hunter'],
+};
+
+function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile }) {
+  const GW = 8, GH = 6, CELL = 52;
+  const profile = AI_COMBAT_PROFILES[opponentProfile] || AI_COMBAT_PROFILES.syndicate_thug;
+
+  const initCover = () => {
+    const c = Array.from({ length: GH }, () => Array(GW).fill(0));
+    c[1][3] = 1; c[2][3] = 2; c[3][3] = 1;
+    c[0][5] = 1; c[2][5] = 1;
+    c[3][2] = 1; c[5][2] = 2;
+    return c;
+  };
+
+  const INIT = {
+    pRow: 2, pCol: 1, eRow: 2, eCol: 6,
+    pHp: 8, pSh: 3, eHp: profile.hp, eSh: profile.shield,
+    ap: 3, phase: 'player', outcome: null,
+    pOW: false, eOW: false, eBlind: 0,
+    gadgets: { thermal: 2, flash: 2, shield: 1, glitch: 2 },
+    selGadget: null,
+    log: ['Ambush! WASD=Move  E=Attack/Gadget  Tab=Overwatch  Q=Cycle Gadget  Space=End Turn'],
+    turn: 1,
+    cover: initCover(),
+    objs: [
+      { id: 'b1', type: 'barrel', row: 1, col: 4, active: true },
+      { id: 's1', type: 'steam',  row: 4, col: 3, active: true },
+      { id: 't1', type: 'turret', row: 2, col: 6, active: true, hacked: false },
+    ],
+    steam: {},
+  };
+
+  const [gs, setGs] = React.useState(INIT);
+  const gRef = React.useRef(INIT);
+
+  function upd(patch) {
+    const next = { ...gRef.current, ...patch };
+    gRef.current = next;
+    setGs(next);
+  }
+
+  function cdist(r1, c1, r2, c2) { return Math.max(Math.abs(r1 - r2), Math.abs(c1 - c2)); }
+
+  function hasLoS(ar, ac, tr, tc) {
+    const steps = Math.max(Math.abs(tr - ar), Math.abs(tc - ac));
+    for (let i = 1; i < steps; i++) {
+      const r = Math.round(ar + (tr - ar) * i / steps);
+      const c = Math.round(ac + (tc - ac) * i / steps);
+      if (gRef.current.steam[`${r},${c}`]) return false;
+    }
+    return true;
+  }
+
+  function isFlank(ar, ac, tr, tc) {
+    const d = cdist(ar, ac, tr, tc);
+    if (d <= 1) return true;
+    return (ar === tr || ac === tc) && d <= 2;
+  }
+
+  function getCv(r, c) { return (gRef.current.cover[r] || [])[c] || 0; }
+
+  function calcHit(ar, ac, tr, tc, blind) {
+    const cv = getCv(tr, tc);
+    const fl = isFlank(ar, ac, tr, tc);
+    let base = 75;
+    if (!fl) { if (cv === 1) base -= 25; else if (cv === 2) base -= 50; }
+    const d = cdist(ar, ac, tr, tc);
+    if (d > 4) base -= (d - 4) * 8;
+    if (blind) base = Math.round(base * 0.35);
+    return Math.max(10, Math.min(95, base));
+  }
+
+  function applyDmg(sh, hp, dmg) {
+    let s = sh, d = dmg;
+    if (s > 0) { const a = Math.min(s, d); s -= a; d -= a; }
+    return { sh: s, hp: Math.max(0, hp - d) };
+  }
+
+  function playerAttack() {
+    const g = gRef.current;
+    if (g.phase !== 'player' || g.ap < 1) return;
+    if (!hasLoS(g.pRow, g.pCol, g.eRow, g.eCol)) {
+      upd({ log: [...g.log.slice(-4), 'No line of sight through the steam cloud.'] });
+      return;
+    }
+    const fl = isFlank(g.pRow, g.pCol, g.eRow, g.eCol);
+    const hit = Math.random() * 100 < calcHit(g.pRow, g.pCol, g.eRow, g.eCol, false);
+    let nESh = g.eSh, nEHp = g.eHp, nPSh = g.pSh, nPHp = g.pHp;
+    let nCov = g.cover, nObjs = g.objs;
+    let msg = '', nPhase = g.phase, nOut = g.outcome;
+
+    if (hit) {
+      const dmg = fl ? 3 : 2;
+      const r = applyDmg(nESh, nEHp, dmg);
+      nESh = r.sh; nEHp = r.hp;
+      msg = `Hit! ${fl ? 'Flanking shot' : getCv(g.eRow, g.eCol) > 0 ? 'Through cover' : 'Clean shot'} — ${dmg} dmg.`;
+      const brl = g.objs.find(o => o.type === 'barrel' && o.active && cdist(o.row, o.col, g.eRow, g.eCol) <= 1);
+      if (brl) {
+        nObjs = g.objs.map(o => o.id === brl.id ? { ...o, active: false } : o);
+        nCov = g.cover.map(row => [...row]);
+        for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+          const br = brl.row + dr, bc = brl.col + dc;
+          if (br >= 0 && br < GH && bc >= 0 && bc < GW) nCov[br][bc] = 0;
+        }
+        if (cdist(g.eRow, g.eCol, brl.row, brl.col) <= 1) { const r2 = applyDmg(nESh, nEHp, 4); nESh = r2.sh; nEHp = r2.hp; }
+        if (cdist(g.pRow, g.pCol, brl.row, brl.col) <= 1) { const r3 = applyDmg(nPSh, nPHp, 3); nPSh = r3.sh; nPHp = r3.hp; }
+        msg += ' BARREL EXPLODES!';
+      }
+      if (nEHp <= 0) { nPhase = 'outcome'; nOut = 'win'; msg += ` ${profile.name} eliminated!`; }
+      if (nPHp <= 0 && nPhase !== 'outcome') { nPhase = 'outcome'; nOut = 'loss'; msg += ' You are critically hit!'; }
+    } else {
+      msg = `Miss! ${getCv(g.eRow, g.eCol) > 0 ? 'Cover held.' : 'Shot went wide.'}`;
+    }
+    upd({ ap: g.ap - 1, eSh: nESh, eHp: nEHp, pSh: nPSh, pHp: nPHp, cover: nCov, objs: nObjs, log: [...g.log.slice(-4), msg], phase: nPhase, outcome: nOut });
+  }
+
+  function useGadget() {
+    const g = gRef.current;
+    if (g.phase !== 'player' || !g.selGadget || g.gadgets[g.selGadget] <= 0) return;
+    const sel = g.selGadget;
+    const apCost = (sel === 'thermal' || sel === 'shield') ? 2 : 1;
+    if (g.ap < apCost) { upd({ log: [...g.log.slice(-4), `Need ${apCost} AP for that gadget.`] }); return; }
+    const nGad = { ...g.gadgets, [sel]: g.gadgets[sel] - 1 };
+    let patch = { ap: g.ap - apCost, gadgets: nGad };
+    let msg = '';
+    if (sel === 'thermal') {
+      if (cdist(g.pRow, g.pCol, g.eRow, g.eCol) > 4) { upd({ log: [...g.log.slice(-4), 'Enemy too far for Thermal Detonator.'] }); return; }
+      const r = applyDmg(g.eSh, g.eHp, 5); patch.eSh = r.sh; patch.eHp = r.hp;
+      const nC = g.cover.map(row => [...row]);
+      for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) { const rr = g.eRow + dr, cc = g.eCol + dc; if (rr >= 0 && rr < GH && cc >= 0 && cc < GW) nC[rr][cc] = 0; }
+      patch.cover = nC;
+      msg = 'Thermal Detonator! 5 area damage, cover destroyed in blast radius.';
+      if (r.hp <= 0) { patch.phase = 'outcome'; patch.outcome = 'win'; msg += ` ${profile.name} eliminated!`; }
+    } else if (sel === 'flash') {
+      if (cdist(g.pRow, g.pCol, g.eRow, g.eCol) > 3) { upd({ log: [...g.log.slice(-4), 'Enemy too far for Flashbang.'] }); return; }
+      patch.eBlind = 2; patch.eOW = false;
+      msg = 'Flashbang detonates! Enemy blinded for 2 turns.';
+    } else if (sel === 'shield') {
+      patch.pSh = Math.min(g.pSh + 4, 8);
+      msg = 'Shield Emitter active! +4 shield capacity restored.';
+    } else if (sel === 'glitch') {
+      const turret = g.objs.find(o => o.type === 'turret' && o.active && !o.hacked && cdist(o.row, o.col, g.eRow, g.eCol) <= 2);
+      if (!turret) { upd({ log: [...g.log.slice(-4), 'No hackable turret within range of the enemy.'] }); return; }
+      patch.objs = g.objs.map(o => o.id === turret.id ? { ...o, hacked: true } : o);
+      msg = 'Cyber-Glitch! Turret compromised and now targeting the enemy.';
+    }
+    upd({ ...patch, log: [...g.log.slice(-4), msg] });
+  }
+
+  function movePlayer(dr, dc) {
+    const g = gRef.current;
+    if (g.phase !== 'player' || g.ap < 1) return;
+    const nr = g.pRow + dr, nc = g.pCol + dc;
+    if (nr < 0 || nr >= GH || nc < 0 || nc >= GW || (nr === g.eRow && nc === g.eCol)) return;
+    let patch = { pRow: nr, pCol: nc, ap: g.ap - 1, pOW: false };
+    let msg = `Advanced to position [${nc},${nr}].`;
+    if (g.eOW && hasLoS(g.eRow, g.eCol, nr, nc)) {
+      const r = applyDmg(g.pSh, g.pHp, 2);
+      patch.pSh = r.sh; patch.pHp = r.hp; patch.eOW = false;
+      msg = 'Enemy overwatch reaction fire! 2 damage taken moving into the open.';
+      if (r.hp <= 0) { patch.phase = 'outcome'; patch.outcome = 'loss'; }
+    }
+    upd({ ...patch, log: [...g.log.slice(-4), msg] });
+  }
+
+  function toggleOW() {
+    const g = gRef.current;
+    if (g.phase !== 'player' || g.ap < 1) return;
+    const next = !g.pOW;
+    upd({ pOW: next, ap: g.ap - 1, log: [...g.log.slice(-4), next ? 'Overwatch set. Reaction fire triggers on enemy movement.' : 'Overwatch cancelled.'] });
+  }
+
+  function endTurn() {
+    const g = gRef.current;
+    if (g.phase !== 'player') return;
+    upd({ phase: 'enemy', log: [...g.log.slice(-4), 'Turn ended. Enemy acting...'] });
+    setTimeout(runEnemy, 420);
+  }
+
+  function runEnemy() {
+    const g = gRef.current;
+    if (g.phase !== 'enemy') return;
+    let eRow = g.eRow, eCol = g.eCol, eHp = g.eHp, eSh = g.eSh;
+    let pHp = g.pHp, pSh = g.pSh;
+    const eBlind = Math.max(0, g.eBlind - 1);
+    const newSteam = {};
+    Object.entries(g.steam).forEach(([k, v]) => { if (v > 1) newSteam[k] = v - 1; });
+    const logs = [];
+
+    const ht = g.objs.find(o => o.type === 'turret' && o.active && o.hacked);
+    if (ht && cdist(ht.row, ht.col, eRow, eCol) <= 4) {
+      const r = applyDmg(eSh, eHp, 2); eSh = r.sh; eHp = r.hp;
+      logs.push('Allied turret fires on the enemy — 2 damage!');
+      if (eHp <= 0) {
+        upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW: false, steam: newSteam, phase: 'outcome', outcome: 'win', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs, `${profile.name} destroyed by the hacked turret!`] });
+        return;
+      }
+    }
+
+    let bestScore = -Infinity, bestR = eRow, bestC = eCol;
+    for (let dr = -2; dr <= 2; dr++) {
+      for (let dc = -2; dc <= 2; dc++) {
+        const tr = eRow + dr, tc = eCol + dc;
+        if (tr < 0 || tr >= GH || tc < 0 || tc >= GW) continue;
+        if (tr === g.pRow && tc === g.pCol) continue;
+        let score = 0;
+        const d = cdist(tr, tc, g.pRow, g.pCol);
+        score -= Math.abs(d - profile.optRange) * 10;
+        const cv = (g.cover[tr] || [])[tc] || 0;
+        score += cv * (profile.cover / 10);
+        if (isFlank(tr, tc, g.pRow, g.pCol)) score += profile.flank * 0.5;
+        if (d < cdist(eRow, eCol, g.pRow, g.pCol)) score += profile.aggression * 0.2;
+        if (score > bestScore) { bestScore = score; bestR = tr; bestC = tc; }
+      }
+    }
+
+    let eOW = false;
+    if (bestR !== eRow || bestC !== eCol) {
+      const stepR = eRow + Math.sign(bestR - eRow), stepC = eCol + Math.sign(bestC - eCol);
+      if (stepR !== g.pRow || stepC !== g.pCol) {
+        if (g.pOW && hasLoS(g.pRow, g.pCol, stepR, stepC)) {
+          const r = applyDmg(eSh, eHp, 2); eSh = r.sh; eHp = r.hp;
+          logs.push(`Overwatch reaction! Hit ${profile.name} for 2 damage.`);
+          if (eHp <= 0) {
+            upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW, steam: newSteam, pOW: false, phase: 'outcome', outcome: 'win', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs, 'Enemy eliminated!'] });
+            return;
+          }
+        }
+        eRow = stepR; eCol = stepC;
+        logs.push(`${profile.name} moves to [${eCol},${eRow}].`);
+      }
+    } else if (Math.random() * 100 < profile.overwatch && !eBlind) {
+      eOW = true;
+      logs.push(`${profile.name} takes overwatch position.`);
+    }
+
+    if (hasLoS(eRow, eCol, g.pRow, g.pCol)) {
+      const hit = Math.random() * 100 < calcHit(eRow, eCol, g.pRow, g.pCol, eBlind > 0);
+      if (hit) {
+        const fl = isFlank(eRow, eCol, g.pRow, g.pCol);
+        const dmg = fl ? 3 : 2;
+        const r = applyDmg(pSh, pHp, dmg); pSh = r.sh; pHp = r.hp;
+        logs.push(`${profile.name} fires${fl ? ' (flanking)' : ''} — ${dmg} damage!`);
+        if (pHp <= 0) {
+          upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW, steam: newSteam, phase: 'outcome', outcome: 'loss', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs, 'You are down. Retreat!'] });
+          return;
+        }
+      } else {
+        logs.push(`${profile.name} fires and misses.`);
+      }
+    } else {
+      logs.push(`${profile.name} advances — no clear line of sight.`);
+    }
+
+    upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW, steam: newSteam, phase: 'player', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs] });
+  }
+
+  React.useEffect(() => {
+    function handle(e) {
+      const g = gRef.current;
+      if (g.phase === 'outcome') return;
+      const k = e.key.toLowerCase();
+      if (k === 'arrowup' || k === 'w') { e.preventDefault(); movePlayer(-1, 0); }
+      else if (k === 'arrowdown' || k === 's') { e.preventDefault(); movePlayer(1, 0); }
+      else if (k === 'arrowleft' || k === 'a') { e.preventDefault(); movePlayer(0, -1); }
+      else if (k === 'arrowright' || k === 'd') { e.preventDefault(); movePlayer(0, 1); }
+      else if (k === 'e') { e.preventDefault(); if (g.selGadget && g.gadgets[g.selGadget] > 0) useGadget(); else playerAttack(); }
+      else if (k === 'tab') { e.preventDefault(); toggleOW(); }
+      else if (k === 'q') {
+        e.preventDefault();
+        const ord = [null, 'thermal', 'flash', 'shield', 'glitch'];
+        const i = ord.indexOf(g.selGadget);
+        upd({ selGadget: ord[(i + 1) % ord.length] });
+      }
+      else if (k === ' ' || k === 'enter') { e.preventDefault(); endTurn(); }
+    }
+    window.addEventListener('keydown', handle);
+    return () => window.removeEventListener('keydown', handle);
+  }, []);
+
+  const g = gs;
+  const gdLabels = { thermal: 'Thermal(2AP)', flash: 'Flash(1AP)', shield: 'Shield(2AP)', glitch: 'Glitch(1AP)' };
+  const cells = [];
+  for (let r = 0; r < GH; r++) {
+    for (let c = 0; c < GW; c++) {
+      const isP = r === g.pRow && c === g.pCol;
+      const isE = r === g.eRow && c === g.eCol;
+      const cv = (g.cover[r] || [])[c] || 0;
+      const hasSteam = !!g.steam[`${r},${c}`];
+      const obj = g.objs.find(o => o.active && o.row === r && o.col === c);
+      const bg = hasSteam ? '#1A2A1A' : cv === 2 ? '#161622' : cv === 1 ? '#12121C' : '#0A0A14';
+      let inner = null;
+      if (isP) inner = <span style={{ color: '#4A9FFF', fontWeight: 'bold', fontSize: '0.75rem' }}>[P]</span>;
+      else if (isE) inner = <span style={{ color: profile.accent, fontWeight: 'bold', fontSize: '0.75rem' }}>[E]</span>;
+      else if (hasSteam) inner = <span style={{ color: '#5A8A5A', fontSize: '0.85rem' }}>≈</span>;
+      else if (obj) inner = <span style={{ fontSize: '0.9rem' }}>{obj.type === 'barrel' ? '⚡' : obj.type === 'steam' ? '💨' : obj.hacked ? '★' : '⊙'}</span>;
+      else if (cv === 2) inner = <span style={{ color: '#334', fontSize: '0.8rem' }}>█</span>;
+      else if (cv === 1) inner = <span style={{ color: '#223', fontSize: '0.8rem' }}>▒</span>;
+      cells.push(
+        <div key={`${r}${c}`} style={{ width: CELL, height: CELL, background: bg, border: '1px solid #111', display: 'flex', alignItems: 'center', justifyContent: 'center', outline: isP ? '2px solid #4A9FFF44' : isE ? `2px solid ${profile.accent}44` : 'none', boxSizing: 'border-box' }}>
+          {inner}
+        </div>
+      );
+    }
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.96)', zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: "'IBM Plex Mono',monospace", gap: 4, padding: 8, overflowY: 'auto' }}>
+      <div style={{ color: '#C8A000', fontSize: '0.65rem', letterSpacing: '0.25em', marginBottom: 4 }}>TACTICAL ENGAGEMENT</div>
+      <div style={{ display: 'flex', gap: 32, width: GW * CELL, marginBottom: 4 }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ color: '#4A9FFF', fontSize: '0.6rem', marginBottom: 2 }}>YOU  HP:{g.pHp}/8  SH:{g.pSh}</div>
+          <div style={{ height: 5, background: '#111', borderRadius: 2 }}><div style={{ height: '100%', width: `${Math.max(0, g.pHp / 8) * 100}%`, background: g.pHp > 4 ? '#4A9FFF' : '#C8A000', borderRadius: 2, transition: 'width 0.2s' }} /></div>
+        </div>
+        <div style={{ flex: 1, textAlign: 'right' }}>
+          <div style={{ color: profile.accent, fontSize: '0.6rem', marginBottom: 2 }}>{profile.name}  HP:{g.eHp}/{profile.hp}  SH:{g.eSh}</div>
+          <div style={{ height: 5, background: '#111', borderRadius: 2, display: 'flex', justifyContent: 'flex-end' }}><div style={{ height: '100%', width: `${Math.max(0, g.eHp / profile.hp) * 100}%`, background: profile.accent, borderRadius: 2, transition: 'width 0.2s' }} /></div>
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GW}, ${CELL}px)`, border: '1px solid #1A1A2A' }}>{cells}</div>
+      <div style={{ display: 'flex', gap: 12, width: GW * CELL, marginTop: 4, alignItems: 'center' }}>
+        <div style={{ color: '#555', fontSize: '0.6rem' }}>Turn {g.turn}</div>
+        <div style={{ display: 'flex', gap: 3 }}>{[0, 1, 2].map(i => <div key={i} style={{ width: 11, height: 11, borderRadius: '50%', background: i < g.ap ? '#C8A000' : '#1A1A14', border: '1px solid #333' }} />)}</div>
+        {g.pOW && <div style={{ color: '#C8A000', fontSize: '0.58rem' }}>OW</div>}
+        {g.eBlind > 0 && <div style={{ color: '#9B59B6', fontSize: '0.58rem' }}>BLINDED({g.eBlind})</div>}
+        <div style={{ flex: 1, textAlign: 'right', fontSize: '0.6rem', color: g.phase === 'player' ? '#4ACDFF' : g.phase === 'enemy' ? '#C03030' : '#C8A000' }}>
+          {g.phase === 'player' ? 'YOUR TURN' : g.phase === 'enemy' ? 'ENEMY ACTING...' : g.outcome === 'win' ? 'VICTORY' : 'DEFEAT'}
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 4, width: GW * CELL, marginTop: 2 }}>
+        {['thermal', 'flash', 'shield', 'glitch'].map(gk => (
+          <button key={gk} onClick={() => upd({ selGadget: g.selGadget === gk ? null : gk })}
+            style={{ flex: 1, padding: '3px 2px', fontSize: '0.5rem', background: g.selGadget === gk ? '#2A2600' : '#0C0C14', color: g.gadgets[gk] > 0 ? '#C8A000' : '#333', border: g.selGadget === gk ? '1px solid #C8A000' : '1px solid #1A1A2A', cursor: 'pointer' }}>
+            {gdLabels[gk]}[{g.gadgets[gk]}]
+          </button>
+        ))}
+      </div>
+      <div style={{ display: 'flex', gap: 6, width: GW * CELL, marginTop: 2 }}>
+        <button onClick={playerAttack} disabled={g.phase !== 'player' || g.ap < 1} style={{ flex: 1, padding: '4px', fontSize: '0.6rem', background: '#0E0808', color: '#C03030', border: '1px solid #C03030', cursor: 'pointer', opacity: g.phase === 'player' && g.ap >= 1 ? 1 : 0.35 }}>[E] Attack</button>
+        <button onClick={useGadget} disabled={!g.selGadget || g.phase !== 'player'} style={{ flex: 1, padding: '4px', fontSize: '0.6rem', background: '#080E08', color: '#5ACD5A', border: '1px solid #5ACD5A', cursor: 'pointer', opacity: g.selGadget && g.phase === 'player' ? 1 : 0.35 }}>[E] Gadget</button>
+        <button onClick={toggleOW} disabled={g.phase !== 'player' || g.ap < 1} style={{ flex: 1, padding: '4px', fontSize: '0.6rem', background: g.pOW ? '#1A1600' : '#080814', color: '#C8A000', border: '1px solid #C8A000', cursor: 'pointer', opacity: g.phase === 'player' && g.ap >= 1 ? 1 : 0.35 }}>[Tab] {g.pOW ? 'Cancel OW' : 'Overwatch'}</button>
+        <button onClick={endTurn} disabled={g.phase !== 'player'} style={{ flex: 1, padding: '4px', fontSize: '0.6rem', background: '#0C0C0C', color: '#888', border: '1px solid #333', cursor: 'pointer', opacity: g.phase === 'player' ? 1 : 0.35 }}>[Space] End Turn</button>
+      </div>
+      <div style={{ width: GW * CELL, background: '#060610', border: '1px solid #111', padding: '5px 8px', marginTop: 2, minHeight: 52 }}>
+        {g.log.slice(-4).map((l, i) => <div key={i} style={{ color: i === g.log.slice(-4).length - 1 ? '#BBB' : '#555', fontSize: '0.58rem', lineHeight: 1.6 }}>{l}</div>)}
+      </div>
+      <div style={{ color: '#333', fontSize: '0.52rem', marginTop: 2 }}>WASD/Arrows: Move  |  E: Attack or use selected Gadget  |  Tab: Overwatch  |  Q: Cycle Gadget  |  Space: End Turn</div>
+      {g.phase === 'outcome' && (
+        <button onClick={g.outcome === 'win' ? onSuccess : onFailure}
+          style={{ marginTop: 10, background: g.outcome === 'win' ? '#C8A000' : '#1A0A0A', color: g.outcome === 'win' ? '#000' : '#EEE', border: 'none', padding: '0.5rem 2rem', cursor: 'pointer', fontSize: '0.8rem' }}>
+          {g.outcome === 'win' ? 'Hold the Field' : 'Fall Back'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 function SignalSiphonOverlay({ onSuccess, onFailure }) {
   const [stage, setStage] = React.useState(1);
   const [selectedFreq, setSelectedFreq] = React.useState(null);
@@ -6816,6 +7194,23 @@ function StarWarsRPG() {
         else pushActionLog(`${collectible.label}.${collectible.reward > 0 ? ` (+${collectible.reward} credits)` : ''}`, zoneId);
       }
 
+      const _ePool = ENCOUNTER_TABLE[zoneId];
+      if (_ePool && !questFlags[`enc_cd_${zoneId}`] && !activeMinigame) {
+        const _hBonus = Math.floor((syndicateHeat || 0) * 0.4);
+        if (Math.random() * 100 < (15 + _hBonus)) {
+          const _pKey = _ePool[Math.floor(Math.random() * _ePool.length)];
+          setFlag(`enc_cd_${zoneId}`);
+          setActiveMinigame({
+            type: 'tactical_combat',
+            opponentProfile: _pKey,
+            onSuccess: () => { pushActionLog('You held the field. Threat neutralized.', zoneId); setCredits(c => c + 150); setActiveMinigame(null); },
+            onFailure: () => { pushActionLog('You fell back under fire. CSF heat spikes.', zoneId); setSyndicateHeat(h => Math.min(100, h + 10)); setActiveMinigame(null); },
+          });
+          setPos({ x, y });
+          return;
+        }
+      }
+
       setPos({ x, y });
     };
     window.addEventListener('keydown', handleKey);
@@ -7024,6 +7419,7 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'arms_bench' && <ArmsBenchOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} credits={credits} setCredits={setCredits} />}
       {activeMinigame && activeMinigame.type === 'shakedown' && <ProtectionShakedownOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'sky_evasion' && <SkyLaneEvasionOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {activeMinigame && activeMinigame.type === 'tactical_combat' && <TacticalGridCombatOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} opponentProfile={activeMinigame.opponentProfile ?? 'syndicate_thug'} />}
       {showDebug && (
         <div style={{ position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.82)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'monospace' }}>
           <div style={{ background:'#0A0A12',border:'1px solid #4ACDFF44',padding:24,minWidth:480,maxWidth:620 }}>
