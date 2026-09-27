@@ -1098,6 +1098,37 @@ const PLANETS = {
             prompt: '"If it fell off the back of a freighter, I have it. No warranties. Once you walk off my platform, we do not know each other."',
             choices: [],
           },
+          { id: 'vane_freight', x: 34, y: 17, kind: 'republic_guard', label: 'Officer Vane',
+            requiresAllFlags: ['csf_training_complete'],
+            phases: [
+              { id: 'phase_field_briefing',
+                requiresNoneFlags: ['vane_freight_briefed'],
+                prompt: 'Vane has commandeered the cargo supervisor\'s office at the far end of the hub. A portable terminal runs Bay 14 manifest cross-references on one screen and a Platform 09 camera feed on another. He does not look up immediately. "You made it." He gestures to the chair. "Sit. There is a lot to cover before you walk that floor."',
+                choices: [
+                  { text: '"What exactly are we looking for, Detective?"', morality: 5, loyalty: { republic: 8 }, result: '"Ghost manifests. Three containers cleared through Bay 14 carry Senate authorization codes that trace to a sub-committee that does not officially exist. The cargo weight does not match the declared goods. Jax — dock engineer, he was in the maintenance shaft during the last transfer — will not talk without a push. Try the badge first. That is what it is for."', grants: { flags: ['vane_freight_briefed', 'bay14_method_known'] } },
+                  { text: '"How far does my authority actually reach here?"', morality: 3, loyalty: { republic: 5 }, result: '"Sector 4, Platform 09, the Bay 14 loading corridor — full CSF Auxiliary authority. Witnesses are required to cooperate. You can access restricted cargo logs without a warrant. What you cannot do is make arrests without contact to Precinct Command. You find a name. I make the arrest."', grants: { flags: ['vane_freight_briefed'] } },
+                  { text: '"This place is run by organized crime. Are we actually going to change anything?"', morality: 0, loyalty: { underworld: 3 }, result: '"We are going to find out who moved unscanned Phrik alloy through this hub using a Senate override code. Whether that changes anything depends on who is holding the other end. Start with Jax. He was there."', grants: { flags: ['vane_freight_briefed', 'vane_sector4_hint'] } },
+                ],
+              },
+              { id: 'phase_field_ongoing',
+                requiresAllFlags: ['vane_freight_briefed'],
+                requiresNoneFlags: ['freight_hub_investigated'],
+                prompt: '"Talk to Jax. He was in the maintenance shaft during the transfer. He knows more than he admitted to the first CSF team. If he will not cooperate, try the shipping clerk Dax — he has been filing false manifests and he knows it. The Bay 14 blast marks are also preserved near Platform 09."',
+                choices: [
+                  { text: '"What if both of them refuse?"', morality: 0, loyalty: {}, result: '"Then you pull the physical evidence. Crime scene at Bay 14, customs manifest registry near Platform 09 — either one gives us documentation. I need something that holds up in front of a Senate subcommittee."' },
+                  { text: '"Understood. I will start with Jax."', morality: 5, loyalty: { republic: 5 }, result: '"Good. Keep your badge visible. In Sector 4 that matters more than the weapon."' },
+                ],
+              },
+              { id: 'phase_field_post_investigation',
+                requiresAllFlags: ['freight_hub_investigated'],
+                prompt: 'Vane is already packing the portable terminal when you return. "I got enough from your transmissions. Good work, Investigator." He locks the terminal under his arm. "Everything you found gets documented and sealed at Precinct Command tonight. Meet me there. I am not transmitting this through an open line."',
+                choices: [
+                  { text: '"How serious is what we found?"', morality: 5, loyalty: { republic: 8 }, result: '"Serious enough that I want four walls around this conversation before I answer that. Precinct Command. AirTaxi back the way you came."' },
+                  { text: '"I will be right behind you."', morality: 3, loyalty: { republic: 5 }, result: '"See that you are." He walks out with the terminal under his arm and does not look back.' },
+                ],
+              },
+            ],
+          },
         ],
         collectibles: [
           { id: 'freight_hub_credit', x: 24, y: 22, label: 'Dropped Pay Chip', reward: 60 },
@@ -7489,7 +7520,8 @@ function StarWarsRPG() {
     if (questFlags.sector4_raid_complete && !questFlags.jon_endgame_known) return 'Debrief Jon on the raid. He has intel on the Senate connection you need.';
     if (questFlags.sector4_raid_complete) return 'Pursue the Iron Syndicate to Level 005. Find Vex.';
     if (questFlags.csf_briefed && !questFlags.jon_confrontation_done) return 'Jon needs to see your CSF badge. Return to his apartment now.';
-    if (questFlags.csf_training_complete) return 'Report to Vane at Sector 4 Freight Hub.';
+    if (questFlags.csf_training_complete && questFlags.freight_hub_investigated) return 'Return to Vane at CSF Academy. Report your Bay 14 findings.';
+    if (questFlags.csf_training_complete) return 'Report to Vane at Sector 4 Freight Hub. Investigate Bay 14.';
     if (questFlags.csf_briefed) return 'Complete all three training modules at the CSF Academy.';
     if ((questFlags.marlo_sky_talked || questFlags.vane_sky_cooperated) && !questFlags.jon_sky_market_debriefed) return 'Check in with Jon. He will want to know which side you picked at the Sky-Market.';
     if (questFlags.republic_path_open) return 'Travel to CSF Tactical Command, Level 1222.';
