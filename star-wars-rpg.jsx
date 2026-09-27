@@ -2381,6 +2381,10 @@ const PLANETS = {
           carveRect(g, 14, 18, 20, 22, 'floor');
           // Door tiles
           pt(g, 1, 12, 'door');
+          // Observation deck entrance (south wall gap)
+          pt(g, 12, 6, 'floor');
+          // Pit arena north entrance (north wall gap)
+          pt(g, 12, 8, 'floor');
           return g;
         },
       },
@@ -2712,7 +2716,7 @@ const PLANETS = {
             description: 'Moss-covered stone that does not match the architecture around it. Older. The Force does not speak here, but something resonates faintly under the weight of centuries. Whoever built this was speaking to something larger than themselves.',
             grantsItem: 'ancient_force_relic',
             grantsCodex: 'codex-jedi-ruins' },
-          { id: 'toxic_waste_terminal', x: 30, y: 10, once: false, label: 'Reclamation Facility Controls', iconKind: 'panel',
+          { id: 'toxic_waste_terminal', x: 30, y: 7, once: false, label: 'Reclamation Facility Controls', iconKind: 'panel',
             triggersMinigame: 'valve_override',
             grantsFlag: 'waste_reclamation_diverted',
             description: 'Waste processing controls for the undercity reclamation facility. The overflow valve is stuck open. Someone locked it intentionally.' },
@@ -2806,6 +2810,14 @@ const PLANETS = {
           carveRect(g, 22, 1, 38, 10, 'wall'); carveRect(g, 23, 2, 37, 9, 'floor');
           carveRect(g, 12, 14, 30, 22, 'wall'); carveRect(g, 13, 15, 29, 21, 'floor');
           pt(g, 1, 12, 'door'); pt(g, 20, 23, 'door');
+          // NW building south entrance
+          pt(g, 8, 10, 'floor');
+          // NE building south entrance
+          pt(g, 28, 10, 'floor');
+          // South building north entrance
+          pt(g, 20, 14, 'floor');
+          // South building south passage connecting to AirTaxi door
+          pt(g, 20, 22, 'floor');
           return g;
         },
       },
@@ -7856,7 +7868,7 @@ function StarWarsRPG() {
     if ((questFlags.malak_turned || questFlags.malak_dead) && !questFlags.reya_loyal && !questFlags.reya_blackmailed && !questFlags.reya_warrant_mission_active) return '[INHERITANCE] Speak with Reya in Shadow Town. She has a condition.';
     if (questFlags.reya_warrant_mission_active && !questFlags.reya_warrant_cleared) return '[INHERITANCE] Slice Precinct 42 at the CSF Academy and clear Reya\'s warrant.';
     if ((questFlags.cargo_skimmed || questFlags.cargo_delivered_full) && !questFlags.malak_turned && !questFlags.malak_dead) return '[INHERITANCE] Find Malak at Shadow Town, Level 1312. Turn him or remove him.';
-    if (questFlags.inheritance_active && !questFlags.cargo_skimmed && !questFlags.cargo_delivered_full) return '[INHERITANCE] Retrieve the Bay 14 weapons cache and bring the manifest back to Jon.';
+    if (questFlags.inheritance_active && !questFlags.cargo_skimmed && !questFlags.cargo_delivered_full) return '[INHERITANCE] Go to Shadow Town, Level 1312 (The Pits). Find the skimmed arms cache in the northeast alcove and bring the manifest back to Jon.';
     if (questFlags.senate_line_secured && !questFlags.inheritance_active) return 'Jon has a new proposition. Return to his apartment.';
     if (questFlags.bomb_reached) return 'Neutralize the weapon on the Senate transit line.';
     if (questFlags.sector4_raid_complete && !questFlags.jon_endgame_known) return 'Debrief Jon on the raid. He has intel on the Senate connection you need.';
