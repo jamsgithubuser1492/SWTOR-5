@@ -1,0 +1,214 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SWTOR5SyndicateStrategySystem",
+  "description": "Data contracts for the CoruscantConquestOverlay grand strategy component in star-wars-rpg.jsx. All sector coordinates are SVG canvas units inside a 760x520 viewBox.",
+
+  "definitions": {
+
+    "GarrisonComposition": {
+      "description": "Unit counts garrisoned inside a ConquestSector. Keys match CONQUEST_UNIT_TYPES keys.",
+      "type": "object",
+      "properties": {
+        "inf": { "type": "integer", "minimum": 0, "description": "Enforcer Infantry units. Combat power 10 each." },
+        "snp": { "type": "integer", "minimum": 0, "description": "Covert Marksmen. Combat power 25 each." },
+        "tnk": { "type": "integer", "minimum": 0, "description": "Assault Tanks. Combat power 75 each. Upkeep 2 PWR/turn." }
+      },
+      "required": ["inf", "snp", "tnk"]
+    },
+
+    "ConquestSector": {
+      "description": "A single territory on the Coruscant sector map. Lives as a value inside the CONQUEST_SECTORS_INIT constant and inside the sectors React state object (keyed by id).",
+      "type": "object",
+      "properties": {
+        "id":     { "type": "string", "description": "Unique sector key matching its key in the sectors object." },
+        "name":   { "type": "string", "description": "Display name shown in SVG labels and the sector inspector." },
+        "tier":   { "type": "string", "description": "Flavor sub-label (e.g. 'Sub-Surface Slums')." },
+        "owner":  { "type": "string", "enum": ["player", "black_sun", "exchange", "csf"], "description": "Which faction controls this sector. player = Your Syndicate." },
+        "cx":     { "type": "number", "description": "SVG center-X for the sector node circle." },
+        "cy":     { "type": "number", "description": "SVG center-Y for the sector node circle." },
+        "adj":    { "type": "array", "items": { "type": "string" }, "description": "Array of adjacent sector IDs. Used for attack eligibility and AI targeting." },
+        "income": { "type": "integer", "minimum": 0, "description": "Base credits collected per End Turn when owner = player." },
+        "pwr":    { "type": "integer", "minimum": 0, "description": "Base power cells generated per End Turn when owner = player." },
+        "gar":    { "$ref": "#/definitions/GarrisonComposition" },
+        "def":    { "type": "integer", "minimum": 0, "maximum": 100, "description": "Defense rating 0-100. Multiplied against garrison CP on attack resolution." },
+        "bld":    { "type": "array", "items": { "type": "string" }, "description": "IDs of CONQUEST_BUILDINGS entries already constructed here." }
+      },
+      "required": ["id", "name", "tier", "owner", "cx", "cy", "adj", "income", "pwr", "gar", "def", "bld"]
+    },
+
+    "ConquestFactionData": {
+      "description": "Entry in CONQUEST_FACTION_DATA. Defines AI behaviour and presentation per faction.",
+      "type": "object",
+      "properties": {
+        "name":      { "type": "string" },
+        "color":     { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "description": "Hex accent used for sector nodes, bars, and labels." },
+        "aggr":      { "type": "integer", "minimum": 0, "maximum": 100, "description": "Aggression score 0-100. Each End Turn, (random * 100 < aggr/2) determines if faction attempts an attack." },
+        "aiProfile": { "type": "string", "description": "Key into AI_COMBAT_PROFILES used when faction battle launches TacticalGridCombatOverlay." },
+        "startRel":  { "type": "integer", "minimum": -100, "maximum": 100, "description": "Initial relation value seeded into the relations state object. Player faction omits this." }
+      },
+      "required": ["name", "color"]
+    },
+
+    "ConquestUnitType": {
+      "description": "Entry in CONQUEST_UNIT_TYPES. Defines recruitment cost and overworld combat power contribution.",
+      "type": "object",
+      "properties": {
+        "name":    { "type": "string" },
+        "costCR":  { "type": "integer", "minimum": 0, "description": "Credits spent per unit on Recruit." },
+        "costPWR": { "type": "integer", "minimum": 0, "description": "Power cells spent per unit on Recruit." },
+        "upPWR":   { "type": "integer", "minimum": 0, "description": "Power cells consumed per unit per End Turn as upkeep." },
+        "cp":      { "type": "integer", "minimum": 0, "description": "Combat power contribution per unit. Used in auto-resolve formula and attack-button display." }
+      },
+      "required": ["name", "costCR", "costPWR", "upPWR", "cp"]
+    },
+
+    "ConquestBuilding": {
+      "description": "Entry in CONQUEST_BUILDINGS array. Constructed in player-owned sectors from the Build tab.",
+      "type": "object",
+      "properties": {
+        "id":       { "type": "string" },
+        "name":     { "type": "string" },
+        "cost":     { "type": "integer", "minimum": 0, "description": "CR cost to construct." },
+        "costPWR":  { "type": "integer", "minimum": 0, "description": "PWR cost to construct." },
+        "defBonus": { "type": "integer", "minimum": 0, "description": "Permanent defense rating increase applied to the sector on construction." },
+        "incBonus": { "type": "integer", "minimum": 0, "description": "Flat CR added to the sector's income each End Turn." },
+        "pwrBonus": { "type": "integer", "minimum": 0, "description": "Power cells added to per-sector generation each End Turn." }
+      },
+      "required": ["id", "name", "cost", "costPWR", "defBonus", "incBonus", "pwrBonus"]
+    },
+
+    "CrisisCard": {
+      "description": "Entry in CONQUEST_CRISIS_CARDS. Drawn every 2 turns if heatMin threshold is met.",
+      "type": "object",
+      "properties": {
+        "id":      { "type": "string" },
+        "title":   { "type": "string" },
+        "desc":    { "type": "string", "description": "Shown in the crisis banner during the affected turn." },
+        "heatMin": { "type": "integer", "minimum": 0, "maximum": 100, "description": "Minimum current heat for this card to enter the eligible pool." },
+        "type":    {
+          "type": "string",
+          "enum": ["income_penalty", "power_loss", "recruit_discount", "credit_bonus", "def_penalty"],
+          "description": "Effect type processed in endTurn(). income_penalty: cuts income 60%. power_loss: -8 PWR. recruit_discount: sets discountActive=true. credit_bonus: +400 CR. def_penalty: a random player sector loses 20 def for 2 turns + heat +15."
+        }
+      },
+      "required": ["id", "title", "desc", "heatMin", "type"]
+    },
+
+    "ConquestResources": {
+      "description": "The res state slice in CoruscantConquestOverlay.",
+      "type": "object",
+      "properties": {
+        "cr":  { "type": "integer", "minimum": 0, "description": "Credit treasury. Gained from sector income, smuggling, and crisis bonuses. Spent on units, buildings, diplomacy, and agent deployments." },
+        "pwr": { "type": "integer", "minimum": 0, "description": "Power cell reserve. Gained from sector power generation and Sub-Station buildings. Spent on unit recruitment and building construction." }
+      },
+      "required": ["cr", "pwr"]
+    },
+
+    "BattleState": {
+      "description": "The battle state slice when a tactical engagement is in progress. When non-null, CoruscantConquestOverlay renders TacticalGridCombatOverlay in place of its own UI.",
+      "type": "object",
+      "properties": {
+        "sectorId": { "type": "string", "description": "ID of the sector being contested." },
+        "fk":       { "type": "string", "enum": ["black_sun", "exchange", "csf"], "description": "Defending faction key. Maps to CONQUEST_FACTION_DATA[fk].aiProfile." },
+        "flavor":   { "type": "string", "description": "flavorText string passed to TacticalGridCombatOverlay." }
+      },
+      "required": ["sectorId", "fk", "flavor"]
+    },
+
+    "DefPenalty": {
+      "description": "Tracks a temporary defense reduction applied by the def_penalty crisis card.",
+      "type": "object",
+      "properties": {
+        "sectorId": { "type": "string" },
+        "turns":    { "type": "integer", "minimum": 1 }
+      },
+      "required": ["sectorId", "turns"]
+    },
+
+    "AgentRecord": {
+      "description": "Covert agent shown in the Missions tab.",
+      "type": "object",
+      "properties": {
+        "id":     { "type": "string" },
+        "name":   { "type": "string" },
+        "skill":  { "type": "integer", "minimum": 1, "maximum": 10 },
+        "status": { "type": "string", "enum": ["ready", "deployed", "captured"] }
+      },
+      "required": ["id", "name", "skill", "status"]
+    },
+
+    "SmuggleRoute": {
+      "description": "Passive income route processed each End Turn. Rolls against intercept risk.",
+      "type": "object",
+      "properties": {
+        "id":     { "type": "integer" },
+        "label":  { "type": "string" },
+        "cargo":  { "type": "string" },
+        "profit": { "type": "integer", "minimum": 0, "description": "CR added on a successful (non-intercepted) turn." },
+        "risk":   { "type": "integer", "minimum": 0, "maximum": 100, "description": "Percent chance each turn the cargo is seized (profit not collected; log entry added)." }
+      },
+      "required": ["id", "label", "cargo", "profit", "risk"]
+    },
+
+    "ConquestMinigamePayload": {
+      "description": "Object shape for setActiveMinigame({ type: 'coruscant_conquest', ... }) dispatch.",
+      "type": "object",
+      "properties": {
+        "type":         { "type": "string", "const": "coruscant_conquest" },
+        "onSuccess":    { "description": "Callback invoked when all 5 sectors are player-controlled." },
+        "onFailure":    { "description": "Callback invoked when the player exits the overlay." },
+        "startCredits": { "type": "integer", "minimum": 0, "description": "Optional: seed the starting CR treasury. Defaults to 3000 if omitted." }
+      },
+      "required": ["type", "onSuccess", "onFailure"]
+    }
+
+  },
+
+  "type": "object",
+  "description": "Top-level wrapper — each sub-schema maps to a constant or state slice inside CoruscantConquestOverlay.",
+  "properties": {
+    "CONQUEST_SECTORS_INIT": {
+      "type": "object",
+      "description": "Keyed by sector id. Values follow ConquestSector schema. Level 1313 starts player-owned; other sectors are enemy-held.",
+      "additionalProperties": { "$ref": "#/definitions/ConquestSector" }
+    },
+    "CONQUEST_FACTION_DATA": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/ConquestFactionData" }
+    },
+    "CONQUEST_UNIT_TYPES": {
+      "type": "object",
+      "description": "Keys: inf, snp, tnk. Values follow ConquestUnitType schema.",
+      "additionalProperties": { "$ref": "#/definitions/ConquestUnitType" }
+    },
+    "CONQUEST_BUILDINGS": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/ConquestBuilding" }
+    },
+    "CONQUEST_CRISIS_CARDS": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CrisisCard" }
+    },
+    "activeConquestState": {
+      "description": "Runtime state of CoruscantConquestOverlay. Not persisted across sessions.",
+      "type": "object",
+      "properties": {
+        "sectors":       { "type": "object", "additionalProperties": { "$ref": "#/definitions/ConquestSector" } },
+        "relations":     { "type": "object", "description": "{ black_sun: -100..100, exchange: -100..100, csf: -100..100 }" },
+        "res":           { "$ref": "#/definitions/ConquestResources" },
+        "staging":       { "$ref": "#/definitions/GarrisonComposition" },
+        "turn":          { "type": "integer", "minimum": 1 },
+        "heat":          { "type": "integer", "minimum": 0, "maximum": 100 },
+        "crisis":        { "oneOf": [{ "$ref": "#/definitions/CrisisCard" }, { "type": "null" }] },
+        "battle":        { "oneOf": [{ "$ref": "#/definitions/BattleState" }, { "type": "null" }] },
+        "defPenalty":    { "oneOf": [{ "$ref": "#/definitions/DefPenalty" }, { "type": "null" }] },
+        "discountActive":{ "type": "boolean" },
+        "selectedSec":   { "type": "string" },
+        "tab":           { "type": "string", "enum": ["map", "military", "missions", "diplomacy", "build"] },
+        "log":           { "type": "array", "items": { "type": "string" }, "maxItems": 20 },
+        "agents":        { "type": "array", "items": { "$ref": "#/definitions/AgentRecord" } },
+        "routes":        { "type": "array", "items": { "$ref": "#/definitions/SmuggleRoute" } }
+      }
+    }
+  }
+}
