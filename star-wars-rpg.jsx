@@ -5551,6 +5551,45 @@ function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, act
     setCredits(c => c + passiveIncome);
     setHeat(h => Math.max(0, h - 2));
     addLog(`Passive income: +${passiveIncome} credits. Heat: ${Math.max(0, heat - 2 + resolved.reduce((s, ac) => s + ac.heatGenerated, 0))}.`);
+
+    // Dynamic Heat Event pipeline
+    const currentHeat = heat;
+    if (currentHeat >= 100) {
+      // Critical: Full CSF Raid
+      setSyndicateTerritories([]);
+      setCredits(c => Math.max(0, c - 1200));
+      setHeat(50);
+      addLog('CRITICAL RAID: CSF executed a full district sweep. All territory seized. -1200 credits. Heat reset to 50. Rebuild from Shadow Town.');
+    } else if (currentHeat >= 70 && Math.random() < 0.30) {
+      // High heat: pick one of three events
+      const pick = Math.floor(Math.random() * 3);
+      if (pick === 0) {
+        setHeat(h => Math.min(100, h + 8));
+        addLog('HEAT EVENT: Courier Ambush. A supply run was intercepted. Heat +8. Consider cooling operations.');
+      } else if (pick === 1) {
+        const loss = 500 + (Math.random() * 400 | 0);
+        setCredits(c => Math.max(0, c - loss));
+        addLog(`HEAT EVENT: Warehouse Fire Bombing. One of your holdings torched. -${loss} credits.`);
+      } else {
+        setRoster(r => {
+          const avail = r.filter(a => a.status === 'available');
+          if (avail.length === 0) { addLog('HEAT EVENT: CSF attempted an agent extraction but found no exposed operatives.'); return r; }
+          const target = avail[Math.floor(Math.random() * avail.length)];
+          addLog(`HEAT EVENT: Agent Extradition. ${target.name} is in CSF custody. Status: detained. Extract via slicing mission.`);
+          return r.map(a => a.id === target.id ? { ...a, status: 'injured' } : a);
+        });
+      }
+    } else if (currentHeat >= 40 && Math.random() < 0.18) {
+      // Mid heat: Shakedown or Turf War
+      if (Math.random() < 0.5) {
+        const cut = Math.round(passiveIncome * 0.30);
+        setCredits(c => Math.max(0, c - cut));
+        addLog(`HEAT EVENT: CSF Customs Shakedown. Income routes disrupted this cycle. -${cut} credits.`);
+      } else {
+        setHeat(h => Math.min(100, h + 6));
+        addLog('HEAT EVENT: Turf War. Rival faction muscle moved into one of your districts. Heat +6. Hold the line.');
+      }
+    }
   };
 
   const dispatch = (contract) => {
