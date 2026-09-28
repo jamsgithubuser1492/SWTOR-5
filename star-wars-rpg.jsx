@@ -8688,7 +8688,8 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
         React.createElement('span', { style: { color: heat > 70 ? '#FF4040' : heat > 40 ? '#FFD700' : '#888' } }, `HEAT: ${heat}`),
         React.createElement('span', { style: { color: playerIncomeVal >= 7000 ? '#00FF80' : '#888' } }, `INC/T: ${playerIncomeVal.toLocaleString()}`),
         saveFlash && React.createElement('span', { style: { color: '#22C55E', fontSize: 10 } }, saveFlash),
-        React.createElement('button', { style: { fontSize: 9, padding: '2px 6px', background: '#1A0A0A', color: '#FF8060', border: '1px solid #FF404044', borderRadius: 3, cursor: 'pointer' }, onClick: () => { if (window.confirm('Reset Conquest campaign? All progress will be lost.')) resetCampaign(); } }, 'Reset')
+        React.createElement('button', { style: { fontSize: 9, padding: '2px 6px', background: '#1A0A0A', color: '#FF8060', border: '1px solid #FF404044', borderRadius: 3, cursor: 'pointer' }, onClick: () => { if (window.confirm('Reset Conquest campaign? All progress will be lost.')) resetCampaign(); } }, 'Reset'),
+        React.createElement('button', { style: { fontSize: 9, padding: '2px 6px', background: '#0A0F1A', color: '#00BFFF', border: '1px solid #00BFFF44', borderRadius: 3, cursor: 'pointer' }, onClick: onSuccess }, '[ Exit to Game ]')
       )
     ),
     crisis && React.createElement('div', { style: { background: '#2A1A00', border: '1px solid #FF8C00', borderRadius: 4, padding: '6px 10px', marginBottom: 8, fontSize: 11, color: '#FFD700' } },
