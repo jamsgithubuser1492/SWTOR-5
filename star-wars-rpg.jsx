@@ -8315,28 +8315,70 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
 
 
 function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
-  const initSectors = () => {
+  const SAVE_KEY = 'swtor5_conquest_v1';
+
+  const loadSave = () => {
+    try { const r = localStorage.getItem(SAVE_KEY); return r ? JSON.parse(r) : null; }
+    catch(e) { return null; }
+  };
+
+  const [sectors, setSectors] = React.useState(() => {
+    const sv = loadSave();
+    const s = {};
+    Object.keys(CONQUEST_SECTORS_INIT).forEach(k => {
+      const d = CONQUEST_SECTORS_INIT[k];
+      if (sv && sv.sectors && sv.sectors[k]) {
+        s[k] = { ...d, ...sv.sectors[k], adj: [...d.adj] };
+      } else {
+        s[k] = { ...d, gar: { ...d.gar }, adj: [...d.adj], bld: [] };
+      }
+    });
+    return s;
+  });
+
+  const _sv0 = loadSave();
+  const [relations, setRelations] = React.useState((_sv0 && _sv0.relations) || { black_sun: -20, exchange: 25, csf: -70 });
+  const [res, setRes] = React.useState((_sv0 && _sv0.res) || { cr: startCredits || 3000, pwr: 10 });
+  const [staging, setStaging] = React.useState((_sv0 && _sv0.staging) || { inf: 2, snp: 0, tnk: 0, med: 0, drd: 0, spc: 0 });
+  const [turn, setTurn] = React.useState((_sv0 && _sv0.turn) || 1);
+  const [heat, setHeat] = React.useState((_sv0 && _sv0.heat != null) ? _sv0.heat : 30);
+  const [crisis, setCrisis] = React.useState(null);
+  const [selectedSec, setSelectedSec] = React.useState((_sv0 && _sv0.selectedSec) || 'shadow_town');
+  const [tab, setTab] = React.useState('map');
+  const [battle, setBattle] = React.useState(null);
+  const [log, setLog] = React.useState((_sv0 && _sv0.log) || ['Turn 1: Your syndicate controls Shadow Town L.1312. Expand your territory.']);
+  const [discountActive, setDiscountActive] = React.useState(false);
+  const [combatChoice, setCombatChoice] = React.useState(null);
+  const [saveFlash, setSaveFlash] = React.useState('');
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ sectors, relations, res, staging, turn, heat, log, selectedSec }));
+      setSaveFlash('✓ Saved');
+      const t = setTimeout(() => setSaveFlash(''), 1200);
+      return () => clearTimeout(t);
+    } catch(e) { setSaveFlash('Save failed'); }
+  }, [sectors, relations, res, staging, turn, heat, log]);
+
+  const resetCampaign = () => {
+    try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
     const s = {};
     Object.keys(CONQUEST_SECTORS_INIT).forEach(k => {
       const d = CONQUEST_SECTORS_INIT[k];
       s[k] = { ...d, gar: { ...d.gar }, adj: [...d.adj], bld: [] };
     });
-    return s;
+    setSectors(s);
+    setRelations({ black_sun: -20, exchange: 25, csf: -70 });
+    setRes({ cr: startCredits || 3000, pwr: 10 });
+    setStaging({ inf: 2, snp: 0, tnk: 0, med: 0, drd: 0, spc: 0 });
+    setTurn(1);
+    setHeat(30);
+    setLog(['Campaign reset. Shadow Town is yours.']);
+    setSelectedSec('shadow_town');
+    setCrisis(null);
+    setCombatChoice(null);
+    setBattle(null);
   };
-
-  const [sectors, setSectors] = React.useState(initSectors);
-  const [relations, setRelations] = React.useState({ black_sun: -20, exchange: 25, csf: -70 });
-  const [res, setRes] = React.useState({ cr: startCredits || 3000, pwr: 10 });
-  const [staging, setStaging] = React.useState({ inf: 2, snp: 0, tnk: 0, med: 0, drd: 0, spc: 0 });
-  const [turn, setTurn] = React.useState(1);
-  const [heat, setHeat] = React.useState(30);
-  const [crisis, setCrisis] = React.useState(null);
-  const [selectedSec, setSelectedSec] = React.useState('shadow_town');
-  const [tab, setTab] = React.useState('map');
-  const [battle, setBattle] = React.useState(null);
-  const [log, setLog] = React.useState(['Turn 1: Your syndicate controls Shadow Town L.1312. Expand your territory.']);
-  const [discountActive, setDiscountActive] = React.useState(false);
-  const [combatChoice, setCombatChoice] = React.useState(null);
 
   const garAtkPow = (sec) => {
     const gar = sec.gar;
@@ -8384,7 +8426,8 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
         { title:'Black Market Windfall', apply: (cr) => cr + 500, desc:'+500 CR bonus shipment.' },
       ];
       const card = cards[Math.floor(Math.random() * cards.length)];
-      crMod = card.apply(0) - 0;
+      const appliedIncome = card.apply(income);
+      crMod = appliedIncome - income;
       setCrisis({ title: card.title, desc: card.desc });
     } else {
       setCrisis(null);
@@ -8599,11 +8642,13 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
     // Header
     React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 } },
       React.createElement('div', { style: { color: '#00BFFF', fontSize: 14 } }, `CORUSCANT CONQUEST — Turn ${turn}`),
-      React.createElement('div', { style: { display: 'flex', gap: 14, fontSize: 11 } },
+      React.createElement('div', { style: { display: 'flex', gap: 14, fontSize: 11, alignItems: 'center' } },
         React.createElement('span', { style: { color: '#FFD700' } }, `CR: ${res.cr.toLocaleString()}`),
         React.createElement('span', { style: { color: '#22C55E' } }, `PWR: ${res.pwr}`),
         React.createElement('span', { style: { color: heat > 70 ? '#FF4040' : heat > 40 ? '#FFD700' : '#888' } }, `HEAT: ${heat}`),
-        React.createElement('span', { style: { color: playerIncomeVal >= 7000 ? '#00FF80' : '#888' } }, `INC/T: ${playerIncomeVal.toLocaleString()}`)
+        React.createElement('span', { style: { color: playerIncomeVal >= 7000 ? '#00FF80' : '#888' } }, `INC/T: ${playerIncomeVal.toLocaleString()}`),
+        saveFlash && React.createElement('span', { style: { color: '#22C55E', fontSize: 10 } }, saveFlash),
+        React.createElement('button', { style: { fontSize: 9, padding: '2px 6px', background: '#1A0A0A', color: '#FF8060', border: '1px solid #FF404044', borderRadius: 3, cursor: 'pointer' }, onClick: () => { if (window.confirm('Reset Conquest campaign? All progress will be lost.')) resetCampaign(); } }, 'Reset')
       )
     ),
     crisis && React.createElement('div', { style: { background: '#2A1A00', border: '1px solid #FF8C00', borderRadius: 4, padding: '6px 10px', marginBottom: 8, fontSize: 11, color: '#FFD700' } },
