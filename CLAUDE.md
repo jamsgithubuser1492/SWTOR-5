@@ -8,7 +8,7 @@ Single-file React/Babel browser app. No build system.
 
 | File | Purpose |
 |---|---|
-| `star-wars-rpg.jsx` | The entire game |
+| `star-wars-rpg.jsx` | The entire game (~10,068 lines as of last push) |
 | `index.html` | CDN loader (React 18, Babel 7) |
 | `.claude/agents/` | Agent system prompts |
 | `.claude/schemas/` | Data structure contracts |
@@ -51,6 +51,9 @@ Systems Architect adds an SVG branch to `NpcPortrait()` in `star-wars-rpg.jsx`.
 **New mini-game:**
 Systems Architect builds it as an overlay component and wires it to a trigger in the keydown handler.
 
+**New Conquest sector or unit:**
+Modify `CONQUEST_SECTORS_INIT` or `CONQUEST_UNIT_TYPES` constants (defined around line 5357). All Conquest logic lives in `CoruscantConquestOverlay` (~lines 8317 onward).
+
 ---
 
 ## Technical Limits (hard limits only)
@@ -60,6 +63,8 @@ Systems Architect builds it as an overlay component and wires it to a trigger in
 - NPC `kind` must be registered in `NpcPortrait()` or entities render nothing
 - Entity x,y must land on `floor` tiles or they are unreachable
 - Door pairs must be symmetric — each side lists the other as `targetZone`/`targetPos`
+- All React hooks inside `CoruscantConquestOverlay` must use the `React.useState` / `React.useEffect` form — no shorthand destructuring (single-file Babel constraint)
+- `MapView` inside `CoruscantConquestOverlay` is called as a direct function `MapView()` rather than via `React.createElement(MapView, null)` to prevent remount on every render
 
 ---
 
@@ -70,3 +75,189 @@ Reference these when directing agents:
 - `.claude/schemas/zone-schema.json` — planet, zone, door, tile structure
 - `.claude/schemas/dialogue-schema.json` — NPC, choices, loyalty/morality
 - `.claude/schemas/quest-schema.json` — world objects, collectibles, quest flags
+
+---
+
+## Current Game State (as of last push to main)
+
+### Story
+
+The player is a rising crime lord on Coruscant in the Old Republic era. The main questline (Inheritance of Shadows) is complete. Key story flags:
+
+| Flag | Meaning |
+|---|---|
+| `syndicateManagement_active` | Player has founded the syndicate |
+| `jon_status_dead` / `jon_status_subjugated` | Outcome of the Jon Vane confrontation |
+| `malak_turned` / `malak_dead` | Outcome of the Malak pit fight |
+| `sith_contact` | Player has made contact with the Sith underground |
+
+### Zones (all on Coruscant)
+
+27 zones spread across three tiers: sky-level, mid-levels, and undercity. Entry point is `shadow_town`. Key zones:
+
+| Zone ID | Name | Notes |
+|---|---|---|
+| `shadow_town` | Shadow Town L.1312 | Starting zone, player HQ |
+| `penthouse` | Syndicate Penthouse | Syndicate management hub, Conquest access point |
+| `sky_market` | Sky-Level Market | Commerce zone |
+| `slicer_alleyway` | Slicer Alleyway | Hacker den |
+| `freight_hub` | Freight Hub | Industrial zone |
+| `the_works` | The Works | Deep industrial |
+| `level_1313` | Level 1313 | Undercity |
+
+### Mini-Games
+
+| Type string | Component | Trigger location |
+|---|---|---|
+| `pit_fight` | `PitFightOverlay` | Malak in shadow_town, Jon in penthouse |
+| `signal_siphon` | `SignalSiphonOverlay` | Slicer terminals |
+| `terminal_slicing` | `TerminalSlicingOverlay` | Data terminals |
+| `speeder_pursuit` | `SpeederPursuitOverlay` | Chase sequences |
+| `valve_override` | `ValveOverrideOverlay` | Industrial consoles |
+| `conquest` | `CoruscantConquestOverlay` | Sector Control Holo in penthouse |
+
+### NPC Portrait Kinds (registered in `NpcPortrait()`)
+
+`crime_boss`, `enforcer`, `slicer`, `broker`, `republic_guard`, `jedi`, `mechanic`, `smuggler`, `droid`, `assassin`, `generic`, `vigo_vanguard`, `black_sun_vigo_guard`, `black_sun_slicer`, `exchange_bounty_hunter`, `exchange_smuggler_captain`, `csf_swat`, `csf_detective`, `sith_warrior`, `sith_acolyte`, `mandalorian_tracker`, `hutt_lieutenant`, `twilek_dancer`, `syndicate_thug`, `devaronian_scoundrel`, `rodian_sharpshooter`
+
+### Canvas Object Types (rendered in zone canvas, beyond tiles)
+
+Beyond the 7 tile types, the canvas renderer supports world objects with these visual types:
+
+`neon_sign` — glowing text marquee with animated shimmer
+`coaxium_barrel` — glowing blue hazardous fuel drum
+`plasma_grid` — flickering energy grid floor hazard
+`steam_vent` — rising steam particle emitter
+`holoscreen` — animated holographic display
+
+---
+
+## Coruscant Conquest Mode
+
+A turn-based strategy overlay accessed from the Sector Control Holo in the penthouse zone.
+
+### Architecture
+
+All Conquest code lives in two places:
+
+1. **Constants** (~line 5357): `CONQUEST_SECTORS_INIT`, `CONQUEST_FACTION_DATA`, `CONQUEST_UNIT_TYPES`, `CONQUEST_BUILDINGS`
+2. **Component** (~line 8317): `function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits })`
+
+### Map
+
+16 sectors arranged in a vertical hierarchy from Apex Tier (top) to Depths (bottom):
+
+| Sector ID | Name | Tier | Starting Owner |
+|---|---|---|---|
+| `sky_lounges` | Senatorial Sky-Lounges L.5100 | Apex | Black Sun HQ |
+| `senate_district` | Senate District | Upper Core | Black Sun |
+| `upper_levels` | Upper Levels | Upper Core | Neutral |
+| `senate_precinct` | Senate Precinct L.1900 | Legislature | CSF |
+| `lower_promenade` | Lower Promenade L.1100 | Commerce Belt | Neutral |
+| `slicer_alley` | Slicer Alleyway L.1150 | Data Nexus | Neutral |
+| `rep_midlevels` | Republic Mid-Levels | Mid-Layers | Neutral |
+| `csf_hub` | CSF Training Hub L.1222 | Enforcement | CSF HQ |
+| `the_works` | The Works L.005 | Industrial | Exchange |
+| `ind_midlevels` | Industrial Mid-Levels | Factory Belt | Neutral |
+| `sub_spaceport` | Sub-Surface Spaceport | Docking Ring | Neutral |
+| `shadow_town` | Shadow Town L.1312 | Underworld | Player HQ |
+| `sub_l2_west` | Sub-Surface L2 West Market | Black Market | Neutral |
+| `freight_hub` | Sector 4 Freight Hub L.088 | Logistics | Exchange HQ |
+| `undercity` | Undercity | Depths | Neutral |
+| `undercity_out` | Undercity Outskirts | Depths | Neutral |
+
+HQ sectors (`isHQ` field set) cannot be captured by any faction.
+
+### Unit Types
+
+| Key | Name | atkCP | defCP | Cost |
+|---|---|---|---|---|
+| `inf` | Enforcer Infantry | 10 | 12 | 150 CR |
+| `snp` | Covert Marksman | 25 | 20 | 350 CR + 1 PWR |
+| `tnk` | Assault Tank | 75 | 90 | 1200 CR + 5 PWR |
+| `med` | Field Medic | 5 | 15 | 250 CR |
+| `drd` | Combat Droid | 35 | 35 | 700 CR + 2 PWR |
+| `spc` | Speeder Cavalry | 45 | 25 | 500 CR + 1 PWR |
+
+### Buildings
+
+| ID | Name | defMult | atkMult | incBonus | Cost |
+|---|---|---|---|---|---|
+| `bunker` | Reinforced Bunker | 1.25 | 1.00 | 0 | 600 CR |
+| `turret` | Auto Turret Nest | 1.40 | 1.00 | 0 | 850 CR |
+| `rally` | War Rally Point | 1.00 | 1.20 | 0 | 700 CR |
+| `armory` | Weapons Armory | 1.00 | 1.15 | 0 | 900 CR |
+| `relay` | Black Market Relay | 1.00 | 1.00 | +200 | 1200 CR |
+| `slicehub` | Slicing Hub | 1.00 | 1.00 | +250 | 800 CR |
+| `substat` | Power Sub-Station | 1.00 | 1.00 | 0 | 500 CR (grants +3 PWR/turn) |
+| `medbay` | Field Medical Bay | 1.10 | 1.00 | 0 | 600 CR |
+
+### Combat
+
+When the player attacks a sector, a choice screen appears:
+
+- **Auto-Resolve:** Compares `stagAtkPow()` vs defender `garDefPow(sec)`. Player wins if attack > defense.
+- **Manual Tactical:** Launches `TacticalGridCombatOverlay` for a full grid combat session.
+
+Helper functions:
+- `garAtkPow(sec)` — garrison attack power with building atkMult applied
+- `garDefPow(sec)` — garrison defense power with building defMult applied
+- `stagAtkPow()` — staging area attack power (no building bonus on offense)
+
+### Save System
+
+State saved to `localStorage` key `swtor5_conquest_v1` on every state change via `useEffect`. Restored via lazy `useState` initializers on component mount. Fields persisted: `sectors`, `relations`, `res`, `staging`, `turn`, `heat`, `log`, `selectedSec`. A Reset Campaign button in the header clears localStorage and restores defaults.
+
+### Win Condition
+
+Reaching 7,000 CR/turn income triggers victory. The income display turns green when approaching this threshold.
+
+### Crisis Cards (every 3 turns)
+
+| Title | Effect |
+|---|---|
+| CSF Sector Sweep | Heat +5, income reduced 30% |
+| Power Conduit Rupture | Power reserve -8 |
+| Underworld Cartel War | Recruits 30% cheaper next turn |
+| Black Market Windfall | +500 CR bonus |
+
+---
+
+## Gameplay Features Not Yet Added
+
+The following were planned (see plan file) but not yet implemented. A future session should pick these up:
+
+### High Priority
+- **Sabacc mini-game** (`SabaccOverlay`, type `'sabacc'`) — card game with 76-card deck, Sabacc Shift mechanic, cheating detection
+- **Contraband Market** (`ContrabandMarketOverlay`, type `'contraband_market'`) — commodity trading with price fluctuation
+- **Interrogation Matrix** (`InterrogationMatrixOverlay`, type `'interrogation'`) — psychological pressure mini-game
+
+### New Zones (planned)
+- `senatorial_lounges` — sky tier, door from `sky_market`, sabacc table, Black Sun Vigo encounter
+- `spice_refining_vaults` — mid tier, door from `level_1313`, contraband market, Exchange questline
+- `undercity_outskirts` — deep tier, door from `the_works`, Jedi ruin fragment, Anzati assassin NPC
+
+### New NPCs (planned)
+- Malis (Black Sun Vigo) in `senatorial_lounges` — alliance or war choice
+- Karrn (Exchange Tariff Lord) in `spice_refining_vaults` — trade monopoly questline
+- Grix (Devaronian Smuggler) — recruitable syndicate lieutenant
+- Vael (Ex-SIS Slicer) — recruitable lieutenant
+- Marro (Disgraced CSF Inspector) — recruitable lieutenant, reduces heat buildup
+- Kesh (Rogue Sith) — dark side questline
+- The Anzati — assassin-for-hire, new portrait kind needed
+
+### Dynamic Heat Events (planned)
+- Mid Heat (40-69): CSF Customs Shakedown world event, Turf War encounters
+- High Heat (70-99): Courier Ambush, Warehouse Fire Bombing, Agent Extradition
+- Critical Heat (100): Full CSF Raid (territory wipe, heavy credit loss)
+
+### Remaining Mini-Games (planned)
+- `droid_arena` — droid pit combat with stat upgrades and betting
+- `arms_bench` — weapon fabrication with stability risk
+- `shakedown` — protection extortion engine
+- `sky_evasion` — extended speeder pursuit with cargo drop and hull stats
+
+### Known Gaps (pre-existing, not yet fixed)
+- `pit_fight` exists in code but has no world object trigger in `shadow_town` or `penthouse` — needs `triggersMinigame` wired via a world object, not a dialogue choice
+- `syndicateTerritories` starts as `[]` and is never populated — passive syndicate income is always 0
+- Injured syndicate agents never recover — status stays `'injured'` permanently
