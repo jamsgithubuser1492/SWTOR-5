@@ -7536,9 +7536,16 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
     addLog('Recruited ' + ut.name + '.');
   };
 
+  const isAttackable = (sectorId) => {
+    const sec = sectors[sectorId];
+    if (!sec || sec.owner === 'player') return false;
+    return Object.values(sectors).some(s => s.owner === 'player' && s.adj.indexOf(sectorId) !== -1);
+  };
+
   const attackSector = (sectorId) => {
     const sec = sectors[sectorId];
     if (!sec || sec.owner === 'player') return;
+    if (!isAttackable(sectorId)) { addLog('Cannot attack ' + sec.name + ' — no adjacent friendly territory borders it.'); return; }
     if (stagPow() < 1) { addLog('Stage an army in the Military tab before attacking!'); return; }
     setBattle({ sectorId, fk: sec.owner, flavor: 'Storming ' + sec.name + ' — ' + CONQUEST_FACTION_DATA[sec.owner].name + ' defends!' });
   };
@@ -7779,9 +7786,13 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
               </div>
               <div style={{ color: '#555', fontSize: '0.5rem', marginBottom: 10 }}>Infantry: {sec.gar.inf} | Snipers: {sec.gar.snp} | Tanks: {sec.gar.tnk}{sec.bld.length > 0 ? ' | Structures: ' + sec.bld.length : ''}</div>
               {sec.owner !== 'player' ? (
-                <button onClick={() => attackSector(sec.id)} style={{ width: '100%', padding: '8px 0', background: '#180808', color: '#FF5060', border: '1px solid #C03030', cursor: 'pointer', fontSize: '0.6rem', fontWeight: 'bold', letterSpacing: '0.08em' }}>
-                  LAUNCH INVASION — Strike Force: {stagPow()} CP vs Defense: {Math.floor(sec.def / 100 * garPow(sec.gar))} CP
-                </button>
+                isAttackable(sec.id) ? (
+                  <button onClick={() => attackSector(sec.id)} style={{ width: '100%', padding: '8px 0', background: '#180808', color: '#FF5060', border: '1px solid #C03030', cursor: 'pointer', fontSize: '0.6rem', fontWeight: 'bold', letterSpacing: '0.08em' }}>
+                    LAUNCH INVASION — Strike Force: {stagPow()} CP vs Defense: {Math.floor(sec.def / 100 * garPow(sec.gar))} CP
+                  </button>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '6px 0', background: '#0A0A0A', border: '1px solid #1A1A2A', color: '#444', fontSize: '0.5rem' }}>NOT REACHABLE — Capture an adjacent sector first</div>
+                )
               ) : (
                 <div style={{ textAlign: 'center', padding: '6px 0', background: '#001A0A', border: '1px solid #22C55E33', color: '#22C55E', fontSize: '0.5rem' }}>FRIENDLY TERRITORY — Syndicate Control Active</div>
               )}
