@@ -223,41 +223,78 @@ Reaching 7,000 CR/turn income triggers victory. The income display turns green w
 
 ---
 
-## Gameplay Features Not Yet Added
+## Full Feature Inventory (all implemented)
 
-The following were planned (see plan file) but not yet implemented. A future session should pick these up:
+All features listed here are live in `star-wars-rpg.jsx` on `main`.
 
-### High Priority
-- **Sabacc mini-game** (`SabaccOverlay`, type `'sabacc'`) — card game with 76-card deck, Sabacc Shift mechanic, cheating detection
-- **Contraband Market** (`ContrabandMarketOverlay`, type `'contraband_market'`) — commodity trading with price fluctuation
-- **Interrogation Matrix** (`InterrogationMatrixOverlay`, type `'interrogation'`) — psychological pressure mini-game
+### Mini-Games
 
-### New Zones (planned)
-- `senatorial_lounges` — sky tier, door from `sky_market`, sabacc table, Black Sun Vigo encounter
-- `spice_refining_vaults` — mid tier, door from `level_1313`, contraband market, Exchange questline
-- `undercity_outskirts` — deep tier, door from `the_works`, Jedi ruin fragment, Anzati assassin NPC
+| Type string | Component | Trigger location | Notes |
+|---|---|---|---|
+| `sabacc` | `SabaccOverlay` | Sabacc tables in `senatorial_lounges`, `sky_market` | 76-card deck, Sabacc Shift dice, Sleeve Swap cheat risk |
+| `contraband_market` | `ContrabandMarketOverlay` | Black market terminal in `spice_refining_vaults` | 5 goods, price volatility, heat-aware selling |
+| `interrogation` | `InterrogationMatrixOverlay` | Interrogation chamber in `csf_academy`, `senatorial_lounges` | Trait-reactive tactics, 8-round limit |
+| `droid_arena` | `DroidArenaOverlay` | Droid arena in `spice_refining_vaults` | Frame selection, mod installation, stat combat |
+| `arms_bench` | `ArmsBenchOverlay` | Arms bench in `undercity_outskirts` | Blueprint + mod crafting, thermal rupture risk |
+| `shakedown` | `ProtectionShakedownOverlay` | Shakedown targets in `freight_hub` | Fear/Resistance meters, CSF notice accumulation |
+| `sky_evasion` | `SkyLaneEvasionOverlay` | Sky lanes in `senatorial_lounges` | Lane-dodge evasion, cargo drop mechanic, hull stat |
+| `signal_siphon` | `SignalSiphonOverlay` | Multiple data terminals | Frequency-match timing game |
+| `terminal_slicing` | `TerminalSlicingOverlay` | Data terminals | Word-reveal puzzle with limited guesses |
+| `speeder_pursuit` | `SpeederPursuitOverlay` | Emergency speeder bays | Dodge obstacles, distance countdown |
+| `valve_override` | `ValveOverrideOverlay` | Pressure valves in industrial zones | Sequence timing puzzle |
+| `pit_fight` | (via `tactical_combat`) | `malak_pit_entrance` world object in `shadow_town` | Wired to tactical grid combat with `malak_enforcer` profile |
+| `tactical_combat` | `TacticalGridCombatOverlay` | Multiple zone encounters | Full 8x6 grid, cover, flanking, overwatch |
+| `syndicate_management` | `SyndicateManagementOverlay` | War Table in `penthouse` | Agent roster, contracts, heat, territory income |
+| `coruscant_conquest` | `CoruscantConquestOverlay` | Sector Control Holo in `penthouse` | 16-sector strategy mode, localStorage save |
 
-### New NPCs (planned)
-- Malis (Black Sun Vigo) in `senatorial_lounges` — alliance or war choice
-- Karrn (Exchange Tariff Lord) in `spice_refining_vaults` — trade monopoly questline
-- Grix (Devaronian Smuggler) — recruitable syndicate lieutenant
-- Vael (Ex-SIS Slicer) — recruitable lieutenant
-- Marro (Disgraced CSF Inspector) — recruitable lieutenant, reduces heat buildup
-- Kesh (Rogue Sith) — dark side questline
-- The Anzati — assassin-for-hire, new portrait kind needed
+### Zones (all traversable)
 
-### Dynamic Heat Events (planned)
-- Mid Heat (40-69): CSF Customs Shakedown world event, Turf War encounters
-- High Heat (70-99): Courier Ambush, Warehouse Fire Bombing, Agent Extradition
-- Critical Heat (100): Full CSF Raid (territory wipe, heavy credit loss)
+30 zones across three tiers: sky, mid, undercity. All have doors connecting to adjacent zones.
 
-### Remaining Mini-Games (planned)
-- `droid_arena` — droid pit combat with stat upgrades and betting
-- `arms_bench` — weapon fabrication with stability risk
-- `shakedown` — protection extortion engine
-- `sky_evasion` — extended speeder pursuit with cargo drop and hull stats
+| Zone ID | Notable content |
+|---|---|
+| `senatorial_lounges` | Malis (Black Sun Vigo), sabacc table, sky-lane evasion access |
+| `spice_refining_vaults` | Karrn (Exchange Tariff Lord), Grix (Smuggler lieutenant), Vael (Slicer lieutenant), contraband market, droid arena |
+| `undercity_outskirts` | Marro (CSF Inspector lieutenant), Kesh (Rogue Sith), The Anzati (assassin-for-hire), arms bench, Jedi ruin fragment |
 
-### Known Gaps (pre-existing, not yet fixed)
-- `pit_fight` exists in code but has no world object trigger in `shadow_town` or `penthouse` — needs `triggersMinigame` wired via a world object, not a dialogue choice
-- `syndicateTerritories` starts as `[]` and is never populated — passive syndicate income is always 0
-- Injured syndicate agents never recover — status stays `'injured'` permanently
+### NPCs (all zones, all recruitable lieutenants active)
+
+| NPC | Zone | Kind | Flags |
+|---|---|---|---|
+| Malis | `senatorial_lounges` | `crime_boss` | `black_sun_allied` / `malis_hostile` |
+| Karrn | `spice_refining_vaults` | `broker` | `karrn_deal` / `karrn_hostile` |
+| Grix | `spice_refining_vaults` | `smuggler` | `grix_recruited` (adds to syndicate roster) |
+| Vael | `spice_refining_vaults` | `slicer` | `vael_recruited` (adds to syndicate roster) |
+| Marro | `undercity_outskirts` | `republic_guard` | `marro_recruited` (adds to syndicate roster, reduces heat) |
+| Kesh | `undercity_outskirts` | `jedi` | `sith_contact` |
+| The Anzati | `undercity_outskirts` | `assassin` | `anzati_contracted` |
+
+### Dynamic Heat Events (in SyndicateManagementOverlay.advanceTime)
+
+Each `Advance Time` press checks heat and rolls for a random event:
+
+| Heat Tier | Chance | Events |
+|---|---|---|
+| Critical (100) | Always | Full CSF Raid: all territories seized, -1200 cr, heat reset to 50 |
+| High (70+) | 30% | Courier Ambush (+8 heat), Warehouse Fire Bombing (-500 to -900 cr), Agent Extradition (one agent detained) |
+| Mid (40+) | 18% | CSF Customs Shakedown (-30% passive income), Turf War (+6 heat) |
+
+### Syndicate Management (all gaps fixed)
+
+- `syndicateTerritories` populated on activation based on story path (`jon_status_dead` / `jon_status_subjugated`)
+- Injured agents recover at 50% chance per Advance Time press
+- Lieutenant recruitment flags (`grix_recruited`, `vael_recruited`, `marro_recruited`) auto-add agents to roster via `useEffect`
+
+---
+
+## Gameplay Content Roadmap (not yet built)
+
+Future sessions may add:
+
+- Speeder racing tournament (reuse `SkyLaneEvasionOverlay` in competitive bracket format)
+- Sabacc tournament mode (multi-opponent bracket)
+- Expanded Black Sun alliance questline with Malis (currently stops at flag grant)
+- Sith underground questline continuation from Kesh contact
+- Exchange trade monopoly resolution questline from Karrn deal
+- More Conquest buildings and a defensive siege mechanic when HQs are threatened
+- Dynamic NPC patrol routes (currently all NPCs are stationary)
