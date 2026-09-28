@@ -6930,6 +6930,8 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
 
   const [gs, setGs] = React.useState(INIT);
   const gRef = React.useRef(INIT);
+  const canvasRef = React.useRef(null);
+  const [hoverCell, setHoverCell] = React.useState(null);
 
   function upd(patch) {
     const next = { ...gRef.current, ...patch };
@@ -7182,31 +7184,126 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
     return () => window.removeEventListener('keydown', handle);
   }, []);
 
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || gs.phase === 'intro' || gs.phase === 'outcome') return;
+    const ctx = canvas.getContext('2d');
+    const s = gs;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let r = 0; r < GH; r++) {
+      for (let c = 0; c < GW; c++) {
+        const px = c * CELL, py = r * CELL;
+        const cv = (s.cover[r] || [])[c] || 0;
+        const hasSteam = !!s.steam[r + ',' + c];
+        ctx.fillStyle = hasSteam ? '#0E1A0E' : cv === 2 ? '#13121E' : cv === 1 ? '#0F0F1A' : '#0A0A14';
+        ctx.fillRect(px, py, CELL, CELL);
+        ctx.strokeStyle = 'rgba(0,180,230,0.1)'; ctx.lineWidth = 1;
+        ctx.strokeRect(px, py, CELL, CELL);
+        if (hoverCell && hoverCell[0] === r && hoverCell[1] === c && s.phase === 'player') {
+          ctx.fillStyle = 'rgba(0,200,255,0.14)'; ctx.fillRect(px, py, CELL, CELL);
+        }
+        if (cv === 1) {
+          ctx.fillStyle = '#5A3A00'; ctx.fillRect(px + 8, py + CELL - 12, CELL - 16, 7);
+          ctx.fillStyle = '#8A6000'; ctx.fillRect(px + 8, py + CELL - 13, CELL - 16, 2);
+        } else if (cv === 2) {
+          ctx.fillStyle = '#1A0A0A'; ctx.fillRect(px + 6, py + 6, CELL - 12, CELL - 12);
+          ctx.strokeStyle = '#3A0000'; ctx.lineWidth = 1; ctx.strokeRect(px + 6, py + 6, CELL - 12, CELL - 12);
+        }
+        if (hasSteam) {
+          ctx.fillStyle = 'rgba(70,110,70,0.22)'; ctx.fillRect(px, py, CELL, CELL);
+          ctx.fillStyle = 'rgba(90,160,90,0.55)';
+          ctx.font = Math.round(CELL * 0.52) + 'px monospace';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText('≈', px + CELL / 2, py + CELL / 2);
+          ctx.textBaseline = 'alphabetic';
+        }
+      }
+    }
+    s.objs.forEach(function(obj) {
+      if (!obj.active) return;
+      const px = obj.col * CELL + CELL / 2, py = obj.row * CELL + CELL / 2;
+      const rad = Math.round(CELL * 0.29);
+      if (obj.type === 'barrel') {
+        ctx.beginPath(); ctx.arc(px, py, rad, 0, Math.PI * 2);
+        ctx.fillStyle = '#2A1800'; ctx.fill();
+        ctx.strokeStyle = '#C8A000'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#C8A000';
+        ctx.font = Math.round(CELL * 0.42) + 'px monospace';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('⚡', px, py); ctx.textBaseline = 'alphabetic';
+      } else if (obj.type === 'turret') {
+        ctx.beginPath(); ctx.arc(px, py, rad, 0, Math.PI * 2);
+        ctx.fillStyle = obj.hacked ? '#00182A' : '#001400'; ctx.fill();
+        ctx.strokeStyle = obj.hacked ? '#4A9FFF' : '#22C55E'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = obj.hacked ? '#4A9FFF' : '#22C55E';
+        ctx.font = Math.round(CELL * 0.42) + 'px monospace';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(obj.hacked ? '★' : '⊙', px, py); ctx.textBaseline = 'alphabetic';
+      } else if (obj.type === 'steam') {
+        ctx.beginPath(); ctx.arc(px, py, rad, 0, Math.PI * 2);
+        ctx.fillStyle = '#1A2A1A'; ctx.fill();
+        ctx.strokeStyle = '#4A7A4A'; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.fillStyle = '#7AAA7A';
+        ctx.font = Math.round(CELL * 0.42) + 'px monospace';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('≈', px, py); ctx.textBaseline = 'alphabetic';
+      }
+    });
+    var drawF = function(row, col, isP, ow, blind) {
+      var fpx = col * CELL + CELL / 2, fpy = row * CELL + CELL / 2;
+      var rad = Math.round(CELL * 0.32);
+      if (ow) {
+        ctx.beginPath(); ctx.arc(fpx, fpy, rad + 7, 0, Math.PI * 2);
+        ctx.setLineDash([5, 4]); ctx.strokeStyle = '#C8A000'; ctx.lineWidth = 2; ctx.stroke(); ctx.setLineDash([]);
+      }
+      if (blind) {
+        ctx.beginPath(); ctx.arc(fpx, fpy, rad + 3, 0, Math.PI * 2);
+        ctx.strokeStyle = '#9B59B6'; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+      ctx.beginPath(); ctx.arc(fpx, fpy, rad, 0, Math.PI * 2);
+      ctx.fillStyle = isP ? '#081828' : '#1E0808'; ctx.fill();
+      ctx.strokeStyle = isP ? '#4A9FFF' : profile.accent; ctx.lineWidth = 2.5; ctx.stroke();
+      ctx.fillStyle = isP ? '#4A9FFF' : profile.accent;
+      ctx.font = 'bold ' + Math.round(CELL * 0.38) + 'px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(isP ? '●' : '▲', fpx, fpy); ctx.textBaseline = 'alphabetic';
+      var barW = CELL - 8, barH = 4, barX = col * CELL + 4, barY = row * CELL + CELL - 7;
+      var maxHp = isP ? 8 : profile.hp, curHp = isP ? s.pHp : s.eHp;
+      ctx.fillStyle = '#111'; ctx.fillRect(barX, barY, barW, barH);
+      ctx.fillStyle = isP ? (curHp > 4 ? '#4A9FFF' : '#C8A000') : profile.accent;
+      ctx.fillRect(barX, barY, barW * Math.max(0, curHp / maxHp), barH);
+      var curSh = isP ? s.pSh : s.eSh, maxSh = isP ? 8 : profile.shield;
+      if (maxSh > 0 && curSh > 0) {
+        ctx.fillStyle = '#0A1A0A'; ctx.fillRect(barX, barY - 5, barW, 4);
+        ctx.fillStyle = '#22C55E'; ctx.fillRect(barX, barY - 5, barW * Math.max(0, curSh / maxSh), 4);
+      }
+    };
+    drawF(s.pRow, s.pCol, true, s.pOW, false);
+    drawF(s.eRow, s.eCol, false, s.eOW, s.eBlind > 0);
+  }, [gs, hoverCell]);
+
+  function handleCvMove(e) {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const col = Math.floor((e.clientX - rect.left) / CELL);
+    const row = Math.floor((e.clientY - rect.top) / CELL);
+    if (row >= 0 && row < GH && col >= 0 && col < GW) setHoverCell([row, col]);
+    else setHoverCell(null);
+  }
+
+  function handleCvClick() {
+    if (!hoverCell) return;
+    const tr = hoverCell[0], tc = hoverCell[1];
+    const g2 = gRef.current;
+    if (g2.phase !== 'player' || g2.ap < 1) return;
+    const dr = tr - g2.pRow, dc = tc - g2.pCol;
+    if (dr === 0 && dc === 0) return;
+    movePlayer(Math.sign(dr), Math.sign(dc));
+  }
+
   const g = gs;
   const gdLabels = { thermal: 'Thermal(2AP)', flash: 'Flash(1AP)', shield: 'Shield(2AP)', glitch: 'Glitch(1AP)' };
-  const cells = [];
-  for (let r = 0; r < GH; r++) {
-    for (let c = 0; c < GW; c++) {
-      const isP = r === g.pRow && c === g.pCol;
-      const isE = r === g.eRow && c === g.eCol;
-      const cv = (g.cover[r] || [])[c] || 0;
-      const hasSteam = !!g.steam[`${r},${c}`];
-      const obj = g.objs.find(o => o.active && o.row === r && o.col === c);
-      const bg = hasSteam ? '#1A2A1A' : cv === 2 ? '#161622' : cv === 1 ? '#12121C' : '#0A0A14';
-      let inner = null;
-      if (isP) inner = <PlayerSprite w={40} h={40} />;
-      else if (isE) inner = <EnemySprite kind={opponentProfile} w={40} h={40} />;
-      else if (hasSteam) inner = <span style={{ color: '#5A8A5A', fontSize: '0.85rem' }}>≈</span>;
-      else if (obj) inner = <span style={{ fontSize: '0.9rem' }}>{obj.type === 'barrel' ? '⚡' : obj.type === 'steam' ? '💨' : obj.hacked ? '★' : '⊙'}</span>;
-      else if (cv === 2) inner = <span style={{ color: '#334', fontSize: '0.8rem' }}>█</span>;
-      else if (cv === 1) inner = <span style={{ color: '#223', fontSize: '0.8rem' }}>▒</span>;
-      cells.push(
-        <div key={`${r}${c}`} style={{ width: CELL, height: CELL, background: bg, border: '1px solid #111', display: 'flex', alignItems: 'center', justifyContent: 'center', outline: isP ? '2px solid #4A9FFF44' : isE ? `2px solid ${profile.accent}44` : 'none', boxSizing: 'border-box' }}>
-          {inner}
-        </div>
-      );
-    }
-  }
 
   if (g.phase === 'intro') {
     return (
@@ -7247,7 +7344,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
           <div style={{ height: 5, background: '#111', borderRadius: 2, display: 'flex', justifyContent: 'flex-end' }}><div style={{ height: '100%', width: `${Math.max(0, g.eHp / profile.hp) * 100}%`, background: profile.accent, borderRadius: 2, transition: 'width 0.2s' }} /></div>
         </div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GW}, ${CELL}px)`, border: '1px solid #1A1A2A' }}>{cells}</div>
+      <canvas ref={canvasRef} width={GW * CELL} height={GH * CELL} onMouseMove={handleCvMove} onMouseLeave={() => setHoverCell(null)} onClick={handleCvClick} style={{ display: 'block', border: '1px solid #1A1A2A', cursor: g.phase === 'player' ? 'crosshair' : 'default' }} />
       <div style={{ display: 'flex', gap: 12, width: GW * CELL, marginTop: 4, alignItems: 'center' }}>
         <div style={{ color: '#555', fontSize: '0.6rem' }}>Turn {g.turn}</div>
         <div style={{ display: 'flex', gap: 3 }}>{[0, 1, 2].map(i => <div key={i} style={{ width: 11, height: 11, borderRadius: '50%', background: i < g.ap ? '#C8A000' : '#1A1A14', border: '1px solid #333' }} />)}</div>
@@ -7470,6 +7567,111 @@ function SpeederPursuitOverlay({ onSuccess, onFailure }) {
         </div>
         <div style={{ fontSize:11, color:'#E8C97A', minHeight:16, marginBottom:8 }}>{display.message}</div>
         <div style={{ fontSize:10, color:'#4A3020' }}>A/D: lane · Space: turbo burst · E: EMP swoop</div>
+      </div>
+    </div>
+  );
+}
+
+function TerminalSlicingOverlay({ onSuccess, onFailure, difficulty }) {
+  var nodeCount = (difficulty || 4) + 3;
+  var canvasRef = React.useRef(null);
+  var initData = React.useMemo(function() {
+    var cols = [60, 140, 220, 300, 360];
+    var rows = [55, 130, 205];
+    var nodes = [];
+    var usedKeys = {};
+    for (var i = 0; i < nodeCount; i++) {
+      var px, py, key, tries = 0;
+      do { px = cols[Math.floor(Math.random() * cols.length)]; py = rows[Math.floor(Math.random() * rows.length)]; key = px + '|' + py; tries++; }
+      while (usedKeys[key] && tries < 30);
+      usedKeys[key] = true;
+      nodes.push({ id: i, x: px, y: py, type: i === 0 ? 'entry' : i === nodeCount - 1 ? 'exit' : 'node' });
+    }
+    var conns = [];
+    for (var a = 0; a < nodeCount - 1; a++) conns.push([a, a + 1]);
+    for (var b = 0; b < nodeCount; b++) for (var c = b + 2; c < nodeCount; c++) if (Math.random() < 0.28) conns.push([b, c]);
+    return { nodes: nodes, connections: conns };
+  }, []);
+  var [path, setPath] = React.useState([]);
+  var [timeLeft, setTimeLeft] = React.useState(20);
+  var [status, setStatus] = React.useState('active');
+
+  React.useEffect(function() {
+    if (status !== 'active') return;
+    var t = setInterval(function() {
+      setTimeLeft(function(tl) {
+        if (tl <= 1) { clearInterval(t); setStatus('fail'); setTimeout(onFailure, 900); return 0; }
+        return tl - 1;
+      });
+    }, 1000);
+    return function() { clearInterval(t); };
+  }, [status]);
+
+  React.useEffect(function() {
+    var canvas = canvasRef.current;
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var nodes = initData.nodes, conns = initData.connections;
+    ctx.fillStyle = '#020810'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    conns.forEach(function(pair) {
+      var na = nodes[pair[0]], nb = nodes[pair[1]];
+      var iInPath = path.indexOf(pair[0]) !== -1 && path.indexOf(pair[1]) !== -1 && Math.abs(path.indexOf(pair[0]) - path.indexOf(pair[1])) === 1;
+      ctx.strokeStyle = iInPath ? 'rgba(0,255,128,0.55)' : 'rgba(0,150,80,0.18)';
+      ctx.lineWidth = iInPath ? 2 : 1;
+      if (iInPath) ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y); ctx.stroke();
+      ctx.setLineDash([]);
+    });
+    nodes.forEach(function(n) {
+      var inPath = path.indexOf(n.id) !== -1;
+      var isLast = path.length > 0 && path[path.length - 1] === n.id;
+      ctx.beginPath(); ctx.arc(n.x, n.y, 22, 0, Math.PI * 2);
+      ctx.fillStyle = n.type === 'exit' ? '#001A0A' : n.type === 'entry' ? '#00080F' : inPath ? '#002210' : '#030C08';
+      ctx.fill();
+      ctx.strokeStyle = isLast ? '#00FF80' : n.type === 'exit' ? '#22C55E' : n.type === 'entry' ? '#4A9FFF' : inPath ? '#00C060' : '#0A3020';
+      ctx.lineWidth = isLast ? 2.5 : 1.5; ctx.stroke();
+      ctx.fillStyle = n.type === 'entry' ? '#4A9FFF' : n.type === 'exit' ? '#22C55E' : inPath ? '#00FF80' : '#1A6040';
+      ctx.font = '11px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(n.type === 'entry' ? 'IN' : n.type === 'exit' ? 'OUT' : n.id.toString(16).toUpperCase().padStart(2, '0'), n.x, n.y);
+      ctx.textBaseline = 'alphabetic';
+    });
+  }, [initData, path]);
+
+  function handleClick(e) {
+    if (status !== 'active') return;
+    var canvas = canvasRef.current;
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    var clicked = null;
+    initData.nodes.forEach(function(n) { if (Math.sqrt((n.x - mx) * (n.x - mx) + (n.y - my) * (n.y - my)) < 26) clicked = n; });
+    if (!clicked) return;
+    if (path.length === 0) {
+      if (clicked.type !== 'entry') return;
+      setPath([clicked.id]);
+    } else {
+      if (path.indexOf(clicked.id) !== -1) return;
+      var newPath = path.concat([clicked.id]);
+      setPath(newPath);
+      if (clicked.type === 'exit') { setStatus('success'); setTimeout(onSuccess, 700); }
+    }
+  }
+
+  var timeRatio = timeLeft / 20;
+  var msg = status === 'active' ? (path.length === 0 ? 'Click IN to start. Trace a bypass route to OUT.' : 'Continue tracing the path to OUT.') : status === 'success' ? 'BYPASS COMPLETE' : 'SECURITY TRIGGERED';
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.95)', zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: "'IBM Plex Mono',monospace" }}>
+      <div style={{ background: '#020810', border: '1px solid #0A4030', borderRadius: 6, padding: 22, maxWidth: 440, width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <div style={{ color: '#22C55E', fontSize: '0.65rem', letterSpacing: '0.2em' }}>TERMINAL SLICING OVERRIDE</div>
+          <div style={{ color: timeLeft <= 5 ? '#C03030' : '#555', fontSize: '0.65rem' }}>T:{timeLeft}s</div>
+        </div>
+        <div style={{ height: 3, background: '#111', borderRadius: 2, marginBottom: 14 }}>
+          <div style={{ height: '100%', width: (timeRatio * 100) + '%', background: timeRatio > 0.5 ? '#22C55E' : timeRatio > 0.25 ? '#C8A000' : '#C03030', borderRadius: 2, transition: 'width 1s linear' }} />
+        </div>
+        <canvas ref={canvasRef} width={420} height={280} onClick={handleClick} style={{ display: 'block', cursor: 'crosshair', width: '100%', borderRadius: 4, border: '1px solid #0A2018' }} />
+        <div style={{ marginTop: 10, color: status === 'success' ? '#22C55E' : status === 'fail' ? '#C03030' : '#555', fontSize: '0.55rem', textAlign: 'center' }}>{msg}</div>
+        {status === 'fail' && <button onClick={onFailure} style={{ marginTop: 8, width: '100%', background: '#1A0808', color: '#888', border: '1px solid #333', padding: '6px', cursor: 'pointer', fontSize: '0.65rem', fontFamily: "'IBM Plex Mono',monospace" }}>Abort</button>}
       </div>
     </div>
   );
@@ -8431,6 +8633,7 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'shakedown' && <ProtectionShakedownOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'sky_evasion' && <SkyLaneEvasionOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'tactical_combat' && <TacticalGridCombatOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} opponentProfile={activeMinigame.opponentProfile ?? 'syndicate_thug'} flavorText={activeMinigame.flavorText} />}
+      {activeMinigame && activeMinigame.type === 'terminal_slicing' && <TerminalSlicingOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} difficulty={activeMinigame.difficulty ?? 4} />}
       {showDebug && (
         <div style={{ position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.82)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'monospace' }}>
           <div style={{ background:'#0A0A12',border:'1px solid #4ACDFF44',padding:24,minWidth:480,maxWidth:620 }}>
