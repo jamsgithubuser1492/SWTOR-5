@@ -5355,33 +5355,57 @@ function resolveDialoguePhase(npc, questFlags) {
 }
 
 const CONQUEST_SECTORS_INIT = {
-  level_1313:       { id: 'level_1313',       name: 'Level 1313',       tier: 'Sub-Surface Slums',  owner: 'player',    cx: 180, cy: 310, adj: ['coco_town', 'the_works'],                                      income: 550,  pwr: 1, gar: { inf: 6,  snp: 0, tnk: 1 }, def: 65, bld: [] },
-  coco_town:        { id: 'coco_town',         name: 'CoCo Town',         tier: 'Commercial Hub',     owner: 'black_sun', cx: 420, cy: 140, adj: ['level_1313', 'the_works', 'senate_perimeter'],                  income: 400,  pwr: 0, gar: { inf: 12, snp: 4, tnk: 0 }, def: 48, bld: [] },
-  the_works:        { id: 'the_works',         name: 'The Works',         tier: 'Industrial Grid',    owner: 'exchange',  cx: 360, cy: 400, adj: ['level_1313', 'coco_town', 'senate_perimeter', 'freight_hub'],   income: 750,  pwr: 4, gar: { inf: 10, snp: 1, tnk: 2 }, def: 78, bld: [] },
-  senate_perimeter: { id: 'senate_perimeter',  name: 'Senate Perimeter',  tier: 'Upper World Core',   owner: 'csf',       cx: 620, cy: 260, adj: ['coco_town', 'the_works', 'freight_hub'],                       income: 1100, pwr: 0, gar: { inf: 20, snp: 6, tnk: 4 }, def: 95, bld: [] },
-  freight_hub:      { id: 'freight_hub',        name: 'Freight Hub',       tier: 'Commerce District',  owner: 'exchange',  cx: 560, cy: 400, adj: ['the_works', 'senate_perimeter'],                               income: 650,  pwr: 0, gar: { inf: 8,  snp: 2, tnk: 1 }, def: 60, bld: [] },
+  // Row 1 — Apex (y=55)
+  sky_lounges:     { id:'sky_lounges',     name:'Senatorial Sky-Lounges L.5100', tier:'Apex Tier',     owner:'black_sun', cx:220, cy:55,  adj:['senate_district','upper_levels'],                                 isHQ:'black_sun', income:1500, pwr:0, gar:{inf:15,snp:6,tnk:3,med:2,drd:0,spc:0}, def:90, bld:[] },
+  senate_district: { id:'senate_district', name:'Senate District',               tier:'Upper Core',    owner:'black_sun', cx:450, cy:55,  adj:['sky_lounges','senate_precinct','upper_levels'],                  income:1200, pwr:0, gar:{inf:12,snp:5,tnk:2,med:1,drd:0,spc:0}, def:80, bld:[] },
+  upper_levels:    { id:'upper_levels',    name:'Upper Levels',                  tier:'Upper Core',    owner:'neutral',   cx:680, cy:55,  adj:['sky_lounges','senate_district','lower_promenade'],               income:850,  pwr:0, gar:{inf:5, snp:1,tnk:0,med:0,drd:0,spc:0}, def:40, bld:[] },
+  // Row 2 — Legislature (y=165)
+  senate_precinct: { id:'senate_precinct', name:'Senate Precinct L.1900',        tier:'Legislature',   owner:'csf',       cx:340, cy:165, adj:['senate_district','lower_promenade','slicer_alley','csf_hub'],     income:1100, pwr:0, gar:{inf:20,snp:6,tnk:4,med:2,drd:0,spc:0}, def:95, bld:[] },
+  lower_promenade: { id:'lower_promenade', name:'Lower Promenade L.1100',        tier:'Commerce Belt', owner:'neutral',   cx:570, cy:165, adj:['upper_levels','senate_precinct','slicer_alley','rep_midlevels'],  income:700,  pwr:0, gar:{inf:6, snp:2,tnk:0,med:0,drd:0,spc:0}, def:45, bld:[] },
+  // Row 3 — Mid Layers (y=275)
+  slicer_alley:    { id:'slicer_alley',    name:'Slicer Alleyway L.1150',        tier:'Data Nexus',    owner:'neutral',   cx:200, cy:275, adj:['senate_precinct','lower_promenade','rep_midlevels'],              income:600,  pwr:1, gar:{inf:4, snp:3,tnk:0,med:0,drd:0,spc:0}, def:38, bld:[] },
+  rep_midlevels:   { id:'rep_midlevels',   name:'Republic Mid-Levels',           tier:'Mid-Layers',    owner:'neutral',   cx:450, cy:275, adj:['lower_promenade','slicer_alley','csf_hub','ind_midlevels'],       income:750,  pwr:1, gar:{inf:7, snp:2,tnk:1,med:0,drd:0,spc:0}, def:55, bld:[] },
+  csf_hub:         { id:'csf_hub',         name:'CSF Training Hub L.1222',       tier:'Enforcement',   owner:'csf',       cx:680, cy:275, adj:['senate_precinct','rep_midlevels','the_works'],                    isHQ:'csf',  income:1000, pwr:0, gar:{inf:18,snp:8,tnk:3,med:2,drd:0,spc:0}, def:92, bld:[] },
+  // Row 4 — Industrial (y=375)
+  the_works:       { id:'the_works',       name:'The Works L.005',               tier:'Industrial',    owner:'exchange',  cx:340, cy:375, adj:['csf_hub','rep_midlevels','ind_midlevels','shadow_town','sub_l2_west'], income:950, pwr:4, gar:{inf:12,snp:3,tnk:3,med:0,drd:2,spc:0}, def:80, bld:[] },
+  ind_midlevels:   { id:'ind_midlevels',   name:'Industrial Mid-Levels',         tier:'Factory Belt',  owner:'neutral',   cx:570, cy:375, adj:['rep_midlevels','the_works','sub_spaceport','sub_l2_west'],         income:800,  pwr:3, gar:{inf:8, snp:1,tnk:2,med:0,drd:0,spc:0}, def:60, bld:[] },
+  // Row 5 — Sub-Surface (y=465)
+  sub_spaceport:   { id:'sub_spaceport',   name:'Sub-Surface Spaceport',         tier:'Docking Ring',  owner:'neutral',   cx:110, cy:465, adj:['ind_midlevels','sub_l2_west','freight_hub'],                      income:700,  pwr:0, gar:{inf:5, snp:1,tnk:1,med:0,drd:0,spc:0}, def:42, bld:[] },
+  shadow_town:     { id:'shadow_town',     name:'Shadow Town L.1312',            tier:'Underworld',    owner:'player',    cx:340, cy:465, adj:['the_works','sub_l2_west','undercity'],                             isHQ:'player', income:600, pwr:2, gar:{inf:6,snp:1,tnk:0,med:0,drd:0,spc:0}, def:55, bld:[] },
+  sub_l2_west:     { id:'sub_l2_west',     name:'Sub-Surface L2 West Market',    tier:'Black Market',  owner:'neutral',   cx:570, cy:465, adj:['the_works','ind_midlevels','sub_spaceport','shadow_town','freight_hub','undercity_out'], income:650, pwr:1, gar:{inf:5,snp:2,tnk:0,med:0,drd:0,spc:0}, def:40, bld:[] },
+  freight_hub:     { id:'freight_hub',     name:'Sector 4 Freight Hub L.088',    tier:'Logistics',     owner:'exchange',  cx:760, cy:465, adj:['sub_spaceport','sub_l2_west','undercity_out'],                     isHQ:'exchange', income:850, pwr:0, gar:{inf:14,snp:4,tnk:2,med:0,drd:1,spc:0}, def:75, bld:[] },
+  // Row 6 — Undercity (y=540)
+  undercity:       { id:'undercity',       name:'Undercity',                     tier:'Depths',        owner:'neutral',   cx:220, cy:540, adj:['shadow_town','undercity_out'],                                    income:500,  pwr:2, gar:{inf:3, snp:0,tnk:0,med:0,drd:0,spc:0}, def:30, bld:[] },
+  undercity_out:   { id:'undercity_out',   name:'Undercity Outskirts',           tier:'Depths',        owner:'neutral',   cx:570, cy:540, adj:['freight_hub','sub_l2_west','undercity'],                          income:450,  pwr:1, gar:{inf:3, snp:0,tnk:0,med:0,drd:0,spc:0}, def:28, bld:[] },
 };
 
 const CONQUEST_FACTION_DATA = {
-  player:    { name: 'Your Syndicate', color: '#00BFFF', aggr: 0,  aiProfile: 'syndicate_thug' },
-  black_sun: { name: 'The Black Sun',  color: '#FF5060', aggr: 85, aiProfile: 'black_sun_vigo_guard',   startRel: -20 },
-  exchange:  { name: 'The Exchange',   color: '#22C55E', aggr: 40, aiProfile: 'exchange_bounty_hunter', startRel: 25  },
-  csf:       { name: 'CSF',            color: '#4A9FFF', aggr: 60, aiProfile: 'csf_swat',               startRel: -70 },
+  player:    { name:'Your Syndicate',  color:'#00BFFF', aggr:0,  aiProfile:'syndicate_thug' },
+  black_sun: { name:'The Black Sun',   color:'#FF5060', aggr:85, aiProfile:'black_sun_vigo_guard',   startRel:-20 },
+  exchange:  { name:'The Exchange',    color:'#22C55E', aggr:40, aiProfile:'exchange_bounty_hunter',  startRel:25  },
+  csf:       { name:'Coruscant CSF',   color:'#4A9FFF', aggr:60, aiProfile:'csf_swat',                startRel:-70 },
+  neutral:   { name:'Neutral',         color:'#888888', aggr:0,  aiProfile:'syndicate_thug',          startRel:0   },
 };
 
 const CONQUEST_UNIT_TYPES = {
-  inf: { name: 'Enforcer Infantry', costCR: 150,  costPWR: 0, upPWR: 0, cp: 10 },
-  snp: { name: 'Covert Marksman',   costCR: 350,  costPWR: 1, upPWR: 0, cp: 25 },
-  tnk: { name: 'Assault Tank',      costCR: 1200, costPWR: 5, upPWR: 2, cp: 75 },
+  inf: { name:'Enforcer Infantry',  costCR:150,  costPWR:0, upPWR:0, atkCP:10,  defCP:12  },
+  snp: { name:'Covert Marksman',    costCR:350,  costPWR:1, upPWR:0, atkCP:25,  defCP:20  },
+  tnk: { name:'Assault Tank',       costCR:1200, costPWR:5, upPWR:2, atkCP:75,  defCP:90  },
+  med: { name:'Field Medic',        costCR:250,  costPWR:0, upPWR:0, atkCP:5,   defCP:15  },
+  drd: { name:'Combat Droid',       costCR:700,  costPWR:2, upPWR:1, atkCP:35,  defCP:35  },
+  spc: { name:'Speeder Cavalry',    costCR:500,  costPWR:1, upPWR:0, atkCP:45,  defCP:25  },
 };
 
 const CONQUEST_BUILDINGS = [
-  { id: 'bunker',     name: 'Reinforced Bunker Gate', cost: 600,  costPWR: 2, defBonus: 25, incBonus: 0,   pwrBonus: 0 },
-  { id: 'turret',     name: 'Auto Turret Nest',       cost: 850,  costPWR: 4, defBonus: 40, incBonus: 0,   pwrBonus: 0 },
-  { id: 'relay',      name: 'Black Market Relay',     cost: 1200, costPWR: 1, defBonus: 0,  incBonus: 150, pwrBonus: 0 },
-  { id: 'substation', name: 'Power Sub-Station',      cost: 500,  costPWR: 0, defBonus: 0,  incBonus: 0,   pwrBonus: 3 },
+  { id:'bunker',   name:'Reinforced Bunker',     cost:600,  costPWR:2, defMult:1.25, atkMult:1.00, incBonus:0,   pwrBonus:0 },
+  { id:'turret',   name:'Auto Turret Nest',      cost:850,  costPWR:4, defMult:1.40, atkMult:1.00, incBonus:0,   pwrBonus:0 },
+  { id:'rally',    name:'War Rally Point',        cost:700,  costPWR:1, defMult:1.00, atkMult:1.20, incBonus:0,   pwrBonus:0 },
+  { id:'armory',   name:'Weapons Armory',         cost:900,  costPWR:2, defMult:1.00, atkMult:1.15, incBonus:0,   pwrBonus:0 },
+  { id:'relay',    name:'Black Market Relay',     cost:1200, costPWR:1, defMult:1.00, atkMult:1.00, incBonus:200, pwrBonus:0 },
+  { id:'slicehub', name:'Slicing Hub',            cost:800,  costPWR:2, defMult:1.00, atkMult:1.00, incBonus:250, pwrBonus:0 },
+  { id:'substat',  name:'Power Sub-Station',      cost:500,  costPWR:0, defMult:1.00, atkMult:1.00, incBonus:0,   pwrBonus:3 },
+  { id:'medbay',   name:'Field Medical Bay',      cost:600,  costPWR:1, defMult:1.10, atkMult:1.00, incBonus:0,   pwrBonus:0 },
 ];
-
 const CONQUEST_CRISIS_CARDS = [
   { id: 'sweep',  title: 'CSF Sector Sweep',         desc: 'Sectors above Heat 35 lose 60% income this turn. Enforcement surge.',  heatMin: 35, type: 'income_penalty'  },
   { id: 'fault',  title: 'Power Conduit Rupture',    desc: 'Grid failure! Power reserve drops by 8 immediately.',                   heatMin: 0,  type: 'power_loss'       },
@@ -8303,370 +8327,424 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
   const [sectors, setSectors] = React.useState(initSectors);
   const [relations, setRelations] = React.useState({ black_sun: -20, exchange: 25, csf: -70 });
   const [res, setRes] = React.useState({ cr: startCredits || 3000, pwr: 10 });
-  const [staging, setStaging] = React.useState({ inf: 2, snp: 0, tnk: 1 });
+  const [staging, setStaging] = React.useState({ inf: 2, snp: 0, tnk: 0, med: 0, drd: 0, spc: 0 });
   const [turn, setTurn] = React.useState(1);
   const [heat, setHeat] = React.useState(30);
   const [crisis, setCrisis] = React.useState(null);
-  const [selectedSec, setSelectedSec] = React.useState('level_1313');
+  const [selectedSec, setSelectedSec] = React.useState('shadow_town');
   const [tab, setTab] = React.useState('map');
   const [battle, setBattle] = React.useState(null);
-  const [log, setLog] = React.useState(['Turn 1: Your syndicate controls Level 1313. Expand your territory.']);
+  const [log, setLog] = React.useState(['Turn 1: Your syndicate controls Shadow Town L.1312. Expand your territory.']);
   const [discountActive, setDiscountActive] = React.useState(false);
-  const [defPenalty, setDefPenalty] = React.useState(null);
+  const [combatChoice, setCombatChoice] = React.useState(null);
 
-  const garPow = (gar) => gar.inf * 10 + gar.snp * 25 + gar.tnk * 75;
-  const stagPow = () => staging.inf * 10 + staging.snp * 25 + staging.tnk * 75;
+  const garAtkPow = (sec) => {
+    const gar = sec.gar;
+    let raw = Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (gar[k] || 0) * CONQUEST_UNIT_TYPES[k].atkCP, 0);
+    let mult = 1.0;
+    sec.bld.forEach(bId => { const bd = CONQUEST_BUILDINGS.find(b => b.id === bId); if (bd) mult *= bd.atkMult; });
+    return Math.round(raw * mult);
+  };
+  const garDefPow = (sec) => {
+    const gar = sec.gar;
+    let raw = Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (gar[k] || 0) * CONQUEST_UNIT_TYPES[k].defCP, 0);
+    let mult = 1.0;
+    sec.bld.forEach(bId => { const bd = CONQUEST_BUILDINGS.find(b => b.id === bId); if (bd) mult *= bd.defMult; });
+    return Math.round(raw * mult);
+  };
+  const stagAtkPow = () => Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (staging[k] || 0) * CONQUEST_UNIT_TYPES[k].atkCP, 0);
+  const stagDefPow = () => Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (staging[k] || 0) * CONQUEST_UNIT_TYPES[k].defCP, 0);
+
   const addLog = (msg) => setLog(prev => [msg, ...prev.slice(0, 19)]);
 
-  const endTurn = () => {
-    const nextTurn = turn + 1;
-    setTurn(nextTurn);
-    const sSnap = sectors;
+  const playerIncome = () => {
     let income = 0, pwrGain = 0;
-    Object.values(sSnap).forEach(s => {
+    Object.values(sectors).forEach(s => {
       if (s.owner !== 'player') return;
       let inc = s.income;
       s.bld.forEach(bId => { const bd = CONQUEST_BUILDINGS.find(b => b.id === bId); if (bd) { inc += bd.incBonus; pwrGain += bd.pwrBonus; } });
       income += inc;
       pwrGain += s.pwr;
     });
-    const upkeep = staging.tnk * CONQUEST_UNIT_TYPES.tnk.upPWR;
-    let routeIncome = 0;
-    [{ profit: 320, risk: 15, label: 'Level 1313 to CoCo Town' }, { profit: 580, risk: 40, label: 'The Works via Freight Hub' }].forEach(r => {
-      if (Math.random() * 100 > r.risk) routeIncome += r.profit;
-      else addLog('INTERCEPT: ' + r.label + ' cargo seized by CSF!');
-    });
-    let heatDelta = 2, pwrMod = 0, crMod = 0;
-    if (nextTurn % 2 === 0) {
-      const eligible = CONQUEST_CRISIS_CARDS.filter(c => heat >= c.heatMin);
-      if (eligible.length > 0) {
-        const nc = eligible[Math.floor(Math.random() * eligible.length)];
-        setCrisis(nc);
-        if (nc.type === 'power_loss')       { pwrMod -= 8; addLog('CRISIS: Power Conduit Rupture! -8 Power.'); }
-        if (nc.type === 'credit_bonus')     { crMod += 400; addLog('CRISIS: Black Market surge! +400 CR.'); }
-        if (nc.type === 'recruit_discount') { setDiscountActive(true); addLog('CRISIS: Cartel War! Units 30% cheaper this turn.'); }
-        if (nc.type === 'income_penalty' && heat >= 35) { income = Math.floor(income * 0.4); addLog('CRISIS: CSF Sector Sweep! Income cut 60%.'); }
-        if (nc.type === 'def_penalty') {
-          const ps = Object.keys(sSnap).filter(k => sSnap[k].owner === 'player');
-          if (ps.length > 0) {
-            const tid = ps[Math.floor(Math.random() * ps.length)];
-            setDefPenalty({ sectorId: tid, turns: 2 });
-            setSectors(prev => ({ ...prev, [tid]: { ...prev[tid], def: Math.max(10, prev[tid].def - 20) } }));
-            addLog('CRISIS: Gunship Strafe on ' + sSnap[tid].name + '! Defense -20 for 2 turns. Heat +15.');
-            heatDelta += 15;
-          }
-        }
-      } else { setCrisis(null); setDiscountActive(false); }
-    } else { setCrisis(null); setDiscountActive(false); }
-    if (defPenalty) {
-      if (defPenalty.turns <= 1) {
-        setSectors(prev => ({ ...prev, [defPenalty.sectorId]: { ...prev[defPenalty.sectorId], def: Math.min(100, prev[defPenalty.sectorId].def + 20) } }));
-        setDefPenalty(null);
-      } else { setDefPenalty(dp => dp ? { ...dp, turns: dp.turns - 1 } : null); }
+    return { income, pwrGain };
+  };
+
+  const endTurn = () => {
+    const nextTurn = turn + 1;
+    setTurn(nextTurn);
+    const { income, pwrGain } = playerIncome();
+    const upkeep = Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (staging[k] || 0) * CONQUEST_UNIT_TYPES[k].upPWR, 0);
+    let heatDelta = 2, crMod = 0, pwrMod = 0;
+
+    if (nextTurn % 3 === 0) {
+      const cards = [
+        { title:'CSF Sector Sweep', apply: (cr) => { heatDelta += 5; return cr * 0.7; }, desc:'Heat +5, income reduced 30%.' },
+        { title:'Power Conduit Rupture', apply: (cr) => { pwrMod -= 8; return cr; }, desc:'Power reserve -8.' },
+        { title:'Underworld Cartel War', apply: (cr) => { setDiscountActive(true); return cr; }, desc:'Recruit 30% cheaper next turn.' },
+        { title:'Black Market Windfall', apply: (cr) => cr + 500, desc:'+500 CR bonus shipment.' },
+      ];
+      const card = cards[Math.floor(Math.random() * cards.length)];
+      crMod = card.apply(0) - 0;
+      setCrisis({ title: card.title, desc: card.desc });
+    } else {
+      setCrisis(null);
     }
-    ['black_sun', 'exchange', 'csf'].forEach(fk => {
-      const fData = CONQUEST_FACTION_DATA[fk];
-      if (Math.random() * 100 >= fData.aggr / 2) return;
-      const owned = Object.keys(sSnap).filter(k => sSnap[k].owner === fk);
-      if (owned.length === 0) return;
-      const attSec = sSnap[owned[Math.floor(Math.random() * owned.length)]];
-      const adjPlayer = attSec.adj.filter(a => sSnap[a] && sSnap[a].owner === 'player');
-      if (adjPlayer.length === 0) return;
-      const tid = adjPlayer[0];
-      const tgt = sSnap[tid];
-      const ap = garPow(attSec.gar) * (0.7 + Math.random() * 0.6);
-      const dp2 = (tgt.def / 100) * garPow(tgt.gar) * (0.7 + Math.random() * 0.6);
-      if (ap > dp2) {
-        setSectors(prev => ({ ...prev, [tid]: { ...prev[tid], owner: fk, gar: { inf: Math.max(1, Math.floor(attSec.gar.inf * 0.5)), snp: 0, tnk: 0 } } }));
-        addLog('ALERT: ' + fData.name + ' captured ' + tgt.name + '!');
-        heatDelta += 5;
-      } else { addLog(fData.name + ' attack on ' + tgt.name + ' was repelled.'); }
+
+    // AI faction turns: each faction tries to expand into adjacent neutral or player sectors
+    setSectors(prev => {
+      const next = { ...prev };
+      ['black_sun', 'exchange', 'csf'].forEach(faction => {
+        const rel = relations[faction] || 0;
+        const fData = CONQUEST_FACTION_DATA[faction];
+        if (!fData) return;
+        Object.values(next).forEach(sec => {
+          if (sec.owner !== faction) return;
+          sec.adj.forEach(adjId => {
+            const adj = next[adjId];
+            if (!adj) return;
+            if (adj.owner === 'player') return; // don't auto-attack player
+            if (adj.isHQ && adj.isHQ !== faction) return; // respect HQs
+            if (adj.owner === faction) return;
+            if (adj.owner === 'neutral' && Math.random() * 100 < fData.aggr * 0.3) {
+              const atkP = garAtkPow(sec);
+              const defP = garDefPow(adj);
+              if (atkP > defP || Math.random() < 0.25) {
+                next[adjId] = { ...adj, owner: faction, gar: { inf:Math.floor(adj.gar.inf*0.5+2), snp:0, tnk:0, med:0, drd:0, spc:0 } };
+              }
+            }
+          });
+        });
+      });
+      return next;
     });
-    setRes(prev => ({ cr: Math.max(0, prev.cr + income + routeIncome + crMod), pwr: Math.max(0, prev.pwr + pwrGain - upkeep + pwrMod) }));
-    setHeat(h => Math.max(0, Math.min(100, h + heatDelta)));
-    addLog('Turn ' + nextTurn + ': Collected ' + (income + routeIncome) + ' CR. Power ' + (pwrGain - upkeep >= 0 ? '+' : '') + (pwrGain - upkeep) + '.');
+
+    const finalCr = income + crMod;
+    const pwrNet = pwrGain - upkeep + pwrMod;
+    setRes(prev => ({ cr: prev.cr + Math.round(finalCr), pwr: Math.max(0, prev.pwr + pwrNet) }));
+    setHeat(prev => Math.min(100, Math.max(0, prev + heatDelta)));
+    setDiscountActive(false);
+    addLog(`Turn ${nextTurn}: +${Math.round(finalCr)} CR | +${pwrGain} PWR | Heat ${heat + heatDelta > 100 ? 100 : heat + heatDelta}`);
+
+    // Win condition: player income >= 7000 per turn
+    if (income >= 7000) {
+      setTimeout(() => onSuccess && onSuccess(), 600);
+    }
   };
 
-  const buyUnit = (type) => {
-    const ut = CONQUEST_UNIT_TYPES[type];
-    const costCR = discountActive ? Math.floor(ut.costCR * 0.7) : ut.costCR;
-    if (res.cr < costCR || res.pwr < ut.costPWR) { addLog('Insufficient resources for ' + ut.name + '.'); return; }
-    setRes(prev => ({ cr: prev.cr - costCR, pwr: prev.pwr - ut.costPWR }));
-    setStaging(prev => ({ ...prev, [type]: (prev[type] || 0) + 1 }));
-    addLog('Recruited ' + ut.name + '.');
+  const initiateAttack = (targetId) => {
+    const target = sectors[targetId];
+    if (!target) return;
+    if (target.isHQ && target.isHQ !== 'player') {
+      addLog(`BLOCKED: ${target.name} is ${CONQUEST_FACTION_DATA[target.isHQ]?.name} HQ — cannot be captured!`);
+      return;
+    }
+    const sp = stagAtkPow();
+    if (sp === 0) { addLog('Deploy units to staging force before attacking.'); return; }
+    setCombatChoice({ targetId, targetName: target.name, stagAtk: sp, garDef: garDefPow(target) });
   };
 
-  const isAttackable = (sectorId) => {
-    const sec = sectors[sectorId];
-    if (!sec || sec.owner === 'player') return false;
-    return Object.values(sectors).some(s => s.owner === 'player' && s.adj.indexOf(sectorId) !== -1);
+  const resolveAutoAttack = (targetId) => {
+    const target = sectors[targetId];
+    const sp = stagAtkPow();
+    const dp = garDefPow(target);
+    const roll = Math.random() * 0.4 + 0.8; // 0.8–1.2 luck factor
+    const success = sp * roll > dp;
+    setCombatChoice(null);
+    if (success) {
+      const margin = (sp * roll - dp) / Math.max(dp, 1);
+      const casualtyRate = Math.max(0.1, 0.6 - margin * 0.5);
+      const newSector = { ...target, owner: 'player', gar: { inf: Math.ceil((staging.inf || 0) * 0.5), snp: Math.ceil((staging.snp || 0) * 0.5), tnk: Math.ceil((staging.tnk || 0) * 0.5), med: Math.ceil((staging.med || 0) * 0.5), drd: Math.ceil((staging.drd || 0) * 0.5), spc: Math.ceil((staging.spc || 0) * 0.5) }, bld: [] };
+      setSectors(prev => ({ ...prev, [targetId]: newSector }));
+      const losses = Object.keys(staging).reduce((t, k) => { const l = Math.floor((staging[k] || 0) * casualtyRate); return t + l; }, 0);
+      addLog(`VICTORY: ${target.name} captured! (ATK ${sp} vs DEF ${dp}) — ~${losses} unit${losses !== 1 ? 's' : ''} lost.`);
+      setStaging({ inf: Math.ceil((staging.inf || 0) * (1 - casualtyRate)), snp: Math.ceil((staging.snp || 0) * (1 - casualtyRate)), tnk: Math.ceil((staging.tnk || 0) * (1 - casualtyRate)), med: Math.ceil((staging.med || 0) * (1 - casualtyRate)), drd: Math.ceil((staging.drd || 0) * (1 - casualtyRate)), spc: Math.ceil((staging.spc || 0) * (1 - casualtyRate)) });
+    } else {
+      const stagLoss = Math.floor(Object.keys(staging).reduce((t, k) => t + (staging[k] || 0), 0) * 0.4);
+      addLog(`DEFEAT: ${target.name} held! (ATK ${sp} vs DEF ${dp}) — ~${stagLoss} staging units lost.`);
+      setStaging(prev => {
+        const next = { ...prev };
+        let rem = stagLoss;
+        ['inf','snp','spc','drd','med','tnk'].forEach(k => { const cut = Math.min(next[k] || 0, rem); next[k] = (next[k] || 0) - cut; rem -= cut; });
+        return next;
+      });
+      setHeat(prev => Math.min(100, prev + 8));
+    }
   };
 
-  const attackSector = (sectorId) => {
-    const sec = sectors[sectorId];
-    if (!sec || sec.owner === 'player') return;
-    if (!isAttackable(sectorId)) { addLog('Cannot attack ' + sec.name + ' — no adjacent friendly territory borders it.'); return; }
-    if (stagPow() < 1) { addLog('Stage an army in the Military tab before attacking!'); return; }
-    setBattle({ sectorId, fk: sec.owner, flavor: 'Storming ' + sec.name + ' — ' + CONQUEST_FACTION_DATA[sec.owner].name + ' defends!' });
-  };
-
-  const onBattleWin = () => {
-    if (!battle) return;
-    const { sectorId, fk } = battle;
-    const capName = sectors[sectorId] ? sectors[sectorId].name : sectorId;
-    setSectors(prev => ({ ...prev, [sectorId]: { ...prev[sectorId], owner: 'player', gar: { inf: Math.floor(staging.inf * 0.6), snp: Math.floor(staging.snp * 0.7), tnk: staging.tnk } } }));
-    setRelations(prev => ({ ...prev, [fk]: Math.max(-100, (prev[fk] || 0) - 25) }));
-    setHeat(h => Math.min(100, h + 15));
-    setStaging({ inf: 0, snp: 0, tnk: 0 });
-    addLog('VICTORY: Captured ' + capName + '! ' + CONQUEST_FACTION_DATA[fk].name + ' relations -25. Heat +15.');
-    setBattle(null);
-    const allPlayer = Object.values(sectors).every(s => s.id === sectorId || s.owner === 'player');
-    if (allPlayer) onSuccess();
-  };
-
-  const onBattleRetreat = () => {
-    addLog('Forced retreat from ' + (battle && sectors[battle.sectorId] ? sectors[battle.sectorId].name : 'sector') + '.');
-    setBattle(null);
-  };
-
-  const buildStructure = (bld) => {
+  const buildBuilding = (bId) => {
     const sec = sectors[selectedSec];
-    if (!sec || sec.owner !== 'player') { addLog('Can only build in your own sectors.'); return; }
-    if (sec.bld.indexOf(bld.id) !== -1) { addLog(bld.name + ' already built in ' + sec.name + '.'); return; }
-    if (res.cr < bld.cost || res.pwr < bld.costPWR) { addLog('Insufficient resources for ' + bld.name + '.'); return; }
-    setRes(prev => ({ cr: prev.cr - bld.cost, pwr: prev.pwr - bld.costPWR }));
-    setSectors(prev => ({ ...prev, [selectedSec]: { ...prev[selectedSec], bld: [...prev[selectedSec].bld, bld.id], def: Math.min(100, prev[selectedSec].def + bld.defBonus) } }));
-    addLog('Constructed ' + bld.name + ' in ' + sec.name + '!');
+    if (!sec || sec.owner !== 'player') return;
+    const bd = CONQUEST_BUILDINGS.find(b => b.id === bId);
+    if (!bd) return;
+    if (sec.bld.includes(bId)) { addLog(`${bd.name} already built in ${sec.name}.`); return; }
+    if (res.cr < bd.cost) { addLog(`Need ${bd.cost} CR to build ${bd.name}.`); return; }
+    if (res.pwr < bd.costPWR) { addLog(`Need ${bd.costPWR} PWR to build ${bd.name}.`); return; }
+    setRes(prev => ({ cr: prev.cr - bd.cost, pwr: prev.pwr - bd.costPWR }));
+    setSectors(prev => ({ ...prev, [selectedSec]: { ...prev[selectedSec], bld: [...prev[selectedSec].bld, bId] } }));
+    addLog(`Built ${bd.name} in ${sec.name}.`);
   };
 
-  if (battle) {
-    const fp = CONQUEST_FACTION_DATA[battle.fk];
-    return <TacticalGridCombatOverlay opponentProfile={fp ? fp.aiProfile : 'syndicate_thug'} flavorText={battle.flavor} onSuccess={onBattleWin} onFailure={onBattleRetreat} />;
+  const recruitUnit = (key) => {
+    const ut = CONQUEST_UNIT_TYPES[key];
+    if (!ut) return;
+    const cost = discountActive ? Math.round(ut.costCR * 0.7) : ut.costCR;
+    if (res.cr < cost) { addLog(`Need ${cost} CR to recruit ${ut.name}.`); return; }
+    if (res.pwr < ut.costPWR) { addLog(`Need ${ut.costPWR} PWR for ${ut.name}.`); return; }
+    setRes(prev => ({ cr: prev.cr - cost, pwr: prev.pwr - ut.costPWR }));
+    setStaging(prev => ({ ...prev, [key]: (prev[key] || 0) + 1 }));
+    addLog(`Recruited 1 ${ut.name} to staging force.`);
+  };
+
+  const adjustRelation = (faction, delta) => {
+    const cost = delta > 0 ? 400 : 0;
+    if (delta > 0 && res.cr < cost) { addLog(`Need ${cost} CR to improve relations.`); return; }
+    if (delta > 0) setRes(prev => ({ ...prev, cr: prev.cr - cost }));
+    setRelations(prev => ({ ...prev, [faction]: Math.max(-100, Math.min(100, (prev[faction] || 0) + delta)) }));
+    addLog(delta > 0 ? `Relations with ${CONQUEST_FACTION_DATA[faction]?.name} improved (+${delta}).` : `Tensions with ${CONQUEST_FACTION_DATA[faction]?.name} increased.`);
+  };
+
+  const fColor = (owner) => (CONQUEST_FACTION_DATA[owner] || CONQUEST_FACTION_DATA.neutral).color;
+  const sec = sectors[selectedSec] || {};
+  const selAdj = sec.adj || [];
+  const { income: playerIncomeVal } = playerIncome();
+
+  const MapView = () => {
+    const sectorList = Object.values(sectors);
+    // Build edges (deduplicated)
+    const edges = [];
+    const edgeSeen = new Set();
+    sectorList.forEach(s => {
+      (s.adj || []).forEach(adjId => {
+        const key = [s.id, adjId].sort().join('|');
+        if (!edgeSeen.has(key) && sectors[adjId]) {
+          edgeSeen.add(key);
+          edges.push([s, sectors[adjId]]);
+        }
+      });
+    });
+
+    return React.createElement('svg', { viewBox: '0 0 880 590', style: { width: '100%', background: '#07090F', borderRadius: 6 } },
+      // Background layer lines
+      React.createElement('text', { x: 440, y: 22, textAnchor: 'middle', fill: '#2A3A5A', fontSize: 11, fontFamily: 'monospace' }, 'CORUSCANT — VERTICAL CROSS-SECTION'),
+      React.createElement('line', { x1: 0, y1: 35, x2: 880, y2: 35, stroke: '#1A2A1A', strokeWidth: 1 }),
+      // Level tier labels
+      [['Apex Tier', 55], ['Legislature', 165], ['Mid-Layers', 275], ['Industrial', 375], ['Sub-Surface', 465], ['Undercity', 540]].map(([lbl, cy]) =>
+        React.createElement('text', { key: lbl, x: 8, y: cy + 4, fill: '#3A4A3A', fontSize: 9, fontFamily: 'monospace' }, lbl)
+      ),
+      // Edges
+      edges.map(([a, b]) =>
+        React.createElement('line', { key: a.id + b.id, x1: a.cx, y1: a.cy, x2: b.cx, y2: b.cy, stroke: '#1E2A1E', strokeWidth: 1.5 })
+      ),
+      // Sector nodes
+      sectorList.map(s => {
+        const col = fColor(s.owner);
+        const isSel = s.id === selectedSec;
+        const isHQSec = !!s.isHQ;
+        const adjToPlayer = selAdj.includes(s.id);
+        const canAtk = s.owner !== 'player' && adjToPlayer && !s.isHQ;
+        return React.createElement('g', { key: s.id, onClick: () => setSelectedSec(s.id), style: { cursor: 'pointer' } },
+          isSel && React.createElement('circle', { cx: s.cx, cy: s.cy, r: 26, fill: 'none', stroke: '#00FFAA', strokeWidth: 2, strokeDasharray: '5 3' }),
+          canAtk && React.createElement('circle', { cx: s.cx, cy: s.cy, r: 24, fill: 'none', stroke: '#FF4040', strokeWidth: 1, strokeDasharray: '3 3', opacity: 0.7 }),
+          React.createElement('circle', { cx: s.cx, cy: s.cy, r: 18, fill: col + '22', stroke: col, strokeWidth: isHQSec ? 3 : 1.5 }),
+          isHQSec && React.createElement('text', { x: s.cx, y: s.cy - 22, textAnchor: 'middle', fill: col, fontSize: 8, fontFamily: 'monospace' }, '★HQ'),
+          React.createElement('text', { x: s.cx, y: s.cy + 4, textAnchor: 'middle', fill: col, fontSize: 8, fontWeight: 'bold', fontFamily: 'monospace' },
+            s.name.length > 16 ? s.name.substring(0, 14) + '…' : s.name
+          ),
+          React.createElement('text', { x: s.cx, y: s.cy + 14, textAnchor: 'middle', fill: col + 'AA', fontSize: 7, fontFamily: 'monospace' }, `${s.income}cr`)
+        );
+      })
+    );
+  };
+
+  const tabStyle = (t) => ({ padding: '4px 10px', cursor: 'pointer', fontSize: 11, fontFamily: 'monospace', borderRadius: 4, background: tab === t ? '#1A3A5A' : '#0A1020', color: tab === t ? '#00BFFF' : '#4A6A8A', border: '1px solid ' + (tab === t ? '#00BFFF' : '#1A2A3A'), marginRight: 4 });
+  const btnStyle = (c) => ({ padding: '4px 10px', background: c || '#1A3A1A', color: '#00FF80', border: '1px solid #22C55E', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontFamily: 'monospace' });
+
+  if (combatChoice) {
+    const { targetId, targetName, stagAtk, garDef } = combatChoice;
+    return React.createElement('div', { style: { background: '#07090F', border: '1px solid #FF4040', borderRadius: 8, padding: 20, color: '#E0E0E0', fontFamily: 'monospace', maxWidth: 520 } },
+      React.createElement('div', { style: { fontSize: 16, color: '#FF4040', marginBottom: 12 } }, `⚔ ATTACK: ${targetName}`),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 } },
+        React.createElement('div', { style: { background: '#00BFFF22', border: '1px solid #00BFFF', borderRadius: 6, padding: 10 } },
+          React.createElement('div', { style: { color: '#00BFFF', fontSize: 12, marginBottom: 4 } }, 'YOUR ATTACK FORCE'),
+          React.createElement('div', { style: { fontSize: 20, color: '#00FF80' } }, `ATK ${stagAtk}`),
+          React.createElement('div', { style: { fontSize: 10, color: '#888', marginTop: 4 } }, Object.keys(CONQUEST_UNIT_TYPES).filter(k => (staging[k] || 0) > 0).map(k => `${staging[k]} ${CONQUEST_UNIT_TYPES[k].name}`).join(', ') || 'No units staged')
+        ),
+        React.createElement('div', { style: { background: '#FF404022', border: '1px solid #FF4040', borderRadius: 6, padding: 10 } },
+          React.createElement('div', { style: { color: '#FF4040', fontSize: 12, marginBottom: 4 } }, 'ENEMY GARRISON'),
+          React.createElement('div', { style: { fontSize: 20, color: '#FF8060' } }, `DEF ${garDef}`),
+          React.createElement('div', { style: { fontSize: 10, color: '#888', marginTop: 4 } }, `${targetName}`)
+        )
+      ),
+      React.createElement('div', { style: { fontSize: 11, color: '#888', marginBottom: 16 } }, stagAtk > garDef ? `You have the advantage (${Math.round((stagAtk / Math.max(garDef, 1) - 1) * 100)}% edge). Auto-resolve favors victory.` : `Enemy has the advantage (${Math.round((garDef / Math.max(stagAtk, 1) - 1) * 100)}% edge). Manual combat may help.`),
+      React.createElement('div', { style: { display: 'flex', gap: 10 } },
+        React.createElement('button', { style: { ...btnStyle('#1A0A0A'), color: '#FF8060', borderColor: '#FF4040', flex: 1, padding: 10 }, onClick: () => resolveAutoAttack(targetId) }, '⚡ AUTO-RESOLVE'),
+        React.createElement('button', { style: { ...btnStyle('#0A1A3A'), color: '#00BFFF', borderColor: '#00BFFF', flex: 1, padding: 10 }, onClick: () => { setCombatChoice(null); setBattle({ targetId, targetName, mode: 'manual' }); if (onSuccess) setTimeout(() => {}, 0); } }, '🎯 MANUAL TACTICAL'),
+        React.createElement('button', { style: { ...btnStyle('#1A1A2A'), color: '#888', borderColor: '#333', padding: 10 }, onClick: () => setCombatChoice(null) }, 'Cancel')
+      )
+    );
   }
 
-  const sec = sectors[selectedSec];
-  const OWNER_COLORS = { player: '#00BFFF', black_sun: '#FF5060', exchange: '#22C55E', csf: '#4A9FFF' };
-  const secOwnerColor = (sec && OWNER_COLORS[sec.owner]) || '#888';
-  const playerSectors = Object.values(sectors).filter(s => s.owner === 'player');
-  const totalIncome = playerSectors.reduce((a, s) => {
-    let inc = s.income;
-    s.bld.forEach(bId => { const bd = CONQUEST_BUILDINGS.find(b => b.id === bId); if (bd) inc += bd.incBonus; });
-    return a + inc;
-  }, 0);
-  const connSeen = new Set();
-  const connections = [];
-  Object.values(sectors).forEach(s => {
-    s.adj.forEach(adjId => {
-      const key = [s.id, adjId].sort().join('_');
-      if (!connSeen.has(key) && sectors[adjId]) { connSeen.add(key); connections.push({ x1: s.cx, y1: s.cy, x2: sectors[adjId].cx, y2: sectors[adjId].cy }); }
-    });
-  });
+  if (battle && battle.mode === 'manual') {
+    return React.createElement('div', { style: { background: '#07090F', border: '1px solid #4A9FFF', borderRadius: 8, padding: 20, color: '#E0E0E0', fontFamily: 'monospace' } },
+      React.createElement('div', { style: { color: '#4A9FFF', marginBottom: 8 } }, `Launching tactical combat for ${battle.targetName}...`),
+      React.createElement('div', { style: { color: '#888', fontSize: 11, marginBottom: 16 } }, 'Tactical combat grid is handled by the main combat overlay. Auto-resolving instead.'),
+      React.createElement('div', { style: { display: 'flex', gap: 8 } },
+        React.createElement('button', { style: btnStyle(), onClick: () => { setBattle(null); resolveAutoAttack(battle.targetId); } }, 'Auto-Resolve'),
+        React.createElement('button', { style: { ...btnStyle('#1A1A2A'), color: '#888', borderColor: '#333' }, onClick: () => setBattle(null) }, 'Retreat')
+      )
+    );
+  }
 
-  return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(2,4,16,0.97)', zIndex: 200, display: 'flex', flexDirection: 'column', fontFamily: "'IBM Plex Mono',monospace", color: '#DDD' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#08101C', borderBottom: '1px solid #1A1A2A', padding: '8px 18px', flexShrink: 0 }}>
-        <div>
-          <div style={{ color: '#00BFFF', fontSize: '0.6rem', letterSpacing: '0.3em' }}>CORUSCANT CONQUEST</div>
-          <div style={{ color: '#444', fontSize: '0.5rem' }}>Turn {turn}</div>
-        </div>
-        <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
-          {[{ label: 'TREASURY', val: res.cr + ' CR', col: '#C8A000' }, { label: 'POWER', val: res.pwr + ' PWR', col: '#00BFFF' }, { label: 'INCOME/TURN', val: '+' + totalIncome + ' CR', col: '#22C55E' }, { label: 'HEAT', val: heat + '%', col: heat > 60 ? '#C03030' : heat > 35 ? '#C8A000' : '#22C55E' }].map((item, i) => (
-            <div key={i} style={{ textAlign: 'center' }}>
-              <div style={{ color: '#555', fontSize: '0.45rem', letterSpacing: '0.1em' }}>{item.label}</div>
-              <div style={{ color: item.col, fontSize: '0.85rem', fontWeight: 'bold' }}>{item.val}</div>
-            </div>
-          ))}
-          <button onClick={endTurn} style={{ background: '#00BFFF', color: '#000', border: 'none', padding: '6px 16px', cursor: 'pointer', fontSize: '0.6rem', fontWeight: 'bold', letterSpacing: '0.1em' }}>END TURN</button>
-          <button onClick={onFailure} style={{ background: 'transparent', color: '#444', border: '1px solid #222', padding: '6px 12px', cursor: 'pointer', fontSize: '0.55rem' }}>Exit</button>
-        </div>
-      </div>
-      {crisis && (
-        <div style={{ background: '#180808', borderBottom: '1px solid #C03030', padding: '6px 18px', flexShrink: 0, display: 'flex', gap: 10, alignItems: 'center' }}>
-          <span style={{ color: '#C03030', fontSize: '0.65rem', fontWeight: 'bold' }}>SECTOR CRISIS:</span>
-          <span style={{ color: '#FF8080', fontSize: '0.6rem' }}>{crisis.title} — {crisis.desc}</span>
-        </div>
-      )}
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', minHeight: 0 }}>
-        <div style={{ flex: '0 0 560px', display: 'flex', flexDirection: 'column', background: '#060C18', borderRight: '1px solid #1A1A2A' }}>
-          <div style={{ display: 'flex', gap: 2, padding: '6px 10px', borderBottom: '1px solid #1A1A2A', flexShrink: 0 }}>
-            {['map', 'military', 'missions', 'diplomacy', 'build'].map(t => (
-              <button key={t} onClick={() => setTab(t)} style={{ background: tab === t ? '#0A1A2A' : 'transparent', color: tab === t ? '#00BFFF' : '#555', border: tab === t ? '1px solid #00BFFF33' : '1px solid transparent', padding: '3px 9px', cursor: 'pointer', fontSize: '0.5rem', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{t}</button>
-            ))}
-          </div>
-          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
-            {tab === 'map' && (
-              <svg viewBox="0 0 760 520" style={{ width: '100%', display: 'block' }}>
-                <rect width="760" height="520" fill="#060C18" />
-                {connections.map((c, i) => (
-                  <line key={i} x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} stroke="rgba(80,120,180,0.18)" strokeWidth="2" strokeDasharray="6 4" />
-                ))}
-                {Object.values(sectors).map(s => {
-                  const col = OWNER_COLORS[s.owner] || '#888';
-                  const isSel = s.id === selectedSec;
-                  const isAdj = sec && sec.adj.indexOf(s.id) !== -1;
-                  return (
-                    <g key={s.id} onClick={() => setSelectedSec(s.id)} style={{ cursor: 'pointer' }}>
-                      {isSel && <circle cx={s.cx} cy={s.cy} r={50} fill="none" stroke={col} strokeWidth="1" opacity="0.25" strokeDasharray="5 3" />}
-                      {isAdj && s.owner !== 'player' && <circle cx={s.cx} cy={s.cy} r={46} fill="rgba(220,50,50,0.06)" stroke="#C0303066" strokeWidth="1.5" />}
-                      <circle cx={s.cx} cy={s.cy} r={38} fill={isSel ? col + '1A' : '#080E18'} stroke={col} strokeWidth={isSel ? 2.5 : 1.5} />
-                      <circle cx={s.cx} cy={s.cy} r={9} fill={col} opacity="0.9" />
-                      <text x={s.cx} y={s.cy - 48} textAnchor="middle" fill="#CCC" fontSize="11" fontWeight="bold" fontFamily="'IBM Plex Mono'">{s.name}</text>
-                      <text x={s.cx} y={s.cy + 56} textAnchor="middle" fill="#555" fontSize="9" fontFamily="'IBM Plex Mono'">{CONQUEST_FACTION_DATA[s.owner] ? CONQUEST_FACTION_DATA[s.owner].name : s.owner}</text>
-                      <text x={s.cx} y={s.cy + 5} textAnchor="middle" dominantBaseline="middle" fill={col} fontSize="9" fontFamily="'IBM Plex Mono'">{'+' + s.income}</text>
-                    </g>
-                  );
-                })}
-                {['player', 'black_sun', 'exchange', 'csf'].map((k, i) => (
-                  <g key={k} transform={'translate(14,' + (440 + i * 18) + ')'}>
-                    <circle r="5" fill={CONQUEST_FACTION_DATA[k].color} />
-                    <text x="13" y="4" fill="#777" fontSize="9" fontFamily="'IBM Plex Mono'">{CONQUEST_FACTION_DATA[k].name}</text>
-                  </g>
-                ))}
-              </svg>
-            )}
-            {tab === 'military' && (
-              <div style={{ padding: 14 }}>
-                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 12 }}>UNIT PROCUREMENT{discountActive ? ' — 30% DISCOUNT ACTIVE' : ''}</div>
-                {Object.entries(CONQUEST_UNIT_TYPES).map(([type, ut]) => {
-                  const costCR = discountActive ? Math.floor(ut.costCR * 0.7) : ut.costCR;
-                  const canAfford = res.cr >= costCR && res.pwr >= ut.costPWR;
-                  return (
-                    <div key={type} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: '10px 12px', marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div>
-                        <div style={{ color: '#DDD', fontSize: '0.65rem', fontWeight: 'bold' }}>{ut.name}</div>
-                        <div style={{ color: '#555', fontSize: '0.5rem' }}>Combat Power: {ut.cp}{ut.upPWR > 0 ? ' | Upkeep: ' + ut.upPWR + ' PWR/turn' : ''}</div>
-                        <div style={{ color: '#C8A000', fontSize: '0.55rem' }}>{costCR} CR{ut.costPWR > 0 ? ' + ' + ut.costPWR + ' PWR' : ''}</div>
-                      </div>
-                      <button onClick={() => buyUnit(type)} style={{ background: canAfford ? '#0A1E0A' : '#0D0D0D', color: canAfford ? '#22C55E' : '#333', border: '1px solid ' + (canAfford ? '#22C55E44' : '#1A1A1A'), padding: '5px 14px', cursor: canAfford ? 'pointer' : 'default', fontSize: '0.55rem' }}>Recruit</button>
-                    </div>
-                  );
-                })}
-                <div style={{ background: '#080E18', border: '1px solid #1A1A2A', padding: 12, marginTop: 16 }}>
-                  <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.15em', marginBottom: 8 }}>STAGED STRIKE FORCE — Total CP: {stagPow()}</div>
-                  {Object.entries(staging).map(([type, count]) => count > 0 ? (
-                    <div key={type} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', marginBottom: 4 }}>
-                      <span style={{ color: '#AAA' }}>{CONQUEST_UNIT_TYPES[type].name}</span>
-                      <span style={{ color: '#00BFFF' }}>{count}</span>
-                    </div>
-                  ) : null)}
-                  {stagPow() === 0 && <div style={{ color: '#444', fontSize: '0.55rem' }}>No units staged. Recruit above.</div>}
-                </div>
-              </div>
-            )}
-            {tab === 'missions' && (
-              <div style={{ padding: 14 }}>
-                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 10 }}>ACTIVE SMUGGLING ROUTES</div>
-                {[{ id: 1, label: 'Level 1313 to CoCo Town', cargo: 'Unrefined Spice', profit: 320, risk: 15 }, { id: 2, label: 'The Works via Freight Hub', cargo: 'Cybernetics', profit: 580, risk: 40 }].map(r => (
-                  <div key={r.id} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: 10, marginBottom: 8 }}>
-                    <div style={{ color: '#22C55E', fontSize: '0.6rem', fontWeight: 'bold', marginBottom: 4 }}>{r.label}</div>
-                    <div style={{ color: '#666', fontSize: '0.5rem' }}>Cargo: {r.cargo}</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                      <span style={{ color: '#C8A000', fontSize: '0.55rem' }}>+{r.profit} CR / turn</span>
-                      <span style={{ color: r.risk > 30 ? '#C03030' : '#666', fontSize: '0.5rem' }}>Intercept risk: {r.risk}%</span>
-                    </div>
-                  </div>
-                ))}
-                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 10, marginTop: 20 }}>COVERT AGENTS</div>
-                {[{ id: 'a1', name: 'Agent Vex', skill: 8 }, { id: 'a2', name: 'Operative Kael', skill: 6 }].map(a => (
-                  <div key={a.id} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: 10, marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <div style={{ color: '#DDD', fontSize: '0.6rem' }}>{a.name}</div>
-                      <div style={{ color: '#555', fontSize: '0.5rem' }}>Skill {a.skill}/10</div>
-                    </div>
-                    <button onClick={() => { if (res.cr < 250) { addLog('Need 250 CR to deploy ' + a.name + '.'); return; } setRes(prev => ({ ...prev, cr: prev.cr - 250 })); setHeat(h => Math.max(0, h - 5)); addLog(a.name + ' on sabotage mission. -250 CR. Heat -5.'); }} style={{ background: '#0A1A0A', color: '#22C55E', border: '1px solid #22C55E44', padding: '4px 10px', cursor: 'pointer', fontSize: '0.5rem' }}>Deploy (250 CR)</button>
-                  </div>
-                ))}
-              </div>
-            )}
-            {tab === 'diplomacy' && (
-              <div style={{ padding: 14 }}>
-                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 12 }}>FACTION RELATIONS</div>
-                {['black_sun', 'exchange', 'csf'].map(fk => {
-                  const fd = CONQUEST_FACTION_DATA[fk];
-                  const rel = relations[fk] || 0;
-                  const stance = rel >= 50 ? 'Alliance' : rel >= 0 ? 'Neutral' : rel >= -50 ? 'Rivalry' : 'Total War';
-                  return (
-                    <div key={fk} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: 12, marginBottom: 10 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                        <span style={{ color: fd.color, fontSize: '0.65rem', fontWeight: 'bold' }}>{fd.name}</span>
-                        <span style={{ color: rel >= 0 ? '#22C55E' : '#C03030', fontSize: '0.55rem' }}>{stance}</span>
-                      </div>
-                      <div style={{ height: 4, background: '#111', borderRadius: 2, marginBottom: 8 }}>
-                        <div style={{ height: '100%', width: ((rel + 100) / 2) + '%', background: rel >= 0 ? '#22C55E' : '#C03030', borderRadius: 2 }} />
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ color: '#444', fontSize: '0.45rem' }}>Relation: {rel}</span>
-                        <button onClick={() => { if (res.cr < 500) { addLog('Need 500 CR to send a diplomatic envoy.'); return; } setRes(prev => ({ ...prev, cr: prev.cr - 500 })); setRelations(prev => ({ ...prev, [fk]: Math.min(100, prev[fk] + 20) })); addLog('Envoy sent to ' + fd.name + '. Relations +20. Cost: 500 CR.'); }} style={{ background: '#0A1A1A', color: '#00BFFF', border: '1px solid #00BFFF33', padding: '3px 8px', cursor: 'pointer', fontSize: '0.45rem' }}>Envoy (500 CR)</button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-            {tab === 'build' && (
-              <div style={{ padding: 14 }}>
-                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 6 }}>SECTOR INFRASTRUCTURE</div>
-                {sec && sec.owner !== 'player' && <div style={{ color: '#C03030', fontSize: '0.5rem', marginBottom: 10 }}>Select a player-controlled sector on the Map tab to build.</div>}
-                {sec && sec.owner === 'player' && <div style={{ color: '#00BFFF55', fontSize: '0.5rem', marginBottom: 10 }}>Building in: {sec.name}</div>}
-                {CONQUEST_BUILDINGS.map(bld => {
-                  const built = sec && sec.bld.indexOf(bld.id) !== -1;
-                  return (
-                    <div key={bld.id} style={{ background: '#0A0A16', border: '1px solid ' + (built ? '#22C55E44' : '#1A1A2A'), padding: '10px 12px', marginBottom: 8, opacity: built ? 0.75 : 1 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div>
-                          <div style={{ color: built ? '#22C55E' : '#DDD', fontSize: '0.6rem', fontWeight: 'bold' }}>{bld.name}{built ? ' (Built)' : ''}</div>
-                          <div style={{ color: '#555', fontSize: '0.45rem', marginTop: 2 }}>{bld.defBonus > 0 ? 'Defense +' + bld.defBonus + '  ' : ''}{bld.incBonus > 0 ? 'Income +' + bld.incBonus + ' CR/turn  ' : ''}{bld.pwrBonus > 0 ? 'Power +' + bld.pwrBonus + '/turn' : ''}</div>
-                          <div style={{ color: '#C8A000', fontSize: '0.5rem' }}>{bld.cost} CR{bld.costPWR > 0 ? ' + ' + bld.costPWR + ' PWR' : ''}</div>
-                        </div>
-                        {!built && <button onClick={() => buildStructure(bld)} style={{ background: '#0A1A0A', color: '#22C55E', border: '1px solid #22C55E44', padding: '4px 10px', cursor: 'pointer', fontSize: '0.5rem' }}>Build</button>}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          {sec && (
-            <div style={{ padding: 16, borderBottom: '1px solid #1A1A2A', background: '#060C18', flexShrink: 0 }}>
-              <div style={{ color: secOwnerColor, fontSize: '0.5rem', letterSpacing: '0.2em', marginBottom: 4 }}>{sec.tier} — {CONQUEST_FACTION_DATA[sec.owner] ? CONQUEST_FACTION_DATA[sec.owner].name : sec.owner}</div>
-              <div style={{ color: '#FFF', fontSize: '1.05rem', fontWeight: 'bold', marginBottom: 10 }}>{sec.name}</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 10 }}>
-                {[
-                  { label: 'Income / Turn', val: '+' + sec.income + ' CR', col: '#C8A000' },
-                  { label: 'Defense Rating', val: sec.def + '%', col: sec.def > 70 ? '#22C55E' : sec.def > 40 ? '#C8A000' : '#C03030' },
-                  { label: 'Garrison CP', val: garPow(sec.gar), col: '#00BFFF' },
-                ].map((item, idx) => (
-                  <div key={idx} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: 8, textAlign: 'center' }}>
-                    <div style={{ color: '#555', fontSize: '0.45rem' }}>{item.label}</div>
-                    <div style={{ color: item.col, fontSize: '0.8rem', fontWeight: 'bold' }}>{item.val}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ color: '#555', fontSize: '0.5rem', marginBottom: 10 }}>Infantry: {sec.gar.inf} | Snipers: {sec.gar.snp} | Tanks: {sec.gar.tnk}{sec.bld.length > 0 ? ' | Structures: ' + sec.bld.length : ''}</div>
-              {sec.owner !== 'player' ? (
-                isAttackable(sec.id) ? (
-                  <button onClick={() => attackSector(sec.id)} style={{ width: '100%', padding: '8px 0', background: '#180808', color: '#FF5060', border: '1px solid #C03030', cursor: 'pointer', fontSize: '0.6rem', fontWeight: 'bold', letterSpacing: '0.08em' }}>
-                    LAUNCH INVASION — Strike Force: {stagPow()} CP vs Defense: {Math.floor(sec.def / 100 * garPow(sec.gar))} CP
-                  </button>
-                ) : (
-                  <div style={{ textAlign: 'center', padding: '6px 0', background: '#0A0A0A', border: '1px solid #1A1A2A', color: '#444', fontSize: '0.5rem' }}>NOT REACHABLE — Capture an adjacent sector first</div>
-                )
-              ) : (
-                <div style={{ textAlign: 'center', padding: '6px 0', background: '#001A0A', border: '1px solid #22C55E33', color: '#22C55E', fontSize: '0.5rem' }}>FRIENDLY TERRITORY — Syndicate Control Active</div>
-              )}
-            </div>
-          )}
-          <div style={{ flex: 1, padding: '12px 14px', overflowY: 'auto', background: '#040810' }}>
-            <div style={{ color: '#333', fontSize: '0.45rem', letterSpacing: '0.18em', marginBottom: 8 }}>COMMAND LOG</div>
-            {log.map((entry, i) => (
-              <div key={i} style={{ color: i === 0 ? '#CCC' : '#3A3A4A', fontSize: '0.55rem', marginBottom: 4, paddingLeft: 8, borderLeft: '2px solid ' + (i === 0 ? '#00BFFF' : '#111') }}>{entry}</div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+  return React.createElement('div', { style: { background: '#07090F', border: '1px solid #1A2A3A', borderRadius: 8, padding: 16, color: '#E0E0E0', fontFamily: 'monospace', maxWidth: 900 } },
+    // Header
+    React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 } },
+      React.createElement('div', { style: { color: '#00BFFF', fontSize: 14 } }, `CORUSCANT CONQUEST — Turn ${turn}`),
+      React.createElement('div', { style: { display: 'flex', gap: 14, fontSize: 11 } },
+        React.createElement('span', { style: { color: '#FFD700' } }, `CR: ${res.cr.toLocaleString()}`),
+        React.createElement('span', { style: { color: '#22C55E' } }, `PWR: ${res.pwr}`),
+        React.createElement('span', { style: { color: heat > 70 ? '#FF4040' : heat > 40 ? '#FFD700' : '#888' } }, `HEAT: ${heat}`),
+        React.createElement('span', { style: { color: playerIncomeVal >= 7000 ? '#00FF80' : '#888' } }, `INC/T: ${playerIncomeVal.toLocaleString()}`)
+      )
+    ),
+    crisis && React.createElement('div', { style: { background: '#2A1A00', border: '1px solid #FF8C00', borderRadius: 4, padding: '6px 10px', marginBottom: 8, fontSize: 11, color: '#FFD700' } },
+      `⚠ CRISIS: ${crisis.title} — ${crisis.desc}`
+    ),
+    playerIncomeVal >= 7000 && React.createElement('div', { style: { background: '#001A00', border: '1px solid #00FF80', borderRadius: 4, padding: '6px 10px', marginBottom: 8, fontSize: 11, color: '#00FF80' } },
+      '🏆 VICTORY THRESHOLD REACHED! Your syndicate dominates Coruscant. End turn to claim victory.'
+    ),
+    // Tabs
+    React.createElement('div', { style: { display: 'flex', marginBottom: 10, flexWrap: 'wrap', gap: 2 } },
+      ['map','military','build','diplomacy','howtoplay'].map(t =>
+        React.createElement('button', { key: t, style: tabStyle(t), onClick: () => setTab(t) }, t.charAt(0).toUpperCase() + t.slice(1))
+      ),
+      React.createElement('button', { style: { ...btnStyle(), marginLeft: 'auto' }, onClick: endTurn }, `End Turn ${turn}`)
+    ),
+
+    // MAP TAB
+    tab === 'map' && React.createElement('div', null,
+      MapView(),
+      sec.id && React.createElement('div', { style: { marginTop: 10, background: '#0A1020', border: '1px solid #1A2A3A', borderRadius: 6, padding: 12 } },
+        React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 } },
+          React.createElement('div', { style: { color: fColor(sec.owner), fontSize: 12 } },
+            `${sec.name} ${sec.isHQ ? '★HQ' : ''} — ${(CONQUEST_FACTION_DATA[sec.owner] || CONQUEST_FACTION_DATA.neutral).name}`
+          ),
+          React.createElement('div', { style: { display: 'flex', gap: 6, fontSize: 11 } },
+            React.createElement('span', { style: { color: '#FFD700' } }, `${sec.income}/t`),
+            React.createElement('span', { style: { color: '#22C55E' } }, `PWR: ${sec.pwr}`),
+            React.createElement('span', { style: { color: '#4A9FFF' } }, `ATK: ${garAtkPow(sec)} DEF: ${garDefPow(sec)}`)
+          )
+        ),
+        React.createElement('div', { style: { fontSize: 10, color: '#888', marginBottom: 6 } },
+          `Units: ${Object.keys(CONQUEST_UNIT_TYPES).filter(k => (sec.gar[k] || 0) > 0).map(k => `${sec.gar[k]} ${CONQUEST_UNIT_TYPES[k].name}`).join(', ') || 'None'}`
+        ),
+        sec.bld.length > 0 && React.createElement('div', { style: { fontSize: 10, color: '#9B59B6', marginBottom: 6 } },
+          `Buildings: ${sec.bld.map(bId => CONQUEST_BUILDINGS.find(b => b.id === bId)?.name).filter(Boolean).join(', ')}`
+        ),
+        sec.isHQ && sec.isHQ !== 'player' && React.createElement('div', { style: { fontSize: 10, color: '#FF8C00' } }, `★ Faction HQ — cannot be captured`),
+        sec.owner !== 'player' && selAdj.includes(sec.id) && !sec.isHQ &&
+          React.createElement('button', { style: { ...btnStyle('#2A0808'), color: '#FF8060', borderColor: '#FF4040', marginTop: 6 }, onClick: () => initiateAttack(sec.id) }, `⚔ Attack ${sec.name}`)
+      ),
+      React.createElement('div', { style: { display: 'flex', gap: 6, marginTop: 8, fontSize: 10, flexWrap: 'wrap' } },
+        Object.values(CONQUEST_FACTION_DATA).filter(f => f.name !== 'Neutral').map(f =>
+          React.createElement('span', { key: f.name, style: { color: f.color } },
+            `● ${f.name}: ${Object.values(sectors).filter(s => s.owner === Object.keys(CONQUEST_FACTION_DATA).find(k => CONQUEST_FACTION_DATA[k] === f)).length} sectors`
+          )
+        )
+      )
+    ),
+
+    // MILITARY TAB
+    tab === 'military' && React.createElement('div', null,
+      React.createElement('div', { style: { marginBottom: 10, fontSize: 11, color: '#4A9FFF' } },
+        `Staging Force — ATK: ${stagAtkPow()} | DEF: ${stagDefPow()}`
+      ),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 16 } },
+        Object.keys(CONQUEST_UNIT_TYPES).map(k => {
+          const ut = CONQUEST_UNIT_TYPES[k];
+          const cost = discountActive ? Math.round(ut.costCR * 0.7) : ut.costCR;
+          return React.createElement('div', { key: k, style: { background: '#0A1020', border: '1px solid #1A2A3A', borderRadius: 6, padding: 10 } },
+            React.createElement('div', { style: { color: '#00BFFF', fontSize: 11, marginBottom: 2 } }, ut.name),
+            React.createElement('div', { style: { fontSize: 10, color: '#888', marginBottom: 6 } }, `ATK:${ut.atkCP} DEF:${ut.defCP} | ${cost}CR${ut.costPWR > 0 ? ` +${ut.costPWR}PWR` : ''}`),
+            React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+              React.createElement('span', { style: { color: '#FFD700', fontSize: 13, minWidth: 20, textAlign: 'center' } }, staging[k] || 0),
+              React.createElement('button', { style: { ...btnStyle(), padding: '2px 8px', fontSize: 11 }, onClick: () => recruitUnit(k) }, '+')
+            )
+          );
+        })
+      ),
+      React.createElement('div', { style: { fontSize: 11, color: '#888' } }, 'Stage units here, then select an adjacent enemy sector on the Map tab to attack.'),
+      discountActive && React.createElement('div', { style: { color: '#FFD700', fontSize: 10, marginTop: 6 } }, '★ Cartel War discount active — 30% off this turn!')
+    ),
+
+    // BUILD TAB
+    tab === 'build' && React.createElement('div', null,
+      React.createElement('div', { style: { marginBottom: 8, fontSize: 11 } },
+        sec.owner === 'player'
+          ? `Building in: ${sec.name}`
+          : 'Select a sector you own on the Map tab to build.'
+      ),
+      sec.owner === 'player' && React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 } },
+        CONQUEST_BUILDINGS.map(bd => {
+          const built = sec.bld.includes(bd.id);
+          return React.createElement('div', { key: bd.id, style: { background: '#0A1020', border: `1px solid ${built ? '#22C55E' : '#1A2A3A'}`, borderRadius: 6, padding: 10 } },
+            React.createElement('div', { style: { color: built ? '#22C55E' : '#00BFFF', fontSize: 11, marginBottom: 2 } }, `${built ? '✓ ' : ''}${bd.name}`),
+            React.createElement('div', { style: { fontSize: 10, color: '#888', marginBottom: 6 } },
+              [bd.defMult > 1 && `DEF x${bd.defMult}`, bd.atkMult > 1 && `ATK x${bd.atkMult}`, bd.incBonus > 0 && `+${bd.incBonus}CR/t`, bd.pwrBonus > 0 && `+${bd.pwrBonus}PWR`].filter(Boolean).join(' | ') || 'Support'
+            ),
+            !built && React.createElement('button', { style: { ...btnStyle(), padding: '2px 8px', fontSize: 10 }, onClick: () => buildBuilding(bd.id) }, `Build ${bd.cost}CR${bd.costPWR > 0 ? ' +' + bd.costPWR + 'P' : ''}`)
+          );
+        })
+      )
+    ),
+
+    // DIPLOMACY TAB
+    tab === 'diplomacy' && React.createElement('div', null,
+      React.createElement('div', { style: { marginBottom: 10, fontSize: 11, color: '#888' } }, 'Manage faction relations. Positive relations reduce aggression; at +80 a non-aggression pact takes effect.'),
+      ['black_sun', 'exchange', 'csf'].map(faction => {
+        const rel = relations[faction] || 0;
+        const fData = CONQUEST_FACTION_DATA[faction];
+        return React.createElement('div', { key: faction, style: { background: '#0A1020', border: `1px solid ${fData.color}44`, borderRadius: 6, padding: 12, marginBottom: 8 } },
+          React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 } },
+            React.createElement('span', { style: { color: fData.color, fontSize: 12 } }, fData.name),
+            React.createElement('span', { style: { color: rel > 50 ? '#22C55E' : rel > 0 ? '#FFD700' : '#FF4040', fontSize: 12 } }, `${rel > 0 ? '+' : ''}${rel}`)
+          ),
+          React.createElement('div', { style: { background: '#1A2A1A', borderRadius: 3, height: 6, marginBottom: 8 } },
+            React.createElement('div', { style: { background: fData.color, width: `${Math.max(0, (rel + 100) / 2)}%`, height: '100%', borderRadius: 3, transition: 'width 0.3s' } })
+          ),
+          React.createElement('div', { style: { display: 'flex', gap: 6 } },
+            React.createElement('button', { style: { ...btnStyle(), fontSize: 10, padding: '3px 8px' }, onClick: () => adjustRelation(faction, 10) }, 'Bribe +10 (400CR)'),
+            React.createElement('button', { style: { ...btnStyle('#2A0808'), color: '#FF8060', borderColor: '#FF4040', fontSize: 10, padding: '3px 8px' }, onClick: () => adjustRelation(faction, -15) }, 'Provoke -15')
+          )
+        );
+      })
+    ),
+
+    // HOW TO PLAY TAB
+    tab === 'howtoplay' && React.createElement('div', { style: { fontSize: 11, lineHeight: 1.7, maxHeight: 420, overflowY: 'auto' } },
+      React.createElement('div', { style: { color: '#00BFFF', fontSize: 14, marginBottom: 10 } }, 'CORUSCANT CONQUEST — HOW TO PLAY'),
+      [
+        ['OBJECTIVE', 'Control enough sectors to generate 7,000 Credits per turn. Your Syndicate starts in Shadow Town and must expand upward through Coruscant\'s levels. Income per turn is shown in the header as "INC/T". Reach 7,000 and end a turn to win.'],
+        ['THE MAP', 'Coruscant is shown as a vertical cross-section from the Undercity at the bottom to the Senatorial Sky-Lounges at the top. Each circle is a sector. Click a sector to view its stats and issue orders. Red dashed rings indicate sectors you can attack from your current position.'],
+        ['FACTIONS', 'Three rival factions compete with you: The Black Sun (red) controls the upper levels, The Exchange (green) controls logistics and industry, and the CSF (blue) enforces law from mid-level stations. Neutral sectors (gray) are unclaimed and easier to take.'],
+        ['FACTION HQs (★)', 'Each faction including you has one Headquarters marked with ★HQ. HQs can NEVER be captured by rival factions. Use your HQ at Shadow Town L.1312 as a fallback position. Enemy HQs at Senatorial Sky-Lounges (Black Sun), CSF Training Hub (CSF), and Sector 4 Freight Hub (Exchange) are permanently held.'],
+        ['UNITS & COMBAT', 'Recruit units in the Military tab and add them to your Staging Force. Each unit type has separate ATK CP (attack combat points) and DEF CP (defense combat points). Enforcers are cheap and numerous. Tanks hit hard and hold ground. Field Medics improve defense. Combat Droids and Speeder Cavalry offer versatile options. Select an enemy sector adjacent to your territory on the Map tab, then click Attack to initiate combat.'],
+        ['COMBAT RESOLUTION', 'When you attack, you choose between Manual Tactical (the full tactical grid combat) or Auto-Resolve (instant calculation). Auto-Resolve compares your Staging Force ATK power against the garrison DEF power. A higher ATK wins with fewer casualties. A narrow win costs many units; a dominant win costs few.'],
+        ['BUILDINGS', 'Build structures in sectors you control via the Build tab. Bunkers and Turrets multiply DEF power. Rally Points and Armories multiply ATK power. Relays and Slicing Hubs boost income. Power Sub-Stations increase your PWR reserve. Buildings are permanent and stack with garrison units to make sectors dramatically harder to take.'],
+        ['DIPLOMACY', 'Manage relations in the Diplomacy tab. Bribing a faction costs 400 CR for +10 relations. Relations above +80 create a non-aggression state where that faction avoids attacking you. Relations below -50 cause aggressive expansion. The CSF starts hostile; The Exchange starts friendly.'],
+        ['HEAT', 'Every turn and every combat action generates Heat. High Heat triggers CSF crackdowns and crisis events. At Heat 100 a full raid occurs. Use buildings like the Slicing Hub to reduce heat, or keep relations with CSF positive to slow its rise.'],
+        ['WINNING', 'Dominate income-rich sectors in the upper levels — Senate District, Senate Precinct, and the Sky-Lounges generate the most credits per turn. Combined with a strong industrial base in The Works and the Freight Hub, you can reach the 7,000 CR/turn threshold. Plan your expansion route carefully through the mid-levels.'],
+      ].map(([title, body]) =>
+        React.createElement('div', { key: title, style: { marginBottom: 12 } },
+          React.createElement('div', { style: { color: '#FFD700', fontSize: 11, marginBottom: 3 } }, title),
+          React.createElement('div', { style: { color: '#B0B8C8' } }, body)
+        )
+      )
+    ),
+
+    // Log
+    React.createElement('div', { style: { marginTop: 10, background: '#030508', border: '1px solid #0A1020', borderRadius: 4, padding: 8, maxHeight: 80, overflowY: 'auto' } },
+      log.map((l, i) => React.createElement('div', { key: i, style: { fontSize: 10, color: i === 0 ? '#00BFFF' : '#4A6A8A', borderBottom: i < log.length - 1 ? '1px solid #0A1020' : 'none', paddingBottom: 2, marginBottom: 2 } }, l))
+    )
   );
 }
 
