@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SWTOR5CombatGridSystem",
+  "description": "Data contracts for the tactical grid combat system in star-wars-rpg.jsx. Grid dimensions: GW=8 cols, GH=6 rows. All coordinates are row/col (not x/y).",
+
+  "definitions": {
+
+    "AIProfile": {
+      "description": "Shape of entries in AI_COMBAT_PROFILES constant (line ~6302). All sliders are raw integers, not normalised.",
+      "type": "object",
+      "properties": {
+        "aggression":  { "type": "integer", "minimum": 0, "maximum": 100, "description": "Chance-weight for closing distance each AI turn." },
+        "cover":       { "type": "integer", "minimum": 0, "maximum": 100, "description": "Preference multiplier for high-cover destination cells." },
+        "flank":       { "type": "integer", "minimum": 0, "maximum": 100, "description": "Bonus score applied when a candidate move achieves flanking angle." },
+        "overwatch":   { "type": "integer", "minimum": 0, "maximum": 100, "description": "Percent chance per turn that the AI takes overwatch instead of moving." },
+        "optRange":    { "type": "integer", "minimum": 1, "maximum": 8,   "description": "Chebyshev distance the AI tries to maintain from the player." },
+        "name":        { "type": "string",  "description": "Display name shown in the combat HUD and log." },
+        "hp":          { "type": "integer", "minimum": 1, "maximum": 20,  "description": "Starting hit points for this opponent profile." },
+        "shield":      { "type": "integer", "minimum": 0, "maximum": 10,  "description": "Starting shield points. Shield absorbs damage before HP." },
+        "accent":      { "type": "string",  "pattern": "^#[0-9A-Fa-f]{6}$", "description": "Hex colour used for the enemy glyph and HP bar." }
+      },
+      "required": ["aggression", "cover", "flank", "overwatch", "optRange", "name", "hp", "shield", "accent"]
+    },
+
+    "InteractiveObject": {
+      "description": "Element of the 'objs' array inside CombatState. Created by genCombatMap().",
+      "type": "object",
+      "properties": {
+        "id":     { "type": "string",  "description": "Unique key like 'o0', 'o1'." },
+        "type":   { "type": "string",  "enum": ["barrel", "steam", "turret"], "description": "barrel: explosive on proximity hit. steam: generates concealment cloud. turret: hackable with Glitch gadget." },
+        "row":    { "type": "integer", "minimum": 0, "maximum": 5 },
+        "col":    { "type": "integer", "minimum": 0, "maximum": 7 },
+        "active": { "type": "boolean", "description": "False once a barrel has detonated." },
+        "hacked": { "type": "boolean", "description": "Turret only. When true the turret fires on the enemy each enemy turn." }
+      },
+      "required": ["id", "type", "row", "col", "active"]
+    },
+
+    "GadgetInventory": {
+      "description": "Charge counts for the four player gadget types.",
+      "type": "object",
+      "properties": {
+        "thermal": { "type": "integer", "minimum": 0, "maximum": 2, "description": "Thermal Detonator. Costs 2 AP. Area damage 5, destroys cover in blast radius." },
+        "flash":   { "type": "integer", "minimum": 0, "maximum": 2, "description": "Flashbang. Costs 1 AP. Blinds enemy for 2 turns (35% hit chance penalty)." },
+        "shield":  { "type": "integer", "minimum": 0, "maximum": 1, "description": "Shield Emitter. Costs 2 AP. Restores +4 player shield." },
+        "glitch":  { "type": "integer", "minimum": 0, "maximum": 2, "description": "Cyber-Glitch. Costs 1 AP. Hacks nearest turret within 2 squares of enemy." }
+      },
+      "required": ["thermal", "flash", "shield", "glitch"]
+    },
+
+    "LootItem": {
+      "description": "Item dropped on a successful engagement outcome. Follows the ITEMS constant schema.",
+      "type": "object",
+      "properties": {
+        "id":          { "type": "string" },
+        "name":        { "type": "string" },
+        "type":        { "type": "string", "enum": ["weapon", "gear", "consumable", "quest"] },
+        "iconKind":    { "type": "string" },
+        "value":       { "type": "integer", "minimum": 0 },
+        "description": { "type": "string" },
+        "qty":         { "type": "integer", "const": 1 }
+      },
+      "required": ["id", "name", "type", "iconKind", "value", "description", "qty"]
+    },
+
+    "Loot": {
+      "description": "Payload passed to onSuccess when the player wins. Produced by rollLoot().",
+      "type": "object",
+      "properties": {
+        "credits": { "type": "integer", "minimum": 0 },
+        "item":    { "oneOf": [{ "$ref": "#/definitions/LootItem" }, { "type": "null" }] }
+      },
+      "required": ["credits", "item"]
+    },
+
+    "CombatState": {
+      "description": "Complete gs state object inside TacticalGridCombatOverlay. Updated via upd(patch).",
+      "type": "object",
+      "properties": {
+        "pRow":      { "type": "integer", "minimum": 0, "maximum": 5,  "description": "Player row (y axis)." },
+        "pCol":      { "type": "integer", "minimum": 0, "maximum": 7,  "description": "Player column (x axis)." },
+        "eRow":      { "type": "integer", "minimum": 0, "maximum": 5,  "description": "Enemy row." },
+        "eCol":      { "type": "integer", "minimum": 0, "maximum": 7,  "description": "Enemy column." },
+        "pHp":       { "type": "integer", "minimum": 0, "maximum": 8 },
+        "pSh":       { "type": "integer", "minimum": 0, "maximum": 8 },
+        "eHp":       { "type": "integer", "minimum": 0 },
+        "eSh":       { "type": "integer", "minimum": 0 },
+        "ap":        { "type": "integer", "minimum": 0, "maximum": 3,  "description": "Action points remaining this player turn. Resets to 3 at start of each turn." },
+        "phase":     { "type": "string",  "enum": ["intro", "player", "enemy", "outcome"] },
+        "outcome":   { "oneOf": [{ "type": "string", "enum": ["win", "loss"] }, { "type": "null" }] },
+        "loot":      { "oneOf": [{ "$ref": "#/definitions/Loot" }, { "type": "null" }] },
+        "pOW":       { "type": "boolean", "description": "Player overwatch active. Triggers reaction fire when enemy moves into LoS." },
+        "eOW":       { "type": "boolean", "description": "Enemy overwatch active." },
+        "eBlind":    { "type": "integer", "minimum": 0, "description": "Turns remaining that enemy is blinded (hit chance 35% of normal)." },
+        "gadgets":   { "$ref": "#/definitions/GadgetInventory" },
+        "selGadget": { "oneOf": [{ "type": "string", "enum": ["thermal", "flash", "shield", "glitch"] }, { "type": "null" }] },
+        "log":       { "type": "array", "items": { "type": "string" }, "description": "Combat event log. Displayed as last 4 entries. Capped by .slice(-4)." },
+        "turn":      { "type": "integer", "minimum": 1 },
+        "cover":     {
+          "type": "array",
+          "description": "GH-length array of GW-length rows. Value 0=open, 1=half cover (-25% hit to occupant not flanked), 2=full cover (-50% hit).",
+          "items": { "type": "array", "items": { "type": "integer", "enum": [0, 1, 2] } }
+        },
+        "objs":      { "type": "array", "items": { "$ref": "#/definitions/InteractiveObject" } },
+        "steam":     {
+          "type": "object",
+          "description": "Sparse map of 'row,col' string keys to integer turn-counts. A cell with a key here is concealed (breaks LoS). Value decrements each enemy turn; removed when it reaches 1.",
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "required": ["pRow", "pCol", "eRow", "eCol", "pHp", "pSh", "eHp", "eSh", "ap", "phase", "outcome", "loot", "pOW", "eOW", "eBlind", "gadgets", "selGadget", "log", "turn", "cover", "objs", "steam"]
+    },
+
+    "MinigameDispatchPayload": {
+      "description": "Object passed to setActiveMinigame() from world object interactions. The 'type' field selects which overlay renders.",
+      "type": "object",
+      "properties": {
+        "type":            { "type": "string", "enum": ["tactical_combat", "terminal_slicing", "signal_siphon", "speeder_pursuit", "valve_override", "willpower_override", "pit_fight", "sabacc", "contraband_market", "interrogation", "droid_arena", "arms_bench", "shakedown", "sky_evasion", "syndicate_management"] },
+        "onSuccess":       { "type": "string", "description": "Callback function reference. Called with loot payload for tactical_combat wins." },
+        "onFailure":       { "type": "string", "description": "Callback function reference." },
+        "opponentProfile": { "type": "string", "description": "tactical_combat only. Key into AI_COMBAT_PROFILES." },
+        "flavorText":      { "type": "string", "description": "tactical_combat only. Intro screen narrative text." },
+        "difficulty":      { "type": "integer", "minimum": 1, "maximum": 8, "description": "terminal_slicing only. Controls node count (difficulty + 3 nodes)." }
+      },
+      "required": ["type", "onSuccess", "onFailure"]
+    },
+
+    "SliceNode": {
+      "description": "A node in the TerminalSlicingOverlay canvas graph.",
+      "type": "object",
+      "properties": {
+        "id":   { "type": "integer" },
+        "x":    { "type": "number", "description": "Canvas pixel X coordinate." },
+        "y":    { "type": "number", "description": "Canvas pixel Y coordinate." },
+        "type": { "type": "string", "enum": ["entry", "node", "exit"] }
+      },
+      "required": ["id", "x", "y", "type"]
+    },
+
+    "EncounterTableEntry": {
+      "description": "Entry in ENCOUNTER_TABLE. Maps zone IDs to arrays of profile keys.",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+
+  },
+
+  "type": "object",
+  "description": "Top-level wrapper. In practice each piece lives as a constant or state slice, not as one object.",
+  "properties": {
+    "AI_COMBAT_PROFILES": {
+      "type": "object",
+      "description": "Keyed by profile ID string (e.g. 'syndicate_thug'). Values follow AIProfile schema.",
+      "additionalProperties": { "$ref": "#/definitions/AIProfile" }
+    },
+    "activeCombatState": { "$ref": "#/definitions/CombatState" },
+    "minigameDispatch":  { "$ref": "#/definitions/MinigameDispatchPayload" }
+  }
+}

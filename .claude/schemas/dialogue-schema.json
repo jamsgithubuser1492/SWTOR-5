@@ -37,7 +37,8 @@
       "crime_boss",
       "mechanic",
       "swoop_gang",
-      "warden"
+      "warden",
+      "slicer"
     ],
     "note": "To add a new kind, ask the Systems Architect to add an SVG branch to NpcPortrait() before writing any NPC that uses it."
   },

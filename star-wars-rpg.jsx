@@ -804,7 +804,7 @@ const PLANETS = {
           },
           { id: 'madame_vex_sky', x: 10, y: 6, kind: 'cantina_owner', label: 'Madame Vex',
             repeatPrompt: 'Madame Vex shuffles a Sabacc deck without looking at her hands. The cards move like they are afraid of her.',
-            prompt: 'The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."',
+            prompt: `The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."`,
             choices: [
               { text: '"I am here for a Sabacc game."', morality: 0, loyalty: { underworld: 5 }, result: '"Everyone is here for a Sabacc game. Sit. The buy-in is two hundred credits and your reputation. Lose the first and I keep the second."', grants: { flags: ['vex_sabacc_offered'] } },
               { text: '"High-stakes. I want the real table."', morality: -5, loyalty: { underworld: 10 }, result: '"The real table has a different buy-in." She sets down the deck. "You are going to play a standard hand in the open, win convincingly, and not gloat when you do it. Then I will take you downstairs." She returns to her shuffle. "Assuming you can win convincingly."', grants: { flags: ['vex_high_table_offered'] } },
@@ -815,7 +815,7 @@ const PLANETS = {
                 id: 'phase_initial',
                 requiresAllFlags: [],
                 requiresNoneFlags: ['sabacc_won'],
-                prompt: 'The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."',
+                prompt: `The Twi'lek dealer glances up from her table with the unhurried confidence of someone who has decided the outcome before the cards are dealt. "I see a new face. New faces mean new money or new complications. Sit down and we will find out which."`,
                 choices: [
                   { text: '"I am here for a Sabacc game."', morality: 0, loyalty: { underworld: 5 }, result: '"Everyone is here for a Sabacc game. Sit. The buy-in is two hundred credits and your reputation. Lose the first and I keep the second."', grants: { flags: ['vex_sabacc_offered'] } },
                   { text: '"High-stakes. I want the real table."', morality: -5, loyalty: { underworld: 10 }, result: '"The real table has a different buy-in." She sets down the deck. "You are going to play a standard hand in the open, win convincingly, and not gloat when you do it. Then I will take you downstairs." She returns to her shuffle. "Assuming you can win convincingly."', grants: { flags: ['vex_high_table_offered'] } },
@@ -1097,6 +1097,37 @@ const PLANETS = {
             repeatPrompt: 'Vond is cataloguing a crate of questionable components.',
             prompt: '"If it fell off the back of a freighter, I have it. No warranties. Once you walk off my platform, we do not know each other."',
             choices: [],
+          },
+          { id: 'vane_freight', x: 34, y: 17, kind: 'republic_guard', label: 'Officer Vane',
+            requiresAllFlags: ['csf_training_complete'],
+            phases: [
+              { id: 'phase_field_briefing',
+                requiresNoneFlags: ['vane_freight_briefed'],
+                prompt: 'Vane has commandeered the cargo supervisor\'s office at the far end of the hub. A portable terminal runs Bay 14 manifest cross-references on one screen and a Platform 09 camera feed on another. He does not look up immediately. "You made it." He gestures to the chair. "Sit. There is a lot to cover before you walk that floor."',
+                choices: [
+                  { text: '"What exactly are we looking for, Detective?"', morality: 5, loyalty: { republic: 8 }, result: '"Ghost manifests. Three containers cleared through Bay 14 carry Senate authorization codes that trace to a sub-committee that does not officially exist. The cargo weight does not match the declared goods. Jax — dock engineer, he was in the maintenance shaft during the last transfer — will not talk without a push. Try the badge first. That is what it is for."', grants: { flags: ['vane_freight_briefed', 'bay14_method_known'] } },
+                  { text: '"How far does my authority actually reach here?"', morality: 3, loyalty: { republic: 5 }, result: '"Sector 4, Platform 09, the Bay 14 loading corridor — full CSF Auxiliary authority. Witnesses are required to cooperate. You can access restricted cargo logs without a warrant. What you cannot do is make arrests without contact to Precinct Command. You find a name. I make the arrest."', grants: { flags: ['vane_freight_briefed'] } },
+                  { text: '"This place is run by organized crime. Are we actually going to change anything?"', morality: 0, loyalty: { underworld: 3 }, result: '"We are going to find out who moved unscanned Phrik alloy through this hub using a Senate override code. Whether that changes anything depends on who is holding the other end. Start with Jax. He was there."', grants: { flags: ['vane_freight_briefed', 'vane_sector4_hint'] } },
+                ],
+              },
+              { id: 'phase_field_ongoing',
+                requiresAllFlags: ['vane_freight_briefed'],
+                requiresNoneFlags: ['freight_hub_investigated'],
+                prompt: '"Talk to Jax. He was in the maintenance shaft during the transfer. He knows more than he admitted to the first CSF team. If he will not cooperate, try the shipping clerk Dax — he has been filing false manifests and he knows it. The Bay 14 blast marks are also preserved near Platform 09."',
+                choices: [
+                  { text: '"What if both of them refuse?"', morality: 0, loyalty: {}, result: '"Then you pull the physical evidence. Crime scene at Bay 14, customs manifest registry near Platform 09 — either one gives us documentation. I need something that holds up in front of a Senate subcommittee."' },
+                  { text: '"Understood. I will start with Jax."', morality: 5, loyalty: { republic: 5 }, result: '"Good. Keep your badge visible. In Sector 4 that matters more than the weapon."' },
+                ],
+              },
+              { id: 'phase_field_post_investigation',
+                requiresAllFlags: ['freight_hub_investigated'],
+                prompt: 'Vane is already packing the portable terminal when you return. "I got enough from your transmissions. Good work, Investigator." He locks the terminal under his arm. "Everything you found gets documented and sealed at Precinct Command tonight. Meet me there. I am not transmitting this through an open line."',
+                choices: [
+                  { text: '"How serious is what we found?"', morality: 5, loyalty: { republic: 8 }, result: '"Serious enough that I want four walls around this conversation before I answer that. Precinct Command. AirTaxi back the way you came."' },
+                  { text: '"I will be right behind you."', morality: 3, loyalty: { republic: 5 }, result: '"See that you are." He walks out with the terminal under his arm and does not look back.' },
+                ],
+              },
+            ],
           },
         ],
         collectibles: [
@@ -1528,10 +1559,10 @@ const PLANETS = {
           { id: 'induction_terminal', x: 10, y: 6, once: true, label: 'CSF Induction Terminal', description: 'Your Auxiliary Corps enrollment is confirmed. Designation: AX-7. Access level: provisional. Supervisor: Vane, T. Welcome to the Coruscant Security Force.', grantsItem: 'csf_aux_badge' },
           { id: 'drill_holotable', x: 20, y: 6, once: false, label: 'Tactical Holotable', description: 'A 3D grid of Sector 4 showing current patrol routes, Black Sun safe house locations, and three markers labeled UNKNOWN — each in a different sub-level. Someone is mapping something.' },
           { id: 'holding_cell_log', x: 6, y: 25, once: true, label: 'Cell Block Log', description: 'Entry 847: Detainee refuses to identify employing organization. Grey coat. No ID chip. Transferred off-site per Senate directive 1182-C. Authorized by: [REDACTED].' },
-          { id: 'module_a_terminal', x: 36, y: 12, once: true, label: 'Training Module A: Non-Lethal Combat', description: 'Simulated Iron Syndicate droids in live-fire configuration. Stun your way through the course. Lethal discharges are flagged. Sergeant Torren is watching.', grantsFlag: 'module_a_complete' },
-          { id: 'module_b_terminal', x: 36, y: 16, once: true, label: 'Training Module B: Forensic Slicing', description: 'A reconstructed simulation of Docking Bay 14 — manifest kiosks, scorched terminals, altered shipping logs. Identify the code-trail left by the strike team. CSF Chain of Custody Protocol codex unlocked.', grantsItem: 'forensic_slicing_suite', grantsCodex: 'codex-csf-chain-of-custody', grantsFlag: 'module_b_complete' },
-          { id: 'holding_block_b', x: 6, y: 24, once: true, label: 'Training Module C: High-Stress Interrogation', description: 'A captured Black Sun informant in Holding Block B. You have thirty minutes. No weapons discharges. No civil rights violations on record.' },
-          { id: 'senate_honor_ceremony', x: 20, y: 14, once: true, label: 'Senate Honor Ceremony Terminal', description: 'The Senate Honor Cross is awarded in a formal ceremony. Officer Vane promotes you to Special Lead Investigator of the CSF Auxiliary Division.' },
+          { id: 'module_a_terminal', x: 36, y: 12, once: true, requiresFlag: 'csf_briefed', label: 'Training Module A: Non-Lethal Combat', description: 'CSF Certification Module A. Simulated Syndicate droids are live on the training range in full-engagement mode. Stun configuration only — one lethal discharge ends your certification run. Droids do not telegraph. They do not pause. Clear the course clean.', triggersMinigame: 'pit_fight', minigameConfig: { opponentName: 'Syndicate Training Droid Mk.IV', opponentHp: 4, accent: '#4A9FFF' }, grantsFlag: 'module_a_complete' },
+          { id: 'module_b_terminal', x: 36, y: 16, once: true, requiresFlag: 'module_a_complete', label: 'Training Module B: Forensic Slicing', description: 'CSF Certification Module B. A reconstructed simulation of Docking Bay 14 — scorched manifests, altered routing codes, a ghost cargo layer in the customs log. The chain of custody is broken in three places. Find all three breaks and reconstruct the full trail. No assumptions. Only evidence.', triggersMinigame: 'signal_siphon', grantsItem: 'forensic_slicing_suite', grantsCodex: 'codex-csf-chain-of-custody', grantsFlag: 'module_b_complete' },
+          { id: 'holding_block_b', x: 6, y: 24, once: true, requiresFlag: 'module_b_complete', label: 'Training Module C: High-Stress Interrogation', description: 'CSF Certification Module C. The Black Sun informant in Holding Block B has resisted four certified detectives. Thirty minutes. No weapons discharges. No civil rights violations on record. Break the suspect using psychological pressure before time runs out.', triggersMinigame: 'interrogation', grantsFlag: 'module_c_complete' },
+          { id: 'senate_honor_ceremony', x: 20, y: 14, once: true, requiresFlag: 'csf_training_complete', label: 'Senate Honor Ceremony', description: 'Certification confirmed. The Senate Honor Cross is awarded in a holographic broadcast to Precinct Command. Officer Vane promotes you to Special Lead Investigator of the CSF Auxiliary Division. Sector 4 deployment is now authorized.', grantsFlag: 'vane_record_commend' },
           { id: 'airtaxi_csf_academy', x: 38, y: 22, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Republic transit terminal. Authorized personnel only. Connects to the Coruscant AirTaxi Network.' },
           { id: 'precinct42_warrant_terminal', x: 28, y: 22, once: true, iconKind: 'terminal', label: 'Precinct 42 Remote Terminal',
             requiresFlag: 'reya_warrant_mission_active',
@@ -1549,18 +1580,28 @@ const PLANETS = {
                 requiresNoneFlags: ['csf_briefed'],
                 prompt: '"You made it. The Auxiliary Corps runs accelerated courses for candidates with field experience. You already have that. Walk through the drill yard and talk to the training sergeant."',
                 choices: [
-                  { text: '"I am ready to bring order to the underbelly, Detective."', morality: 8, loyalty: { republic: 10 }, result: '"Good. Start by keeping your eyes open and your mind off credits."', grants: { flags: ['csf_briefed', 'csf_duty_stance'], items: ['csf_aux_badge'] } },
-                  { text: '"This badge better give me open access to restricted transport lanes."', morality: 3, loyalty: { republic: 5 }, result: '"It gives you authority and responsibility. Do not abuse it." He hands you the badge without ceremony.', grants: { flags: ['csf_briefed', 'csf_transit_unlocked'], items: ['csf_aux_badge'] } },
-                  { text: '"Does this mean CSF will stay out of Jon\'s sector in the Mid-Levels?"', morality: 0, loyalty: { republic: 3 }, result: '"If your friend obeys Republic code, he has nothing to fear. If he does not, you will be the one arresting him." He watches your face carefully.', grants: { flags: ['csf_briefed', 'vane_suspicious_of_jon'], items: ['csf_aux_badge'] } },
+                  { text: '"I am ready to bring order to the underbelly, Detective."', morality: 8, loyalty: { republic: 10 }, result: '"Good. Start by keeping your eyes open and your mind off credits."', grants: { flags: ['csf_briefed', 'csf_duty_stance', 'speeder_transit_unlocked'], items: ['csf_aux_badge'] } },
+                  { text: '"This badge better give me open access to restricted transport lanes."', morality: 3, loyalty: { republic: 5 }, result: '"It gives you authority and responsibility. Do not abuse it." He hands you the badge without ceremony.', grants: { flags: ['csf_briefed', 'csf_transit_unlocked', 'speeder_transit_unlocked'], items: ['csf_aux_badge'] } },
+                  { text: '"Does this mean CSF will stay out of Jon\'s sector in the Mid-Levels?"', morality: 0, loyalty: { republic: 3 }, result: '"If your friend obeys Republic code, he has nothing to fear. If he does not, you will be the one arresting him." He watches your face carefully.', grants: { flags: ['csf_briefed', 'vane_suspicious_of_jon', 'speeder_transit_unlocked'], items: ['csf_aux_badge'] } },
                 ],
               },
               { id: 'phase_post_commission',
                 requiresAllFlags: ['csf_briefed'],
-                requiresNoneFlags: ['echo7_vane_leverage_offered'],
+                requiresNoneFlags: ['echo7_vane_leverage_offered', 'csf_training_complete'],
                 prompt: 'Vane looks up from his files. "Training modules are your priority. We need your clearance active before I can put you on Sector 4 assignment."',
                 choices: [
                   { text: '"Understood. I will complete the modules."', morality: 5, loyalty: { republic: 5 }, result: '"That is what I want to hear. Torren is running the drill yard. Do not waste his time."' },
                   { text: '"What is happening in Sector 4 that needs this much preparation?"', morality: 3, loyalty: {}, result: 'He sets down his datapad. "Phantom freight manifests. Someone is moving unscanned cargo through the hub and the trail keeps going cold at Bay 14. That is all I can say until you have clearance."', grants: { flags: ['vane_sector4_hint'] } },
+                ],
+              },
+              { id: 'phase_training_done',
+                requiresAllFlags: ['csf_training_complete'],
+                requiresNoneFlags: ['echo7_vane_leverage_offered'],
+                prompt: '"All three modules cleared. Certification confirmed." He rises from his desk for the first time during your visit. "Special Lead Investigator, CSF Auxiliary Division." A brief, firm handshake. "Sector 4 Freight Hub is your assignment. Bay 14 manifests are wrong. Find out who is running the ghost cargo operation and bring me a name. Use your badge when you have to. Try not to have to."',
+                choices: [
+                  { text: '"Understood, Detective. I will find your name."', morality: 8, loyalty: { republic: 10 }, result: '"I know you will. The AirTaxi terminal is behind you. Sector 4 is waiting."', grants: { flags: ['csf_duty_stance', 'vane_record_commend', 'sector4_clearance_granted'] } },
+                  { text: '"What happens if the evidence points at the wrong people?"', morality: 5, loyalty: { republic: 5 }, result: '"Bring it to me first. Not Internal Affairs. Not anyone outside this precinct." He waits. He wants an honest answer.', grants: { flags: ['csf_duty_stance', 'vane_confidential_channel'] } },
+                  { text: '"Does this clearance extend to Shadow Town, Level 1312?"', morality: 3, loyalty: { underworld: 3 }, result: '"Your clearance extends wherever the investigation takes you." He sits back down. "Do not ask questions you already know the answer to."', grants: { flags: ['csf_duty_stance'] } },
                 ],
               },
               { id: 'phase_confrontation',
@@ -1585,10 +1626,58 @@ const PLANETS = {
           },
           { id: 'training_sgt', x: 22, y: 16, kind: 'republic_guard', label: 'Sergeant Torren',
             repeatPrompt: 'Torren watches the drill yard. He has eyes on everyone simultaneously.',
-            prompt: '"Fresh Auxiliary. Vane vouches for you which is the only reason I am not sending you back up the lift. Run the drill circuit. Keep your hands off the live-fire range until I clear you."',
-            choices: [
-              { text: '"Yes, Sergeant. Where do I start?"', morality: 8, loyalty: { republic: 10 }, result: '"Perimeter first. Then the obstacle rig. Then we see if you can tell the difference between a stun setting and a full discharge." He almost smiles.', grants: { flags: ['drill_accepted'], items: ['csf_patrol_armor'] } },
-              { text: '"I have field experience. Skip the basics."', morality: 0, loyalty: {}, result: '"Everyone has field experience. Nobody has the Republic way. Do the circuit." He turns away. Discussion over.' },
+            phases: [
+              { id: 'torren_pre_brief',
+                requiresNoneFlags: ['csf_briefed'],
+                prompt: '"Fresh Auxiliary. Vane vouches for you, which is the only reason I am not sending you back up the lift. Run the drill circuit. Keep your hands off the live-fire range until I clear you."',
+                choices: [
+                  { text: '"Yes, Sergeant. Where do I start?"', morality: 8, loyalty: { republic: 10 }, result: '"Talk to Vane first, get your commission, then come back. Perimeter circuit first. Then the module terminals." He almost smiles.', grants: { flags: ['drill_accepted'], items: ['csf_patrol_armor'] } },
+                  { text: '"I have field experience. Skip the basics."', morality: 0, loyalty: {}, result: '"Talk to Vane first. Then come back and skip whatever you want." He turns away.' },
+                ],
+              },
+              { id: 'torren_a_pending',
+                requiresAllFlags: ['csf_briefed'],
+                requiresNoneFlags: ['module_a_complete'],
+                prompt: '"Module A is the first gate. East wall, upper terminal. Stun only — one lethal discharge and the certification run ends immediately. The droids move faster than you expect and they do not warn you before they engage. Use your environment."',
+                choices: [
+                  { text: '"Stun only. Understood."', morality: 5, loyalty: { republic: 5 }, result: '"Correct. Now go prove it."' },
+                  { text: '"How fast do the combat droids move?"', morality: 3, loyalty: {}, result: '"Faster than the last three candidates expected. Do not be the fourth." He nods toward the east wall.' },
+                ],
+              },
+              { id: 'torren_b_pending',
+                requiresAllFlags: ['module_a_complete'],
+                requiresNoneFlags: ['module_b_complete'],
+                prompt: '"Module A cleared. Faster than the last three candidates." He delivers it like a criticism and a compliment at once. "Module B is forensic analysis. Bay 14 crime scene reconstruction — manifests altered, chain of custody broken in three places. Do not guess. Only evidence holds up in a prosecution."',
+                choices: [
+                  { text: '"Bay 14 — that is the real active case, is it not?"', morality: 5, loyalty: { republic: 8 }, result: '"You have been asking the right questions." He almost approves. "Good. The terminal will test whether you can read a scene or just react to one. East wall, lower position."', grants: { flags: ['vane_sector4_hint'] } },
+                  { text: '"I will run the simulation now."', morality: 0, loyalty: {}, result: '"Minimize assumptions, maximize the evidence chain." He returns his attention to the drill yard.' },
+                ],
+              },
+              { id: 'torren_c_pending',
+                requiresAllFlags: ['module_b_complete'],
+                requiresNoneFlags: ['module_c_complete'],
+                prompt: '"Forensic module passed. Chain of custody reconstruction was solid." A pause to let that register. "Module C is different. The informant in Holding Block B has resisted four certified detectives. Observe before you speak. Every suspect has a fear and a pride — find both before you open your mouth. Hit them wrong and the wall goes back up permanently."',
+                choices: [
+                  { text: '"Fear and pride — which opens the door?"', morality: 5, loyalty: { republic: 5 }, result: '"Neither alone. The sequence matters. Fear first — that tells you what they are protecting. Pride tells you how. Holding Block B, south wall."', grants: { flags: ['torren_interrogation_advice'] } },
+                  { text: '"I will handle it my way."', morality: 0, loyalty: {}, result: '"That is your right and your risk." He watches you go.' },
+                ],
+              },
+              { id: 'torren_all_done',
+                requiresAllFlags: ['module_a_complete', 'module_b_complete', 'module_c_complete'],
+                requiresNoneFlags: ['csf_training_complete'],
+                prompt: '"All three modules cleared." He crosses his arms. "I am not going to tell you that you did well, because this was training and what is waiting in Sector 4 does not grade on a curve. What I will tell you is: you did not cut corners. Report to Vane. He will finalize your certification."',
+                choices: [
+                  { text: '"Thank you, Sergeant."', morality: 5, loyalty: { republic: 5 }, result: '"Do not thank me. Bring back a clean record from Sector 4. That is the only thanks worth giving." He turns back to the drill yard.' },
+                  { text: '"Anything I should know about Sector 4?"', morality: 3, loyalty: {}, result: '"Phantom manifests. Ghost cargo layers in the Bay 14 logging system. Someone is very good at staying invisible. Be better." He nods once. "Dismissed."' },
+                ],
+              },
+              { id: 'torren_certified',
+                requiresAllFlags: ['csf_training_complete'],
+                prompt: '"You are certified. Sector 4 orders are with Vane." He studies you. "Keep the stun habit. The day you start defaulting to lethal, you have lost the only distinction between us and the organizations we are watching."',
+                choices: [
+                  { text: '"Understood, Sergeant."', morality: 5, loyalty: { republic: 3 }, result: '"Then go. The precinct does not patrol itself."' },
+                ],
+              },
             ],
           },
           { id: 'talo_voren', x: 10, y: 24, kind: 'republic_guard', label: 'Detective Talo Voren',
@@ -1601,10 +1690,32 @@ const PLANETS = {
           },
           { id: 'kaelen_informant', x: 6, y: 26, kind: 'swoop_gang', label: 'Black Sun Informant "Kaelen"',
             repeatPrompt: '"I have nothing to add to my statement." He means it.',
-            prompt: 'He sits handcuffed to the interrogation chair, staring at a fixed point on the wall. "I already told the last officer everything I know. Which is nothing."',
-            choices: [
-              { text: '"We recovered your encrypted cylinder from Docking Bay 14."', morality: 5, loyalty: { republic: 10 }, requires: { flag: 'module_b_complete' }, result: 'He flinches. "My cylinder? That is impossible — I dumped it." He pauses. "Fine. Platform 09. Ask for Dax. He logged the phantom manifests."', grants: { flags: ['module_c_complete', 'dax_named', 'phantom_freight_available'] } },
-              { text: '"Talk, and Vane reduces your sentence to mid-level probation."', morality: 8, loyalty: { republic: 8 }, result: '"Probation. Sure. And I grow wings and fly to Naboo." He leans back. "I want it in writing. Then I talk."', grants: { flags: ['module_c_complete', 'legal_pressure_used'] } },
+            phases: [
+              { id: 'kaelen_pre_interrogation',
+                requiresNoneFlags: ['module_c_complete'],
+                prompt: 'He sits handcuffed to the interrogation chair, staring at a fixed point on the wall. "I already told the last officer everything I know. Which is nothing. Run your evaluation module if you want. I will sit here."',
+                choices: [
+                  { text: '"The evaluation module is running."', morality: 3, loyalty: { republic: 3 }, result: '"I have heard that. Four times." He goes back to studying the wall.' },
+                  { text: '"We already have your cylinder from Bay 14."', morality: 5, loyalty: { republic: 5 }, result: 'A flicker crosses his face — controlled quickly. "Then you do not need anything from me." He is lying. You can tell. The module evaluation will expose it.' },
+                ],
+              },
+              { id: 'kaelen_broken',
+                requiresAllFlags: ['module_c_complete'],
+                requiresNoneFlags: ['dax_named'],
+                prompt: 'The session changed something. He looks at you differently now — not hostile, just resigned. "Platform 09. Ask for Dax. He logged the phantom manifests. I was a courier. I did not know what was in the containers." He pauses. "If you are going to burn him, at least tell him I held out longer than usual."',
+                choices: [
+                  { text: '"Where does the manifest trail end?"', morality: 5, loyalty: { republic: 10 }, result: '"Bay 14. Cargo logging splits across three systems — official, CSF override, and a ghost layer that should not exist. Dax built the third layer. He is the one you actually want."', grants: { flags: ['dax_named', 'phantom_freight_available'] } },
+                  { text: '"Talk fully and Vane will review your sentence."', morality: 8, loyalty: { republic: 8 }, result: '"In writing." He exhales. "Dax. Platform 09. Ghost layer in the manifest system — he built it. That is everything I have." He looks at the wall again. "I am done."', grants: { flags: ['dax_named', 'phantom_freight_available', 'legal_pressure_used'] } },
+                ],
+              },
+              { id: 'kaelen_post_intel',
+                requiresAllFlags: ['dax_named'],
+                prompt: '"You have what you need. Dax, Platform 09." He has closed down again — not resistant, just finished. "I cooperated. Remember that when my case comes up."',
+                choices: [
+                  { text: '"Cooperation noted."', morality: 5, loyalty: { republic: 3 }, result: 'He nods once. Nothing more to say.' },
+                  { text: '"Do not count on anything."', morality: -3, loyalty: {}, result: '"Of course not." His tone is flat. "No one does in this precinct."' },
+                ],
+              },
             ],
           },
           { id: 'csf_medic', x: 36, y: 10, kind: 'mechanic', label: 'Field Medic Daya',
@@ -1680,18 +1791,149 @@ const PLANETS = {
         },
       },
       senate_district: {
-        id: 'senate_district', name: 'Senate District Vaults', subtitle: 'Coruscant · Senate Precinct · L.1900',
+        id: 'senate_district', name: 'Senate Precinct L.1900', subtitle: 'Coruscant · Upper Levels · Senate District',
         width: 44, height: 32, spawnPos: { x: 2, y: 16 }, textureId: 'coruscant',
         accent: '#4A9FFF', accentGlow: 'rgba(74,159,255,0.20)', accentDim: '#1A4A80',
         floorColor: '#181C28', floorAlt: '#1E2430', wallDark: '#0A0C14', wallLight: '#141820',
         bg: 'radial-gradient(circle at 50% 30%, #10182A 0%, #080C14 70%)', ambient: 'traffic', floorPattern: 'marble',
         decor: ['pillar', 'archive', 'scan_arch'],
-        doors: [], worldObjects: [
-          { id: 'airtaxi_senate_district', x: 40, y: 28, once: false, iconKind: 'beacon', label: 'Senate Express Terminal', description: 'A high-security transit terminal. Coruscant AirTaxi Network — Senate District access point.' },
-        ], npcs: [], collectibles: [],
+        doors: [],
+        worldObjects: [
+          { id: 'senate_phantom_freight_file', x: 4, y: 4, once: true, iconKind: 'archive', label: 'Committee Dossier 7-Theta',
+            requiresFlag: 'echo7_stakes_known',
+            description: 'A sealed committee dossier marked PHANTOM FREIGHT OVERSIGHT (CLASSIFIED). The file number matches one of the suppressed archives Echo-7 described. Three pages are intact. They contain the names of six Senate subcommittee members who co-signed a standing exemption order for the Bay 14 cargo pathway, renewed every fiscal cycle for thirty years. One name is currently serving as the Deputy Chair of the Senate Commerce Authority.',
+            grantsFlag: 'phantom_freight_senate_link',
+            grantsCodex: 'codex-senate-precinct' },
+          { id: 'holo_news_kiosk_senate', x: 10, y: 8, once: false, iconKind: 'terminal', label: 'HNN Kiosk — Senate Wing',
+            description: '[HNN PRIORITY] "The Senate Commerce Authority has issued a statement calling the Bay 14 irregularities an administrative matter under routine review. Deputy Chair Torvenn described media coverage as irresponsible speculation. In unrelated news, fourteen tonnes of unmanifested cargo cleared Coruscant Customs without inspection under an emergency security protocol." The terminal has three active response threads. All of them have been flagged by Senate information security.' },
+          { id: 'senate_surveillance_array', x: 20, y: 6, once: true, iconKind: 'terminal', label: 'HoloNet Surveillance Hub',
+            requiresFlag: 'vane_sublevel_connection_found',
+            description: 'A Commerce Authority surveillance node routing encrypted monitoring data to four Senate offices simultaneously. The uplink log shows Vane\'s inspection report from eleven years ago was accessed twice in the last forty-eight hours, both times from a terminal registered to Deputy Chair Torvenn\'s office.',
+            triggersMinigame: 'signal_siphon',
+            grantsFlag: 'senate_surveillance_tapped',
+            grantsCodex: 'codex-senate-precinct' },
+          { id: 'senate_classified_briefing', x: 35, y: 6, once: true, iconKind: 'archive', label: 'Sealed Briefing Chamber',
+            requiresFlag: 'senate_access_granted',
+            description: 'A secure briefing room last active three months ago. The session transcript is still cached in the chamber\'s closed-loop system. Twelve senators. One agenda item: how to contain the Level 1313 access question before it reached the standing committee. The resolution passed eleven to one. The dissenting vote is not attributed to any name in the record. That space is blank, as if someone removed the attribution before the session closed.',
+            grantsFlag: 'senate_dissent_found',
+            grantsCodex: 'codex-senate-precinct' },
+          { id: 'senate_committee_minutes', x: 35, y: 8, once: true, iconKind: 'datapad', label: 'Committee Meeting Log',
+            description: 'Three years of Commerce Authority subcommittee meeting logs. Cross-referenced against the Bay 14 manifest irregularities, they form a clear pattern: every cargo review request that touched Bay 14 was tabled, deferred, or simply removed from the agenda before discussion. The removals are stamped as routine calendar management. The name authorising them appears twenty-three times. It is always the same: Deputy Chair Torvenn.',
+            grantsFlag: 'torvenn_named',
+            requiresFlag: 'phantom_freight_senate_link' },
+          { id: 'senate_archive_core', x: 8, y: 24, once: true, iconKind: 'terminal', label: 'Archive Sub-Node',
+            requiresFlag: 'echo7_vault_details_known',
+            description: 'A secondary archive node running a fragmented index of the original Level 1313 records purge. The index itself survived the purge because it was stored as a maintenance file rather than a document record. It lists four hundred and twelve archive entries marked DESTROYED in the purge order. The last twelve entries in the list are marked LOCATION UNVERIFIED. They include a line item reading: ARCHIVIST CONSCIOUSNESS TRANSFER PROTOCOL. AUTHORIZED. SIGNED: TORVENN, W.',
+            grantsFlag: 'echo7_archive_origin_found',
+            grantsCodex: 'codex-senate-precinct' },
+          { id: 'senate_bribe_ledger', x: 15, y: 26, once: true, iconKind: 'archive', label: 'Commerce Authority Payment Log',
+            requiresFlag: 'vault_heist_complete',
+            description: 'A physical payment ledger from the Commerce Authority bursary. Forty-three named accounts. Cross-referenced against the Iron Syndicate bribe schedule from Jon\'s vault, eleven of them match. The accounts belong to clerks, inspectors, and subcommittee aides across four Senate offices. The money moved from Syndicate accounts through three shell companies before landing in Republic payroll. Someone built this channel over years. It did not happen by accident.',
+            grantsFlag: 'bribe_network_mapped',
+            grantsCodex: 'codex-senate-precinct' },
+          { id: 'senate_maintenance_access', x: 36, y: 26, once: true, iconKind: 'panel', label: 'Emergency Maintenance Shaft',
+            requiresNoneFlags: ['senate_maintenance_opened'],
+            description: 'A panel behind the archive stacks, unlocked. A maintenance shaft runs down through the precinct sub-structure. Access logs show it has not been officially entered in eleven years. The dust on the interior ladder is disturbed. Someone has been using this route without signing in.',
+            grantsFlag: 'senate_maintenance_opened',
+            grantsCodex: 'codex-senate-precinct' },
+          { id: 'senate_guard_post', x: 6, y: 16, once: false, iconKind: 'prop', label: 'Republic Guard Post',
+            description: 'Standard Senate precinct guard station. Emergency response time is four minutes at this level. The duty log shows three unlogged visitor entries in the last week, each flagged by the guard on duty and subsequently deleted from the official record by a Commerce Authority clearance override. The guard who flagged them is listed as transferred. The destination is blank.' },
+          { id: 'airtaxi_senate_district', x: 37, y: 25, once: false, iconKind: 'beacon', label: 'Senate Express Terminal',
+            description: 'A high-security transit terminal with biometric clearance requirements. The Republic crest above the boarding gate is polished. Everything here is polished. That is the point.' },
+        ],
+        npcs: [
+          { id: 'undersecretary_meln', x: 7, y: 6, kind: 'senator', label: 'Undersecretary Meln',
+            questNpc: true,
+            repeatPrompt: 'Meln arranges a set of datafiles with practiced precision. His movements are economical. Every gesture is a calculation.',
+            phases: [
+              {
+                id: 'phase_meln_initial',
+                requiresNoneFlags: ['torvenn_named', 'phantom_freight_senate_link', 'meln_confronted'],
+                prompt: 'The Muun undersecretary turns from his terminal with a smile that reaches exactly nowhere. "The precinct is restricted to authorised personnel. You have authorisation, or you would not be here. That is the extent of my interest in why you are here." He returns to his filing. The deliberate dismissal of a man who has decided you are not yet a problem.',
+                choices: [
+                  { text: '"I am looking into the Bay 14 irregularities."', morality: 5, loyalty: { republic: 3 }, result: '"Bay 14 is under routine Commerce Authority review." He does not look up. "Any further inquiries should be directed to the subcommittee clerk. That office is located on Level 1880. Good day."', grants: {} },
+                  { text: '"Who authorises clearance for the archive sub-nodes?"', morality: 0, loyalty: {}, result: '"Archive access is managed by the precinct archivist. Dax. If Dax is available." He pauses just slightly. "Dax has not been available this week." The pause was not an accident.', grants: { flags: ['dax_referenced_by_meln'] } },
+                  { text: 'Leave without a word.', grants: {} },
+                ],
+              },
+              {
+                id: 'phase_meln_evidence_found',
+                requiresAllFlags: ['phantom_freight_senate_link'],
+                requiresNoneFlags: ['meln_confronted', 'meln_turned'],
+                prompt: 'Meln notices the dossier you are carrying before you speak. Something shifts behind his eyes, carefully controlled. "You have been in the committee archive." It is not a question. He sets down his datafiles. For the first time, he gives you his full attention. "What do you want?"',
+                choices: [
+                  { text: '"I want to know who Torvenn is protecting."', morality: 5, loyalty: { republic: 8 }, result: '"Torvenn." He repeats the name without expression. A very long pause. "Deputy Chair Torvenn has been managing the Bay 14 oversight exemption for nineteen years. I co-signed four of the renewal orders. I want you to understand what I am telling you when I say that." He holds your gaze. "I am telling you, not running."', grants: { flags: ['meln_confronted', 'meln_cooperation_offered'] } },
+                  { text: '"I want this to go away. What is it worth to you?"', morality: -10, loyalty: { underworld: 5 }, result: 'He studies you for five seconds. Then he reaches into his desk and sets a credit chip on the surface between you. "Fifty thousand. And you walk out of this precinct and never return." He is very still. He has done this before.', grants: { flags: ['meln_confronted', 'meln_bribed'], items: ['senate_bribe_chip'] } },
+                ],
+              },
+              {
+                id: 'phase_meln_cooperation',
+                requiresAllFlags: ['meln_cooperation_offered'],
+                requiresNoneFlags: ['meln_turned', 'meln_bribed'],
+                prompt: '"If you are building a case, you need the renewal order chain and the original clearance authorisation from thirty years ago. Both are in the sealed archive under a Commerce Authority retention hold. I cannot access them without triggering an alert to Torvenn\'s office. But the precinct archivist, Dax, has a separate retention key that predates the hold." He pauses. "Dax knows what is in there. Dax has known for a long time."',
+                choices: [
+                  { text: '"Why are you telling me this?"', morality: 5, loyalty: { republic: 5 }, result: '"Because I am sixty-three years old and I am tired of the weight of it." He says it without drama. "Find Dax. And be careful. Torvenn has eyes in this precinct."', grants: { flags: ['meln_turned', 'dax_location_known'] } },
+                  { text: '"I will find Dax."', grants: { flags: ['meln_turned', 'dax_location_known'] } },
+                ],
+              },
+              {
+                id: 'phase_meln_turned',
+                requiresAllFlags: ['meln_turned'],
+                prompt: '"Dax knows where the original authorisation is. The retention key is the only thing standing between the sealed archive and you." He keeps his voice flat and level. In this building, that is the most dangerous thing a person can be.',
+                choices: [{ text: '"I understand. Thank you."', grants: {} }],
+                repeatPrompt: 'Meln gives a single, precise nod. He has said what he had to say.',
+              },
+            ],
+          },
+          { id: 'archivist_dax', x: 10, y: 24, kind: 'archivist', label: 'Dax',
+            questNpc: true,
+            requiresFlag: 'dax_location_known',
+            repeatPrompt: 'Dax is surrounded by physical archive canisters arranged in an order that makes sense only to him. He does not stop working when you approach.',
+            phases: [
+              {
+                id: 'phase_dax_initial',
+                requiresAllFlags: ['dax_location_known'],
+                requiresNoneFlags: ['echo7_archive_origin_found', 'dax_key_granted'],
+                prompt: 'The old archivist looks up from a canister he has been cataloguing. His eyes move to the dossier in your hands, then to your face. He does not seem surprised. "I have been waiting for someone to come down here and ask about this for eleven years," he says. "Every year I thought: this is the year. And every year it was not." He sets down the canister. "Meln sent you."',
+                choices: [
+                  { text: '"Tell me about the Level 1313 archive purge."', morality: 5, loyalty: { republic: 5 }, result: '"Thirty-one years ago, a clearance order came through this office authorising the permanent destruction of four hundred and twelve archive entries classified under the Old Republic Historical Continuity Act. I was a junior archivist. My supervisor signed it and retired three weeks later. I kept a copy of the index." He is quiet for a moment. "The man who authorised it is now Deputy Chair of the Commerce Authority. His name is Torvenn Wald."', grants: { flags: ['torvenn_full_name_known'], codex: ['codex-senate-precinct'] } },
+                  { text: '"Do you have the original clearance authorisation?"', morality: 0, loyalty: {}, result: '"The original document is in the sealed sub-archive. The Commerce Authority retention hold prevents me from accessing it through official channels." He opens a desk drawer. "But I made a physical copy thirty-one years ago and put it in a canister marked FISCAL MAINTENANCE RECORDS 87-C, and nobody has ever looked for it." He sets a sealed canister on the desk between you.', grants: { flags: ['torvenn_authorisation_found', 'senate_access_granted'], codex: ['codex-senate-precinct'] } },
+                ],
+              },
+              {
+                id: 'phase_dax_archive_found',
+                requiresAllFlags: ['echo7_archive_origin_found'],
+                requiresNoneFlags: ['dax_key_granted'],
+                prompt: '"You found the sub-node index." He reads your expression correctly. "Then you know what ARCHIVIST CONSCIOUSNESS TRANSFER PROTOCOL means." He opens a second drawer. Inside it: a single data key on a plain chain. "This is the retention key. It predates the Commerce Authority hold. With it, you can access the full sealed archive and pull everything that was supposed to be destroyed." He holds it out to you. "Take it. I have been carrying it long enough."',
+                choices: [
+                  { text: 'Take the retention key.', morality: 5, loyalty: { republic: 8 }, result: '"Use it well." He goes back to his canisters. He does not watch you leave. He has been waiting to put this down for thirty-one years and now he has.', grants: { flags: ['dax_key_granted', 'senate_archive_unlocked'], items: ['senate_retention_key'] } },
+                  { text: '"What happens to you when this comes out?"', morality: 5, loyalty: {}, result: '"I am sixty-eight years old and I have spent thirty-one years filing documents in a basement nobody visits." He almost smiles. "Whatever happens to me, it will be more interesting than this." He holds out the key.', grants: { flags: ['dax_key_granted', 'senate_archive_unlocked'], items: ['senate_retention_key'] } },
+                ],
+              },
+              {
+                id: 'phase_dax_key_granted',
+                requiresAllFlags: ['dax_key_granted'],
+                prompt: '"The retention key is yours. Everything in the sealed archive is accessible now. Do what you came here to do."',
+                choices: [{ text: '"I will."', grants: {} }],
+                repeatPrompt: '"Go. The archive will not organise itself. Neither will the case against Torvenn."',
+              },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'senate_precinct_datachip', x: 30, y: 22, label: 'Precinct Access Datachip', reward: 60 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 42, 30, 'floor');
+          carveRect(g, 1, 13, 42, 18, 'floor');
+          carveRect(g, 2, 2, 12, 11, 'floor');
+          pt(g, 7, 12, 'floor');
+          carveRect(g, 16, 2, 27, 11, 'floor');
+          pt(g, 21, 12, 'floor');
+          carveRect(g, 31, 2, 41, 11, 'floor');
+          pt(g, 36, 12, 'floor');
+          carveRect(g, 5, 20, 18, 29, 'floor');
+          pt(g, 10, 19, 'floor');
+          carveRect(g, 22, 20, 39, 29, 'floor');
+          pt(g, 30, 19, 'floor');
           return g;
         },
       },
@@ -1930,8 +2172,8 @@ const PLANETS = {
             requiresFlag: 'malak_pit_challenged',
             requiresNoneFlags: ['malak_turned', 'malak_dead'],
             description: 'The pit floor. Sand hard underfoot from decades of use. Malak is waiting at the center. This settles it.',
-            triggersMinigame: 'pit_fight',
-            minigameConfig: { opponentName: 'Malak', opponentHp: 5, accent: '#C03030' },
+            triggersMinigame: 'tactical_combat',
+            minigameConfig: { opponentProfile: 'malak_enforcer', flavorText: 'The pit floor is hard sand, worn smooth by decades of use. Malak stands at the center — massive, unreadable, blaster already clear of its holster. The crowd above is silent. This is the only way through.' },
             grantsFlag: 'malak_turned',
             grantsCodex: 'codex-malak' },
           { id: 'shadow_town_codex_terminal', x: 5, y: 3, once: true, iconKind: 'terminal', label: 'Sub-Level Registry Post',
@@ -1939,6 +2181,22 @@ const PLANETS = {
             grantsCodex: 'codex-shadow-town' },
           { id: 'airtaxi_shadow_town', x: 8, y: 20, once: false, iconKind: 'beacon', label: 'Sub-Level Transit Node',
             description: 'An unofficial transit splice wired into the AirTaxi network three levels above. The routing fee is charged as a food delivery surcharge. Nobody has complained.' },
+          { id: 'shadow_town_armory_rack', x: 31, y: 8, once: false, iconKind: 'crate', label: 'Weapons Rack',
+            description: 'A wall-mounted rack of contest hardware: electroblades with cracked casings, vibroshivs with the safety locks removed, and one stripped-down blaster pistol with the stun setting shorted out. A handwritten sign reads: FIGHT NIGHT ONLY. PAY FOR WHAT YOU BREAK. No price list is posted. The prices are not the kind that get written down.' },
+          { id: 'arena_challenger_register', x: 21, y: 3, once: false, iconKind: 'board', label: 'Challenger Register',
+            description: 'A physical board where fighters sign up for the night\'s card in their own handwriting. Forty-three names over the course of a month. You recognise three of them from CSF missing persons reports. A fourth is crossed out with two short lines, which in Shadow Town means he lost the final bout.' },
+          { id: 'fighter_shrine', x: 5, y: 18, once: true, iconKind: 'artifact', label: 'Pit Fighter\'s Altar',
+            description: 'A shelf nailed to the wall with offerings left by fighters before matches: a pair of worn hand wraps, a data chip with a name burned into the casing, a single unspent cartridge case turned upward like a candle. The shrine has been maintained for at least twelve years. Someone comes here every fight night, regardless of who they are fighting.',
+            grantsCodex: 'codex-shadow-town' },
+          { id: 'black_sun_territorial_mark', x: 5, y: 20, once: true, iconKind: 'prop', label: 'Black Sun Mark',
+            description: 'A Black Sun emblem stamped into the permasteel wall in industrial dye: a stylised starburst inside a circle, twelve points, each one representing one of the twelve original Black Sun Vigos of the Galactic War period. This section of Level 1312 has been Black Sun territory for forty years. No one has successfully contested it in that time. Malak holds the pit because the Black Sun let him. That has always been the arrangement.',
+            grantsCodex: 'codex-shadow-town' },
+          { id: 'old_ventshaft_hatch', x: 31, y: 12, once: true, iconKind: 'valve', label: 'Old Infrastructure Hatch',
+            description: 'A hatch cover bolted over a ventilation shaft that predates anything else in this structure by at least two hundred years. The permasteel around it is a different grade, a different alloy, cast when Coruscant was being sealed level by level rather than built upward. Below this hatch is a Level 1312 that nobody has officially surveyed since before the Republic-era urban codes were written. The bolts are welded shut.',
+            grantsFlag: 'shadow_town_sublevel_found',
+            grantsCodex: 'codex-shadow-town' },
+          { id: 'pit_medic_supplies', x: 31, y: 18, once: false, iconKind: 'supply', label: 'Medic Station',
+            description: 'A repurposed cargo crate serving as a medical supply station. Bacta patches, coagulant foam, and two syringes of combat stims, all clearly sourced from legitimate medical channels and therefore clearly brought here by someone who had access to legitimate medical channels. No questions are asked at the medic station. That is the entire point of its existence.' },
         ],
         npcs: [
           { id: 'malak_shadow', x: 4, y: 5, kind: 'crime_boss', label: 'Malak',
@@ -2037,6 +2295,73 @@ const PLANETS = {
               },
             ],
           },
+          { id: 'voss_shadow', x: 8, y: 17, kind: 'pit_fighter', label: 'Voss',
+            questNpc: false,
+            repeatPrompt: 'Voss watches the pit floor with the concentrated stillness of a man who has learned not to waste energy.',
+            phases: [
+              {
+                id: 'phase_voss_initial',
+                requiresNoneFlags: ['malak_pit_challenged', 'malak_turned', 'malak_dead'],
+                prompt: 'The veteran fighter looks you over with the flat assessment of someone who has been doing this long enough to read a person in under three seconds. "You are not here to fight," he says. It is not a question. He goes back to watching the arena floor. "Come back when you are."',
+                choices: [
+                  { text: '"How long have you been fighting here?"', morality: 0, loyalty: {}, result: '"Eleven years. Before that, four years in the Exchange\'s droid pit on Level 1200, which is worse than it sounds. Before that, Mandalore. Before that, things I do not talk about." He says it without self-pity. "This is the best post I have had."', grants: {} },
+                  { text: 'Leave him to it.', grants: {} },
+                ],
+              },
+              {
+                id: 'phase_voss_pit_challenged',
+                requiresAllFlags: ['malak_pit_challenged'],
+                requiresNoneFlags: ['malak_turned', 'malak_dead'],
+                prompt: 'When you tell him you are fighting Malak, Voss goes still for a moment. Then he looks at you with something that might be respect and might be concern. "I have fought Malak twice," he says. "First time, I lasted forty seconds. Second time, I lasted forty-two. He will try to go to the left early. He telegraphs it with his right shoulder. After that, he does not telegraph anything."',
+                choices: [
+                  { text: '"Why are you telling me this?"', morality: 5, loyalty: {}, result: '"Because I have been trying to beat that man for three years and you are the first person who has a reason to." He pauses. "A real reason. Not credit. Real." He looks at the pit floor. "Good luck. Mean it."', grants: { flags: ['voss_intel_gained'] } },
+                  { text: '"Thank you, Voss."', morality: 5, loyalty: {}, result: 'He nods once. A veteran\'s economy of motion. "Do not thank me. Win."', grants: { flags: ['voss_intel_gained'] } },
+                ],
+              },
+              {
+                id: 'phase_voss_post_malak',
+                requiresAllFlags: ['malak_turned'],
+                requiresNoneFlags: ['malak_dead'],
+                prompt: 'Voss watches you approach with the expression of a man recalibrating what he thought he knew. "You walked out." He says it quietly. "I have never seen anyone walk out after that." He is quiet for a moment. "The man I fought was not the same man you fought. Something changed in him. You changed it."',
+                choices: [
+                  { text: '"Do you want to keep fighting here?"', morality: 5, loyalty: {}, result: '"I do not fight for Malak. I fight because it is what I know." He considers. "But if the Pit is going to be something other than what it has been, I would rather see what that looks like." He meets your gaze. "I will work with you."', grants: { flags: ['voss_allied'], codex: ['codex-shadow-town'] } },
+                  { text: '"This place is changing. Be ready."', grants: { flags: ['voss_aware'] } },
+                ],
+              },
+            ],
+          },
+          { id: 'toma_shadow', x: 30, y: 19, kind: 'medic', label: 'Toma',
+            questNpc: false,
+            repeatPrompt: 'Toma is restocking the bacta supply with the methodical calm of someone who has been doing this long enough that it no longer costs anything to think about.',
+            phases: [
+              {
+                id: 'phase_toma_initial',
+                requiresNoneFlags: ['toma_trust_established'],
+                prompt: 'The Twi\'lek medic looks up from the medic station. She has the composed expression of someone who has seen everything this pit produces and still comes back, which means either she is very good at this or she is very committed, and either way you respect it. "The station is for fighters," she says. "You look like you might count."',
+                choices: [
+                  { text: '"What do you know about the Black Sun operation here?"', morality: 0, loyalty: {}, result: '"I know what every medic knows. I know what the fighters look like before and after and what the difference says about what happened in between." She pauses. "The Black Sun does not run the pit. They run the district. The pit is Malak\'s. That distinction matters to people who end up on my table."', grants: { flags: ['toma_trust_established'] } },
+                  { text: '"Who gets treatment here?"', morality: 5, loyalty: {}, result: '"Fighters. Pit staff. Anyone who comes through that door bleeding. I do not ask which side of the floor they fell on." She meets your gaze steadily. "That is the only policy this station has."', grants: { flags: ['toma_trust_established'] } },
+                ],
+              },
+              {
+                id: 'phase_toma_trusted',
+                requiresAllFlags: ['toma_trust_established'],
+                requiresNoneFlags: ['toma_intel_shared'],
+                prompt: '"Three months ago I treated a CSF officer," she says quietly. "He did not tell me he was CSF. His credentials were in a pocket I found when I was cutting the jacket off to reach the wound. He was not in uniform. He was carrying a sealed data canister in a secondary harness under the vest, which I handed back without opening." She pauses. "He died on this table. I kept the canister."',
+                choices: [
+                  { text: '"What was in the canister?"', morality: 5, loyalty: { republic: 5 }, result: '"I never opened it. I am a medic, not a slicer. But the identifier on the seal said: CSF INTERNAL REVIEW. PRECINCT 42. LEVEL 1313 ACCESS LOG, YEAR 11." She reaches under the station. "I have been trying to figure out who to give it to for three months. You might be the right person." She sets a sealed canister on the supply crate between you.', grants: { flags: ['toma_intel_shared', 'precinct42_log_found'], items: ['precinct42_access_log'] } },
+                  { text: '"Why tell me this now?"', morality: 5, loyalty: {}, result: '"Because you fought Malak and walked out, which means you either work for someone who matters or you are someone who matters, and either way you are more useful to this than a medic station in Level 1312." She sets the canister down. "Take it."', grants: { flags: ['toma_intel_shared', 'precinct42_log_found'], items: ['precinct42_access_log'] } },
+                ],
+              },
+              {
+                id: 'phase_toma_post_intel',
+                requiresAllFlags: ['toma_intel_shared'],
+                prompt: '"The canister is yours. Do something useful with it." She goes back to the supply inventory. "And if you come back bleeding, the station is available."',
+                choices: [{ text: '"Thank you, Toma."', grants: {} }],
+                repeatPrompt: 'Toma gives a precise nod and returns to her inventory. She has done what she needed to do.',
+              },
+            ],
+          },
         ],
         collectibles: [{ id: 'shadow_town_credits', x: 22, y: 20, label: 'Pit Winnings', reward: 80 }],
         buildMap() {
@@ -2056,6 +2381,10 @@ const PLANETS = {
           carveRect(g, 14, 18, 20, 22, 'floor');
           // Door tiles
           pt(g, 1, 12, 'door');
+          // Observation deck entrance (south wall gap)
+          pt(g, 12, 6, 'floor');
+          // Pit arena north entrance (north wall gap)
+          pt(g, 12, 8, 'floor');
           return g;
         },
       },
@@ -2105,8 +2434,8 @@ const PLANETS = {
             requiresFlag: 'jon_confrontation_path_a_chosen',
             requiresNoneFlags: ['jon_status_dead'],
             description: 'The space between you and Jon Vane. Twelve years of operation about to end. You have both made your calculation.',
-            triggersMinigame: 'pit_fight',
-            minigameConfig: { opponentName: 'Jon Vane', opponentHp: 8, accent: '#C8A000' },
+            triggersMinigame: 'tactical_combat',
+            minigameConfig: { opponentProfile: 'jon_vane', flavorText: "Jon Vane draws the Merr-Sonn with the cortosis-inlaid grip — twelve years in operation ending in a penthouse overlooking the entire city. He looks almost relieved. 'Whoever walks out of this room just proved it.' The viewport is behind him. This is where it ends." },
             grantsFlag: 'jon_status_dead',
             grantsItem: 'weapon_vane_custom_blaster',
             grantsCodex: 'codex-penthouse' },
@@ -2392,7 +2721,7 @@ const PLANETS = {
             description: 'Moss-covered stone that does not match the architecture around it. Older. The Force does not speak here, but something resonates faintly under the weight of centuries. Whoever built this was speaking to something larger than themselves.',
             grantsItem: 'ancient_force_relic',
             grantsCodex: 'codex-jedi-ruins' },
-          { id: 'toxic_waste_terminal', x: 30, y: 10, once: false, label: 'Reclamation Facility Controls', iconKind: 'panel',
+          { id: 'toxic_waste_terminal', x: 30, y: 7, once: false, label: 'Reclamation Facility Controls', iconKind: 'panel',
             triggersMinigame: 'valve_override',
             grantsFlag: 'waste_reclamation_diverted',
             description: 'Waste processing controls for the undercity reclamation facility. The overflow valve is stuck open. Someone locked it intentionally.' },
@@ -2486,6 +2815,14 @@ const PLANETS = {
           carveRect(g, 22, 1, 38, 10, 'wall'); carveRect(g, 23, 2, 37, 9, 'floor');
           carveRect(g, 12, 14, 30, 22, 'wall'); carveRect(g, 13, 15, 29, 21, 'floor');
           pt(g, 1, 12, 'door'); pt(g, 20, 23, 'door');
+          // NW building south entrance
+          pt(g, 8, 10, 'floor');
+          // NE building south entrance
+          pt(g, 28, 10, 'floor');
+          // South building north entrance
+          pt(g, 20, 14, 'floor');
+          // South building south passage connecting to AirTaxi door
+          pt(g, 20, 22, 'floor');
           return g;
         },
       },
@@ -2878,6 +3215,122 @@ function NpcPortrait({ kind, accent }) {
       </svg>
     );
   }
+  if (kind === 'pit_fighter') {
+    const skin = '#C89066', skinDark = '#A07050', scar = '#8A4A38', wrap = '#4A3828', pants = '#3A2E24', boots = '#241E18';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M9 42 L10 32 L14 32 L13.5 42 Z" fill={boots} />
+        <path d="M15 42 L14.5 32 L18 32 L19 42 Z" fill={boots} />
+        <path d="M9 32 L10 22 L14 22 L14 32 Z" fill={pants} />
+        <path d="M14 32 L14 22 L18 22 L19 32 Z" fill={pants} />
+        <path d="M7 22 C5 20 4 15 6 13 L10 13 L10 22 L7 22 Z" fill={skin} />
+        <path d="M23 22 C25 20 26 15 24 13 L20 13 L20 22 L23 22 Z" fill={skin} />
+        <path d="M10 22 L20 22 L20 13 L10 13 Z" fill={skin} />
+        <path d="M12 15 Q15 16.5 18 15" stroke={skinDark} strokeWidth="0.7" fill="none" opacity="0.5" />
+        <line x1="15" y1="16.5" x2="15" y2="22" stroke={skinDark} strokeWidth="0.5" opacity="0.4" />
+        <path d="M5 16 C3 16.5 3 19 5.5 20" stroke={wrap} strokeWidth="2.2" fill="none" strokeLinecap="round" />
+        <path d="M25 16 C27 16.5 27 19 24.5 20" stroke={wrap} strokeWidth="2.2" fill="none" strokeLinecap="round" />
+        <rect x="9" y="21.5" width="12" height="1.8" fill={boots} opacity="0.9" />
+        <rect x="12.5" y="21.5" width="5" height="1.8" fill="#584030" opacity="0.6" />
+        <ellipse cx="15" cy="9" rx="4.8" ry="5.2" fill={skin} />
+        <path d="M10.5 6.5 C10.5 3.5 12 2 15 2 C18 2 19.5 3.5 19.5 6.5 Z" fill="#1A1410" />
+        <path d="M11 8 L13.5 10 L12.8 11.5" stroke={scar} strokeWidth="0.9" fill="none" opacity="0.9" />
+        <circle cx="12.8" cy="9.2" r="0.65" fill="#2A2320" />
+        <circle cx="17.2" cy="9.2" r="0.65" fill="#2A2320" />
+        <ellipse cx="12.8" cy="9.2" rx="0.95" ry="0.72" fill={skin} style={{ animation: 'npc-blink 4.8s ease-in-out infinite' }} />
+        <ellipse cx="17.2" cy="9.2" rx="0.95" ry="0.72" fill={skin} style={{ animation: 'npc-blink 4.8s ease-in-out infinite' }} />
+        <path d="M13.2 11.5 L16.8 11.5" stroke={skinDark} strokeWidth="0.5" fill="none" opacity="0.7" />
+        <rect x="9" y="21" width="12" height="1.5" fill={accent} opacity="0.25" />
+      </svg>
+    );
+  }
+  if (kind === 'medic') {
+    const skin = '#8AB0C0', skinDark = '#5A8090', coat = '#3A5A3A', coatLight = '#4A7248', lekku = '#6A9090';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M8 42 L9 26 L21 26 L22 42 Z" fill={coat} />
+        <path d="M9 26 L21 26 L20 14 L10 14 Z" fill={coatLight} />
+        <path d="M9 26 C6 26 5 22 7 18 L10 18 L9 26 Z" fill={coat} />
+        <path d="M21 26 C24 26 25 22 23 18 L20 18 L21 26 Z" fill={coat} />
+        <path d="M11 14 L15 19 L19 14" fill={coatLight} opacity="0.45" />
+        <g style={{ transformBox: 'fill-box', transformOrigin: '100% 0%', animation: 'lekku-sway-l 3.5s ease-in-out infinite' }}>
+          <path d="M11 14 C8 20 7 28 9 35" stroke={lekku} strokeWidth="2.8" fill="none" strokeLinecap="round" />
+        </g>
+        <g style={{ transformBox: 'fill-box', transformOrigin: '0% 0%', animation: 'lekku-sway-r 4s ease-in-out infinite 0.5s' }}>
+          <path d="M19 14 C22 20 23 28 21 35" stroke={lekku} strokeWidth="2.8" fill="none" strokeLinecap="round" />
+        </g>
+        <rect x="20" y="20" width="3" height="5.5" rx="1" fill="#7A8A9A" />
+        <circle cx="21.5" cy="21.2" r="0.9" fill={accent} opacity="0.85" style={{ animation: 'lens-flicker 1.8s ease-in-out infinite' }} />
+        <ellipse cx="15" cy="9.5" rx="5" ry="5.5" fill={skin} />
+        <path d="M10 7 C10 4 12 2 15 2 C18 2 20 4 20 7 Z" fill={lekku} />
+        <circle cx="12.8" cy="9.5" r="0.6" fill="#1A1A2A" />
+        <circle cx="17.2" cy="9.5" r="0.6" fill="#1A1A2A" />
+        <ellipse cx="12.8" cy="9.5" rx="0.9" ry="0.7" fill={skin} style={{ animation: 'npc-blink 5s ease-in-out infinite' }} />
+        <ellipse cx="17.2" cy="9.5" rx="0.9" ry="0.7" fill={skin} style={{ animation: 'npc-blink 5s ease-in-out infinite' }} />
+        <path d="M13.2 12 Q15 12.8 16.8 12" stroke={skinDark} strokeWidth="0.5" fill="none" />
+        <rect x="13.5" y="23.5" width="3" height="1.2" fill={accent} opacity="0.55" />
+        <rect x="14.5" y="22.5" width="1" height="3.2" fill={accent} opacity="0.55" />
+        <rect x="9" y="25.5" width="12" height="1.5" fill={coatLight} opacity="0.5" />
+      </svg>
+    );
+  }
+  if (kind === 'senator') {
+    const skin = '#D4C890', skinDark = '#B0A870', robe = '#2A1A4A', robeTrim = '#8A6AAA', robeLight = '#3A2A5C';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M6 42 L8 24 L22 24 L24 42 Z" fill={robe} />
+        <path d="M9 24 L21 24 L19 12 L11 12 Z" fill={robeLight} />
+        <path d="M9 24 C5 24 4 18 7 13 L10 14 L9 24 Z" fill={robe} />
+        <path d="M21 24 C25 24 26 18 23 13 L20 14 L21 24 Z" fill={robe} />
+        <circle cx="15" cy="18" r="2.2" fill="none" stroke={robeTrim} strokeWidth="0.9" opacity="0.65" />
+        <circle cx="15" cy="18" r="0.9" fill={robeTrim} opacity="0.55" />
+        <rect x="9" y="23.5" width="12" height="1.5" fill={robeTrim} opacity="0.45" />
+        <ellipse cx="15" cy="6.5" rx="4.5" ry="7" fill={skin} />
+        <ellipse cx="15" cy="2.5" rx="3.2" ry="2" fill={skinDark} opacity="0.28" />
+        <ellipse cx="12.5" cy="8.5" rx="1.2" ry="0.9" fill="#1A1A1A" />
+        <ellipse cx="17.5" cy="8.5" rx="1.2" ry="0.9" fill="#1A1A1A" />
+        <circle cx="12.8" cy="8.4" r="0.4" fill="#5A4A00" opacity="0.75" />
+        <circle cx="17.8" cy="8.4" r="0.4" fill="#5A4A00" opacity="0.75" />
+        <ellipse cx="12.5" cy="8.5" rx="1.3" ry="1" fill={skin} style={{ animation: 'npc-blink 6s ease-in-out infinite' }} />
+        <ellipse cx="17.5" cy="8.5" rx="1.3" ry="1" fill={skin} style={{ animation: 'npc-blink 6s ease-in-out infinite' }} />
+        <path d="M14.5 10.8 L15.5 10.8 L15 11.8 Z" fill={skinDark} opacity="0.45" />
+        <path d="M13.5 12.5 L16.5 12.5" stroke={skinDark} strokeWidth="0.6" fill="none" />
+        <rect x="3.5" y="18" width="2.5" height="4.5" rx="0.5" fill="#1A1A2A" />
+        <rect x="3.8" y="18.5" width="2" height="3.5" fill={accent} opacity="0.28" />
+      </svg>
+    );
+  }
+  if (kind === 'archivist') {
+    const skin = '#C4A882', skinDark = '#A08864', robe = '#2A3A4A', robeLight = '#364A5A', hair = '#8A8888';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 26 L21 26 L23 42 Z" fill={robe} />
+        <path d="M9 26 L21 26 L20 14 L10 14 Z" fill={robeLight} />
+        <path d="M9 26 C6 26 5 22 7 18 L10 18 L9 26 Z" fill={robe} />
+        <path d="M21 26 C24 26 25 22 23 18 L20 18 L21 26 Z" fill={robe} />
+        <rect x="12" y="17" width="6" height="4.5" rx="0.5" fill={accent} opacity="0.28" />
+        <line x1="13" y1="18.5" x2="17" y2="18.5" stroke={accent} strokeWidth="0.55" opacity="0.55" />
+        <line x1="13" y1="19.8" x2="17" y2="19.8" stroke={accent} strokeWidth="0.55" opacity="0.35" />
+        <rect x="9" y="25.5" width="12" height="1.5" fill={robeLight} opacity="0.55" />
+        <ellipse cx="15" cy="9.5" rx="4.8" ry="5.2" fill={skin} />
+        <path d="M10.5 7 C10.5 3.5 12.2 2 15 2 C17.8 2 19.5 3.5 19.5 7 Z" fill={hair} />
+        <path d="M10.5 7 C9 8 9 12 10.5 12" stroke={hair} strokeWidth="1.8" fill="none" />
+        <path d="M19.5 7 C21 8 21 12 19.5 12" stroke={hair} strokeWidth="1.8" fill="none" />
+        <line x1="11" y1="10" x2="12.8" y2="10" stroke={skinDark} strokeWidth="0.4" opacity="0.28" />
+        <line x1="17.2" y1="10" x2="19" y2="10" stroke={skinDark} strokeWidth="0.4" opacity="0.28" />
+        <circle cx="12.8" cy="9.5" r="1.5" fill="none" stroke={accent} strokeWidth="0.55" opacity="0.65" />
+        <circle cx="17.2" cy="9.5" r="1.5" fill="none" stroke={accent} strokeWidth="0.55" opacity="0.65" />
+        <line x1="14.3" y1="9.5" x2="15.7" y2="9.5" stroke={accent} strokeWidth="0.55" opacity="0.45" />
+        <circle cx="12.8" cy="9.5" r="0.6" fill="#2A2320" />
+        <circle cx="17.2" cy="9.5" r="0.6" fill="#2A2320" />
+        <ellipse cx="12.8" cy="9.5" rx="0.85" ry="0.65" fill={skin} style={{ animation: 'npc-blink 5.5s ease-in-out infinite' }} />
+        <ellipse cx="17.2" cy="9.5" rx="0.85" ry="0.65" fill={skin} style={{ animation: 'npc-blink 5.5s ease-in-out infinite' }} />
+        <path d="M13.5 12 Q15 12.8 16.5 12" stroke={skinDark} strokeWidth="0.5" fill="none" />
+        <rect x="3.5" y="18" width="3" height="5" rx="0.5" fill="#101820" />
+        <rect x="3.9" y="18.5" width="2.2" height="4" fill={accent} opacity="0.22" />
+      </svg>
+    );
+  }
   return null;
 }
 
@@ -3254,6 +3707,9 @@ const ITEMS = {
   crafted_blaster_pistol:    { id:'crafted_blaster_pistol',     name:'Fabricated Blaster Pistol',             type:'weapon',     iconKind:'gear',     value:800,  description:'A custom DL-44 variant assembled at the arms bench. Untraceable, slightly unstable, and worth considerably more than its components.' },
   crafted_carbine:           { id:'crafted_carbine',            name:'Fabricated Carbine',                    type:'weapon',     iconKind:'gear',     value:1200, description:'An illegal Czerka-pattern carbine assembled from stolen components. The receiver has been filed smooth.' },
   crafted_thermal_det:       { id:'crafted_thermal_det',        name:'Fabricated Thermal Detonator',          type:'supply',     iconKind:'supply',   value:1500, description:'Custom-fabricated from military components. The detonator circuit is non-standard.' },
+  senate_bribe_chip:         { id:'senate_bribe_chip',          name:'Senate Undersecretary Credit Chip',      type:'quest',      iconKind:'keycard',  value:50000, description:"Fifty thousand credits on a plain chip. Meln set it on the desk without looking at you when he did it. He has been doing this for a very long time." },
+  senate_retention_key:      { id:'senate_retention_key',       name:'Archive Retention Key',                  type:'quest',      iconKind:'keycard',  value:0,     description:"A physical data key predating the Commerce Authority archive hold. Dax has been carrying it for thirty-one years. He handed it over without ceremony. That was the point." },
+  precinct42_access_log:     { id:'precinct42_access_log',      name:'Precinct 42 Access Log (Sealed)',         type:'quest',      iconKind:'datapad',  value:0,     description:"A sealed CSF internal review canister. The identifier reads: LEVEL 1313 ACCESS LOG, YEAR 11. A dead officer was carrying it under his vest in Shadow Town. Someone wanted this information to disappear." },
 
 };
 
@@ -3414,6 +3870,15 @@ const CODEX_ENTRIES = {
       "Jon's enforcer Malak holds court in the corner table of the arena observation deck. He is not there to watch the fights. He is there because everyone who comes to him comes through the arena floor, and the arena floor makes everyone uncomfortable.",
     ],
   },
+  'codex-senate-precinct': {
+    id:'codex-senate-precinct', title:'Senate Precinct L.1900: The Oversight Engine', category:'lore',
+    summary:'Upper-level Senate district where the Bay 14 exemption chain originates.',
+    body:[
+      'Senate Precinct L.1900 operates at an altitude where the air smells like recycled marble and the security response time is under three minutes. It houses the Commerce Authority subcommittee offices, four archive vaults, and the access terminals for a standing oversight apparatus that has been rubber-stamping the Bay 14 cargo exemption for thirty consecutive years.',
+      'The precinct archivist, a human named Dax, has been quietly cataloguing discrepancies in the purge records since Year 11 of the current legislative cycle. He has never filed a formal complaint. He has kept physical copies of everything.',
+      'Deputy Chair Torvenn Wald authorised the original Level 1313 archive purge thirty-one years ago. His name appears on the consciousness transfer protocol that created Echo-7. He is currently the most senior official of the Commerce Authority with a standing security clearance above Level 1500. He has attended three committee hearings on Bay 14 irregularities in the last fiscal year. He chaired two of them.',
+    ],
+  },
   'codex-penthouse': {
     id:'codex-penthouse', title:'The Sky-Market Penthouse', category:'lore',
     summary:"Jon's operational headquarters above Level 1450. Floor-to-ceiling transparisteel over the city.",
@@ -3488,6 +3953,57 @@ const CODEX_ENTRIES = {
   },
 };
 
+// ── Debug Stage-Jump Cheat Codes ─────────────────────────────────────────────
+// Toggle the panel with backtick (`). Jump to a stage with 1–9.
+// Shift+C injects 5000 credits. Shift+Z resets all flags.
+const DEBUG_STAGES = [
+  {
+    key: '1', label: 'Fresh Start',
+    zone: 'spaceport', pos: { x: 14, y: 10 }, credits: 340,
+    flags: {},
+  },
+  {
+    key: '2', label: 'CSF Training Hub',
+    zone: 'csf_academy', pos: { x: 4, y: 8 }, credits: 500,
+    flags: { republic_path_open: true, speeder_transit_unlocked: true },
+  },
+  {
+    key: '3', label: 'CSF Training Complete',
+    zone: 'sky_market', pos: { x: 4, y: 13 }, credits: 700,
+    flags: { speeder_transit_unlocked: true, republic_path_open: true, csf_briefed: true, csf_duty_stance: true, csf_training_complete: true, module_a_complete: true, module_b_complete: true, module_c_complete: true, vane_record_commend: true, jaxxon_arrested: true, marlo_sky_talked: true },
+  },
+  {
+    key: '4', label: 'Senate Arc Complete',
+    zone: 'sky_market', pos: { x: 4, y: 13 }, credits: 900,
+    flags: { speeder_transit_unlocked: true, republic_path_open: true, csf_briefed: true, csf_duty_stance: true, csf_training_complete: true, module_a_complete: true, module_b_complete: true, module_c_complete: true, jaxxon_arrested: true, marlo_sky_talked: true, credit_trail_found: true, senate_line_secured: true, vex_sabacc_offered: true, echo7_found: true, vane_record_commend: true },
+  },
+  {
+    key: '5', label: 'Inheritance Arc — Level 1312',
+    zone: 'shadow_town', pos: { x: 4, y: 12 }, credits: 1200,
+    flags: { speeder_transit_unlocked: true, republic_path_open: true, csf_training_complete: true, module_a_complete: true, module_b_complete: true, module_c_complete: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, jon_apartment_visited: true, marlo_sky_talked: true, credit_trail_found: true },
+  },
+  {
+    key: '6', label: 'Malak Resolved',
+    zone: 'shadow_town', pos: { x: 4, y: 12 }, credits: 1500,
+    flags: { speeder_transit_unlocked: true, republic_path_open: true, csf_training_complete: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_pit_challenged: true, malak_turned: true, inside_man_path: true },
+  },
+  {
+    key: '7', label: 'Vault Approach Ready',
+    zone: 'penthouse', pos: { x: 14, y: 10 }, credits: 2000,
+    flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, echo7_vault_approach_active: true, vault_approach_active: true, csf_training_complete: true },
+  },
+  {
+    key: '8', label: 'Vault Heist Complete',
+    zone: 'penthouse', pos: { x: 14, y: 10 }, credits: 3000,
+    flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, vault_heist_complete: true, rook_eliminated: true, inside_man_path: true, csf_training_complete: true },
+  },
+  {
+    key: '9', label: 'Full Endgame — Syndicate Founded',
+    zone: 'penthouse', pos: { x: 14, y: 10 }, credits: 8000,
+    flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, vault_heist_complete: true, rook_eliminated: true, jon_confrontation_path_a_chosen: true, jon_status_dead: true, syndicateManagement_active: true, syndicate_1313_founded: true, trait_crime_lord: true, grix_recruited: true, vael_recruited: true, marro_recruited: true, anzati_contracted: true, black_sun_allied: true, sith_contact: true, csf_training_complete: true },
+  },
+];
+
 const SPEEDER_DESTINATIONS = [
   { id: 'spaceport',         name: 'Sub-Surface Spaceport',       level: 'Sub-Surface L2',        cost: 0,   requiredFlag: null,                       targetZone: 'spaceport',         targetPos: { x: 14, y: 10 } },
   { id: 'market',            name: 'West Market District',         level: 'Sub-Surface L2',        cost: 0,   requiredFlag: null,                       targetZone: 'market',            targetPos: { x: 2,  y: 10 } },
@@ -3496,6 +4012,7 @@ const SPEEDER_DESTINATIONS = [
   { id: 'the_works',         name: 'The Works L.005',              level: 'Undercity',             cost: 75,  requiredFlag: 'speeder_transit_unlocked', targetZone: 'the_works',         targetPos: { x: 2,  y: 12 } },
   { id: 'csf_academy',       name: 'CSF Training Hub L.1222',      level: 'Republic Mid-Levels',   cost: 0,   requiredFlag: 'republic_path_open',       targetZone: 'csf_academy',       targetPos: { x: 2,  y: 15 } },
   { id: 'lower_sky_market',  name: 'Lower Promenade L.1100',       level: 'Lower Mid-Levels',      cost: 0,   requiredFlag: 'marlo_sky_talked',         targetZone: 'lower_sky_market',  targetPos: { x: 2,  y: 13 } },
+  { id: 'shadow_town',       name: 'Shadow Town L.1312',           level: 'Lower Mid-Levels',      cost: 30,  requiredFlag: 'inheritance_active',       targetZone: 'shadow_town',       targetPos: { x: 3,  y: 12 } },
   { id: 'senate_district',   name: 'Senate Precinct L.1900',       level: 'Upper Levels',          cost: 100, requiredFlag: 'rook_eliminated',          targetZone: 'senate_district',   targetPos: { x: 2,  y: 16 } },
   { id: 'slicer_alleyway',   name: 'Slicer Alleyway L.1150',       level: 'Lower Mid-Levels',      cost: 0,   requiredFlag: 'echo7_found',              targetZone: 'slicer_alleyway',   targetPos: { x: 2,  y: 10 } },
   { id: 'senatorial_lounges', name: 'Senatorial Sky-Lounges L.5100', level: 'Senate District',       cost: 150, requiredFlag: 'syndicateManagement_active', targetZone: 'senatorial_lounges', targetPos: { x: 16, y: 18 } },
@@ -7562,6 +8079,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
           ctx.fillStyle = 'rgba(70,110,70,0.22)'; ctx.fillRect(px, py, CELL, CELL);
           ctx.fillStyle = 'rgba(90,160,90,0.55)';
           ctx.font = Math.round(CELL * 0.52) + 'px monospace';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
           ctx.fillText('≈', px + CELL / 2, py + CELL / 2);
           ctx.textBaseline = 'alphabetic';
         }
@@ -7577,6 +8095,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
         ctx.strokeStyle = '#C8A000'; ctx.lineWidth = 2; ctx.stroke();
         ctx.fillStyle = '#C8A000';
         ctx.font = Math.round(CELL * 0.42) + 'px monospace';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText('⚡', px, py); ctx.textBaseline = 'alphabetic';
       } else if (obj.type === 'turret') {
         ctx.beginPath(); ctx.arc(px, py, rad, 0, Math.PI * 2);
@@ -7584,6 +8103,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
         ctx.strokeStyle = obj.hacked ? '#4A9FFF' : '#22C55E'; ctx.lineWidth = 2; ctx.stroke();
         ctx.fillStyle = obj.hacked ? '#4A9FFF' : '#22C55E';
         ctx.font = Math.round(CELL * 0.42) + 'px monospace';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText(obj.hacked ? '★' : '⊙', px, py); ctx.textBaseline = 'alphabetic';
       } else if (obj.type === 'steam') {
         ctx.beginPath(); ctx.arc(px, py, rad, 0, Math.PI * 2);
@@ -7591,8 +8111,8 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
         ctx.strokeStyle = '#4A7A4A'; ctx.lineWidth = 1.5; ctx.stroke();
         ctx.fillStyle = '#7AAA7A';
         ctx.font = Math.round(CELL * 0.42) + 'px monospace';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText('≈', px, py); ctx.textBaseline = 'alphabetic';
-      }
       } else if (obj.type === 'neon_sign') {
         const nsColors = ['#FF40CC','#00CCFF','#FF8C00','#40FF80'];
         const nsC = nsColors[obj.colorIdx || 0];
@@ -7619,6 +8139,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
         ctx.globalAlpha = 1.0;
         ctx.fillStyle = '#8ACFFF'; ctx.font = Math.round(CELL * 0.34) + 'px monospace';
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('⚡', px, py); ctx.textBaseline = 'alphabetic';
+      }
     });
     var drawF = function(row, col, isP, ow, blind) {
       var fpx = col * CELL + CELL / 2, fpy = row * CELL + CELL / 2;
@@ -7875,9 +8396,16 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
     addLog('Recruited ' + ut.name + '.');
   };
 
+  const isAttackable = (sectorId) => {
+    const sec = sectors[sectorId];
+    if (!sec || sec.owner === 'player') return false;
+    return Object.values(sectors).some(s => s.owner === 'player' && s.adj.indexOf(sectorId) !== -1);
+  };
+
   const attackSector = (sectorId) => {
     const sec = sectors[sectorId];
     if (!sec || sec.owner === 'player') return;
+    if (!isAttackable(sectorId)) { addLog('Cannot attack ' + sec.name + ' — no adjacent friendly territory borders it.'); return; }
     if (stagPow() < 1) { addLog('Stage an army in the Military tab before attacking!'); return; }
     setBattle({ sectorId, fk: sec.owner, flavor: 'Storming ' + sec.name + ' — ' + CONQUEST_FACTION_DATA[sec.owner].name + ' defends!' });
   };
@@ -8118,9 +8646,13 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
               </div>
               <div style={{ color: '#555', fontSize: '0.5rem', marginBottom: 10 }}>Infantry: {sec.gar.inf} | Snipers: {sec.gar.snp} | Tanks: {sec.gar.tnk}{sec.bld.length > 0 ? ' | Structures: ' + sec.bld.length : ''}</div>
               {sec.owner !== 'player' ? (
-                <button onClick={() => attackSector(sec.id)} style={{ width: '100%', padding: '8px 0', background: '#180808', color: '#FF5060', border: '1px solid #C03030', cursor: 'pointer', fontSize: '0.6rem', fontWeight: 'bold', letterSpacing: '0.08em' }}>
-                  LAUNCH INVASION — Strike Force: {stagPow()} CP vs Defense: {Math.floor(sec.def / 100 * garPow(sec.gar))} CP
-                </button>
+                isAttackable(sec.id) ? (
+                  <button onClick={() => attackSector(sec.id)} style={{ width: '100%', padding: '8px 0', background: '#180808', color: '#FF5060', border: '1px solid #C03030', cursor: 'pointer', fontSize: '0.6rem', fontWeight: 'bold', letterSpacing: '0.08em' }}>
+                    LAUNCH INVASION — Strike Force: {stagPow()} CP vs Defense: {Math.floor(sec.def / 100 * garPow(sec.gar))} CP
+                  </button>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '6px 0', background: '#0A0A0A', border: '1px solid #1A1A2A', color: '#444', fontSize: '0.5rem' }}>NOT REACHABLE — Capture an adjacent sector first</div>
+                )
               ) : (
                 <div style={{ textAlign: 'center', padding: '6px 0', background: '#001A0A', border: '1px solid #22C55E33', color: '#22C55E', fontSize: '0.5rem' }}>FRIENDLY TERRITORY — Syndicate Control Active</div>
               )}
@@ -8381,6 +8913,7 @@ function TerminalSlicingOverlay({ onSuccess, onFailure, difficulty }) {
       ctx.strokeStyle = isLast ? '#00FF80' : n.type === 'exit' ? '#22C55E' : n.type === 'entry' ? '#4A9FFF' : inPath ? '#00C060' : '#0A3020';
       ctx.lineWidth = isLast ? 2.5 : 1.5; ctx.stroke();
       ctx.fillStyle = n.type === 'entry' ? '#4A9FFF' : n.type === 'exit' ? '#22C55E' : inPath ? '#00FF80' : '#1A6040';
+      ctx.font = '11px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(n.type === 'entry' ? 'IN' : n.type === 'exit' ? 'OUT' : n.id.toString(16).toUpperCase().padStart(2, '0'), n.x, n.y);
       ctx.textBaseline = 'alphabetic';
     });
@@ -8793,6 +9326,7 @@ function StarWarsRPG() {
   const [syndicateActiveContracts, setSyndicateActiveContracts] = useState([]);
   const [syndicateHeat, setSyndicateHeat] = useState(0);
   const [syndicateTerritories, setSyndicateTerritories] = useState([]);
+  const [showDebug, setShowDebug] = useState(false);
   const posRef = React.useRef(pos);
   const questFlagsRef = React.useRef(questFlags);
 
@@ -8818,13 +9352,14 @@ function StarWarsRPG() {
     if ((questFlags.malak_turned || questFlags.malak_dead) && !questFlags.reya_loyal && !questFlags.reya_blackmailed && !questFlags.reya_warrant_mission_active) return '[INHERITANCE] Speak with Reya in Shadow Town. She has a condition.';
     if (questFlags.reya_warrant_mission_active && !questFlags.reya_warrant_cleared) return '[INHERITANCE] Slice Precinct 42 at the CSF Academy and clear Reya\'s warrant.';
     if ((questFlags.cargo_skimmed || questFlags.cargo_delivered_full) && !questFlags.malak_turned && !questFlags.malak_dead) return '[INHERITANCE] Find Malak at Shadow Town, Level 1312. Turn him or remove him.';
-    if (questFlags.inheritance_active && !questFlags.cargo_skimmed && !questFlags.cargo_delivered_full) return '[INHERITANCE] Retrieve the Bay 14 weapons cache and bring the manifest back to Jon.';
+    if (questFlags.inheritance_active && !questFlags.cargo_skimmed && !questFlags.cargo_delivered_full) return '[INHERITANCE] Go to Shadow Town, Level 1312 (The Pits). Find the skimmed arms cache in the northeast alcove and bring the manifest back to Jon.';
     if (questFlags.senate_line_secured && !questFlags.inheritance_active) return 'Jon has a new proposition. Return to his apartment.';
     if (questFlags.bomb_reached) return 'Neutralize the weapon on the Senate transit line.';
     if (questFlags.sector4_raid_complete && !questFlags.jon_endgame_known) return 'Debrief Jon on the raid. He has intel on the Senate connection you need.';
     if (questFlags.sector4_raid_complete) return 'Pursue the Iron Syndicate to Level 005. Find Vex.';
     if (questFlags.csf_briefed && !questFlags.jon_confrontation_done) return 'Jon needs to see your CSF badge. Return to his apartment now.';
-    if (questFlags.csf_training_complete) return 'Report to Vane at Sector 4 Freight Hub.';
+    if (questFlags.csf_training_complete && questFlags.freight_hub_investigated) return 'Return to Vane at CSF Academy. Report your Bay 14 findings.';
+    if (questFlags.csf_training_complete) return 'Report to Vane at Sector 4 Freight Hub. Investigate Bay 14.';
     if (questFlags.csf_briefed) return 'Complete all three training modules at the CSF Academy.';
     if ((questFlags.marlo_sky_talked || questFlags.vane_sky_cooperated) && !questFlags.jon_sky_market_debriefed) return 'Check in with Jon. He will want to know which side you picked at the Sky-Market.';
     if (questFlags.republic_path_open) return 'Travel to CSF Tactical Command, Level 1222.';
@@ -9021,6 +9556,14 @@ function StarWarsRPG() {
 
   useEffect(() => {
     const handleKey = (e) => {
+      if (e.key === '`') { setShowDebug(v => !v); return; }
+      if (showDebug) {
+        const stage = DEBUG_STAGES.find(s => s.key === e.key);
+        if (stage) { setQuestFlags(stage.flags); setCredits(stage.credits); travelToZone(stage.zone, stage.pos); setShowDebug(false); return; }
+        if (e.key === 'C' && e.shiftKey) { setCredits(c => c + 5000); setShowDebug(false); return; }
+        if (e.key === 'Z' && e.shiftKey) { setQuestFlags({}); setShowDebug(false); return; }
+        setShowDebug(false); return;
+      }
       if (showTravel || activeDialogue || transitioning || showSpeeder || showInventory || showCodex || activeMinigame || showVendor) return;
       if (e.key === 'i' || e.key === 'I') { setShowInventory(v => !v); return; }
       if (e.key === 'c' || e.key === 'C') { setShowCodex(v => !v); return; }
@@ -9103,12 +9646,14 @@ function StarWarsRPG() {
             pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId);
           }
           if (worldObjHere.triggersMinigame && !completedInteractions.has(worldObjHere.id)) {
-            const successCb = () => {
+            const successCb = (loot) => {
               if (worldObjHere.grantsFlag) setFlag(worldObjHere.grantsFlag);
               if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) { addItem(ITEMS[worldObjHere.grantsItem]); pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId); }
               if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
               if (worldObjHere.once) setCompletedInteractions(prev => new Set([...prev, worldObjHere.id]));
-              pushActionLog(`[${worldObjHere.label}] Override successful.`, zoneId);
+              if (loot && loot.credits) { setCredits(c => c + loot.credits); pushActionLog(`+${loot.credits} credits recovered from the engagement.`, zoneId); }
+              if (loot && loot.item) { addItem(loot.item); pushActionLog(`Salvaged: ${loot.item.name}`, zoneId); }
+              pushActionLog(`[${worldObjHere.label}] Engagement concluded.`, zoneId);
               setActiveMinigame(null);
             };
             const failCb = () => {
@@ -9133,6 +9678,32 @@ function StarWarsRPG() {
         setCollectedItems((prev) => new Set([...prev, collectible.id]));
         if (collectible.grantsItem && ITEMS[collectible.grantsItem]) { addItem(ITEMS[collectible.grantsItem]); pushActionLog(`${collectible.label}. Acquired: ${ITEMS[collectible.grantsItem].name}`, zoneId); }
         else pushActionLog(`${collectible.label}.${collectible.reward > 0 ? ` (+${collectible.reward} credits)` : ''}`, zoneId);
+      }
+
+      const _ePool = ENCOUNTER_TABLE[zoneId];
+      if (_ePool && !questFlags[`enc_cd_${zoneId}`] && !activeMinigame) {
+        const _hBonus = Math.floor((syndicateHeat || 0) * 0.4);
+        const _baseRate = ENCOUNTER_RATES[zoneId] || 15;
+        if (Math.random() * 100 < (_baseRate + _hBonus)) {
+          const _pKey = _ePool[Math.floor(Math.random() * _ePool.length)];
+          const _flavor = getEncounterFlavor(zoneId, _pKey);
+          setFlag(`enc_cd_${zoneId}`);
+          setActiveMinigame({
+            type: 'tactical_combat',
+            opponentProfile: _pKey,
+            flavorText: _flavor,
+            onSuccess: (loot) => {
+              const _cr = loot ? loot.credits : 100;
+              pushActionLog(`You held the field. +${_cr} credits recovered.`, zoneId);
+              setCredits(c => c + _cr);
+              if (loot && loot.item) addItem(loot.item);
+              setActiveMinigame(null);
+            },
+            onFailure: () => { pushActionLog('You fell back under fire. CSF heat spikes.', zoneId); setSyndicateHeat(h => Math.min(100, h + 10)); setActiveMinigame(null); },
+          });
+          setPos({ x, y });
+          return;
+        }
       }
 
       setPos({ x, y });
