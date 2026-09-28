@@ -2074,6 +2074,11 @@ const PLANETS = {
             requiresFlag: 'syndicateManagement_active',
             description: 'A holographic tactical display showing your territories, active agents, and contract queue. The Iron Syndicate operational map, rendered in cold blue light over a relief projection of Coruscant sub-levels 800 through 1450.',
             triggersMinigame: 'syndicate_management' },
+          { id: 'conquest_table', x: 10, y: 10, once: false, iconKind: 'terminal', label: 'Sector Control Holo',
+            requiresFlag: 'syndicateManagement_active',
+            description: 'A secondary tactical display overlaying the five contested sectors of Coruscant mid-city. Garrison strength, income flows, defense ratings, and faction aggression indicators scroll in real time. From here you direct the long war: deploy units, build infrastructure, launch assaults, and respond to crisis events before they destabilize your hold.',
+            triggersMinigame: 'coruscant_conquest',
+            minigameConfig: { startCredits: 5000 } },
           { id: 'vault_terminal', x: 25, y: 4, once: true, iconKind: 'terminal', label: 'Credit Vault Terminal',
             requiresFlag: 'inheritance_active',
             requires: { item: 'vane_vault_keycard' },
@@ -4832,6 +4837,42 @@ function resolveDialoguePhase(npc, questFlags) {
   };
 }
 
+const CONQUEST_SECTORS_INIT = {
+  level_1313:       { id: 'level_1313',       name: 'Level 1313',       tier: 'Sub-Surface Slums',  owner: 'player',    cx: 180, cy: 310, adj: ['coco_town', 'the_works'],                                      income: 550,  pwr: 1, gar: { inf: 6,  snp: 0, tnk: 1 }, def: 65, bld: [] },
+  coco_town:        { id: 'coco_town',         name: 'CoCo Town',         tier: 'Commercial Hub',     owner: 'black_sun', cx: 420, cy: 140, adj: ['level_1313', 'the_works', 'senate_perimeter'],                  income: 400,  pwr: 0, gar: { inf: 12, snp: 4, tnk: 0 }, def: 48, bld: [] },
+  the_works:        { id: 'the_works',         name: 'The Works',         tier: 'Industrial Grid',    owner: 'exchange',  cx: 360, cy: 400, adj: ['level_1313', 'coco_town', 'senate_perimeter', 'freight_hub'],   income: 750,  pwr: 4, gar: { inf: 10, snp: 1, tnk: 2 }, def: 78, bld: [] },
+  senate_perimeter: { id: 'senate_perimeter',  name: 'Senate Perimeter',  tier: 'Upper World Core',   owner: 'csf',       cx: 620, cy: 260, adj: ['coco_town', 'the_works', 'freight_hub'],                       income: 1100, pwr: 0, gar: { inf: 20, snp: 6, tnk: 4 }, def: 95, bld: [] },
+  freight_hub:      { id: 'freight_hub',        name: 'Freight Hub',       tier: 'Commerce District',  owner: 'exchange',  cx: 560, cy: 400, adj: ['the_works', 'senate_perimeter'],                               income: 650,  pwr: 0, gar: { inf: 8,  snp: 2, tnk: 1 }, def: 60, bld: [] },
+};
+
+const CONQUEST_FACTION_DATA = {
+  player:    { name: 'Your Syndicate', color: '#00BFFF', aggr: 0,  aiProfile: 'syndicate_thug' },
+  black_sun: { name: 'The Black Sun',  color: '#FF5060', aggr: 85, aiProfile: 'black_sun_vigo_guard',   startRel: -20 },
+  exchange:  { name: 'The Exchange',   color: '#22C55E', aggr: 40, aiProfile: 'exchange_bounty_hunter', startRel: 25  },
+  csf:       { name: 'CSF',            color: '#4A9FFF', aggr: 60, aiProfile: 'csf_swat',               startRel: -70 },
+};
+
+const CONQUEST_UNIT_TYPES = {
+  inf: { name: 'Enforcer Infantry', costCR: 150,  costPWR: 0, upPWR: 0, cp: 10 },
+  snp: { name: 'Covert Marksman',   costCR: 350,  costPWR: 1, upPWR: 0, cp: 25 },
+  tnk: { name: 'Assault Tank',      costCR: 1200, costPWR: 5, upPWR: 2, cp: 75 },
+};
+
+const CONQUEST_BUILDINGS = [
+  { id: 'bunker',     name: 'Reinforced Bunker Gate', cost: 600,  costPWR: 2, defBonus: 25, incBonus: 0,   pwrBonus: 0 },
+  { id: 'turret',     name: 'Auto Turret Nest',       cost: 850,  costPWR: 4, defBonus: 40, incBonus: 0,   pwrBonus: 0 },
+  { id: 'relay',      name: 'Black Market Relay',     cost: 1200, costPWR: 1, defBonus: 0,  incBonus: 150, pwrBonus: 0 },
+  { id: 'substation', name: 'Power Sub-Station',      cost: 500,  costPWR: 0, defBonus: 0,  incBonus: 0,   pwrBonus: 3 },
+];
+
+const CONQUEST_CRISIS_CARDS = [
+  { id: 'sweep',  title: 'CSF Sector Sweep',         desc: 'Sectors above Heat 35 lose 60% income this turn. Enforcement surge.',  heatMin: 35, type: 'income_penalty'  },
+  { id: 'fault',  title: 'Power Conduit Rupture',    desc: 'Grid failure! Power reserve drops by 8 immediately.',                   heatMin: 0,  type: 'power_loss'       },
+  { id: 'war',    title: 'Underworld Cartel War',    desc: 'Factions clash. Unit procurement is 30% cheaper this turn.',            heatMin: 0,  type: 'recruit_discount' },
+  { id: 'surge',  title: 'Black Market Price Surge', desc: 'Demand spike! Smuggling contacts pay out +400 CR.',                    heatMin: 0,  type: 'credit_bonus'     },
+  { id: 'strafe', title: 'CSF Gunship Strafe',       desc: 'A player sector loses 20 defense for 2 turns. Heat +15.',               heatMin: 50, type: 'def_penalty'      },
+];
+
 function PitFightOverlay({ onSuccess, onFailure, opponentName, opponentHp, accent }) {
   const gameRef = React.useRef({ playerHp: 3, opponentHp: opponentHp, phase: 'ready', telegraph: null, tickCount: 0, running: true });
   const [display, setDisplay] = React.useState({ playerHp: 3, opponentHp: opponentHp, telegraph: null, message: 'The pit is watching. Press A (dodge), D (counter), or S (guard).', outcome: null });
@@ -5778,6 +5819,375 @@ function SkyLaneEvasionOverlay({ onSuccess, onFailure }) {
       )}
       <div style={{ maxWidth:400, textAlign:'center', color:'#AAA', fontSize:'0.82rem', lineHeight:1.6, marginBottom:'1rem' }}>{msg}</div>
       {done && <button onClick={success ? onSuccess : onFailure} style={{ background: success ? '#C8A000' : '#333', color: success ? '#000' : '#EEE', border:'none', padding:'0.4rem 1.2rem', cursor:'pointer', fontSize:'0.85rem' }}>{success ? 'Disappear into the city' : 'Accept Capture'}</button>}
+    </div>
+  );
+}
+
+function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
+  const initSectors = () => {
+    const s = {};
+    Object.keys(CONQUEST_SECTORS_INIT).forEach(k => {
+      const d = CONQUEST_SECTORS_INIT[k];
+      s[k] = { ...d, gar: { ...d.gar }, adj: [...d.adj], bld: [] };
+    });
+    return s;
+  };
+
+  const [sectors, setSectors] = React.useState(initSectors);
+  const [relations, setRelations] = React.useState({ black_sun: -20, exchange: 25, csf: -70 });
+  const [res, setRes] = React.useState({ cr: startCredits || 3000, pwr: 10 });
+  const [staging, setStaging] = React.useState({ inf: 2, snp: 0, tnk: 1 });
+  const [turn, setTurn] = React.useState(1);
+  const [heat, setHeat] = React.useState(30);
+  const [crisis, setCrisis] = React.useState(null);
+  const [selectedSec, setSelectedSec] = React.useState('level_1313');
+  const [tab, setTab] = React.useState('map');
+  const [battle, setBattle] = React.useState(null);
+  const [log, setLog] = React.useState(['Turn 1: Your syndicate controls Level 1313. Expand your territory.']);
+  const [discountActive, setDiscountActive] = React.useState(false);
+  const [defPenalty, setDefPenalty] = React.useState(null);
+
+  const garPow = (gar) => gar.inf * 10 + gar.snp * 25 + gar.tnk * 75;
+  const stagPow = () => staging.inf * 10 + staging.snp * 25 + staging.tnk * 75;
+  const addLog = (msg) => setLog(prev => [msg, ...prev.slice(0, 19)]);
+
+  const endTurn = () => {
+    const nextTurn = turn + 1;
+    setTurn(nextTurn);
+    const sSnap = sectors;
+    let income = 0, pwrGain = 0;
+    Object.values(sSnap).forEach(s => {
+      if (s.owner !== 'player') return;
+      let inc = s.income;
+      s.bld.forEach(bId => { const bd = CONQUEST_BUILDINGS.find(b => b.id === bId); if (bd) { inc += bd.incBonus; pwrGain += bd.pwrBonus; } });
+      income += inc;
+      pwrGain += s.pwr;
+    });
+    const upkeep = staging.tnk * CONQUEST_UNIT_TYPES.tnk.upPWR;
+    let routeIncome = 0;
+    [{ profit: 320, risk: 15, label: 'Level 1313 to CoCo Town' }, { profit: 580, risk: 40, label: 'The Works via Freight Hub' }].forEach(r => {
+      if (Math.random() * 100 > r.risk) routeIncome += r.profit;
+      else addLog('INTERCEPT: ' + r.label + ' cargo seized by CSF!');
+    });
+    let heatDelta = 2, pwrMod = 0, crMod = 0;
+    if (nextTurn % 2 === 0) {
+      const eligible = CONQUEST_CRISIS_CARDS.filter(c => heat >= c.heatMin);
+      if (eligible.length > 0) {
+        const nc = eligible[Math.floor(Math.random() * eligible.length)];
+        setCrisis(nc);
+        if (nc.type === 'power_loss')       { pwrMod -= 8; addLog('CRISIS: Power Conduit Rupture! -8 Power.'); }
+        if (nc.type === 'credit_bonus')     { crMod += 400; addLog('CRISIS: Black Market surge! +400 CR.'); }
+        if (nc.type === 'recruit_discount') { setDiscountActive(true); addLog('CRISIS: Cartel War! Units 30% cheaper this turn.'); }
+        if (nc.type === 'income_penalty' && heat >= 35) { income = Math.floor(income * 0.4); addLog('CRISIS: CSF Sector Sweep! Income cut 60%.'); }
+        if (nc.type === 'def_penalty') {
+          const ps = Object.keys(sSnap).filter(k => sSnap[k].owner === 'player');
+          if (ps.length > 0) {
+            const tid = ps[Math.floor(Math.random() * ps.length)];
+            setDefPenalty({ sectorId: tid, turns: 2 });
+            setSectors(prev => ({ ...prev, [tid]: { ...prev[tid], def: Math.max(10, prev[tid].def - 20) } }));
+            addLog('CRISIS: Gunship Strafe on ' + sSnap[tid].name + '! Defense -20 for 2 turns. Heat +15.');
+            heatDelta += 15;
+          }
+        }
+      } else { setCrisis(null); setDiscountActive(false); }
+    } else { setCrisis(null); setDiscountActive(false); }
+    if (defPenalty) {
+      if (defPenalty.turns <= 1) {
+        setSectors(prev => ({ ...prev, [defPenalty.sectorId]: { ...prev[defPenalty.sectorId], def: Math.min(100, prev[defPenalty.sectorId].def + 20) } }));
+        setDefPenalty(null);
+      } else { setDefPenalty(dp => dp ? { ...dp, turns: dp.turns - 1 } : null); }
+    }
+    ['black_sun', 'exchange', 'csf'].forEach(fk => {
+      const fData = CONQUEST_FACTION_DATA[fk];
+      if (Math.random() * 100 >= fData.aggr / 2) return;
+      const owned = Object.keys(sSnap).filter(k => sSnap[k].owner === fk);
+      if (owned.length === 0) return;
+      const attSec = sSnap[owned[Math.floor(Math.random() * owned.length)]];
+      const adjPlayer = attSec.adj.filter(a => sSnap[a] && sSnap[a].owner === 'player');
+      if (adjPlayer.length === 0) return;
+      const tid = adjPlayer[0];
+      const tgt = sSnap[tid];
+      const ap = garPow(attSec.gar) * (0.7 + Math.random() * 0.6);
+      const dp2 = (tgt.def / 100) * garPow(tgt.gar) * (0.7 + Math.random() * 0.6);
+      if (ap > dp2) {
+        setSectors(prev => ({ ...prev, [tid]: { ...prev[tid], owner: fk, gar: { inf: Math.max(1, Math.floor(attSec.gar.inf * 0.5)), snp: 0, tnk: 0 } } }));
+        addLog('ALERT: ' + fData.name + ' captured ' + tgt.name + '!');
+        heatDelta += 5;
+      } else { addLog(fData.name + ' attack on ' + tgt.name + ' was repelled.'); }
+    });
+    setRes(prev => ({ cr: Math.max(0, prev.cr + income + routeIncome + crMod), pwr: Math.max(0, prev.pwr + pwrGain - upkeep + pwrMod) }));
+    setHeat(h => Math.max(0, Math.min(100, h + heatDelta)));
+    addLog('Turn ' + nextTurn + ': Collected ' + (income + routeIncome) + ' CR. Power ' + (pwrGain - upkeep >= 0 ? '+' : '') + (pwrGain - upkeep) + '.');
+  };
+
+  const buyUnit = (type) => {
+    const ut = CONQUEST_UNIT_TYPES[type];
+    const costCR = discountActive ? Math.floor(ut.costCR * 0.7) : ut.costCR;
+    if (res.cr < costCR || res.pwr < ut.costPWR) { addLog('Insufficient resources for ' + ut.name + '.'); return; }
+    setRes(prev => ({ cr: prev.cr - costCR, pwr: prev.pwr - ut.costPWR }));
+    setStaging(prev => ({ ...prev, [type]: (prev[type] || 0) + 1 }));
+    addLog('Recruited ' + ut.name + '.');
+  };
+
+  const attackSector = (sectorId) => {
+    const sec = sectors[sectorId];
+    if (!sec || sec.owner === 'player') return;
+    if (stagPow() < 1) { addLog('Stage an army in the Military tab before attacking!'); return; }
+    setBattle({ sectorId, fk: sec.owner, flavor: 'Storming ' + sec.name + ' — ' + CONQUEST_FACTION_DATA[sec.owner].name + ' defends!' });
+  };
+
+  const onBattleWin = () => {
+    if (!battle) return;
+    const { sectorId, fk } = battle;
+    const capName = sectors[sectorId] ? sectors[sectorId].name : sectorId;
+    setSectors(prev => ({ ...prev, [sectorId]: { ...prev[sectorId], owner: 'player', gar: { inf: Math.floor(staging.inf * 0.6), snp: Math.floor(staging.snp * 0.7), tnk: staging.tnk } } }));
+    setRelations(prev => ({ ...prev, [fk]: Math.max(-100, (prev[fk] || 0) - 25) }));
+    setHeat(h => Math.min(100, h + 15));
+    setStaging({ inf: 0, snp: 0, tnk: 0 });
+    addLog('VICTORY: Captured ' + capName + '! ' + CONQUEST_FACTION_DATA[fk].name + ' relations -25. Heat +15.');
+    setBattle(null);
+    const allPlayer = Object.values(sectors).every(s => s.id === sectorId || s.owner === 'player');
+    if (allPlayer) onSuccess();
+  };
+
+  const onBattleRetreat = () => {
+    addLog('Forced retreat from ' + (battle && sectors[battle.sectorId] ? sectors[battle.sectorId].name : 'sector') + '.');
+    setBattle(null);
+  };
+
+  const buildStructure = (bld) => {
+    const sec = sectors[selectedSec];
+    if (!sec || sec.owner !== 'player') { addLog('Can only build in your own sectors.'); return; }
+    if (sec.bld.indexOf(bld.id) !== -1) { addLog(bld.name + ' already built in ' + sec.name + '.'); return; }
+    if (res.cr < bld.cost || res.pwr < bld.costPWR) { addLog('Insufficient resources for ' + bld.name + '.'); return; }
+    setRes(prev => ({ cr: prev.cr - bld.cost, pwr: prev.pwr - bld.costPWR }));
+    setSectors(prev => ({ ...prev, [selectedSec]: { ...prev[selectedSec], bld: [...prev[selectedSec].bld, bld.id], def: Math.min(100, prev[selectedSec].def + bld.defBonus) } }));
+    addLog('Constructed ' + bld.name + ' in ' + sec.name + '!');
+  };
+
+  if (battle) {
+    const fp = CONQUEST_FACTION_DATA[battle.fk];
+    return <TacticalGridCombatOverlay opponentProfile={fp ? fp.aiProfile : 'syndicate_thug'} flavorText={battle.flavor} onSuccess={onBattleWin} onFailure={onBattleRetreat} />;
+  }
+
+  const sec = sectors[selectedSec];
+  const OWNER_COLORS = { player: '#00BFFF', black_sun: '#FF5060', exchange: '#22C55E', csf: '#4A9FFF' };
+  const secOwnerColor = (sec && OWNER_COLORS[sec.owner]) || '#888';
+  const playerSectors = Object.values(sectors).filter(s => s.owner === 'player');
+  const totalIncome = playerSectors.reduce((a, s) => {
+    let inc = s.income;
+    s.bld.forEach(bId => { const bd = CONQUEST_BUILDINGS.find(b => b.id === bId); if (bd) inc += bd.incBonus; });
+    return a + inc;
+  }, 0);
+  const connSeen = new Set();
+  const connections = [];
+  Object.values(sectors).forEach(s => {
+    s.adj.forEach(adjId => {
+      const key = [s.id, adjId].sort().join('_');
+      if (!connSeen.has(key) && sectors[adjId]) { connSeen.add(key); connections.push({ x1: s.cx, y1: s.cy, x2: sectors[adjId].cx, y2: sectors[adjId].cy }); }
+    });
+  });
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(2,4,16,0.97)', zIndex: 200, display: 'flex', flexDirection: 'column', fontFamily: "'IBM Plex Mono',monospace", color: '#DDD' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#08101C', borderBottom: '1px solid #1A1A2A', padding: '8px 18px', flexShrink: 0 }}>
+        <div>
+          <div style={{ color: '#00BFFF', fontSize: '0.6rem', letterSpacing: '0.3em' }}>CORUSCANT CONQUEST</div>
+          <div style={{ color: '#444', fontSize: '0.5rem' }}>Turn {turn}</div>
+        </div>
+        <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
+          {[{ label: 'TREASURY', val: res.cr + ' CR', col: '#C8A000' }, { label: 'POWER', val: res.pwr + ' PWR', col: '#00BFFF' }, { label: 'INCOME/TURN', val: '+' + totalIncome + ' CR', col: '#22C55E' }, { label: 'HEAT', val: heat + '%', col: heat > 60 ? '#C03030' : heat > 35 ? '#C8A000' : '#22C55E' }].map((item, i) => (
+            <div key={i} style={{ textAlign: 'center' }}>
+              <div style={{ color: '#555', fontSize: '0.45rem', letterSpacing: '0.1em' }}>{item.label}</div>
+              <div style={{ color: item.col, fontSize: '0.85rem', fontWeight: 'bold' }}>{item.val}</div>
+            </div>
+          ))}
+          <button onClick={endTurn} style={{ background: '#00BFFF', color: '#000', border: 'none', padding: '6px 16px', cursor: 'pointer', fontSize: '0.6rem', fontWeight: 'bold', letterSpacing: '0.1em' }}>END TURN</button>
+          <button onClick={onFailure} style={{ background: 'transparent', color: '#444', border: '1px solid #222', padding: '6px 12px', cursor: 'pointer', fontSize: '0.55rem' }}>Exit</button>
+        </div>
+      </div>
+      {crisis && (
+        <div style={{ background: '#180808', borderBottom: '1px solid #C03030', padding: '6px 18px', flexShrink: 0, display: 'flex', gap: 10, alignItems: 'center' }}>
+          <span style={{ color: '#C03030', fontSize: '0.65rem', fontWeight: 'bold' }}>SECTOR CRISIS:</span>
+          <span style={{ color: '#FF8080', fontSize: '0.6rem' }}>{crisis.title} — {crisis.desc}</span>
+        </div>
+      )}
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', minHeight: 0 }}>
+        <div style={{ flex: '0 0 560px', display: 'flex', flexDirection: 'column', background: '#060C18', borderRight: '1px solid #1A1A2A' }}>
+          <div style={{ display: 'flex', gap: 2, padding: '6px 10px', borderBottom: '1px solid #1A1A2A', flexShrink: 0 }}>
+            {['map', 'military', 'missions', 'diplomacy', 'build'].map(t => (
+              <button key={t} onClick={() => setTab(t)} style={{ background: tab === t ? '#0A1A2A' : 'transparent', color: tab === t ? '#00BFFF' : '#555', border: tab === t ? '1px solid #00BFFF33' : '1px solid transparent', padding: '3px 9px', cursor: 'pointer', fontSize: '0.5rem', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{t}</button>
+            ))}
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+            {tab === 'map' && (
+              <svg viewBox="0 0 760 520" style={{ width: '100%', display: 'block' }}>
+                <rect width="760" height="520" fill="#060C18" />
+                {connections.map((c, i) => (
+                  <line key={i} x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} stroke="rgba(80,120,180,0.18)" strokeWidth="2" strokeDasharray="6 4" />
+                ))}
+                {Object.values(sectors).map(s => {
+                  const col = OWNER_COLORS[s.owner] || '#888';
+                  const isSel = s.id === selectedSec;
+                  const isAdj = sec && sec.adj.indexOf(s.id) !== -1;
+                  return (
+                    <g key={s.id} onClick={() => setSelectedSec(s.id)} style={{ cursor: 'pointer' }}>
+                      {isSel && <circle cx={s.cx} cy={s.cy} r={50} fill="none" stroke={col} strokeWidth="1" opacity="0.25" strokeDasharray="5 3" />}
+                      {isAdj && s.owner !== 'player' && <circle cx={s.cx} cy={s.cy} r={46} fill="rgba(220,50,50,0.06)" stroke="#C0303066" strokeWidth="1.5" />}
+                      <circle cx={s.cx} cy={s.cy} r={38} fill={isSel ? col + '1A' : '#080E18'} stroke={col} strokeWidth={isSel ? 2.5 : 1.5} />
+                      <circle cx={s.cx} cy={s.cy} r={9} fill={col} opacity="0.9" />
+                      <text x={s.cx} y={s.cy - 48} textAnchor="middle" fill="#CCC" fontSize="11" fontWeight="bold" fontFamily="'IBM Plex Mono'">{s.name}</text>
+                      <text x={s.cx} y={s.cy + 56} textAnchor="middle" fill="#555" fontSize="9" fontFamily="'IBM Plex Mono'">{CONQUEST_FACTION_DATA[s.owner] ? CONQUEST_FACTION_DATA[s.owner].name : s.owner}</text>
+                      <text x={s.cx} y={s.cy + 5} textAnchor="middle" dominantBaseline="middle" fill={col} fontSize="9" fontFamily="'IBM Plex Mono'">{'+' + s.income}</text>
+                    </g>
+                  );
+                })}
+                {['player', 'black_sun', 'exchange', 'csf'].map((k, i) => (
+                  <g key={k} transform={'translate(14,' + (440 + i * 18) + ')'}>
+                    <circle r="5" fill={CONQUEST_FACTION_DATA[k].color} />
+                    <text x="13" y="4" fill="#777" fontSize="9" fontFamily="'IBM Plex Mono'">{CONQUEST_FACTION_DATA[k].name}</text>
+                  </g>
+                ))}
+              </svg>
+            )}
+            {tab === 'military' && (
+              <div style={{ padding: 14 }}>
+                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 12 }}>UNIT PROCUREMENT{discountActive ? ' — 30% DISCOUNT ACTIVE' : ''}</div>
+                {Object.entries(CONQUEST_UNIT_TYPES).map(([type, ut]) => {
+                  const costCR = discountActive ? Math.floor(ut.costCR * 0.7) : ut.costCR;
+                  const canAfford = res.cr >= costCR && res.pwr >= ut.costPWR;
+                  return (
+                    <div key={type} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: '10px 12px', marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div style={{ color: '#DDD', fontSize: '0.65rem', fontWeight: 'bold' }}>{ut.name}</div>
+                        <div style={{ color: '#555', fontSize: '0.5rem' }}>Combat Power: {ut.cp}{ut.upPWR > 0 ? ' | Upkeep: ' + ut.upPWR + ' PWR/turn' : ''}</div>
+                        <div style={{ color: '#C8A000', fontSize: '0.55rem' }}>{costCR} CR{ut.costPWR > 0 ? ' + ' + ut.costPWR + ' PWR' : ''}</div>
+                      </div>
+                      <button onClick={() => buyUnit(type)} style={{ background: canAfford ? '#0A1E0A' : '#0D0D0D', color: canAfford ? '#22C55E' : '#333', border: '1px solid ' + (canAfford ? '#22C55E44' : '#1A1A1A'), padding: '5px 14px', cursor: canAfford ? 'pointer' : 'default', fontSize: '0.55rem' }}>Recruit</button>
+                    </div>
+                  );
+                })}
+                <div style={{ background: '#080E18', border: '1px solid #1A1A2A', padding: 12, marginTop: 16 }}>
+                  <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.15em', marginBottom: 8 }}>STAGED STRIKE FORCE — Total CP: {stagPow()}</div>
+                  {Object.entries(staging).map(([type, count]) => count > 0 ? (
+                    <div key={type} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', marginBottom: 4 }}>
+                      <span style={{ color: '#AAA' }}>{CONQUEST_UNIT_TYPES[type].name}</span>
+                      <span style={{ color: '#00BFFF' }}>{count}</span>
+                    </div>
+                  ) : null)}
+                  {stagPow() === 0 && <div style={{ color: '#444', fontSize: '0.55rem' }}>No units staged. Recruit above.</div>}
+                </div>
+              </div>
+            )}
+            {tab === 'missions' && (
+              <div style={{ padding: 14 }}>
+                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 10 }}>ACTIVE SMUGGLING ROUTES</div>
+                {[{ id: 1, label: 'Level 1313 to CoCo Town', cargo: 'Unrefined Spice', profit: 320, risk: 15 }, { id: 2, label: 'The Works via Freight Hub', cargo: 'Cybernetics', profit: 580, risk: 40 }].map(r => (
+                  <div key={r.id} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: 10, marginBottom: 8 }}>
+                    <div style={{ color: '#22C55E', fontSize: '0.6rem', fontWeight: 'bold', marginBottom: 4 }}>{r.label}</div>
+                    <div style={{ color: '#666', fontSize: '0.5rem' }}>Cargo: {r.cargo}</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+                      <span style={{ color: '#C8A000', fontSize: '0.55rem' }}>+{r.profit} CR / turn</span>
+                      <span style={{ color: r.risk > 30 ? '#C03030' : '#666', fontSize: '0.5rem' }}>Intercept risk: {r.risk}%</span>
+                    </div>
+                  </div>
+                ))}
+                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 10, marginTop: 20 }}>COVERT AGENTS</div>
+                {[{ id: 'a1', name: 'Agent Vex', skill: 8 }, { id: 'a2', name: 'Operative Kael', skill: 6 }].map(a => (
+                  <div key={a.id} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: 10, marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ color: '#DDD', fontSize: '0.6rem' }}>{a.name}</div>
+                      <div style={{ color: '#555', fontSize: '0.5rem' }}>Skill {a.skill}/10</div>
+                    </div>
+                    <button onClick={() => { if (res.cr < 250) { addLog('Need 250 CR to deploy ' + a.name + '.'); return; } setRes(prev => ({ ...prev, cr: prev.cr - 250 })); setHeat(h => Math.max(0, h - 5)); addLog(a.name + ' on sabotage mission. -250 CR. Heat -5.'); }} style={{ background: '#0A1A0A', color: '#22C55E', border: '1px solid #22C55E44', padding: '4px 10px', cursor: 'pointer', fontSize: '0.5rem' }}>Deploy (250 CR)</button>
+                  </div>
+                ))}
+              </div>
+            )}
+            {tab === 'diplomacy' && (
+              <div style={{ padding: 14 }}>
+                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 12 }}>FACTION RELATIONS</div>
+                {['black_sun', 'exchange', 'csf'].map(fk => {
+                  const fd = CONQUEST_FACTION_DATA[fk];
+                  const rel = relations[fk] || 0;
+                  const stance = rel >= 50 ? 'Alliance' : rel >= 0 ? 'Neutral' : rel >= -50 ? 'Rivalry' : 'Total War';
+                  return (
+                    <div key={fk} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: 12, marginBottom: 10 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <span style={{ color: fd.color, fontSize: '0.65rem', fontWeight: 'bold' }}>{fd.name}</span>
+                        <span style={{ color: rel >= 0 ? '#22C55E' : '#C03030', fontSize: '0.55rem' }}>{stance}</span>
+                      </div>
+                      <div style={{ height: 4, background: '#111', borderRadius: 2, marginBottom: 8 }}>
+                        <div style={{ height: '100%', width: ((rel + 100) / 2) + '%', background: rel >= 0 ? '#22C55E' : '#C03030', borderRadius: 2 }} />
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ color: '#444', fontSize: '0.45rem' }}>Relation: {rel}</span>
+                        <button onClick={() => { if (res.cr < 500) { addLog('Need 500 CR to send a diplomatic envoy.'); return; } setRes(prev => ({ ...prev, cr: prev.cr - 500 })); setRelations(prev => ({ ...prev, [fk]: Math.min(100, prev[fk] + 20) })); addLog('Envoy sent to ' + fd.name + '. Relations +20. Cost: 500 CR.'); }} style={{ background: '#0A1A1A', color: '#00BFFF', border: '1px solid #00BFFF33', padding: '3px 8px', cursor: 'pointer', fontSize: '0.45rem' }}>Envoy (500 CR)</button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {tab === 'build' && (
+              <div style={{ padding: 14 }}>
+                <div style={{ color: '#666', fontSize: '0.5rem', letterSpacing: '0.18em', marginBottom: 6 }}>SECTOR INFRASTRUCTURE</div>
+                {sec && sec.owner !== 'player' && <div style={{ color: '#C03030', fontSize: '0.5rem', marginBottom: 10 }}>Select a player-controlled sector on the Map tab to build.</div>}
+                {sec && sec.owner === 'player' && <div style={{ color: '#00BFFF55', fontSize: '0.5rem', marginBottom: 10 }}>Building in: {sec.name}</div>}
+                {CONQUEST_BUILDINGS.map(bld => {
+                  const built = sec && sec.bld.indexOf(bld.id) !== -1;
+                  return (
+                    <div key={bld.id} style={{ background: '#0A0A16', border: '1px solid ' + (built ? '#22C55E44' : '#1A1A2A'), padding: '10px 12px', marginBottom: 8, opacity: built ? 0.75 : 1 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <div style={{ color: built ? '#22C55E' : '#DDD', fontSize: '0.6rem', fontWeight: 'bold' }}>{bld.name}{built ? ' (Built)' : ''}</div>
+                          <div style={{ color: '#555', fontSize: '0.45rem', marginTop: 2 }}>{bld.defBonus > 0 ? 'Defense +' + bld.defBonus + '  ' : ''}{bld.incBonus > 0 ? 'Income +' + bld.incBonus + ' CR/turn  ' : ''}{bld.pwrBonus > 0 ? 'Power +' + bld.pwrBonus + '/turn' : ''}</div>
+                          <div style={{ color: '#C8A000', fontSize: '0.5rem' }}>{bld.cost} CR{bld.costPWR > 0 ? ' + ' + bld.costPWR + ' PWR' : ''}</div>
+                        </div>
+                        {!built && <button onClick={() => buildStructure(bld)} style={{ background: '#0A1A0A', color: '#22C55E', border: '1px solid #22C55E44', padding: '4px 10px', cursor: 'pointer', fontSize: '0.5rem' }}>Build</button>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {sec && (
+            <div style={{ padding: 16, borderBottom: '1px solid #1A1A2A', background: '#060C18', flexShrink: 0 }}>
+              <div style={{ color: secOwnerColor, fontSize: '0.5rem', letterSpacing: '0.2em', marginBottom: 4 }}>{sec.tier} — {CONQUEST_FACTION_DATA[sec.owner] ? CONQUEST_FACTION_DATA[sec.owner].name : sec.owner}</div>
+              <div style={{ color: '#FFF', fontSize: '1.05rem', fontWeight: 'bold', marginBottom: 10 }}>{sec.name}</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 10 }}>
+                {[
+                  { label: 'Income / Turn', val: '+' + sec.income + ' CR', col: '#C8A000' },
+                  { label: 'Defense Rating', val: sec.def + '%', col: sec.def > 70 ? '#22C55E' : sec.def > 40 ? '#C8A000' : '#C03030' },
+                  { label: 'Garrison CP', val: garPow(sec.gar), col: '#00BFFF' },
+                ].map((item, idx) => (
+                  <div key={idx} style={{ background: '#0A0A16', border: '1px solid #1A1A2A', padding: 8, textAlign: 'center' }}>
+                    <div style={{ color: '#555', fontSize: '0.45rem' }}>{item.label}</div>
+                    <div style={{ color: item.col, fontSize: '0.8rem', fontWeight: 'bold' }}>{item.val}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ color: '#555', fontSize: '0.5rem', marginBottom: 10 }}>Infantry: {sec.gar.inf} | Snipers: {sec.gar.snp} | Tanks: {sec.gar.tnk}{sec.bld.length > 0 ? ' | Structures: ' + sec.bld.length : ''}</div>
+              {sec.owner !== 'player' ? (
+                <button onClick={() => attackSector(sec.id)} style={{ width: '100%', padding: '8px 0', background: '#180808', color: '#FF5060', border: '1px solid #C03030', cursor: 'pointer', fontSize: '0.6rem', fontWeight: 'bold', letterSpacing: '0.08em' }}>
+                  LAUNCH INVASION — Strike Force: {stagPow()} CP vs Defense: {Math.floor(sec.def / 100 * garPow(sec.gar))} CP
+                </button>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '6px 0', background: '#001A0A', border: '1px solid #22C55E33', color: '#22C55E', fontSize: '0.5rem' }}>FRIENDLY TERRITORY — Syndicate Control Active</div>
+              )}
+            </div>
+          )}
+          <div style={{ flex: 1, padding: '12px 14px', overflowY: 'auto', background: '#040810' }}>
+            <div style={{ color: '#333', fontSize: '0.45rem', letterSpacing: '0.18em', marginBottom: 8 }}>COMMAND LOG</div>
+            {log.map((entry, i) => (
+              <div key={i} style={{ color: i === 0 ? '#CCC' : '#3A3A4A', fontSize: '0.55rem', marginBottom: 4, paddingLeft: 8, borderLeft: '2px solid ' + (i === 0 ? '#00BFFF' : '#111') }}>{entry}</div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -6883,6 +7293,30 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'arms_bench' && <ArmsBenchOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} credits={credits} setCredits={setCredits} />}
       {activeMinigame && activeMinigame.type === 'shakedown' && <ProtectionShakedownOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'sky_evasion' && <SkyLaneEvasionOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
+      {activeMinigame && activeMinigame.type === 'tactical_combat' && <TacticalGridCombatOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} opponentProfile={activeMinigame.opponentProfile ?? 'syndicate_thug'} flavorText={activeMinigame.flavorText} />}
+      {activeMinigame && activeMinigame.type === 'terminal_slicing' && <TerminalSlicingOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} difficulty={activeMinigame.difficulty ?? 4} />}
+      {activeMinigame && activeMinigame.type === 'coruscant_conquest' && <CoruscantConquestOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} startCredits={activeMinigame.startCredits} />}
+      {showDebug && (
+        <div style={{ position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.82)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'monospace' }}>
+          <div style={{ background:'#0A0A12',border:'1px solid #4ACDFF44',padding:24,minWidth:480,maxWidth:620 }}>
+            <div style={{ color:'#4ACDFF',fontSize:13,letterSpacing:'0.15em',marginBottom:4 }}>DEBUG STAGE SELECT</div>
+            <div style={{ color:'#3A3F54',fontSize:10,marginBottom:16 }}>Press a number to jump to that checkpoint. Any other key closes this panel.</div>
+            {DEBUG_STAGES.map(s => (
+              <div key={s.key} style={{ display:'flex',gap:12,alignItems:'baseline',padding:'4px 0',borderBottom:'1px solid #14141E' }}>
+                <div style={{ color:'#E8C97A',fontSize:13,width:16,textAlign:'right',flexShrink:0 }}>[{s.key}]</div>
+                <div style={{ color:'#C8CDD8',fontSize:11,flex:1 }}>{s.label}</div>
+                <div style={{ color:'#3A3F54',fontSize:10 }}>{s.zone}</div>
+                <div style={{ color:'#5A9F6A',fontSize:10 }}>{s.credits}cr</div>
+              </div>
+            ))}
+            <div style={{ marginTop:16,display:'flex',gap:24 }}>
+              <div style={{ fontSize:10,color:'#5A5F74' }}>[Shift+C] +5000 credits</div>
+              <div style={{ fontSize:10,color:'#5A5F74' }}>[Shift+Z] reset all flags</div>
+              <div style={{ fontSize:10,color:'#5A5F74' }}>[` ] close panel</div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
