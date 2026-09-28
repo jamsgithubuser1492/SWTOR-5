@@ -5521,7 +5521,7 @@ function PitFightOverlay({ onSuccess, onFailure, opponentName, opponentHp, accen
   );
 }
 
-function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, activeContracts, setActiveContracts, heat, setHeat, territories, credits, setCredits }) {
+function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, activeContracts, setActiveContracts, heat, setHeat, territories, setTerritories, credits, setCredits }) {
   const [panel, setPanel] = React.useState('contracts');
   const [log, setLog] = React.useState([]);
   const addLog = (msg) => setLog(l => [`> ${msg}`, ...l].slice(0, 20));
@@ -5556,7 +5556,7 @@ function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, act
     const currentHeat = heat;
     if (currentHeat >= 100) {
       // Critical: Full CSF Raid
-      setSyndicateTerritories([]);
+      setTerritories([]);
       setCredits(c => Math.max(0, c - 1200));
       setHeat(50);
       addLog('CRITICAL RAID: CSF executed a full district sweep. All territory seized. -1200 credits. Heat reset to 50. Rebuild from Shadow Town.');
@@ -5571,13 +5571,14 @@ function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, act
         setCredits(c => Math.max(0, c - loss));
         addLog(`HEAT EVENT: Warehouse Fire Bombing. One of your holdings torched. -${loss} credits.`);
       } else {
-        setRoster(r => {
-          const avail = r.filter(a => a.status === 'available');
-          if (avail.length === 0) { addLog('HEAT EVENT: CSF attempted an agent extraction but found no exposed operatives.'); return r; }
+        const avail = roster.filter(a => a.status === 'available');
+        if (avail.length === 0) {
+          addLog('HEAT EVENT: CSF attempted an agent extraction but found no exposed operatives.');
+        } else {
           const target = avail[Math.floor(Math.random() * avail.length)];
           addLog(`HEAT EVENT: Agent Extradition. ${target.name} is in CSF custody. Status: detained. Extract via slicing mission.`);
-          return r.map(a => a.id === target.id ? { ...a, status: 'injured' } : a);
-        });
+          setRoster(r => r.map(a => a.id === target.id ? { ...a, status: 'injured' } : a));
+        }
       }
     } else if (currentHeat >= 40 && Math.random() < 0.18) {
       // Mid heat: Shakedown or Turf War
@@ -10068,7 +10069,7 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'valve_override' && <ValveOverrideOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'willpower_override' && <WillpowerOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'pit_fight' && <PitFightOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} opponentName={activeMinigame.opponentName ?? 'Opponent'} opponentHp={activeMinigame.opponentHp ?? 5} accent={activeMinigame.accent ?? '#C03030'} />}
-      {activeMinigame && activeMinigame.type === 'syndicate_management' && <SyndicateManagementOverlay onClose={activeMinigame.onSuccess} roster={syndicateRoster} setRoster={setSyndicateRoster} contracts={syndicateContracts} activeContracts={syndicateActiveContracts} setActiveContracts={setSyndicateActiveContracts} heat={syndicateHeat} setHeat={setSyndicateHeat} territories={syndicateTerritories} credits={credits} setCredits={setCredits} />}
+      {activeMinigame && activeMinigame.type === 'syndicate_management' && <SyndicateManagementOverlay onClose={activeMinigame.onSuccess} roster={syndicateRoster} setRoster={setSyndicateRoster} contracts={syndicateContracts} activeContracts={syndicateActiveContracts} setActiveContracts={setSyndicateActiveContracts} heat={syndicateHeat} setHeat={setSyndicateHeat} territories={syndicateTerritories} setTerritories={setSyndicateTerritories} credits={credits} setCredits={setCredits} />}
       {activeMinigame && activeMinigame.type === 'sabacc' && <SabaccOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'contraband_market' && <ContrabandMarketOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} heat={syndicateHeat} setHeat={setSyndicateHeat} credits={credits} setCredits={setCredits} />}
       {activeMinigame && activeMinigame.type === 'interrogation' && <InterrogationMatrixOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
