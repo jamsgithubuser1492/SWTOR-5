@@ -2441,6 +2441,12 @@ const PLANETS = {
             grantsCodex: 'codex-penthouse' },
           { id: 'airtaxi_penthouse', x: 28, y: 10, once: false, iconKind: 'beacon', label: 'Private Transit Terminal',
             description: 'A private transit node registered to Scylla Tower Seven Holdings. No destination log. No arrival record. Complete transit discretion for an additional surcharge billed to an account that does not appear in any public registry.' },
+          { id: 'holonet_transmission_index', x: 22, y: 4, once: true, iconKind: 'terminal', label: 'Holonet Transmission — Incoming',
+            requiresFlag: 'senate_line_secured',
+            requiresNoneFlags: ['ghost_keel_active', 'tanner_briefed'],
+            description: 'The transmission index is flagged PRIORITY — PERSONAL ROUTING. Sender: TANNER, KDY RING BERTH 7. The message reads: "Senate line resolved. Your name cleared the usual friction. I have a contract problem on Bador Moon that requires someone with your particular clearance level and risk tolerance. Six cycles before Senate oversight arrives on the surface. I have a shuttle prepped and a number that may interest you. Accept transmission for full briefing." The Kuat orbital ring beacon is appended as a destination coordinate.',
+            grantsFlag: 'ghost_keel_active',
+            grantsCodex: 'codex-kuat-operation' },
         ],
         npcs: [
           { id: 'jon_penthouse', x: 14, y: 5, kind: 'crime_boss', label: 'Jon',
@@ -4524,6 +4530,24 @@ const CODEX_ENTRIES = {
       'The Anzati are old. Older than the Republic, older than most civilizations that remember themselves as old. They look human at a distance, but the vertical slits below the cheekbones are proboscises, coiled when not in use, which they call a secret they keep from everyone they intend to survive.',
       'They feed on what they call soup: the cerebral fluid and Force-essence of their prey. The feeding is careful and slow. Prey rarely understands what is happening until it has already happened.',
       'An Anzati assassin is not a hired killer in the conventional sense. They do not need the money. They take contracts because the contract specifies a target, and a specified target is permission they have already decided to collect.',
+    ],
+  },
+  'codex-kuat-operation': {
+    id:'codex-kuat-operation', title:'OPERATION GHOST KEEL', category:'story',
+    summary:'A classified KDY project on Bador Moon. Unauthorized construction. Senate oversight incoming in six cycles.',
+    body:[
+      'Kuat Drive Yards maintains a restricted moon designated Bador, officially classified as an uninhabited geological survey site. For three years, Sector 4 of the Bador surface installation has been running an unauthorized manufacturing program beneath that classification.',
+      'The project\'s internal designation is OPERATION GHOST KEEL. Its product: a Mandator-class pocket dreadnaught assembled in pieces from off-manifest components, powered by an experimental hypercore of unclear origin. No Senate appropriation. No registry number. No commission authority on any public record.',
+      'KDY executive Tanner holds Level Eight authorization for the project. His stated objective is retrieval of the hypercore before a Senate Oversight Committee arrives on the surface. What the Senate would find, if it arrived first, is unclear. What is clear is that someone built something that should not exist, and the window to decide what happens to it is very short.',
+    ],
+  },
+  'codex-bador-history': {
+    id:'codex-bador-history', title:'Bador Moon: Survey Classification', category:'lore',
+    summary:'A moon with a classified past and an inconvenient present.',
+    body:[
+      'Bador was formally surveyed by Republic Geological Division in the year 3,641 BBY, four years after the signing of the Treaty of Coruscant. The survey report noted unusual crystalline formations in the sub-surface grid and recommended further study. That follow-up study was never funded.',
+      'KDY acquired mineral extraction rights to Bador through a series of shell company transactions spanning eleven years. The moon\'s official classification as uninhabited has been maintained continuously, despite evidence of unauthorized structures appearing in three of the last five orbital surveys.',
+      'The Republic garrison that was briefly stationed on Bador was decommissioned without explanation eighteen months ago. The last transmission from that garrison references a distress call that was never answered.',
     ],
   },
 };
