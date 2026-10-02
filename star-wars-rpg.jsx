@@ -2441,7 +2441,7 @@ const PLANETS = {
             grantsCodex: 'codex-penthouse' },
           { id: 'airtaxi_penthouse', x: 28, y: 10, once: false, iconKind: 'beacon', label: 'Private Transit Terminal',
             description: 'A private transit node registered to Scylla Tower Seven Holdings. No destination log. No arrival record. Complete transit discretion for an additional surcharge billed to an account that does not appear in any public registry.' },
-          { id: 'holonet_transmission_index', x: 22, y: 4, once: true, iconKind: 'terminal', label: 'Holonet Transmission — Incoming',
+          { id: 'holonet_transmission_index', x: 20, y: 3, once: true, iconKind: 'terminal', label: 'Holonet Transmission — Incoming',
             requiresFlag: 'senate_line_secured',
             requiresNoneFlags: ['ghost_keel_active', 'tanner_briefed'],
             description: 'The transmission index is flagged PRIORITY — PERSONAL ROUTING. Sender: TANNER, KDY RING BERTH 7. The message reads: "Senate line resolved. Your name cleared the usual friction. I have a contract problem on Bador Moon that requires someone with your particular clearance level and risk tolerance. Six cycles before Senate oversight arrives on the surface. I have a shuttle prepped and a number that may interest you. Accept transmission for full briefing." The Kuat orbital ring beacon is appended as a destination coordinate.',
@@ -2497,22 +2497,26 @@ const PLANETS = {
             ],
           },
         ],
-        collectibles: [{ id: 'penthouse_credstick', x: 22, y: 14, label: 'Vault Overflow Credstick', reward: 200 }],
+        collectibles: [{ id: 'penthouse_credstick', x: 24, y: 16, label: 'Vault Overflow Credstick', reward: 200 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 1, 1, 28, 18, 'floor');
           // Trophy alcove (northwest)
           carveRect(g, 1, 1, 7, 6, 'wall');
           carveRect(g, 2, 2, 6, 5, 'floor');
+          pt(g, 7, 4, 'floor');
           // Vault alcove (northeast)
           carveRect(g, 22, 1, 28, 6, 'wall');
           carveRect(g, 23, 2, 27, 5, 'floor');
+          pt(g, 22, 3, 'floor');
           // Security alcove (southeast)
           carveRect(g, 22, 14, 28, 18, 'wall');
           carveRect(g, 23, 15, 27, 17, 'floor');
+          pt(g, 22, 16, 'floor');
           // Roster alcove (southwest)
           carveRect(g, 1, 14, 7, 18, 'wall');
           carveRect(g, 2, 15, 6, 17, 'floor');
+          pt(g, 7, 16, 'floor');
           // Center corridor connections
           pt(g, 14, 1, 'floor'); pt(g, 14, 2, 'floor');
           pt(g, 14, 17, 'floor'); pt(g, 14, 18, 'floor');
