@@ -2946,6 +2946,13 @@ const PLANETS = {
             description: 'An unmonitored high-bandwidth terminal feeding through KDY\'s private network backbone, which predates Imperial censorship architecture. It can reach any relay in the galaxy without a routing trace. The Republic Senate Oversight Committee contact code Rael encoded on the blueprint drive would reach its destination without interception from here.',
             requiresFlag: 'rael_helped',
             once: true, grantsFlag: 'blueprints_transmitted', grantsItem: 'union_leaders_contact' },
+
+          { id: 'kuati_history_mural', x: 4, y: 4, label: 'House Kuat Ancestral Mural',
+            description: 'An engraved bronze relief panel, three meters wide, depicting the founding of Kuat Drive Yards in a stylized Old Republic aesthetic. Figures in ancient shipbuilder\'s garb stand before a hull-frame skeleton above Kuat\'s atmosphere. The Ten Families are named in Aurebesh along the bottom border, their crests arranged in a circle. The Vas-Kuat crest appears at center. It has been subtly repositioned since the original casting — the crest was not at center in the version documented in pre-war KDY archives.' },
+          { id: 'luxury_panoramic_viewport', x: 22, y: 2, label: 'Executive Ring Panoramic Viewport',
+            description: 'The largest viewport on the ring, reserved for the executive tier. Two meters tall, four wide, triple-layered transparisteel. The curvature of Kuat\'s ring-world and the vast orbital infrastructure arcing above it are visible in both directions simultaneously. A KDY Executive Protocol Droid stands motionless before it — a slender brass-and-copper humanoid with formally-pressed garment simulators, photoreceptors dimmed in standby — monitoring the construction progress display projected onto the lower pane.' },
+          { id: 'executive_protocol_droid_unit', x: 16, y: 8, label: 'KDY Executive Protocol Droid',
+            description: 'A KDY-commissioned protocol variant: slender brass-and-copper chassis, formal service configuration, copper wiring visible at the joint couplings in the style of Old Republic luxury manufacture. Its photoreceptors are dim — standby mode. The KDY crest is etched into its chest plating. A service card reads: UNIT DESIGNATION — RUEN-7, EXECUTIVE SUITE DETAIL, AUTHORIZED USE: HOUSE KUAT STAFF ONLY. The service log shows the last activated user was Lady Kuat, two days prior.' },
         ],
         npcs: [
           { id: 'captain_vaelen', x: 4, y: 8, kind: 'kdy_executive_sentinel', label: 'Captain Vaelen',
@@ -2978,6 +2985,21 @@ const PLANETS = {
               { text: 'Tell her the ISB slate can also reach the Oversight Committee through the privileged terminal.', morality: 10, loyalty: { republic: 15 },
                 result: 'She looks at you for a moment with something that might be reassessment. "You have been thorough." She opens the safe. Removes the slate and sets it on the desk in front of you. "The terminal in the far corner has the routing code pre-loaded. Send it before Krennis\'s team docks." She looks out the viewport at Kuat below. "I have been outlasting temporary plagues for thirty years. I expect this one will follow the pattern."',
                 grants: { flags: ['lady_kuat_trust', 'lady_kuat_mission_complete'], items: ['executive_blackmail_slate'] } },
+            ],
+          },
+          { id: 'kdy_overseer_dalin', x: 4, y: 12, kind: 'kdy_guild_overseer', label: 'Guild Overseer Dalin Orveth',
+            repeatPrompt: 'He turns a stylus in his fingers. "The authorization audit timeline has not changed."',
+            prompt: 'He is reading from a datapad he holds with both hands, the cybernetic monocle over his right eye scrolling through text at a rate that suggests it is doing most of the reading for him. Navy robes, gold epaulettes: the standard formal dress of a KDY Guild Overseer, which in Kuati terms means someone who manages billions of credits in construction contracts and does not need to speak loudly to be heard. He finishes the paragraph he is on before acknowledging you. "You have been cleared to the executive tier. That is unusual. Tell me who authorized it."',
+            choices: [
+              { text: 'Explain Captain Vaelen granted access.', morality: 0, loyalty: {},
+                result: '"Vaelen holds the threshold on the Lady\'s authority." He processes this. "That means you have something the Lady considers useful, or you are something the Lady considers a useful problem." He studies you through the monocle. "Both of those outcomes suggest I should know more about you before you have access to this suite\'s data terminals." He does not say no. He says it like a man who has learned that information has a price and he is setting his.',
+                grants: { flags: ['dalin_met'] } },
+              { text: 'Ask about the construction authorization audit.', morality: 5, loyalty: { republic: 8 },
+                result: '"The KDY Guild conducts mandatory authorization audits of all active construction contracts twice per standard year." He says it with the precision of a man reading from internal regulation. "The current audit was initiated six weeks ago. It has identified fourteen line items in the Bador surface facility contracts that do not correspond to any Senate-authorized production schedule." He looks at you through the monocle. "That is a matter of significant concern to the Guild Board."',
+                grants: { flags: ['dalin_audit_explained'] } },
+              { text: 'Ask if the Guild will cooperate with the Senate Oversight Committee.', morality: 10, loyalty: { republic: 15 },
+                result: '"The Ten Families built this ring over four centuries. We have cooperated with every Senate inspection, every Republic audit, every security review in that history." A long pause. "The current situation is the first time in four centuries that cooperation with the Senate and compliance with our primary customer have been in direct conflict." He looks at the Kuati mural. "The Guild Board has not yet decided which relationship takes priority. I am here representing the faction that believes the answer should be obvious."',
+                grants: { flags: ['dalin_guild_stance_shared'] } },
             ],
           },
           { id: 'tanner', x: 18, y: 9, kind: 'broker', label: 'Tanner',
@@ -3045,6 +3067,19 @@ const PLANETS = {
             requiresFlag: 'vectis_standard_cleared' },
           { id: 'bay7_impound_notice', x: 14, y: 3, label: 'Docking Bay 7 — Impound Notice',
             description: 'A bright red notice is locked to Docking Bay 7\'s blast door. KDY Ring-Sec seal. The ship name is listed as FREE HORIZON, registry Corellia. Impoundment reason: manifest discrepancy, Class B commercial violation. The notice is three days old.' },
+
+          { id: 'orbital_viewport_bay1', x: 10, y: 3, label: 'Orbital Viewport — Bay Section 7',
+            description: 'Reinforced transparisteel three meters wide, set into the ring\'s hull plating. Beyond it, the curve of Kuat\'s upper atmosphere catches amber light from the system\'s star. Closer — much closer — the skeletal frame of a Valor-class cruiser hangs in its construction cradle. Twelve construction teams move across the unfinished hull in vacuum suits. At this scale, they look like sparks. A KDY identifier plate is etched into the viewport frame: HULL CLASS VL-9, BERTH 7, COMMISSIONED 3,961 BBY.' },
+          { id: 'tether_locker_wall', x: 4, y: 4, label: 'Zero-G Worker Tether Lockers',
+            description: 'A row of mag-locked lockers set into the alcove wall, each stamped with a worker identification number. Several are open, harnesses hanging. A handwritten note is stuck to locker 12: ANYONE WHO TAKES MY EMERGENCY LINE AGAIN ANSWERS TO ME PERSONALLY. The equipment is Old Republic surplus: heavy, reliable, and repaired too many times to count.' },
+          { id: 'transit_pod_terminal', x: 14, y: 14, label: 'Ring Pneumatic Transit — Pod Station 3',
+            description: 'A cylindrical pod capsule sits in its pressurized cradle, acceleration foam still carrying the impression of its last passenger. The route board shows three destinations: Briefing Ring (cleared transit), Executive Ring (Director code required), Maintenance Underbelly (engineering access only). A KDY Mark IV Heavy Loader Droid stands idle beside it, quad-pedal chassis locked in standby, its teal-grey carapace scored from a thousand cargo shifts.' },
+          { id: 'plasma_welding_arm', x: 24, y: 10, label: 'Plasma Arc Welding Rig — Station 14',
+            description: 'An articulated welding arm the size of a speeder, locked in its storage cradle between shifts. The plasma torch head is still warm, glowing faint orange at its sealed tip. A safety checklist is stamped on the cradle: LAST INSPECTION — 3 CYCLES PRIOR. SIGNED: OSSEK. Tool markings on the arm\'s body are in at least four different hands, each correction slightly different from the last.' },
+          { id: 'aurebesh_wayfinding', x: 8, y: 10, label: 'KDY Ring Wayfinding Plaque',
+            description: 'Cast bronze signage in the angular stepped-arch style of Kuati industrial design. The Aurebesh reads: TRANSIT SECTION 3 — PRIVATE EXECUTIVE RING (CLEARANCE REQUIRED) / TEAM BRIEFING RING / LOUNGE, MARKET, AND UNION HALL / BAY ACCESS BELOW. Below the main text, someone has scratched a smaller addition in Basic: IF LOST, ASK VECTIS. IT WILL TELL YOU TWICE.' },
+          { id: 'hydraulic_blast_panel', x: 1, y: 12, label: 'Emergency Bulkhead Override',
+            description: 'A manual hydraulic override wheel behind a break-glass panel, painted in the bright amber and black hazard stripes of every KDY station built in the last two centuries. The placard reads: FOR HULL BREACH OR FIRE — TURN THREE FULL ROTATIONS COUNTERCLOCKWISE. A secondary notice below it reads: YES THIS MEANS YOU, BAY CREW. SIGNED, RING SAFETY OFFICER PRENN.' },
         ],
         npcs: [
           { id: 'corporal_dren', x: 18, y: 10, kind: 'kdy_ring_sec', label: 'Guard Corporal Dren',
@@ -3075,6 +3110,37 @@ const PLANETS = {
               { text: 'Ask what the Sector House operation is.', morality: 0, loyalty: {},
                 result: '"Shell company. Runs out of a stall in the Market ring — Garrok\'s, I think, is the front. They broker restricted cargo across three transit routes and use registered free traders as cut-outs. When something goes wrong, the registered trader takes the KDY citation and Sector House dissolves the route." He shakes his head. "This isn\'t the first time."',
                 grants: { flags: ['sector_house_identified'] } },
+            ],
+          },
+          { id: 'kdy_marine_rix', x: 20, y: 6, kind: 'kdy_security_marine', label: 'Security Marine Rix',
+            repeatPrompt: 'Rix watches the bay entrance. "No incidents yet. Keep it that way."',
+            prompt: 'He stands at the transit lane junction with the relaxed vigilance of a man who has done this shift so many times the alertness is biological. The KDY crest on his pauldron is white-and-blue Ring Security, not the grey of the orbital platform crews. He notices you noticing. "New arrival. Transit cleared — Corporal Dren\'s stamp is on the board." He does not move to stop you. "If you\'re here on private ring business, make sure your code is current before you reach the Sentinel at the threshold. She doesn\'t accept partial credentials."',
+            choices: [
+              { text: 'Ask about the ship impounded in Bay 7.', morality: 5, loyalty: { republic: 5 },
+                result: '"Free Horizon." He says it like the name means something. "Corellia-registered trader. Flagged on a manifest discrepancy — engineering grade materials listed as commercial surplus. That\'s a Class B violation normally. But the serial ranges on the crates don\'t match any commercial batch produced in the last three years." He pauses. "I filed my observation report. Whether Ring Command reads it is someone else\'s problem."',
+                grants: { flags: ['rix_bay7_explained'] } },
+              { text: 'Ask how to obtain Director override credentials.', morality: 0, loyalty: {},
+                result: '"You don\'t ask a Ring Marine how to get Director override." Flat. Not hostile, just accurate. "That comes through KDY Guild channels or from the Lady herself. If you\'re asking me, you\'re not close enough to either."',
+                grants: {} },
+              { text: 'Offer him a bribe.', morality: -10, loyalty: { underworld: 8 },
+                result: 'He looks at the credit chip. Looks at you. Looks at the security monitoring node on the wall above you, which both of you can see from here. "I\'m going to forget you said that." He resumes watching the bay entrance.',
+                grants: {} },
+            ],
+          },
+          { id: 'republic_pilot_davan', x: 12, y: 14, kind: 'republic_pilot', label: 'Pilot Davan Sael (Republic)',
+            repeatPrompt: 'Davan is still watching the construction frames. "Fourteen months and that cruiser still isn\'t done."',
+            prompt: 'He is off-duty in the way Republic pilots are off-duty: flight suit on, helmet tucked under one arm, watching the construction frames through the bay viewport with professional attention. Valor-class designation — you can tell from the hull segmentation. He glances over. "You\'re not engineering staff. That means you came through on a transit authorization, or you\'re very good at looking like you belong." He doesn\'t seem troubled by either option.',
+            choices: [
+              { text: 'Ask what he is doing at KDY.', morality: 0, loyalty: {},
+                result: '"Liaison tour. Republic Navy sends pilots to each major shipyard twice a cycle — we check construction standards on ships we\'ll actually be flying." He nods toward the Valor frame outside. "The beam weapons mounts on that hull are six degrees off-axis from spec. I filed it. The KDY guild foreman told me it was within tolerance." A pause. "It is not within tolerance."',
+                grants: { flags: ['davan_met'] } },
+              { text: 'Ask about the political climate on the ring.', morality: 5, loyalty: { republic: 8 },
+                result: '"More Imperial audit teams than Senate inspection teams. First time that\'s been true in the history of this shipyard." He keeps his voice low. "KDY has been producing Republic hulls for four centuries. Whatever changes when Imperial authority supersedes Guild authority, the hulls change with it. I\'m documenting everything I can while I still have access."',
+                grants: { flags: ['davan_intel_shared'] } },
+              { text: 'Ask if the Republic knows about the unreported hull class.', morality: 5, loyalty: { republic: 10 },
+                result: '"Which one?" He says it without expression. Then: "I shouldn\'t have said that. What I will say is that the Republic Senate Oversight Committee arrives in four cycles and they\'re asking questions that suggest they already know the answer." He tucks his helmet tighter. "Find Rael in the briefing ring if you haven\'t yet. He\'ll tell you more than I should."',
+                grants: { flags: ['davan_directed_to_rael'] },
+                requiresFlag: 'davan_intel_shared' },
             ],
           },
         ],
@@ -3120,6 +3186,19 @@ const PLANETS = {
             description: 'A standard KDY engineering terminal. The access log shows it was last used forty minutes ago. The files accessed were assembly sequence archives from Sector 4, Bador Moon. Whoever pulled these files was not on a scheduled audit.',
             requiresFlag: 'designer_contacted',
             once: true, grantsFlag: 'assembly_sequence_reviewed', grantsItem: 'sabotage_blueprint_files' },
+
+          { id: 'fleet_holo_command_table', x: 14, y: 8, label: 'Fleet Holo-Command Table',
+            description: 'An octagonal holographic command table, wide enough for twelve officers to stand around it. Currently it projects a real-time scan of the construction cradles: three Hammerhead-class frigates at varying stages, the nearly-complete Valor-class cruiser designated VL-9, and two Thranta-class corvettes in the outer gantries. Blue vector overlays mark structural progress percentages. Someone has highlighted VL-9 in amber — the color code for schedule deviation.' },
+          { id: 'ordnance_transport_crate', x: 30, y: 6, label: 'Ordnance Transport Crate — Classified',
+            description: 'Blast-shielded durasteel case, sealed with a KDY ordnance lock. The stencil reads: COMPONENT CLASS RESTRICTED — AUTHORIZATION CODE REQUIRED — DO NOT OPEN IN ATMOSPHERE. Three identical cases are stacked beside it. The shipping manifest is partially torn, but the origin facility is legible: KUAT SURFACE — FACILITY BADOR-7. Date stamp: four cycles prior.' },
+          { id: 'secure_armory_locker', x: 28, y: 4, label: 'Briefing Ring Secure Armory',
+            description: 'A heavy-grade security locker, floor-bolted, with a biometric palm reader that has seen better years. The panel shows evidence of at least one bypass attempt — fresh scoring around the secondary housing from a splicer tool. The attempt was unsuccessful. Someone wanted in here badly and did not have the right handprint.' },
+          { id: 'conduit_cable_truss', x: 18, y: 4, label: 'Overhead Wiring Truss — Section B-12',
+            description: 'A bundled mass of armored conduit lines runs overhead in a pressed-metal tray. One bundle has been partially re-routed with newer cabling — the original is darker, older alloy standard from before the last KDY infrastructure audit. The newer line was added within the last year. Acoustic intercept hardware would benefit from proximity to runs like this one.' },
+          { id: 'coolant_pipe_hazard', x: 14, y: 15, label: 'Pressurized Coolant Conduit — Warning Valve',
+            description: 'A section of high-pressure coolant pipe isolated behind a safety cage, amber indicators cycling. The pressure gauge reads above nominal. Stencil on the cage: DO NOT OPERATE WITHOUT ENGINEERING CLEARANCE — VALVE SEQUENCE REQUIRED. The gauge has been climbing for two cycles. A work order was filed. No one has come.',
+            triggersMinigame: 'valve_override',
+            grantsFlag: 'coolant_pressure_vented' },
         ],
         npcs: [
           { id: 'commander_krennis', x: 22, y: 5, kind: 'imperial_naval_liaison', label: 'Commander Krennis',
@@ -3152,6 +3231,36 @@ const PLANETS = {
               { text: 'Tell him you will sell the information to the highest bidder.', morality: -15, loyalty: { underworld: 15 },
                 result: 'A long pause. He looks at the drive. Then he puts it back in his sleeve port. "Then I take my chances with the sweep." He turns back to his terminal. "There is no version of this where selling those files ends well for anyone aboard a KDY Star Destroyer in the next five years. I would prefer they get built correctly. Even if it means I get arrested."',
                 grants: { flags: ['rael_blackmail_refused'] } },
+            ],
+          },
+          { id: 'republic_inspector_thane', x: 14, y: 5, kind: 'republic_navy_inspector', label: 'Inspector Thane (Republic Navy)',
+            repeatPrompt: 'Thane keeps his voice low. "The committee arrives in four cycles. I need those construction logs before then."',
+            prompt: 'He wears his rank cylinders the way men who earned them do: without thinking about them. Republic Navy grey, pressed with the faint crease of someone on-station long enough for it to count. He looks at you the way investigators look at everything — like you might be useful or trouble and he has not yet determined which. "I\'ve been on this ring for twelve days. In twelve days I have found three discrepancies in the published construction logs that do not appear in the KDY internal records." A pause. "Someone is carefully editing one set of records and not the other."',
+            choices: [
+              { text: 'Offer to access KDY internal records for him.', morality: -5, loyalty: { underworld: 8 },
+                result: '"That\'s theft of proprietary shipyard data." He says it without inflection. "The answer is no." Three full seconds. "However. If those records found their way to the committee via a source that cannot be traced to the Republic Navy, that would serve the same purpose without the legal complications." Another pause. "I haven\'t asked you anything."',
+                grants: { flags: ['thane_unofficial_contact'] } },
+              { text: 'Tell him about the unreported hull class.', morality: 10, loyalty: { republic: 12 },
+                result: 'Something shifts in his expression — not surprise, but confirmation. "The committee knows it exists. We don\'t know its specifications or operational status. A sealed executive safe is mentioned in three different intercepts and we cannot identify its current location." He looks at you carefully. "Can you?"',
+                grants: { flags: ['thane_hull_class_discussed'] } },
+              { text: 'Ask about the ordnance cases in the alcove.', morality: 0, loyalty: {},
+                result: '"Classified components from the Bador surface facility. That\'s the official manifest." He lets that sit. "The Bador facility does not appear in the KDY Senate charter. It does not appear in the Imperial occupation authorization. It appears on no official document I have been able to locate — and I have been looking." He glances at the ordnance locker. "Four cases. Arriving four cycles before the committee. Draw your own conclusions."',
+                grants: { flags: ['thane_bador_discussed'] } },
+            ],
+          },
+          { id: 'kuati_sub_director_orenne', x: 28, y: 3, kind: 'kuati_sub_director', label: 'Sub-Director Orenne Vas-Kuat',
+            repeatPrompt: 'She turns a stylus end over end. "Guild authorization has not changed since we last spoke."',
+            prompt: 'Young for the rank, which in House Kuat means someone took a deliberate political risk to place her here. Silver pauldrons, flowing mauve robes of the Vas-Kuat family line. She holds herself with the practiced composure of someone trained from childhood never to show what they actually think. "The Briefing Ring is cleared access for registered KDY contractors and Republic liaison staff." She notes your presence. "You are neither."',
+            choices: [
+              { text: 'Explain you are conducting business on behalf of a Guild party.', morality: -5, loyalty: { underworld: 5 },
+                result: '"Which Guild party." Not a question. When you give an answer she processes it with that trained stillness. "I will verify the authorization." She produces a datapad. Enters something. Looks at you again. "The authorization is current. Unusual." She closes the pad. "The Guild has standing to bring private contractors into the briefing ring for operational purposes. I don\'t have to like it." She steps aside.',
+                grants: { flags: ['orenne_cleared_access'] } },
+              { text: 'Ask her about the Bador surface facility.', morality: 5, loyalty: { republic: 8 },
+                result: 'The stylus stops turning. One beat of absolute stillness, then it resumes. "Bador is a KDY restricted moon. Surface operations are under Guild charter and House Kuat authority." She looks at the ordnance cases. "Anything further about Bador is above your access tier." She is very careful not to say there is nothing unusual about Bador.',
+                grants: { flags: ['orenne_bador_probed'] } },
+              { text: 'Ask how she feels about the Imperial presence on the ring.', morality: 5, loyalty: { republic: 5 },
+                result: '"I represent House Kuat and the KDY Guild Board. I do not have feelings about political arrangements — I have contractual obligations and strategic interests." She glances toward Krennis\'s position across the ring. A single glance, immediately controlled. "I will say only that the Ten Families built this ring and intend to maintain authority over it. Whatever temporary arrangements are currently in place."',
+                grants: { flags: ['orenne_house_kuat_view'] } },
             ],
           },
         ],
@@ -3200,6 +3309,19 @@ const PLANETS = {
             once: true, grantsFlag: 'union_surveillance_disabled' },
           { id: 'forge_anvil_bar', x: 28, y: 14, label: 'Forge and Anvil — Bar Counter',
             description: 'Corellian whiskey served warm because the refrigeration unit in this section failed two months ago and the work order is still open. A Sullustan bartender moves with the practiced efficiency of someone who has heard every story and judges none of them. Someone has carved into the bar surface: HERE SINCE YEAR ONE. Below it, in fresher scratching: AND COUNTING.' },
+
+          { id: 'czerka_trade_terminal', x: 34, y: 3, label: 'Czerka Corporation Trade Desk',
+            description: 'A Czerka-branded terminal occupies the northeast alcove: red and gold corporate livery, polished to a shine that looks more aggressive than welcoming. The product catalog is technically legal — industrial components, survey equipment, labor contracting services. The pricing model is not. A fine-print clause at the bottom notes: CZERKA CORPORATION RETAINS RIGHT OF FIRST PURCHASE FOR ALL MATERIALS PRODUCED WITH CZERKA-SUPPLIED COMPONENTS. Someone has circled this in red ink and written: THIS IS HOW THEY OWN YOU.' },
+          { id: 'fusion_fuel_canister_rack', x: 16, y: 5, label: 'Deuterium Fusion-Fuel Storage Rack',
+            description: 'Thirty-six sealed canisters in a blast-rated rack, each labeled with deuterium concentration, pressure rating, and date of last inspection. The rack is surrounded by mag-clamped warning stanchions, their amber hazard lights cycling in slow arrhythmic pulses. Three canisters near the bottom show handling damage: dented safety collars, one with a micro-fracture sealant patch over the pressure housing. The last full inspection is eight days overdue.' },
+          { id: 'sub_light_drive_cradle', x: 25, y: 10, label: 'Sub-Light Drive Calibration Cradle',
+            description: 'A scaled-down ion engine calibration ring, used to set output tolerances before final hull installation. The engine currently seated is a KY-88 — old model, standard for Hammerhead frigates. The calibration display shows a resonance drift of 0.3 percent beyond spec. Written on the service tag: DRIFT ACCEPTABLE — J.OSSEK. Written below in different handwriting: DRIFT IS NOT ACCEPTABLE — RECALIBRATE BEFORE INSTALL.' },
+          { id: 'conduit_crawler_port', x: 12, y: 3, label: 'Conduit Crawler Maintenance Port',
+            description: 'A low hatch in the ring wall, barely a meter high, surrounded by amber and black hazard markings. An M-33 Conduit Crawler Droid is currently emerging from it: a segmented, copper-plated inspection unit designed to navigate the cable bundles in the ring\'s utility substructure. It moves with the patient efficiency of a creature that has never questioned its purpose. Its inspection log shows seven minor insulation faults and one major conduit degradation flagged this cycle.' },
+          { id: 'pneumatic_rivet_hopper', x: 18, y: 18, label: 'Pneumatic Rivet Supply Hopper',
+            description: 'A heavy supply hopper fed from an overhead pressurized line, dispensing structural fasteners for hull plating work. A KDY Mark IV Heavy Loader Droid stands beside it in standby: four-legged, teal-grey carapace, built for orbital construction environments. Its loading arms are folded, cargo bed empty. A work order is attached to the hopper: RIVET SPEC KDY-884, VOID-RATED, 40,000 UNITS, HULL SECTION 7F. AUTHORIZED BY: GUILD MASTER OSSEK. The order is two days old and the hopper is half empty.' },
+          { id: 'data_terminal_republic', x: 25, y: 6, label: 'Republic-Issue Diagnostic Terminal',
+            description: 'A Republic Navy diagnostic terminal — older hardware, late Mandalorian Wars manufacture, cutting edge thirty years ago and now kept running by institutional stubbornness and spare parts. The display cycles through engineering schematics for Valor-class structural tolerances. A sticky note on the housing reads: IF THIS TERMINAL GOES DOWN AGAIN CONTACT VAEL IN SECTION FOUR. NOT ENGINEERING. VAEL. Someone has written below it: WHO IS VAEL and someone else has written: EXACTLY.' },
         ],
         npcs: [
           { id: 'garrok_ithorian', x: 10, y: 8, kind: 'broker', label: 'Garrok',
@@ -3244,8 +3366,65 @@ const PLANETS = {
                 grants: { flags: ['vasek_atmosphere_discussed'] } },
             ],
           },
+          { id: 'czerka_liaison_hax', x: 34, y: 4, kind: 'czerka_liaison', label: 'Hax Durenn (Czerka Corporation)',
+            repeatPrompt: 'Hax straightens his cuffs. "The offer remains on the table. As do the terms."',
+            prompt: 'Everything about him is precisely positioned, from the cuff links to the practiced warmth in his expression. Czerka Corporation colors: deep crimson and corporate gold, worn like a weapon that is not hidden. He extends a hand. "Hax Durenn, Senior Trade Liaison, Czerka Corporation. We provide complementary services to shipyard operations throughout the Republic." A pause timed for effect. "And increasingly, throughout the broader galactic market."',
+            choices: [
+              { text: 'Ask what Czerka wants on a KDY ring.', morality: 0, loyalty: {},
+                result: '"Components, labor contracting, raw material sourcing — we offer all of it at rates the Guild cannot match. KDY is a premium shipyard with Republic-scale infrastructure costs." He smiles. "Czerka can absorb costs that independent guilds cannot. We have been in discussion with KDY executive staff about a service integration arrangement. Modest at first. Complementary." The word complementary lands precisely.',
+                grants: { flags: ['hax_pitch_heard'] } },
+              { text: 'Ask what happens to KDY workers under a Czerka arrangement.', morality: 5, loyalty: { republic: 8 },
+                result: '"Continued employment. Skill assessment and placement. Some role consolidation for efficiency." He does not change expression. "Labor transitions are a normal part of any operational integration. The Guild contract provisions are —" He stops. Recalibrates. "The workers keep their jobs. The terms of those jobs are renegotiated through proper channels." Everything in that answer is technically accurate.',
+                grants: { flags: ['hax_labor_impact_asked'] } },
+              { text: 'Offer to facilitate his access to KDY internal documents.', morality: -15, loyalty: { underworld: 15 },
+                result: 'He becomes very still. The warmth does not disappear — it gets sharper. "What kind of documents, and what is your price point?" He produces a datapad. "I represent Czerka\'s business intelligence division in addition to our trade function. If the documents are relevant to our integration assessment, we compensate appropriately."',
+                grants: { flags: ['hax_intel_offered'] } },
+            ],
+          },
+          { id: 'deuterium_specialist_kelso', x: 20, y: 12, kind: 'deuterium_specialist', label: 'Fuel Technician Kelso',
+            repeatPrompt: 'Kelso checks his wrist pressure monitor. "That micro-fracture isn\'t going to self-report."',
+            prompt: 'He has the slightly vacant expression of someone who has been inhaling trace deuterium compound off-gas for too many years, but his hands are precise and his tool belt is organized with the obsessive clarity of a man who works near things that can kill him. He does not look up when you approach. He is running a calibration pass on a canister from the fuel rack, and this takes priority. After a full minute he closes the case. "You\'re not engineering crew."',
+            choices: [
+              { text: 'Ask about the micro-fracture on the fuel canister.', morality: 5, loyalty: { republic: 5 },
+                result: '"That canister has been on the non-urgent queue for three weeks. Three weeks." He holds it up. The sealant patch is visible — a grey disc over a hairline crack. "Standard duty cycle on these is fourteen months. This one is at month twenty-two. If the patch fails under load pressure, the deuterium release in a closed environment is — not good." He puts it back on the rack. "I filed the report. Parts take time. This is how accidents happen."',
+                grants: { flags: ['kelso_canister_warned'] } },
+              { text: 'Ask how the fuel supply to construction bays works.', morality: 0, loyalty: {},
+                result: '"Transit pod to Bay 3, load on the transfer arm, hand-off to the assembly crew. Simple in theory. In practice, the routing protocols for volatile cargo on a pressurized ring have seventeen steps and someone skips four of them every third cycle." He holds up his wrist monitor. "That\'s why I carry this. If atmospheric deuterium goes above 0.8 parts per million, I want to know before the automatic alarm does."',
+                grants: { flags: ['kelso_fuel_system_explained'] } },
+            ],
+          },
+          { id: 'shipwright_master_ossek', x: 15, y: 8, kind: 'kdy_shipwright', label: 'Guild Shipwright Master Ossek',
+            repeatPrompt: 'Ossek marks something on his datapad. "The calibration drift doesn\'t fix itself."',
+            prompt: 'A man built like the work he does: solid, unhurried, with hands that have shaped metal and eyes that can read the health of a structure from across a bay. The leather apron is genuine, not decorative. The brass goggles pushed up on his forehead have a lens crack on the left side that hasn\'t been replaced in what looks like years. He studies the sub-light drive calibration cradle with focused attention. He acknowledges you with a single look. "Guild Master Ossek. Hull and propulsion certification, KDY Orbital Ring, forty-one years." He does not say this to impress you.',
+            choices: [
+              { text: 'Ask about the calibration drift he signed off on.', morality: 5, loyalty: { republic: 5 },
+                result: '"Point three percent." No defensiveness. "On a KY-88 in standard conditions, point three drift is within operational margin. In a combat engagement at sustained maximum thrust, it creates a resonance feedback loop that degrades output by twelve percent over three hours." He marks the datapad. "The Republic pilot filed it. He\'s right. I signed it acceptable because I don\'t have a replacement engine. The one in the supply queue is spoken for." A pause. "You see the problem."',
+                grants: { flags: ['ossek_drift_explained'] } },
+              { text: 'Ask what he knows about the unreported hull class.', morality: -5, loyalty: { underworld: 10 },
+                result: '"I have built ships for the Republic Navy for forty-one years. I have built ships that carried Republic soldiers into the Mandalorian Wars." His hands stop. "I know about the hull. I know what it is built to do. I am not the person you should be asking — but whoever you ask, ask before the Oversight Committee arrives."',
+                grants: { flags: ['ossek_hull_acknowledged'] } },
+              { text: 'Ask if he can authorize ring access past the Sentinel threshold.', morality: -5, loyalty: { underworld: 8 },
+                result: '"Guild Master authorization covers engineering access and construction clearance. Executive ring access is the Sentinel\'s call — Captain Vaelen holds that threshold." He gives you a long look. "I can authorize you into the maintenance underbelly and the construction cradles. Whether that\'s useful depends on what you\'re looking for."',
+                grants: { flags: ['ossek_access_explained'] } },
+            ],
+          },
+          { id: 'sub_deck_slicer_myra', x: 12, y: 4, kind: 'sub_deck_slicer', label: 'Myra Veth (Sub-Deck Tech)',
+            repeatPrompt: 'Myra is still pulling cable from the conduit access port. "Four hours of work left in this wall."',
+            prompt: 'She has her arm elbow-deep in a conduit access panel when you find her, a splice diagnostic running on the wrist-mounted datapad glowing through the grease on her forearm. Her utility belt is packed to capacity. She does not acknowledge you until she has finished the sequence she is running. Then she pulls her arm out and looks at you with the sharp assessment of someone who has learned to read strangers in two seconds. "You\'re in my light."',
+            choices: [
+              { text: 'Ask what she is working on.', morality: 0, loyalty: {},
+                result: '"Signal conduit degradation, Section B-12. Third time this month. The insulation is original install from thirty years ago — failing in sections every time the ring adjusts thermal load." She wipes her hands on a rag that is past helping. "Engineering keeps patching. I keep finding new patches. What they won\'t do is run new line because that requires a Guild authorization that requires a budget request." She glances at the conduit truss overhead. "If that main trunk goes, you lose comms and power to the entire briefing ring."',
+                grants: { flags: ['myra_conduit_briefed'] } },
+              { text: 'Ask if she can slice the armory locker in the briefing ring.', morality: -10, loyalty: { underworld: 12 },
+                result: '"That\'s a biometric lock with secondary mechanical override and a KDY Security alarm relay." She thinks. "Someone already tried the secondary mechanical — the scoring on the housing is fresh. They didn\'t have the technique." She clips the datapad to her belt. "I could do it in under ten minutes with the right splice tools and access to the conduit run behind that wall." Another look. "What\'s in it?"',
+                grants: { flags: ['myra_armory_approached'] } },
+              { text: 'Tell her about the acoustic intercept wall in the briefing area.', morality: -5, loyalty: { underworld: 8 },
+                result: '"I know about it." No surprise. "Who do you think installed the conduit routing that makes it work?" She lowers her voice. "Whoever put that wall in knows signals architecture. It\'s spliced into the B-12 trunk in a way that looks like a power regulation shunt if you don\'t know what you\'re looking at." She gives you a measured look. "Now I know you\'re not here for the sabacc tables."',
+                grants: { flags: ['myra_intercept_discussed'] } },
+            ],
+          },
         ],
-        collectibles: [{ id: 'market_stall_components', x: 34, y: 8, label: 'Overstock Actuator Components', reward: 200 }],
+        collectibles: [{ id: 'market_stall_components', x: 34, y: 5, label: 'Overstock Actuator Components', reward: 200 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 1, 1, 38, 22, 'floor');
@@ -4305,6 +4484,207 @@ function NpcPortrait({ kind, accent }) {
       </svg>
     );
   }
+  if (kind === 'kdy_guild_overseer') {
+    const robe = '#182858', gold = '#C8A030', skin = '#D4B090', mono = accent || '#FFAA00';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 24 L21 24 L23 42 Z" fill={robe} />
+        <path d="M9 24 L21 24 L20 13 L10 13 Z" fill={robe} />
+        <rect x="8" y="11" width="4" height="3" rx="0.5" fill={gold} opacity="0.9" />
+        <rect x="18" y="11" width="4" height="3" rx="0.5" fill={gold} opacity="0.9" />
+        <rect x="5" y="22" width="4" height="6" rx="0.5" fill={robe} opacity="0.8" />
+        <rect x="21" y="22" width="4" height="6" rx="0.5" fill={robe} opacity="0.8" />
+        <ellipse cx="15" cy="7" rx="5" ry="5.5" fill={skin} />
+        <ellipse cx="12.5" cy="6.2" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <ellipse cx="17.5" cy="6.2" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <circle cx="17.5" cy="6.2" r="1.6" fill="none" stroke={mono} strokeWidth="0.7" opacity="0.9" />
+        <line x1="19.1" y1="6.2" x2="21" y2="7" stroke={mono} strokeWidth="0.5" />
+        <rect x="9" y="12" width="12" height="1.5" rx="0.3" fill={gold} opacity="0.5" />
+        <path d="M11 13 L9 18 L10 24 L11 23 L11 18 Z" fill={robe} opacity="0.6" />
+        <path d="M19 13 L21 18 L20 24 L19 23 L19 18 Z" fill={robe} opacity="0.6" />
+      </svg>
+    );
+  }
+  if (kind === 'republic_navy_inspector') {
+    const uni = '#2A3A5A', silver = '#B0B8C0', skin = '#C8A88A', glv = '#E8E4D8';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill={uni} />
+        <path d="M9 22 L21 22 L20 12 L10 12 Z" fill={uni} />
+        <ellipse cx="15" cy="6" rx="5" ry="5.5" fill={skin} />
+        <ellipse cx="12.5" cy="5.5" rx="0.85" ry="0.75" fill="#2A1A14" />
+        <ellipse cx="17.5" cy="5.5" rx="0.85" ry="0.75" fill="#2A1A14" />
+        <rect x="9" y="12" width="12" height="1.2" fill={silver} opacity="0.6" />
+        <rect x="10" y="14" width="3" height="0.9" rx="0.3" fill={silver} opacity="0.9" />
+        <rect x="14" y="14" width="3" height="0.9" rx="0.3" fill={silver} opacity="0.9" />
+        <rect x="10" y="15.5" width="2" height="0.9" rx="0.3" fill={silver} opacity="0.7" />
+        <rect x="13.5" y="15.5" width="2" height="0.9" rx="0.3" fill={silver} opacity="0.7" />
+        <rect x="17" y="15.5" width="2" height="0.9" rx="0.3" fill={silver} opacity="0.7" />
+        <rect x="5" y="22" width="5" height="7" rx="0.5" fill={glv} opacity="0.9" />
+        <rect x="20" y="22" width="5" height="7" rx="0.5" fill={glv} opacity="0.9" />
+        <path d="M9.5 12 L8 16 L9 22 L10 22 L10 17 Z" fill={uni} opacity="0.7" />
+        <path d="M20.5 12 L22 16 L21 22 L20 22 L20 17 Z" fill={uni} opacity="0.7" />
+      </svg>
+    );
+  }
+  if (kind === 'kdy_shipwright') {
+    const apron = '#4A3218', suit = '#3A4028', skin = '#C8A480', goggle = '#8A7038';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill={suit} />
+        <path d="M9 22 L21 22 L20 13 L10 13 Z" fill={suit} />
+        <rect x="10" y="16" width="10" height="20" rx="1" fill={apron} opacity="0.85" />
+        <ellipse cx="15" cy="7" rx="5" ry="5.5" fill={skin} />
+        <ellipse cx="12.5" cy="6.5" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <ellipse cx="17.5" cy="6.5" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <rect x="10" y="3" width="5" height="2.5" rx="1" fill={goggle} opacity="0.9" />
+        <rect x="15" y="3" width="5" height="2.5" rx="1" fill={goggle} opacity="0.9" />
+        <rect x="9.5" y="3.5" width="11" height="1.5" rx="0.5" fill={goggle} opacity="0.5" />
+        <rect x="5" y="22" width="5" height="8" rx="0.5" fill={suit} opacity="0.7" />
+        <rect x="20" y="22" width="5" height="8" rx="0.5" fill={apron} opacity="0.8" />
+        <rect x="10" y="22" width="10" height="1" fill={apron} opacity="0.6" />
+      </svg>
+    );
+  }
+  if (kind === 'deuterium_specialist') {
+    const suit = '#D44818', patch = '#E8E0D0', skin = '#C89870', resp = '#2A2A2A';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M6 42 L8 21 L22 21 L24 42 Z" fill={suit} />
+        <path d="M8 21 L22 21 L21 12 L9 12 Z" fill={suit} />
+        <ellipse cx="15" cy="6.5" rx="5.5" ry="6" fill={skin} />
+        <ellipse cx="12.5" cy="6" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <ellipse cx="17.5" cy="6" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <rect x="11" y="9.5" width="8" height="3.5" rx="1.5" fill={resp} opacity="0.85" />
+        <rect x="12.5" y="10" width="5" height="1.5" rx="0.5" fill="#3A3A3A" opacity="0.6" />
+        <rect x="9" y="12" width="5" height="4" rx="0.5" fill={patch} opacity="0.8" />
+        <rect x="16" y="14" width="5" height="3" rx="0.5" fill={patch} opacity="0.8" />
+        <rect x="5" y="21" width="5" height="8" rx="0.5" fill={suit} opacity="0.8" />
+        <rect x="20" y="21" width="5" height="8" rx="0.5" fill={suit} opacity="0.8" />
+        <line x1="8" y1="28" x2="8" y2="32" stroke={patch} strokeWidth="1" opacity="0.6" />
+        <line x1="22" y1="28" x2="22" y2="32" stroke={patch} strokeWidth="1" opacity="0.6" />
+        <rect x="9" y="21" width="12" height="1" fill={patch} opacity="0.4" />
+      </svg>
+    );
+  }
+  if (kind === 'czerka_liaison') {
+    const suit = '#8A1818', gold = '#C8A020', skin = '#D4B090', hair = '#1A1010';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill={suit} />
+        <path d="M9 22 L21 22 L20 12 L10 12 Z" fill={suit} />
+        <path d="M10 12 L9 20 L10 22 L11 18 Z" fill={gold} opacity="0.7" />
+        <path d="M20 12 L21 20 L20 22 L19 18 Z" fill={gold} opacity="0.7" />
+        <rect x="13" y="17" width="4" height="5" fill={gold} opacity="0.5" />
+        <ellipse cx="15" cy="6.5" rx="5" ry="5.5" fill={skin} />
+        <rect x="10" y="1.5" width="10" height="5" rx="2.5" fill={hair} opacity="0.85" />
+        <ellipse cx="12.5" cy="6" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <ellipse cx="17.5" cy="6" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <rect x="13.5" y="8.5" width="3" height="0.8" rx="0.3" fill={gold} opacity="0.6" />
+        <rect x="5" y="22" width="5" height="7" rx="0.5" fill={suit} opacity="0.9" />
+        <rect x="20" y="22" width="5" height="7" rx="0.5" fill={suit} opacity="0.9" />
+        <rect x="9" y="21" width="12" height="1.5" fill={gold} opacity="0.4" />
+      </svg>
+    );
+  }
+  if (kind === 'kuati_sub_director') {
+    const robe = '#4A2858', silver = '#B8C0C8', skin = '#D4C0A0', silk = '#E8E0D8';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M6 42 L9 23 L21 23 L24 42 Z" fill={robe} />
+        <path d="M9 23 L21 23 L20 13 L10 13 Z" fill={robe} />
+        <rect x="8" y="11" width="5" height="3" rx="1" fill={silver} opacity="0.9" />
+        <rect x="17" y="11" width="5" height="3" rx="1" fill={silver} opacity="0.9" />
+        <ellipse cx="15" cy="7" rx="4.5" ry="5" fill={skin} />
+        <ellipse cx="12.5" cy="6.5" rx="0.85" ry="0.75" fill="#3A2A20" />
+        <ellipse cx="17.5" cy="6.5" rx="0.85" ry="0.75" fill="#3A2A20" />
+        <rect x="14" y="17" width="2" height="8" rx="0.5" fill={silk} opacity="0.7" />
+        <path d="M9.5 13 L7 18 L9 23 L10 22 L9 18 Z" fill={robe} opacity="0.7" />
+        <path d="M20.5 13 L23 18 L21 23 L20 22 L21 18 Z" fill={robe} opacity="0.7" />
+        <rect x="5" y="23" width="5" height="7" rx="0.5" fill={robe} opacity="0.8" />
+        <rect x="20" y="23" width="5" height="7" rx="0.5" fill={robe} opacity="0.8" />
+        <rect x="9" y="22" width="12" height="1.5" fill={silver} opacity="0.3" />
+      </svg>
+    );
+  }
+  if (kind === 'republic_pilot') {
+    const suit = '#D4501A', wht = '#E8E4D8', skin = '#C8A87A', badge = accent || '#44AAFF';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill={suit} />
+        <path d="M9 22 L21 22 L20 12 L10 12 Z" fill={suit} />
+        <rect x="8" y="17" width="5" height="5" rx="0.5" fill={wht} opacity="0.85" />
+        <rect x="17" y="17" width="5" height="5" rx="0.5" fill={wht} opacity="0.85" />
+        <ellipse cx="15" cy="6.5" rx="5" ry="5.5" fill={skin} />
+        <ellipse cx="12.5" cy="6" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <ellipse cx="17.5" cy="6" rx="0.9" ry="0.8" fill="#2A1A14" />
+        <rect x="9" y="12" width="5" height="2" rx="0.4" fill={wht} opacity="0.7" />
+        <rect x="9" y="14.5" width="3" height="1.5" rx="0.3" fill={badge} opacity="0.8" />
+        <rect x="5" y="22" width="5" height="8" rx="0.5" fill={suit} opacity="0.8" />
+        <rect x="20" y="22" width="5" height="8" rx="0.5" fill={suit} opacity="0.8" />
+        <rect x="10" y="12" width="10" height="1" fill={wht} opacity="0.3" />
+      </svg>
+    );
+  }
+  if (kind === 'sub_deck_slicer') {
+    const cov = '#1A2A1A', dp = accent || '#44AAFF', skin = '#C89870', belt = '#2A1A0A';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill={cov} />
+        <path d="M9 22 L21 22 L20 12 L10 12 Z" fill={cov} />
+        <ellipse cx="15" cy="6.5" rx="4.8" ry="5.2" fill={skin} />
+        <ellipse cx="12.5" cy="6" rx="0.9" ry="0.8" fill="#1A1A1A" />
+        <ellipse cx="17.5" cy="6" rx="0.9" ry="0.8" fill="#1A1A1A" />
+        <path d="M9 2 L9 8 L15 10 L21 8 L21 2 L15 1 Z" fill={cov} opacity="0.7" />
+        <rect x="5" y="22" width="4" height="8" rx="0.5" fill={cov} opacity="0.8" />
+        <rect x="4" y="25" width="5" height="4" rx="1" fill={dp} opacity="0.6" />
+        <rect x="4.5" y="25.5" width="4" height="3" rx="0.5" fill={dp} opacity="0.4" />
+        <rect x="21" y="22" width="4" height="8" rx="0.5" fill={cov} opacity="0.8" />
+        <rect x="9" y="20" width="12" height="2" fill={belt} opacity="0.8" />
+        <rect x="10" y="20.5" width="2" height="1" rx="0.3" fill="#5A3A1A" />
+        <rect x="14" y="20.5" width="2" height="1" rx="0.3" fill="#5A3A1A" />
+        <rect x="18" y="20.5" width="2" height="1" rx="0.3" fill="#5A3A1A" />
+      </svg>
+    );
+  }
+  if (kind === 'zero_g_welder') {
+    const suit = '#384058', visor = '#D4A820', pad = '#484858';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M5 42 L8 22 L22 22 L25 42 Z" fill={suit} />
+        <path d="M8 22 L22 22 L21 12 L9 12 Z" fill={suit} />
+        <rect x="7" y="11" width="5" height="4" rx="0.5" fill={pad} opacity="0.9" />
+        <rect x="18" y="11" width="5" height="4" rx="0.5" fill={pad} opacity="0.9" />
+        <ellipse cx="15" cy="7" rx="6" ry="6.5" fill={suit} />
+        <rect x="9" y="3" width="12" height="8" rx="3" fill={visor} opacity="0.9" />
+        <rect x="10" y="4" width="10" height="5.5" rx="2" fill="#AA8010" opacity="0.7" />
+        <rect x="4" y="22" width="5" height="9" rx="1" fill={pad} opacity="0.85" />
+        <rect x="21" y="22" width="5" height="9" rx="1" fill={pad} opacity="0.85" />
+        <rect x="9" y="21" width="12" height="1.5" fill={pad} opacity="0.6" />
+        <rect x="7" y="35" width="5" height="3" rx="0.5" fill={pad} opacity="0.7" />
+        <rect x="18" y="35" width="5" height="3" rx="0.5" fill={pad} opacity="0.7" />
+      </svg>
+    );
+  }
+  if (kind === 'kdy_security_marine') {
+    const armor = '#D0D5D8', blue = '#1A3A8A', visorC = accent || '#44AAFF', dark = '#1A1A2A';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M6 42 L8 21 L22 21 L24 42 Z" fill={armor} />
+        <path d="M8 21 L22 21 L20 11 L10 11 Z" fill={armor} />
+        <rect x="8" y="10" width="4" height="3" rx="0.5" fill={blue} opacity="0.9" />
+        <rect x="18" y="10" width="4" height="3" rx="0.5" fill={blue} opacity="0.9" />
+        <ellipse cx="15" cy="6" rx="5.5" ry="6" fill={dark} />
+        <rect x="9.5" y="3.5" width="11" height="5" rx="1.5" fill={dark} />
+        <rect x="10" y="5" width="10" height="2.5" rx="0.5" fill={visorC} opacity="0.7" />
+        <rect x="5" y="21" width="5" height="9" rx="0.5" fill={armor} opacity="0.9" />
+        <rect x="20" y="21" width="5" height="9" rx="0.5" fill={armor} opacity="0.9" />
+        <rect x="9" y="20" width="12" height="1.5" fill={blue} opacity="0.8" />
+        <rect x="10" y="14" width="10" height="1" fill={blue} opacity="0.5" />
+        <rect x="16" y="16" width="4" height="3" rx="0.5" fill={blue} opacity="0.6" />
+      </svg>
+    );
+  }
   return null;
 }
 
@@ -4699,6 +5079,10 @@ const ITEMS = {
   kdy_director_override:     { id:'kdy_director_override',     name:'KDY Director Override Token',           type:'quest',      iconKind:'keycard',  value:4000, description:'A Director-tier clearance token. Vectis\'s optical lenses turn green the moment you present it. Executive berths, private suites, and Bador transit all open without question.' },
   executive_blackmail_slate: { id:'executive_blackmail_slate', name:'Moff Bribe Registry (Classified Slate)', type:'quest',      iconKind:'datapad',  value:0,    description:'A KDY classification-red political slate listing every Moff who accepted a bribe from corporate for reduced oversight, with amounts, dates, and the name of the KDY board member who arranged each payment. Lady Kuat has been keeping this for fourteen months.' },
 
+  kdy_inspection_report:    { id:'kdy_inspection_report',    name:'Republic Navy Inspection Report',     type:'quest',  iconKind:'datapad', value:0,   description:'Inspector Thane\'s documented discrepancies between KDY published construction logs and internal records. Seven pages of precise Republic Navy notation. Three of the fourteen line items are highlighted in red.' },
+  bador_facility_manifest:  { id:'bador_facility_manifest',  name:'Bador Surface Facility Manifest',      type:'quest',  iconKind:'datapad', value:0,   description:'A partial shipping manifest for Facility Bador-7. Component classes are listed in restricted KDY shorthand. The quantities exceed anything authorized by the Guild Board audit.' },
+  czerka_contract_draft:    { id:'czerka_contract_draft',    name:'Czerka Integration Contract Draft',    type:'quest',  iconKind:'datapad', value:500, description:'A preliminary draft of Czerka Corporation\'s proposed service integration with KDY. The fine print is extraordinary. Hax left a copy at the trade desk.' },
+  guild_auth_chip:          { id:'guild_auth_chip',          name:'Guild Authorization Clearance Chip',   type:'quest',  iconKind:'keycard', value:0,   description:'An Overseer Dalin Orveth Guild authorization chip. It grants access to the construction cradles and maintenance underbelly of the KDY ring.' },
   corrupt_manifest:          { id:'corrupt_manifest',          name:'Corrupt Manufacturing Manifest',         type:'quest',      iconKind:'datapad',  value:0,    description:'A KDY Sector 4 assembly log with falsified output entries. The actual production figures are encoded in the metadata.' },
 
 };
