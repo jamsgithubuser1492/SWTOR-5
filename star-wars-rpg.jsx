@@ -2907,7 +2907,7 @@ const PLANETS = {
     },
   },
   kuat: {
-    id: 'kuat', name: 'Kuat', travelCost: 1200, startZoneId: 'kuat_private_suites',
+    id: 'kuat', name: 'Kuat', travelCost: 1200, startZoneId: 'kdy_landing_bay',
     requiresFlag: 'senate_line_secured',
     description: 'The orbital ring never stops moving. Below it, Bador Moon keeps its secrets in glass and ash.',
     zones: {
@@ -2920,6 +2920,8 @@ const PLANETS = {
         bg: 'radial-gradient(circle at 60% 30%, #0E1520 0%, #060810 70%)', ambient: 'traffic',
         decor: ['neon_sign', 'girder'],
         doors: [
+          { x: 0, y: 8, targetZone: 'kdy_landing_bay', targetPos: { x: 30, y: 11 }, label: 'Ring Transit' },
+          { x: 0, y: 9, targetZone: 'kdy_landing_bay', targetPos: { x: 30, y: 12 }, label: 'Ring Transit' },
           { x: 27, y: 8, targetZone: 'bador_main_base', targetPos: { x: 1, y: 9 }, label: 'Shuttle to Bador' },
           { x: 27, y: 9, targetZone: 'bador_main_base', targetPos: { x: 1, y: 10 }, label: 'Shuttle to Bador' },
         ],
@@ -2932,8 +2934,52 @@ const PLANETS = {
             once: true, grantsFlag: 'ghost_keel_briefed', grantsCodex: 'codex-kuat-operation' },
           { id: 'tanner_executive_terminal', x: 20, y: 5, label: 'Executive Holonet Terminal',
             description: 'The terminal links to KDY\'s private shipping network. Tanner\'s access codes are pre-loaded.' },
+          { id: 'grand_executive_safe', x: 24, y: 8, label: 'Grand Executive Safe',
+            description: 'A heavy wall-mounted safe concealed behind a gilt-framed painting of the Kuat orbital ring in its first year of construction. The painter included the still-visible scoring on the outer hull from a pirate raid that KDY officially denies ever occurred. Inside, behind two layers of biometric lock, are a stack of nobility rings, a pile of credit wafers totaling something substantial, and three classification-red political slates. The slates are labeled with Moff surnames.',
+            triggersMinigame: 'terminal_slicing',
+            requiresFlag: 'lady_kuat_trust',
+            once: true, grantsFlag: 'executive_safe_opened', grantsItem: 'executive_blackmail_slate' },
+          { id: 'historical_model_case', x: 22, y: 12, label: 'Display Case — KDY Historical Ship Models',
+            description: 'Nine gold-plated starship miniatures under a polished transparisteel case. Each one is a production milestone. The first is labeled YEAR ONE — CORELLIAN CORVETTE DESIGN COMMISSION. The last is unlabeled, a hull form that does not match any published vessel class. The case is sealed with a physical lock that was last opened recently. The maintenance log shows it was accessed three days ago.',
+            once: true, grantsFlag: 'historical_models_examined', grantsCodex: 'codex-kdy-dreadnought' },
+          { id: 'privileged_holonet_terminal', x: 24, y: 14, label: 'Privileged Holonet Terminal',
+            description: 'An unmonitored high-bandwidth terminal feeding through KDY\'s private network backbone, which predates Imperial censorship architecture. It can reach any relay in the galaxy without a routing trace. The Republic Senate Oversight Committee contact code Rael encoded on the blueprint drive would reach its destination without interception from here.',
+            requiresFlag: 'rael_helped',
+            once: true, grantsFlag: 'blueprints_transmitted', grantsItem: 'union_leaders_contact' },
         ],
         npcs: [
+          { id: 'captain_vaelen', x: 4, y: 8, kind: 'kdy_executive_sentinel', label: 'Captain Vaelen',
+            repeatPrompt: 'Vaelen\'s obsidian visor does not turn toward you. "Your access status has not changed."',
+            prompt: 'He is positioned at the transit threshold and gives no indication of having moved since you arrived. The ivory-and-gold armor is not issued equipment — it is older than any current KDY contract, older than the Imperial occupation, older than the man wearing it. He speaks without turning his head. "You came through the ring transit." A statement not requiring a response. "Ring-Sec clears the transit gate. The Sentinel roster clears the suites. Those are different clearances." He lets this sit.',
+            choices: [
+              { text: 'Present the KDY Director override token.', morality: 0, loyalty: {},
+                result: 'The token reads instantly. Both optical sensors in the visor shift to a cooler configuration. "Director clearance confirmed." He steps two centimeters to the left — the difference between blocking the corridor and permitting passage. "Lady Kuat will see you in the inner suite. She was expecting you." He says nothing else.',
+                grants: { flags: ['vaelen_cleared'] } },
+              { text: 'Tell him Tanner sent you.', morality: 0, loyalty: {},
+                result: '"Tanner has KDY operational clearance. Not residential clearance." He still does not look at you. "Those are not the same authorization tier. I recognize that you are here. I also recognize that you are not cleared past this threshold." A pause. "If someone in the suites wishes to clear you personally, I will be informed."',
+                grants: { flags: ['vaelen_tanner_refused'] } },
+              { text: 'Ask him about House Kuat\'s history on the ring.', morality: 5, loyalty: { republic: 5 },
+                result: 'For the first time, he turns his head. A fraction. "House Kuat has maintained this ring since before the Republic codified its current article of statehood." He says this the way a fact is stated when the speaker believes ignoring it is a form of stupidity. "The Empire placed an emblem over a KDY dock seal in Year Three of the occupation. That emblem is a decal. The dock seal is twenty-two years older." He turns back. "Lady Kuat is not available without authorization."',
+                grants: { flags: ['vaelen_history_shared'] } },
+            ],
+          },
+          { id: 'lady_kuat', x: 22, y: 10, kind: 'kdy_executive_sentinel', label: 'Lady Kuat',
+            requiresFlag: 'vaelen_cleared',
+            hideAfterFlags: ['lady_kuat_mission_complete'],
+            repeatPrompt: 'Lady Kuat sets down her tea. "The window is smaller than I estimated. Have you found what you need?"',
+            prompt: 'She is old in the way that orbital rings are old — not declining but accumulating weight. She does not stand when you enter. She does not have to. She is seated at a writing desk of antique Kuati dark-wood in a room that smells of something rare and unidentifiable. She looks at you over the rim of a tea cup. "You came through Tanner\'s operation." She says it as a sorting mechanism, not a question. "That means you are capable. It does not yet mean you are trustworthy." She sets the cup down with precision. "I need a specific thing done before the ISB team that Krennis called arrives at this ring. You are the only party in these suites not on record."',
+            choices: [
+              { text: 'Ask what the ISB team is coming for.', morality: 0, loyalty: {},
+                result: '"Me." No hesitation. "I have been channeling KDY ship schematics and encrypted navigation data to an anti-Imperial Senate faction for fourteen months. Krennis has been building a file. He does not have it complete yet, but the team he called will finish it." She looks at you calmly. "There is a slate in the executive safe with the names of every Moff who has accepted a bribe from KDY corporate for reduced oversight. If that slate reaches the Senate Oversight Committee arriving in four cycles, the ISB\'s case against me becomes politically untenable." She pauses. "The safe is behind the painting."',
+                grants: { flags: ['lady_kuat_mission_understood', 'lady_kuat_trust'] } },
+              { text: 'Ask what she offers in exchange.', morality: -5, loyalty: { underworld: 8 },
+                result: '"KDY transit rights, permanent and unrestricted. Not Tanner\'s operational clearance — full ring access, cargo manifest exemption, and a standing diplomatic cover story credible enough to satisfy any Republic port inspector." She refills her cup. "House Kuat has maintained that level of access for selected partners since before the Clone Wars. It is worth considerably more than what I am asking."',
+                grants: { flags: ['lady_kuat_offered_terms'] } },
+              { text: 'Tell her the ISB slate can also reach the Oversight Committee through the privileged terminal.', morality: 10, loyalty: { republic: 15 },
+                result: 'She looks at you for a moment with something that might be reassessment. "You have been thorough." She opens the safe. Removes the slate and sets it on the desk in front of you. "The terminal in the far corner has the routing code pre-loaded. Send it before Krennis\'s team docks." She looks out the viewport at Kuat below. "I have been outlasting temporary plagues for thirty years. I expect this one will follow the pattern."',
+                grants: { flags: ['lady_kuat_trust', 'lady_kuat_mission_complete'], items: ['executive_blackmail_slate'] } },
+            ],
+          },
           { id: 'tanner', x: 18, y: 9, kind: 'broker', label: 'Tanner',
             questNpc: true,
             hideAfterFlags: ['tanner_briefed'],
@@ -2960,7 +3006,254 @@ const PLANETS = {
           pt(g, 8, 9, 'floor'); pt(g, 8, 10, 'floor'); pt(g, 8, 11, 'floor');
           pt(g, 8, 12, 'floor'); pt(g, 8, 13, 'floor'); pt(g, 8, 14, 'floor');
           pt(g, 13, 12, 'floor'); pt(g, 13, 13, 'floor'); pt(g, 13, 14, 'floor');
+          pt(g, 0, 8, 'door'); pt(g, 0, 9, 'door');
           pt(g, 27, 8, 'door'); pt(g, 27, 9, 'door');
+          return g;
+        },
+      },
+
+      kdy_landing_bay: {
+        id: 'kdy_landing_bay', name: 'KDY Orbital Ring — Landing Bay',
+        subtitle: 'Kuat Drive Yards · Ring Berth Seven',
+        width: 32, height: 22, spawnPos: { x: 2, y: 10 }, textureId: 'ferrowake',
+        accent: '#3A7AB0', accentGlow: 'rgba(58,122,176,0.28)', accentDim: '#123458',
+        floorColor: '#141A20', floorAlt: '#1A2028', wallDark: '#080C10', wallLight: '#101418',
+        bg: 'radial-gradient(circle at 40% 30%, #0E1520 0%, #060A10 70%)', ambient: 'traffic',
+        decor: ['neon_sign', 'pipe', 'girder'],
+        doors: [
+          { x: 31, y: 8,  targetZone: 'kuat_private_suites', targetPos: { x: 1, y: 8 }, label: 'Executive Transit' },
+          { x: 31, y: 9,  targetZone: 'kuat_private_suites', targetPos: { x: 1, y: 9 }, label: 'Executive Transit' },
+          { x: 31, y: 12, targetZone: 'kdy_briefing_area', targetPos: { x: 1, y: 8 }, label: 'Briefing Ring' },
+          { x: 31, y: 13, targetZone: 'kdy_briefing_area', targetPos: { x: 1, y: 9 }, label: 'Briefing Ring' },
+          { x: 14, y: 21, targetZone: 'kdy_lounge_market', targetPos: { x: 14, y: 1 }, label: 'Market Ring' },
+          { x: 15, y: 21, targetZone: 'kdy_lounge_market', targetPos: { x: 15, y: 1 }, label: 'Market Ring' },
+        ],
+        worldObjects: [
+          { id: 'fuel_rig_4a', x: 5, y: 3, label: 'Fuel Rig 4-A',
+            description: 'A coaxium refueling conduit the width of a speeder. The safety clamps are corroded and the flow regulators have been manually bypassed. Tamper with the pressure valve and this entire bay becomes a distraction of spectacular proportions.',
+            triggersMinigame: 'valve_override',
+            once: true, grantsFlag: 'fuel_rig_tampered' },
+          { id: 'manifest_holo_terminal', x: 26, y: 4, label: 'Manifest Holo-Terminal',
+            description: 'A public-access node cycling through incoming cargo manifests. Everything on the surface is routine. Below the routing headers there are eleven entries marked CONSIGNMENT RESTRICTED — KDY DIRECTOR CLEARANCE. The timestamps are all within the last six hours.',
+            triggersMinigame: 'terminal_slicing',
+            once: true, grantsFlag: 'manifest_accessed', grantsItem: 'missing_hyperdrive_manifest' },
+          { id: 'vectis_terminal', x: 26, y: 17, label: 'Ring Transit Terminal — RX-9',
+            description: 'The bronze-and-black chassis of Vectis descends on its ceiling track. Multi-lensed optics converge on you with the calm precision of a targeting system repurposed for customer service. "Greetings, traveler. Ring Sector Security clearance is required for Executive and Briefing ring access. Please present credentials or validate corporate clearance codes. Unauthorized transit attempts are logged and prosecuted under KDY Orbital Security Ordinance 44-G."',
+            requiresNoneFlags: ['vectis_standard_cleared'] },
+          { id: 'vectis_terminal_active', x: 26, y: 17, label: 'Ring Transit — RX-9 (Cleared)',
+            description: 'Vectis rotates its optical head as you approach. "Clearance on file. Standard ring access confirmed. Executive berths require Director override or validated KDY clearance code. Please mind the acceleration inertia." The shuttle bays on the right side of the bay are open.',
+            requiresFlag: 'vectis_standard_cleared' },
+          { id: 'bay7_impound_notice', x: 14, y: 3, label: 'Docking Bay 7 — Impound Notice',
+            description: 'A bright red notice is locked to Docking Bay 7\'s blast door. KDY Ring-Sec seal. The ship name is listed as FREE HORIZON, registry Corellia. Impoundment reason: manifest discrepancy, Class B commercial violation. The notice is three days old.' },
+        ],
+        npcs: [
+          { id: 'corporal_dren', x: 18, y: 10, kind: 'kdy_ring_sec', label: 'Guard Corporal Dren',
+            repeatPrompt: 'Dren glances at you, chewing his stim strip. "Shift doesn\'t end for four hours. Don\'t give me something to file a report on."',
+            prompt: 'The scorch mark on his left chest plate is deep enough that no amount of polish will touch it. He looks you over with the eyes of a man who has categorized ten thousand people walking through this bay and found exactly none of them surprising. He chews slowly. "New arrival. Berth Seven passage. You\'ve got that look — someone sent you, you don\'t know exactly why, and you\'re trying to figure out if I\'m a problem."',
+            choices: [
+              { text: 'You\'re perceptive. How much to let me look at that impound manifest?', morality: -5, loyalty: { underworld: 8 },
+                result: 'He stops chewing for one full second. Then resumes. "Off-world liquor. Not the synthetic kind — the real kind, from somewhere that has trees." He does not look at the impound terminal. "I can\'t see what happens if you happen to use the access panel while I\'m on my rounds. Which happen to take me to the north end of the bay in about four minutes." He walks north.',
+                grants: { flags: ['dren_bribed_item'], items: [] } },
+              { text: 'Tell him you\'re here on KDY business.', morality: 0, loyalty: {},
+                result: 'He processes this with the slow metabolism of a man who has heard every story. "Ring clearance gets you the standard transit. Executive berths need a Director code or a Sentinel escort." He jerks his chin toward the Vectis terminal. "Droid handles the paperwork." He goes back to his stim strip.',
+                grants: { flags: ['dren_standard_briefed'] } },
+              { text: 'Ask about the man whose ship is impounded in Bay 7.', morality: 5, loyalty: { republic: 5 },
+                result: '"Jaxen. Free Horizon. Corellia registry." He recites it from memory, not looking at anything. "Three days in Bay 7. Claims his cargo manifest was falsified before docking. Claims he was set up." He pauses. "Ring-Sec doesn\'t care who set up who. Manifest discrepancy is a manifest discrepancy." Another pause, slightly longer. "He might be telling the truth. The discrepancy is oddly clean for a working smuggler. Working smugglers make messy mistakes."',
+                grants: { flags: ['dren_jaxen_discussed'] } },
+            ],
+          },
+          { id: 'jaxen_smuggler', x: 5, y: 17, kind: 'smuggler', label: 'Jaxen',
+            repeatPrompt: 'Jaxen is sitting against the scrap bins with his arms on his knees. "You find anything?"',
+            prompt: 'He stands up too fast. Three days in a landing bay will do that to a man — every approaching footstep sounds like either rescue or arrest. "You\'re not Ring-Sec." He exhales. "My ship is in Bay 7. My manifest had twelve military-grade hyperdrive motivators listed that were never in the crate when I accepted the cargo on Corellia. I know who set me up. A broker out of the Market ring — operation called Sector House. They used my transit route to move restricted hardware and filed the manifest under my registry before I even lifted off." He looks exhausted. "I just need someone to pull the original cargo receipt from the Corellian dock authority. That\'s all. It proves the manifest was altered post-filing."',
+            choices: [
+              { text: 'Offer to slice the manifest records and clear his ship.', morality: -5, loyalty: { underworld: 10 },
+                result: 'He stares at you for a moment, recalibrating. "That\'s — yes. That gets me out of here." He pulls out a data chip. "My ship\'s transponder backup. If you can get to the manifest terminal and overwrite the discrepancy log, Ring-Sec loses its hold. Cargo violation without documentation gets dismissed." He presses the chip into your hand. "I owe you a transit favor. Free Horizon runs three routes — Corellia, Nar Shaddaa, and Kuat. I don\'t forget a favor."',
+                grants: { flags: ['jaxen_helped', 'jaxen_owes_favor'], items: ['missing_hyperdrive_manifest'] } },
+              { text: 'Tell him to contact a Republic legal advocate.', morality: 10, loyalty: { republic: 8 },
+                result: '"Legal advocacy takes six weeks and costs more credits than the ship is worth at auction." He is not wrong. He looks at the scrap bins behind him. "I\'m not asking you to do anything wrong. I\'m asking you to help me prove someone else did."',
+                grants: { flags: ['jaxen_republic_advised'] } },
+              { text: 'Ask what the Sector House operation is.', morality: 0, loyalty: {},
+                result: '"Shell company. Runs out of a stall in the Market ring — Garrok\'s, I think, is the front. They broker restricted cargo across three transit routes and use registered free traders as cut-outs. When something goes wrong, the registered trader takes the KDY citation and Sector House dissolves the route." He shakes his head. "This isn\'t the first time."',
+                grants: { flags: ['sector_house_identified'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'scrap_surplus_crate', x: 4, y: 17, label: 'Scrap Surplus — Discarded Components', reward: 120 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 30, 20, 'floor');
+          carveRect(g, 1, 1, 8, 7, 'wall');  carveRect(g, 2, 2, 7, 6, 'floor');  pt(g, 8, 3, 'floor'); pt(g, 8, 4, 'floor');
+          carveRect(g, 22, 1, 30, 7, 'wall'); carveRect(g, 23, 2, 29, 6, 'floor'); pt(g, 22, 3, 'floor'); pt(g, 22, 4, 'floor');
+          carveRect(g, 22, 14, 30, 20, 'wall'); carveRect(g, 23, 15, 29, 19, 'floor'); pt(g, 22, 15, 'floor'); pt(g, 22, 16, 'floor');
+          carveRect(g, 1, 14, 9, 20, 'wall'); carveRect(g, 2, 15, 8, 19, 'floor'); pt(g, 9, 15, 'floor'); pt(g, 9, 16, 'floor');
+          pt(g, 31, 8, 'door'); pt(g, 31, 9, 'door');
+          pt(g, 31, 12, 'door'); pt(g, 31, 13, 'door');
+          pt(g, 14, 21, 'door'); pt(g, 15, 21, 'door');
+          return g;
+        },
+      },
+
+      kdy_briefing_area: {
+        id: 'kdy_briefing_area', name: 'KDY Team Briefing Area',
+        subtitle: 'Kuat Drive Yards · Restricted Operations Ring',
+        width: 36, height: 22, spawnPos: { x: 2, y: 8 }, textureId: 'ferrowake',
+        accent: '#5A7A9A', accentGlow: 'rgba(90,122,154,0.25)', accentDim: '#1A3A5A',
+        floorColor: '#111820', floorAlt: '#181E28', wallDark: '#08080E', wallLight: '#101218',
+        bg: 'radial-gradient(circle at 50% 40%, #0C1220 0%, #060810 70%)', ambient: 'traffic',
+        decor: ['neon_sign', 'girder'],
+        doors: [
+          { x: 0, y: 8, targetZone: 'kdy_landing_bay', targetPos: { x: 30, y: 12 }, label: 'Ring Transit' },
+          { x: 0, y: 9, targetZone: 'kdy_landing_bay', targetPos: { x: 30, y: 13 }, label: 'Ring Transit' },
+        ],
+        worldObjects: [
+          { id: 'primary_holo_projector', x: 18, y: 9, label: 'Primary Holo-Projector',
+            description: 'A rotating full-scale wireframe of a warship hull class that does not appear in any published register. The scale bar in the corner reads 1800 meters. That puts it in Star Dreadnought territory — a commission that requires a full Senate appropriation and three fleet admirals signing off. Whoever authorized this hull did it outside the normal channels. Two sub-menus are locked behind a Level 6 clearance badge. A third, labeled STRUCTURAL TOLERANCE MARGINS, is accessible without clearance. Its numbers are wrong.',
+            triggersMinigame: 'terminal_slicing',
+            once: true, grantsFlag: 'holotable_accessed', grantsCodex: 'codex-kdy-dreadnought' },
+          { id: 'secure_datapad_locker', x: 28, y: 15, label: 'Secure Datapad Charging Locker',
+            description: 'A bank of twelve encrypted storage units. Most are sealed with ISB biometric locks. One — third from the right, second row — has a cracked seal. Someone was in a hurry. Inside is a partially overwritten datapad. The readable portions are KDY executive memos discussing a payment made to an unnamed Moff delegate. The amount is significant. The purpose is listed as DESIGN CONSULTATION FEE.',
+            triggersMinigame: 'terminal_slicing',
+            once: true, grantsFlag: 'datapad_cracked', grantsItem: 'executive_bribe_record' },
+          { id: 'acoustic_intercept_wall', x: 10, y: 4, label: 'Transparisteel Partition — Conference Room A',
+            description: 'The partition between the main briefing floor and Conference Room A is single-pane transparisteel, vibrating slightly from the conversation inside. Two Imperial Naval officers are visible. One is pointing at a holographic schematic that matches the dreadnought on the main projector. The other has their arms crossed and is shaking their head. You cannot hear the words, but you can read one phrase from the officer\'s lips with absolute certainty: "not in the budget."' },
+          { id: 'engineering_terminal_vorn', x: 8, y: 15, label: 'Engineering Access Terminal',
+            description: 'A standard KDY engineering terminal. The access log shows it was last used forty minutes ago. The files accessed were assembly sequence archives from Sector 4, Bador Moon. Whoever pulled these files was not on a scheduled audit.',
+            requiresFlag: 'designer_contacted',
+            once: true, grantsFlag: 'assembly_sequence_reviewed', grantsItem: 'sabotage_blueprint_files' },
+        ],
+        npcs: [
+          { id: 'commander_krennis', x: 22, y: 5, kind: 'imperial_naval_liaison', label: 'Commander Krennis',
+            repeatPrompt: 'Krennis makes a slow pass of the room with his eyes before settling on you again. "I already told you everything I am cleared to share with a non-commissioned party."',
+            prompt: 'He turns the moment you enter the briefing ring — not because he heard you but because he was already watching the door. Imperial olive-grey pressed to geometric precision, code cylinders aligned by rank, leather gloves on at this hour. He evaluates you the way someone evaluates an unexpected line item in a ledger: not with suspicion exactly, but with the certainty that you represent a cost he hasn\'t accounted for yet.',
+            choices: [
+              { text: 'Identify yourself as a KDY liaison consultant.', morality: -5, loyalty: { underworld: 5 },
+                result: '"KDY employs consultants with transit access to the Operations Ring. I am aware." He is not dismissing you — he is filing you. "That designation grants you access to the briefing floor, not to classified schematics, not to personnel files, and not to any ISB-flagged investigation currently active on this ring." He turns back to his slate. "I suggest you consult within your clearance level."',
+                grants: { flags: ['krennis_neutral_established'] } },
+              { text: 'Ask him what the ISB investigation is looking for.', morality: 0, loyalty: {},
+                result: 'One long look. "That is not a question I answer for consultants." He holds the look a beat longer than necessary. "What I will tell you is that KDY corporate security is cooperative to a point, and beyond that point, cooperation becomes obstruction." He says this pleasantly. "If you have information relevant to a structural integrity inquiry on an active ship program, I will take your contact details."',
+                grants: { flags: ['krennis_iss_hinted'] } },
+              { text: 'Tell him you found structural tolerance errors on the main projector.', morality: 10, loyalty: { republic: 15 },
+                result: 'He stops. Turns all the way back. "Show me." He says it quietly and quickly. When you walk him to the projector and highlight the margin discrepancy, his expression does not change — but his gloves tighten. "This is the commissioned hull." He straightens. "Someone put this on an open terminal." He pulls a cipher slate from his breast pocket and starts recording. "I need your name and your access trail. This is now an ISB matter."',
+                grants: { flags: ['krennis_structural_shown', 'krennis_iob_alerted'] } },
+            ],
+          },
+          { id: 'ship_designer_rael', x: 8, y: 14, kind: 'kdy_logistics_officer', label: 'Senior Designer Rael Thoss',
+            questNpc: true,
+            hideAfterFlags: ['rael_helped', 'rael_reported'],
+            repeatPrompt: 'Rael glances at the door, then back at you. "The window is closing. If you are going to help me, it has to be now."',
+            prompt: 'The designer\'s sleeves are rolled to the elbow and the cybernetic port in his wrist is actively syncing with a portable data drive. He does not look up when you approach, but he angles his body so you can see the drive clearly — a deliberate, practiced gesture. "You are not KDY clearance. You are not ISB. That means you are either a very expensive problem or the only option I have left in the next twenty minutes before Krennis pulls my access." He finally looks up. His eyes are steady despite everything else about him indicating controlled panic. "I need this drive out of the briefing ring before a sweep locks down all personal data ports in three hours."',
+            choices: [
+              { text: 'Ask what is on the drive.', morality: 0, loyalty: {},
+                result: '"Corrected schematics. The hull on that projector has six reactor shield tolerance errors that I inserted into the commissioned design six months ago on orders from a KDY board member I cannot name here. I was told it was a cost-reduction measure. It is not. Those ships will have systematic shield failures under sustained fire." He holds the drive toward you. "The corrected files are on here. If the ISB finds this on my person, they classify it, bury it, and the ships get built wrong anyway. If it leaves the ring on someone they are not watching — it reaches the Republic Senate oversight committee that is arriving in four cycles."',
+                grants: { flags: ['rael_mission_understood'] } },
+              { text: 'Take the drive and agree to get it out.', morality: 10, loyalty: { republic: 20 },
+                result: 'He exhales — not with relief but with the specific feeling of having transferred a weight rather than resolved one. "The committee contact is encoded on the drive. Do not open the shield files until you are off Kuat. There is a passive trace signature on the metadata that activates on this ring\'s sensor network." He straightens his sleeve over the now-empty wrist port. "Go."',
+                grants: { flags: ['rael_helped', 'designer_contacted'], items: ['sabotage_blueprint_files'] } },
+              { text: 'Tell him you will sell the information to the highest bidder.', morality: -15, loyalty: { underworld: 15 },
+                result: 'A long pause. He looks at the drive. Then he puts it back in his sleeve port. "Then I take my chances with the sweep." He turns back to his terminal. "There is no version of this where selling those files ends well for anyone aboard a KDY Star Destroyer in the next five years. I would prefer they get built correctly. Even if it means I get arrested."',
+                grants: { flags: ['rael_blackmail_refused'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'briefing_classified_report', x: 32, y: 4, label: 'Classified Engineering Report — Redacted', reward: 300 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 34, 20, 'floor');
+          carveRect(g, 1, 1, 8, 6, 'wall');  carveRect(g, 2, 2, 7, 5, 'floor');  pt(g, 8, 3, 'floor'); pt(g, 8, 4, 'floor');
+          carveRect(g, 26, 1, 34, 8, 'wall'); carveRect(g, 27, 2, 33, 7, 'floor'); pt(g, 26, 4, 'floor'); pt(g, 26, 5, 'floor');
+          carveRect(g, 26, 12, 34, 20, 'wall'); carveRect(g, 27, 13, 33, 19, 'floor'); pt(g, 26, 14, 'floor'); pt(g, 26, 15, 'floor');
+          carveRect(g, 1, 12, 8, 20, 'wall'); carveRect(g, 2, 13, 7, 19, 'floor'); pt(g, 8, 14, 'floor'); pt(g, 8, 15, 'floor');
+          pt(g, 0, 8, 'door'); pt(g, 0, 9, 'door');
+          return g;
+        },
+      },
+
+      kdy_lounge_market: {
+        id: 'kdy_lounge_market', name: 'The Forge and Anvil — KDY Market Ring',
+        subtitle: 'Kuat Drive Yards · Commercial Ring',
+        width: 40, height: 24, spawnPos: { x: 20, y: 2 }, textureId: 'ferrowake',
+        accent: '#8A6A3A', accentGlow: 'rgba(138,106,58,0.25)', accentDim: '#3A2A10',
+        floorColor: '#201A10', floorAlt: '#281E12', wallDark: '#0C0A06', wallLight: '#161008',
+        bg: 'radial-gradient(circle at 40% 60%, #1A1208 0%, #0A0804 70%)', ambient: 'embers',
+        decor: ['neon_sign', 'pipe'],
+        doors: [
+          { x: 14, y: 0, targetZone: 'kdy_landing_bay', targetPos: { x: 14, y: 20 }, label: 'Ring Transit' },
+          { x: 15, y: 0, targetZone: 'kdy_landing_bay', targetPos: { x: 15, y: 20 }, label: 'Ring Transit' },
+        ],
+        worldObjects: [
+          { id: 'sabacc_table_forge', x: 30, y: 17, label: 'The Sabacc Table — Forge and Anvil',
+            description: 'A round table in the back corner of the Forge and Anvil, green felt surface worn to grey at the edges from years of use. Four people are playing. An off-duty KDY engineer with the look of someone whose entire shift bonus is already on the table. A Rodian in shipwright coveralls chewing something. An Imperial logistics clerk who is down three hundred and trying not to show it. And an empty chair — the fourth player stepped out ten minutes ago and has not come back. The credits in the pot suggest they did not intend to leave.',
+            triggersMinigame: 'sabacc' },
+          { id: 'garroks_goods', x: 10, y: 8, label: 'Garrok\'s Goods — Market Stall 7',
+            description: 'The stall is deliberately unremarkable. Generic signage. No holographic displays. An Ithorian stands behind the counter with the stillness of something that has survived in hostile ecosystems for a very long time. His four-throated voice is quiet enough that the industrial grinding from the adjacent tool shop covers it completely. Behind the visible tools and replacement components are blaster actuator overclocks, slicer spikes factory-sealed but with the serial identifiers filed off, and forged security passes printed to KDY ring standard. He looks at you. You look at him. He nods very slightly.',
+            grantsFlag: 'garrok_approached' },
+          { id: 'shift_announcement_board', x: 20, y: 2, label: 'Shift Announcement Board',
+            description: 'A flickering holo-terminal cycling through shift rotations, maintenance lockdown schedules, and corporate safety announcements. The current notice at the top has been there for six hours: PLASMA WELDING DECK 4 — MANDATORY OVERTIME. THIRD SHIFT EXTENDED TWELVE HOURS. COMPENSATION ADJUSTMENT PENDING REVIEW. The adjustment has been pending review for eleven weeks.' },
+          { id: 'union_bulletin', x: 5, y: 15, label: 'Barracks Corridor Bulletin',
+            description: 'Someone has pinned a hand-written flimsi to the corridor wall. Most of it has been torn off — Ring-Sec sweeps the barracks twice a shift for unauthorized postings. What remains reads: "Deck 4 third shift. Seven injuries in four months. The review board has not met. We meet—" The rest is gone. In the corner, a stylized gear symbol. Not the KDY gear. A different one.',
+            requiresNoneFlags: ['union_leader_met'],
+            once: true, grantsFlag: 'union_bulletin_read' },
+          { id: 'surveillance_node', x: 5, y: 18, label: 'Ring-Sec Surveillance Node — Barracks Block 2',
+            description: 'A gray hardline sensor housing mounted at head height in the second barracks junction. The blue indicator light confirms it is active and transmitting. A T-7 hex driver and forty seconds of unobserved access are all it takes to physically disconnect the hardline feed. Ring-Sec will log it as equipment failure and send a maintenance ticket. The ticket will sit unresolved until someone files a second report.',
+            requiresFlag: 'union_mission_accepted',
+            triggersMinigame: 'valve_override',
+            once: true, grantsFlag: 'union_surveillance_disabled' },
+          { id: 'forge_anvil_bar', x: 28, y: 14, label: 'Forge and Anvil — Bar Counter',
+            description: 'Corellian whiskey served warm because the refrigeration unit in this section failed two months ago and the work order is still open. A Sullustan bartender moves with the practiced efficiency of someone who has heard every story and judges none of them. Someone has carved into the bar surface: HERE SINCE YEAR ONE. Below it, in fresher scratching: AND COUNTING.' },
+        ],
+        npcs: [
+          { id: 'garrok_ithorian', x: 10, y: 8, kind: 'broker', label: 'Garrok',
+            requiresFlag: 'garrok_approached',
+            repeatPrompt: 'Garrok tilts his broad head slightly. His four-throated voice carries the register of someone choosing every word. "You need something else?"',
+            prompt: 'Up close, his bark-brown skin has the texture of someone who has been in recycled air environments too long. His herd ship exiled him forty years ago. He has not been back. He adjusts a grinding tool to produce a consistent industrial whine and leans forward over the counter. What he says beneath it is only barely audible. "I know three things about you. You came through Bay Seven. You talked to the boy with the impounded ship. And you are carrying more access than your entry clearance suggests." He tilts his head. "I sell things to people who need things. What do you need?"',
+            choices: [
+              { text: 'Ask about the Sector House operation Jaxen mentioned.', morality: 0, loyalty: {},
+                result: 'He adjusts the grinder. Does not change expression. "Sector House is a routing arrangement. Not mine. I pass no restricted hardware through this stall." He turns a replacement blaster actuator over in his large hands. "What I will tell you is that the party operating that route has a standing arrangement with a KDY Logistics officer. Not the tired woman — the one above her. The one who never comes to the market ring." He sets the actuator down. "That is a free observation. What I sell costs credits."',
+                grants: { flags: ['garrok_sector_house_hinted'] } },
+              { text: 'Buy forged ring clearance credentials.', morality: -8, loyalty: { underworld: 10 },
+                result: 'He does not say a price. He turns a printed transit pass card face-down on the counter, covers it with a replacement power cell, slides both to the edge. "Three hundred. The power cell is free." He does not make eye contact during the transaction.',
+                grants: { flags: ['garrok_traded'], items: ['forged_transit_chit'] } },
+              { text: 'Ask what he knows about the union activity in the barracks.', morality: 5, loyalty: { republic: 5 },
+                result: '"Careful." His voice drops further, below the grinder. "Seven injuries on Deck 4. Ring-Sec has orders to disperse any organized meeting above four people. The organizers know that. They meet in groups of three." He pauses. "The one you want is named Prenn. She operates in the second barracks block. She is careful and she is smart and she is running out of time."',
+                grants: { flags: ['union_prenn_named'] } },
+            ],
+          },
+          { id: 'union_leader_prenn', x: 5, y: 17, kind: 'mechanic', label: 'Prenn',
+            requiresFlag: 'union_prenn_named',
+            hideAfterFlags: ['union_surveillance_disabled', 'union_crackdown'],
+            repeatPrompt: 'Prenn keeps her voice low. "The node. If you are doing it, it has to be tonight — they are moving the crackdown schedule up."',
+            prompt: 'She does not look like an organizer. She looks like a plasma-weld technician on hour eleven of a twelve-hour shift, which is exactly what she is. The only tell is the way she checked the corridor in three directions before she said your name. "Garrok says you can move through this ring without being flagged. I need one thing. There is a Ring-Sec surveillance node in the second barracks block — a hardline sensor cluster feeding directly to the Operations ring. Krennis has been using it to record private conversations in the barracks since last month. The recordings are being used to identify organizers." She looks at you with the calm of someone who has already decided what they are willing to lose. "I need it disabled. Physically. Not sliced — they\'d notice a slice and rebuild it in an hour. Physically disconnected, so it reads as equipment failure."',
+            choices: [
+              { text: 'Agree to disable the surveillance node.', morality: 5, loyalty: { republic: 10 },
+                result: '"Second block, third junction. Gray housing, blue indicator light. You\'ll need a T-7 hex driver — Garrok sells them." She exhales slowly. "Seven people have been injured on Deck 4. Three of them are back at work already because they cannot afford not to be. I am not asking for a rebellion. I am asking for one conversation that Ring-Sec doesn\'t get to record."',
+                grants: { flags: ['union_mission_accepted'] } },
+              { text: 'Ask what happens if Ring-Sec identifies her before then.', morality: 0, loyalty: {},
+                result: '"They arrest me and three others. The meeting doesn\'t happen. Deck 4 runs another cycle of mandatory overtime and the review board\'s next meeting date gets moved back another quarter." She says this without self-pity, which makes it worse. "I have been doing this for two years. I know the arithmetic."',
+                grants: { flags: ['union_prenn_risk_discussed'] } },
+              { text: 'Warn her that Krennis is already monitoring the market ring.', morality: 8, loyalty: { republic: 12 },
+                result: '"I know. We have been meeting in groups of three for the last month." A pause. "Thank you for confirming the method. It helps to know it is hardline feed and not wireless." She adjusts her timing slightly, a tell she does not know she has. "The node. Tonight."',
+                grants: { flags: ['union_krennis_warned'] } },
+            ],
+          },
+          { id: 'forge_bartender', x: 28, y: 13, kind: 'generic', label: 'Vasek (Bartender)',
+            repeatPrompt: 'Vasek refills whatever is in front of you without being asked. "Same again?"',
+            prompt: 'He has the careful, efficient neutrality of someone who serves three factions every shift and has long since concluded that the only survivable position is absolute discretion. He sets a glass down. "Corellian. Warm. It\'s all warm." He starts cleaning a glass that is already clean. "You want the atmosphere or something else?"',
+            choices: [
+              { text: 'Ask what the atmosphere tells him about the ring lately.', morality: 0, loyalty: {},
+                result: '"More Imperial liaisons in the last thirty days than the last three years combined." He keeps cleaning the glass. "Engineering staff stopping conversations when an officer walks past. Two shift supervisors transferred off-ring in the last week — no announcement, no goodbye drinks." He sets the glass down. "I\'ve been here since Year One. When people stop having goodbye drinks, that means they didn\'t get to choose to leave."',
+                grants: { flags: ['vasek_atmosphere_discussed'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'market_stall_components', x: 34, y: 8, label: 'Overstock Actuator Components', reward: 200 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 38, 22, 'floor');
+          carveRect(g, 1, 5, 8, 11, 'wall'); carveRect(g, 2, 6, 7, 10, 'floor'); pt(g, 8, 7, 'floor'); pt(g, 8, 8, 'floor');
+          carveRect(g, 1, 14, 8, 22, 'wall'); carveRect(g, 2, 15, 7, 21, 'floor'); pt(g, 8, 16, 'floor'); pt(g, 8, 17, 'floor');
+          carveRect(g, 22, 12, 38, 22, 'wall'); carveRect(g, 23, 13, 37, 21, 'floor'); pt(g, 22, 14, 'floor'); pt(g, 22, 15, 'floor');
+          carveRect(g, 30, 1, 38, 8, 'wall'); carveRect(g, 31, 2, 37, 7, 'floor'); pt(g, 30, 4, 'floor'); pt(g, 30, 5, 'floor');
+          pt(g, 14, 0, 'door'); pt(g, 15, 0, 'door');
           return g;
         },
       },
@@ -3909,6 +4202,109 @@ function NpcPortrait({ kind, accent }) {
       </svg>
     );
   }
+  if (kind === 'kdy_ring_sec') {
+    const armor = '#2A3A5A', pauldron = '#4A5A7A', visor = '#D4901A', crest = '#8A9AB0';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M6 42 L8 22 L22 22 L24 42 Z" fill={armor} />
+        <path d="M8 22 L22 22 L20 11 L10 11 Z" fill={pauldron} />
+        <path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z" fill={pauldron} />
+        <path d="M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={pauldron} />
+        <rect x="10" y="1" width="10" height="10" rx="1.5" fill={armor} />
+        <rect x="11" y="4" width="8" height="2.5" rx="0.4" fill={visor} opacity="0.9" />
+        <rect x="12" y="4.2" width="6" height="1.5" fill="#FFD88A" opacity="0.3" />
+        <circle cx="8" cy="15" r="2.5" fill={pauldron} />
+        <circle cx="22" cy="15" r="2.5" fill={pauldron} />
+        <rect x="12" y="11" width="6" height="1" rx="0.3" fill={crest} opacity="0.7" />
+        <path d="M13 13 L15 11.5 L17 13 Z" fill={crest} opacity="0.55" />
+        <rect x="8" y="21.5" width="14" height="1.5" fill={visor} opacity="0.4" />
+      </svg>
+    );
+  }
+  if (kind === 'kdy_executive_sentinel') {
+    const plate = '#E8E4D8', gold = '#C8A830', cape = '#8A1A1A', visor = '#1A1410';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M5 42 L7 22 L23 22 L25 42 Z" fill={cape} opacity="0.85" />
+        <path d="M7 22 L23 22 L21 10 L9 10 Z" fill={plate} />
+        <path d="M7 22 C4 22 2 17 4 11 L8 12 L7 22 Z" fill={plate} />
+        <path d="M23 22 C26 22 28 17 26 11 L22 12 L23 22 Z" fill={plate} />
+        <rect x="9" y="0.5" width="12" height="11" rx="2" fill={plate} />
+        <rect x="10" y="5" width="10" height="3.5" rx="0.4" fill={visor} />
+        <rect x="11" y="5.3" width="8" height="2" fill="#2A1A0A" opacity="0.5" />
+        <rect x="9" y="14" width="12" height="1" fill={gold} opacity="0.9" />
+        <rect x="9" y="15.5" width="12" height="0.6" fill={gold} opacity="0.55" />
+        <rect x="6" y="11" width="3" height="1" rx="0.3" fill={gold} opacity="0.8" />
+        <rect x="21" y="11" width="3" height="1" rx="0.3" fill={gold} opacity="0.8" />
+        <rect x="9" y="21.5" width="12" height="1.5" fill={gold} opacity="0.5" />
+      </svg>
+    );
+  }
+  if (kind === 'kdy_logistics_officer') {
+    const suit = '#2E3238', collar = '#3A3E44', cyber = '#4A9AC8', datapad = '#5A5A60';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill={suit} />
+        <path d="M9 22 L21 22 L19 11 L11 11 Z" fill={suit} />
+        <path d="M9 22 C6 22 4 18 6 12 L10 13 L9 22 Z" fill={suit} />
+        <path d="M21 22 C24 22 26 18 24 12 L20 13 L21 22 Z" fill={suit} />
+        <rect x="9" y="13" width="4" height="7" rx="0.5" fill={datapad} opacity="0.7" />
+        <rect x="14" y="13" width="4" height="5" rx="0.5" fill={datapad} opacity="0.55" />
+        <ellipse cx="15" cy="6" rx="5.5" ry="5.5" fill="#8A7A6A" />
+        <ellipse cx="12.5" cy="5" rx="0.9" ry="0.7" fill="#2A1A1A" />
+        <ellipse cx="17.5" cy="5" rx="0.9" ry="0.7" fill="#2A1A1A" />
+        <rect x="22" y="12" width="3" height="5" rx="1" fill={cyber} opacity="0.85" />
+        <rect x="22.3" y="12.3" width="2.4" height="4.4" fill="#88DEFF" opacity="0.3" />
+        <rect x="8" y="10" width="5" height="1" rx="0.3" fill={collar} />
+        <rect x="17" y="10" width="5" height="1" rx="0.3" fill={collar} />
+        <rect x="9" y="21.5" width="12" height="1.5" fill={cyber} opacity="0.35" />
+      </svg>
+    );
+  }
+  if (kind === 'imperial_naval_liaison') {
+    const tunic = '#4A4E3A', trim = '#3A3E2E', rank = '#C8A830', glove = '#1A1A1A';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill={tunic} />
+        <path d="M9 22 L21 22 L19 11 L11 11 Z" fill={tunic} />
+        <path d="M9 22 C6 22 4 17 6 12 L10 13 L9 22 Z" fill={trim} />
+        <path d="M21 22 C24 22 26 17 24 12 L20 13 L21 22 Z" fill={trim} />
+        <ellipse cx="15" cy="5.5" rx="5" ry="5" fill="#9A8A78" />
+        <ellipse cx="12.5" cy="4.8" rx="0.85" ry="0.75" fill="#2A1A14" />
+        <ellipse cx="17.5" cy="4.8" rx="0.85" ry="0.75" fill="#2A1A14" />
+        <rect x="10" y="13" width="10" height="1" rx="0.4" fill={rank} opacity="0.9" />
+        <rect x="11" y="14.5" width="3" height="1" rx="0.3" fill={rank} opacity="0.75" />
+        <rect x="16" y="14.5" width="3" height="1" rx="0.3" fill={rank} opacity="0.75" />
+        <rect x="11" y="8" width="3" height="3" rx="0.3" fill="#888A82" opacity="0.7" />
+        <rect x="16" y="8" width="3" height="3" rx="0.3" fill="#888A82" opacity="0.7" />
+        <rect x="6" y="22" width="5" height="7" rx="0.5" fill={glove} opacity="0.9" />
+        <rect x="19" y="22" width="5" height="7" rx="0.5" fill={glove} opacity="0.9" />
+        <rect x="9" y="21.5" width="12" height="1.5" fill={rank} opacity="0.4" />
+      </svg>
+    );
+  }
+  if (kind === 'vectis_droid') {
+    const chassis = '#7A6040', dark = '#3A2A18', lens = accent || '#44AACC', arm = '#5A4A30';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <rect x="8" y="0" width="14" height="12" rx="2" fill={dark} />
+        <rect x="9" y="1" width="12" height="10" rx="1.5" fill={chassis} />
+        <circle cx="11.5" cy="5" r="2" fill="#0A0A0A" />
+        <circle cx="11.5" cy="5" r="1.3" fill={lens} opacity="0.9" />
+        <circle cx="18.5" cy="5" r="2" fill="#0A0A0A" />
+        <circle cx="18.5" cy="5" r="1.3" fill={lens} opacity="0.9" />
+        <circle cx="15" cy="8.5" r="1.2" fill="#0A0A0A" />
+        <circle cx="15" cy="8.5" r="0.7" fill={lens} opacity="0.7" />
+        <rect x="9" y="11.5" width="12" height="1" fill={dark} opacity="0.6" />
+        <rect x="7" y="12" width="16" height="16" rx="1.5" fill={chassis} />
+        <rect x="8" y="13" width="14" height="4" rx="0.5" fill={dark} opacity="0.7" />
+        <rect x="9" y="14" width="5" height="2" rx="0.3" fill={lens} opacity="0.4" />
+        <rect x="16" y="13.5" width="1" height="5" rx="0.2" fill="#AAAAAA" opacity="0.5" />
+        <path d="M3 6 L7 12 L7 20 L3 24 Z" fill={arm} opacity="0.7" />
+        <rect x="8" y="21.5" width="14" height="1.5" fill={chassis} opacity="0.5" />
+      </svg>
+    );
+  }
   return null;
 }
 
@@ -4294,6 +4690,15 @@ const ITEMS = {
   ion_charged_coils:         { id:'ion_charged_coils',         name:'Ion-Charged Power Coils',               type:'gear',       iconKind:'gear',     value:600,  description:'Precision coils calibrated for a reactor-scale power draw. Not standard issue for any published vessel class.' },
   cherit_logbook:            { id:'cherit_logbook',            name:"Cherit's Personal Logbook",             type:'quest',      iconKind:'datapad',  value:0,    description:'The private log of Republic Intelligence Officer Cherit, spanning forty-three years. The final entry is dated eighteen months before she was officially declared killed.' },
   experimental_hypercore_fragment: { id:'experimental_hypercore_fragment', name:'Experimental Hypercore Fragment', type:'quest', iconKind:'artifact', value:8000, description:'A severed sliver of the Ghost Keel hypercore. Enough to reverse-engineer the power generation method. Enough to cause problems for anyone who does.' },
+  forged_transit_chit:       { id:'forged_transit_chit',       name:'Forged KDY Transit Chit',               type:'quest',      iconKind:'keycard',  value:300,  description:'A ring-standard transit pass with a falsified clearance tier. Garrok\'s work is clean enough that casual inspection passes. Do not push it against a biometric reader.' },
+  corellian_moonshine:       { id:'corellian_moonshine',       name:'Corellian Reserve Moonshine',           type:'consumable', iconKind:'supply',   value:60,   description:'Genuine off-world distillate, amber and sharp. Not synthetic. Corporal Dren mentioned it in passing without exactly asking for it.' },
+  missing_hyperdrive_manifest: { id:'missing_hyperdrive_manifest', name:'Jaxen\'s Original Cargo Receipt',  type:'quest',      iconKind:'datapad',  value:0,    description:'The Corellian dock authority receipt predating the manifest alteration. Twelve military-grade hyperdrive motivators appear nowhere in it. Jaxen was set up.' },
+  sabotage_blueprint_files:  { id:'sabotage_blueprint_files',  name:'Corrected Hull Schematics (Sealed)',    type:'quest',      iconKind:'datapad',  value:0,    description:'Designer Rael Thoss\'s corrected reactor shield tolerances. The sealed container has a passive trace signature that activates on the KDY ring sensor network. Do not open it here.' },
+  executive_bribe_record:    { id:'executive_bribe_record',    name:'KDY Executive Bribe Record',            type:'quest',      iconKind:'datapad',  value:0,    description:'A partially recovered memo documenting a DESIGN CONSULTATION FEE paid to an unnamed Moff delegate. The amount and timing align with the commissioned dreadnought program.' },
+  union_leaders_contact:     { id:'union_leaders_contact',     name:'Encrypted Union Contact Chip',          type:'quest',      iconKind:'keycard',  value:0,    description:'Prenn\'s encrypted comlink frequency, formatted for off-ring transmission. She wants the surveillance node disabled and the meeting to happen before Krennis moves the crackdown timeline.' },
+  kdy_director_override:     { id:'kdy_director_override',     name:'KDY Director Override Token',           type:'quest',      iconKind:'keycard',  value:4000, description:'A Director-tier clearance token. Vectis\'s optical lenses turn green the moment you present it. Executive berths, private suites, and Bador transit all open without question.' },
+  executive_blackmail_slate: { id:'executive_blackmail_slate', name:'Moff Bribe Registry (Classified Slate)', type:'quest',      iconKind:'datapad',  value:0,    description:'A KDY classification-red political slate listing every Moff who accepted a bribe from corporate for reduced oversight, with amounts, dates, and the name of the KDY board member who arranged each payment. Lady Kuat has been keeping this for fourteen months.' },
+
   corrupt_manifest:          { id:'corrupt_manifest',          name:'Corrupt Manufacturing Manifest',         type:'quest',      iconKind:'datapad',  value:0,    description:'A KDY Sector 4 assembly log with falsified output entries. The actual production figures are encoded in the metadata.' },
 
 };
@@ -4534,6 +4939,15 @@ const CODEX_ENTRIES = {
       'The Anzati are old. Older than the Republic, older than most civilizations that remember themselves as old. They look human at a distance, but the vertical slits below the cheekbones are proboscises, coiled when not in use, which they call a secret they keep from everyone they intend to survive.',
       'They feed on what they call soup: the cerebral fluid and Force-essence of their prey. The feeding is careful and slow. Prey rarely understands what is happening until it has already happened.',
       'An Anzati assassin is not a hired killer in the conventional sense. They do not need the money. They take contracts because the contract specifies a target, and a specified target is permission they have already decided to collect.',
+    ],
+  },
+  'codex-kdy-dreadnought': {
+    id:'codex-kdy-dreadnought', title:'UNNAMED HULL CLASS — KDY BRIEFING RING', category:'lore',
+    summary:'A warship commission that does not appear in any published register.',
+    body:[
+      'The wireframe on the KDY Operations Ring briefing projector belongs to a capital ship hull 1,800 meters in length. That scale places it in Star Dreadnought classification territory — a vessel type that requires full Senate appropriation and three fleet admiral authorizations under the Galactic Republic Military Construction Act.',
+      'No such appropriation appears in any Senate record. No commission registry entry exists. The hull is being built.',
+      'The reactor shield tolerance figures displayed openly on the projector are wrong. Not miscalculated — deliberately wrong. Someone inserted systematic errors into the commissioned design. Whether this represents sabotage, corporate fraud, or something more deliberate is a question whose answer requires leaving Kuat with the right files.',
     ],
   },
   'codex-kuat-operation': {
