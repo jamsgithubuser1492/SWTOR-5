@@ -2897,6 +2897,490 @@ const PLANETS = {
       },
     },
   },
+  kuat: {
+    id: 'kuat', name: 'Kuat', travelCost: 1200, startZoneId: 'kuat_private_suites',
+    requiresFlag: 'senate_line_secured',
+    description: 'The orbital ring never stops moving. Below it, Bador Moon keeps its secrets in glass and ash.',
+    zones: {
+      kuat_private_suites: {
+        id: 'kuat_private_suites', name: 'KDY Orbital Ring — Private Suites',
+        subtitle: 'Kuat Drive Yards · Executive Ring',
+        width: 28, height: 18, spawnPos: { x: 2, y: 8 }, textureId: 'ferrowake',
+        accent: '#1A8FD0', accentGlow: 'rgba(26,143,208,0.3)', accentDim: '#0A4A72',
+        floorColor: '#1A1E26', floorAlt: '#20252E', wallDark: '#0A0C10', wallLight: '#141820',
+        bg: 'radial-gradient(circle at 60% 30%, #0E1520 0%, #060810 70%)', ambient: 'traffic',
+        decor: ['neon_sign', 'girder'],
+        doors: [
+          { x: 27, y: 8, targetZone: 'bador_main_base', targetPos: { x: 1, y: 9 }, label: 'Shuttle to Bador' },
+          { x: 27, y: 9, targetZone: 'bador_main_base', targetPos: { x: 1, y: 10 }, label: 'Shuttle to Bador' },
+        ],
+        worldObjects: [
+          { id: 'kuat_viewing_port', x: 8, y: 4, label: 'Structural Viewing Port',
+            description: 'Through the transparisteel, Kuat\'s orbital shipyard stretches for hundreds of kilometers. Dozens of Star Destroyers float in perfect formation.' },
+          { id: 'kuat_holobriefing', x: 14, y: 14, label: 'Mission Holobriefing Table',
+            description: 'Tanner has left a holographic dossier on Bador Moon. The file is marked: OPERATION GHOST KEEL.',
+            once: true, grantsFlag: 'ghost_keel_briefed', grantsCodex: 'codex-kuat-operation' },
+          { id: 'tanner_executive_terminal', x: 20, y: 5, label: 'Executive Holonet Terminal',
+            description: 'The terminal links to KDY\'s private shipping network. Tanner\'s access codes are pre-loaded.' },
+        ],
+        npcs: [
+          { id: 'tanner', x: 18, y: 9, kind: 'broker', label: 'Tanner',
+            questNpc: true,
+            hideAfterFlags: ['tanner_briefed'],
+            repeatPrompt: 'Tanner keeps his voice even. "The shuttle to Bador is prepped. Sector 4 waits."',
+            prompt: 'He does not stand when you enter. A man who does not need to perform confidence. He slides a datapad across the lacquer table. "Kuat Drive Yards has a contract problem on Bador Moon. Someone on the surface built something that is not in any manifest — and KDY needs it found before the Senate Oversight Committee arrives in six cycles. I am told you are the person who finds things."',
+            choices: [
+              { text: 'What is the timeline and what does it pay?', morality: 0, loyalty: { underworld: 5 }, result: 'Tanner almost smiles. "Six cycles. Fifty thousand on completion, and KDY transit rights permanently. The shuttle is at ring berth seven." He taps the datapad. "Briefing is there. Do not lose it."', grants: { flags: ['tanner_briefed', 'ghost_keel_active'], items: ['kuati_brandy'] } },
+              { text: 'Who authorized a secret construction project on Bador?', morality: 5, loyalty: { republic: 5 }, result: '"Someone with Sector 4 manifest access and a great deal of patience. That is what you are going to find out." He slides a second datapad across. "Read the briefing. The shuttle is ready."', grants: { flags: ['tanner_briefed', 'ghost_keel_active', 'tanner_asked_auth'], items: ['kuati_brandy'] } },
+              { text: 'I want double. KDY can afford it.', morality: -5, loyalty: { underworld: 10 }, result: 'A pause. One blink. "Seventy-five thousand. Do not push further." He closes the datapad case. "Shuttle is prepped. Bador surface, KDY Main Base. Ask for Commander Vael."', grants: { flags: ['tanner_briefed', 'ghost_keel_active', 'tanner_premium_deal'], items: ['kuati_brandy'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'kuat_credit_chip', x: 4, y: 14, label: 'KDY Executive Credit Chip', reward: 500 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 26, 16, 'floor');
+          carveRect(g, 5, 3, 12, 7, 'wall');
+          carveRect(g, 14, 3, 22, 7, 'wall');
+          pt(g, 8, 3, 'floor'); pt(g, 9, 3, 'floor'); pt(g, 10, 3, 'floor');
+          pt(g, 8, 7, 'floor'); pt(g, 9, 7, 'floor'); pt(g, 12, 5, 'floor');
+          pt(g, 16, 5, 'floor'); pt(g, 17, 5, 'floor'); pt(g, 18, 5, 'floor');
+          pt(g, 19, 5, 'floor'); pt(g, 20, 5, 'floor'); pt(g, 22, 5, 'floor');
+          carveRect(g, 5, 9, 13, 16, 'wall');
+          pt(g, 8, 9, 'floor'); pt(g, 8, 10, 'floor'); pt(g, 8, 11, 'floor');
+          pt(g, 8, 12, 'floor'); pt(g, 8, 13, 'floor'); pt(g, 8, 14, 'floor');
+          pt(g, 13, 12, 'floor'); pt(g, 13, 13, 'floor'); pt(g, 13, 14, 'floor');
+          pt(g, 27, 8, 'door'); pt(g, 27, 9, 'door');
+          return g;
+        },
+      },
+
+      bador_main_base: {
+        id: 'bador_main_base', name: 'KDY Main Base — Bador',
+        subtitle: 'Bador Moon · Sector Control',
+        width: 30, height: 20, spawnPos: { x: 2, y: 9 }, textureId: 'ferrowake',
+        accent: '#4A7A9B', accentGlow: 'rgba(74,122,155,0.28)', accentDim: '#1C3848',
+        floorColor: '#1C2228', floorAlt: '#22292E', wallDark: '#0A0E12', wallLight: '#141A1E',
+        bg: 'radial-gradient(circle at 40% 20%, #12181E 0%, #080C10 70%)', ambient: 'traffic',
+        decor: ['pipe', 'girder'],
+        doors: [
+          { x: 0, y: 9,  targetZone: 'kuat_private_suites', targetPos: { x: 26, y: 8 }, label: 'Orbital Shuttle' },
+          { x: 0, y: 10, targetZone: 'kuat_private_suites', targetPos: { x: 26, y: 9 }, label: 'Orbital Shuttle' },
+          { x: 29, y: 8, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 8 }, label: 'Sector 4 Facilities' },
+          { x: 29, y: 9, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 9 }, label: 'Sector 4 Facilities' },
+          { x: 14, y: 19, targetZone: 'city_outskirts_bador', targetPos: { x: 14, y: 1 }, label: 'City Outskirts' },
+          { x: 15, y: 19, targetZone: 'city_outskirts_bador', targetPos: { x: 15, y: 1 }, label: 'City Outskirts' },
+        ],
+        worldObjects: [
+          { id: 'vael_tactical_display', x: 20, y: 5, label: 'Tactical Operations Display',
+            description: 'Commander Vael\'s battle board. Red markers cluster around Sector 4 and the Engine Wastes. Two positions are marked UNKNOWN STRUCTURE.' },
+          { id: 'bador_intel_drop', x: 8, y: 16, label: 'Intel Drop Point',
+            description: 'A sealed datacanister left at the extraction point. Inside: partial schematics for a classified KDY vessel class.',
+            once: true, requiresFlag: 'ghost_keel_active',
+            grantsFlag: 'partial_schematics_found', grantsItem: 'encrypted_kdy_schematics' },
+        ],
+        npcs: [
+          { id: 'commander_vael', x: 20, y: 8, kind: 'kdy_commander', label: 'Commander Vael',
+            questNpc: true,
+            requiresFlag: 'tanner_briefed',
+            repeatPrompt: 'Vael keeps scanning the tactical board. "Sector 4 and the Engine Wastes are your priority targets."',
+            prompt: '"Tanner\'s contact. Good." Vael does not turn from the tactical display. Her voice is flat, professional. "Bador is a Class-C restricted moon. Population zero — officially. What we are finding is inconsistent with that classification. Sector 4 is running unauthorized assembly, the Engine Wastes have structures that predate our survey by three decades, and our last deep-scan team stopped transmitting forty hours ago."',
+            choices: [
+              { text: 'What happened to the scan team?', morality: 0, loyalty: {}, result: '"Unknown. Comms cut at grid reference seven-seven-nine. I have two squads at the perimeter and orders not to advance without clearance from KDY." She turns. "That clearance is you."', grants: { flags: ['vael_briefed'] } },
+              { text: 'I want full access to your intel before I move.', morality: 5, loyalty: { republic: 5 }, result: '"Reasonable." She uploads the tactical packet to your comlink. "Sector 4 manufacturing, Engine Wastes survey, and partial readings from a structure at grid nine-one. Do not trust the south readings — something is jamming them."', grants: { flags: ['vael_briefed', 'vael_intel_shared'] } },
+              { text: 'Forty hours. Your team is likely dead.', morality: -10, loyalty: { underworld: 5 }, result: 'Vael holds eye contact two seconds longer than expected. "Yes. Probably. Which is why I need someone with a different risk calculation than a uniformed officer." She loads the grid data. "Move carefully."', grants: { flags: ['vael_briefed'] } },
+            ],
+          },
+          { id: 'bador_squad_kaelin', x: 6, y: 14, kind: 'republic_guard', label: 'Squad Leader Kaelin',
+            repeatPrompt: 'Kaelin keeps his hand near his carbine. "Stay behind the perimeter and we stay in good standing."',
+            prompt: '"You are the freelancer Vael authorized." A statement, not a question. "I have twelve troopers on this base and six more at forward position seven. What I do not have is answers about what is in the wastes." He glances toward the southern exits. "Something knocked out our sensor drones. Not equipment failure."',
+            choices: [
+              { text: 'Tell him about the unknown structure marker.', morality: 5, loyalty: { republic: 8 }, result: '"We know. We have had it marked for three days. Whatever it is, it has a heat signature inconsistent with standard KDY construction." He lowers his voice. "Vael thinks it is a ship."', grants: { flags: ['kaelin_structure_discussed'] } },
+              { text: 'Ask what knocked out the drones.', morality: 0, loyalty: {}, result: '"Our diagnostics say plasma interference. Natural sources would register differently — it is targeted." He shakes his head. "Someone does not want us scanning that grid."', grants: { flags: ['kaelin_drone_discussed'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'bador_base_intel', x: 26, y: 4, label: 'KDY Survey Report', reward: 200 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 28, 18, 'floor');
+          carveRect(g, 3, 3, 10, 7, 'wall');
+          pt(g, 6, 3, 'floor'); pt(g, 7, 3, 'floor');
+          pt(g, 10, 5, 'floor'); pt(g, 10, 6, 'floor');
+          carveRect(g, 15, 3, 25, 7, 'wall');
+          pt(g, 18, 3, 'floor'); pt(g, 19, 3, 'floor');
+          pt(g, 20, 6, 'floor'); pt(g, 21, 6, 'floor');
+          carveRect(g, 20, 12, 28, 18, 'wall');
+          pt(g, 22, 12, 'floor'); pt(g, 23, 12, 'floor');
+          pt(g, 0, 9, 'door'); pt(g, 0, 10, 'door');
+          pt(g, 29, 8, 'door'); pt(g, 29, 9, 'door');
+          pt(g, 14, 19, 'door'); pt(g, 15, 19, 'door');
+          return g;
+        },
+      },
+
+      bador_manufacturing: {
+        id: 'bador_manufacturing', name: 'KDY Manufacturing Facilities — Sector 4',
+        subtitle: 'Bador Moon · Restricted Zone',
+        width: 36, height: 22, spawnPos: { x: 2, y: 8 }, textureId: 'ferrowake',
+        accent: '#D4762C', accentGlow: 'rgba(212,118,44,0.28)', accentDim: '#6A3010',
+        floorColor: '#251A0E', floorAlt: '#2E2010', wallDark: '#0E0A06', wallLight: '#1A1208',
+        bg: 'radial-gradient(circle at 50% 70%, #1A1008 0%, #0A0804 70%)', ambient: 'embers',
+        decor: ['pipe', 'girder', 'slag'],
+        doors: [
+          { x: 0, y: 8, targetZone: 'bador_main_base', targetPos: { x: 28, y: 8 }, label: 'Main Base' },
+          { x: 0, y: 9, targetZone: 'bador_main_base', targetPos: { x: 28, y: 9 }, label: 'Main Base' },
+          { x: 35, y: 10, targetZone: 'engine_wastes', targetPos: { x: 1, y: 10 }, label: 'Engine Wastes' },
+          { x: 35, y: 11, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Engine Wastes' },
+        ],
+        worldObjects: [
+          { id: 'assembly_line_terminal', x: 20, y: 6, label: 'Assembly Line Override Terminal',
+            description: 'An unauthorized modification routes assembly output to an off-manifest storage bay. The override code is not in the KDY standard library.',
+            triggersMinigame: 'terminal_slicing', requiresFlag: 'ghost_keel_active',
+            once: true, grantsFlag: 'assembly_override_accessed', grantsItem: 'corrupt_manifest' },
+          { id: 'mag_lev_crane', x: 18, y: 3, label: 'Mag-Lev Cargo Crane',
+            description: 'A five-ton crane magnetized to the ceiling rail. The routing manifest reads: PERSONAL CONSIGNMENT.' },
+          { id: 'krax_manifest_safe', x: 30, y: 16, label: 'Overseer\'s Manifest Safe',
+            description: 'A heavy durasteel lockbox welded to the floor. The serial number has been removed.',
+            once: true, requiresFlag: 'krax_revealed',
+            grantsFlag: 'overseer_safe_opened', grantsItem: 'ion_charged_coils' },
+        ],
+        npcs: [
+          { id: 'overseer_krax', x: 22, y: 9, kind: 'besalisk_boss', label: 'Overseer Krax',
+            questNpc: true,
+            requiresFlag: 'vael_briefed',
+            hideAfterFlags: ['krax_exposed'],
+            repeatPrompt: 'Krax\'s four arms keep moving across different controls. "Inspections by appointment, not by ambush."',
+            prompt: 'The Besalisk does not stop moving. Four arms, four simultaneous tasks. He speaks without looking at you. "Freelancer. I was told to expect an inspection liaison." A pause — one beat too long. "Sector 4 is on schedule. All output is logged. Whatever anomaly your survey team flagged will be explained by thermal variance in the smelting array."',
+            choices: [
+              { text: 'Ask about the off-manifest routing code.', morality: 0, loyalty: {}, result: 'Two of his four arms freeze. The other two keep moving, slower. "Routing variance. Standard redundancy protocol." He meets your eyes for the first time. "I would not probe further without clearance from KDY Operations Level Six."', grants: { flags: ['krax_pressure_applied'] } },
+              { text: 'Tell him you have Level Six clearance.', morality: -10, loyalty: { underworld: 8 }, result: 'He stares. Then a slow exhale. "Then you already know what this line is producing." He lowers his voice. "If you are who you say you are, we are on the same side. Come back when your handlers have confirmed."', grants: { flags: ['krax_suspicious', 'krax_level6_bluff'] } },
+              { text: 'Tell him the scan team never came back.', morality: 5, loyalty: { republic: 5 }, result: '"I know." The most honest thing he has said. He picks up a manifest tablet, not looking at it. "That was not my order. I want you to know that." He sets it down. "Come back without an audience."', grants: { flags: ['krax_revealed'] } },
+            ],
+          },
+          { id: 'lead_engineer_vorn', x: 8, y: 16, kind: 'mechanic', label: 'Lead Engineer Vorn',
+            repeatPrompt: 'Vorn has his hands inside a conduit housing. "These assemblies are above civilian spec. Someone had authorization."',
+            prompt: '"You are not KDY clearance." He wipes his hands on a rag that does not help. "But you are not CSF either." He looks at the assembly line. "I have been building components for a frame that does not appear in the current-cycle shiplist. No registry, no commission number. I am told it is a classified project. I am starting to wonder who classified it."',
+            choices: [
+              { text: 'Ask what class of vessel the components are for.', morality: 5, loyalty: { republic: 8 }, result: '"The plating specs and drive housing dimensions — I built those before. Mandator-class dreadnaught. Pocket configuration." He shakes his head. "Nobody builds pocket dreadnaughts without a full Senate appropriation."', grants: { flags: ['vorn_consulted', 'dreadnaught_class_known'] } },
+              { text: 'Offer him credits to share the technical files.', morality: -8, loyalty: { underworld: 10 }, result: 'He looks at the credit chip for a long time. "Log access only. I am not handing over drive specs." He pockets the chip. "Assembly sequence files are on the engineering terminal. Krax does not check it between shifts."', grants: { flags: ['vorn_bribed', 'vorn_consulted'] } },
+            ],
+          },
+        ],
+        collectibles: [
+          { id: 'sector4_hull_fragment', x: 32, y: 4, label: 'Forged Star Destroyer Hull Plating', reward: 800 },
+          { id: 'sector4_assembly_log', x: 10, y: 4, label: 'Assembly Sequence Log', reward: 300 },
+        ],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 34, 20, 'floor');
+          for (let ax = 4; ax <= 32; ax++) { pt(g, ax, 12, 'lava'); pt(g, ax, 13, 'lava'); }
+          for (let bx = 12; bx <= 22; bx++) { pt(g, bx, 12, 'floor'); pt(g, bx, 13, 'floor'); }
+          for (let cx = 14; cx <= 20; cx++) { pt(g, cx, 7, 'lava'); pt(g, cx, 8, 'lava'); }
+          pt(g, 16, 7, 'floor'); pt(g, 17, 7, 'floor');
+          carveRect(g, 26, 14, 34, 20, 'wall');
+          pt(g, 28, 14, 'floor'); pt(g, 29, 14, 'floor'); pt(g, 30, 14, 'floor');
+          pt(g, 0, 8, 'door'); pt(g, 0, 9, 'door');
+          pt(g, 35, 10, 'door'); pt(g, 35, 11, 'door');
+          return g;
+        },
+      },
+
+      city_outskirts_bador: {
+        id: 'city_outskirts_bador', name: 'City Outskirts of Bador',
+        subtitle: 'Bador Moon · Civilian Sector',
+        width: 34, height: 20, spawnPos: { x: 16, y: 1 }, textureId: 'ferrowake',
+        accent: '#8B5E3C', accentGlow: 'rgba(139,94,60,0.25)', accentDim: '#42220E',
+        floorColor: '#22180C', floorAlt: '#2A1E0E', wallDark: '#0C0806', wallLight: '#181006',
+        bg: 'radial-gradient(circle at 30% 80%, #181008 0%, #0C0806 70%)', ambient: 'embers',
+        decor: ['pipe', 'rubble'],
+        doors: [
+          { x: 14, y: 0,  targetZone: 'bador_main_base', targetPos: { x: 14, y: 18 }, label: 'KDY Main Base' },
+          { x: 15, y: 0,  targetZone: 'bador_main_base', targetPos: { x: 15, y: 18 }, label: 'KDY Main Base' },
+          { x: 33, y: 10, targetZone: 'outpost_7', targetPos: { x: 1, y: 10 }, label: 'Outpost 7' },
+          { x: 33, y: 11, targetZone: 'outpost_7', targetPos: { x: 1, y: 11 }, label: 'Outpost 7' },
+        ],
+        worldObjects: [
+          { id: 'bador_republic_terminal', x: 10, y: 10, label: 'Abandoned Republic Terminal',
+            description: 'A rusted Republic outpost terminal, decommissioned three years prior. The last logged entry is a distress call with no response on record.',
+            once: true, grantsFlag: 'bador_republic_history', grantsCodex: 'codex-bador-history' },
+          { id: 'bador_supply_cache', x: 26, y: 15, label: 'Hidden Supply Cache',
+            description: 'A hidden alcove in the collapsed wall. Someone has been using this as a supply drop.',
+            once: true, requiresFlag: 'ghost_keel_active', grantsItem: 'cherit_logbook' },
+        ],
+        npcs: [
+          { id: 'bador_survivor', x: 16, y: 10, kind: 'generic', label: 'Bador Resident',
+            repeatPrompt: 'They keep their distance. "I have told you what I know."',
+            prompt: '"You are not KDY." They keep the wall behind them. "The new ones come in white armor. Three people from the south district left two weeks ago to investigate the engine sounds. We have not seen them."',
+            choices: [
+              { text: 'Ask what they heard from the south.', morality: 5, loyalty: { republic: 5 }, result: '"Resonance. Like something large charging up. Then silence." They wrap their coat tighter. "Whatever they are building out there, it is not a standard installation."', grants: { flags: ['bador_locals_spoken'] } },
+              { text: 'Tell them to evacuate while they still can.', morality: 10, loyalty: { republic: 10 }, result: '"Evacuate to where? The shuttle is KDY property. They do not fly civilians." They look at you with something between gratitude and resignation. "Find out what it is. Maybe then someone will care."', grants: { flags: ['bador_evacuation_suggested'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'bador_city_cache', x: 28, y: 4, label: 'Salvaged Survival Rations', reward: 150 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 32, 18, 'floor');
+          carveRect(g, 3, 3, 8, 8, 'wall');
+          pt(g, 5, 3, 'floor'); pt(g, 6, 3, 'floor'); pt(g, 8, 5, 'floor'); pt(g, 8, 6, 'floor');
+          carveRect(g, 12, 3, 20, 8, 'wall');
+          pt(g, 15, 3, 'floor'); pt(g, 16, 3, 'floor'); pt(g, 20, 5, 'floor'); pt(g, 20, 6, 'floor');
+          carveRect(g, 22, 3, 30, 8, 'wall');
+          pt(g, 25, 3, 'floor'); pt(g, 26, 3, 'floor'); pt(g, 30, 5, 'floor'); pt(g, 30, 6, 'floor');
+          carveRect(g, 3, 12, 14, 18, 'wall');
+          pt(g, 6, 12, 'floor'); pt(g, 7, 12, 'floor'); pt(g, 10, 15, 'floor'); pt(g, 10, 16, 'floor');
+          pt(g, 14, 0, 'door'); pt(g, 15, 0, 'door');
+          pt(g, 33, 10, 'door'); pt(g, 33, 11, 'door');
+          return g;
+        },
+      },
+
+      engine_wastes: {
+        id: 'engine_wastes', name: 'The Engine Wastes',
+        subtitle: 'Bador Moon · Glassed Crater Expanse',
+        width: 40, height: 22, spawnPos: { x: 2, y: 10 }, textureId: 'ferrowake',
+        accent: '#8A9090', accentGlow: 'rgba(138,144,144,0.22)', accentDim: '#3A4040',
+        floorColor: '#1E2020', floorAlt: '#252828', wallDark: '#0C0E0E', wallLight: '#141818',
+        bg: 'radial-gradient(circle at 60% 40%, #141818 0%, #080A0A 70%)', ambient: 'embers',
+        decor: ['rubble', 'slag'],
+        doors: [
+          { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 10 }, label: 'Sector 4' },
+          { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 11 }, label: 'Sector 4' },
+          { x: 20, y: 21, targetZone: 'deep_caverns', targetPos: { x: 20, y: 1 }, label: 'Deep Caverns' },
+          { x: 21, y: 21, targetZone: 'deep_caverns', targetPos: { x: 21, y: 1 }, label: 'Deep Caverns' },
+        ],
+        worldObjects: [
+          { id: 'ion_storm_capacitor', x: 28, y: 6, label: 'Ion Storm Capacitor',
+            description: 'A massive industrial capacitor bank still actively cycling. The discharge pattern is not natural — it is deliberately jamming sensor sweeps across a six-kilometer radius.',
+            once: true, requiresFlag: 'ghost_keel_active',
+            grantsFlag: 'jammer_found', grantsCodex: 'codex-engine-wastes' },
+          { id: 'scan_team_wreckage', x: 34, y: 14, label: 'KDY Scan Team Wreckage',
+            description: 'The remains of the missing scan team. Their equipment is intact but deliberately disabled. No signs of combat. They were warned off.',
+            once: true, requiresFlag: 'vael_briefed', grantsFlag: 'scan_team_fate_known' },
+          { id: 'glassed_crater_lake', x: 10, y: 6, label: 'Glassed Crater Lake',
+            description: 'A shallow basin of fused silica — evidence of catastrophic engine discharge centuries past. Something large once burned here and the ground remembers it.' },
+        ],
+        npcs: [
+          { id: 'gharza', x: 32, y: 6, kind: 'trandoshan_sniper', label: 'Gharza',
+            questNpc: true,
+            hideAfterFlags: ['gharza_dead', 'gharza_recruited'],
+            repeatPrompt: 'Gharza does not lower her rifle. "Move slowly."',
+            prompt: 'She has a Trandoshan\'s stillness — total, patient, and entirely comfortable with killing. Her rifle does not waver. "You came from the base. You are not KDY standard issue." A beat. "Which means you are looking for the same thing I am looking for, or you are about to complicate my work significantly."',
+            choices: [
+              { text: 'Ask what she is looking for.', morality: 0, loyalty: {}, result: '"The hypercore. Deep caverns, grid nine-one." She lowers the rifle three degrees. "KDY hired me to retrieve it before their oversight committee arrives. I was told I was the only contractor." She sounds displeased. "We have a coordination problem."', grants: { flags: ['gharza_negotiated', 'gharza_mission_disclosed'] } },
+              { text: 'Tell her you are working the same contract.', morality: 0, loyalty: {}, result: '"Then Tanner is playing games." Her rifle comes down. "The caverns have automated sentinels. I cannot disable them from range. You may be useful."', grants: { flags: ['gharza_negotiated', 'gharza_allied'] } },
+              { text: 'Offer to pay her to stand down.', morality: -5, loyalty: { underworld: 8 }, result: '"I do not take buyouts from unknown parties." But she does not raise the rifle. "I take information. Tell me who hired you and I will decide whether you leave this field standing."', grants: { flags: ['gharza_negotiated'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'wastes_salvage', x: 6, y: 18, label: 'KDY Engine Debris Component', reward: 400 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 38, 20, 'floor');
+          for (let wx = 8; wx <= 14; wx++) { pt(g, wx, 4, 'lava'); pt(g, wx, 5, 'lava'); pt(g, wx, 6, 'lava'); }
+          for (let wz = 9; wz <= 13; wz++) pt(g, wz, 4, 'floor');
+          for (let wx = 22; wx <= 30; wx++) { pt(g, wx, 14, 'lava'); pt(g, wx, 15, 'lava'); }
+          pt(g, 25, 14, 'floor'); pt(g, 26, 14, 'floor');
+          carveRect(g, 36, 2, 38, 10, 'wall');
+          pt(g, 36, 4, 'floor'); pt(g, 36, 5, 'floor');
+          pt(g, 0, 10, 'door'); pt(g, 0, 11, 'door');
+          pt(g, 20, 21, 'door'); pt(g, 21, 21, 'door');
+          return g;
+        },
+      },
+
+      outpost_7: {
+        id: 'outpost_7', name: 'Outpost 7',
+        subtitle: 'Bador Moon · Resistance Encampment',
+        width: 32, height: 22, spawnPos: { x: 1, y: 10 }, textureId: 'ferrowake',
+        accent: '#C4813A', accentGlow: 'rgba(196,129,58,0.26)', accentDim: '#5A3010',
+        floorColor: '#201810', floorAlt: '#281E12', wallDark: '#0C0A06', wallLight: '#181206',
+        bg: 'radial-gradient(circle at 30% 60%, #18140A 0%, #0C0A06 70%)', ambient: 'embers',
+        decor: ['pipe', 'cargo_crate', 'rubble'],
+        doors: [
+          { x: 0, y: 10, targetZone: 'city_outskirts_bador', targetPos: { x: 32, y: 10 }, label: 'City Outskirts' },
+          { x: 0, y: 11, targetZone: 'city_outskirts_bador', targetPos: { x: 32, y: 11 }, label: 'City Outskirts' },
+          { x: 31, y: 11, targetZone: 'deep_caverns', targetPos: { x: 1, y: 11 }, label: 'Deep Caverns' },
+          { x: 31, y: 12, targetZone: 'deep_caverns', targetPos: { x: 1, y: 12 }, label: 'Deep Caverns' },
+        ],
+        worldObjects: [
+          { id: 'outpost7_holoboard', x: 8, y: 5, label: 'Resistance Planning Board',
+            description: 'Hand-drawn maps of the cavern system, supplemented with stolen KDY grid data. Someone has been planning this longer than Tanner implied.',
+            once: true, requiresFlag: 'ghost_keel_active',
+            grantsFlag: 'cavern_maps_found', grantsCodex: 'codex-outpost7-resistance' },
+          { id: 'outpost7_armory', x: 26, y: 5, label: 'Hidden Arms Cache',
+            description: 'Pre-war blasters, bacta packs, and a cracked slicer spike. Someone prepared for a long stay.',
+            once: true, grantsFlag: 'outpost7_armory_raided' },
+          { id: 'outpost7_rebreather', x: 16, y: 18, label: 'Rebreather Station',
+            description: 'Emergency atmospheric gear for the cavern descent. The mix is calibrated for the nitrogen-heavy deep cavern air.',
+            once: true, grantsFlag: 'rebreather_equipped' },
+        ],
+        npcs: [
+          { id: 'slicer_nix', x: 20, y: 10, kind: 'slicer', label: 'Slicer Nix',
+            questNpc: true,
+            requiresFlag: 'ghost_keel_active',
+            hideAfterFlags: ['nix_dead'],
+            repeatPrompt: 'Nix does not look up from her terminal. "Same answers as last time."',
+            prompt: 'The Twi\'lek keeps three terminals running simultaneously. She speaks without turning. "KDY ghost-class project. I have been in their network for six weeks. The manifests are shielded under OPERATION GHOST KEEL authorization. Whoever authorized this has Level Eight KDY clearance. That is four people. Two are on Coruscant. One of them is Tanner."',
+            choices: [
+              { text: 'Ask who the fourth Level Eight clearance belongs to.', morality: 0, loyalty: {}, result: '"Someone who does not officially exist in the KDY registry. A ghost account, forty-three years active. I ran the signature pattern through three Republic databases." She pauses. "It matches a former KDY Chief Architect who was officially killed in the Drayen Massacre. He was not killed."', grants: { flags: ['nix_consulted', 'architect_identity_known'] } },
+              { text: 'Tell Nix about Gharza in the Engine Wastes.', morality: 5, loyalty: { republic: 5 }, result: '"I know her clearance code. She was on Tanner\'s initial contractor list, then removed." A pause. "She was removed because someone at Level Eight overrode the contract. She is not working for Tanner. She is working for the Architect."', grants: { flags: ['nix_consulted', 'gharza_architect_connection'] } },
+            ],
+          },
+          { id: 'outpost7_contact', x: 10, y: 14, kind: 'generic', label: 'Resistance Contact',
+            repeatPrompt: '"The caverns run deep. Trust the maps."',
+            prompt: '"We have been watching Sector 4 for two cycles. KDY is building something that does not appear in any public commission. The shell of a capital ship, assembling in pieces." He spreads the hand-drawn maps. "The final components are in the deep caverns, stored in a decommissioned Republic survey station. Something is already there — and it has been there longer than KDY knows."',
+            choices: [
+              { text: 'Ask how they got this information.', morality: 0, loyalty: {}, result: '"Engineer Vorn. He was not told what the total project was until three months ago. He started talking to us the day he realized." He taps the map. "He is still inside. Treat him carefully."', grants: { flags: ['resistance_vorn_connection'] } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'outpost7_intel', x: 28, y: 18, label: 'Resistance Survey Notes', reward: 300 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 30, 20, 'floor');
+          carveRect(g, 3, 3, 12, 8, 'wall');
+          pt(g, 7, 3, 'floor'); pt(g, 8, 3, 'floor'); pt(g, 12, 5, 'floor'); pt(g, 12, 6, 'floor');
+          carveRect(g, 18, 3, 28, 8, 'wall');
+          pt(g, 22, 3, 'floor'); pt(g, 23, 3, 'floor'); pt(g, 28, 5, 'floor'); pt(g, 28, 6, 'floor');
+          carveRect(g, 3, 14, 14, 20, 'wall');
+          pt(g, 8, 14, 'floor'); pt(g, 9, 14, 'floor'); pt(g, 14, 16, 'floor'); pt(g, 14, 17, 'floor');
+          carveRect(g, 22, 14, 30, 20, 'wall');
+          pt(g, 26, 14, 'floor'); pt(g, 26, 18, 'floor');
+          pt(g, 0, 10, 'door'); pt(g, 0, 11, 'door');
+          pt(g, 31, 11, 'door'); pt(g, 31, 12, 'door');
+          return g;
+        },
+      },
+
+      deep_caverns: {
+        id: 'deep_caverns', name: 'Deep Caverns of Bador',
+        subtitle: 'Bador Moon · Sub-Surface Grid 9-1',
+        width: 34, height: 22, spawnPos: { x: 16, y: 1 }, textureId: 'verdanth',
+        accent: '#5A4B8A', accentGlow: 'rgba(90,75,138,0.28)', accentDim: '#28204A',
+        floorColor: '#14101E', floorAlt: '#1A1426', wallDark: '#080610', wallLight: '#100C18',
+        bg: 'radial-gradient(circle at 50% 50%, #100C18 0%, #060410 70%)', ambient: 'mist',
+        decor: ['rubble', 'moss'],
+        doors: [
+          { x: 16, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 20, y: 20 }, label: 'Engine Wastes' },
+          { x: 17, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 21, y: 20 }, label: 'Engine Wastes' },
+          { x: 0, y: 11,  targetZone: 'outpost_7', targetPos: { x: 30, y: 11 }, label: 'Outpost 7' },
+          { x: 0, y: 12,  targetZone: 'outpost_7', targetPos: { x: 30, y: 12 }, label: 'Outpost 7' },
+          { x: 33, y: 11, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 11 }, label: 'Zora IV Wreckage' },
+          { x: 33, y: 12, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 12 }, label: 'Zora IV Wreckage' },
+        ],
+        worldObjects: [
+          { id: 'republic_survey_cache', x: 18, y: 12, label: 'Republic Survey Station Cache',
+            description: 'An Old Republic survey station, sealed for decades. Inside: geological samples and an encrypted data core. The encryption pattern is not Republic standard — it was resealed after the initial survey.',
+            once: true, requiresFlag: 'ghost_keel_active',
+            grantsFlag: 'survey_cache_opened', grantsItem: 'cherit_logbook' },
+          { id: 'cavern_crystal_formation', x: 6, y: 16, label: 'Force-Resonant Crystal Formation',
+            description: 'A natural formation of kyber-adjacent crystal. Whoever designed the cavern installation placed it here deliberately. The resonance pattern is not naturally occurring.',
+            once: true, grantsFlag: 'cavern_crystal_found', grantsCodex: 'codex-bador-crystal' },
+          { id: 'cavern_sentinel_inactive', x: 26, y: 6, label: 'Automated Sentinel (Inactive)',
+            description: 'A KDY-pattern security droid, deactivated but recently serviced. Someone turned it off for you — or for themselves.',
+            once: true, requiresFlag: 'gharza_allied', grantsFlag: 'sentinel_cleared' },
+        ],
+        npcs: [
+          { id: 'cavern_unit_8x', x: 22, y: 6, kind: 'droid', label: 'Unit 8-X',
+            requiresFlag: 'assembly_override_accessed',
+            hideAfterFlags: ['unit8x_destroyed', 'unit8x_reprogrammed'],
+            repeatPrompt: 'Unit 8-X\'s optical array tracks you. "ACCESS PROTOCOL ENGAGED."',
+            prompt: '"QUERY: AUTHORIZATION CODE." The droid is a heavily modified KDY assembly unit, repurposed as an armed guardian. Its chassis bears signs of unauthorized modification. "QUERY NOT ANSWERED. INITIATING THREAT ASSESSMENT."',
+            choices: [
+              { text: 'Input the assembly override code.', morality: 0, loyalty: {}, result: '"CODE ACCEPTED. THREAT ASSESSMENT SUSPENDED." The droid\'s posture shifts. "SECONDARY QUERY: MANIFEST REFERENCE GHOST KEEL. CONFIRM IDENTITY." It waits.', requiresFlag: 'assembly_override_accessed', grants: { flags: ['unit8x_interacted'] } },
+              { text: 'Tell it the Architect sent you.', morality: 0, loyalty: {}, result: '"AUTHORIZATION CONFIRMED — LEVEL EIGHT." The droid stands down completely. "UNIT 8-X AWAITING RELOCATION ORDERS. HYPERCORE STATUS: SECURED AT GRID REFERENCE ALPHA-7. ZORA IV SECTOR."', requiresFlag: 'architect_identity_known', grants: { flags: ['unit8x_reprogrammed', 'hypercore_location_known'] } },
+              { text: 'Engage it in combat.', morality: -5, loyalty: { underworld: 3 }, result: 'The droid\'s full weapons array activates. It was built to stop exactly this.', grants: { flags: ['unit8x_hostile'] }, triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'unit_8x', flavorText: 'Unit 8-X locks on. It was built to stop exactly this.' } },
+            ],
+          },
+        ],
+        collectibles: [{ id: 'cavern_survey_data', x: 8, y: 4, label: 'Deep Survey Geological Record', reward: 350 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 32, 20, 'floor');
+          for (let cx = 4; cx <= 14; cx++) { pt(g, cx, 9, 'water'); pt(g, cx, 10, 'water'); }
+          pt(g, 8, 9, 'floor'); pt(g, 9, 9, 'floor');
+          for (let cz = 20; cz <= 28; cz++) { pt(g, cz, 14, 'water'); pt(g, cz, 15, 'water'); }
+          pt(g, 23, 14, 'floor'); pt(g, 24, 14, 'floor');
+          carveRect(g, 28, 2, 32, 8, 'wall');
+          pt(g, 30, 2, 'floor'); pt(g, 31, 2, 'floor');
+          pt(g, 16, 0, 'door'); pt(g, 17, 0, 'door');
+          pt(g, 0, 11, 'door'); pt(g, 0, 12, 'door');
+          pt(g, 33, 11, 'door'); pt(g, 33, 12, 'door');
+          return g;
+        },
+      },
+
+      zora_iv_wreckage: {
+        id: 'zora_iv_wreckage', name: 'Abandoned Capital Ship — Zora IV',
+        subtitle: 'Bador Moon · Grid 9-1 · Final Approach',
+        width: 34, height: 24, spawnPos: { x: 2, y: 11 }, textureId: 'ferrowake',
+        accent: '#B8D4E8', accentGlow: 'rgba(184,212,232,0.25)', accentDim: '#485868',
+        floorColor: '#141C24', floorAlt: '#1A2430', wallDark: '#080C10', wallLight: '#101820',
+        bg: 'radial-gradient(circle at 50% 30%, #101820 0%, #060C10 70%)', ambient: 'traffic',
+        decor: ['girder', 'pipe'],
+        doors: [
+          { x: 0, y: 11, targetZone: 'deep_caverns', targetPos: { x: 32, y: 11 }, label: 'Deep Caverns' },
+          { x: 0, y: 12, targetZone: 'deep_caverns', targetPos: { x: 32, y: 12 }, label: 'Deep Caverns' },
+        ],
+        worldObjects: [
+          { id: 'hypercore_chamber', x: 28, y: 12, label: 'Experimental Hypercore Chamber',
+            description: 'A sealed vault integrated into the old ship\'s reactor housing. Inside, the hypercore pulses with a power reading that should not exist outside a full Star Destroyer.',
+            once: true, requiresFlag: 'hypercore_location_known', grantsFlag: 'hypercore_visible' },
+          { id: 'zora_iv_bridge', x: 20, y: 5, label: 'Zora IV Bridge',
+            description: 'The original bridge of the Zora IV, a Venator-class survivor that limped here after the Drayen Massacre and never left. The flight logs are intact. Three decades of waiting.',
+            once: true, grantsFlag: 'zora_iv_history_known', grantsCodex: 'codex-zora-iv', grantsItem: 'cherit_logbook' },
+          { id: 'architect_terminal', x: 16, y: 18, label: 'The Architect\'s Personal Terminal',
+            description: 'Final access logs, forty-three years of shadow work. The terminal is unlocked — whoever last used it expected someone would come.',
+            once: true, requiresFlag: 'architect_identity_known',
+            grantsFlag: 'architect_logs_read', grantsCodex: 'codex-the-architect' },
+        ],
+        npcs: [
+          { id: 'the_architect', x: 18, y: 12, kind: 'the_architect', label: 'The Architect',
+            questNpc: true,
+            hideAfterFlags: ['architect_dead', 'architect_departed', 'hypercore_choice_made'],
+            repeatPrompt: '"What was built here will outlast all of us. That was the point."',
+            prompt: 'He is older than you expected. The rebreather gives him a labored rhythm, but his eyes are the sharpest thing in the room. He does not seem surprised to see you. "Tanner\'s contractor. Or perhaps something more by now." He stands at the bridge viewport, looking at the shape of the half-assembled ship below. "I built the first frame for this vessel forty-three years ago. It was declared destroyed with me. I have been less certain lately what I was giving the Republic."',
+            choices: [
+              { text: 'Ask who originally commissioned Ghost Keel.', morality: 5, loyalty: { republic: 8 }, result: '"A Republic intelligence officer who died eight years after commissioning it. Her name was Cherit. She believed that a state capable of extreme force but unwilling to use it was more deterrent than one that used force freely." He touches the viewport. "She was probably right. The question is whether that remains true when the state is no longer the same state that commissioned it."', grants: { flags: ['cherit_history_known'] } },
+              { text: 'Tell him the Syndicate will protect it better than the Republic ever would.', morality: -15, loyalty: { underworld: 15 }, result: '"I have heard that argument before. From intelligence services, from crime lords, from four different Senate subcommittees over four decades." He turns away. "It is always convincing to the person making it. What the ship does when it is used will determine whether you were right."', grants: { flags: ['architect_syndicate_argument'] } },
+              { text: 'Tell him you intend to destroy it.', morality: 20, loyalty: { republic: 15 }, result: '"I thought about that for thirty years. I chose to complete it instead." He straightens. "If you destroy it, I will not stop you. I made my choice. You are allowed to make a different one." He steps away from the viewport. "I will not be here when you do."', grants: { flags: ['architect_accepted_destruction', 'architect_departed'] } },
+            ],
+          },
+          { id: 'the_architect_final', x: 18, y: 14, kind: 'the_architect', label: 'The Architect',
+            requiresFlag: 'hypercore_visible',
+            hideAfterFlags: ['hypercore_choice_made'],
+            repeatPrompt: '"The choice is still yours."',
+            prompt: '"You have seen it." He stands with his hands clasped, looking at the hypercore chamber. "Three paths. Tanner\'s contract. A Republic demolition protocol I left active in the vault. Or your own comlink, if the Syndicate has a frequency for claiming capital assets." He does not tell you which to choose. "Forty-three years is enough time to stop having opinions about that kind of thing."',
+            choices: [
+              { text: 'Transmit schematics to KDY. Complete Tanner\'s contract.', morality: 0, loyalty: { underworld: 5 }, result: 'The transfer completes. Tanner\'s response is immediate: seventy-five thousand credits and KDY transit rights, permanent. The hypercore begins powering down remotely. You handed over something that will become a weapon for someone else\'s war.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_kdy', 'tanner_contract_completed'], items: ['experimental_hypercore_fragment'] } },
+              { text: 'Trigger the Republic demolition protocol. Destroy it.', morality: 25, loyalty: { republic: 20 }, result: 'The countdown initiates. Three minutes. You walk out of the Zora IV as the reactor core exceeds tolerance. The detonation is quiet from outside — a pulse, not an explosion. Something that should never have existed no longer does.', grants: { flags: ['hypercore_choice_made', 'hypercore_destroyed', 'republic_commendation'] } },
+              { text: 'Claim it for the Syndicate. This is your flagship now.', morality: -15, loyalty: { underworld: 25 }, result: 'The Syndicate frequency receives the handshake. "Asset secured." Somewhere on Coruscant, a ghost ship just found an owner. The pocket dreadnaught will take months to complete. But it will be yours.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_syndicate', 'syndicate_flagship_active'], items: ['experimental_hypercore_fragment'] } },
+            ],
+          },
+        ],
+        collectibles: [
+          { id: 'zora_iv_reactor_log', x: 30, y: 20, label: 'Zora IV Final Reactor Log', reward: 600 },
+          { id: 'zora_iv_turbolaser_crystal', x: 6, y: 18, label: 'Turbolaser Focus Crystal', reward: 1200 },
+        ],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 1, 32, 22, 'ship_hull');
+          carveRect(g, 3, 3, 30, 20, 'floor');
+          for (let hx = 3; hx <= 16; hx++) pt(g, hx, 1, 'ship_ramp');
+          for (let hx = 18; hx <= 30; hx++) pt(g, hx, 1, 'ship_ramp');
+          for (let hy = 1; hy <= 22; hy++) { pt(g, 1, hy, 'ship_hull'); pt(g, 32, hy, 'ship_hull'); }
+          carveRect(g, 3, 8, 14, 16, 'wall');
+          pt(g, 3, 12, 'floor'); pt(g, 4, 12, 'floor'); pt(g, 5, 12, 'floor'); pt(g, 6, 12, 'floor');
+          pt(g, 14, 10, 'floor'); pt(g, 14, 11, 'floor'); pt(g, 14, 12, 'floor');
+          pt(g, 0, 11, 'door'); pt(g, 0, 12, 'door');
+          return g;
+        },
+      },
+
+    },
+  },
 };
 
 function hash(x, y) { return Math.abs((x * 73856093) ^ (y * 19349663)) % 100; }
@@ -3331,6 +3815,90 @@ function NpcPortrait({ kind, accent }) {
       </svg>
     );
   }
+
+  if (kind === 'kdy_commander') {
+    const visor = accent, armor = '#C8CDD8', armDark = '#9AA0B0', trim = '#1A8FD0';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M6 42 L8 22 L22 22 L24 42 Z" fill={armor} />
+        <path d="M8 22 L22 22 L20 11 L10 11 Z" fill={armDark} />
+        <path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z" fill={armor} />
+        <path d="M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={armor} />
+        <rect x="10" y="1" width="10" height="10" rx="2" fill={armDark} />
+        <rect x="11" y="4" width="8" height="3.5" rx="0.5" fill={visor} opacity="0.92" />
+        <rect x="12" y="4.5" width="6" height="2" fill="#AAEEFF" opacity="0.45" />
+        <rect x="11" y="9" width="8" height="2" rx="0.5" fill="#8A9AB0" opacity="0.6" />
+        <rect x="12" y="15" width="6" height="1" fill={trim} opacity="0.8" />
+        <rect x="12" y="16.8" width="4" height="0.8" fill={trim} opacity="0.55" />
+        <rect x="8" y="21.5" width="14" height="1.5" fill={trim} opacity="0.5" />
+      </svg>
+    );
+  }
+  if (kind === 'the_architect') {
+    const skin = '#8A7A5A', coat = '#4A3A22', hazard = '#D4762C', rebreath = '#333840';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M5 42 L8 22 L22 22 L25 42 Z" fill={coat} />
+        <path d="M8 22 L22 22 L20 11 L10 11 Z" fill={hazard} />
+        <path d="M8 22 C5 22 3 16 5 11 L9 12 L8 22 Z" fill={coat} />
+        <path d="M22 22 C25 22 27 16 25 11 L21 12 L22 22 Z" fill={coat} />
+        <ellipse cx="15" cy="7.5" rx="5" ry="5.5" fill={skin} />
+        <rect x="11" y="9" width="8" height="4" rx="2" fill={rebreath} />
+        <rect x="13" y="10" width="4" height="2" rx="1" fill="#555A60" />
+        <circle cx="12" cy="11" r="0.85" fill={accent} opacity="0.8" />
+        <circle cx="18" cy="11" r="0.85" fill={accent} opacity="0.8" />
+        <circle cx="12.5" cy="6.8" r="0.65" fill="#2A2320" />
+        <circle cx="17.5" cy="6.8" r="0.65" fill="#2A2320" />
+        <ellipse cx="12.5" cy="6.8" rx="0.95" ry="0.75" fill={skin} style={{ animation: 'npc-blink 6s ease-in-out infinite' }} />
+        <ellipse cx="17.5" cy="6.8" rx="0.95" ry="0.75" fill={skin} style={{ animation: 'npc-blink 6s ease-in-out infinite' }} />
+        <rect x="8" y="21.5" width="14" height="1.5" fill={hazard} opacity="0.5" />
+      </svg>
+    );
+  }
+  if (kind === 'besalisk_boss') {
+    const scale = '#6A5A3A', scaleDark = '#4A3A24', eye = '#FF8800', cyber = '#8A8A8A';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M3 42 L7 22 L23 22 L27 42 Z" fill="#3A2E1E" />
+        <path d="M7 22 L23 22 L21 9 L9 9 Z" fill="#4A3A28" />
+        <path d="M9 9 C4 9 1 5 3 1 L7 3 L9 9 Z" fill="#3A2E1E" />
+        <path d="M21 9 C26 9 29 5 27 1 L23 3 L21 9 Z" fill="#3A2E1E" />
+        <path d="M8 17 C3 17 1 13 3 9 L6 10 L8 17 Z" fill="#4A3A28" />
+        <path d="M22 17 C27 17 29 13 27 9 L24 10 L22 17 Z" fill="#4A3A28" />
+        <ellipse cx="15" cy="5" rx="7" ry="5.5" fill={scale} />
+        <ellipse cx="9.5" cy="7.5" rx="2" ry="2.5" fill={scale} />
+        <ellipse cx="20.5" cy="7.5" rx="2" ry="2.5" fill={scale} />
+        <ellipse cx="12" cy="3.8" rx="2" ry="1.6" fill="#0A0A0A" />
+        <ellipse cx="18" cy="3.8" rx="2" ry="1.6" fill="#0A0A0A" />
+        <circle cx="12" cy="3.6" r="0.7" fill={eye} opacity="0.9" />
+        <circle cx="18" cy="3.6" r="0.7" fill={eye} opacity="0.9" />
+        <rect x="21" y="2" width="3" height="4.5" rx="0.5" fill={cyber} opacity="0.8" />
+        <rect x="21.4" y="2.5" width="2.2" height="3.5" fill={accent} opacity="0.4" />
+        <rect x="7" y="21.5" width="16" height="1.5" fill={accent} opacity="0.4" />
+      </svg>
+    );
+  }
+  if (kind === 'trandoshan_sniper') {
+    const scale = '#5A7050', scaleDark = '#3A5030', eye = '#CC7700', suit = '#2A3020';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 24 L21 24 L23 42 Z" fill={suit} />
+        <path d="M9 24 L21 24 L19 12 L11 12 Z" fill="#3A4028" />
+        <path d="M9 24 C6 24 5 18 7 13 L10 14 L9 24 Z" fill={suit} />
+        <path d="M21 24 C24 24 25 18 23 13 L20 14 L21 24 Z" fill={suit} />
+        <rect x="1" y="9.5" width="9" height="1.5" rx="0.5" fill="#555" />
+        <rect x="1" y="8.8" width="1.5" height="1.2" fill="#666" />
+        <rect x="8.5" y="8.5" width="1.2" height="3" fill="#444" />
+        <ellipse cx="15" cy="7.5" rx="5.5" ry="5" fill={scale} />
+        <path d="M12 10 L15 13 L18 10" fill={scaleDark} />
+        <ellipse cx="12.5" cy="6.8" rx="1.5" ry="2" fill="#0A0A0A" />
+        <ellipse cx="17.5" cy="6.8" rx="1.5" ry="2" fill="#0A0A0A" />
+        <rect x="12.2" y="5.6" width="0.65" height="2.6" fill={eye} opacity="0.9" />
+        <rect x="17.2" y="5.6" width="0.65" height="2.6" fill={eye} opacity="0.9" />
+        <rect x="9" y="23.5" width="12" height="1.5" fill={accent} opacity="0.4" />
+      </svg>
+    );
+  }
   return null;
 }
 
@@ -3596,22 +4164,23 @@ function DialogueOverlay({ npc, onChoose, inventory = [], questFlags = {} }) {
   );
 }
 
-function TravelOverlay({ currentPlanetId, credits, onTravel, onClose }) {
+function TravelOverlay({ currentPlanetId, credits, questFlags, onTravel, onClose }) {
   return (
     <div style={{ position:'absolute',inset:0,background:'rgba(4,4,8,0.92)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:20 }}>
       <div style={{ width:'min(92%,480px)',border:'1px solid #2A2A38',background:'#0E0E16',fontFamily:"'IBM Plex Mono',ui-monospace,monospace" }}>
         <div style={{ padding:'14px 18px',borderBottom:'1px solid #2A2A38',color:'#8890A8',fontSize:11,letterSpacing:'0.08em' }}>hyperspace docking manifest</div>
         {Object.values(PLANETS).map((p) => {
           const isCurrent = p.id === currentPlanetId;
+          const isLocked = p.requiresFlag && !(questFlags && questFlags[p.requiresFlag]);
           const canAfford = credits >= p.travelCost;
           const zone0 = p.zones[p.startZoneId];
           return (
-            <div key={p.id} onClick={() => !isCurrent && canAfford && onTravel(p.id)} style={{ padding:'14px 18px',borderBottom:'1px solid #1C1C26',cursor:isCurrent||!canAfford?'default':'pointer',opacity:isCurrent?0.4:canAfford?1:0.5,display:'flex',justifyContent:'space-between',alignItems:'center' }}>
+            <div key={p.id} onClick={() => !isCurrent && canAfford && !isLocked && onTravel(p.id)} style={{ padding:'14px 18px',borderBottom:'1px solid #1C1C26',cursor:isCurrent||!canAfford||isLocked?'default':'pointer',opacity:isCurrent?0.4:isLocked?0.3:canAfford?1:0.5,display:'flex',justifyContent:'space-between',alignItems:'center' }}>
               <div>
-                <div style={{ color:zone0.accent,fontSize:15,fontWeight:600 }}>{p.name}</div>
-                <div style={{ color:'#7A7F94',fontSize:11,marginTop:2 }}>{zone0.subtitle}</div>
+                <div style={{ color:isLocked?'#5A5F74':zone0.accent,fontSize:15,fontWeight:600 }}>{p.name}{isLocked?' [LOCKED]':''}</div>
+                <div style={{ color:'#7A7F94',fontSize:11,marginTop:2 }}>{isLocked?'Complete Senate mission to unlock':zone0.subtitle}</div>
               </div>
-              <div style={{ textAlign:'right',fontSize:12,color:'#A8ADC0' }}>{isCurrent?'docked here':p.travelCost===0?'no fee':`${p.travelCost} cr`}</div>
+              <div style={{ textAlign:'right',fontSize:12,color:'#A8ADC0' }}>{isCurrent?'docked here':isLocked?'locked':p.travelCost===0?'no fee':`${p.travelCost} cr`}</div>
             </div>
           );
         })}
@@ -3710,6 +4279,12 @@ const ITEMS = {
   senate_bribe_chip:         { id:'senate_bribe_chip',          name:'Senate Undersecretary Credit Chip',      type:'quest',      iconKind:'keycard',  value:50000, description:"Fifty thousand credits on a plain chip. Meln set it on the desk without looking at you when he did it. He has been doing this for a very long time." },
   senate_retention_key:      { id:'senate_retention_key',       name:'Archive Retention Key',                  type:'quest',      iconKind:'keycard',  value:0,     description:"A physical data key predating the Commerce Authority archive hold. Dax has been carrying it for thirty-one years. He handed it over without ceremony. That was the point." },
   precinct42_access_log:     { id:'precinct42_access_log',      name:'Precinct 42 Access Log (Sealed)',         type:'quest',      iconKind:'datapad',  value:0,     description:"A sealed CSF internal review canister. The identifier reads: LEVEL 1313 ACCESS LOG, YEAR 11. A dead officer was carrying it under his vest in Shadow Town. Someone wanted this information to disappear." },
+  encrypted_kdy_schematics:  { id:'encrypted_kdy_schematics',  name:'Encrypted KDY Schematics',              type:'quest',      iconKind:'datapad',  value:0,    description:'Partial blueprints for a classified KDY vessel class. The designation is redacted. The scale is not.' },
+  kuati_brandy:              { id:'kuati_brandy',              name:'Vial of Kuati Brandy',                  type:'consumable', iconKind:'supply',   value:80,   description:'A single-origin reserve from the KDY executive cellar. Tanner included it without explanation.' },
+  ion_charged_coils:         { id:'ion_charged_coils',         name:'Ion-Charged Power Coils',               type:'gear',       iconKind:'gear',     value:600,  description:'Precision coils calibrated for a reactor-scale power draw. Not standard issue for any published vessel class.' },
+  cherit_logbook:            { id:'cherit_logbook',            name:"Cherit's Personal Logbook",             type:'quest',      iconKind:'datapad',  value:0,    description:'The private log of Republic Intelligence Officer Cherit, spanning forty-three years. The final entry is dated eighteen months before she was officially declared killed.' },
+  experimental_hypercore_fragment: { id:'experimental_hypercore_fragment', name:'Experimental Hypercore Fragment', type:'quest', iconKind:'artifact', value:8000, description:'A severed sliver of the Ghost Keel hypercore. Enough to reverse-engineer the power generation method. Enough to cause problems for anyone who does.' },
+  corrupt_manifest:          { id:'corrupt_manifest',          name:'Corrupt Manufacturing Manifest',         type:'quest',      iconKind:'datapad',  value:0,    description:'A KDY Sector 4 assembly log with falsified output entries. The actual production figures are encoded in the metadata.' },
 
 };
 
@@ -6429,6 +7004,9 @@ const AI_COMBAT_PROFILES = {
   ig_assassin_droid:    { aggression:80, cover:20, flank:70, overwatch:90, optRange:5, name:'IG Assassin Droid',         hp:8,  shield:0, accent:'#CC3030' },
   sewer_crawler:        { aggression:95, cover:0,  flank:30, overwatch:0,  optRange:1, name:'Sewer Crawler',             hp:6,  shield:0, accent:'#80FF40' },
   desperate_scrapper:   { aggression:80, cover:30, flank:40, overwatch:10, optRange:2, name:'Desperate Scrapper',        hp:3,  shield:0, accent:'#B08030' },
+  unit_8x:              { aggression:65, cover:50, flank:40, overwatch:90, optRange:5, name:'Unit 8-X',                  hp:10, shield:4, accent:'#B8D4E8' },
+  kdy_security_guard:   { aggression:45, cover:75, flank:35, overwatch:65, optRange:4, name:'KDY Security Guard',          hp:6,  shield:3, accent:'#4A7A9B' },
+  trandoshan_hunter:    { aggression:70, cover:55, flank:85, overwatch:70, optRange:5, name:'Trandoshan Hunter',            hp:7,  shield:1, accent:'#5A7050' },
 };
 
 const ENCOUNTER_TABLE = {
@@ -6440,6 +7018,13 @@ const ENCOUNTER_TABLE = {
   spice_refining_vaults:['pyke_sentinel','pyke_sentinel','spice_brute','cyborg_splicer','rodian_saboteur'],
   senatorial_lounges:  ['vigo_vanguard','falleen_taskmaster','black_sun_striker','csf_swat'],
   csf_academy:         ['riot_controller','swat_marksman','csf_swat','csf_scout'],
+  bador_main_base:       ['kdy_security_guard','kdy_security_guard','syndicate_thug'],
+  bador_manufacturing:   ['kdy_security_guard','unit_8x','syndicate_thug','trandoshan_hunter'],
+  city_outskirts_bador:  ['syndicate_thug','trandoshan_hunter','desperate_scrapper'],
+  engine_wastes:         ['trandoshan_hunter','desperate_scrapper','syndicate_thug'],
+  outpost_7:             ['kdy_security_guard','syndicate_thug'],
+  deep_caverns:          ['unit_8x','trandoshan_hunter','desperate_scrapper'],
+  zora_iv_wreckage:      ['unit_8x','kdy_security_guard'],
 };
 
 const ENCOUNTER_RATES = {
@@ -6451,6 +7036,13 @@ const ENCOUNTER_RATES = {
   spice_refining_vaults: 25,
   senatorial_lounges:    12,
   csf_academy:           30,
+  bador_main_base:       8,
+  bador_manufacturing:   20,
+  city_outskirts_bador:  15,
+  engine_wastes:         25,
+  outpost_7:             10,
+  deep_caverns:          22,
+  zora_iv_wreckage:      18,
 };
 
 const ENCOUNTER_FLAVOR = {
@@ -10049,7 +10641,7 @@ function StarWarsRPG() {
           <div style={{ color:zone.accent,fontSize:14,letterSpacing:'0.2em' }}>...</div>
         </div>
       )}
-      {showTravel && <TravelOverlay currentPlanetId={planetId} credits={credits} onTravel={travelToPlanet} onClose={() => setShowTravel(false)} />}
+      {showTravel && <TravelOverlay currentPlanetId={planetId} credits={credits} questFlags={questFlags} onTravel={travelToPlanet} onClose={() => setShowTravel(false)} />}
       {activeDialogue && <DialogueOverlay npc={activeDialogue} onChoose={resolveChoice} inventory={inventory} questFlags={questFlags} />}
       {showSpeeder && <SpeederOverlay credits={credits} questFlags={questFlags} currentZoneId={zoneId} onTravel={(dest) => { setCredits((c) => c - dest.cost); setShowSpeeder(false); travelToZone(dest.targetZone, dest.targetPos); }} onClose={() => setShowSpeeder(false)} />}
       {showInventory && <InventoryOverlay inventory={inventory} onClose={() => setShowInventory(false)} />}
