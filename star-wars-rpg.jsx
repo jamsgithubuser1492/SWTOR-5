@@ -2926,32 +2926,32 @@ const PLANETS = {
           { x: 27, y: 9, targetZone: 'bador_main_base', targetPos: { x: 1, y: 10 }, label: 'Shuttle to Bador' },
         ],
         worldObjects: [
-          { id: 'kuat_viewing_port', x: 8, y: 4, label: 'Structural Viewing Port',
+          { id: 'kuat_viewing_port', iconKind: 'orbital_viewport', x: 8, y: 4, label: 'Structural Viewing Port',
             description: 'Through the transparisteel, Kuat\'s orbital shipyard stretches for hundreds of kilometers. Dozens of Star Destroyers float in perfect formation.' },
-          { id: 'kuat_holobriefing', x: 14, y: 14, label: 'Mission Holobriefing Table',
+          { id: 'kuat_holobriefing', iconKind: 'holo_table', x: 14, y: 14, label: 'Mission Holobriefing Table',
             description: 'The holographic dossier Tanner prepared is still running. Sector 4 grid coordinates. KDY surface personnel files. Commander Vael\'s operational brief. And at the top of the index, a single classification line: OPERATION GHOST KEEL — ACCESS LEVEL 8. Whatever is on Bador Moon, someone with significant authority decided it needed a name.',
             requiresFlag: 'tanner_briefed',
             once: true, grantsFlag: 'ghost_keel_briefed', grantsCodex: 'codex-kuat-operation' },
-          { id: 'tanner_executive_terminal', x: 20, y: 5, label: 'Executive Holonet Terminal',
+          { id: 'tanner_executive_terminal', iconKind: 'terminal', x: 20, y: 5, label: 'Executive Holonet Terminal',
             description: 'The terminal links to KDY\'s private shipping network. Tanner\'s access codes are pre-loaded.' },
-          { id: 'grand_executive_safe', x: 24, y: 8, label: 'Grand Executive Safe',
+          { id: 'grand_executive_safe', iconKind: 'safe', x: 24, y: 8, label: 'Grand Executive Safe',
             description: 'A heavy wall-mounted safe concealed behind a gilt-framed painting of the Kuat orbital ring in its first year of construction. The painter included the still-visible scoring on the outer hull from a pirate raid that KDY officially denies ever occurred. Inside, behind two layers of biometric lock, are a stack of nobility rings, a pile of credit wafers totaling something substantial, and three classification-red political slates. The slates are labeled with Moff surnames.',
             triggersMinigame: 'terminal_slicing',
             requiresFlag: 'lady_kuat_trust',
             once: true, grantsFlag: 'executive_safe_opened', grantsItem: 'executive_blackmail_slate' },
-          { id: 'historical_model_case', x: 22, y: 12, label: 'Display Case — KDY Historical Ship Models',
+          { id: 'historical_model_case', iconKind: 'ship_model_case', x: 22, y: 12, label: 'Display Case — KDY Historical Ship Models',
             description: 'Nine gold-plated starship miniatures under a polished transparisteel case. Each one is a production milestone. The first is labeled YEAR ONE — CORELLIAN CORVETTE DESIGN COMMISSION. The last is unlabeled, a hull form that does not match any published vessel class. The case is sealed with a physical lock that was last opened recently. The maintenance log shows it was accessed three days ago.',
             once: true, grantsFlag: 'historical_models_examined', grantsCodex: 'codex-kdy-dreadnought' },
-          { id: 'privileged_holonet_terminal', x: 24, y: 14, label: 'Privileged Holonet Terminal',
+          { id: 'privileged_holonet_terminal', iconKind: 'terminal', x: 24, y: 14, label: 'Privileged Holonet Terminal',
             description: 'An unmonitored high-bandwidth terminal feeding through KDY\'s private network backbone, which predates Imperial censorship architecture. It can reach any relay in the galaxy without a routing trace. The Republic Senate Oversight Committee contact code Rael encoded on the blueprint drive would reach its destination without interception from here.',
             requiresFlag: 'rael_helped',
             once: true, grantsFlag: 'blueprints_transmitted', grantsItem: 'union_leaders_contact' },
 
-          { id: 'kuati_history_mural', x: 4, y: 4, label: 'House Kuat Ancestral Mural',
+          { id: 'kuati_history_mural', iconKind: 'bronze_mural', x: 4, y: 4, label: 'House Kuat Ancestral Mural',
             description: 'An engraved bronze relief panel, three meters wide, depicting the founding of Kuat Drive Yards in a stylized Old Republic aesthetic. Figures in ancient shipbuilder\'s garb stand before a hull-frame skeleton above Kuat\'s atmosphere. The Ten Families are named in Aurebesh along the bottom border, their crests arranged in a circle. The Vas-Kuat crest appears at center. It has been subtly repositioned since the original casting — the crest was not at center in the version documented in pre-war KDY archives.' },
-          { id: 'luxury_panoramic_viewport', x: 22, y: 2, label: 'Executive Ring Panoramic Viewport',
+          { id: 'luxury_panoramic_viewport', iconKind: 'panoramic_viewport', x: 22, y: 2, label: 'Executive Ring Panoramic Viewport',
             description: 'The largest viewport on the ring, reserved for the executive tier. Two meters tall, four wide, triple-layered transparisteel. The curvature of Kuat\'s ring-world and the vast orbital infrastructure arcing above it are visible in both directions simultaneously. A KDY Executive Protocol Droid stands motionless before it — a slender brass-and-copper humanoid with formally-pressed garment simulators, photoreceptors dimmed in standby — monitoring the construction progress display projected onto the lower pane.' },
-          { id: 'executive_protocol_droid_unit', x: 16, y: 8, label: 'KDY Executive Protocol Droid',
+          { id: 'executive_protocol_droid_unit', iconKind: 'protocol_droid_stand', x: 16, y: 8, label: 'KDY Executive Protocol Droid',
             description: 'A KDY-commissioned protocol variant: slender brass-and-copper chassis, formal service configuration, copper wiring visible at the joint couplings in the style of Old Republic luxury manufacture. Its photoreceptors are dim — standby mode. The KDY crest is etched into its chest plating. A service card reads: UNIT DESIGNATION — RUEN-7, EXECUTIVE SUITE DETAIL, AUTHORIZED USE: HOUSE KUAT STAFF ONLY. The service log shows the last activated user was Lady Kuat, two days prior.' },
         ],
         npcs: [
@@ -3051,34 +3051,34 @@ const PLANETS = {
           { x: 15, y: 21, targetZone: 'kdy_lounge_market', targetPos: { x: 15, y: 1 }, label: 'Market Ring' },
         ],
         worldObjects: [
-          { id: 'fuel_rig_4a', x: 5, y: 3, label: 'Fuel Rig 4-A',
+          { id: 'fuel_rig_4a', iconKind: 'fuel_rig', x: 5, y: 3, label: 'Fuel Rig 4-A',
             description: 'A coaxium refueling conduit the width of a speeder. The safety clamps are corroded and the flow regulators have been manually bypassed. Tamper with the pressure valve and this entire bay becomes a distraction of spectacular proportions.',
             triggersMinigame: 'valve_override',
             once: true, grantsFlag: 'fuel_rig_tampered' },
-          { id: 'manifest_holo_terminal', x: 26, y: 4, label: 'Manifest Holo-Terminal',
+          { id: 'manifest_holo_terminal', iconKind: 'manifest_terminal', x: 26, y: 4, label: 'Manifest Holo-Terminal',
             description: 'A public-access node cycling through incoming cargo manifests. Everything on the surface is routine. Below the routing headers there are eleven entries marked CONSIGNMENT RESTRICTED — KDY DIRECTOR CLEARANCE. The timestamps are all within the last six hours.',
             triggersMinigame: 'terminal_slicing',
             once: true, grantsFlag: 'manifest_accessed', grantsItem: 'missing_hyperdrive_manifest' },
-          { id: 'vectis_terminal', x: 26, y: 17, label: 'Ring Transit Terminal — RX-9',
+          { id: 'vectis_terminal', iconKind: 'terminal', x: 26, y: 17, label: 'Ring Transit Terminal — RX-9',
             description: 'The bronze-and-black chassis of Vectis descends on its ceiling track. Multi-lensed optics converge on you with the calm precision of a targeting system repurposed for customer service. "Greetings, traveler. Ring Sector Security clearance is required for Executive and Briefing ring access. Please present credentials or validate corporate clearance codes. Unauthorized transit attempts are logged and prosecuted under KDY Orbital Security Ordinance 44-G."',
             requiresNoneFlags: ['vectis_standard_cleared'] },
-          { id: 'vectis_terminal_active', x: 26, y: 17, label: 'Ring Transit — RX-9 (Cleared)',
+          { id: 'vectis_terminal_active', iconKind: 'terminal', x: 26, y: 17, label: 'Ring Transit — RX-9 (Cleared)',
             description: 'Vectis rotates its optical head as you approach. "Clearance on file. Standard ring access confirmed. Executive berths require Director override or validated KDY clearance code. Please mind the acceleration inertia." The shuttle bays on the right side of the bay are open.',
             requiresFlag: 'vectis_standard_cleared' },
-          { id: 'bay7_impound_notice', x: 14, y: 3, label: 'Docking Bay 7 — Impound Notice',
+          { id: 'bay7_impound_notice', iconKind: 'impound_notice', x: 14, y: 3, label: 'Docking Bay 7 — Impound Notice',
             description: 'A bright red notice is locked to Docking Bay 7\'s blast door. KDY Ring-Sec seal. The ship name is listed as FREE HORIZON, registry Corellia. Impoundment reason: manifest discrepancy, Class B commercial violation. The notice is three days old.' },
 
-          { id: 'orbital_viewport_bay1', x: 10, y: 3, label: 'Orbital Viewport — Bay Section 7',
+          { id: 'orbital_viewport_bay1', iconKind: 'orbital_viewport', x: 10, y: 3, label: 'Orbital Viewport — Bay Section 7',
             description: 'Reinforced transparisteel three meters wide, set into the ring\'s hull plating. Beyond it, the curve of Kuat\'s upper atmosphere catches amber light from the system\'s star. Closer — much closer — the skeletal frame of a Valor-class cruiser hangs in its construction cradle. Twelve construction teams move across the unfinished hull in vacuum suits. At this scale, they look like sparks. A KDY identifier plate is etched into the viewport frame: HULL CLASS VL-9, BERTH 7, COMMISSIONED 3,961 BBY.' },
-          { id: 'tether_locker_wall', x: 4, y: 4, label: 'Zero-G Worker Tether Lockers',
+          { id: 'tether_locker_wall', iconKind: 'tether_locker', x: 4, y: 4, label: 'Zero-G Worker Tether Lockers',
             description: 'A row of mag-locked lockers set into the alcove wall, each stamped with a worker identification number. Several are open, harnesses hanging. A handwritten note is stuck to locker 12: ANYONE WHO TAKES MY EMERGENCY LINE AGAIN ANSWERS TO ME PERSONALLY. The equipment is Old Republic surplus: heavy, reliable, and repaired too many times to count.' },
-          { id: 'transit_pod_terminal', x: 14, y: 14, label: 'Ring Pneumatic Transit — Pod Station 3',
+          { id: 'transit_pod_terminal', iconKind: 'transit_pod', x: 14, y: 14, label: 'Ring Pneumatic Transit — Pod Station 3',
             description: 'A cylindrical pod capsule sits in its pressurized cradle, acceleration foam still carrying the impression of its last passenger. The route board shows three destinations: Briefing Ring (cleared transit), Executive Ring (Director code required), Maintenance Underbelly (engineering access only). A KDY Mark IV Heavy Loader Droid stands idle beside it, quad-pedal chassis locked in standby, its teal-grey carapace scored from a thousand cargo shifts.' },
-          { id: 'plasma_welding_arm', x: 24, y: 10, label: 'Plasma Arc Welding Rig — Station 14',
+          { id: 'plasma_welding_arm', iconKind: 'welding_rig', x: 24, y: 10, label: 'Plasma Arc Welding Rig — Station 14',
             description: 'An articulated welding arm the size of a speeder, locked in its storage cradle between shifts. The plasma torch head is still warm, glowing faint orange at its sealed tip. A safety checklist is stamped on the cradle: LAST INSPECTION — 3 CYCLES PRIOR. SIGNED: OSSEK. Tool markings on the arm\'s body are in at least four different hands, each correction slightly different from the last.' },
-          { id: 'aurebesh_wayfinding', x: 8, y: 10, label: 'KDY Ring Wayfinding Plaque',
+          { id: 'aurebesh_wayfinding', iconKind: 'wayfinding_plaque', x: 8, y: 10, label: 'KDY Ring Wayfinding Plaque',
             description: 'Cast bronze signage in the angular stepped-arch style of Kuati industrial design. The Aurebesh reads: TRANSIT SECTION 3 — PRIVATE EXECUTIVE RING (CLEARANCE REQUIRED) / TEAM BRIEFING RING / LOUNGE, MARKET, AND UNION HALL / BAY ACCESS BELOW. Below the main text, someone has scratched a smaller addition in Basic: IF LOST, ASK VECTIS. IT WILL TELL YOU TWICE.' },
-          { id: 'hydraulic_blast_panel', x: 1, y: 12, label: 'Emergency Bulkhead Override',
+          { id: 'hydraulic_blast_panel', iconKind: 'blast_door_panel', x: 1, y: 12, label: 'Emergency Bulkhead Override',
             description: 'A manual hydraulic override wheel behind a break-glass panel, painted in the bright amber and black hazard stripes of every KDY station built in the last two centuries. The placard reads: FOR HULL BREACH OR FIRE — TURN THREE FULL ROTATIONS COUNTERCLOCKWISE. A secondary notice below it reads: YES THIS MEANS YOU, BAY CREW. SIGNED, RING SAFETY OFFICER PRENN.' },
         ],
         npcs: [
@@ -3172,30 +3172,30 @@ const PLANETS = {
           { x: 0, y: 9, targetZone: 'kdy_landing_bay', targetPos: { x: 30, y: 13 }, label: 'Ring Transit' },
         ],
         worldObjects: [
-          { id: 'primary_holo_projector', x: 18, y: 9, label: 'Primary Holo-Projector',
+          { id: 'primary_holo_projector', iconKind: 'holo_projector', x: 18, y: 9, label: 'Primary Holo-Projector',
             description: 'A rotating full-scale wireframe of a warship hull class that does not appear in any published register. The scale bar in the corner reads 1800 meters. That puts it in Star Dreadnought territory — a commission that requires a full Senate appropriation and three fleet admirals signing off. Whoever authorized this hull did it outside the normal channels. Two sub-menus are locked behind a Level 6 clearance badge. A third, labeled STRUCTURAL TOLERANCE MARGINS, is accessible without clearance. Its numbers are wrong.',
             triggersMinigame: 'terminal_slicing',
             once: true, grantsFlag: 'holotable_accessed', grantsCodex: 'codex-kdy-dreadnought' },
-          { id: 'secure_datapad_locker', x: 28, y: 15, label: 'Secure Datapad Charging Locker',
+          { id: 'secure_datapad_locker', iconKind: 'secure_locker', x: 28, y: 15, label: 'Secure Datapad Charging Locker',
             description: 'A bank of twelve encrypted storage units. Most are sealed with ISB biometric locks. One — third from the right, second row — has a cracked seal. Someone was in a hurry. Inside is a partially overwritten datapad. The readable portions are KDY executive memos discussing a payment made to an unnamed Moff delegate. The amount is significant. The purpose is listed as DESIGN CONSULTATION FEE.',
             triggersMinigame: 'terminal_slicing',
             once: true, grantsFlag: 'datapad_cracked', grantsItem: 'executive_bribe_record' },
-          { id: 'acoustic_intercept_wall', x: 10, y: 4, label: 'Transparisteel Partition — Conference Room A',
+          { id: 'acoustic_intercept_wall', iconKind: 'intercept_wall', x: 10, y: 4, label: 'Transparisteel Partition — Conference Room A',
             description: 'The partition between the main briefing floor and Conference Room A is single-pane transparisteel, vibrating slightly from the conversation inside. Two Imperial Naval officers are visible. One is pointing at a holographic schematic that matches the dreadnought on the main projector. The other has their arms crossed and is shaking their head. You cannot hear the words, but you can read one phrase from the officer\'s lips with absolute certainty: "not in the budget."' },
-          { id: 'engineering_terminal_vorn', x: 8, y: 15, label: 'Engineering Access Terminal',
+          { id: 'engineering_terminal_vorn', iconKind: 'terminal', x: 8, y: 15, label: 'Engineering Access Terminal',
             description: 'A standard KDY engineering terminal. The access log shows it was last used forty minutes ago. The files accessed were assembly sequence archives from Sector 4, Bador Moon. Whoever pulled these files was not on a scheduled audit.',
             requiresFlag: 'designer_contacted',
             once: true, grantsFlag: 'assembly_sequence_reviewed', grantsItem: 'sabotage_blueprint_files' },
 
-          { id: 'fleet_holo_command_table', x: 14, y: 8, label: 'Fleet Holo-Command Table',
+          { id: 'fleet_holo_command_table', iconKind: 'holo_table', x: 14, y: 8, label: 'Fleet Holo-Command Table',
             description: 'An octagonal holographic command table, wide enough for twelve officers to stand around it. Currently it projects a real-time scan of the construction cradles: three Hammerhead-class frigates at varying stages, the nearly-complete Valor-class cruiser designated VL-9, and two Thranta-class corvettes in the outer gantries. Blue vector overlays mark structural progress percentages. Someone has highlighted VL-9 in amber — the color code for schedule deviation.' },
-          { id: 'ordnance_transport_crate', x: 30, y: 6, label: 'Ordnance Transport Crate — Classified',
+          { id: 'ordnance_transport_crate', iconKind: 'ordnance_crate', x: 30, y: 6, label: 'Ordnance Transport Crate — Classified',
             description: 'Blast-shielded durasteel case, sealed with a KDY ordnance lock. The stencil reads: COMPONENT CLASS RESTRICTED — AUTHORIZATION CODE REQUIRED — DO NOT OPEN IN ATMOSPHERE. Three identical cases are stacked beside it. The shipping manifest is partially torn, but the origin facility is legible: KUAT SURFACE — FACILITY BADOR-7. Date stamp: four cycles prior.' },
-          { id: 'secure_armory_locker', x: 28, y: 4, label: 'Briefing Ring Secure Armory',
+          { id: 'secure_armory_locker', iconKind: 'armory_locker', x: 28, y: 4, label: 'Briefing Ring Secure Armory',
             description: 'A heavy-grade security locker, floor-bolted, with a biometric palm reader that has seen better years. The panel shows evidence of at least one bypass attempt — fresh scoring around the secondary housing from a splicer tool. The attempt was unsuccessful. Someone wanted in here badly and did not have the right handprint.' },
-          { id: 'conduit_cable_truss', x: 18, y: 4, label: 'Overhead Wiring Truss — Section B-12',
+          { id: 'conduit_cable_truss', iconKind: 'cable_truss', x: 18, y: 4, label: 'Overhead Wiring Truss — Section B-12',
             description: 'A bundled mass of armored conduit lines runs overhead in a pressed-metal tray. One bundle has been partially re-routed with newer cabling — the original is darker, older alloy standard from before the last KDY infrastructure audit. The newer line was added within the last year. Acoustic intercept hardware would benefit from proximity to runs like this one.' },
-          { id: 'coolant_pipe_hazard', x: 14, y: 15, label: 'Pressurized Coolant Conduit — Warning Valve',
+          { id: 'coolant_pipe_hazard', iconKind: 'coolant_pipe', x: 14, y: 15, label: 'Pressurized Coolant Conduit — Warning Valve',
             description: 'A section of high-pressure coolant pipe isolated behind a safety cage, amber indicators cycling. The pressure gauge reads above nominal. Stencil on the cage: DO NOT OPERATE WITHOUT ENGINEERING CLEARANCE — VALVE SEQUENCE REQUIRED. The gauge has been climbing for two cycles. A work order was filed. No one has come.',
             triggersMinigame: 'valve_override',
             grantsFlag: 'coolant_pressure_vented' },
@@ -3290,37 +3290,37 @@ const PLANETS = {
           { x: 15, y: 0, targetZone: 'kdy_landing_bay', targetPos: { x: 15, y: 20 }, label: 'Ring Transit' },
         ],
         worldObjects: [
-          { id: 'sabacc_table_forge', x: 30, y: 17, label: 'The Sabacc Table — Forge and Anvil',
+          { id: 'sabacc_table_forge', iconKind: 'sabacc_table', x: 30, y: 17, label: 'The Sabacc Table — Forge and Anvil',
             description: 'A round table in the back corner of the Forge and Anvil, green felt surface worn to grey at the edges from years of use. Four people are playing. An off-duty KDY engineer with the look of someone whose entire shift bonus is already on the table. A Rodian in shipwright coveralls chewing something. An Imperial logistics clerk who is down three hundred and trying not to show it. And an empty chair — the fourth player stepped out ten minutes ago and has not come back. The credits in the pot suggest they did not intend to leave.',
             triggersMinigame: 'sabacc' },
-          { id: 'garroks_goods', x: 10, y: 8, label: 'Garrok\'s Goods — Market Stall 7',
+          { id: 'garroks_goods', iconKind: 'stall', x: 10, y: 8, label: 'Garrok\'s Goods — Market Stall 7',
             description: 'The stall is deliberately unremarkable. Generic signage. No holographic displays. An Ithorian stands behind the counter with the stillness of something that has survived in hostile ecosystems for a very long time. His four-throated voice is quiet enough that the industrial grinding from the adjacent tool shop covers it completely. Behind the visible tools and replacement components are blaster actuator overclocks, slicer spikes factory-sealed but with the serial identifiers filed off, and forged security passes printed to KDY ring standard. He looks at you. You look at him. He nods very slightly.',
             grantsFlag: 'garrok_approached' },
-          { id: 'shift_announcement_board', x: 20, y: 2, label: 'Shift Announcement Board',
+          { id: 'shift_announcement_board', iconKind: 'board', x: 20, y: 2, label: 'Shift Announcement Board',
             description: 'A flickering holo-terminal cycling through shift rotations, maintenance lockdown schedules, and corporate safety announcements. The current notice at the top has been there for six hours: PLASMA WELDING DECK 4 — MANDATORY OVERTIME. THIRD SHIFT EXTENDED TWELVE HOURS. COMPENSATION ADJUSTMENT PENDING REVIEW. The adjustment has been pending review for eleven weeks.' },
-          { id: 'union_bulletin', x: 5, y: 15, label: 'Barracks Corridor Bulletin',
+          { id: 'union_bulletin', iconKind: 'board', x: 5, y: 15, label: 'Barracks Corridor Bulletin',
             description: 'Someone has pinned a hand-written flimsi to the corridor wall. Most of it has been torn off — Ring-Sec sweeps the barracks twice a shift for unauthorized postings. What remains reads: "Deck 4 third shift. Seven injuries in four months. The review board has not met. We meet—" The rest is gone. In the corner, a stylized gear symbol. Not the KDY gear. A different one.',
             requiresNoneFlags: ['union_leader_met'],
             once: true, grantsFlag: 'union_bulletin_read' },
-          { id: 'surveillance_node', x: 5, y: 18, label: 'Ring-Sec Surveillance Node — Barracks Block 2',
+          { id: 'surveillance_node', iconKind: 'surveillance_cam', x: 5, y: 18, label: 'Ring-Sec Surveillance Node — Barracks Block 2',
             description: 'A gray hardline sensor housing mounted at head height in the second barracks junction. The blue indicator light confirms it is active and transmitting. A T-7 hex driver and forty seconds of unobserved access are all it takes to physically disconnect the hardline feed. Ring-Sec will log it as equipment failure and send a maintenance ticket. The ticket will sit unresolved until someone files a second report.',
             requiresFlag: 'union_mission_accepted',
             triggersMinigame: 'valve_override',
             once: true, grantsFlag: 'union_surveillance_disabled' },
-          { id: 'forge_anvil_bar', x: 28, y: 14, label: 'Forge and Anvil — Bar Counter',
+          { id: 'forge_anvil_bar', iconKind: 'forge_bar', x: 28, y: 14, label: 'Forge and Anvil — Bar Counter',
             description: 'Corellian whiskey served warm because the refrigeration unit in this section failed two months ago and the work order is still open. A Sullustan bartender moves with the practiced efficiency of someone who has heard every story and judges none of them. Someone has carved into the bar surface: HERE SINCE YEAR ONE. Below it, in fresher scratching: AND COUNTING.' },
 
-          { id: 'czerka_trade_terminal', x: 34, y: 3, label: 'Czerka Corporation Trade Desk',
+          { id: 'czerka_trade_terminal', iconKind: 'czerka_terminal', x: 34, y: 3, label: 'Czerka Corporation Trade Desk',
             description: 'A Czerka-branded terminal occupies the northeast alcove: red and gold corporate livery, polished to a shine that looks more aggressive than welcoming. The product catalog is technically legal — industrial components, survey equipment, labor contracting services. The pricing model is not. A fine-print clause at the bottom notes: CZERKA CORPORATION RETAINS RIGHT OF FIRST PURCHASE FOR ALL MATERIALS PRODUCED WITH CZERKA-SUPPLIED COMPONENTS. Someone has circled this in red ink and written: THIS IS HOW THEY OWN YOU.' },
-          { id: 'fusion_fuel_canister_rack', x: 16, y: 5, label: 'Deuterium Fusion-Fuel Storage Rack',
+          { id: 'fusion_fuel_canister_rack', iconKind: 'fuel_canister_rack', x: 16, y: 5, label: 'Deuterium Fusion-Fuel Storage Rack',
             description: 'Thirty-six sealed canisters in a blast-rated rack, each labeled with deuterium concentration, pressure rating, and date of last inspection. The rack is surrounded by mag-clamped warning stanchions, their amber hazard lights cycling in slow arrhythmic pulses. Three canisters near the bottom show handling damage: dented safety collars, one with a micro-fracture sealant patch over the pressure housing. The last full inspection is eight days overdue.' },
-          { id: 'sub_light_drive_cradle', x: 25, y: 10, label: 'Sub-Light Drive Calibration Cradle',
+          { id: 'sub_light_drive_cradle', iconKind: 'drive_cradle', x: 25, y: 10, label: 'Sub-Light Drive Calibration Cradle',
             description: 'A scaled-down ion engine calibration ring, used to set output tolerances before final hull installation. The engine currently seated is a KY-88 — old model, standard for Hammerhead frigates. The calibration display shows a resonance drift of 0.3 percent beyond spec. Written on the service tag: DRIFT ACCEPTABLE — J.OSSEK. Written below in different handwriting: DRIFT IS NOT ACCEPTABLE — RECALIBRATE BEFORE INSTALL.' },
-          { id: 'conduit_crawler_port', x: 12, y: 3, label: 'Conduit Crawler Maintenance Port',
+          { id: 'conduit_crawler_port', iconKind: 'crawler_port', x: 12, y: 3, label: 'Conduit Crawler Maintenance Port',
             description: 'A low hatch in the ring wall, barely a meter high, surrounded by amber and black hazard markings. An M-33 Conduit Crawler Droid is currently emerging from it: a segmented, copper-plated inspection unit designed to navigate the cable bundles in the ring\'s utility substructure. It moves with the patient efficiency of a creature that has never questioned its purpose. Its inspection log shows seven minor insulation faults and one major conduit degradation flagged this cycle.' },
-          { id: 'pneumatic_rivet_hopper', x: 18, y: 18, label: 'Pneumatic Rivet Supply Hopper',
+          { id: 'pneumatic_rivet_hopper', iconKind: 'rivet_hopper', x: 18, y: 18, label: 'Pneumatic Rivet Supply Hopper',
             description: 'A heavy supply hopper fed from an overhead pressurized line, dispensing structural fasteners for hull plating work. A KDY Mark IV Heavy Loader Droid stands beside it in standby: four-legged, teal-grey carapace, built for orbital construction environments. Its loading arms are folded, cargo bed empty. A work order is attached to the hopper: RIVET SPEC KDY-884, VOID-RATED, 40,000 UNITS, HULL SECTION 7F. AUTHORIZED BY: GUILD MASTER OSSEK. The order is two days old and the hopper is half empty.' },
-          { id: 'data_terminal_republic', x: 25, y: 6, label: 'Republic-Issue Diagnostic Terminal',
+          { id: 'data_terminal_republic', iconKind: 'republic_terminal', x: 25, y: 6, label: 'Republic-Issue Diagnostic Terminal',
             description: 'A Republic Navy diagnostic terminal — older hardware, late Mandalorian Wars manufacture, cutting edge thirty years ago and now kept running by institutional stubbornness and spare parts. The display cycles through engineering schematics for Valor-class structural tolerances. A sticky note on the housing reads: IF THIS TERMINAL GOES DOWN AGAIN CONTACT VAEL IN SECTION FOUR. NOT ENGINEERING. VAEL. Someone has written below it: WHO IS VAEL and someone else has written: EXACTLY.' },
         ],
         npcs: [
@@ -6600,6 +6600,439 @@ function WorldObjectSprite({ kind, accent, id }) {
       <ellipse cx="20" cy="13" rx="5" ry="3" fill={accent} opacity="0.12" />
       <ellipse cx="20" cy="16" rx="7" ry="4" fill={accent} opacity="0.07" />
       <rect x="11" y="20" width="6" height="5" rx="0.5" fill={dim} />
+    </svg>
+  );
+  if (kind === 'fuel_rig') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="9" y="16" width="10" height="8" rx="1" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.8" />
+      <ellipse cx="14" cy="16" rx="5" ry="1.8" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.7" />
+      <ellipse cx="14" cy="24" rx="5" ry="1.8" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.5" />
+      <line x1="14" y1="7" x2="14" y2="16" stroke={accent} strokeWidth="1.2" opacity="0.7" />
+      <rect x="13" y="7" width="8" height="2" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <path d="M21 8 Q25 8 25 12 L25 15" stroke={accent} strokeWidth="1" fill="none" opacity="0.6" />
+      <rect x="24" y="15" width="2" height="3" rx="0.5" fill="#FF6600" opacity="0.7" />
+      <circle cx="11" cy="19" r="1" fill={accent} opacity="0.4" />
+      <circle cx="11" cy="22" r="0.6" fill="#FF3300" opacity="0.5" style={{ animation:'world-obj-pulse 1.8s ease-in-out infinite' }} />
+    </svg>
+  );
+  if (kind === 'manifest_terminal') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="3" y="6" width="22" height="16" rx="1" fill={dim} stroke={accent} strokeWidth="0.7" opacity="0.9" />
+      <rect x="4" y="7" width="20" height="2" fill={accent} opacity="0.25" />
+      <line x1="5" y1="11" x2="23" y2="11" stroke={accent} strokeWidth="0.5" opacity="0.35" />
+      <line x1="5" y1="13" x2="20" y2="13" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+      <line x1="5" y1="15" x2="22" y2="15" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+      <rect x="5" y="17" width="18" height="1.5" rx="0.3" fill="#FF2222" opacity="0.45" style={{ animation:'world-obj-pulse 1.2s ease-in-out infinite' }} />
+      <rect x="5" y="19" width="8" height="1" rx="0.3" fill={accent} opacity="0.2" />
+      <rect x="5" y="22" width="18" height="1.5" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.5" />
+    </svg>
+  );
+  if (kind === 'impound_notice') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="3" y="3" width="22" height="22" rx="1" fill="#330000" stroke="#FF2222" strokeWidth="1" opacity="0.9" />
+      <rect x="3" y="3" width="22" height="5" fill="#CC0000" opacity="0.6" />
+      <circle cx="14" cy="5" r="2" fill="none" stroke="#FF4444" strokeWidth="0.7" opacity="0.8" />
+      <rect x="12.5" y="4" width="3" height="2.5" rx="0.3" fill="none" stroke="#FF4444" strokeWidth="0.5" opacity="0.7" />
+      <line x1="5" y1="11" x2="23" y2="11" stroke="#FF4444" strokeWidth="0.4" opacity="0.5" />
+      <line x1="5" y1="13" x2="20" y2="13" stroke="#FF4444" strokeWidth="0.4" opacity="0.4" />
+      <line x1="5" y1="15" x2="22" y2="15" stroke="#FF4444" strokeWidth="0.4" opacity="0.4" />
+      <line x1="5" y1="17" x2="18" y2="17" stroke="#FF4444" strokeWidth="0.4" opacity="0.4" />
+      <rect x="8" y="19" width="12" height="4" rx="0.5" fill="none" stroke="#FF2222" strokeWidth="0.6" opacity="0.5" />
+      <line x1="14" y1="19" x2="14" y2="23" stroke="#FF2222" strokeWidth="0.5" opacity="0.4" />
+    </svg>
+  );
+  if (kind === 'orbital_viewport') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <circle cx="14" cy="14" r="11" fill="#000811" stroke={accent} strokeWidth="1.2" opacity="0.9" />
+      <circle cx="14" cy="14" r="11" fill="none" stroke={accent} strokeWidth="2.5" opacity="0.15" />
+      <circle cx="6" cy="6" r="0.7" fill={accent} opacity="0.7" />
+      <circle cx="10" cy="5" r="0.5" fill={accent} opacity="0.5" />
+      <circle cx="18" cy="7" r="0.6" fill={accent} opacity="0.6" />
+      <circle cx="22" cy="10" r="0.5" fill={accent} opacity="0.5" />
+      <circle cx="8" cy="18" r="0.4" fill={accent} opacity="0.4" />
+      <circle cx="20" cy="20" r="0.5" fill={accent} opacity="0.4" />
+      <path d="M6 16 L9 14 L14 17 L19 12 L22 13" stroke={accent} strokeWidth="0.8" fill="none" opacity="0.5" />
+      <path d="M3 14 Q14 3 25 14" stroke={accent} strokeWidth="0.4" fill="none" opacity="0.2" />
+      <circle cx="4.5" cy="9.5" r="0.8" fill="none" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+      <circle cx="23.5" cy="9.5" r="0.8" fill="none" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+      <circle cx="4.5" cy="18.5" r="0.8" fill="none" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+      <circle cx="23.5" cy="18.5" r="0.8" fill="none" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+    </svg>
+  );
+  if (kind === 'tether_locker') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="6" width="24" height="18" rx="1" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.8" />
+      <rect x="2" y="6" width="24" height="2" fill={accent} opacity="0.15" />
+      <line x1="10" y1="6" x2="10" y2="24" stroke={accent} strokeWidth="0.6" opacity="0.4" />
+      <line x1="18" y1="6" x2="18" y2="24" stroke={accent} strokeWidth="0.6" opacity="0.4" />
+      <line x1="14" y1="6" x2="14" y2="24" stroke={accent} strokeWidth="0.5" opacity="0.25" />
+      <rect x="3.5" y="8" width="5" height="14" rx="0.3" fill={accent} opacity="0.07" />
+      <rect x="5.5" y="14" width="1.5" height="1" rx="0.2" fill={accent} opacity="0.5" />
+      <rect x="13.5" y="14" width="1.5" height="1" rx="0.2" fill={accent} opacity="0.5" />
+      <rect x="21.5" y="14" width="1.5" height="1" rx="0.2" fill={accent} opacity="0.5" />
+      <path d="M6 8 Q5 12 4 20" stroke={accent} strokeWidth="0.8" fill="none" opacity="0.5" />
+      <circle cx="4" cy="20" r="1.2" fill={accent} opacity="0.35" />
+    </svg>
+  );
+  if (kind === 'transit_pod') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <line x1="2" y1="10" x2="26" y2="10" stroke={accent} strokeWidth="0.8" opacity="0.6" />
+      <line x1="2" y1="12" x2="26" y2="12" stroke={accent} strokeWidth="0.8" opacity="0.6" />
+      <ellipse cx="14" cy="17" rx="9" ry="5" fill={dim} stroke={accent} strokeWidth="0.7" opacity="0.9" />
+      <ellipse cx="14" cy="15" rx="7" ry="3.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.5" />
+      <circle cx="14" cy="15" r="1.5" fill={accent} opacity="0.3" />
+      <circle cx="11" cy="11" r="0.5" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <circle cx="17" cy="11" r="0.5" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <rect x="10" y="20" width="8" height="2" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.4" />
+    </svg>
+  );
+  if (kind === 'welding_rig') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="3" y="20" width="10" height="4" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.7" />
+      <rect x="7" y="6" width="2.5" height="14" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <rect x="9" y="8" width="12" height="2" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <circle cx="21" cy="9" r="3" fill="#FF5500" opacity="0.75" style={{ animation:'world-obj-pulse 0.8s ease-in-out infinite' }} />
+      <circle cx="21" cy="9" r="1.5" fill="#FFBB00" opacity="0.6" />
+      <line x1="24" y1="6" x2="26" y2="4" stroke="#FF8800" strokeWidth="0.7" opacity="0.6" />
+      <line x1="24" y1="9" x2="27" y2="9" stroke="#FFAA00" strokeWidth="0.7" opacity="0.5" />
+      <line x1="24" y1="12" x2="26" y2="14" stroke="#FF6600" strokeWidth="0.7" opacity="0.5" />
+      <line x1="21" y1="12" x2="21" y2="15" stroke="#FF7700" strokeWidth="0.7" opacity="0.4" />
+      <circle cx="26" cy="4" r="0.5" fill="#FFDD00" opacity="0.7" />
+      <circle cx="27" cy="9" r="0.5" fill="#FFAA00" opacity="0.6" />
+    </svg>
+  );
+  if (kind === 'wayfinding_plaque') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="5" width="24" height="18" rx="1" fill={dim} stroke={accent} strokeWidth="0.7" opacity="0.85" />
+      <rect x="2" y="5" width="24" height="4" rx="1" fill={accent} opacity="0.2" />
+      <line x1="4" y1="12" x2="24" y2="12" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <line x1="4" y1="14" x2="20" y2="14" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <line x1="4" y1="16" x2="22" y2="16" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <line x1="4" y1="18" x2="18" y2="18" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <polygon points="18,20 22,21.5 18,23" fill={accent} opacity="0.5" />
+      <circle cx="5" cy="14" r="0.6" fill={accent} opacity="0.4" />
+      <circle cx="5" cy="16" r="0.6" fill={accent} opacity="0.4" />
+      <circle cx="5" cy="18" r="0.6" fill={accent} opacity="0.4" />
+    </svg>
+  );
+  if (kind === 'blast_door_panel') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="2" width="24" height="24" rx="1" fill="#221100" stroke="#FF6600" strokeWidth="1" opacity="0.9" />
+      <line x1="2" y1="2" x2="26" y2="26" stroke="#FF6600" strokeWidth="1.5" opacity="0.25" />
+      <line x1="26" y1="2" x2="2" y2="26" stroke="#FF6600" strokeWidth="1.5" opacity="0.25" />
+      <rect x="8" y="6" width="12" height="9" rx="0.5" fill="none" stroke="#FF6600" strokeWidth="0.7" opacity="0.5" />
+      <line x1="10" y1="8" x2="12" y2="6" stroke="#FF6600" strokeWidth="0.5" opacity="0.4" />
+      <line x1="18" y1="8" x2="16" y2="6" stroke="#FF6600" strokeWidth="0.5" opacity="0.4" />
+      <circle cx="14" cy="18" r="4" fill="none" stroke="#FF6600" strokeWidth="0.8" opacity="0.6" />
+      <line x1="14" y1="14" x2="14" y2="22" stroke="#FF6600" strokeWidth="0.7" opacity="0.5" />
+      <line x1="10" y1="18" x2="18" y2="18" stroke="#FF6600" strokeWidth="0.7" opacity="0.5" />
+      <line x1="11" y1="15" x2="17" y2="21" stroke="#FF6600" strokeWidth="0.5" opacity="0.4" />
+      <line x1="17" y1="15" x2="11" y2="21" stroke="#FF6600" strokeWidth="0.5" opacity="0.4" />
+    </svg>
+  );
+  if (kind === 'holo_projector') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <ellipse cx="14" cy="22" rx="8" ry="2.5" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.7" />
+      <circle cx="14" cy="22" r="1.5" fill={accent} opacity="0.4" />
+      <path d="M8 22 L10 10 M20 22 L18 10" stroke={accent} strokeWidth="0.5" fill="none" opacity="0.3" />
+      <polygon points="10,10 18,10 16,4 12,4" fill={accent} opacity="0.12" style={{ animation:'world-obj-pulse 2s ease-in-out infinite' }} />
+      <polygon points="10,10 18,10 16,4 12,4" fill="none" stroke={accent} strokeWidth="0.6" opacity="0.4" />
+      <ellipse cx="14" cy="7" rx="3" ry="1.5" fill="none" stroke={accent} strokeWidth="0.6" opacity="0.5" style={{ animation:'world-obj-pulse 2s ease-in-out infinite' }} />
+    </svg>
+  );
+  if (kind === 'secure_locker') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="4" width="24" height="20" rx="1" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.85" />
+      <line x1="14" y1="4" x2="14" y2="24" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+      <line x1="2" y1="11" x2="26" y2="11" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+      <line x1="2" y1="17" x2="26" y2="17" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+      <rect x="3" y="5" width="10" height="5.5" rx="0.3" fill={accent} opacity="0.06" />
+      <rect x="15" y="5" width="10" height="5.5" rx="0.3" fill="#CC0000" opacity="0.12" />
+      <rect x="15" y="5" width="10" height="5.5" rx="0.3" fill="none" stroke="#FF2222" strokeWidth="0.5" opacity="0.5" />
+      <rect x="3" y="12" width="10" height="5" rx="0.3" fill="#FF8800" opacity="0.08" />
+      <rect x="3" y="12" width="10" height="5" rx="0.3" fill="none" stroke="#FF8800" strokeWidth="0.4" opacity="0.4" />
+      <circle cx="8" cy="8" r="0.8" fill={accent} opacity="0.35" />
+      <circle cx="20" cy="8" r="0.8" fill="#FF2222" opacity="0.5" />
+      <circle cx="8" cy="14.5" r="0.8" fill={accent} opacity="0.35" />
+    </svg>
+  );
+  if (kind === 'intercept_wall') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="3" width="24" height="22" rx="0.5" fill="#050B1A" stroke={accent} strokeWidth="0.7" opacity="0.85" />
+      <rect x="14" y="3" width="1" height="22" fill={accent} opacity="0.08" />
+      <line x1="14" y1="3" x2="14" y2="25" stroke={accent} strokeWidth="0.5" opacity="0.2" />
+      <ellipse cx="8" cy="14" rx="2.5" ry="2.5" fill={accent} opacity="0.15" />
+      <rect x="7" y="16" width="3" height="7" rx="0.5" fill={accent} opacity="0.12" />
+      <ellipse cx="20" cy="14" rx="2.5" ry="2.5" fill={accent} opacity="0.15" />
+      <rect x="19" y="16" width="3" height="7" rx="0.5" fill={accent} opacity="0.12" />
+      <path d="M10 15 L12 17" stroke={accent} strokeWidth="0.6" opacity="0.35" />
+      <line x1="2" y1="10" x2="26" y2="10" stroke={accent} strokeWidth="0.4" opacity="0.2" />
+    </svg>
+  );
+  if (kind === 'holo_table') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <ellipse cx="14" cy="19" rx="11" ry="4" fill={dim} stroke={accent} strokeWidth="0.7" opacity="0.8" />
+      <ellipse cx="14" cy="18" rx="9" ry="3" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.4" />
+      <line x1="7" y1="19" x2="7" y2="24" stroke={accent} strokeWidth="0.6" opacity="0.4" />
+      <line x1="21" y1="19" x2="21" y2="24" stroke={accent} strokeWidth="0.6" opacity="0.4" />
+      <path d="M10 14 L10 9 L14 5 L18 9 L18 14" fill="none" stroke={accent} strokeWidth="0.6" opacity="0.4" style={{ animation:'world-obj-pulse 2.2s ease-in-out infinite' }} />
+      <line x1="10" y1="11" x2="18" y2="11" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <ellipse cx="14" cy="5" rx="3" ry="1.2" fill={accent} opacity="0.15" style={{ animation:'world-obj-pulse 2.2s ease-in-out infinite' }} />
+    </svg>
+  );
+  if (kind === 'ordnance_crate') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="3" y="8" width="22" height="16" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.7" opacity="0.85" />
+      <path d="M3 8 L5 6 L23 6 L25 8" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.7" />
+      <line x1="14" y1="6" x2="14" y2="8" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+      <rect x="3" y="8" width="3" height="16" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <rect x="22" y="8" width="3" height="16" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <polygon points="14,10 11,16 17,16" fill="none" stroke="#FF8800" strokeWidth="0.7" opacity="0.6" />
+      <line x1="14" y1="12" x2="14" y2="14.5" stroke="#FF8800" strokeWidth="0.6" opacity="0.5" />
+      <circle cx="14" cy="15.2" r="0.5" fill="#FF8800" opacity="0.6" />
+      <line x1="8" y1="8" x2="8" y2="24" stroke={accent} strokeWidth="0.3" opacity="0.2" />
+      <line x1="20" y1="8" x2="20" y2="24" stroke={accent} strokeWidth="0.3" opacity="0.2" />
+    </svg>
+  );
+  if (kind === 'armory_locker') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="3" y="4" width="22" height="22" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.8" opacity="0.9" />
+      <rect x="3" y="4" width="3" height="22" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <rect x="22" y="4" width="3" height="22" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <rect x="3" y="24" width="22" height="2" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.4" />
+      <circle cx="5" cy="6" r="0.8" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.5" />
+      <circle cx="23" cy="6" r="0.8" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.5" />
+      <line x1="14" y1="4" x2="14" y2="26" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+      <rect x="9" y="13" width="10" height="8" rx="0.5" fill="#003300" stroke="#00CC44" strokeWidth="0.6" opacity="0.7" />
+      <path d="M11 16 L13 18 L17 14" fill="none" stroke="#00CC44" strokeWidth="0.7" opacity="0.6" />
+      <line x1="7" y1="9" x2="9" y2="11" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <line x1="21" y1="9" x2="19" y2="11" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+    </svg>
+  );
+  if (kind === 'cable_truss') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="4" width="24" height="5" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.8" />
+      <rect x="4" y="4" width="3" height="2" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <rect x="12" y="4" width="3" height="2" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <rect x="20" y="4" width="3" height="2" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <line x1="5" y1="9" x2="5" y2="24" stroke={accent} strokeWidth="1.2" opacity="0.5" />
+      <line x1="14" y1="9" x2="14" y2="22" stroke={accent} strokeWidth="1" opacity="0.45" />
+      <line x1="22" y1="9" x2="22" y2="26" stroke="#FF8800" strokeWidth="1.2" opacity="0.55" />
+      <rect x="4" y="13" width="3" height="1.5" rx="0.3" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <rect x="12" y="16" width="3" height="1.5" rx="0.3" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <rect x="20" y="12" width="3" height="1.5" rx="0.3" fill={dim} stroke="#FF8800" strokeWidth="0.4" opacity="0.5" />
+      <circle cx="5" cy="24" r="1.2" fill={accent} opacity="0.3" />
+    </svg>
+  );
+  if (kind === 'coolant_pipe') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="11" width="24" height="6" rx="3" fill={dim} stroke={accent} strokeWidth="0.7" opacity="0.8" />
+      <rect x="2" y="12" width="24" height="1" fill={accent} opacity="0.12" />
+      <circle cx="14" cy="14" r="4" fill="none" stroke={accent} strokeWidth="0.6" opacity="0.5" />
+      <line x1="14" y1="10" x2="14" y2="18" stroke={accent} strokeWidth="0.7" opacity="0.4" />
+      <line x1="10" y1="14" x2="18" y2="14" stroke={accent} strokeWidth="0.7" opacity="0.4" />
+      <line x1="11" y1="11" x2="17" y2="17" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+      <line x1="17" y1="11" x2="11" y2="17" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+      <circle cx="22" cy="9" r="2.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <line x1="22" y1="9" x2="22" y2="11" stroke={accent} strokeWidth="0.5" opacity="0.4" style={{ transformOrigin:'22px 9px', animation:'spin 4s linear infinite' }} />
+      <circle cx="6" cy="9" r="1.5" fill="#FF8800" opacity="0.5" style={{ animation:'world-obj-pulse 1.5s ease-in-out infinite' }} />
+    </svg>
+  );
+  if (kind === 'sabacc_table') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <ellipse cx="14" cy="17" rx="12" ry="8" fill="#042604" stroke={accent} strokeWidth="0.7" opacity="0.9" />
+      <ellipse cx="14" cy="17" rx="10" ry="6.5" fill="none" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+      <rect x="8" y="10" width="4" height="6" rx="0.5" fill="#FAFAFA" stroke={accent} strokeWidth="0.4" opacity="0.6" style={{ transform:'rotate(-12deg)', transformOrigin:'10px 13px' }} />
+      <rect x="12" y="9" width="4" height="6" rx="0.5" fill="#EEEEFF" stroke={accent} strokeWidth="0.4" opacity="0.6" />
+      <rect x="16" y="10" width="4" height="6" rx="0.5" fill="#FFEEEE" stroke={accent} strokeWidth="0.4" opacity="0.6" style={{ transform:'rotate(12deg)', transformOrigin:'18px 13px' }} />
+      <circle cx="7" cy="20" r="1.5" fill="#D4AF37" opacity="0.7" />
+      <circle cx="14" cy="22" r="1.5" fill="#D4AF37" opacity="0.7" />
+      <circle cx="21" cy="20" r="1.5" fill="#D4AF37" opacity="0.7" />
+    </svg>
+  );
+  if (kind === 'surveillance_cam') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="5" y="2" width="5" height="3" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <line x1="7.5" y1="5" x2="7.5" y2="9" stroke={accent} strokeWidth="0.7" opacity="0.5" />
+      <path d="M5 9 Q14 12 23 9" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.7" />
+      <ellipse cx="14" cy="12" rx="6" ry="5" fill={dim} stroke={accent} strokeWidth="0.7" opacity="0.85" />
+      <circle cx="14" cy="12" r="3.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.5" />
+      <circle cx="14" cy="12" r="1.5" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.6" />
+      <circle cx="14" cy="12" r="0.7" fill="#FF0000" opacity="0.7" style={{ animation:'world-obj-pulse 1s ease-in-out infinite' }} />
+      <line x1="4" y1="9" x2="4" y2="16" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+      <line x1="24" y1="9" x2="24" y2="16" stroke={accent} strokeWidth="0.5" opacity="0.3" />
+    </svg>
+  );
+  if (kind === 'czerka_terminal') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="4" y="6" width="20" height="18" rx="1" fill={dim} stroke="#CC8800" strokeWidth="0.8" opacity="0.9" />
+      <rect x="4" y="6" width="20" height="3.5" fill="#CC8800" opacity="0.25" />
+      <path d="M8 7.5 A5 5 0 0 1 13 7.5" fill="none" stroke="#FFAA00" strokeWidth="0.8" opacity="0.7" />
+      <line x1="6" y1="13" x2="22" y2="13" stroke="#CC8800" strokeWidth="0.4" opacity="0.3" />
+      <line x1="6" y1="15" x2="19" y2="15" stroke="#CC8800" strokeWidth="0.4" opacity="0.3" />
+      <line x1="6" y1="17" x2="21" y2="17" stroke="#CC8800" strokeWidth="0.4" opacity="0.3" />
+      <rect x="6" y="19" width="10" height="1" rx="0.3" fill="#CC8800" opacity="0.2" />
+      <rect x="4" y="22" width="20" height="2" rx="0.3" fill={dim} stroke="#CC8800" strokeWidth="0.4" opacity="0.5" />
+    </svg>
+  );
+  if (kind === 'fuel_canister_rack') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="4" width="24" height="20" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <rect x="2" y="4" width="24" height="2" fill={accent} opacity="0.15" />
+      <ellipse cx="6" cy="8" rx="2.5" ry="1" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <rect x="3.5" y="8" width="5" height="12" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.7" />
+      <ellipse cx="6" cy="20" rx="2.5" ry="1" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.5" />
+      <ellipse cx="13" cy="8" rx="2.5" ry="1" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <rect x="10.5" y="8" width="5" height="12" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.7" />
+      <ellipse cx="13" cy="20" rx="2.5" ry="1" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.5" />
+      <ellipse cx="20" cy="8" rx="2.5" ry="1" fill={dim} stroke="#FF8800" strokeWidth="0.5" opacity="0.6" />
+      <rect x="17.5" y="8" width="5" height="12" fill={dim} stroke="#FF8800" strokeWidth="0.5" opacity="0.7" />
+      <ellipse cx="20" cy="20" rx="2.5" ry="1" fill={dim} stroke="#FF8800" strokeWidth="0.5" opacity="0.5" />
+      <line x1="19" y1="14" x2="22" y2="14" stroke="#FF8800" strokeWidth="0.8" opacity="0.4" />
+      <circle cx="6" cy="22" r="0.8" fill={accent} opacity="0.3" />
+      <circle cx="13" cy="22" r="0.8" fill={accent} opacity="0.3" />
+    </svg>
+  );
+  if (kind === 'drive_cradle') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="4" y="20" width="20" height="4" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.7" />
+      <line x1="8" y1="20" x2="8" y2="15" stroke={accent} strokeWidth="0.7" opacity="0.5" />
+      <line x1="20" y1="20" x2="20" y2="15" stroke={accent} strokeWidth="0.7" opacity="0.5" />
+      <circle cx="14" cy="13" r="6" fill="none" stroke={accent} strokeWidth="0.6" opacity="0.5" />
+      <circle cx="14" cy="13" r="4" fill="none" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+      <ellipse cx="14" cy="13" rx="3" ry="3" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.6" />
+      <ellipse cx="14" cy="14" rx="2" ry="2.5" fill="#0033AA" opacity="0.3" />
+      <ellipse cx="14" cy="14.5" rx="1.2" ry="1.8" fill="#0066FF" opacity="0.25" style={{ animation:'world-obj-pulse 1.8s ease-in-out infinite' }} />
+      <line x1="8" y1="11" x2="10" y2="13" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <line x1="20" y1="11" x2="18" y2="13" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+    </svg>
+  );
+  if (kind === 'crawler_port') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <circle cx="14" cy="14" r="11" fill={dim} stroke="#FF6600" strokeWidth="0.8" opacity="0.9" />
+      <circle cx="14" cy="14" r="8" fill={dim} stroke="#FF6600" strokeWidth="0.5" opacity="0.5" />
+      <line x1="14" y1="3" x2="14" y2="25" stroke="#FF6600" strokeWidth="0.5" opacity="0.3" />
+      <line x1="3" y1="14" x2="25" y2="14" stroke="#FF6600" strokeWidth="0.5" opacity="0.3" />
+      <path d="M10 14 Q12 11 14 14 Q16 17 18 14" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.5" />
+      <ellipse cx="14" cy="10" rx="3" ry="2" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <rect x="12" y="12" width="4" height="3" rx="0.3" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <circle cx="12.5" cy="10.5" r="0.6" fill={accent} opacity="0.4" />
+      <circle cx="15.5" cy="10.5" r="0.6" fill={accent} opacity="0.4" />
+    </svg>
+  );
+  if (kind === 'rivet_hopper') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <line x1="14" y1="2" x2="14" y2="6" stroke={accent} strokeWidth="0.8" opacity="0.5" />
+      <polygon points="8,6 20,6 17,13 11,13" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.8" />
+      <rect x="11" y="13" width="6" height="4" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.7" />
+      <polygon points="12,17 16,17 17,20 11,20" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <circle cx="12" cy="22" r="0.7" fill={accent} opacity="0.5" />
+      <circle cx="14" cy="23" r="0.7" fill={accent} opacity="0.4" />
+      <circle cx="16" cy="22" r="0.7" fill={accent} opacity="0.5" />
+      <circle cx="11" cy="24" r="0.5" fill={accent} opacity="0.3" />
+      <circle cx="17" cy="24" r="0.5" fill={accent} opacity="0.3" />
+      <rect x="8" y="9" width="4" height="1" rx="0.3" fill={accent} opacity="0.2" />
+      <rect x="8" y="11" width="6" height="1" rx="0.3" fill={accent} opacity="0.15" />
+    </svg>
+  );
+  if (kind === 'republic_terminal') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="4" y="5" width="20" height="16" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.7" opacity="0.85" />
+      <rect x="5" y="6" width="18" height="11" rx="0.3" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.4" />
+      <circle cx="14" cy="11.5" r="3" fill="none" stroke={accent} strokeWidth="0.5" opacity="0.4" />
+      <line x1="14" y1="8.5" x2="14" y2="14.5" stroke={accent} strokeWidth="0.4" opacity="0.35" />
+      <line x1="11" y1="11.5" x2="17" y2="11.5" stroke={accent} strokeWidth="0.4" opacity="0.35" />
+      <line x1="12" y1="9.5" x2="16" y2="13.5" stroke={accent} strokeWidth="0.3" opacity="0.25" />
+      <line x1="16" y1="9.5" x2="12" y2="13.5" stroke={accent} strokeWidth="0.3" opacity="0.25" />
+      <rect x="4" y="21" width="20" height="3" rx="0.3" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <line x1="6" y1="22" x2="8" y2="22" stroke={accent} strokeWidth="0.3" opacity="0.3" />
+      <line x1="10" y1="22" x2="12" y2="22" stroke={accent} strokeWidth="0.3" opacity="0.3" />
+      <line x1="14" y1="22" x2="16" y2="22" stroke={accent} strokeWidth="0.3" opacity="0.3" />
+    </svg>
+  );
+  if (kind === 'ship_model_case') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="4" width="24" height="20" rx="0.5" fill="#000A14" stroke={accent} strokeWidth="0.7" opacity="0.9" />
+      <rect x="2" y="4" width="24" height="2.5" fill={accent} opacity="0.1" />
+      <rect x="2" y="4" width="24" height="2" rx="0.5" fill="none" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <polygon points="7,16 5,18 9,18" fill="#D4AF37" opacity="0.7" />
+      <line x1="7" y1="10" x2="7" y2="16" stroke="#D4AF37" strokeWidth="0.5" opacity="0.5" />
+      <line x1="5" y1="13" x2="9" y2="13" stroke="#D4AF37" strokeWidth="0.5" opacity="0.5" />
+      <polygon points="14,15 12,17 16,17" fill="#D4AF37" opacity="0.7" />
+      <line x1="14" y1="9" x2="14" y2="15" stroke="#D4AF37" strokeWidth="0.5" opacity="0.5" />
+      <line x1="12" y1="12" x2="16" y2="12" stroke="#D4AF37" strokeWidth="0.5" opacity="0.5" />
+      <polygon points="21,16 19,18 23,18" fill="#D4AF37" opacity="0.7" />
+      <line x1="21" y1="10" x2="21" y2="16" stroke="#D4AF37" strokeWidth="0.5" opacity="0.5" />
+      <line x1="19" y1="13" x2="23" y2="13" stroke="#D4AF37" strokeWidth="0.5" opacity="0.5" />
+      <line x1="4" y1="20" x2="12" y2="20" stroke={accent} strokeWidth="0.3" opacity="0.3" />
+      <line x1="11" y1="20" x2="17" y2="20" stroke={accent} strokeWidth="0.3" opacity="0.3" />
+      <line x1="18" y1="20" x2="26" y2="20" stroke={accent} strokeWidth="0.3" opacity="0.3" />
+    </svg>
+  );
+  if (kind === 'bronze_mural') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="2" y="2" width="24" height="24" rx="0.5" fill="#1A0D00" stroke="#B8860B" strokeWidth="0.8" opacity="0.9" />
+      <path d="M5 22 Q8 12 14 10 Q20 12 23 22" fill="#1A0D00" stroke="#B8860B" strokeWidth="0.5" opacity="0.5" />
+      <ellipse cx="8" cy="13" rx="1.5" ry="1.5" fill="#B8860B" opacity="0.3" />
+      <rect x="7" y="14.5" width="3" height="7" rx="0.3" fill="#B8860B" opacity="0.25" />
+      <ellipse cx="14" cy="12" rx="1.5" ry="1.5" fill="#B8860B" opacity="0.35" />
+      <rect x="13" y="13.5" width="3" height="8" rx="0.3" fill="#B8860B" opacity="0.3" />
+      <ellipse cx="20" cy="13" rx="1.5" ry="1.5" fill="#B8860B" opacity="0.3" />
+      <rect x="19" y="14.5" width="3" height="7" rx="0.3" fill="#B8860B" opacity="0.25" />
+      <line x1="4" y1="8" x2="24" y2="8" stroke="#B8860B" strokeWidth="0.4" opacity="0.3" />
+      <line x1="5" y1="9.5" x2="23" y2="9.5" stroke="#B8860B" strokeWidth="0.3" opacity="0.2" />
+      <circle cx="14" cy="5" r="1.5" fill="#B8860B" opacity="0.4" />
+      <circle cx="8" cy="5.5" r="0.8" fill="#B8860B" opacity="0.3" />
+      <circle cx="20" cy="5.5" r="0.8" fill="#B8860B" opacity="0.3" />
+    </svg>
+  );
+  if (kind === 'panoramic_viewport') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <path d="M2 22 Q2 6 14 4 Q26 6 26 22 Z" fill="#000811" stroke={accent} strokeWidth="0.8" opacity="0.9" />
+      <path d="M4 22 Q4 8 14 6 Q24 8 24 22 Z" fill="none" stroke={accent} strokeWidth="0.4" opacity="0.25" />
+      <path d="M6 22 Q6 10 14 8 Q22 10 22 22 Z" fill="none" stroke={accent} strokeWidth="0.3" opacity="0.15" />
+      <path d="M3 18 Q10 12 14 14 Q18 16 25 10" fill="none" stroke={accent} strokeWidth="0.6" opacity="0.35" />
+      <line x1="8" y1="18" x2="10" y2="15" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <line x1="18" y1="15" x2="20" y2="18" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <circle cx="7" cy="9" r="0.6" fill={accent} opacity="0.5" />
+      <circle cx="12" cy="7" r="0.4" fill={accent} opacity="0.4" />
+      <circle cx="19" cy="8" r="0.5" fill={accent} opacity="0.5" />
+      <circle cx="22" cy="12" r="0.4" fill={accent} opacity="0.4" />
+      <line x1="2" y1="22" x2="26" y2="22" stroke={accent} strokeWidth="1" opacity="0.5" />
+    </svg>
+  );
+  if (kind === 'protocol_droid_stand') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="8" y="22" width="12" height="3" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.7" />
+      <rect x="11" y="19" width="6" height="3" fill={dim} stroke={accent} strokeWidth="0.5" opacity="0.6" />
+      <rect x="9" y="11" width="10" height="8" rx="1" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.8" />
+      <line x1="11" y1="14" x2="17" y2="14" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <line x1="11" y1="16" x2="17" y2="16" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <line x1="9" y1="13" x2="6" y2="17" stroke={dim} strokeWidth="1.5" opacity="0.6" />
+      <line x1="19" y1="13" x2="22" y2="17" stroke={dim} strokeWidth="1.5" opacity="0.6" />
+      <line x1="9" y1="13" x2="6" y2="17" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <line x1="19" y1="13" x2="22" y2="17" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <ellipse cx="14" cy="8" rx="4" ry="3.5" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.8" />
+      <circle cx="12" cy="8" r="1" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <circle cx="16" cy="8" r="1" fill={dim} stroke={accent} strokeWidth="0.4" opacity="0.5" />
+      <circle cx="12" cy="8" r="0.4" fill="#CC8800" opacity="0.5" />
+      <circle cx="16" cy="8" r="0.4" fill="#CC8800" opacity="0.5" />
+      <circle cx="9" cy="12" r="0.5" fill="#CC6600" opacity="0.4" />
+      <circle cx="19" cy="12" r="0.5" fill="#CC6600" opacity="0.4" />
+    </svg>
+  );
+  if (kind === 'forge_bar') return (
+    <svg viewBox="0 0 28 28" width="26" height="26" style={s}>
+      <rect x="3" y="16" width="22" height="8" rx="0.5" fill={dim} stroke={accent} strokeWidth="0.6" opacity="0.8" />
+      <rect x="3" y="16" width="22" height="2" fill={accent} opacity="0.15" />
+      <line x1="3" y1="18" x2="25" y2="18" stroke={accent} strokeWidth="0.4" opacity="0.3" />
+      <rect x="5" y="8" width="2.5" height="8" rx="0.5" fill="#5B1A00" stroke={accent} strokeWidth="0.4" opacity="0.6" />
+      <rect x="9" y="9" width="2.5" height="7" rx="0.5" fill="#8B2500" stroke={accent} strokeWidth="0.4" opacity="0.6" />
+      <rect x="13" y="7" width="2.5" height="9" rx="0.5" fill="#003B5C" stroke={accent} strokeWidth="0.4" opacity="0.6" />
+      <rect x="17" y="10" width="2.5" height="6" rx="0.5" fill="#2E4A1A" stroke={accent} strokeWidth="0.4" opacity="0.6" />
+      <rect x="21" y="8" width="2.5" height="8" rx="0.5" fill="#4A3A00" stroke={accent} strokeWidth="0.4" opacity="0.6" />
+      <rect x="9" y="21" width="3" height="1" rx="0.3" fill={accent} opacity="0.25" />
+      <line x1="5" y1="20" x2="23" y2="20" stroke={accent} strokeWidth="0.3" opacity="0.2" />
     </svg>
   );
   return (
