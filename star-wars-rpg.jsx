@@ -22,6 +22,8 @@ function GlobalAnimations() {
       @keyframes scanDown { from{transform:translateY(0);opacity:0.8;}to{transform:translateY(120vh);opacity:0;} }
       @keyframes drift { from{transform:translate(0,0) scale(1);}to{transform:translate(10px,-8px) scale(1.1);} }
       @keyframes rise { from{transform:translateY(0);opacity:0.5;}to{transform:translateY(-60px);opacity:0;} }
+      @keyframes holo-flicker { 0%,100%{opacity:0.78;}50%{opacity:1;} }
+      @keyframes prop-scan { from{transform:translateY(0);opacity:0.8;}to{transform:translateY(26px);opacity:0;} }
       @keyframes ship-blink { 0%,100%{opacity:0.15;}50%{opacity:1;} }
       @keyframes ship-engine { 0%,100%{opacity:0.3;}50%{opacity:0.85;} }
       @keyframes ship-spark { 0%,100%{opacity:0;transform:scale(0.4);}20%{opacity:1;transform:scale(1.2);}60%{opacity:0.4;transform:scale(0.8);} }
@@ -2948,32 +2950,32 @@ const PLANETS = {
           { x: 27, y: 9, targetZone: 'bador_main_base', targetPos: { x: 1, y: 10 }, label: 'Shuttle to Bador' },
         ],
         worldObjects: [
-          { id: 'kuat_viewing_port', iconKind: 'orbital_viewport', x: 8, y: 4, label: 'Structural Viewing Port',
+          { id: 'kuat_viewing_port', iconKind: 'orbital_viewport', propArt: 'shipyard_viewport', x: 8, y: 3, label: 'Structural Viewing Port',
             description: 'Through the transparisteel, Kuat\'s orbital shipyard stretches for hundreds of kilometers. Dozens of Star Destroyers float in perfect formation.' },
-          { id: 'kuat_holobriefing', iconKind: 'holo_table', x: 14, y: 14, label: 'Mission Holobriefing Table',
+          { id: 'kuat_holobriefing', iconKind: 'holo_table', propArt: 'holo_table', propVariant: 'dossier', x: 14, y: 14, label: 'Mission Holobriefing Table',
             description: 'The holographic dossier Tanner prepared is still running. Sector 4 grid coordinates. KDY surface personnel files. Commander Vael\'s operational brief. And at the top of the index, a single classification line: OPERATION GHOST KEEL — ACCESS LEVEL 8. Whatever is on Bador Moon, someone with significant authority decided it needed a name.',
             requiresFlag: 'tanner_briefed',
             once: true, grantsFlag: 'ghost_keel_briefed', grantsCodex: 'codex-kuat-operation' },
-          { id: 'tanner_executive_terminal', iconKind: 'terminal', x: 20, y: 5, label: 'Executive Holonet Terminal',
+          { id: 'tanner_executive_terminal', iconKind: 'terminal', propArt: 'terminal', propVariant: 'executive', x: 20, y: 5, label: 'Executive Holonet Terminal',
             description: 'The terminal links to KDY\'s private shipping network. Tanner\'s access codes are pre-loaded.' },
-          { id: 'grand_executive_safe', iconKind: 'safe', x: 24, y: 8, label: 'Grand Executive Safe',
+          { id: 'grand_executive_safe', iconKind: 'safe', propArt: 'executive_safe', x: 24, y: 8, label: 'Grand Executive Safe',
             description: 'A heavy wall-mounted safe concealed behind a gilt-framed painting of the Kuat orbital ring in its first year of construction. The painter included the still-visible scoring on the outer hull from a pirate raid that KDY officially denies ever occurred. Inside, behind two layers of biometric lock, are a stack of nobility rings, a pile of credit wafers totaling something substantial, and three classification-red political slates. The slates are labeled with Moff surnames.',
             triggersMinigame: 'terminal_slicing',
             requiresFlag: 'lady_kuat_trust',
             once: true, grantsFlag: 'executive_safe_opened', grantsItem: 'executive_blackmail_slate' },
-          { id: 'historical_model_case', iconKind: 'ship_model_case', x: 22, y: 12, label: 'Display Case — KDY Historical Ship Models',
+          { id: 'historical_model_case', iconKind: 'ship_model_case', propArt: 'model_case', x: 22, y: 12, label: 'Display Case — KDY Historical Ship Models',
             description: 'Nine gold-plated starship miniatures under a polished transparisteel case. Each one is a production milestone. The first is labeled YEAR ONE — CORELLIAN CORVETTE DESIGN COMMISSION. The last is unlabeled, a hull form that does not match any published vessel class. The case is sealed with a physical lock that was last opened recently. The maintenance log shows it was accessed three days ago.',
             once: true, grantsFlag: 'historical_models_examined', grantsCodex: 'codex-kdy-dreadnought' },
-          { id: 'privileged_holonet_terminal', iconKind: 'terminal', x: 24, y: 14, label: 'Privileged Holonet Terminal',
+          { id: 'privileged_holonet_terminal', iconKind: 'terminal', propArt: 'terminal', propVariant: 'privileged', x: 24, y: 14, label: 'Privileged Holonet Terminal',
             description: 'An unmonitored high-bandwidth terminal feeding through KDY\'s private network backbone, which predates Imperial censorship architecture. It can reach any relay in the galaxy without a routing trace. The Republic Senate Oversight Committee contact code Rael encoded on the blueprint drive would reach its destination without interception from here.',
             requiresFlag: 'rael_helped',
             once: true, grantsFlag: 'blueprints_transmitted', grantsItem: 'union_leaders_contact' },
 
-          { id: 'kuati_history_mural', iconKind: 'bronze_mural', x: 4, y: 4, label: 'House Kuat Ancestral Mural',
+          { id: 'kuati_history_mural', iconKind: 'bronze_mural', propArt: 'bronze_mural', x: 4, y: 4, label: 'House Kuat Ancestral Mural',
             description: 'An engraved bronze relief panel, three meters wide, depicting the founding of Kuat Drive Yards in a stylized Old Republic aesthetic. Figures in ancient shipbuilder\'s garb stand before a hull-frame skeleton above Kuat\'s atmosphere. The Ten Families are named in Aurebesh along the bottom border, their crests arranged in a circle. The Vas-Kuat crest appears at center. It has been subtly repositioned since the original casting — the crest was not at center in the version documented in pre-war KDY archives.' },
-          { id: 'luxury_panoramic_viewport', iconKind: 'panoramic_viewport', x: 22, y: 2, label: 'Executive Ring Panoramic Viewport',
+          { id: 'luxury_panoramic_viewport', iconKind: 'panoramic_viewport', propArt: 'panoramic_viewport', x: 22, y: 2, label: 'Executive Ring Panoramic Viewport',
             description: 'The largest viewport on the ring, reserved for the executive tier. Two meters tall, four wide, triple-layered transparisteel. The curvature of Kuat\'s ring-world and the vast orbital infrastructure arcing above it are visible in both directions simultaneously. A KDY Executive Protocol Droid stands motionless before it — a slender brass-and-copper humanoid with formally-pressed garment simulators, photoreceptors dimmed in standby — monitoring the construction progress display projected onto the lower pane.' },
-          { id: 'executive_protocol_droid_unit', iconKind: 'protocol_droid_stand', x: 16, y: 8, label: 'KDY Executive Protocol Droid',
+          { id: 'executive_protocol_droid_unit', iconKind: 'protocol_droid_stand', propArt: 'protocol_droid', x: 16, y: 8, label: 'KDY Executive Protocol Droid',
             description: 'A KDY-commissioned protocol variant: slender brass-and-copper chassis, formal service configuration, copper wiring visible at the joint couplings in the style of Old Republic luxury manufacture. Its photoreceptors are dim — standby mode. The KDY crest is etched into its chest plating. A service card reads: UNIT DESIGNATION — RUEN-7, EXECUTIVE SUITE DETAIL, AUTHORIZED USE: HOUSE KUAT STAFF ONLY. The service log shows the last activated user was Lady Kuat, two days prior.' },
         ],
         npcs: [
@@ -3082,34 +3084,34 @@ const PLANETS = {
           { x: 15, y: 21, targetZone: 'kdy_lounge_market', targetPos: { x: 15, y: 1 }, label: 'Market Ring' },
         ],
         worldObjects: [
-          { id: 'fuel_rig_4a', iconKind: 'fuel_rig', x: 5, y: 3, label: 'Fuel Rig 4-A',
+          { id: 'fuel_rig_4a', iconKind: 'fuel_rig', propArt: 'fuel_rig', x: 5, y: 3, label: 'Fuel Rig 4-A',
             description: 'A coaxium refueling conduit the width of a speeder. The safety clamps are corroded and the flow regulators have been manually bypassed. Tamper with the pressure valve and this entire bay becomes a distraction of spectacular proportions.',
             triggersMinigame: 'valve_override',
             once: true, grantsFlag: 'fuel_rig_tampered' },
-          { id: 'manifest_holo_terminal', iconKind: 'manifest_terminal', x: 26, y: 4, label: 'Manifest Holo-Terminal',
+          { id: 'manifest_holo_terminal', iconKind: 'manifest_terminal', propArt: 'manifest_terminal', x: 26, y: 4, label: 'Manifest Holo-Terminal',
             description: 'A public-access node cycling through incoming cargo manifests. Everything on the surface is routine. Below the routing headers there are eleven entries marked CONSIGNMENT RESTRICTED — KDY DIRECTOR CLEARANCE. The timestamps are all within the last six hours.',
             triggersMinigame: 'terminal_slicing',
             once: true, grantsFlag: 'manifest_accessed', grantsItem: 'missing_hyperdrive_manifest' },
-          { id: 'vectis_terminal', iconKind: 'terminal', x: 26, y: 17, label: 'Ring Transit Terminal — RX-9',
+          { id: 'vectis_terminal', iconKind: 'terminal', propArt: 'vectis', x: 26, y: 17, label: 'Ring Transit Terminal — RX-9',
             description: 'The bronze-and-black chassis of Vectis descends on its ceiling track. Multi-lensed optics converge on you with the calm precision of a targeting system repurposed for customer service. "Greetings, traveler. Ring Sector Security clearance is required for Executive and Briefing ring access. Please present credentials or validate corporate clearance codes. Unauthorized transit attempts are logged and prosecuted under KDY Orbital Security Ordinance 44-G."',
             requiresNoneFlags: ['vectis_standard_cleared'] },
-          { id: 'vectis_terminal_active', iconKind: 'terminal', x: 26, y: 17, label: 'Ring Transit — RX-9 (Cleared)',
+          { id: 'vectis_terminal_active', iconKind: 'terminal', propArt: 'vectis', x: 26, y: 17, label: 'Ring Transit — RX-9 (Cleared)',
             description: 'Vectis rotates its optical head as you approach. "Clearance on file. Standard ring access confirmed. Executive berths require Director override or validated KDY clearance code. Please mind the acceleration inertia." The shuttle bays on the right side of the bay are open.',
             requiresFlag: 'vectis_standard_cleared' },
-          { id: 'bay7_impound_notice', iconKind: 'impound_notice', x: 14, y: 3, label: 'Docking Bay 7 — Impound Notice',
+          { id: 'bay7_impound_notice', iconKind: 'impound_notice', propArt: 'impound_door', x: 14, y: 3, label: 'Docking Bay 7 — Impound Notice',
             description: 'A bright red notice is locked to Docking Bay 7\'s blast door. KDY Ring-Sec seal. The ship name is listed as FREE HORIZON, registry Corellia. Impoundment reason: manifest discrepancy, Class B commercial violation. The notice is three days old.' },
 
-          { id: 'orbital_viewport_bay1', iconKind: 'orbital_viewport', x: 10, y: 3, label: 'Orbital Viewport — Bay Section 7',
+          { id: 'orbital_viewport_bay1', iconKind: 'orbital_viewport', propArt: 'orbital_viewport', x: 10, y: 3, label: 'Orbital Viewport — Bay Section 7',
             description: 'Reinforced transparisteel three meters wide, set into the ring\'s hull plating. Beyond it, the curve of Kuat\'s upper atmosphere catches amber light from the system\'s star. Closer — much closer — the skeletal frame of a Valor-class cruiser hangs in its construction cradle. Twelve construction teams move across the unfinished hull in vacuum suits. At this scale, they look like sparks. A KDY identifier plate is etched into the viewport frame: HULL CLASS VL-9, BERTH 7, COMMISSIONED 3,961 BBY.' },
-          { id: 'tether_locker_wall', iconKind: 'tether_locker', x: 4, y: 4, label: 'Zero-G Worker Tether Lockers',
+          { id: 'tether_locker_wall', iconKind: 'tether_locker', propArt: 'tether_lockers', x: 4, y: 4, label: 'Zero-G Worker Tether Lockers',
             description: 'A row of mag-locked lockers set into the alcove wall, each stamped with a worker identification number. Several are open, harnesses hanging. A handwritten note is stuck to locker 12: ANYONE WHO TAKES MY EMERGENCY LINE AGAIN ANSWERS TO ME PERSONALLY. The equipment is Old Republic surplus: heavy, reliable, and repaired too many times to count.' },
-          { id: 'transit_pod_terminal', iconKind: 'transit_pod', x: 14, y: 14, label: 'Ring Pneumatic Transit — Pod Station 3',
+          { id: 'transit_pod_terminal', iconKind: 'transit_pod', propArt: 'transit_pod', x: 14, y: 14, label: 'Ring Pneumatic Transit — Pod Station 3',
             description: 'A cylindrical pod capsule sits in its pressurized cradle, acceleration foam still carrying the impression of its last passenger. The route board shows three destinations: Briefing Ring (cleared transit), Executive Ring (Director code required), Maintenance Underbelly (engineering access only). A KDY Mark IV Heavy Loader Droid stands idle beside it, quad-pedal chassis locked in standby, its teal-grey carapace scored from a thousand cargo shifts.' },
-          { id: 'plasma_welding_arm', iconKind: 'welding_rig', x: 24, y: 10, label: 'Plasma Arc Welding Rig — Station 14',
+          { id: 'plasma_welding_arm', iconKind: 'welding_rig', propArt: 'welding_rig', x: 24, y: 10, label: 'Plasma Arc Welding Rig — Station 14',
             description: 'An articulated welding arm the size of a speeder, locked in its storage cradle between shifts. The plasma torch head is still warm, glowing faint orange at its sealed tip. A safety checklist is stamped on the cradle: LAST INSPECTION — 3 CYCLES PRIOR. SIGNED: OSSEK. Tool markings on the arm\'s body are in at least four different hands, each correction slightly different from the last.' },
-          { id: 'aurebesh_wayfinding', iconKind: 'wayfinding_plaque', x: 8, y: 10, label: 'KDY Ring Wayfinding Plaque',
+          { id: 'aurebesh_wayfinding', iconKind: 'wayfinding_plaque', propArt: 'wayfinding_plaque', x: 8, y: 10, label: 'KDY Ring Wayfinding Plaque',
             description: 'Cast bronze signage in the angular stepped-arch style of Kuati industrial design. The Aurebesh reads: TRANSIT SECTION 3 — PRIVATE EXECUTIVE RING (CLEARANCE REQUIRED) / TEAM BRIEFING RING / LOUNGE, MARKET, AND UNION HALL / BAY ACCESS BELOW. Below the main text, someone has scratched a smaller addition in Basic: IF LOST, ASK VECTIS. IT WILL TELL YOU TWICE.' },
-          { id: 'hydraulic_blast_panel', iconKind: 'blast_door_panel', x: 1, y: 12, label: 'Emergency Bulkhead Override',
+          { id: 'hydraulic_blast_panel', iconKind: 'blast_door_panel', propArt: 'blast_panel', x: 1, y: 12, label: 'Emergency Bulkhead Override',
             description: 'A manual hydraulic override wheel behind a break-glass panel, painted in the bright amber and black hazard stripes of every KDY station built in the last two centuries. The placard reads: FOR HULL BREACH OR FIRE — TURN THREE FULL ROTATIONS COUNTERCLOCKWISE. A secondary notice below it reads: YES THIS MEANS YOU, BAY CREW. SIGNED, RING SAFETY OFFICER PRENN.' },
         ],
         npcs: [
@@ -3209,30 +3211,30 @@ const PLANETS = {
           { x: 0, y: 9, targetZone: 'kdy_landing_bay', targetPos: { x: 30, y: 13 }, label: 'Ring Transit' },
         ],
         worldObjects: [
-          { id: 'primary_holo_projector', iconKind: 'holo_projector', x: 18, y: 9, label: 'Primary Holo-Projector',
+          { id: 'primary_holo_projector', iconKind: 'holo_projector', propArt: 'holo_projector', x: 18, y: 9, label: 'Primary Holo-Projector',
             description: 'A rotating full-scale wireframe of a warship hull class that does not appear in any published register. The scale bar in the corner reads 1800 meters. That puts it in Star Dreadnought territory — a commission that requires a full Senate appropriation and three fleet admirals signing off. Whoever authorized this hull did it outside the normal channels. Two sub-menus are locked behind a Level 6 clearance badge. A third, labeled STRUCTURAL TOLERANCE MARGINS, is accessible without clearance. Its numbers are wrong.',
             triggersMinigame: 'terminal_slicing',
             once: true, grantsFlag: 'holotable_accessed', grantsCodex: 'codex-kdy-dreadnought' },
-          { id: 'secure_datapad_locker', iconKind: 'secure_locker', x: 28, y: 15, label: 'Secure Datapad Charging Locker',
+          { id: 'secure_datapad_locker', iconKind: 'secure_locker', propArt: 'secure_locker', x: 28, y: 15, label: 'Secure Datapad Charging Locker',
             description: 'A bank of twelve encrypted storage units. Most are sealed with ISB biometric locks. One — third from the right, second row — has a cracked seal. Someone was in a hurry. Inside is a partially overwritten datapad. The readable portions are KDY executive memos discussing a payment made to an unnamed Moff delegate. The amount is significant. The purpose is listed as DESIGN CONSULTATION FEE.',
             triggersMinigame: 'terminal_slicing',
             once: true, grantsFlag: 'datapad_cracked', grantsItem: 'executive_bribe_record' },
-          { id: 'acoustic_intercept_wall', iconKind: 'intercept_wall', x: 10, y: 4, label: 'Transparisteel Partition — Conference Room A',
+          { id: 'acoustic_intercept_wall', iconKind: 'intercept_wall', propArt: 'intercept_wall', x: 10, y: 4, label: 'Transparisteel Partition — Conference Room A',
             description: 'The partition between the main briefing floor and Conference Room A is single-pane transparisteel, vibrating slightly from the conversation inside. Two Imperial Naval officers are visible. One is pointing at a holographic schematic that matches the dreadnought on the main projector. The other has their arms crossed and is shaking their head. You cannot hear the words, but you can read one phrase from the officer\'s lips with absolute certainty: "not in the budget."' },
-          { id: 'engineering_terminal_vorn', iconKind: 'terminal', x: 8, y: 15, label: 'Engineering Access Terminal',
+          { id: 'engineering_terminal_vorn', iconKind: 'terminal', propArt: 'terminal', propVariant: 'engineering', x: 8, y: 15, label: 'Engineering Access Terminal',
             description: 'A standard KDY engineering terminal. The access log shows it was last used forty minutes ago. The files accessed were assembly sequence archives from Sector 4, Bador Moon. Whoever pulled these files was not on a scheduled audit.',
             requiresFlag: 'designer_contacted',
             once: true, grantsFlag: 'assembly_sequence_reviewed', grantsItem: 'sabotage_blueprint_files' },
 
-          { id: 'fleet_holo_command_table', iconKind: 'holo_table', x: 14, y: 8, label: 'Fleet Holo-Command Table',
+          { id: 'fleet_holo_command_table', iconKind: 'holo_table', propArt: 'holo_table', propVariant: 'fleet', x: 14, y: 8, label: 'Fleet Holo-Command Table',
             description: 'An octagonal holographic command table, wide enough for twelve officers to stand around it. Currently it projects a real-time scan of the construction cradles: three Hammerhead-class frigates at varying stages, the nearly-complete Valor-class cruiser designated VL-9, and two Thranta-class corvettes in the outer gantries. Blue vector overlays mark structural progress percentages. Someone has highlighted VL-9 in amber — the color code for schedule deviation.' },
-          { id: 'ordnance_transport_crate', iconKind: 'ordnance_crate', x: 30, y: 6, label: 'Ordnance Transport Crate — Classified',
+          { id: 'ordnance_transport_crate', iconKind: 'ordnance_crate', propArt: 'ordnance_crates', x: 30, y: 6, label: 'Ordnance Transport Crate — Classified',
             description: 'Blast-shielded durasteel case, sealed with a KDY ordnance lock. The stencil reads: COMPONENT CLASS RESTRICTED — AUTHORIZATION CODE REQUIRED — DO NOT OPEN IN ATMOSPHERE. Three identical cases are stacked beside it. The shipping manifest is partially torn, but the origin facility is legible: KUAT SURFACE — FACILITY BADOR-7. Date stamp: four cycles prior.' },
-          { id: 'secure_armory_locker', iconKind: 'armory_locker', x: 28, y: 4, label: 'Briefing Ring Secure Armory',
+          { id: 'secure_armory_locker', iconKind: 'armory_locker', propArt: 'armory_locker', x: 28, y: 4, label: 'Briefing Ring Secure Armory',
             description: 'A heavy-grade security locker, floor-bolted, with a biometric palm reader that has seen better years. The panel shows evidence of at least one bypass attempt — fresh scoring around the secondary housing from a splicer tool. The attempt was unsuccessful. Someone wanted in here badly and did not have the right handprint.' },
-          { id: 'conduit_cable_truss', iconKind: 'cable_truss', x: 18, y: 4, label: 'Overhead Wiring Truss — Section B-12',
+          { id: 'conduit_cable_truss', iconKind: 'cable_truss', propArt: 'cable_truss', x: 18, y: 4, label: 'Overhead Wiring Truss — Section B-12',
             description: 'A bundled mass of armored conduit lines runs overhead in a pressed-metal tray. One bundle has been partially re-routed with newer cabling — the original is darker, older alloy standard from before the last KDY infrastructure audit. The newer line was added within the last year. Acoustic intercept hardware would benefit from proximity to runs like this one.' },
-          { id: 'coolant_pipe_hazard', iconKind: 'coolant_pipe', x: 14, y: 15, label: 'Pressurized Coolant Conduit — Warning Valve',
+          { id: 'coolant_pipe_hazard', iconKind: 'coolant_pipe', propArt: 'coolant_pipe', x: 14, y: 15, label: 'Pressurized Coolant Conduit — Warning Valve',
             description: 'A section of high-pressure coolant pipe isolated behind a safety cage, amber indicators cycling. The pressure gauge reads above nominal. Stencil on the cage: DO NOT OPERATE WITHOUT ENGINEERING CLEARANCE — VALVE SEQUENCE REQUIRED. The gauge has been climbing for two cycles. A work order was filed. No one has come.',
             triggersMinigame: 'valve_override',
             grantsFlag: 'coolant_pressure_vented' },
@@ -3333,37 +3335,37 @@ const PLANETS = {
           { x: 15, y: 0, targetZone: 'kdy_landing_bay', targetPos: { x: 15, y: 20 }, label: 'Ring Transit' },
         ],
         worldObjects: [
-          { id: 'sabacc_table_forge', iconKind: 'sabacc_table', x: 30, y: 17, label: 'The Sabacc Table — Forge and Anvil',
+          { id: 'sabacc_table_forge', iconKind: 'sabacc_table', propArt: 'sabacc_table', x: 30, y: 17, label: 'The Sabacc Table — Forge and Anvil',
             description: 'A round table in the back corner of the Forge and Anvil, green felt surface worn to grey at the edges from years of use. Four people are playing. An off-duty KDY engineer with the look of someone whose entire shift bonus is already on the table. A Rodian in shipwright coveralls chewing something. An Imperial logistics clerk who is down three hundred and trying not to show it. And an empty chair — the fourth player stepped out ten minutes ago and has not come back. The credits in the pot suggest they did not intend to leave.',
             triggersMinigame: 'sabacc' },
-          { id: 'garroks_goods', iconKind: 'stall', x: 10, y: 8, label: 'Garrok\'s Goods — Market Stall 7',
+          { id: 'garroks_goods', iconKind: 'stall', propArt: 'market_stall', x: 10, y: 8, label: 'Garrok\'s Goods — Market Stall 7',
             description: 'The stall is deliberately unremarkable. Generic signage. No holographic displays. An Ithorian stands behind the counter with the stillness of something that has survived in hostile ecosystems for a very long time. His four-throated voice is quiet enough that the industrial grinding from the adjacent tool shop covers it completely. Behind the visible tools and replacement components are blaster actuator overclocks, slicer spikes factory-sealed but with the serial identifiers filed off, and forged security passes printed to KDY ring standard. He looks at you. You look at him. He nods very slightly.',
             grantsFlag: 'garrok_approached' },
-          { id: 'shift_announcement_board', iconKind: 'board', x: 20, y: 2, label: 'Shift Announcement Board',
+          { id: 'shift_announcement_board', iconKind: 'board', propArt: 'shift_board', x: 20, y: 2, label: 'Shift Announcement Board',
             description: 'A flickering holo-terminal cycling through shift rotations, maintenance lockdown schedules, and corporate safety announcements. The current notice at the top has been there for six hours: PLASMA WELDING DECK 4 — MANDATORY OVERTIME. THIRD SHIFT EXTENDED TWELVE HOURS. COMPENSATION ADJUSTMENT PENDING REVIEW. The adjustment has been pending review for eleven weeks.' },
-          { id: 'union_bulletin', iconKind: 'board', x: 5, y: 15, label: 'Barracks Corridor Bulletin',
+          { id: 'union_bulletin', iconKind: 'board', propArt: 'union_bulletin', x: 5, y: 15, label: 'Barracks Corridor Bulletin',
             description: 'Someone has pinned a hand-written flimsi to the corridor wall. Most of it has been torn off — Ring-Sec sweeps the barracks twice a shift for unauthorized postings. What remains reads: "Deck 4 third shift. Seven injuries in four months. The review board has not met. We meet—" The rest is gone. In the corner, a stylized gear symbol. Not the KDY gear. A different one.',
             requiresNoneFlags: ['union_leader_met'],
             once: true, grantsFlag: 'union_bulletin_read' },
-          { id: 'surveillance_node', iconKind: 'surveillance_cam', x: 5, y: 18, label: 'Ring-Sec Surveillance Node — Barracks Block 2',
+          { id: 'surveillance_node', iconKind: 'surveillance_cam', propArt: 'surveillance_node', x: 5, y: 18, label: 'Ring-Sec Surveillance Node — Barracks Block 2',
             description: 'A gray hardline sensor housing mounted at head height in the second barracks junction. The blue indicator light confirms it is active and transmitting. A T-7 hex driver and forty seconds of unobserved access are all it takes to physically disconnect the hardline feed. Ring-Sec will log it as equipment failure and send a maintenance ticket. The ticket will sit unresolved until someone files a second report.',
             requiresFlag: 'union_mission_accepted',
             triggersMinigame: 'valve_override',
             once: true, grantsFlag: 'union_surveillance_disabled' },
-          { id: 'forge_anvil_bar', iconKind: 'forge_bar', x: 28, y: 14, label: 'Forge and Anvil — Bar Counter',
+          { id: 'forge_anvil_bar', iconKind: 'forge_bar', propArt: 'forge_bar', x: 28, y: 14, label: 'Forge and Anvil — Bar Counter',
             description: 'Corellian whiskey served warm because the refrigeration unit in this section failed two months ago and the work order is still open. A Sullustan bartender moves with the practiced efficiency of someone who has heard every story and judges none of them. Someone has carved into the bar surface: HERE SINCE YEAR ONE. Below it, in fresher scratching: AND COUNTING.' },
 
-          { id: 'czerka_trade_terminal', iconKind: 'czerka_terminal', x: 34, y: 3, label: 'Czerka Corporation Trade Desk',
+          { id: 'czerka_trade_terminal', iconKind: 'czerka_terminal', propArt: 'czerka_terminal', x: 34, y: 3, label: 'Czerka Corporation Trade Desk',
             description: 'A Czerka-branded terminal occupies the northeast alcove: red and gold corporate livery, polished to a shine that looks more aggressive than welcoming. The product catalog is technically legal — industrial components, survey equipment, labor contracting services. The pricing model is not. A fine-print clause at the bottom notes: CZERKA CORPORATION RETAINS RIGHT OF FIRST PURCHASE FOR ALL MATERIALS PRODUCED WITH CZERKA-SUPPLIED COMPONENTS. Someone has circled this in red ink and written: THIS IS HOW THEY OWN YOU.' },
-          { id: 'fusion_fuel_canister_rack', iconKind: 'fuel_canister_rack', x: 16, y: 5, label: 'Deuterium Fusion-Fuel Storage Rack',
+          { id: 'fusion_fuel_canister_rack', iconKind: 'fuel_canister_rack', propArt: 'fuel_rack', x: 16, y: 5, label: 'Deuterium Fusion-Fuel Storage Rack',
             description: 'Thirty-six sealed canisters in a blast-rated rack, each labeled with deuterium concentration, pressure rating, and date of last inspection. The rack is surrounded by mag-clamped warning stanchions, their amber hazard lights cycling in slow arrhythmic pulses. Three canisters near the bottom show handling damage: dented safety collars, one with a micro-fracture sealant patch over the pressure housing. The last full inspection is eight days overdue.' },
-          { id: 'sub_light_drive_cradle', iconKind: 'drive_cradle', x: 25, y: 10, label: 'Sub-Light Drive Calibration Cradle',
+          { id: 'sub_light_drive_cradle', iconKind: 'drive_cradle', propArt: 'drive_cradle', x: 25, y: 10, label: 'Sub-Light Drive Calibration Cradle',
             description: 'A scaled-down ion engine calibration ring, used to set output tolerances before final hull installation. The engine currently seated is a KY-88 — old model, standard for Hammerhead frigates. The calibration display shows a resonance drift of 0.3 percent beyond spec. Written on the service tag: DRIFT ACCEPTABLE — J.OSSEK. Written below in different handwriting: DRIFT IS NOT ACCEPTABLE — RECALIBRATE BEFORE INSTALL.' },
-          { id: 'conduit_crawler_port', iconKind: 'crawler_port', x: 12, y: 3, label: 'Conduit Crawler Maintenance Port',
+          { id: 'conduit_crawler_port', iconKind: 'crawler_port', propArt: 'crawler_port', x: 12, y: 3, label: 'Conduit Crawler Maintenance Port',
             description: 'A low hatch in the ring wall, barely a meter high, surrounded by amber and black hazard markings. An M-33 Conduit Crawler Droid is currently emerging from it: a segmented, copper-plated inspection unit designed to navigate the cable bundles in the ring\'s utility substructure. It moves with the patient efficiency of a creature that has never questioned its purpose. Its inspection log shows seven minor insulation faults and one major conduit degradation flagged this cycle.' },
-          { id: 'pneumatic_rivet_hopper', iconKind: 'rivet_hopper', x: 18, y: 18, label: 'Pneumatic Rivet Supply Hopper',
+          { id: 'pneumatic_rivet_hopper', iconKind: 'rivet_hopper', propArt: 'rivet_hopper', x: 18, y: 18, label: 'Pneumatic Rivet Supply Hopper',
             description: 'A heavy supply hopper fed from an overhead pressurized line, dispensing structural fasteners for hull plating work. A KDY Mark IV Heavy Loader Droid stands beside it in standby: four-legged, teal-grey carapace, built for orbital construction environments. Its loading arms are folded, cargo bed empty. A work order is attached to the hopper: RIVET SPEC KDY-884, VOID-RATED, 40,000 UNITS, HULL SECTION 7F. AUTHORIZED BY: GUILD MASTER OSSEK. The order is two days old and the hopper is half empty.' },
-          { id: 'data_terminal_republic', iconKind: 'republic_terminal', x: 25, y: 6, label: 'Republic-Issue Diagnostic Terminal',
+          { id: 'data_terminal_republic', iconKind: 'republic_terminal', propArt: 'republic_terminal', x: 25, y: 6, label: 'Republic-Issue Diagnostic Terminal',
             description: 'A Republic Navy diagnostic terminal — older hardware, late Mandalorian Wars manufacture, cutting edge thirty years ago and now kept running by institutional stubbornness and spare parts. The display cycles through engineering schematics for Valor-class structural tolerances. A sticky note on the housing reads: IF THIS TERMINAL GOES DOWN AGAIN CONTACT VAEL IN SECTION FOUR. NOT ENGINEERING. VAEL. Someone has written below it: WHO IS VAEL and someone else has written: EXACTLY.' },
         ],
         npcs: [
@@ -7084,6 +7086,1548 @@ function WorldObjectSprite({ kind, accent, id }) {
   );
 }
 
+const PROP_STYLE = { position:'absolute', inset:0, pointerEvents:'none' };
+const PT = { fontFamily:"'IBM Plex Mono',monospace" };
+
+function PropDefs({ p }) {
+  return (
+    <defs>
+      <linearGradient id={p + 'Steel'} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#AAB7C6" /><stop offset="0.45" stopColor="#64738A" /><stop offset="1" stopColor="#252D3A" /></linearGradient>
+      <linearGradient id={p + 'Dark'} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4A5563" /><stop offset="1" stopColor="#12171E" /></linearGradient>
+      <linearGradient id={p + 'Brass'} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4DA86" /><stop offset="0.5" stopColor="#BC8E2E" /><stop offset="1" stopColor="#6A4A12" /></linearGradient>
+      <linearGradient id={p + 'Bronze'} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#DA9A6A" /><stop offset="0.5" stopColor="#8A5228" /><stop offset="1" stopColor="#3C2010" /></linearGradient>
+      <linearGradient id={p + 'Copper'} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#EBA66E" /><stop offset="0.5" stopColor="#A8602C" /><stop offset="1" stopColor="#5A2E10" /></linearGradient>
+      <linearGradient id={p + 'Teal'} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#8DB3B6" /><stop offset="0.5" stopColor="#456E74" /><stop offset="1" stopColor="#1C3338" /></linearGradient>
+      <linearGradient id={p + 'Red'} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#E0453F" /><stop offset="1" stopColor="#7A1612" /></linearGradient>
+      <linearGradient id={p + 'Glass'} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#CFEFFF" stopOpacity="0.55" /><stop offset="0.5" stopColor="#4A8CB4" stopOpacity="0.3" /><stop offset="1" stopColor="#071A28" stopOpacity="0.5" /></linearGradient>
+      <radialGradient id={p + 'Blue'} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFFFFF" stopOpacity="0.95" /><stop offset="0.4" stopColor="#7FD0FF" stopOpacity="0.8" /><stop offset="1" stopColor="#1A7FD0" stopOpacity="0" /></radialGradient>
+      <radialGradient id={p + 'Amber'} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFF3C8" stopOpacity="0.95" /><stop offset="0.45" stopColor="#FFB844" stopOpacity="0.7" /><stop offset="1" stopColor="#FF7A00" stopOpacity="0" /></radialGradient>
+      <filter id={p + 'Soft'} x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="3.2" /></filter>
+      <pattern id={p + 'Haz'} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="8" fill="#E0A818" /><rect x="4" width="4" height="8" fill="#14171B" /></pattern>
+    </defs>
+  );
+}
+
+function PropShadow({ p, cx, cy, rx, ry }) {
+  return <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="#000" opacity="0.55" filter={`url(#${p}Soft)`} />;
+}
+
+function PropFuelRig() {
+  const p = 'fr';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="32" cy="57" rx="29" ry="5" />
+      <rect x="3" y="50" width="58" height="8" rx="1" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="3" y="54" width="58" height="4" fill={`url(#${p}Haz)`} opacity="0.9" />
+      <rect x="22" y="34" width="20" height="16" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="4" y="29" width="56" height="16" rx="8" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <path d="M10 31 L54 31" stroke="#FFFFFF" strokeWidth="1.2" opacity="0.45" />
+      <rect x="22" y="32" width="20" height="10" rx="2" fill="#06141F" stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="23" y="33" width="18" height="8" rx="1.5" fill={`url(#${p}Blue)`} opacity="0.8" style={{ animation:'ship-engine 2.4s ease-in-out infinite' }} />
+      <path d="M24 37 Q28 34 32 37 T40 37" fill="none" stroke="#DFF6FF" strokeWidth="0.8" opacity="0.8" />
+      {[10, 48].map((x) => (
+        <g key={x}>
+          <rect x={x} y="26" width="7" height="22" rx="1" fill="#8A4A28" stroke="#2A130A" strokeWidth="0.8" />
+          <rect x={x} y="26" width="3" height="22" fill="#B86A3C" opacity="0.6" />
+          <circle cx={x + 3} cy="33" r="1.8" fill="#3FA08A" opacity="0.7" />
+          <circle cx={x + 5} cy="40" r="1.3" fill="#3FA08A" opacity="0.6" />
+          <circle cx={x + 2} cy="44" r="1.5" fill="#3FA08A" opacity="0.5" />
+        </g>
+      ))}
+      <rect x="25" y="12" width="14" height="17" rx="1.5" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="27" y="14" width="10" height="4" fill="#0B1620" />
+      <rect x="27" y="14.5" width="6" height="1.4" fill="#7FD0FF" opacity="0.8" />
+      <path d="M25 22 Q12 6 32 6 Q52 6 39 22" fill="none" stroke="#E0B020" strokeWidth="2" />
+      <path d="M25 22 Q12 6 32 6 Q52 6 39 22" fill="none" stroke="#FFF0A0" strokeWidth="0.6" opacity="0.7" />
+      <circle cx="25" cy="22" r="2" fill="#B8B8C0" stroke="#0A0D12" strokeWidth="0.6" />
+      <circle cx="39" cy="22" r="2" fill="#B8B8C0" stroke="#0A0D12" strokeWidth="0.6" />
+      <line x1="32" y1="6" x2="32" y2="3" stroke="#8892A0" strokeWidth="1.6" />
+      <circle cx="32" cy="3" r="3.4" fill={`url(#${p}Red)`} stroke="#2A0806" strokeWidth="0.7" />
+      <path d="M32 0.5 L32 5.5 M29.5 3 L34.5 3" stroke="#FFC0B8" strokeWidth="0.6" />
+      <circle cx="50" cy="17" r="5" fill="#E8ECF0" stroke="#0A0D12" strokeWidth="0.8" />
+      <path d="M46 20 A5 5 0 0 1 54 20" fill="none" stroke="#C0392B" strokeWidth="1.2" />
+      <line x1="50" y1="17" x2="53" y2="14" stroke="#C0392B" strokeWidth="0.8" style={{ transformOrigin:'50px 17px', animation:'ship-blink 3s ease-in-out infinite' }} />
+      <path d="M61 38 Q64 46 58 52" fill="none" stroke="#2A2F38" strokeWidth="3" />
+      <rect x="55" y="50" width="6" height="4" rx="1" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.6" />
+      <circle cx="20" cy="47" r="1.2" fill="#7FD0FF" style={{ animation:'ship-blink 2s ease-in-out infinite' }} />
+    </svg>
+  );
+}
+
+function PropManifestTerminal() {
+  const p = 'mt';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="32" cy="58" rx="20" ry="4" />
+      <rect x="26" y="40" width="12" height="16" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="18" y="54" width="28" height="5" rx="1.5" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="6" y="5" width="52" height="38" rx="3.5" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="6" y="5" width="52" height="3" rx="2" fill="#FFFFFF" opacity="0.3" />
+      <rect x="10" y="9" width="44" height="30" rx="1.5" fill="#031014" stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="10" y="9" width="44" height="5" fill="#0E5E66" />
+      <text x="12" y="13" fontSize="3.4" fill="#BFFAFF" {...PT}>KDY MANIFEST NODE</text>
+      {[17, 20.4, 23.8, 27.2].map((y, i) => (
+        <g key={y}>
+          <rect x="12" y={y - 2} width={30 + (i % 2) * 6} height="1.4" fill="#3FE0A0" opacity="0.7" />
+          <rect x="48" y={y - 2} width="4" height="1.4" fill="#3FE0A0" opacity="0.45" />
+        </g>
+      ))}
+      <rect x="11" y="28.5" width="42" height="9.5" fill="#4A0A0A" opacity="0.85" style={{ animation:'ship-engine 2.2s ease-in-out infinite' }} />
+      <text x="12.5" y="32" fontSize="2.9" fill="#FF8080" {...PT}>CONSIGNMENT RESTRICTED</text>
+      <text x="12.5" y="35" fontSize="2.6" fill="#FF6060" {...PT}>11 ENTRIES · DIRECTOR ONLY</text>
+      <text x="12.5" y="37.6" fontSize="2.4" fill="#FFA0A0" {...PT}>T MINUS 06:00 STD</text>
+      <rect x="10" y="9" width="44" height="2" fill="#7FE0E8" opacity="0.35" style={{ animation:'prop-scan 3.2s linear infinite' }} />
+      <circle cx="9" cy="41" r="1" fill="#3FE0A0" />
+      <circle cx="13" cy="41" r="1" fill="#FF4040" style={{ animation:'ship-blink 1.2s steps(2) infinite' }} />
+      <path d="M10 10 L30 10 L10 24 Z" fill="#FFFFFF" opacity="0.07" />
+    </svg>
+  );
+}
+
+function PropVectis({ active }) {
+  const p = 'vx';
+  const lens = active ? '#5CFF9A' : '#FFB030';
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="32" cy="90" rx="24" ry="4" />
+      <rect x="0" y="2" width="64" height="7" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <line x1="0" y1="4" x2="64" y2="4" stroke="#8892A0" strokeWidth="0.8" opacity="0.6" />
+      {[6, 18, 30, 42, 54].map((x) => <rect key={x} x={x} y="2" width="2" height="7" fill="#3A4452" />)}
+      <rect x="26" y="9" width="12" height="7" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="29" y="16" width="6" height="12" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.6" />
+      <path d="M17 30 Q32 24 47 30 L45 56 Q32 62 19 56 Z" fill={`url(#${p}Bronze)`} stroke="#1A0E06" strokeWidth="1" />
+      <path d="M20 31 Q32 27 44 31" fill="none" stroke="#FFD9A8" strokeWidth="1.2" opacity="0.6" />
+      <path d="M21 40 L43 40 M21 47 L43 47" stroke="#2A1608" strokeWidth="0.8" opacity="0.7" />
+      <rect x="26" y="42" width="12" height="9" rx="1" fill="#0C0A08" stroke="#C98A4B" strokeWidth="0.6" />
+      <text x="32" y="48.4" fontSize="4.2" fill="#E8B070" textAnchor="middle" fontWeight="700" {...PT}>RX-9</text>
+      <path d="M13 34 L8 56 M51 34 L56 56" stroke="#0E0E12" strokeWidth="4" strokeLinecap="round" />
+      <path d="M13 34 L8 56 M51 34 L56 56" stroke="#7A5A3A" strokeWidth="1" opacity="0.6" strokeLinecap="round" />
+      <circle cx="8" cy="57" r="3" fill="#0E0E12" stroke="#C98A4B" strokeWidth="0.6" />
+      <circle cx="56" cy="57" r="3" fill="#0E0E12" stroke="#C98A4B" strokeWidth="0.6" />
+      <path d="M23 58 L41 58 L39 66 L25 66 Z" fill="#0E0E12" stroke="#C98A4B" strokeWidth="0.6" />
+      <path d="M26 60 L38 60 M26 62 L38 62 M26 64 L38 64" stroke="#C98A4B" strokeWidth="0.5" opacity="0.7" />
+      <ellipse cx="32" cy="22" rx="11" ry="7" fill={`url(#${p}Bronze)`} stroke="#1A0E06" strokeWidth="1" transform="translate(0 0)" />
+      <path d="M24 19 Q32 15 40 19" fill="none" stroke="#FFD9A8" strokeWidth="1" opacity="0.6" />
+      <circle cx="26" cy="22" r="3.2" fill="#0A0A0E" stroke="#C98A4B" strokeWidth="0.7" />
+      <circle cx="32" cy="23.4" r="3.6" fill="#0A0A0E" stroke="#C98A4B" strokeWidth="0.7" />
+      <circle cx="38" cy="22" r="3.2" fill="#0A0A0E" stroke="#C98A4B" strokeWidth="0.7" />
+      {[[26, 22], [32, 23.4], [38, 22]].map(([x, y], i) => (
+        <g key={i}>
+          <circle cx={x} cy={y} r="2" fill={lens} opacity="0.95" style={{ animation:`ship-engine ${2 + i * 0.4}s ease-in-out infinite` }} />
+          <circle cx={x - 0.6} cy={y - 0.7} r="0.7" fill="#FFFFFF" />
+        </g>
+      ))}
+      <path d="M26 24 L22 36 M32 25 L32 38 M38 24 L42 36" stroke={lens} strokeWidth="0.6" opacity="0.3" />
+      <path d="M12 72 L52 72 L50 87 L14 87 Z" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="15" y="74" width="34" height="11" rx="1" fill="#04100E" stroke="#0A0D12" strokeWidth="0.6" />
+      <text x="32" y="79" fontSize="3.2" fill={active ? '#7CFFB0' : '#FFC060'} textAnchor="middle" {...PT}>{active ? 'CLEARANCE ON FILE' : 'CLEARANCE REQUIRED'}</text>
+      <text x="32" y="83" fontSize="2.6" fill={active ? '#4ACD80' : '#FF8A40'} textAnchor="middle" {...PT}>{active ? 'MIND THE INERTIA' : 'ORDINANCE 44-G'}</text>
+      <path d="M20 16 Q10 30 14 44 M44 16 Q54 30 50 44" fill="none" stroke="#1A1A20" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function PropImpoundDoor() {
+  const p = 'id';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <rect x="2" y="2" width="92" height="60" rx="2" fill="#0A0D12" stroke="#0A0D12" strokeWidth="1" />
+      <rect x="2" y="2" width="92" height="7" fill={`url(#${p}Haz)`} />
+      <rect x="2" y="55" width="92" height="7" fill={`url(#${p}Haz)`} />
+      <rect x="4" y="9" width="43" height="46" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="49" y="9" width="43" height="46" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <path d="M4 12 L47 12 M49 12 L92 12" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.4" />
+      {[16, 26, 36, 46].map((y) => (
+        <g key={y} stroke="#1A222C" strokeWidth="0.7" opacity="0.7">
+          <line x1="4" y1={y} x2="47" y2={y} /><line x1="49" y1={y} x2="92" y2={y} />
+        </g>
+      ))}
+      {[[8, 13], [43, 13], [8, 51], [43, 51], [53, 13], [88, 13], [53, 51], [88, 51]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.3" fill="#2A323E" stroke="#8892A0" strokeWidth="0.4" />)}
+      <rect x="45" y="9" width="6" height="46" fill={`url(#${p}Dark)`} />
+      <text x="25" y="35" fontSize="12" fill="#C8D2DE" opacity="0.5" textAnchor="middle" fontWeight="700" {...PT}>7</text>
+      <text x="25" y="22" fontSize="3.6" fill="#E0A818" textAnchor="middle" {...PT}>DOCKING BAY</text>
+      <rect x="54" y="18" width="34" height="30" rx="1" fill="#CC1F1F" stroke="#FFB0B0" strokeWidth="0.7" />
+      <rect x="54" y="18" width="34" height="5" fill="#8A0F0F" />
+      <text x="71" y="21.8" fontSize="3.2" fill="#FFE0E0" textAnchor="middle" fontWeight="700" {...PT}>KDY RING-SEC SEAL</text>
+      <text x="71" y="28" fontSize="4" fill="#FFFFFF" textAnchor="middle" fontWeight="700" {...PT}>IMPOUND</text>
+      <text x="71" y="33" fontSize="3" fill="#FFD0D0" textAnchor="middle" {...PT}>FREE HORIZON</text>
+      <text x="71" y="36.6" fontSize="2.6" fill="#FFD0D0" textAnchor="middle" {...PT}>REGISTRY: CORELLIA</text>
+      <text x="71" y="40.2" fontSize="2.6" fill="#FFD0D0" textAnchor="middle" {...PT}>CLASS B COMMERCIAL</text>
+      <text x="71" y="43.8" fontSize="2.6" fill="#FFD0D0" textAnchor="middle" {...PT}>MANIFEST DISCREPANCY</text>
+      <text x="71" y="46.6" fontSize="2.2" fill="#FFB0B0" textAnchor="middle" {...PT}>NOTICE AGE: 3 DAYS</text>
+      <rect x="51" y="30" width="4" height="8" rx="1" fill={`url(#${p}Dark)`} stroke="#FF4040" strokeWidth="0.6" />
+      <circle cx="53" cy="34" r="1" fill="#FF3030" style={{ animation:'ship-blink 1.1s steps(2) infinite' }} />
+      <path d="M54 18 L88 18 L54 34 Z" fill="#FFFFFF" opacity="0.1" />
+    </svg>
+  );
+}
+
+function PropOrbitalViewport() {
+  const p = 'ov';
+  const dots = [[24, 31], [30, 36], [36, 40], [44, 37], [50, 41], [58, 38], [64, 34], [70, 39], [76, 35], [28, 41], [53, 33], [67, 42]];
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="ovSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#02040A" /><stop offset="0.65" stopColor="#0A1226" /><stop offset="1" stopColor="#2A1608" /></linearGradient>
+        <linearGradient id="ovPlanet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFC060" /><stop offset="0.25" stopColor="#B8601E" /><stop offset="1" stopColor="#2A1206" /></linearGradient>
+        <clipPath id="ovClip"><rect x="8" y="8" width="80" height="48" rx="2" /></clipPath>
+      </defs>
+      <rect x="2" y="2" width="92" height="60" rx="3" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="8" y="8" width="80" height="48" rx="2" fill="url(#ovSky)" />
+      <g clipPath="url(#ovClip)">
+        {[[14, 14], [30, 12], [52, 16], [70, 11], [82, 20], [20, 24], [62, 24]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="0.6" fill="#FFFFFF" opacity="0.8" style={{ animation:`twinkle ${2 + i * 0.4}s ease-in-out infinite` }} />)}
+        <ellipse cx="48" cy="86" rx="70" ry="38" fill="url(#ovPlanet)" />
+        <ellipse cx="48" cy="86" rx="70" ry="38" fill="none" stroke="#FFD890" strokeWidth="1.4" opacity="0.7" />
+        <ellipse cx="48" cy="86" rx="66" ry="35" fill="none" stroke="#FFB860" strokeWidth="3" opacity="0.18" />
+        <path d="M14 34 L82 40 L76 44 L16 38 Z" fill="none" stroke="#7FA8D0" strokeWidth="0.8" opacity="0.8" />
+        <path d="M18 30 L80 38" stroke="#9FC0E0" strokeWidth="1.4" opacity="0.7" />
+        {[24, 32, 40, 48, 56, 64, 72].map((x) => <path key={x} d={`M${x} ${31 + (x - 24) * 0.12} L${x - 2} ${44 - (x - 24) * 0.02}`} stroke="#8FB0D0" strokeWidth="0.7" opacity="0.8" />)}
+        <path d="M22 44 L80 44" stroke="#8FB0D0" strokeWidth="0.6" opacity="0.6" />
+        {dots.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="0.9" fill="#FFE8A0" style={{ animation:`ship-blink ${1.4 + (i % 4) * 0.5}s ease-in-out ${i * 0.17}s infinite` }} />)}
+        <path d="M12 12 L40 8 L22 40 Z" fill="#FFFFFF" opacity="0.09" />
+      </g>
+      <rect x="8" y="8" width="80" height="48" rx="2" fill="none" stroke="#0A0D12" strokeWidth="1.4" />
+      <path d="M8 10 L88 10" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.4" />
+      {[[5, 5], [91, 5], [5, 59], [91, 59]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.4" fill="#2A323E" stroke="#AAB7C6" strokeWidth="0.5" />)}
+      <rect x="46" y="57" width="42" height="4" rx="0.5" fill="#1A1F26" stroke="#8892A0" strokeWidth="0.4" />
+      <text x="67" y="60.1" fontSize="2.4" fill="#E8D9A0" textAnchor="middle" {...PT}>HULL CLASS VL-9 · BERTH 7</text>
+    </svg>
+  );
+}
+
+function PropTetherLockers() {
+  const p = 'tl';
+  const nums = ['07', '08', '09', '10', '11', '12'];
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="60" rx="44" ry="4" />
+      <rect x="2" y="6" width="92" height="52" rx="1.5" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      {nums.map((n, i) => {
+        const x = 4 + i * 15;
+        const open = i === 1 || i === 3 || i === 4;
+        return (
+          <g key={n}>
+            <rect x={x} y="8" width="14" height="48" fill="#3C4A45" stroke="#0A0D12" strokeWidth="0.8" />
+            {open ? (
+              <g>
+                <rect x={x + 1} y="9" width="12" height="46" fill="#0A0E0D" />
+                <path d={`M${x + 3} 12 L${x + 3} 30 M${x + 11} 12 L${x + 11} 30`} stroke="#E8731A" strokeWidth="1.6" />
+                <path d={`M${x + 3} 20 L${x + 11} 24`} stroke="#E8731A" strokeWidth="1.4" />
+                <rect x={x + 5} y="30" width="4" height="7" rx="1" fill="#B8B8C0" stroke="#0A0D12" strokeWidth="0.5" />
+                <path d={`M${x + 7} 37 Q${x + 4} 46 ${x + 9} 52`} fill="none" stroke="#E8731A" strokeWidth="1.2" />
+                <path d={`M${x} 8 L${x - 5} 12 L${x - 5} 54 L${x} 56 Z`} fill="#4A5A54" stroke="#0A0D12" strokeWidth="0.8" />
+              </g>
+            ) : (
+              <g>
+                <rect x={x + 1} y="9" width="12" height="3" fill="#FFFFFF" opacity="0.18" />
+                <rect x={x + 3} y="13" width="8" height="12" fill="none" stroke="#1A2420" strokeWidth="0.6" opacity="0.8" />
+                <rect x={x + 10} y="30" width="2" height="6" rx="0.8" fill="#C0C8D0" stroke="#0A0D12" strokeWidth="0.4" />
+                <circle cx={x + 7} cy="50" r="1.2" fill="#3AFF6A" style={{ animation:`ship-engine ${3 + i * 0.3}s ease-in-out infinite` }} />
+              </g>
+            )}
+            <text x={x + 7} y="42" fontSize="4.2" fill="#C8D2C8" opacity="0.8" textAnchor="middle" fontWeight="700" {...PT}>{n}</text>
+            <path d={`M${x + 2} 50 L${x + 6} 54 M${x + 9} 16 L${x + 12} 19`} stroke="#0A0D12" strokeWidth="0.6" opacity="0.5" />
+          </g>
+        );
+      })}
+      <g transform="rotate(-4 88 20)">
+        <rect x="79" y="14" width="12" height="11" fill="#F2E27A" stroke="#8A7A20" strokeWidth="0.4" />
+        <path d="M80.5 17 L89 17 M80.5 19.2 L88 19.2 M80.5 21.4 L89 21.4 M80.5 23.4 L85 23.4" stroke="#3A3010" strokeWidth="0.5" />
+        <circle cx="85" cy="14.6" r="0.9" fill="#C0392B" />
+      </g>
+      <rect x="2" y="3" width="92" height="3" fill={`url(#${p}Steel)`} />
+    </svg>
+  );
+}
+
+function PropTransitPod() {
+  const p = 'tp';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="60" rx="44" ry="4" />
+      <rect x="2" y="3" width="52" height="16" rx="1.5" fill="#05090E" stroke="#0A0D12" strokeWidth="0.8" />
+      <text x="5" y="8" fontSize="2.8" fill="#8FD0FF" {...PT}>RING PNEUMATIC · POD STATION 3</text>
+      <rect x="4" y="9.6" width="2" height="2" fill="#3AFF6A" /><text x="8" y="11.4" fontSize="2.6" fill="#7CFFB0" {...PT}>BRIEFING RING · CLEARED</text>
+      <rect x="4" y="12.6" width="2" height="2" fill="#FFB030" /><text x="8" y="14.4" fontSize="2.6" fill="#FFC870" {...PT}>EXECUTIVE RING · DIRECTOR CODE</text>
+      <rect x="4" y="15.6" width="2" height="2" fill="#FF5050" /><text x="8" y="17.4" fontSize="2.6" fill="#FF9090" {...PT}>MAINTENANCE · ENGINEERING ONLY</text>
+      <rect x="3" y="30" width="56" height="3" rx="1" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="0.6" />
+      <rect x="3" y="52" width="56" height="3" rx="1" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="0.6" />
+      <path d="M8 33 L8 52 M54 33 L54 52" stroke="#4A5563" strokeWidth="2" />
+      <rect x="6" y="26" width="52" height="30" rx="14" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <path d="M14 29 L50 29" stroke="#FFFFFF" strokeWidth="1.4" opacity="0.5" />
+      <rect x="14" y="31" width="36" height="20" rx="9" fill="#0A1018" stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="16" y="33" width="32" height="16" rx="7" fill="#2A3A4A" />
+      <path d="M20 44 Q24 38 32 40 Q40 38 44 44 Q38 48 32 47 Q26 48 20 44 Z" fill="#1A2630" />
+      <ellipse cx="32" cy="42" rx="6" ry="3" fill="#0E1820" />
+      <circle cx="30" cy="40" r="2.2" fill="#2A3A4A" />
+      <rect x="14" y="31" width="36" height="20" rx="9" fill={`url(#${p}Glass)`} />
+      {[12, 20, 28, 36, 44, 52].map((x) => <circle key={x} cx={x} cy="28" r="0.8" fill="#FFE8A0" opacity="0.7" />)}
+      <rect x="58" y="22" width="34" height="36" rx="3" fill={`url(#${p}Teal)`} stroke="#0A1618" strokeWidth="1" />
+      <path d="M60 24 L90 24" stroke="#FFFFFF" strokeWidth="1" opacity="0.4" />
+      <path d="M62 30 L88 33 M60 40 L90 44 M63 50 L86 52" stroke="#1C3338" strokeWidth="0.6" opacity="0.7" />
+      <path d="M66 28 L70 35 M80 46 L84 50" stroke="#C8E0E2" strokeWidth="0.5" opacity="0.6" />
+      <rect x="62" y="12" width="26" height="12" rx="2.5" fill={`url(#${p}Teal)`} stroke="#0A1618" strokeWidth="1" />
+      <rect x="64" y="15" width="22" height="4" rx="1" fill="#0A1214" /><rect x="66" y="16" width="9" height="2" fill="#FFB030" opacity="0.5" />
+      <path d="M60 36 L54 42 L56 52 M90 36 L94 44 L90 54" fill="none" stroke="#2A4A50" strokeWidth="3" strokeLinecap="round" />
+      {[[62, 58], [86, 58], [60, 54], [90, 54]].map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="4" ry="2.2" fill="#12262A" stroke="#0A1214" strokeWidth="0.6" />)}
+    </svg>
+  );
+}
+
+function PropWeldingRig() {
+  const p = 'wr';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="32" cy="58" rx="28" ry="4.5" />
+      <path d="M4 56 L4 44 L16 44 L16 52 L48 52 L48 44 L60 44 L60 56 Z" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="4" y="54" width="56" height="3" fill={`url(#${p}Haz)`} />
+      <circle cx="18" cy="46" r="7" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <circle cx="18" cy="46" r="3" fill="#252D3A" stroke="#8892A0" strokeWidth="0.6" />
+      <path d="M18 46 L26 22" stroke="#0A0D12" strokeWidth="7" strokeLinecap="round" />
+      <path d="M18 46 L26 22" stroke="#D8A818" strokeWidth="5" strokeLinecap="round" />
+      <path d="M18 46 L26 22" stroke="#FFF0A0" strokeWidth="1" strokeLinecap="round" opacity="0.6" transform="translate(-1.4 0)" />
+      <circle cx="26" cy="22" r="4.5" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <path d="M26 22 L46 14" stroke="#0A0D12" strokeWidth="6" strokeLinecap="round" />
+      <path d="M26 22 L46 14" stroke="#B8C4D2" strokeWidth="4" strokeLinecap="round" />
+      <path d="M26 21 L46 13" stroke="#FFFFFF" strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
+      <circle cx="46" cy="14" r="3.4" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <path d="M46 14 L52 24 L48 27 L43 19 Z" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      <circle cx="50" cy="27" r="6" fill={`url(#${p}Amber)`} style={{ animation:'ship-engine 3s ease-in-out infinite' }} />
+      <circle cx="50" cy="27" r="2" fill="#FF8A1E" /><circle cx="50" cy="27" r="1" fill="#FFF0C0" />
+      <path d="M24 38 L30 36 M32 30 L37 33" stroke="#E04040" strokeWidth="1.2" opacity="0.85" />
+      <path d="M22 30 L28 30" stroke="#3AA0FF" strokeWidth="1.2" opacity="0.85" />
+      <path d="M35 17 L41 20" stroke="#40E080" strokeWidth="1.2" opacity="0.85" />
+      <path d="M38 20 L43 16" stroke="#F0F040" strokeWidth="1.2" opacity="0.85" />
+      <rect x="18" y="47" width="30" height="10" rx="1" fill="#F2EBC8" stroke="#6A5A20" strokeWidth="0.6" />
+      <text x="33" y="50.2" fontSize="2.1" fill="#3A3010" textAnchor="middle" fontWeight="700" {...PT}>STN 14 · SAFETY CHECK</text>
+      <path d="M24 52 L42 52 M24 54.2 L38 54.2" stroke="#3A3010" strokeWidth="0.5" />
+      <text x="33" y="56.6" fontSize="2" fill="#7A1A1A" textAnchor="middle" {...PT}>3 CYCLES PRIOR · OSSEK</text>
+    </svg>
+  );
+}
+
+function PropWayfindingPlaque() {
+  const p = 'wf';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="32" cy="60" rx="24" ry="3" />
+      <path d="M6 58 L6 18 L12 18 L12 12 L20 12 L20 6 L44 6 L44 12 L52 12 L52 18 L58 18 L58 58 Z" fill={`url(#${p}Bronze)`} stroke="#1A0E06" strokeWidth="1.2" />
+      <path d="M8 56 L8 20 L14 20 L14 14 L22 14 L22 8 L42 8 L42 14 L50 14 L50 20 L56 20 L56 56 Z" fill="none" stroke="#F2C890" strokeWidth="0.8" opacity="0.6" />
+      <path d="M6 18 L12 18 L12 12 L20 12 L20 6 L44 6" fill="none" stroke="#FFE0B0" strokeWidth="1" opacity="0.7" />
+      <text x="32" y="15" fontSize="3.2" fill="#2A1608" textAnchor="middle" fontWeight="700" {...PT}>TRANSIT SECTION 3</text>
+      <path d="M12 18 L52 18" stroke="#2A1608" strokeWidth="0.6" />
+      {[
+        ['PRIVATE EXECUTIVE RING', '(CLEARANCE REQUIRED)', 25],
+        ['TEAM BRIEFING RING', '', 32],
+        ['LOUNGE / MARKET / UNION', '', 38],
+        ['BAY ACCESS BELOW', '', 44],
+      ].map(([a, b, y], i) => (
+        <g key={i}>
+          <path d={`M10 ${y - 2} L13 ${y - 0.6} L10 ${y + 0.8} Z`} fill="#2A1608" />
+          <text x="15" y={y} fontSize="2.6" fill="#2A1608" fontWeight="700" {...PT}>{a}</text>
+          {b && <text x="15" y={y + 3} fontSize="2.2" fill="#5A2A10" {...PT}>{b}</text>}
+        </g>
+      ))}
+      <path d="M10 49 L54 49" stroke="#1A0E06" strokeWidth="0.5" opacity="0.6" />
+      <g transform="rotate(-2 32 53)">
+        <text x="10" y="53" fontSize="2.5" fill="#C0A070" opacity="0.95" {...PT}>IF LOST, ASK VECTIS.</text>
+        <text x="10" y="56" fontSize="2.5" fill="#C0A070" opacity="0.95" {...PT}>IT WILL TELL YOU TWICE.</text>
+        <path d="M10 49.8 L26 51.6 M30 50.4 L50 51.4" stroke="#E8CFA0" strokeWidth="0.4" opacity="0.7" />
+      </g>
+      {[[9, 22], [55, 22], [9, 54], [55, 54]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.1" fill="#F2C890" stroke="#1A0E06" strokeWidth="0.4" />)}
+      <path d="M22 6 L30 6" stroke="#FFFFFF" strokeWidth="1.2" opacity="0.5" />
+    </svg>
+  );
+}
+
+function PropBlastPanel() {
+  const p = 'bp';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <rect x="2" y="2" width="60" height="60" rx="2" fill="#14110A" stroke="#0A0D12" strokeWidth="1" />
+      <rect x="2" y="2" width="60" height="9" fill={`url(#${p}Haz)`} />
+      <rect x="2" y="53" width="60" height="9" fill={`url(#${p}Haz)`} />
+      <rect x="2" y="2" width="6" height="60" fill={`url(#${p}Haz)`} />
+      <rect x="56" y="2" width="6" height="60" fill={`url(#${p}Haz)`} />
+      <rect x="10" y="12" width="44" height="30" rx="1.5" fill="#1A1F26" stroke="#0A0D12" strokeWidth="1" />
+      <circle cx="32" cy="27" r="11" fill="#0E0E12" stroke="#C0392B" strokeWidth="2.6" />
+      <circle cx="32" cy="27" r="11" fill="none" stroke="#FF9080" strokeWidth="0.8" opacity="0.6" transform="translate(-0.6 -0.6)" />
+      <circle cx="32" cy="27" r="3.2" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="0.6" />
+      <path d="M32 16 L32 38 M21 27 L43 27 M24.2 19.2 L39.8 34.8 M39.8 19.2 L24.2 34.8" stroke="#C0392B" strokeWidth="1.6" />
+      <path d="M12 14 L20 14 M12 14 L12 20" stroke="#9AA8B8" strokeWidth="0.8" />
+      <rect x="10" y="12" width="44" height="30" rx="1.5" fill={`url(#${p}Glass)`} />
+      <path d="M13 13 L30 13 L13 28 Z" fill="#FFFFFF" opacity="0.14" />
+      <path d="M44 12 L40 20 L47 24 L43 32 M47 24 L54 21" fill="none" stroke="#DFF6FF" strokeWidth="0.6" opacity="0.7" />
+      <rect x="44" y="35" width="8" height="5" fill="#9AA8B8" stroke="#0A0D12" strokeWidth="0.5" />
+      <path d="M36 11 A9 9 0 0 0 28 11" fill="none" stroke="#FFE070" strokeWidth="0.9" />
+      <path d="M28 10 L26 13 L30 12.6 Z" fill="#FFE070" />
+      <rect x="10" y="44" width="44" height="8" fill="#E9E2C4" stroke="#6A5A20" strokeWidth="0.5" />
+      <text x="32" y="47" fontSize="2.2" fill="#2A1A0A" textAnchor="middle" fontWeight="700" {...PT}>HULL BREACH OR FIRE</text>
+      <text x="32" y="49.4" fontSize="2" fill="#2A1A0A" textAnchor="middle" {...PT}>3 ROTATIONS COUNTERCLOCKWISE</text>
+      <text x="32" y="51.6" fontSize="1.9" fill="#8A1A1A" textAnchor="middle" {...PT}>THIS MEANS YOU, BAY CREW. -PRENN</text>
+    </svg>
+  );
+}
+
+function PropHoloProjector() {
+  const p = 'hp';
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="hpCone" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#4ACDFF" stopOpacity="0.5" /><stop offset="1" stopColor="#4ACDFF" stopOpacity="0.02" /></linearGradient>
+      </defs>
+      <PropShadow p={p} cx="48" cy="88" rx="34" ry="5" />
+      <ellipse cx="48" cy="86" rx="30" ry="8" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      <ellipse cx="48" cy="84" rx="30" ry="8" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <ellipse cx="48" cy="84" rx="22" ry="5.5" fill="#0A1018" stroke="#4ACDFF" strokeWidth="0.8" />
+      <ellipse cx="48" cy="84" rx="12" ry="3" fill="#0A1824" stroke="#4ACDFF" strokeWidth="0.6" opacity="0.8" />
+      <ellipse cx="48" cy="84" rx="5" ry="1.8" fill={`url(#${p}Blue)`} style={{ animation:'holo-flicker 2s ease-in-out infinite' }} />
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+        const a = (i / 8) * Math.PI * 2;
+        return <circle key={i} cx={48 + Math.cos(a) * 26} cy={84 + Math.sin(a) * 6.6} r="0.9" fill="#4ACDFF" style={{ animation:`ship-blink 2s ease-in-out ${i * 0.25}s infinite` }} />;
+      })}
+      <path d="M26 83 L12 24 L84 24 L70 83 Z" fill="url(#hpCone)" style={{ animation:'holo-flicker 3.4s ease-in-out infinite' }} />
+      <path d="M30 82 L20 28 M66 82 L76 28" stroke="#7FDFFF" strokeWidth="0.6" opacity="0.5" />
+      <g style={{ animation:'holo-flicker 2.6s ease-in-out infinite' }}>
+        <path d="M18 54 L32 44 L74 38 L82 46 L74 54 L32 60 Z" fill="none" stroke="#7FDFFF" strokeWidth="1" />
+        <path d="M32 44 L36 52 L32 60 M44 42 L48 50 L44 58 M56 40 L60 50 L56 56 M68 38 L72 50 L68 54" fill="none" stroke="#4ACDFF" strokeWidth="0.6" opacity="0.8" />
+        <path d="M18 54 L82 46 M32 44 L74 54 M32 60 L74 38" fill="none" stroke="#4ACDFF" strokeWidth="0.5" opacity="0.5" />
+        <rect x="44" y="40" width="10" height="5" fill="none" stroke="#7FDFFF" strokeWidth="0.6" />
+        <circle cx="26" cy="52" r="1.4" fill="#BFF4FF" />
+        <circle cx="50" cy="50" r="1" fill="#BFF4FF" opacity="0.8" />
+      </g>
+      <path d="M16 31 L40 31" stroke="#FFC060" strokeWidth="1" />
+      <path d="M16 29 L16 33 M28 29.6 L28 32.4 M40 29 L40 33" stroke="#FFC060" strokeWidth="0.8" />
+      <text x="28" y="27.6" fontSize="3" fill="#FFC060" textAnchor="middle" {...PT}>1800 M</text>
+      <rect x="4" y="8" width="26" height="16" rx="1" fill="#05101A" stroke="#4ACDFF" strokeWidth="0.6" opacity="0.92" />
+      <rect x="6" y="10" width="22" height="3.6" fill="#4A1010" stroke="#FF5050" strokeWidth="0.4" /><text x="8" y="12.6" fontSize="2.2" fill="#FF9090" {...PT}>LOCKED · LV 6</text>
+      <rect x="6" y="14.4" width="22" height="3.6" fill="#4A1010" stroke="#FF5050" strokeWidth="0.4" /><text x="8" y="17" fontSize="2.2" fill="#FF9090" {...PT}>LOCKED · LV 6</text>
+      <rect x="6" y="18.8" width="22" height="4" fill="#3A2A06" stroke="#FFC060" strokeWidth="0.4" style={{ animation:'holo-flicker 2s ease-in-out infinite' }} /><text x="8" y="21.6" fontSize="1.9" fill="#FFD890" {...PT}>STRUCTURAL TOLERANCE</text>
+      <text x="72" y="12" fontSize="2.6" fill="#7FDFFF" textAnchor="middle" {...PT}>UNREGISTERED HULL</text>
+    </svg>
+  );
+}
+
+function PropSecureLocker() {
+  const p = 'sl';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="60" rx="44" ry="3.6" />
+      <rect x="2" y="4" width="92" height="54" rx="1.5" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="2" y="4" width="92" height="3" fill={`url(#${p}Steel)`} />
+      {[0, 1].map((r) => [0, 1, 2, 3, 4, 5].map((c) => {
+        const x = 5 + c * 15, y = 9 + r * 24;
+        const cracked = r === 1 && c === 3;
+        return (
+          <g key={`${r}${c}`}>
+            <rect x={x} y={y} width="13" height="22" rx="1" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="0.8" />
+            <rect x={x} y={y} width="13" height="2" fill="#FFFFFF" opacity="0.3" />
+            <rect x={x + 3} y={y + 4} width="7" height="5" rx="0.8" fill="#0A0E14" stroke={cracked ? '#FF9A30' : '#CC2F2F'} strokeWidth="0.6" />
+            {!cracked && <circle cx={x + 6.5} cy={y + 6.5} r="1.5" fill="none" stroke="#FF5050" strokeWidth="0.5" />}
+            {!cracked && <circle cx={x + 6.5} cy={y + 6.5} r="0.5" fill="#FF5050" />}
+            <rect x={x + 5} y={y + 12} width="3" height="6" rx="0.8" fill="#8892A0" stroke="#0A0D12" strokeWidth="0.4" />
+            <circle cx={x + 10.5} cy={y + 19} r="0.7" fill={cracked ? '#FF9A30' : '#3AFF6A'} style={{ animation:`ship-engine ${3 + c * 0.4}s ease-in-out infinite` }} />
+            {cracked && (
+              <g>
+                <path d={`M${x + 3} ${y + 4} L${x + 6} ${y + 7} L${x + 4.5} ${y + 9.4} L${x + 8} ${y + 10.4} L${x + 10} ${y + 9}`} fill="none" stroke="#FF9A30" strokeWidth="0.7" />
+                <path d={`M${x + 1} ${y + 3} L${x + 4} ${y + 1.6}`} stroke="#FFC070" strokeWidth="0.6" />
+                <rect x={x + 2} y={y + 20} width="9" height="2.5" fill="#7FE0E8" opacity="0.6" style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} />
+              </g>
+            )}
+          </g>
+        );
+      }))}
+      <text x="48" y="7" fontSize="2.4" fill="#0A0D12" textAnchor="middle" fontWeight="700" {...PT}>SECURE DATAPAD CHARGING · ISB BIOMETRIC · 12 UNITS</text>
+    </svg>
+  );
+}
+
+function PropInterceptWall() {
+  const p = 'iw';
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="iwRoom" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1A2434" /><stop offset="1" stopColor="#0A0F18" /></linearGradient>
+      </defs>
+      <PropShadow p={p} cx="64" cy="61" rx="58" ry="3" />
+      <g style={{ animation:'door-pulse 0.5s ease-in-out infinite' }}>
+        <rect x="3" y="4" width="122" height="54" rx="2" fill="url(#iwRoom)" stroke="#0A0D12" strokeWidth="1.6" />
+      </g>
+      <rect x="4" y="5" width="120" height="6" fill="#0A0F18" opacity="0.8" />
+      <g opacity="0.95">
+        <path d="M12 20 L42 14 L42 46 L12 40 Z" fill="#0C2A44" opacity="0.7" stroke="#4ACDFF" strokeWidth="0.6" />
+        <path d="M16 36 L24 28 L38 24 L40 30 L26 36 Z" fill="none" stroke="#7FDFFF" strokeWidth="0.6" />
+        <path d="M22 28 L26 36 M30 26 L32 33" stroke="#4ACDFF" strokeWidth="0.4" />
+        <text x="26" y="43" fontSize="2.4" fill="#7FDFFF" textAnchor="middle" {...PT}>HULL 1800 M</text>
+      </g>
+      <g>
+        <ellipse cx="62" cy="26" rx="5.4" ry="6" fill="#D2A584" />
+        <path d="M56 23 Q62 15 68 23 L68 25 Q62 22 56 25 Z" fill="#14181E" />
+        <rect x="55" y="21.6" width="14" height="2.4" rx="1" fill="#14181E" />
+        <circle cx="62" cy="20" r="1" fill="#C0A040" />
+        <path d="M52 36 Q62 32 72 36 L74 58 L50 58 Z" fill="#3A4048" stroke="#14181E" strokeWidth="1" />
+        <path d="M62 36 L62 58" stroke="#14181E" strokeWidth="0.6" />
+        <rect x="55" y="38" width="3" height="2" fill="#C0392B" /><rect x="59" y="38" width="3" height="2" fill="#C0A040" />
+        <path d="M72 38 L90 28" stroke="#3A4048" strokeWidth="5" strokeLinecap="round" />
+        <path d="M72 38 L90 28" stroke="#14181E" strokeWidth="0.8" opacity="0.6" />
+        <circle cx="92" cy="27" r="2.2" fill="#D2A584" />
+        <path d="M92 27 L100 22" stroke="#D2A584" strokeWidth="1.2" strokeLinecap="round" />
+      </g>
+      <g>
+        <ellipse cx="102" cy="30" rx="5.2" ry="5.8" fill="#C79A78" />
+        <path d="M96 27 Q102 20 108 27 L108 29 Q102 26 96 29 Z" fill="#14181E" />
+        <rect x="95" y="25.6" width="14" height="2.4" rx="1" fill="#14181E" />
+        <circle cx="102" cy="24" r="1" fill="#C0A040" />
+        <path d="M92 40 Q102 36 112 40 L114 58 L90 58 Z" fill="#3A4048" stroke="#14181E" strokeWidth="1" />
+        <path d="M94 46 L110 50 M94 51 L110 47" stroke="#2A3038" strokeWidth="3.4" strokeLinecap="round" />
+        <path d="M94 46 L110 50 M94 51 L110 47" stroke="#4A525C" strokeWidth="1" strokeLinecap="round" />
+        <rect x="96" y="40.4" width="3" height="2" fill="#C0392B" /><rect x="100" y="40.4" width="3" height="2" fill="#C0A040" />
+        <path d="M98 34 L100 35.4 M104 35.4 L106 34" stroke="#14181E" strokeWidth="0.6" />
+      </g>
+      <rect x="4" y="5" width="120" height="53" fill={`url(#${p}Glass)`} />
+      <path d="M8 6 L34 6 L10 40 Z" fill="#FFFFFF" opacity="0.12" />
+      <path d="M96 6 L112 6 L90 58 L82 58 Z" fill="#FFFFFF" opacity="0.07" />
+      <rect x="3" y="4" width="122" height="54" rx="2" fill="none" stroke="#9AA8B8" strokeWidth="1" opacity="0.6" />
+      <rect x="40" y="52" width="48" height="6" rx="1" fill="#05090E" opacity="0.8" />
+      <text x="64" y="56.2" fontSize="3" fill="#FFE8A8" textAnchor="middle" fontStyle="italic" {...PT}>(lip read) "not in the budget."</text>
+      {[10, 30, 50, 70, 90, 110].map((x) => <circle key={x} cx={x} cy="7.4" r="0.8" fill="#8892A0" />)}
+    </svg>
+  );
+}
+
+function PropTerminal({ variant }) {
+  const p = 'tm' + variant;
+  const cfg = {
+    engineering: { title:'KDY ENGINEERING ACCESS', rows:['SECTOR 4 · BADOR MOON', 'ASSEMBLY ARCHIVE', 'LAST USED 40 MIN AGO', 'NOT A SCHEDULED AUDIT'], body:'Steel', screen:'#031A22', ink:'#7FE0E8', trim:'#4ACDFF' },
+    executive: { title:'KDY PRIVATE SHIPPING NET', rows:['EXECUTIVE HOLONET', 'ACCESS CODES: LOADED', 'USER: TANNER', 'ROUTE: ALL RINGS'], body:'Brass', screen:'#0A1420', ink:'#F4DA86', trim:'#F4DA86' },
+    privileged: { title:'UNMONITORED BACKBONE', rows:['HIGH BANDWIDTH · NO TRACE', 'RELAY: ANY', 'OVERSIGHT CODE READY', 'PRE-CENSORSHIP ARCH'], body:'Dark', screen:'#02100A', ink:'#6CFFA8', trim:'#3AFF8A' },
+  }[variant] || {};
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="32" cy="58" rx="24" ry="4" />
+      <rect x="22" y="42" width="20" height="14" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <path d="M12 56 L52 56 L48 50 L16 50 Z" fill={`url(#${p}${cfg.body})`} stroke="#0A0D12" strokeWidth="0.9" />
+      <rect x="6" y="6" width="52" height="38" rx="3.5" fill={`url(#${p}${cfg.body})`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="6" y="6" width="52" height="3" rx="2" fill="#FFFFFF" opacity="0.35" />
+      <rect x="10" y="10" width="44" height="30" rx="1.5" fill={cfg.screen} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="10" y="10" width="44" height="5" fill={cfg.trim} opacity="0.3" />
+      <text x="12" y="13.6" fontSize="2.8" fill={cfg.ink} fontWeight="700" {...PT}>{cfg.title}</text>
+      {cfg.rows.map((r, i) => <text key={i} x="12.5" y={20 + i * 5} fontSize="2.4" fill={cfg.ink} opacity={0.9 - i * 0.12} {...PT}>{'> ' + r}</text>)}
+      <rect x="12" y="35" width={14 + (variant === 'privileged' ? 20 : 8)} height="2" fill={cfg.trim} opacity="0.55" style={{ animation:'ship-engine 2.2s ease-in-out infinite' }} />
+      <rect x="10" y="10" width="44" height="2" fill={cfg.ink} opacity="0.3" style={{ animation:'prop-scan 3.4s linear infinite' }} />
+      {variant === 'executive' && <g fill="none" stroke="#F4DA86" strokeWidth="0.5" opacity="0.85"><circle cx="49" cy="28" r="3.6" /><path d="M45.4 28 L52.6 28 M49 24.4 L49 31.6" /></g>}
+      {variant === 'privileged' && <path d="M47 26 L51 30 M51 26 L47 30" fill="none" stroke="#3AFF8A" strokeWidth="0.6" opacity="0.7" />}
+      <circle cx="10" cy="42" r="1" fill={cfg.trim} /><circle cx="14" cy="42" r="1" fill="#FF4040" style={{ animation:'ship-blink 1.4s steps(2) infinite' }} />
+      <path d="M10 11 L30 11 L10 26 Z" fill="#FFFFFF" opacity="0.08" />
+    </svg>
+  );
+}
+
+function PropHoloTable({ variant }) {
+  const p = 'ht' + variant;
+  const dossier = variant === 'dossier';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="58" rx="42" ry="5" />
+      <path d="M26 44 L22 58 L28 58 L32 46 M70 44 L74 58 L68 58 L64 46" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <path d="M18 44 L30 36 L66 36 L78 44 L78 48 L66 54 L30 54 L18 48 Z" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <path d="M18 44 L30 36 L66 36 L78 44 L66 50 L30 50 Z" fill="#0A1624" stroke="#4ACDFF" strokeWidth="0.9" />
+      <path d="M26 44 L34 39 L62 39 L70 44 L62 48 L34 48 Z" fill="#0E2A44" opacity="0.9" stroke="#4ACDFF" strokeWidth="0.5" />
+      <path d="M20 43.4 L31 37 L65 37" fill="none" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.5" />
+      <ellipse cx="48" cy="43.6" rx="22" ry="4.6" fill={`url(#${p}Blue)`} opacity="0.55" style={{ animation:'holo-flicker 3s ease-in-out infinite' }} />
+      <path d="M30 44 L48 56 L66 44" fill="none" stroke="#4ACDFF" strokeWidth="0.3" opacity="0.3" />
+      {[24, 32, 40, 48, 56, 64, 72].map((x, i) => <circle key={x} cx={x} cy={i % 2 ? 50 : 38.2} r="0.8" fill="#4ACDFF" style={{ animation:`ship-blink ${2 + i * 0.3}s ease-in-out infinite` }} />)}
+      {!dossier && (
+        <g style={{ animation:'holo-flicker 3s ease-in-out infinite' }}>
+          <path d="M20 26 L26 22 L36 22 L40 26 L36 30 L26 30 Z M26 22 L26 30 M32 22 L32 30" fill="none" stroke="#9FEAFF" strokeWidth="1" />
+          <path d="M26 33 L38 33" stroke="#4ACDFF" strokeWidth="0.8" /><text x="32" y="36.4" fontSize="2.2" fill="#7FDFFF" textAnchor="middle" {...PT}>HAMMERHEAD 62%</text>
+          <path d="M44 14 L70 10 L76 18 L70 24 L44 22 L46 18 Z M52 11.6 L54 23 M60 10.6 L62 23.4" fill="#4A2A06" fillOpacity="0.6" stroke="#FFC060" strokeWidth="1" />
+          <text x="60" y="30" fontSize="2.6" fill="#FFC060" textAnchor="middle" fontWeight="700" {...PT}>VL-9 · DEVIATION</text>
+          <path d="M78 24 L84 21 L90 24 L84 27 Z M84 21 L84 27" fill="none" stroke="#9FEAFF" strokeWidth="1" />
+          <text x="84" y="31" fontSize="2.2" fill="#7FDFFF" textAnchor="middle" {...PT}>THRANTA 88%</text>
+          <path d="M62 36 L66 28 M46 36 L52 26" stroke="#4ACDFF" strokeWidth="0.4" opacity="0.6" strokeDasharray="1 1" />
+        </g>
+      )}
+      {dossier && (
+        <g style={{ animation:'holo-flicker 3s ease-in-out infinite' }}>
+          <rect x="22" y="8" width="52" height="26" rx="1.5" fill="#06182A" fillOpacity="0.75" stroke="#7FDFFF" strokeWidth="0.7" />
+          <text x="25" y="13" fontSize="2.8" fill="#FFC060" fontWeight="700" {...PT}>OPERATION GHOST KEEL · LEVEL 8</text>
+          <path d="M24 15 L72 15" stroke="#7FDFFF" strokeWidth="0.4" />
+          <text x="25" y="19.4" fontSize="2.5" fill="#BFF4FF" {...PT}>1. SECTOR 4 GRID COORDINATES</text>
+          <text x="25" y="23.4" fontSize="2.5" fill="#BFF4FF" {...PT}>2. KDY SURFACE PERSONNEL FILES</text>
+          <text x="25" y="27.4" fontSize="2.5" fill="#BFF4FF" {...PT}>3. CMDR VAEL OPERATIONAL BRIEF</text>
+          <text x="25" y="31.6" fontSize="2.3" fill="#7FDFFF" opacity="0.7" {...PT}>BADOR MOON · RESTRICTED</text>
+        </g>
+      )}
+    </svg>
+  );
+}
+
+function PropOrdnanceCrates() {
+  const p = 'oc';
+  const crate = (x, y, w, h, key, main) => (
+    <g key={key}>
+      <rect x={x} y={y} width={w} height={h} rx="1.2" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x={x} y={y} width={w} height="2.6" fill="#FFFFFF" opacity="0.3" />
+      <rect x={x + 1.4} y={y + 1.4} width={w - 2.8} height={h - 2.8} fill="none" stroke="#8A97A6" strokeWidth="0.7" opacity="0.7" />
+      <rect x={x} y={y + h - 4} width={w} height="4" fill={`url(#${p}Haz)`} opacity="0.9" />
+      <path d={`M${x + 3} ${y} L${x + 3} ${y + h} M${x + w - 3} ${y} L${x + w - 3} ${y + h}`} stroke="#0A0D12" strokeWidth="0.7" opacity="0.7" />
+      <rect x={x + w / 2 - 3} y={y + h / 2 - 3} width="6" height="6" rx="1" fill="#2A323E" stroke="#C0392B" strokeWidth="0.7" />
+      <circle cx={x + w / 2} cy={y + h / 2} r="1.2" fill="#FF3030" style={{ animation:'ship-blink 1.6s steps(2) infinite' }} />
+      {main && <polygon points={`${x + w - 10},${y + 6} ${x + w - 5},${y + 6} ${x + w - 7.5},${y + 1.8}`} fill="#E0A818" stroke="#0A0D12" strokeWidth="0.4" />}
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="60" rx="44" ry="4" />
+      {crate(4, 24, 44, 32, 'main', true)}
+      <text x="26" y="33" fontSize="2.6" fill="#E0E6EE" textAnchor="middle" fontWeight="700" {...PT}>COMPONENT CLASS RESTRICTED</text>
+      <text x="26" y="36.6" fontSize="2.3" fill="#C8D0DA" textAnchor="middle" {...PT}>AUTH CODE REQUIRED</text>
+      <text x="26" y="40" fontSize="2.3" fill="#FF9A60" textAnchor="middle" {...PT}>DO NOT OPEN IN ATMOSPHERE</text>
+      {crate(52, 38, 20, 18, 'b1')}
+      {crate(74, 38, 20, 18, 'b2')}
+      {crate(62, 20, 20, 18, 'b3')}
+      <g transform="rotate(-6 40 50)">
+        <path d="M30 46 L48 45 L49 47 L47 49 L49 52 L31 53 Z" fill="#E9E2C4" stroke="#6A5A20" strokeWidth="0.4" />
+        <text x="32" y="49.6" fontSize="2" fill="#2A1A0A" {...PT}>KUAT SURFACE</text>
+        <text x="32" y="52" fontSize="2" fill="#2A1A0A" {...PT}>FACILITY BADOR-7</text>
+      </g>
+    </svg>
+  );
+}
+
+function PropArmoryLocker() {
+  const p = 'al';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="32" cy="60" rx="26" ry="3.6" />
+      <rect x="6" y="54" width="52" height="5" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      {[10, 22, 42, 54].map((x) => <circle key={x} cx={x} cy="56.5" r="1.5" fill="#8892A0" stroke="#0A0D12" strokeWidth="0.5" />)}
+      <rect x="9" y="4" width="46" height="51" rx="2" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1.2" />
+      <rect x="9" y="4" width="46" height="3.4" rx="2" fill="#FFFFFF" opacity="0.35" />
+      <rect x="12" y="9" width="40" height="42" rx="1" fill="none" stroke="#1A222C" strokeWidth="0.8" opacity="0.7" />
+      <path d="M32 9 L32 51" stroke="#1A222C" strokeWidth="0.9" opacity="0.8" />
+      {[[11.4, 6.4], [52.6, 6.4], [11.4, 52.6], [52.6, 52.6]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.2" fill="#2A323E" stroke="#AAB7C6" strokeWidth="0.4" />)}
+      <rect x="36" y="22" width="14" height="18" rx="1.5" fill="#0A1018" stroke="#0A0D12" strokeWidth="1" />
+      <rect x="37.4" y="23.4" width="11.2" height="15.2" rx="1" fill="#04161C" stroke="#3A5A60" strokeWidth="0.5" />
+      <path d="M40 34 L40 28 M42 34 L42 26 M44 34 L44 27 M46 34 L46 29 M40 34 Q43 38 47 34 M47 31 L49 30" fill="none" stroke="#2A8A9A" strokeWidth="0.9" opacity="0.8" strokeLinecap="round" />
+      <rect x="37.4" y="23.4" width="11.2" height="1.4" fill="#4ACDFF" opacity="0.5" style={{ animation:'prop-scan 3s linear infinite' }} />
+      <circle cx="46.6" cy="20" r="1" fill="#FF4040" style={{ animation:'ship-blink 1.2s steps(2) infinite' }} />
+      <rect x="33.6" y="26" width="3.6" height="10" rx="0.8" fill="#14181E" stroke="#0A0D12" strokeWidth="0.5" />
+      <path d="M36 23 L33 27 M38 21.4 L34 25 M50 24 L52.4 27 M49 41 L53 40" stroke="#E8EEF6" strokeWidth="0.8" opacity="0.9" />
+      <path d="M35 21 L40 24 M34 39 L37 42 M50 23 L48 26" stroke="#8A4A18" strokeWidth="0.6" opacity="0.8" />
+      <path d="M33.2 29 L30 30.4 L31 32.4 L34 31" fill="#B8C4D2" stroke="#0A0D12" strokeWidth="0.4" />
+      <text x="20" y="30" fontSize="2.6" fill="#2A323E" textAnchor="middle" fontWeight="700" {...PT}>ARMORY</text>
+      <text x="20" y="33.6" fontSize="2.2" fill="#2A323E" textAnchor="middle" {...PT}>BRIEFING RING</text>
+      <path d="M15 40 L26 40 M15 43 L24 43" stroke="#2A323E" strokeWidth="0.5" opacity="0.6" />
+    </svg>
+  );
+}
+
+function PropCableTruss() {
+  const p = 'ct';
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="64" cy="52" rx="58" ry="4" />
+      {[14, 54, 94, 118].map((x) => <path key={x} d={`M${x} 6 L${x} 20 M${x - 4} 6 L${x + 4} 6`} stroke="#8892A0" strokeWidth="2.4" />)}
+      <path d="M2 18 L126 18 L122 30 L6 30 Z" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1.2" />
+      <path d="M4 19.4 L124 19.4" stroke="#FFFFFF" strokeWidth="1" opacity="0.45" />
+      <path d="M8 29 L120 29" stroke="#0A0D12" strokeWidth="1" opacity="0.5" />
+      {[[2, '#2A2218'], [6, '#33291C'], [10, '#241C12']].map(([dy, c], i) => (
+        <path key={i} d={`M2 ${22 + i * 2.4} Q40 ${20 + i * 2.4} 64 ${23 + i * 2.4} T126 ${22 + i * 2.4}`} fill="none" stroke={c} strokeWidth="2.2" />
+      ))}
+      <path d="M2 22 Q40 20 64 23 T126 22" fill="none" stroke="#5A4A30" strokeWidth="0.5" opacity="0.7" />
+      <path d="M2 24.4 Q40 22.4 64 25.4 T126 24.4" fill="none" stroke="#5A4A30" strokeWidth="0.5" opacity="0.6" />
+      <path d="M52 22 Q62 38 76 44 Q92 50 110 46" fill="none" stroke="#2A5A9A" strokeWidth="3.4" />
+      <path d="M52 22 Q62 38 76 44 Q92 50 110 46" fill="none" stroke="#7FB8FF" strokeWidth="1" opacity="0.7" />
+      <path d="M58 22 Q68 40 80 48 Q96 54 112 50" fill="none" stroke="#E8731A" strokeWidth="3" />
+      <path d="M58 22 Q68 40 80 48 Q96 54 112 50" fill="none" stroke="#FFC890" strokeWidth="0.9" opacity="0.7" />
+      <rect x="48" y="19" width="14" height="9" rx="1" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      {[22, 40, 56, 70, 84, 100, 114].map((x) => <rect key={x} x={x} y="17" width="3.4" height="14" rx="0.8" fill="#8892A0" stroke="#0A0D12" strokeWidth="0.5" />)}
+      {[[78, 44], [90, 49], [104, 49]].map(([x, y], i) => <rect key={i} x={x} y={y} width="3" height="6" rx="0.8" fill="#C8D0DA" stroke="#0A0D12" strokeWidth="0.4" transform={`rotate(-14 ${x} ${y})`} />)}
+      <rect x="6" y="32" width="26" height="9" rx="0.8" fill="#E9E2C4" stroke="#6A5A20" strokeWidth="0.5" />
+      <text x="19" y="36.6" fontSize="2.8" fill="#2A1A0A" textAnchor="middle" fontWeight="700" {...PT}>SECTION B-12</text>
+      <text x="19" y="39.6" fontSize="2.2" fill="#5A2A10" textAnchor="middle" {...PT}>REROUTED · NEW LINE</text>
+      <circle cx="5" cy="9" r="0.1" fill="none" />
+    </svg>
+  );
+}
+
+function PropCoolantPipe() {
+  const p = 'cp';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="60" rx="44" ry="3.6" />
+      <rect x="2" y="26" width="92" height="18" rx="9" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1.2" />
+      <rect x="2" y="26" width="92" height="18" rx="9" fill="#2A6A9A" opacity="0.35" />
+      <path d="M10 29.4 L86 29.4" stroke="#FFFFFF" strokeWidth="1.4" opacity="0.55" />
+      {[16, 34, 62, 80].map((x) => <rect key={x} x={x} y="24" width="4" height="22" rx="1" fill="#C8D2DE" stroke="#0A0D12" strokeWidth="0.6" opacity="0.9" />)}
+      {[[24, 41], [44, 42], [58, 40], [72, 41]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="0.9" fill="#BFE8FF" opacity="0.8" />)}
+      <rect x="42" y="12" width="8" height="14" rx="1" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.7" />
+      <circle cx="46" cy="10" r="7" fill="#0E0E12" stroke="#E0A818" strokeWidth="2" />
+      <path d="M46 4 L46 16 M40 10 L52 10 M41.8 5.8 L50.2 14.2 M50.2 5.8 L41.8 14.2" stroke="#E0A818" strokeWidth="1" />
+      <circle cx="46" cy="10" r="1.8" fill={`url(#${p}Steel)`} />
+      <circle cx="14" cy="14" r="8" fill="#ECEFF2" stroke="#0A0D12" strokeWidth="1.2" />
+      <path d="M7.4 18 A8 8 0 0 1 20.6 18" fill="none" stroke="#D8A818" strokeWidth="1.6" />
+      <path d="M17 20.6 A8 8 0 0 1 20.6 18" fill="none" stroke="#C0392B" strokeWidth="1.6" />
+      <line x1="14" y1="14" x2="19" y2="11" stroke="#C0392B" strokeWidth="1" style={{ transformOrigin:'14px 14px', animation:'ship-blink 3s ease-in-out infinite' }} />
+      <circle cx="14" cy="14" r="1.1" fill="#14181E" />
+      <text x="14" y="24.4" fontSize="2.4" fill="#C0392B" textAnchor="middle" fontWeight="700" {...PT}>ABOVE NOM</text>
+      {[10, 22, 34, 46, 58, 70, 82].map((x) => <rect key={x} x={x} y="20" width="2" height="34" fill="#E0A818" stroke="#0A0D12" strokeWidth="0.5" opacity="0.9" />)}
+      <rect x="2" y="20" width="92" height="2.6" fill="#E0A818" stroke="#0A0D12" strokeWidth="0.5" />
+      <rect x="2" y="51" width="92" height="2.6" fill="#E0A818" stroke="#0A0D12" strokeWidth="0.5" />
+      <rect x="2" y="21" width="92" height="1" fill={`url(#${p}Haz)`} />
+      {[60, 70, 80].map((x, i) => <circle key={x} cx={x} cy="16" r="2.2" fill="#FFB030" style={{ animation:`ship-blink 1.8s ease-in-out ${i * 0.6}s infinite` }} />)}
+      <rect x="58" y="54" width="34" height="9" fill="#E9E2C4" stroke="#6A5A20" strokeWidth="0.5" />
+      <text x="75" y="57.4" fontSize="2.1" fill="#7A1A1A" textAnchor="middle" fontWeight="700" {...PT}>DO NOT OPERATE W/O ENG</text>
+      <text x="75" y="60" fontSize="2" fill="#2A1A0A" textAnchor="middle" {...PT}>VALVE SEQUENCE REQUIRED</text>
+      <text x="75" y="62.4" fontSize="1.8" fill="#5A2A10" textAnchor="middle" {...PT}>WORK ORDER FILED · 2 CYCLES</text>
+      <path d="M30 24 Q28 18 31 14 Q34 10 31 6" fill="none" stroke="#FFFFFF" strokeWidth="1.6" opacity="0.25" style={{ animation:'steam-rise 3s ease-in-out infinite' }} />
+    </svg>
+  );
+}
+
+function PropSabaccTable() {
+  const p = 'sb';
+  const chips = (cx, cy, n, c) => Array.from({ length: n }, (_, i) => <ellipse key={i} cx={cx} cy={cy - i * 1.5} rx="3.4" ry="1.7" fill={c} stroke="#0A0D12" strokeWidth="0.4" />);
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <radialGradient id="sbFelt" cx="0.5" cy="0.45" r="0.55"><stop offset="0" stopColor="#1F6A3A" /><stop offset="0.7" stopColor="#14502B" /><stop offset="1" stopColor="#5A6A60" /></radialGradient>
+        <linearGradient id="sbWood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#7A4A26" /><stop offset="1" stopColor="#2A160A" /></linearGradient>
+      </defs>
+      <PropShadow p={p} cx="48" cy="80" rx="42" ry="9" />
+      <ellipse cx="48" cy="50" rx="40" ry="38" fill="url(#sbWood)" stroke="#0A0D12" strokeWidth="1.2" />
+      <ellipse cx="48" cy="50" rx="35" ry="33" fill="url(#sbFelt)" stroke="#0A0D12" strokeWidth="0.8" />
+      <ellipse cx="48" cy="50" rx="35" ry="33" fill="none" stroke="#9AA6A0" strokeWidth="3" opacity="0.18" />
+      <path d="M20 36 Q48 14 76 36" fill="none" stroke="#FFFFFF" strokeWidth="1.2" opacity="0.22" />
+      <ellipse cx="48" cy="50" rx="18" ry="16" fill="none" stroke="#D8C070" strokeWidth="0.6" opacity="0.45" />
+      <g>{chips(48, 52, 4, '#D4AF37')}</g>
+      <g>{chips(42, 50, 3, '#C0392B')}</g>
+      <g>{chips(54, 50, 3, '#2E7BD0')}</g>
+      <g transform="translate(0 0)">
+        <rect x="38" y="18" width="7" height="10" rx="1" fill="#F4F0E0" stroke="#0A0D12" strokeWidth="0.5" transform="rotate(-10 41 23)" />
+        <rect x="45" y="17" width="7" height="10" rx="1" fill="#F4F0E0" stroke="#0A0D12" strokeWidth="0.5" transform="rotate(4 48 22)" />
+        <rect x="51" y="19" width="7" height="10" rx="1" fill="#F4F0E0" stroke="#0A0D12" strokeWidth="0.5" transform="rotate(16 54 24)" />
+        <path d="M40 21 L43 21 M47 20 L50 20 M53 22 L56 22" stroke="#C0392B" strokeWidth="0.8" />
+      </g>
+      <g>
+        <rect x="64" y="46" width="6" height="8" rx="1" fill="#F4F0E0" stroke="#0A0D12" strokeWidth="0.5" transform="rotate(80 67 50)" />
+        <rect x="70" y="50" width="6" height="8" rx="1" fill="#F4F0E0" stroke="#0A0D12" strokeWidth="0.5" transform="rotate(100 73 54)" />
+      </g>
+      <g>
+        <circle cx="48" cy="86" r="8" fill="#B8601E" stroke="#0A0D12" strokeWidth="0.8" />
+        <path d="M40 90 Q48 82 56 90 L58 96 L38 96 Z" fill="#E8731A" stroke="#0A0D12" strokeWidth="0.8" />
+        <path d="M44 88 L52 88" stroke="#2A5ACD" strokeWidth="1.4" />
+        <rect x="37" y="76" width="22" height="3" rx="1" fill="#14181E" opacity="0.6" />
+        <rect x="41" y="66" width="14" height="9" rx="1" fill="#F4F0E0" stroke="#0A0D12" strokeWidth="0.4" />
+        <path d="M43 68 L53 68 M43 70 L52 70 M43 72 L50 72" stroke="#14181E" strokeWidth="0.4" />
+      </g>
+      <g>
+        <circle cx="12" cy="46" r="7" fill="#5A9A4A" stroke="#0A0D12" strokeWidth="0.8" />
+        <path d="M4 44 L1 42 L2 47 Z" fill="#4A8A3A" stroke="#0A0D12" strokeWidth="0.5" />
+        <circle cx="10" cy="44.4" r="1.2" fill="#14181E" /><circle cx="14" cy="44.4" r="1.2" fill="#14181E" />
+        <path d="M17 52 Q22 56 24 62 L10 62 Q8 56 12 52" fill="#6A7080" stroke="#0A0D12" strokeWidth="0.8" />
+        <rect x="19" y="44" width="10" height="6" rx="1" fill="#F4F0E0" stroke="#0A0D12" strokeWidth="0.4" transform="rotate(-20 24 47)" />
+      </g>
+      <g>
+        <circle cx="84" cy="48" r="7" fill="#C79A78" stroke="#0A0D12" strokeWidth="0.8" />
+        <path d="M78 44 Q84 36 90 44 Z" fill="#3A4048" />
+        <path d="M76 56 Q84 52 92 56 L94 68 L74 68 Z" fill="#4A525C" stroke="#0A0D12" strokeWidth="0.8" />
+        <rect x="78" y="58" width="4" height="2.4" fill="#C0392B" /><rect x="83" y="58" width="4" height="2.4" fill="#C0A040" />
+        <path d="M80 50 L84 52 L88 50" fill="none" stroke="#14181E" strokeWidth="0.6" />
+        <circle cx="90" cy="52" r="0.9" fill="#E8C070" />
+      </g>
+      <g transform="rotate(-18 48 14)">
+        <path d="M34 8 L62 8 L62 20 L34 20 Z" fill="#2A1A10" stroke="#0A0D12" strokeWidth="0.8" />
+        <path d="M34 20 L62 20 L58 26 L38 26 Z" fill="#3A2216" stroke="#0A0D12" strokeWidth="0.8" />
+        <path d="M44 10 L52 10 M44 13 L52 13" stroke="#6A4A32" strokeWidth="0.4" opacity="0.6" />
+        <path d="M38 12 Q48 6 58 12 L56 20 L40 20 Z" fill="#4A5A6A" stroke="#0A0D12" strokeWidth="0.6" opacity="0.9" />
+      </g>
+      <path d="M34 30 L62 30 L60 36 L36 36 Z" fill="none" />
+    </svg>
+  );
+}
+
+function PropMarketStall() {
+  const p = 'ms';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="msCanvas" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6A7468" /><stop offset="1" stopColor="#363E36" /></linearGradient>
+        <linearGradient id="msWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8A6A44" /><stop offset="1" stopColor="#3A2A18" /></linearGradient>
+      </defs>
+      <PropShadow p={p} cx="48" cy="61" rx="42" ry="3.4" />
+      <path d="M4 6 L92 6 L96 24 L0 24 Z" fill="url(#msCanvas)" stroke="#0A0D12" strokeWidth="1" />
+      {[8, 22, 36, 50, 64, 78].map((x) => <path key={x} d={`M${x} 6 L${x - 2} 24`} stroke="#262C26" strokeWidth="0.8" opacity="0.7" />)}
+      <path d="M4 6 L92 6" stroke="#FFFFFF" strokeWidth="1" opacity="0.2" />
+      <path d="M0 24 Q6 28 12 24 Q18 28 24 24 Q30 28 36 24 Q42 28 48 24 Q54 28 60 24 Q66 28 72 24 Q78 28 84 24 Q90 28 96 24" fill="#363E36" stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="2" y="24" width="3" height="36" fill="#4A3A28" stroke="#0A0D12" strokeWidth="0.6" />
+      <rect x="91" y="24" width="3" height="36" fill="#4A3A28" stroke="#0A0D12" strokeWidth="0.6" />
+      <rect x="6" y="28" width="84" height="18" fill="#14181E" opacity="0.6" />
+      <rect x="10" y="32" width="26" height="2" fill="url(#msWood)" /><rect x="10" y="40" width="26" height="2" fill="url(#msWood)" />
+      <g>
+        <path d="M12 31 L12 24 M16 31 L16 26" stroke="#8892A0" strokeWidth="1.2" />
+        <rect x="19" y="27" width="6" height="4" rx="0.6" fill="#6A7280" stroke="#0A0D12" strokeWidth="0.4" />
+        <path d="M28 31 L33 26 M30 31 L35 27" stroke="#A0A8B4" strokeWidth="1.2" />
+        <rect x="12" y="36" width="5" height="4" fill="#4A5A6A" stroke="#0A0D12" strokeWidth="0.4" />
+        <rect x="19" y="35" width="6" height="5" fill="#5A4A3A" stroke="#0A0D12" strokeWidth="0.4" />
+        <rect x="27" y="36" width="6" height="4" fill="#3A5A4A" stroke="#0A0D12" strokeWidth="0.4" />
+      </g>
+      <path d="M44 28 L84 28 L84 46 L44 46 Z" fill="#2A3A2A" opacity="0.9" stroke="#0A0D12" strokeWidth="0.6" />
+      <path d="M44 28 L50 40 L60 28 M60 28 L66 42 L76 28 M76 28 L84 44" fill="none" stroke="#1A241A" strokeWidth="1" opacity="0.8" />
+      <path d="M66 34 L82 32 L84 37 L68 40 Z" fill="#6A7A6A" opacity="0.7" />
+      <rect x="2" y="46" width="92" height="10" rx="1" fill="url(#msWood)" stroke="#0A0D12" strokeWidth="1" />
+      <rect x="2" y="46" width="92" height="2.4" fill="#FFFFFF" opacity="0.2" />
+      <path d="M2 56 L94 56 L94 60 L2 60 Z" fill="#3A2A18" stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="30" y="49" width="3" height="3" fill="#2A323E" /><rect x="36" y="49" width="4" height="3" fill="#4A5A6A" />
+      <rect x="64" y="48" width="6" height="4" fill="#6A7280" stroke="#0A0D12" strokeWidth="0.4" />
+      <rect x="32" y="8" width="32" height="10" rx="1" fill="#D8D2C0" stroke="#0A0D12" strokeWidth="0.8" />
+      <text x="48" y="15.2" fontSize="5" fill="#4A4636" textAnchor="middle" fontWeight="700" {...PT}>GOODS</text>
+      <path d="M10 62 Q30 58 48 62" fill="none" stroke="#FFFFFF" strokeWidth="1.2" opacity="0.1" />
+    </svg>
+  );
+}
+
+function PropShiftBoard() {
+  const p = 'sbd';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="60" rx="40" ry="3" />
+      <rect x="4" y="4" width="88" height="54" rx="2.5" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1.2" />
+      <rect x="4" y="4" width="88" height="3" rx="2" fill="#FFFFFF" opacity="0.35" />
+      <rect x="8" y="9" width="80" height="45" rx="1.5" fill="#150E04" stroke="#0A0D12" strokeWidth="1" />
+      <g style={{ animation:'lens-flicker 1.7s ease-in-out infinite' }}>
+        <rect x="8" y="9" width="80" height="6" fill="#B8761A" opacity="0.5" />
+        <text x="11" y="13.4" fontSize="3.4" fill="#FFD890" fontWeight="700" {...PT}>KDY SHIFT BOARD</text>
+        <text x="86" y="13.4" fontSize="3" fill="#FFB84A" textAnchor="end" {...PT}>T-2210</text>
+        <rect x="10" y="17" width="76" height="12" rx="1" fill="#5A1208" stroke="#FF6A40" strokeWidth="0.6" />
+        <text x="12" y="21.4" fontSize="2.8" fill="#FFB090" fontWeight="700" {...PT}>PLASMA WELDING DECK 4 · MANDATORY OVERTIME</text>
+        <text x="12" y="25" fontSize="2.6" fill="#FFC8B0" {...PT}>THIRD SHIFT EXTENDED TWELVE HOURS</text>
+        <text x="12" y="28.2" fontSize="2.4" fill="#FF9A70" {...PT}>COMPENSATION ADJUSTMENT PENDING REVIEW</text>
+        {[0, 1, 2, 3].map((r) => (
+          <g key={r}>
+            <rect x="10" y={32 + r * 5} width="16" height="3.4" fill="#7A5A1A" opacity="0.5" />
+            {[0, 1, 2, 3, 4].map((c) => <rect key={c} x={28 + c * 12} y={32 + r * 5} width="10" height="3.4" fill={(r + c) % 3 === 0 ? '#C8861A' : '#6A4A12'} opacity="0.7" />)}
+          </g>
+        ))}
+        <text x="86" y="53" fontSize="2.2" fill="#FFB84A" textAnchor="end" opacity="0.9" {...PT}>PENDING 11 WEEKS</text>
+      </g>
+      <rect x="8" y="9" width="80" height="2" fill="#FFD890" opacity="0.3" style={{ animation:'prop-scan 4s linear infinite' }} />
+      <path d="M10 10 L34 10 L10 32 Z" fill="#FFFFFF" opacity="0.07" />
+      <circle cx="10" cy="56" r="1" fill="#3AFF6A" /><circle cx="14" cy="56" r="1" fill="#FF4040" style={{ animation:'ship-blink 1.1s steps(2) infinite' }} />
+    </svg>
+  );
+}
+
+function PropUnionBulletin() {
+  const p = 'ub';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <rect x="2" y="2" width="60" height="60" rx="1" fill="#1A1E24" stroke="#0A0D12" strokeWidth="1" />
+      {[10, 20, 30, 40, 50].map((y) => <path key={y} d={`M2 ${y} L62 ${y}`} stroke="#0A0D12" strokeWidth="0.6" opacity="0.6" />)}
+      <path d="M2 2 L62 2 L62 6 L2 6 Z" fill={`url(#${p}Steel)`} opacity="0.7" />
+      <path d="M8 8 L40 7 L46 10 L42 14 L47 18 L43 23 L45 30 L40 34 L44 40 L38 44 L34 50 L28 46 L22 52 L16 48 L10 53 L7 46 L10 38 L6 30 L9 22 L6 15 Z" fill="#EDE3C2" stroke="#8A7A50" strokeWidth="0.6" />
+      <path d="M8 8 L40 7 L46 10 L42 14" fill="none" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.5" />
+      <path d="M44 14 L52 12 L50 18 M43 23 L50 24 M40 34 L48 36 L44 42" fill="#D8CCA8" stroke="#8A7A50" strokeWidth="0.5" />
+      <circle cx="26" cy="9" r="1.6" fill="#C0392B" stroke="#0A0D12" strokeWidth="0.4" /><circle cx="9" cy="10" r="1.4" fill="#2E7BD0" stroke="#0A0D12" strokeWidth="0.4" />
+      <g transform="rotate(-2 24 28)">
+        <text x="11" y="17" fontSize="3.2" fill="#2A2A3A" fontWeight="700" {...PT}>Deck 4 third shift.</text>
+        <text x="11" y="22" fontSize="2.9" fill="#2A2A3A" {...PT}>Seven injuries in</text>
+        <text x="11" y="26.6" fontSize="2.9" fill="#2A2A3A" {...PT}>four months. The review</text>
+        <text x="11" y="31.2" fontSize="2.9" fill="#2A2A3A" {...PT}>board has not met.</text>
+        <text x="11" y="36" fontSize="3" fill="#2A2A3A" fontWeight="700" {...PT}>We meet-</text>
+        <path d="M24 35 L36 38" stroke="#EDE3C2" strokeWidth="3" />
+      </g>
+      <g transform="translate(48 50)">
+        <circle cx="0" cy="0" r="6.2" fill="none" stroke="#D8541A" strokeWidth="2.6" strokeDasharray="2.2 1.2" />
+        <circle cx="0" cy="0" r="4" fill="#1A1E24" stroke="#D8541A" strokeWidth="1" />
+        <path d="M-2.4 2.4 L2.4 -2.4 M-2.4 -2.4 L2.4 2.4" stroke="#FFA060" strokeWidth="1.1" />
+      </g>
+      <path d="M2 44 L10 46 M2 56 L8 52" stroke="#EDE3C2" strokeWidth="0.8" opacity="0.7" />
+    </svg>
+  );
+}
+
+function PropSurveillanceNode() {
+  const p = 'sv';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="svCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4ACDFF" stopOpacity="0.28" /><stop offset="1" stopColor="#4ACDFF" stopOpacity="0" /></linearGradient>
+      </defs>
+      <PropShadow p={p} cx="32" cy="60" rx="20" ry="3" />
+      <path d="M32 30 L6 62 L58 62 Z" fill="url(#svCone)" style={{ animation:'ship-engine 3s ease-in-out infinite' }} />
+      <rect x="28" y="40" width="8" height="20" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <path d="M28 40 L28 60 M36 40 L36 60" stroke="#0A0D12" strokeWidth="0.6" />
+      <path d="M44 48 Q54 46 54 56 Q54 62 60 62" fill="none" stroke="#1A1A20" strokeWidth="2.4" />
+      <path d="M44 48 Q54 46 54 56 Q54 62 60 62" fill="none" stroke="#4A5260" strokeWidth="0.6" />
+      <rect x="12" y="14" width="40" height="28" rx="4" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1.2" />
+      <rect x="12" y="14" width="40" height="4" rx="3" fill="#FFFFFF" opacity="0.35" />
+      <path d="M14 38 L50 38" stroke="#0A0D12" strokeWidth="0.8" opacity="0.5" />
+      <circle cx="32" cy="28" r="10.5" fill="#0C1016" stroke="#0A0D12" strokeWidth="1.2" />
+      <circle cx="32" cy="28" r="8" fill="#14202C" stroke="#4A5A6A" strokeWidth="0.8" />
+      <circle cx="32" cy="28" r="5" fill="#06101A" stroke="#2A5A8A" strokeWidth="0.8" />
+      <circle cx="32" cy="28" r="2.4" fill={`url(#${p}Blue)`} />
+      <circle cx="29.6" cy="25.6" r="1.4" fill="#FFFFFF" opacity="0.7" />
+      <circle cx="35" cy="31" r="0.8" fill="#BFF4FF" opacity="0.7" />
+      <circle cx="46" cy="19" r="2.4" fill="#2E8BFF" style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} />
+      <circle cx="46" cy="19" r="5" fill={`url(#${p}Blue)`} opacity="0.5" style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} />
+      {[[16, 19], [48, 38], [16, 38]].map(([x, y], i) => (
+        <g key={i}>
+          <polygon points={`${x - 1.6},${y} ${x - 0.8},${y - 1.4} ${x + 0.8},${y - 1.4} ${x + 1.6},${y} ${x + 0.8},${y + 1.4} ${x - 0.8},${y + 1.4}`} fill="#C0C8D2" stroke="#0A0D12" strokeWidth="0.4" />
+          <path d={`M${x - 0.8} ${y} L${x + 0.8} ${y}`} stroke="#0A0D12" strokeWidth="0.4" />
+        </g>
+      ))}
+      <path d="M18 14 L28 14 L18 24 Z" fill="#FFFFFF" opacity="0.1" />
+      <text x="32" y="46.6" fontSize="2.2" fill="#8FA0B2" textAnchor="middle" {...PT}>RING-SEC · BARRACKS 2</text>
+    </svg>
+  );
+}
+
+function PropForgeBar() {
+  const p = 'fb';
+  const bottles = [['#6A2A12', 12], ['#8A3A14', 22], ['#E0A020', 32], ['#2A5A3A', 42], ['#7A1A2A', 54], ['#3A5A7A', 64], ['#B86A18', 74]];
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="fbWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#A06A38" /><stop offset="0.5" stopColor="#6A4222" /><stop offset="1" stopColor="#2A160A" /></linearGradient>
+        <radialGradient id="fbWarm" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFC860" stopOpacity="0.55" /><stop offset="1" stopColor="#FF8A20" stopOpacity="0" /></radialGradient>
+      </defs>
+      <PropShadow p={p} cx="64" cy="61" rx="58" ry="3.4" />
+      <rect x="4" y="4" width="120" height="30" rx="1" fill="#1A1008" stroke="#0A0D12" strokeWidth="1" />
+      <ellipse cx="50" cy="20" rx="46" ry="16" fill="url(#fbWarm)" style={{ animation:'ship-engine 4s ease-in-out infinite' }} />
+      <rect x="6" y="16" width="86" height="2.6" fill="url(#fbWood)" /><rect x="6" y="28" width="86" height="2.6" fill="url(#fbWood)" />
+      {bottles.map(([c, x], i) => (
+        <g key={i}>
+          <rect x={x - 2.4} y={7 + (i % 2) * 2} width="5" height={9 - (i % 2) * 2} rx="1" fill={c} stroke="#0A0D12" strokeWidth="0.4" />
+          <rect x={x - 1} y={4 + (i % 2) * 2} width="2" height="3" fill={c} stroke="#0A0D12" strokeWidth="0.3" />
+          <rect x={x - 1.6} y={9 + (i % 2) * 2} width="1" height="5" fill="#FFFFFF" opacity="0.35" />
+        </g>
+      ))}
+      {[16, 30, 46, 60, 76].map((x, i) => <rect key={x} x={x} y="22" width="3.6" height="6" rx="0.6" fill="#E8C070" opacity="0.55" stroke="#0A0D12" strokeWidth="0.3" />)}
+      <rect x="98" y="6" width="22" height="26" rx="1.5" fill="#6A7280" stroke="#0A0D12" strokeWidth="1" />
+      <rect x="98" y="6" width="22" height="3" fill="#FFFFFF" opacity="0.3" />
+      <rect x="101" y="11" width="16" height="12" fill="#1A2028" stroke="#0A0D12" strokeWidth="0.6" />
+      <circle cx="109" cy="17" r="1.8" fill="#FF3030" style={{ animation:'ship-blink 1.4s steps(2) infinite' }} />
+      <text x="109" y="21.6" fontSize="1.8" fill="#FF8080" textAnchor="middle" {...PT}>UNIT OFFLINE</text>
+      <rect x="104" y="24" width="12" height="7" fill="#E9E2C4" stroke="#6A5A20" strokeWidth="0.4" transform="rotate(3 110 27)" />
+      <text x="110" y="28.4" fontSize="1.7" fill="#7A1A1A" textAnchor="middle" fontWeight="700" {...PT}>WORK ORDER OPEN</text>
+      <text x="110" y="30.4" fontSize="1.6" fill="#2A1A0A" textAnchor="middle" {...PT}>2 MONTHS</text>
+      <rect x="2" y="36" width="124" height="8" rx="2" fill="url(#fbWood)" stroke="#0A0D12" strokeWidth="1.2" />
+      <path d="M4 37.4 L124 37.4" stroke="#FFD8A0" strokeWidth="1.2" opacity="0.5" />
+      <rect x="2" y="42" width="124" height="3" fill="#B8C0CC" stroke="#0A0D12" strokeWidth="0.6" />
+      <path d="M2 44 L126 44 L122 58 L6 58 Z" fill="url(#fbWood)" stroke="#0A0D12" strokeWidth="1.2" />
+      <path d="M8 48 L120 48" stroke="#1A0E06" strokeWidth="0.6" opacity="0.6" />
+      <text x="40" y="52" fontSize="4.4" fill="#2A1608" textAnchor="middle" fontWeight="700" transform="rotate(-0.6 40 52)" {...PT}>HERE SINCE YEAR ONE</text>
+      <text x="40" y="52" fontSize="4.4" fill="#D8A878" textAnchor="middle" opacity="0.5" fontWeight="700" transform="translate(-0.4 -0.5) rotate(-0.6 40 52)" {...PT}>HERE SINCE YEAR ONE</text>
+      <text x="94" y="55.4" fontSize="3.4" fill="#E8D0A8" textAnchor="middle" transform="rotate(-2 94 55)" {...PT}>AND COUNTING</text>
+      <path d="M72 53 L112 56" stroke="#E8D0A8" strokeWidth="0.4" opacity="0.5" />
+      {[[20, 36], [34, 36]].map(([x, y], i) => (
+        <g key={i}>
+          <path d={`M${x - 2} ${y} L${x - 1.4} ${y - 5} L${x + 1.4} ${y - 5} L${x + 2} ${y} Z`} fill="#BFE8FF" opacity="0.5" stroke="#0A0D12" strokeWidth="0.4" />
+          <path d={`M${x - 1.6} ${y - 1} L${x - 1.2} ${y - 3} L${x + 1.2} ${y - 3} L${x + 1.6} ${y - 1} Z`} fill="#D88A20" />
+          <path d={`M${x} ${y - 6} Q${x - 1} ${y - 8} ${x} ${y - 10}`} fill="none" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.35" style={{ animation:'steam-rise 3s ease-in-out infinite' }} />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function PropCzerkaTerminal() {
+  const p = 'cz';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="czRed" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#E0453F" /><stop offset="0.5" stopColor="#A81E1A" /><stop offset="1" stopColor="#5A0C0A" /></linearGradient>
+      </defs>
+      <PropShadow p={p} cx="32" cy="60" rx="22" ry="3.4" />
+      <rect x="6" y="4" width="52" height="54" rx="3.5" fill="url(#czRed)" stroke="#2A0806" strokeWidth="1.2" />
+      <rect x="6" y="4" width="52" height="3" rx="2" fill="#FFFFFF" opacity="0.4" />
+      <rect x="8" y="6" width="48" height="2" fill={`url(#${p}Brass)`} />
+      <rect x="8" y="54" width="48" height="2" fill={`url(#${p}Brass)`} />
+      <rect x="6" y="8" width="2" height="46" fill={`url(#${p}Brass)`} /><rect x="56" y="8" width="2" height="46" fill={`url(#${p}Brass)`} />
+      <circle cx="20" cy="17" r="7.5" fill="#2A0806" stroke={`url(#${p}Brass)`} strokeWidth="1.6" />
+      <path d="M24 12.6 A6 6 0 1 0 24 21.4" fill="none" stroke={`url(#${p}Brass)`} strokeWidth="2.2" strokeLinecap="round" />
+      <text x="40" y="16" fontSize="5" fill="#F4DA86" fontWeight="700" textAnchor="middle" {...PT}>CZERKA</text>
+      <text x="40" y="20.4" fontSize="2.4" fill="#F4DA86" textAnchor="middle" opacity="0.9" {...PT}>CORPORATION</text>
+      <rect x="11" y="26" width="42" height="18" rx="1.5" fill="#14080A" stroke="#F4DA86" strokeWidth="0.8" />
+      <text x="13" y="30" fontSize="2.8" fill="#F4DA86" fontWeight="700" {...PT}>INDUSTRIAL COMPONENTS</text>
+      <text x="13" y="33.6" fontSize="2.6" fill="#E8C870" {...PT}>SURVEY EQUIPMENT</text>
+      <text x="13" y="37.2" fontSize="2.6" fill="#E8C870" {...PT}>LABOR CONTRACTING</text>
+      <rect x="13" y="39.4" width="26" height="1.4" fill="#F4DA86" opacity="0.5" style={{ animation:'ship-engine 2.4s ease-in-out infinite' }} />
+      <rect x="9" y="46" width="46" height="7" fill="#F2EBD0" stroke="#6A5A20" strokeWidth="0.4" />
+      <text x="11" y="49" fontSize="1.9" fill="#3A2A1A" {...PT}>CZERKA RETAINS RIGHT OF FIRST PURCHASE</text>
+      <text x="11" y="51.4" fontSize="1.9" fill="#3A2A1A" {...PT}>FOR ALL MATERIALS MADE W/ CZERKA PARTS</text>
+      <ellipse cx="30" cy="50" rx="26" ry="4.6" fill="none" stroke="#E0201A" strokeWidth="0.9" transform="rotate(-1.4 30 50)" />
+      <path d="M8 56 L22 58" stroke="#E0201A" strokeWidth="0.7" /><text x="25" y="58.4" fontSize="2.2" fill="#FFB0A8" fontWeight="700" {...PT}>THIS IS HOW THEY OWN YOU</text>
+      <path d="M10 8 L30 8 L10 30 Z" fill="#FFFFFF" opacity="0.12" />
+    </svg>
+  );
+}
+
+function PropFuelRack() {
+  const p = 'fk';
+  const rows = [0, 1, 2];
+  const dmg = (r, c) => r === 2 && (c === 2 || c === 5 || c === 8);
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="60" rx="44" ry="3.4" />
+      <rect x="4" y="6" width="88" height="50" rx="1.5" fill="#0E1218" stroke="#0A0D12" strokeWidth="1" />
+      <rect x="4" y="6" width="88" height="3" fill={`url(#${p}Steel)`} />
+      <rect x="4" y="54" width="88" height="4" fill={`url(#${p}Haz)`} />
+      {rows.map((r) => (
+        <g key={r}>
+          <rect x="4" y={22 + r * 14} width="88" height="2.4" fill={`url(#${p}Steel)`} opacity="0.9" />
+          {Array.from({ length: 12 }, (_, c) => {
+            const x = 7 + c * 7.2, y = 10 + r * 14;
+            const bad = dmg(r, c % 9);
+            const col = ['#4A8A9A', '#5A9A6A', '#9A8A4A', '#4A7A9A'][c % 4];
+            return (
+              <g key={c}>
+                <rect x={x} y={y} width="5.6" height="12" rx="1.6" fill={col} stroke="#0A0D12" strokeWidth="0.5" />
+                <rect x={x} y={y} width="2" height="12" rx="1" fill="#FFFFFF" opacity="0.28" />
+                <rect x={x} y={y + 2} width="5.6" height="1.6" fill="#E0A818" opacity="0.8" />
+                <rect x={x + 1} y={y - 1} width="3.6" height="1.6" rx="0.5" fill="#3A4452" stroke="#0A0D12" strokeWidth="0.3" />
+                {bad && c < 9 && <path d={`M${x} ${y + 1} L${x + 1.6} ${y + 3.4}`} stroke="#0A0D12" strokeWidth="0.7" />}
+              </g>
+            );
+          })}
+        </g>
+      ))}
+      <rect x="23" y="38.4" width="5.6" height="12" rx="1.6" fill="none" />
+      <path d="M50 44 L54 42 L55 47 L51 48 Z" fill="#E8731A" stroke="#0A0D12" strokeWidth="0.4" />
+      <path d="M50.6 43.4 L53.6 42.6 M51.2 45.4 L54.4 44.8" stroke="#FFC890" strokeWidth="0.4" />
+      <path d="M10 44 L14 42.6" stroke="#0A0D12" strokeWidth="1" />
+      {[8, 88].map((x, i) => (
+        <g key={x}>
+          <rect x={x - 1.6} y="26" width="3.2" height="28" fill="#6A7280" stroke="#0A0D12" strokeWidth="0.5" />
+          <circle cx={x} cy="24" r="3" fill="#FFB030" stroke="#0A0D12" strokeWidth="0.5" style={{ animation:`ship-blink ${2.4 + i * 0.7}s ease-in-out ${i * 0.9}s infinite` }} />
+          <circle cx={x} cy="24" r="7" fill={`url(#${p}Amber)`} opacity="0.5" style={{ animation:`ship-blink ${2.4 + i * 0.7}s ease-in-out ${i * 0.9}s infinite` }} />
+        </g>
+      ))}
+      <text x="48" y="8.4" fontSize="2.6" fill="#0A0D12" textAnchor="middle" fontWeight="700" {...PT}>DEUTERIUM · 36 CANISTERS · INSPECTION OVERDUE 8 DAYS</text>
+    </svg>
+  );
+}
+
+function PropDriveCradle() {
+  const p = 'dc';
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="88" rx="40" ry="5" />
+      <path d="M12 86 L12 74 L84 74 L84 86 Z" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="12" y="82" width="72" height="4" fill={`url(#${p}Haz)`} />
+      <path d="M18 74 L24 46 M78 74 L72 46" stroke="#0A0D12" strokeWidth="7" strokeLinecap="round" />
+      <path d="M18 74 L24 46 M78 74 L72 46" stroke="#8A97A6" strokeWidth="4.4" strokeLinecap="round" />
+      <path d="M17 73 L22.6 47" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.5" />
+      <ellipse cx="48" cy="48" rx="36" ry="30" fill="none" stroke="#0A0D12" strokeWidth="8" />
+      <ellipse cx="48" cy="48" rx="36" ry="30" fill="none" stroke={`url(#${p}Steel)`} strokeWidth="6" />
+      <path d="M18 40 Q30 22 54 19" fill="none" stroke="#FFFFFF" strokeWidth="1.2" opacity="0.55" />
+      {Array.from({ length: 12 }, (_, i) => {
+        const a = (i / 12) * Math.PI * 2;
+        return <circle key={i} cx={48 + Math.cos(a) * 36} cy={48 + Math.sin(a) * 30} r="1.1" fill={i % 4 === 0 ? '#FFB030' : '#4ACDFF'} style={{ animation:`ship-blink ${2 + (i % 4) * 0.4}s ease-in-out ${i * 0.15}s infinite` }} />;
+      })}
+      <path d="M26 40 Q26 30 48 28 Q70 30 70 40 L70 58 Q70 66 48 68 Q26 66 26 58 Z" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="1.2" />
+      <path d="M30 38 Q34 32 48 31" fill="none" stroke="#FFD9A8" strokeWidth="1.2" opacity="0.7" />
+      {[36, 44, 52, 60].map((y) => <path key={y} d={`M27 ${y} L69 ${y}`} stroke="#2A1206" strokeWidth="0.7" opacity="0.7" />)}
+      <text x="48" y="45.6" fontSize="5" fill="#2A1206" textAnchor="middle" fontWeight="700" {...PT}>KY-88</text>
+      <ellipse cx="48" cy="68" rx="14" ry="5" fill="#0A0D12" stroke="#8A97A6" strokeWidth="1" />
+      <ellipse cx="48" cy="69" rx="9" ry="3" fill={`url(#${p}Blue)`} style={{ animation:'ship-engine 1.8s ease-in-out infinite' }} />
+      <ellipse cx="48" cy="69" rx="3.4" ry="1.2" fill="#FFFFFF" />
+      <rect x="2" y="30" width="22" height="22" rx="1.5" fill="#05101A" stroke="#4ACDFF" strokeWidth="0.8" />
+      <text x="13" y="35" fontSize="2.3" fill="#7FDFFF" textAnchor="middle" {...PT}>RESONANCE DRIFT</text>
+      <path d="M4 44 Q7 38 10 44 T16 44 T22 44" fill="none" stroke="#4ACDFF" strokeWidth="0.8" />
+      <path d="M4 46 Q8 38.6 12 46 T20 46" fill="none" stroke="#FFB030" strokeWidth="0.8" style={{ animation:'ship-engine 2.4s ease-in-out infinite' }} />
+      <text x="13" y="51" fontSize="3.4" fill="#FFB030" textAnchor="middle" fontWeight="700" {...PT}>+0.3%</text>
+      <g transform="rotate(4 80 28)">
+        <rect x="68" y="14" width="26" height="26" fill="#F2EBC8" stroke="#6A5A20" strokeWidth="0.5" />
+        <circle cx="81" cy="15" r="1.2" fill="#C0392B" />
+        <text x="70" y="21" fontSize="2.2" fill="#1A3A8A" fontWeight="700" {...PT}>DRIFT ACCEPTABLE</text>
+        <text x="70" y="24" fontSize="2.2" fill="#1A3A8A" {...PT}>-J.OSSEK</text>
+        <path d="M69 26 L93 26" stroke="#6A5A20" strokeWidth="0.4" />
+        <text x="70" y="30" fontSize="2.1" fill="#8A1A1A" fontWeight="700" {...PT}>DRIFT IS NOT</text>
+        <text x="70" y="33" fontSize="2.1" fill="#8A1A1A" fontWeight="700" {...PT}>ACCEPTABLE.</text>
+        <text x="70" y="36.4" fontSize="1.9" fill="#8A1A1A" {...PT}>RECALIBRATE BEFORE</text>
+        <text x="70" y="38.6" fontSize="1.9" fill="#8A1A1A" {...PT}>INSTALL</text>
+      </g>
+    </svg>
+  );
+}
+
+function PropCrawlerPort() {
+  const p = 'cr';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="32" cy="60" rx="26" ry="3.4" />
+      <rect x="2" y="12" width="60" height="44" rx="2" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      <path d="M2 14 L62 14" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.2" />
+      <rect x="6" y="26" width="52" height="26" rx="2" fill="#0A0D12" stroke="#0A0D12" strokeWidth="1" />
+      <rect x="6" y="26" width="52" height="5" fill={`url(#${p}Haz)`} />
+      <rect x="6" y="47" width="52" height="5" fill={`url(#${p}Haz)`} />
+      <rect x="6" y="26" width="5" height="26" fill={`url(#${p}Haz)`} /><rect x="53" y="26" width="5" height="26" fill={`url(#${p}Haz)`} />
+      <rect x="11" y="31" width="42" height="16" rx="1" fill="#02040A" />
+      <path d="M11 38 L53 38" stroke="#1A222C" strokeWidth="0.5" opacity="0.8" />
+      <rect x="12" y="44" width="40" height="2" fill="#E8731A" opacity="0.18" />
+      {[0, 1, 2, 3].map((i) => (
+        <g key={i} style={{ transform:`translateX(${i * 0}px)` }}>
+          <ellipse cx={22 + i * 8.6} cy="48" rx="5.6" ry="4.6" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="0.9" />
+          <path d={`M${18 + i * 8.6} 45.6 Q${22 + i * 8.6} 43.6 ${26 + i * 8.6} 45.6`} fill="none" stroke="#FFD9A8" strokeWidth="0.8" opacity="0.7" />
+          <path d={`M${20 + i * 8.6} 44.6 L${20 + i * 8.6} 51.4 M${24 + i * 8.6} 44.6 L${24 + i * 8.6} 51.4`} stroke="#2A1206" strokeWidth="0.5" opacity="0.7" />
+        </g>
+      ))}
+      <path d="M6 54 L58 54" stroke="#0A0D12" strokeWidth="0.6" />
+      <ellipse cx="14" cy="45" rx="4.4" ry="4" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="0.9" />
+      <circle cx="12.6" cy="44" r="1.2" fill="#0A0A0E" stroke="#C98A4B" strokeWidth="0.4" />
+      <circle cx="12.6" cy="44" r="0.6" fill="#7CFFB0" style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} />
+      <path d="M16 48 L9 50 M16 42 L10 40" stroke="#8A5228" strokeWidth="0.8" />
+      <path d="M52 42 Q58 40 60 34 Q60 28 56 24" fill="none" stroke="#1A1A20" strokeWidth="2" />
+      <circle cx="8" cy="28" r="1" fill="#E0A818" /><circle cx="56" cy="28" r="1" fill="#E0A818" />
+      <rect x="14" y="14" width="36" height="9" rx="0.8" fill="#E9E2C4" stroke="#6A5A20" strokeWidth="0.4" />
+      <text x="32" y="18.2" fontSize="2.3" fill="#2A1A0A" textAnchor="middle" fontWeight="700" {...PT}>M-33 CRAWLER · LOG</text>
+      <text x="32" y="21" fontSize="2" fill="#8A1A1A" textAnchor="middle" {...PT}>7 MINOR · 1 MAJOR CONDUIT FAULT</text>
+    </svg>
+  );
+}
+
+function PropRivetHopper() {
+  const p = 'rh';
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="90" rx="42" ry="4.4" />
+      <rect x="22" y="0" width="12" height="18" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="20" y="14" width="16" height="5" rx="1" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <path d="M28 0 L28 14" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.5" />
+      <path d="M8 22 L48 22 L40 56 L16 56 Z" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1.2" />
+      <path d="M10 24 L46 24" stroke="#FFFFFF" strokeWidth="1" opacity="0.45" />
+      <path d="M12 38 L44 38 L40 56 L16 56 Z" fill="#B8C4D2" opacity="0.6" />
+      {Array.from({ length: 14 }, (_, i) => <circle key={i} cx={16 + (i % 7) * 4} cy={44 + Math.floor(i / 7) * 5} r="1.2" fill="#8892A0" stroke="#0A0D12" strokeWidth="0.3" />)}
+      <path d="M14 33 L42 33" stroke="#E0A818" strokeWidth="0.8" strokeDasharray="2 2" />
+      <text x="28" y="31" fontSize="2.4" fill="#E0A818" textAnchor="middle" {...PT}>HALF</text>
+      <rect x="22" y="56" width="12" height="8" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <path d="M22 64 L34 64 L32 70 L24 70 Z" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="12" y="72" width="32" height="14" rx="1.5" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="12" y="72" width="32" height="2.6" fill="#FFFFFF" opacity="0.2" />
+      {Array.from({ length: 8 }, (_, i) => <circle key={i} cx={17 + i * 3.6} cy={80 + (i % 2) * 2} r="1.1" fill="#8892A0" />)}
+      <circle cx="28" cy="70.6" r="0.9" fill="#8892A0" style={{ animation:'ship-blink 1.4s ease-in-out infinite' }} />
+      <rect x="54" y="46" width="38" height="36" rx="3.5" fill={`url(#${p}Teal)`} stroke="#0A1618" strokeWidth="1.2" />
+      <path d="M56 48 L90 48" stroke="#FFFFFF" strokeWidth="1" opacity="0.4" />
+      <path d="M58 56 L88 59 M56 66 L90 70 M60 76 L86 78" stroke="#1C3338" strokeWidth="0.7" opacity="0.7" />
+      <path d="M64 50 L68 58 M80 70 L84 76" stroke="#C8E0E2" strokeWidth="0.5" opacity="0.6" />
+      <rect x="60" y="34" width="26" height="14" rx="2.5" fill={`url(#${p}Teal)`} stroke="#0A1618" strokeWidth="1.2" />
+      <rect x="62" y="38" width="22" height="4.4" rx="1" fill="#0A1214" /><rect x="64" y="39.2" width="8" height="2" fill="#FFB030" opacity="0.45" />
+      <path d="M56 56 L52 66 L58 76 M92 56 L96 66 L92 76" fill="none" stroke="#2A4A50" strokeWidth="3.6" strokeLinecap="round" />
+      {[[58, 86], [88, 86], [56, 80], [92, 80]].map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="4.4" ry="2.4" fill="#12262A" stroke="#0A1214" strokeWidth="0.6" />)}
+      <rect x="2" y="60" width="26" height="9" fill="#E9E2C4" stroke="#6A5A20" strokeWidth="0.4" transform="rotate(-3 15 64)" />
+      <text x="4" y="64" fontSize="1.9" fill="#2A1A0A" fontWeight="700" transform="rotate(-3 15 64)" {...PT}>RIVET SPEC KDY-884</text>
+      <text x="4" y="66.4" fontSize="1.8" fill="#2A1A0A" transform="rotate(-3 15 64)" {...PT}>40000 · HULL 7F · OSSEK</text>
+    </svg>
+  );
+}
+
+function PropRepublicTerminal() {
+  const p = 'rt';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="rtBeige" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#C8C4B4" /><stop offset="0.5" stopColor="#8A8A82" /><stop offset="1" stopColor="#4A4A48" /></linearGradient>
+      </defs>
+      <PropShadow p={p} cx="32" cy="60" rx="24" ry="3.4" />
+      <rect x="8" y="42" width="48" height="16" rx="2" fill="url(#rtBeige)" stroke="#0A0D12" strokeWidth="1" />
+      <rect x="8" y="42" width="48" height="2.4" fill="#FFFFFF" opacity="0.4" />
+      {[0, 1, 2].map((r) => Array.from({ length: 10 }, (_, c) => <rect key={`${r}${c}`} x={11 + c * 4.4} y={46 + r * 3.6} width="3.4" height="2.6" rx="0.5" fill="#2A2E34" stroke="#0A0D12" strokeWidth="0.3" />))}
+      <rect x="6" y="4" width="52" height="40" rx="4" fill="url(#rtBeige)" stroke="#0A0D12" strokeWidth="1.2" />
+      <rect x="6" y="4" width="52" height="3" rx="2" fill="#FFFFFF" opacity="0.4" />
+      <rect x="6" y="38" width="52" height="3" fill="#B52A2A" />
+      <rect x="10" y="8" width="44" height="28" rx="5" fill="#04100E" stroke="#0A0D12" strokeWidth="1.2" />
+      <rect x="11.5" y="9.5" width="41" height="25" rx="4" fill="#06241C" />
+      <path d="M16 26 L24 18 L34 16 L46 20 L48 26 L40 30 L26 30 Z" fill="none" stroke="#5CFFB0" strokeWidth="0.9" />
+      <path d="M24 18 L26 30 M34 16 L34 30 M40 17 L40 30 M46 20 L40 30" stroke="#3AD890" strokeWidth="0.5" opacity="0.7" />
+      <path d="M18 31 L48 31" stroke="#5CFFB0" strokeWidth="0.5" opacity="0.6" />
+      <text x="14" y="14" fontSize="2.6" fill="#7CFFC0" fontWeight="700" {...PT}>VALOR CLASS · TOLERANCES</text>
+      <text x="14" y="33.4" fontSize="2.2" fill="#3AD890" {...PT}>HULL STRUCT · REV 3902</text>
+      <rect x="12" y="9.5" width="40" height="1.8" fill="#7CFFC0" opacity="0.3" style={{ animation:'prop-scan 3.4s linear infinite' }} />
+      <rect x="11.5" y="9.5" width="41" height="25" rx="4" fill={`url(#${p}Glass)`} />
+      {[[12, 6], [52, 6], [12, 40], [52, 40]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="0.9" fill="#4A4A48" />)}
+      <rect x="44" y="39" width="10" height="2" fill="#D8D2B0" opacity="0.8" /><path d="M46 39.4 L52 40.4" stroke="#8A8A82" strokeWidth="0.4" />
+      <g transform="rotate(-6 14 50)"><rect x="3" y="46" width="14" height="12" fill="#F8E86A" stroke="#8A7A20" strokeWidth="0.4" />
+        <text x="4.6" y="50" fontSize="1.9" fill="#2A2A10" fontWeight="700" {...PT}>IF DOWN AGAIN</text>
+        <text x="4.6" y="52.6" fontSize="1.8" fill="#2A2A10" {...PT}>CONTACT VAEL</text>
+        <text x="4.6" y="55" fontSize="1.8" fill="#2A2A10" {...PT}>SECTION FOUR.</text>
+        <text x="4.6" y="57.2" fontSize="1.8" fill="#8A1A1A" fontWeight="700" {...PT}>NOT ENGINEERING</text></g>
+      <g transform="rotate(5 56 52)"><rect x="49" y="47" width="11" height="9" fill="#FFB0C8" stroke="#8A3A50" strokeWidth="0.4" />
+        <text x="50.4" y="51.6" fontSize="2.1" fill="#3A1020" fontWeight="700" {...PT}>WHO IS VAEL</text>
+        <text x="50.4" y="55" fontSize="2.1" fill="#1A3A8A" fontWeight="700" {...PT}>EXACTLY</text></g>
+      <path d="M44 36 L50 34" stroke="#8892A0" strokeWidth="2" opacity="0.5" />
+    </svg>
+  );
+}
+
+function PropShipyardViewport() {
+  const p = 'sy';
+  const wedge = (x, y, s, key, glow) => (
+    <g key={key}>
+      <path d={`M${x} ${y} L${x + 22 * s} ${y + 4 * s} L${x} ${y + 8 * s} L${x + 3 * s} ${y + 4 * s} Z`} fill="#8A96A6" stroke="#2A323E" strokeWidth="0.4" />
+      <path d={`M${x} ${y} L${x + 22 * s} ${y + 4 * s} L${x + 3 * s} ${y + 4 * s} Z`} fill="#C8D2DE" opacity="0.6" />
+      <circle cx={x + 1} cy={y + 4 * s} r={1.4 * s} fill={glow} style={{ animation:'ship-engine 2.6s ease-in-out infinite' }} />
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="sySky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#02040A" /><stop offset="1" stopColor="#0C1A34" /></linearGradient>
+        <clipPath id="syClip"><rect x="8" y="8" width="80" height="46" rx="2" /></clipPath>
+      </defs>
+      <rect x="2" y="2" width="92" height="60" rx="3" fill={`url(#${p}Brass)`} stroke="#2A1A06" strokeWidth="1.2" />
+      <rect x="5" y="5" width="86" height="54" rx="2" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="8" y="8" width="80" height="46" rx="2" fill="url(#sySky)" />
+      <g clipPath="url(#syClip)">
+        {[[12, 12], [26, 18], [44, 11], [62, 15], [78, 10], [84, 24], [18, 30]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="0.6" fill="#FFFFFF" opacity="0.8" style={{ animation:`twinkle ${2 + i * 0.3}s ease-in-out infinite` }} />)}
+        <path d="M0 50 Q48 38 96 50 L96 60 L0 60 Z" fill="#14233A" />
+        <path d="M0 50 Q48 38 96 50" fill="none" stroke="#7FA8D0" strokeWidth="1" opacity="0.7" />
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => wedge(14 + (i % 3) * 22 - (Math.floor(i / 3) * 3), 14 + Math.floor(i / 3) * 12 + (i % 3) * 1.4, 1 - Math.floor(i / 3) * 0.12, i, '#8FD8FF'))}
+        <path d="M10 46 L86 46" stroke="#4A6A90" strokeWidth="0.5" opacity="0.7" />
+        {[16, 30, 44, 58, 72].map((x) => <path key={x} d={`M${x} 46 L${x + 3} 52`} stroke="#4A6A90" strokeWidth="0.6" opacity="0.7" />)}
+        <path d="M12 12 L36 8 L20 40 Z" fill="#FFFFFF" opacity="0.1" />
+      </g>
+      <rect x="8" y="8" width="80" height="46" rx="2" fill="none" stroke="#0A0D12" strokeWidth="1.4" />
+      <rect x="8" y="8" width="80" height="46" rx="2" fill={`url(#${p}Glass)`} opacity="0.4" />
+      {[[4, 4], [92, 4], [4, 60], [92, 60]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.2" fill="#F4DA86" />)}
+      <rect x="30" y="55" width="36" height="5" rx="0.6" fill="#1A1206" stroke="#F4DA86" strokeWidth="0.4" />
+      <text x="48" y="58.6" fontSize="2.6" fill="#F4DA86" textAnchor="middle" {...PT}>KUAT ORBITAL SHIPYARD · FLEET FORMATION</text>
+    </svg>
+  );
+}
+
+function PropExecutiveSafe() {
+  const p = 'es';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="esSpace" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#04060E" /><stop offset="1" stopColor="#14284A" /></linearGradient>
+      </defs>
+      <PropShadow p={p} cx="32" cy="60" rx="24" ry="3" />
+      <rect x="14" y="10" width="40" height="42" rx="2" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1.2" />
+      <rect x="18" y="14" width="32" height="34" rx="1" fill="#14181E" stroke="#0A0D12" strokeWidth="1" />
+      <circle cx="34" cy="26" r="7" fill="#0A0E14" stroke="#8892A0" strokeWidth="1.4" />
+      <path d="M34 20 L34 32 M28 26 L40 26" stroke="#8892A0" strokeWidth="0.8" />
+      <rect x="22" y="36" width="10" height="9" rx="1" fill="#04161C" stroke="#2A8A9A" strokeWidth="0.8" />
+      <path d="M24 42 L24 39 M26 42 L26 38 M28 42 L28 39 M30 42 L30 40" stroke="#4ACDFF" strokeWidth="0.8" strokeLinecap="round" />
+      <circle cx="42" cy="40" r="4" fill="#04161C" stroke="#2A8A9A" strokeWidth="0.8" />
+      <circle cx="42" cy="40" r="1.6" fill="#4ACDFF" style={{ animation:'ship-engine 1.8s ease-in-out infinite' }} />
+      <circle cx="30" cy="20" r="1" fill="#FF4040" style={{ animation:'ship-blink 1.4s steps(2) infinite' }} />
+      <path d="M4 6 L50 6 L54 10 L54 56 L4 56 Z" fill="none" />
+      <g transform="skewY(-6) translate(0 6)">
+        <rect x="2" y="2" width="22" height="44" rx="1" fill={`url(#${p}Brass)`} stroke="#2A1A06" strokeWidth="1" />
+        <rect x="5" y="5" width="16" height="38" fill="url(#esSpace)" stroke="#2A1A06" strokeWidth="0.6" />
+        <path d="M3 30 Q13 14 23 30" fill="none" stroke="#C8D4E6" strokeWidth="2.4" />
+        <path d="M3 30 Q13 14 23 30" fill="none" stroke="#6A7A92" strokeWidth="0.8" opacity="0.8" />
+        <path d="M8 24 L10 26 M14 20 L15 23 M18 24 L20 25" stroke="#FF8A40" strokeWidth="0.9" />
+        <circle cx="9" cy="38" r="0.5" fill="#FFFFFF" /><circle cx="17" cy="12" r="0.5" fill="#FFFFFF" /><circle cx="12" cy="9" r="0.4" fill="#FFFFFF" />
+        <path d="M4 5 L14 5 L4 20 Z" fill="#FFFFFF" opacity="0.18" />
+      </g>
+      <rect x="14" y="52" width="40" height="3" fill={`url(#${p}Dark)`} />
+    </svg>
+  );
+}
+
+function PropModelCase() {
+  const p = 'mc';
+  const ships = [
+    <path key="0" d="M0 0 L14 -3 L16 0 L14 3 Z M10 -3 L12 -6 M10 3 L12 6" fill="#E8C458" stroke="#6A4A12" strokeWidth="0.4" />,
+    <path key="1" d="M0 0 L10 -4 L16 -2 L16 2 L10 4 Z" fill="#E8C458" stroke="#6A4A12" strokeWidth="0.4" />,
+    <path key="2" d="M0 -2 L12 -5 L16 0 L12 5 L0 2 Z" fill="#E8C458" stroke="#6A4A12" strokeWidth="0.4" />,
+    <path key="3" d="M0 0 L8 -6 L16 -3 L14 0 L16 3 L8 6 Z" fill="#E8C458" stroke="#6A4A12" strokeWidth="0.4" />,
+    <path key="4" d="M0 0 L16 -2 L16 2 Z M5 -1 L9 -7 L11 -1 M5 1 L9 7 L11 1" fill="#E8C458" stroke="#6A4A12" strokeWidth="0.4" />,
+    <path key="5" d="M0 0 L6 -4 L16 -4 L12 0 L16 4 L6 4 Z" fill="#E8C458" stroke="#6A4A12" strokeWidth="0.4" />,
+    <path key="6" d="M0 0 L14 -5 L16 0 L14 5 Z M6 -2 L12 -9 M6 2 L12 9" fill="#E8C458" stroke="#6A4A12" strokeWidth="0.4" />,
+    <path key="7" d="M0 0 L16 -6 L12 0 L16 6 Z M4 0 L14 0" fill="#E8C458" stroke="#6A4A12" strokeWidth="0.4" />,
+    <path key="8" d="M0 0 L5 -8 L9 -3 L16 -6 L13 0 L16 6 L9 3 L5 8 Z" fill="#9A78E8" stroke="#2A1A5A" strokeWidth="0.5" />,
+  ];
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="64" cy="60" rx="58" ry="3.4" />
+      <rect x="4" y="38" width="120" height="20" rx="1.5" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="1" />
+      <rect x="4" y="38" width="120" height="3" fill="#FFFFFF" opacity="0.2" />
+      <path d="M6 40 L122 40 L122 56 L6 56" fill="none" stroke="#F4DA86" strokeWidth="0.6" opacity="0.6" />
+      <rect x="4" y="8" width="120" height="30" fill="#080C12" stroke="#0A0D12" strokeWidth="1" />
+      <rect x="4" y="30" width="120" height="8" fill="#14181E" />
+      {ships.map((s, i) => (
+        <g key={i} transform={`translate(${8 + i * 12.8} ${22 + (i === 8 ? -2 : 0)}) scale(0.78)`}>
+          {s}
+        </g>
+      ))}
+      <ellipse cx="116" cy="20" rx="6" ry="9" fill={`url(#${p}Amber)`} opacity="0.2" style={{ animation:'ship-engine 3s ease-in-out infinite' }} />
+      {ships.map((s, i) => (
+        <g key={'p' + i}>
+          <rect x={5 + i * 13} y="46" width="12" height="8" rx="0.6" fill="#1A1206" stroke="#F4DA86" strokeWidth="0.4" />
+          <text x={11 + i * 13} y="50" fontSize="2.2" fill="#F4DA86" textAnchor="middle" fontWeight="700" {...PT}>{i === 8 ? '???' : (i === 0 ? 'YEAR 1' : `MS-${String(i).padStart(2, '0')}`)}</text>
+          <text x={11 + i * 13} y="52.8" fontSize="1.6" fill="#C8A850" textAnchor="middle" {...PT}>{i === 0 ? 'CORVETTE' : i === 8 ? 'UNLABELED' : 'MILESTONE'}</text>
+        </g>
+      ))}
+      <rect x="4" y="8" width="120" height="30" fill={`url(#${p}Glass)`} />
+      <path d="M6 9 L40 9 L6 34 Z" fill="#FFFFFF" opacity="0.14" />
+      <path d="M70 9 L90 9 L64 38 L52 38 Z" fill="#FFFFFF" opacity="0.07" />
+      <rect x="4" y="6" width="120" height="3" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="0.6" />
+      <rect x="58" y="36" width="10" height="5" rx="1" fill={`url(#${p}Brass)`} stroke="#2A1A06" strokeWidth="0.6" />
+      <circle cx="63" cy="38.6" r="1" fill="#2A1A06" />
+      <circle cx="68" cy="37" r="1" fill="#FFFFFF" opacity="0.9" style={{ animation:'ship-blink 2s ease-in-out infinite' }} />
+    </svg>
+  );
+}
+
+function PropBronzeMural() {
+  const p = 'bm';
+  const crest = (a, i) => <circle key={i} cx={78 + Math.cos(a) * 9} cy={52 + Math.sin(a) * 6} r="1.4" fill="#E8B070" stroke="#2A1608" strokeWidth="0.3" />;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="48" cy="61" rx="44" ry="3" />
+      <rect x="2" y="2" width="92" height="58" rx="1.5" fill={`url(#${p}Bronze)`} stroke="#1A0E06" strokeWidth="1.4" />
+      <rect x="5" y="5" width="86" height="52" rx="1" fill="#4A2A14" stroke="#1A0E06" strokeWidth="1" />
+      <path d="M6 6 L90 6" stroke="#F2C890" strokeWidth="1" opacity="0.6" />
+      <path d="M5 40 Q48 26 91 40 L91 57 L5 57 Z" fill="#3A200E" />
+      <path d="M5 40 Q48 26 91 40" fill="none" stroke="#E8B070" strokeWidth="1.4" opacity="0.8" />
+      <path d="M5 38 Q48 24 91 38" fill="none" stroke="#C98A4B" strokeWidth="0.6" opacity="0.6" />
+      <path d="M22 36 Q36 12 62 14 Q74 18 76 34" fill="none" stroke="#D8A068" strokeWidth="1.6" />
+      {[28, 34, 40, 46, 52, 58, 64, 70].map((x, i) => <path key={x} d={`M${x} ${32 - Math.abs(i - 3.4) * -1 - (6 - Math.abs(i - 3.5) * 1.6)} L${x - 1} 36`} stroke="#B8844C" strokeWidth="1.1" />)}
+      <path d="M22 28 L72 22 M26 33 L76 28" stroke="#B8844C" strokeWidth="0.8" opacity="0.8" />
+      {[[16, 18], [30, 15], [44, 17]].map(([x, y], i) => (
+        <g key={i}>
+          <circle cx={x} cy={y} r="3.2" fill="#D8A068" stroke="#2A1608" strokeWidth="0.5" />
+          <path d={`M${x - 4} ${y + 22} L${x - 3} ${y + 5} Q${x} ${y + 3} ${x + 3} ${y + 5} L${x + 4} ${y + 22} Z`} fill="#C98A4B" stroke="#2A1608" strokeWidth="0.6" />
+          <path d={`M${x + 4} ${y + 8} L${x + 9} ${y + 3}`} stroke="#C98A4B" strokeWidth="1.8" strokeLinecap="round" />
+          <path d={`M${x - 1.6} ${y - 2} Q${x} ${y - 3} ${x + 1.6} ${y - 2}`} fill="none" stroke="#FFE0B0" strokeWidth="0.6" opacity="0.7" />
+          <path d={`M${x - 3} ${y + 7} L${x - 2} ${y + 20}`} stroke="#F2C890" strokeWidth="0.8" opacity="0.6" />
+        </g>
+      ))}
+      <path d="M52 9 L84 9" stroke="#2A1608" strokeWidth="0.4" opacity="0.5" />
+      <text x="68" y="12" fontSize="2.4" fill="#E8B070" textAnchor="middle" {...PT}>THE FOUNDING OF KUAT DRIVE YARDS</text>
+      <rect x="6" y="46" width="62" height="9" fill="#2A160A" stroke="#1A0E06" strokeWidth="0.6" />
+      <text x="37" y="50.6" fontSize="2.4" fill="#E8B070" textAnchor="middle" {...PT}>VAS-KUAT · ORLEAN · BAYEN · TROIKAN</text>
+      <text x="37" y="53.8" fontSize="2.2" fill="#C98A4B" textAnchor="middle" {...PT}>THE TEN FAMILIES OF KUAT</text>
+      <circle cx="78" cy="52" r="10" fill="#2A160A" stroke="#E8B070" strokeWidth="0.8" />
+      <circle cx="78" cy="52" r="11.4" fill="none" stroke="#1A0E06" strokeWidth="0.6" />
+      {Array.from({ length: 10 }, (_, i) => crest((i / 10) * Math.PI * 2, i))}
+      <circle cx="78" cy="52" r="3.6" fill="#F2C890" stroke="#2A1608" strokeWidth="0.6" />
+      <path d="M75.6 53.4 L78 49.4 L80.4 53.4 L78 52.2 Z" fill="#7A4A22" />
+      <path d="M8 8 L40 8 L8 34 Z" fill="#FFFFFF" opacity="0.12" />
+    </svg>
+  );
+}
+
+function PropPanoramicViewport() {
+  const p = 'pv';
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <defs>
+        <linearGradient id="pvSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#02040A" /><stop offset="0.7" stopColor="#0A142A" /><stop offset="1" stopColor="#1A2A4A" /></linearGradient>
+        <clipPath id="pvClip"><path d="M10 58 L10 22 Q64 -2 118 22 L118 58 Z" /></clipPath>
+      </defs>
+      <path d="M2 62 L2 22 Q64 -12 126 22 L126 62 Z" fill={`url(#${p}Brass)`} stroke="#2A1A06" strokeWidth="1.4" />
+      <path d="M6 60 L6 23 Q64 -8 122 23 L122 60 Z" fill={`url(#${p}Steel)`} stroke="#0A0D12" strokeWidth="1" />
+      <path d="M10 58 L10 22 Q64 -2 118 22 L118 58 Z" fill="url(#pvSky)" />
+      <g clipPath="url(#pvClip)">
+        {Array.from({ length: 26 }, (_, i) => <circle key={i} cx={14 + (i * 37) % 100} cy={8 + (i * 17) % 28} r="0.5" fill="#FFFFFF" opacity="0.8" style={{ animation:`twinkle ${2 + (i % 5) * 0.5}s ease-in-out ${i * 0.1}s infinite` }} />)}
+        <path d="M0 60 Q64 32 128 60 Z" fill="#12203A" />
+        <path d="M0 60 Q64 32 128 60" fill="none" stroke="#8FB0D8" strokeWidth="1.2" opacity="0.8" />
+        <path d="M0 54 Q64 28 128 54" fill="none" stroke="#5A7AA8" strokeWidth="0.6" opacity="0.6" />
+        <path d="M14 48 Q64 10 114 48" fill="none" stroke="#7A98C0" strokeWidth="1.6" opacity="0.8" />
+        <path d="M22 50 Q64 16 106 50" fill="none" stroke="#5A7AA8" strokeWidth="0.8" opacity="0.7" />
+        {[24, 36, 48, 64, 80, 92, 104].map((x) => <path key={x} d={`M${x} ${48 - Math.sin(((x - 14) / 100) * Math.PI) * 26} L${x} ${50 - Math.sin(((x - 14) / 100) * Math.PI) * 18}`} stroke="#8FB0D8" strokeWidth="0.7" opacity="0.7" />)}
+        {Array.from({ length: 16 }, (_, i) => <circle key={i} cx={12 + i * 7} cy={46 + Math.sin(i * 0.9) * 2 + (i % 3)} r="0.7" fill="#FFE8A0" style={{ animation:`ship-blink ${1.6 + (i % 4) * 0.4}s ease-in-out ${i * 0.13}s infinite` }} />)}
+        <path d="M40 30 L50 28 L46 33 Z M84 24 L92 22 L90 28 Z" fill="#8FB0D8" opacity="0.8" />
+        <path d="M12 12 L52 6 L26 52 Z" fill="#FFFFFF" opacity="0.09" />
+      </g>
+      <path d="M10 58 L10 22 Q64 -2 118 22 L118 58" fill="none" stroke="#0A0D12" strokeWidth="1.4" />
+      <path d="M13 56 L13 24 Q64 3 115 24 L115 56" fill="none" stroke="#9AB6D8" strokeWidth="0.8" opacity="0.5" />
+      <path d="M16 56 L16 26 Q64 8 112 26 L112 56" fill="none" stroke="#9AB6D8" strokeWidth="0.6" opacity="0.35" />
+      <rect x="22" y="42" width="84" height="14" rx="1.5" fill="#04101A" fillOpacity="0.75" stroke="#4ACDFF" strokeWidth="0.6" style={{ animation:'ship-engine 3.4s ease-in-out infinite' }} />
+      <text x="26" y="47" fontSize="3" fill="#7FDFFF" fontWeight="700" {...PT}>CONSTRUCTION PROGRESS</text>
+      {[['VL-9', 92, '#FFC060'], ['HH-3', 68, '#4ACDFF'], ['TH-2', 41, '#4ACDFF']].map(([n, v, c], i) => (
+        <g key={n}>
+          <text x="26" y={51.4 + i * 2.8} fontSize="2.2" fill="#BFF4FF" {...PT}>{n}</text>
+          <rect x="34" y={49.6 + i * 2.8} width="50" height="1.6" fill="#0A2A44" /><rect x="34" y={49.6 + i * 2.8} width={v * 0.5} height="1.6" fill={c} />
+          <text x="86" y={51.4 + i * 2.8} fontSize="2.2" fill={c} {...PT}>{v}%</text>
+        </g>
+      ))}
+      <rect x="0" y="58" width="128" height="6" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.8" />
+      <rect x="0" y="58" width="128" height="1.4" fill="#FFFFFF" opacity="0.2" />
+    </svg>
+  );
+}
+
+function PropProtocolDroid() {
+  const p = 'pd';
+  return (
+    <svg viewBox="0 0 32 64" width="32" height="64" style={PROP_STYLE}>
+      <PropDefs p={p} />
+      <PropShadow p={p} cx="16" cy="61" rx="12" ry="2.4" />
+      <ellipse cx="16" cy="60" rx="10" ry="2.6" fill={`url(#${p}Dark)`} stroke="#0A0D12" strokeWidth="0.6" />
+      <rect x="9" y="52" width="5" height="8" rx="1.4" fill={`url(#${p}Brass)`} stroke="#2A1A06" strokeWidth="0.6" />
+      <rect x="18" y="52" width="5" height="8" rx="1.4" fill={`url(#${p}Brass)`} stroke="#2A1A06" strokeWidth="0.6" />
+      <circle cx="11.5" cy="50" r="2" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="0.5" />
+      <circle cx="20.5" cy="50" r="2" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="0.5" />
+      <path d="M10 28 L22 28 L23 34 L21 52 L11 52 L9 34 Z" fill={`url(#${p}Brass)`} stroke="#2A1A06" strokeWidth="0.9" />
+      <path d="M10.6 29.4 L16 29" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.55" />
+      <path d="M11 42 L21 42 M10.4 46 L21.6 46" stroke="#6A4A12" strokeWidth="0.6" opacity="0.8" />
+      <path d="M12 28 L16 40 L20 28" fill="#2A1A06" opacity="0.5" />
+      <circle cx="16" cy="35" r="3" fill="#2A1A06" stroke="#F4DA86" strokeWidth="0.6" />
+      <path d="M14.4 36.4 L16 33 L17.6 36.4 L16 35.6 Z" fill="#F4DA86" />
+      <path d="M9 30 L5 36 L5 46" fill="none" stroke={`url(#${p}Brass)`} strokeWidth="3" strokeLinecap="round" />
+      <path d="M23 30 L27 36 L27 46" fill="none" stroke={`url(#${p}Brass)`} strokeWidth="3" strokeLinecap="round" />
+      <path d="M9 30 L5 36 L5 46 M23 30 L27 36 L27 46" fill="none" stroke="#2A1A06" strokeWidth="0.5" />
+      <circle cx="9" cy="30" r="2" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="0.5" />
+      <circle cx="23" cy="30" r="2" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="0.5" />
+      <path d="M5 36 L5.4 38 M27 36 L26.6 38 M11 52 L11.4 54" stroke="#C86A28" strokeWidth="0.8" />
+      <circle cx="5" cy="46.6" r="1.4" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="0.4" />
+      <circle cx="27" cy="46.6" r="1.4" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="0.4" />
+      <rect x="14" y="24" width="4" height="4" fill={`url(#${p}Copper)`} stroke="#2A1206" strokeWidth="0.5" />
+      <path d="M11 12 Q16 5 21 12 L20.4 22 Q16 25 11.6 22 Z" fill={`url(#${p}Brass)`} stroke="#2A1A06" strokeWidth="0.9" />
+      <path d="M12.4 10 Q16 6.6 19 9.6" fill="none" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.6" />
+      <path d="M12.4 14.4 L19.6 14.4 L19.2 18.6 L12.8 18.6 Z" fill="#14100A" stroke="#2A1A06" strokeWidth="0.4" />
+      <circle cx="14" cy="16.4" r="1.5" fill="#3A2A08" /><circle cx="18" cy="16.4" r="1.5" fill="#3A2A08" />
+      <circle cx="14" cy="16.4" r="0.8" fill="#C8841A" opacity="0.6" style={{ animation:'ship-engine 4s ease-in-out infinite' }} />
+      <circle cx="18" cy="16.4" r="0.8" fill="#C8841A" opacity="0.6" style={{ animation:'ship-engine 4s ease-in-out 0.5s infinite' }} />
+      <path d="M13.6 20.6 L18.4 20.6" stroke="#6A4A12" strokeWidth="0.5" />
+      <rect x="6" y="46" width="9" height="5" fill="#F2EBC8" stroke="#6A5A20" strokeWidth="0.3" transform="rotate(-4 10 48)" />
+      <text x="10.4" y="48.6" fontSize="1.4" fill="#2A1A0A" textAnchor="middle" fontWeight="700" transform="rotate(-4 10 48)" {...PT}>RUEN-7</text>
+      <text x="10.4" y="50.2" fontSize="1.1" fill="#2A1A0A" textAnchor="middle" transform="rotate(-4 10 48)" {...PT}>KUAT STAFF ONLY</text>
+    </svg>
+  );
+}
+
+const PROP_DEFS = {
+  fuel_rig:           { w: 2, h: 2, ax: 1, ay: 1 },
+  manifest_terminal:  { w: 2, h: 2, ax: 1, ay: 1 },
+  vectis:             { w: 2, h: 3, ax: 0, ay: 2 },
+  impound_door:       { w: 3, h: 2, ax: 1, ay: 1 },
+  orbital_viewport:   { w: 3, h: 2, ax: 1, ay: 1 },
+  tether_lockers:     { w: 3, h: 2, ax: 0, ay: 0 },
+  transit_pod:        { w: 3, h: 2, ax: 1, ay: 1 },
+  welding_rig:        { w: 2, h: 2, ax: 0, ay: 1 },
+  wayfinding_plaque:  { w: 2, h: 2, ax: 0, ay: 1 },
+  blast_panel:        { w: 2, h: 2, ax: 0, ay: 1 },
+  holo_projector:     { w: 3, h: 3, ax: 1, ay: 2 },
+  secure_locker:      { w: 3, h: 2, ax: 1, ay: 1 },
+  intercept_wall:     { w: 4, h: 2, ax: 1, ay: 1 },
+  terminal:           { w: 2, h: 2, ax: 0, ay: 1 },
+  holo_table:         { w: 3, h: 2, ax: 1, ay: 1 },
+  ordnance_crates:    { w: 3, h: 2, ax: 1, ay: 1 },
+  armory_locker:      { w: 2, h: 2, ax: 0, ay: 1 },
+  cable_truss:        { w: 4, h: 2, ax: 1, ay: 1 },
+  coolant_pipe:       { w: 3, h: 2, ax: 1, ay: 1 },
+  sabacc_table:       { w: 3, h: 3, ax: 1, ay: 1 },
+  market_stall:       { w: 3, h: 2, ax: 1, ay: 1 },
+  shift_board:        { w: 3, h: 2, ax: 1, ay: 1 },
+  union_bulletin:     { w: 2, h: 2, ax: 0, ay: 1 },
+  surveillance_node:  { w: 2, h: 2, ax: 0, ay: 0 },
+  forge_bar:          { w: 4, h: 2, ax: 1, ay: 1 },
+  czerka_terminal:    { w: 2, h: 2, ax: 0, ay: 0 },
+  fuel_rack:          { w: 3, h: 2, ax: 1, ay: 1 },
+  drive_cradle:       { w: 3, h: 3, ax: 1, ay: 2 },
+  crawler_port:       { w: 2, h: 2, ax: 0, ay: 0 },
+  rivet_hopper:       { w: 3, h: 3, ax: 1, ay: 2 },
+  republic_terminal:  { w: 2, h: 2, ax: 0, ay: 1 },
+  shipyard_viewport:  { w: 3, h: 2, ax: 1, ay: 1 },
+  executive_safe:     { w: 2, h: 2, ax: 0, ay: 1 },
+  model_case:         { w: 4, h: 2, ax: 1, ay: 1 },
+  bronze_mural:       { w: 3, h: 2, ax: 0, ay: 1 },
+  panoramic_viewport: { w: 4, h: 2, ax: 1, ay: 1 },
+  protocol_droid:     { w: 1, h: 2, ax: 0, ay: 1 },
+};
+
+const PropArt = React.memo(function PropArt({ kind, variant, active }) {
+  switch (kind) {
+    case 'fuel_rig': return <PropFuelRig />;
+    case 'manifest_terminal': return <PropManifestTerminal />;
+    case 'vectis': return <PropVectis active={!!active} />;
+    case 'impound_door': return <PropImpoundDoor />;
+    case 'orbital_viewport': return <PropOrbitalViewport />;
+    case 'tether_lockers': return <PropTetherLockers />;
+    case 'transit_pod': return <PropTransitPod />;
+    case 'welding_rig': return <PropWeldingRig />;
+    case 'wayfinding_plaque': return <PropWayfindingPlaque />;
+    case 'blast_panel': return <PropBlastPanel />;
+    case 'holo_projector': return <PropHoloProjector />;
+    case 'secure_locker': return <PropSecureLocker />;
+    case 'intercept_wall': return <PropInterceptWall />;
+    case 'terminal': return <PropTerminal variant={variant || 'engineering'} />;
+    case 'holo_table': return <PropHoloTable variant={variant || 'fleet'} />;
+    case 'ordnance_crates': return <PropOrdnanceCrates />;
+    case 'armory_locker': return <PropArmoryLocker />;
+    case 'cable_truss': return <PropCableTruss />;
+    case 'coolant_pipe': return <PropCoolantPipe />;
+    case 'sabacc_table': return <PropSabaccTable />;
+    case 'market_stall': return <PropMarketStall />;
+    case 'shift_board': return <PropShiftBoard />;
+    case 'union_bulletin': return <PropUnionBulletin />;
+    case 'surveillance_node': return <PropSurveillanceNode />;
+    case 'forge_bar': return <PropForgeBar />;
+    case 'czerka_terminal': return <PropCzerkaTerminal />;
+    case 'fuel_rack': return <PropFuelRack />;
+    case 'drive_cradle': return <PropDriveCradle />;
+    case 'crawler_port': return <PropCrawlerPort />;
+    case 'rivet_hopper': return <PropRivetHopper />;
+    case 'republic_terminal': return <PropRepublicTerminal />;
+    case 'shipyard_viewport': return <PropShipyardViewport />;
+    case 'executive_safe': return <PropExecutiveSafe />;
+    case 'model_case': return <PropModelCase />;
+    case 'bronze_mural': return <PropBronzeMural />;
+    case 'panoramic_viewport': return <PropPanoramicViewport />;
+    case 'protocol_droid': return <PropProtocolDroid />;
+    default: return null;
+  }
+});
+
+function visiblePropObjects(zone, questFlags, completed) {
+  const byTile = {};
+  (zone.worldObjects || []).forEach((wo) => {
+    if (!wo.propArt || !PROP_DEFS[wo.propArt]) return;
+    if (wo.once && completed.has(wo.id)) return;
+    const k = wo.x + ',' + wo.y;
+    const cur = byTile[k];
+    const unlocked = !wo.requiresFlag || questFlags[wo.requiresFlag];
+    if (!cur || (unlocked && wo.requiresFlag)) byTile[k] = wo;
+  });
+  return Object.values(byTile);
+}
+
 const SHIP_SVG_STYLE = { position:'absolute', inset:0, pointerEvents:'none' };
 
 function ShipFreeHorizon({ accent }) {
@@ -7144,6 +8688,10 @@ function ShipFreeHorizon({ accent }) {
       <text x="96" y="83.2" textAnchor="middle" fontSize="4.8" fill="#FFD0D0" fontFamily="'IBM Plex Mono',monospace" letterSpacing="0.6">RING-SEC HOLD</text>
       <text x="96" y="130" textAnchor="middle" fontSize="7" fill="#D9C58F" opacity="0.85" fontFamily="'IBM Plex Mono',monospace" letterSpacing="1.6">FREE HORIZON</text>
       <text x="96" y="137" textAnchor="middle" fontSize="4.4" fill="#B8A878" opacity="0.7" fontFamily="'IBM Plex Mono',monospace" letterSpacing="1">CR-7714 · CORELLIA</text>
+      <path d="M60 112 L72 120 L80 108" fill="none" stroke="#10151B" strokeWidth="1.2" opacity="0.85" />
+      {[[62, 113], [66, 116], [70, 119], [74, 118], [77, 113], [79, 109]].map(([x, y], i) => <circle key={'wb' + i} cx={x} cy={y} r="1" fill="#E8731A" opacity="0.9" />)}
+      <path d="M98 139.4 L110 138.2" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.85" />
+      <path d="M100 140.6 L108 139.8" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.5" />
       <path d="M58 142 L134 142 L128 153 L64 153 Z" fill="#1A1F26" stroke="#3B4550" strokeWidth="0.8" />
       <circle cx="74" cy="150" r="6" fill="#0B0F14" stroke="#4A5663" strokeWidth="0.8" />
       <circle cx="96" cy="152" r="7" fill="#0B0F14" stroke="#4A5663" strokeWidth="0.8" />
@@ -12302,7 +13850,7 @@ function StarWarsRPG() {
                           <path d="M4 16 Q8 12 12 16 Q16 20 20 16 Q24 12 28 16" stroke="#4488CC" strokeWidth="1" fill="none" opacity="0.5" style={{ animation:'mist-drift 3s ease-in-out infinite' }} />
                         </svg>
                       )}
-                      {worldObjHere && !isPlayer && !npcHere && !collectibleHere && (
+                      {worldObjHere && !worldObjHere.propArt && !isPlayer && !npcHere && !collectibleHere && (
                         <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',pointerEvents:'none',zIndex:2 }}>
                           <WorldObjectSprite kind={worldObjHere.iconKind ?? getWorldObjIconKind(worldObjHere.id)} accent={zone.accent} id={worldObjHere.id} />
                         </div>
@@ -12325,6 +13873,14 @@ function StarWarsRPG() {
                     </div>
                   );
                 })}
+              </div>
+            );
+          })}
+          {visiblePropObjects(zone, questFlags, completedInteractions).map((wo) => {
+            const d = PROP_DEFS[wo.propArt];
+            return (
+              <div key={'prop_' + wo.id} style={{ position:'absolute',left:(wo.x - d.ax - camX) * TILE,top:(wo.y - d.ay - camY) * TILE,width:d.w * TILE,height:d.h * TILE,zIndex:2,pointerEvents:'none' }}>
+                <PropArt kind={wo.propArt} variant={wo.propVariant} active={wo.id.endsWith('_active')} />
               </div>
             );
           })}
