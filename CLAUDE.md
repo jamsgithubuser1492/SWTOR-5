@@ -62,6 +62,7 @@ Modify `CONQUEST_SECTORS_INIT` or `CONQUEST_UNIT_TYPES` constants (defined aroun
 - Valid tile types: `wall`, `floor`, `door`, `ship_hull`, `ship_ramp`, `lava`, `water`
 - NPC `kind` must be registered in `NpcPortrait()` or entities render nothing
 - Entity x,y must land on `floor` tiles or they are unreachable
+- Ships are large sprites declared in a zone's `ships` array (`{ id, kind, x, y, label, description, grantsFlag }`). Each `kind` needs a `SHIP_DEFS` footprint (w, h in tiles) and a branch in `ShipSprite()`. Call `carveShips(g, this.ships)` at the end of `buildMap()` so the footprint becomes solid `ship_hull`. Bumping the hull shows the description and sets `grantsFlag`. Keep ship footprints clear of entities, doors, and the access paths to alcoves (run a BFS check)
 - Door pairs must be symmetric — each side lists the other as `targetZone`/`targetPos`
 - All React hooks inside `CoruscantConquestOverlay` must use the `React.useState` / `React.useEffect` form — no shorthand destructuring (single-file Babel constraint)
 - `MapView` inside `CoruscantConquestOverlay` is called as a direct function `MapView()` rather than via `React.createElement(MapView, null)` to prevent remount on every render

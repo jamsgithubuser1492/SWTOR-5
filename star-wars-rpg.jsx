@@ -22,6 +22,9 @@ function GlobalAnimations() {
       @keyframes scanDown { from{transform:translateY(0);opacity:0.8;}to{transform:translateY(120vh);opacity:0;} }
       @keyframes drift { from{transform:translate(0,0) scale(1);}to{transform:translate(10px,-8px) scale(1.1);} }
       @keyframes rise { from{transform:translateY(0);opacity:0.5;}to{transform:translateY(-60px);opacity:0;} }
+      @keyframes ship-blink { 0%,100%{opacity:0.15;}50%{opacity:1;} }
+      @keyframes ship-engine { 0%,100%{opacity:0.3;}50%{opacity:0.85;} }
+      @keyframes ship-spark { 0%,100%{opacity:0;transform:scale(0.4);}20%{opacity:1;transform:scale(1.2);}60%{opacity:0.4;transform:scale(0.8);} }
     `}</style>
   );
 }
@@ -37,6 +40,20 @@ function carveRect(g, x1, y1, x2, y2, type = 'floor') {
   for (let y = y1; y <= y2; y++) for (let x = x1; x <= x2; x++) { if (g[y]?.[x]) g[y][x] = { type }; }
 }
 function pt(g, x, y, type) { if (g[y]?.[x]) g[y][x] = { type }; }
+
+const SHIP_DEFS = {
+  free_horizon:     { w: 6,  h: 5 },
+  republic_shuttle: { w: 6,  h: 4 },
+  valor_frame:      { w: 14, h: 4 },
+  czerka_hauler:    { w: 7,  h: 5 },
+  kuat_yacht:       { w: 5,  h: 4 },
+};
+function carveShips(g, ships) {
+  (ships || []).forEach((s) => { const d = SHIP_DEFS[s.kind]; if (d) carveRect(g, s.x, s.y, s.x + d.w - 1, s.y + d.h - 1, 'ship_hull'); });
+}
+function shipAtTile(zone, x, y) {
+  return (zone.ships || []).find((s) => { const d = SHIP_DEFS[s.kind]; return d && x >= s.x && x < s.x + d.w && y >= s.y && y < s.y + d.h; });
+}
 
 const PLANETS = {
   coruscant: {
@@ -2913,6 +2930,11 @@ const PLANETS = {
     zones: {
       kuat_private_suites: {
         id: 'kuat_private_suites', name: 'KDY Orbital Ring — Private Suites',
+        ships: [
+          { id: 'ship_kuat_yacht', kind: 'kuat_yacht', x: 16, y: 12, label: 'House Kuat Courier Yacht',
+            description: 'A House Kuat courier yacht on the private pad, pearl white with gold trim and the KDY blue running the length of the fuselage. Every surface has been polished by hand. The cockpit is dark but the lower lights burn at idle, which means someone expects to leave on short notice. The registry plate carries the personal code of Lady Kuat.',
+            grantsFlag: 'kuat_yacht_examined' },
+        ],
         subtitle: 'Kuat Drive Yards · Executive Ring',
         width: 28, height: 18, spawnPos: { x: 2, y: 8 }, textureId: 'ferrowake',
         accent: '#1A8FD0', accentGlow: 'rgba(26,143,208,0.3)', accentDim: '#0A4A72',
@@ -3023,19 +3045,28 @@ const PLANETS = {
           pt(g, 8, 3, 'floor'); pt(g, 9, 3, 'floor'); pt(g, 10, 3, 'floor');
           pt(g, 8, 7, 'floor'); pt(g, 9, 7, 'floor'); pt(g, 12, 5, 'floor');
           pt(g, 16, 5, 'floor'); pt(g, 17, 5, 'floor'); pt(g, 18, 5, 'floor');
-          pt(g, 19, 5, 'floor'); pt(g, 20, 5, 'floor'); pt(g, 22, 5, 'floor');
+          pt(g, 19, 5, 'floor'); pt(g, 20, 5, 'floor'); pt(g, 21, 5, 'floor'); pt(g, 22, 5, 'floor');
           carveRect(g, 5, 9, 13, 16, 'wall');
           pt(g, 8, 9, 'floor'); pt(g, 8, 10, 'floor'); pt(g, 8, 11, 'floor');
           pt(g, 8, 12, 'floor'); pt(g, 8, 13, 'floor'); pt(g, 8, 14, 'floor');
           pt(g, 13, 12, 'floor'); pt(g, 13, 13, 'floor'); pt(g, 13, 14, 'floor');
           pt(g, 0, 8, 'door'); pt(g, 0, 9, 'door');
           pt(g, 27, 8, 'door'); pt(g, 27, 9, 'door');
+          carveShips(g, this.ships);
           return g;
         },
       },
 
       kdy_landing_bay: {
         id: 'kdy_landing_bay', name: 'KDY Orbital Ring — Landing Bay',
+        ships: [
+          { id: 'ship_free_horizon', kind: 'free_horizon', x: 15, y: 15, label: 'Free Horizon (Impounded)',
+            description: 'A Corellian free trader with a decade of unscheduled landings pitted into its hull, held in Bay 7 under Ring-Sec impound clamps. The engines are cold. A red hold seal is stamped across the dorsal hatch: MANIFEST DISCREPANCY, CLASS B. The cargo ramp has been welded shut, but someone has scored a fresh mark under the registry plate CR-7714 with a hand tool. A message, or a signature.',
+            grantsFlag: 'free_horizon_examined' },
+          { id: 'ship_republic_shuttle', kind: 'republic_shuttle', x: 11, y: 8, label: 'Republic Navy Liaison Shuttle',
+            description: 'A Kuat-built Republic Navy liaison shuttle on a guest pad, hull number RN-4471, red stripes and Republic crest freshly cleaned for the inspection tour. The wings are folded for the tight berth. A crew chief checks a datapad at the ramp seam and does not look up. The pilot is probably the one watching the construction frames across the bay.',
+            grantsFlag: 'liaison_shuttle_examined' },
+        ],
         subtitle: 'Kuat Drive Yards · Ring Berth Seven',
         width: 32, height: 22, spawnPos: { x: 2, y: 10 }, textureId: 'ferrowake',
         accent: '#3A7AB0', accentGlow: 'rgba(58,122,176,0.28)', accentDim: '#123458',
@@ -3155,12 +3186,18 @@ const PLANETS = {
           pt(g, 31, 8, 'door'); pt(g, 31, 9, 'door');
           pt(g, 31, 12, 'door'); pt(g, 31, 13, 'door');
           pt(g, 14, 21, 'door'); pt(g, 15, 21, 'door');
+          carveShips(g, this.ships);
           return g;
         },
       },
 
       kdy_briefing_area: {
         id: 'kdy_briefing_area', name: 'KDY Team Briefing Area',
+        ships: [
+          { id: 'ship_valor_frame', kind: 'valor_frame', x: 11, y: 17, label: 'Valor Class Cruiser (Hull 0417)',
+            description: 'A Valor class cruiser held in a KDY drydock gantry along the south wall of the ring. The aft third is plated and gleaming. Forward of the bridge tower the hull is only ribs and stringers, and crane crews are lowering armor plates into place under work lights. One dorsal turret mount has been surveyed and tagged with an amber marker reading 6 DEGREES OFF AXIS. Someone filed that report. Nobody fixed the mount.',
+            grantsFlag: 'valor_frame_examined' },
+        ],
         subtitle: 'Kuat Drive Yards · Restricted Operations Ring',
         width: 36, height: 22, spawnPos: { x: 2, y: 8 }, textureId: 'ferrowake',
         accent: '#5A7A9A', accentGlow: 'rgba(90,122,154,0.25)', accentDim: '#1A3A5A',
@@ -3273,12 +3310,18 @@ const PLANETS = {
           carveRect(g, 26, 12, 34, 20, 'wall'); carveRect(g, 27, 13, 33, 19, 'floor'); pt(g, 26, 14, 'floor'); pt(g, 26, 15, 'floor');
           carveRect(g, 1, 12, 8, 20, 'wall'); carveRect(g, 2, 13, 7, 19, 'floor'); pt(g, 8, 14, 'floor'); pt(g, 8, 15, 'floor');
           pt(g, 0, 8, 'door'); pt(g, 0, 9, 'door');
+          carveShips(g, this.ships);
           return g;
         },
       },
 
       kdy_lounge_market: {
         id: 'kdy_lounge_market', name: 'The Forge and Anvil — KDY Market Ring',
+        ships: [
+          { id: 'ship_czerka_hauler', kind: 'czerka_hauler', x: 10, y: 16, label: 'Czerka Bulk Hauler (In Repair)',
+            description: 'A Czerka bulk hauler, Kuati built and badly maintained, parked in a repair berth with its drive bay open like a surgical patient. The coil housing has been pulled and a conduit crawler is working inside the exposed core. Czerka amber marks the spine. Three container slots are loaded and one is empty, and the empty slot is the only one nobody seems to be guarding.',
+            grantsFlag: 'czerka_hauler_examined' },
+        ],
         subtitle: 'Kuat Drive Yards · Commercial Ring',
         width: 40, height: 24, spawnPos: { x: 20, y: 2 }, textureId: 'ferrowake',
         accent: '#8A6A3A', accentGlow: 'rgba(138,106,58,0.25)', accentDim: '#3A2A10',
@@ -3433,6 +3476,7 @@ const PLANETS = {
           carveRect(g, 22, 12, 38, 22, 'wall'); carveRect(g, 23, 13, 37, 21, 'floor'); pt(g, 22, 14, 'floor'); pt(g, 22, 15, 'floor');
           carveRect(g, 30, 1, 38, 8, 'wall'); carveRect(g, 31, 2, 37, 7, 'floor'); pt(g, 30, 4, 'floor'); pt(g, 30, 5, 'floor');
           pt(g, 14, 0, 'door'); pt(g, 15, 0, 'door');
+          carveShips(g, this.ships);
           return g;
         },
       },
@@ -7039,6 +7083,450 @@ function WorldObjectSprite({ kind, accent, id }) {
     <div style={{ position:'absolute',inset:3,border:`1px solid ${accent}55`,borderRadius:2,animation:'world-obj-pulse 2.5s ease-in-out infinite',pointerEvents:'none' }} />
   );
 }
+
+const SHIP_SVG_STYLE = { position:'absolute', inset:0, pointerEvents:'none' };
+
+function ShipFreeHorizon({ accent }) {
+  return (
+    <svg viewBox="0 0 192 160" width="192" height="160" style={SHIP_SVG_STYLE}>
+      <defs>
+        <linearGradient id="fhHull" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#A3AEBB" /><stop offset="0.45" stopColor="#5E6976" /><stop offset="1" stopColor="#242A33" />
+        </linearGradient>
+        <linearGradient id="fhHullB" x1="1" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#7C8794" /><stop offset="1" stopColor="#12161C" />
+        </linearGradient>
+        <radialGradient id="fhDome" cx="0.35" cy="0.3" r="0.8">
+          <stop offset="0" stopColor="#CFEFFF" /><stop offset="0.5" stopColor="#3C7FA8" /><stop offset="1" stopColor="#0A2032" />
+        </radialGradient>
+        <radialGradient id="fhGlow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#8FD8FF" stopOpacity="0.9" /><stop offset="1" stopColor="#2A7BC0" stopOpacity="0" />
+        </radialGradient>
+        <filter id="fhSoft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7" /></filter>
+        <pattern id="fhHazard" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="4" height="8" fill="#D8A800" /><rect x="4" width="4" height="8" fill="#14171B" />
+        </pattern>
+      </defs>
+      <rect x="3" y="3" width="186" height="154" rx="4" fill="#04070B" opacity="0.35" />
+      <rect x="3" y="3" width="186" height="154" rx="4" fill="none" stroke="url(#fhHazard)" strokeWidth="3" opacity="0.55" />
+      <ellipse cx="102" cy="98" rx="80" ry="62" fill="#000" opacity="0.5" filter="url(#fhSoft)" />
+      <path d="M46 70 L34 24 Q36 12 50 14 L78 58 Z" fill="url(#fhHull)" stroke="#12161C" strokeWidth="1.2" />
+      <path d="M146 70 L158 24 Q156 12 142 14 L114 58 Z" fill="url(#fhHull)" stroke="#12161C" strokeWidth="1.2" />
+      <path d="M40 30 L48 20 M152 30 L144 20" stroke="#FFFFFF" strokeWidth="1" opacity="0.3" />
+      <path d="M50 44 L64 60 M142 44 L128 60" stroke="#0E1216" strokeWidth="0.8" opacity="0.6" />
+      <ellipse cx="148" cy="36" rx="8" ry="13" fill="url(#fhDome)" stroke="#0E1216" strokeWidth="1" transform="rotate(10 148 36)" />
+      <ellipse cx="145" cy="30" rx="2.6" ry="5" fill="#FFFFFF" opacity="0.45" transform="rotate(10 145 30)" />
+      <line x1="141" y1="38" x2="155" y2="34" stroke="#0E1216" strokeWidth="0.8" opacity="0.7" />
+      <rect x="86" y="42" width="20" height="9" rx="1.5" fill="#1B2128" stroke="#4A5663" strokeWidth="0.6" />
+      <rect x="89" y="44" width="14" height="2.4" fill="#5FB4E8" opacity="0.5" />
+      <ellipse cx="96" cy="92" rx="66" ry="58" fill="url(#fhHull)" stroke="#12161C" strokeWidth="1.6" />
+      <ellipse cx="101" cy="99" rx="58" ry="50" fill="url(#fhHullB)" opacity="0.3" />
+      <path d="M40 82 Q50 46 96 36" fill="none" stroke="#FFFFFF" strokeWidth="1.6" opacity="0.28" />
+      <ellipse cx="96" cy="92" rx="48" ry="42" fill="none" stroke="#10151B" strokeWidth="0.8" opacity="0.65" />
+      <ellipse cx="96" cy="92" rx="28" ry="24" fill="none" stroke="#10151B" strokeWidth="0.8" opacity="0.55" />
+      <path d="M96 50 L96 68 M96 116 L96 134 M50 92 L68 92 M124 92 L142 92 M62 62 L76 74 M130 62 L116 74 M62 122 L76 110 M130 122 L116 110" stroke="#10151B" strokeWidth="0.7" opacity="0.55" />
+      <rect x="58" y="86" width="14" height="9" rx="1" fill="#7B8896" opacity="0.5" stroke="#10151B" strokeWidth="0.5" />
+      <rect x="120" y="100" width="14" height="9" rx="1" fill="#7B8896" opacity="0.45" stroke="#10151B" strokeWidth="0.5" />
+      <rect x="72" y="112" width="10" height="7" rx="1" fill="#46515D" opacity="0.6" />
+      <path d="M42 98 Q44 78 60 66 L66 72 Q54 82 52 100 Z" fill="#2F6FA3" opacity="0.6" />
+      <ellipse cx="74" cy="122" rx="11" ry="6" fill="#000" opacity="0.28" transform="rotate(-18 74 122)" />
+      <ellipse cx="126" cy="76" rx="8" ry="4" fill="#000" opacity="0.22" transform="rotate(30 126 76)" />
+      <circle cx="96" cy="72" r="10" fill="#3A424D" stroke="#10151B" strokeWidth="1" />
+      <circle cx="94" cy="70" r="4" fill="#6E7A88" opacity="0.7" />
+      <line x1="93" y1="72" x2="93" y2="54" stroke="#161B21" strokeWidth="2.6" />
+      <line x1="99" y1="72" x2="99" y2="54" stroke="#161B21" strokeWidth="2.6" />
+      <line x1="92.4" y1="70" x2="92.4" y2="56" stroke="#8D99A8" strokeWidth="0.6" opacity="0.7" />
+      <line x1="98.4" y1="70" x2="98.4" y2="56" stroke="#8D99A8" strokeWidth="0.6" opacity="0.7" />
+      <circle cx="96" cy="108" r="13" fill="#1B2128" stroke="#8895A4" strokeWidth="1.2" />
+      <circle cx="96" cy="108" r="8" fill="none" stroke="#4A5663" strokeWidth="0.8" />
+      <path d="M96 100 L96 116 M88 108 L104 108" stroke="#4A5663" strokeWidth="0.6" />
+      <rect x="80" y="76" width="32" height="10" rx="1" fill="#7A0E0E" stroke="#FF5555" strokeWidth="0.6" />
+      <text x="96" y="83.2" textAnchor="middle" fontSize="4.8" fill="#FFD0D0" fontFamily="'IBM Plex Mono',monospace" letterSpacing="0.6">RING-SEC HOLD</text>
+      <text x="96" y="130" textAnchor="middle" fontSize="7" fill="#D9C58F" opacity="0.85" fontFamily="'IBM Plex Mono',monospace" letterSpacing="1.6">FREE HORIZON</text>
+      <text x="96" y="137" textAnchor="middle" fontSize="4.4" fill="#B8A878" opacity="0.7" fontFamily="'IBM Plex Mono',monospace" letterSpacing="1">CR-7714 · CORELLIA</text>
+      <path d="M58 142 L134 142 L128 153 L64 153 Z" fill="#1A1F26" stroke="#3B4550" strokeWidth="0.8" />
+      <circle cx="74" cy="150" r="6" fill="#0B0F14" stroke="#4A5663" strokeWidth="0.8" />
+      <circle cx="96" cy="152" r="7" fill="#0B0F14" stroke="#4A5663" strokeWidth="0.8" />
+      <circle cx="118" cy="150" r="6" fill="#0B0F14" stroke="#4A5663" strokeWidth="0.8" />
+      <circle cx="74" cy="150" r="9" fill="url(#fhGlow)" style={{ animation:'ship-engine 4.6s ease-in-out infinite' }} opacity="0.25" />
+      <circle cx="96" cy="152" r="10" fill="url(#fhGlow)" style={{ animation:'ship-engine 4.6s ease-in-out 0.6s infinite' }} opacity="0.25" />
+      <circle cx="118" cy="150" r="9" fill="url(#fhGlow)" style={{ animation:'ship-engine 4.6s ease-in-out 1.2s infinite' }} opacity="0.25" />
+      <rect x="8" y="82" width="22" height="20" rx="1.5" fill="#2A1414" stroke="#FF3B3B" strokeWidth="0.9" />
+      <path d="M30 86 L42 90 L42 94 L30 98 Z" fill="#3A1A1A" stroke="#FF3B3B" strokeWidth="0.8" />
+      <rect x="11" y="85" width="9" height="3" fill="#7A2020" opacity="0.8" />
+      <circle cx="19" cy="94" r="2.6" fill="#FF3030" style={{ animation:'ship-blink 1.1s steps(2) infinite' }} />
+      <rect x="162" y="82" width="22" height="20" rx="1.5" fill="#2A1414" stroke="#FF3B3B" strokeWidth="0.9" />
+      <path d="M162 86 L150 90 L150 94 L162 98 Z" fill="#3A1A1A" stroke="#FF3B3B" strokeWidth="0.8" />
+      <rect x="172" y="85" width="9" height="3" fill="#7A2020" opacity="0.8" />
+      <circle cx="173" cy="94" r="2.6" fill="#FF3030" style={{ animation:'ship-blink 1.1s steps(2) 0.55s infinite' }} />
+      <path d="M12 102 Q8 130 22 152 M180 102 Q184 130 170 152" fill="none" stroke="#6A5A20" strokeWidth="1.4" strokeDasharray="3 2" opacity="0.7" />
+    </svg>
+  );
+}
+
+function ShipRepublicShuttle({ accent }) {
+  return (
+    <svg viewBox="0 0 192 128" width="192" height="128" style={SHIP_SVG_STYLE}>
+      <defs>
+        <linearGradient id="rsHull" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#D4D9E0" /><stop offset="0.5" stopColor="#8E96A2" /><stop offset="1" stopColor="#434A55" />
+        </linearGradient>
+        <linearGradient id="rsWing" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#B7BEC8" /><stop offset="1" stopColor="#3C434D" />
+        </linearGradient>
+        <linearGradient id="rsRed" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#D8383D" /><stop offset="1" stopColor="#7E1519" />
+        </linearGradient>
+        <linearGradient id="rsGlass" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#DDF4FF" /><stop offset="0.5" stopColor="#3A7AA0" /><stop offset="1" stopColor="#081C2C" />
+        </linearGradient>
+        <radialGradient id="rsGlow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#9FDCFF" stopOpacity="0.95" /><stop offset="1" stopColor="#2A7BC0" stopOpacity="0" />
+        </radialGradient>
+        <filter id="rsSoft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6" /></filter>
+      </defs>
+      <rect x="3" y="3" width="186" height="122" rx="4" fill="#04070B" opacity="0.35" />
+      <rect x="3" y="3" width="186" height="122" rx="4" fill="none" stroke={accent} strokeWidth="1" strokeDasharray="6 4" opacity="0.4" />
+      <path d="M12 12 L22 22 M12 116 L22 106 M180 12 L170 22 M180 116 L170 106" stroke={accent} strokeWidth="1" opacity="0.4" />
+      <ellipse cx="98" cy="72" rx="82" ry="40" fill="#000" opacity="0.5" filter="url(#rsSoft)" />
+      <path d="M98 42 L128 12 L158 12 L146 44 Z" fill="url(#rsWing)" stroke="#161B21" strokeWidth="1" />
+      <path d="M98 86 L128 116 L158 116 L146 84 Z" fill="url(#rsWing)" stroke="#161B21" strokeWidth="1" />
+      <path d="M104 40 L130 15 M110 41 L134 17" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.28" />
+      <rect x="148" y="12" width="10" height="5" fill="url(#rsRed)" />
+      <rect x="148" y="111" width="10" height="5" fill="url(#rsRed)" />
+      <circle cx="157" cy="14" r="2" fill="#FF3A3A" style={{ animation:'ship-blink 1.4s steps(2) infinite' }} />
+      <circle cx="157" cy="114" r="2" fill="#3AFF6A" style={{ animation:'ship-blink 1.4s steps(2) 0.7s infinite' }} />
+      <path d="M8 64 Q14 52 40 46 L120 38 L168 46 Q180 54 182 64 Q180 74 168 82 L120 90 L40 82 Q14 76 8 64 Z" fill="url(#rsHull)" stroke="#161B21" strokeWidth="1.4" />
+      <path d="M30 50 L120 42 L166 48" fill="none" stroke="#FFFFFF" strokeWidth="1.6" opacity="0.4" />
+      <path d="M30 78 L120 86 L166 80" fill="none" stroke="#000" strokeWidth="1.6" opacity="0.25" />
+      <path d="M70 44 L70 84 M96 41 L96 87 M140 40 L140 88" stroke="#2A3038" strokeWidth="0.6" opacity="0.55" />
+      <rect x="118" y="48" width="18" height="8" rx="1" fill="none" stroke="#2A3038" strokeWidth="0.7" opacity="0.7" />
+      <rect x="46" y="60" width="130" height="8" fill="url(#rsRed)" />
+      <line x1="46" y1="61" x2="176" y2="61" stroke="#FFB0B0" strokeWidth="0.6" opacity="0.5" />
+      <text x="152" y="66.2" textAnchor="middle" fontSize="5.4" fill="#FFFFFF" fontWeight="700" fontFamily="'IBM Plex Mono',monospace" letterSpacing="0.6">RN-4471</text>
+      <circle cx="100" cy="64" r="11" fill="#1B222B" stroke="#E5E7EB" strokeWidth="0.9" />
+      <path d="M100 64 L100 55 M100 64 L108 59.5 M100 64 L108 68.5 M100 64 L100 73 M100 64 L92 68.5 M100 64 L92 59.5" stroke="#D8383D" strokeWidth="1.2" />
+      <circle cx="100" cy="64" r="3" fill="#D8383D" stroke="#FFD0D0" strokeWidth="0.5" />
+      <path d="M16 64 Q22 54 46 50 L60 64 L46 78 Q22 74 16 64 Z" fill="url(#rsGlass)" stroke="#161B21" strokeWidth="1" />
+      <path d="M26 60 Q38 54 52 56 Q40 58 30 63 Z" fill="#FFFFFF" opacity="0.4" />
+      <path d="M36 52 L36 76 M48 50 L52 64 L48 78" stroke="#161B21" strokeWidth="0.9" opacity="0.8" />
+      <rect x="162" y="46" width="22" height="12" rx="3" fill="#2B323B" stroke="#10151B" strokeWidth="0.8" />
+      <rect x="162" y="70" width="22" height="12" rx="3" fill="#2B323B" stroke="#10151B" strokeWidth="0.8" />
+      <ellipse cx="184" cy="52" rx="2.4" ry="6" fill="#0B0F14" />
+      <ellipse cx="184" cy="76" rx="2.4" ry="6" fill="#0B0F14" />
+      <circle cx="184" cy="52" r="6" fill="url(#rsGlow)" opacity="0.45" style={{ animation:'ship-engine 3.4s ease-in-out infinite' }} />
+      <circle cx="184" cy="76" r="6" fill="url(#rsGlow)" opacity="0.45" style={{ animation:'ship-engine 3.4s ease-in-out 0.8s infinite' }} />
+      <rect x="170" y="60" width="10" height="8" fill="none" stroke="#2A3038" strokeWidth="0.6" opacity="0.7" />
+      <circle cx="52" cy="42" r="3.4" fill="#1A1F26" stroke="#4A5663" strokeWidth="0.6" />
+      <circle cx="52" cy="86" r="3.4" fill="#1A1F26" stroke="#4A5663" strokeWidth="0.6" />
+      <circle cx="144" cy="40" r="3.4" fill="#1A1F26" stroke="#4A5663" strokeWidth="0.6" />
+      <circle cx="144" cy="88" r="3.4" fill="#1A1F26" stroke="#4A5663" strokeWidth="0.6" />
+    </svg>
+  );
+}
+
+function ShipValorFrame({ accent }) {
+  const railX = [8, 56, 104, 152, 200, 248, 296, 344, 392, 436];
+  const ribX = [262, 280, 298, 316, 334, 352, 370, 388];
+  const ribTop = (x) => 30 + (x - 250) * 0.1096;
+  return (
+    <svg viewBox="0 0 448 128" width="448" height="128" style={SHIP_SVG_STYLE}>
+      <defs>
+        <linearGradient id="vhHull" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#9AA7B8" /><stop offset="0.5" stopColor="#5C6879" /><stop offset="1" stopColor="#262E39" />
+        </linearGradient>
+        <linearGradient id="vhTower" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#B4C0CF" /><stop offset="1" stopColor="#4A5667" />
+        </linearGradient>
+        <linearGradient id="vhSteel" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#6A819B" /><stop offset="1" stopColor="#2A3748" />
+        </linearGradient>
+        <linearGradient id="vhPlate" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#D2DBE6" /><stop offset="1" stopColor="#6C7888" />
+        </linearGradient>
+        <radialGradient id="vhGlow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#9FDCFF" stopOpacity="0.9" /><stop offset="1" stopColor="#2A7BC0" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="vhLamp" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#FFF3C8" stopOpacity="0.85" /><stop offset="1" stopColor="#FFC060" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="vhSpark" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#FFFBE0" /><stop offset="0.4" stopColor="#FFB844" /><stop offset="1" stopColor="#FF6A00" stopOpacity="0" />
+        </radialGradient>
+        <filter id="vhSoft" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="8" /></filter>
+        <pattern id="vhHazard" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="5" height="10" fill="#E0B020" /><rect x="5" width="5" height="10" fill="#14171B" />
+        </pattern>
+      </defs>
+      <rect x="2" y="2" width="444" height="124" rx="3" fill="#04070B" opacity="0.4" />
+      <ellipse cx="232" cy="72" rx="206" ry="34" fill="#000" opacity="0.55" filter="url(#vhSoft)" />
+      <rect x="8" y="4" width="432" height="8" fill="url(#vhSteel)" stroke="#16202C" strokeWidth="0.8" />
+      <rect x="8" y="116" width="432" height="8" fill="url(#vhSteel)" stroke="#16202C" strokeWidth="0.8" />
+      <rect x="8" y="4" width="72" height="8" fill="url(#vhHazard)" opacity="0.85" />
+      <rect x="376" y="116" width="64" height="8" fill="url(#vhHazard)" opacity="0.85" />
+      <line x1="8" y1="5.2" x2="440" y2="5.2" stroke="#B7CCE4" strokeWidth="0.8" opacity="0.5" />
+      <line x1="8" y1="117.2" x2="440" y2="117.2" stroke="#B7CCE4" strokeWidth="0.8" opacity="0.4" />
+      {railX.map((x) => (
+        <g key={x}>
+          <rect x={x - 2.5} y="12" width="5" height="16" fill="url(#vhSteel)" stroke="#16202C" strokeWidth="0.6" />
+          <rect x={x - 2.5} y="100" width="5" height="16" fill="url(#vhSteel)" stroke="#16202C" strokeWidth="0.6" />
+        </g>
+      ))}
+      {railX.slice(0, -1).map((x) => (
+        <g key={'br' + x} stroke="#5E7690" strokeWidth="0.9" opacity="0.8">
+          <line x1={x} y1="12" x2={x + 48} y2="26" />
+          <line x1={x + 48} y1="12" x2={x} y2="26" />
+          <line x1={x} y1="116" x2={x + 48} y2="102" />
+          <line x1={x + 48} y1="116" x2={x} y2="102" />
+        </g>
+      ))}
+      <path d="M32 44 L52 32 L250 30 L250 98 L52 96 L32 84 Z" fill="url(#vhHull)" stroke="#10161E" strokeWidth="1.4" />
+      <line x1="54" y1="33.6" x2="250" y2="31.8" stroke="#FFFFFF" strokeWidth="1.4" opacity="0.32" />
+      <line x1="54" y1="94.4" x2="250" y2="96.2" stroke="#000" strokeWidth="1.4" opacity="0.35" />
+      {[70, 90, 110, 130, 150, 170, 190, 210, 230].map((x) => (
+        <line key={'s' + x} x1={x} y1="32" x2={x} y2="96" stroke="#0E141B" strokeWidth="0.7" opacity="0.5" />
+      ))}
+      <line x1="52" y1="64" x2="250" y2="64" stroke="#0E141B" strokeWidth="0.8" opacity="0.55" />
+      <rect x="60" y="60" width="86" height="8" fill="#232B35" stroke="#0E141B" strokeWidth="0.6" />
+      {[66, 78, 90, 102, 114, 126, 138].map((x) => (
+        <rect key={'sl' + x} x={x} y="62.6" width="6" height="2.8" fill="#7FD0FF" opacity="0.55" />
+      ))}
+      <line x1="82" y1="38" x2="250" y2="37" stroke="#A5272D" strokeWidth="2.6" opacity="0.9" />
+      <line x1="82" y1="90" x2="250" y2="91" stroke="#A5272D" strokeWidth="2.6" opacity="0.9" />
+      <rect x="150" y="46" width="58" height="36" rx="3" fill="url(#vhTower)" stroke="#10161E" strokeWidth="1" />
+      <line x1="153" y1="48" x2="205" y2="48" stroke="#FFFFFF" strokeWidth="1" opacity="0.45" />
+      {[156, 164, 172, 180, 188, 196].map((x, i) => (
+        <rect key={'w' + x} x={x} y="52" width="5" height="3" fill="#FFD97A" opacity="0.9" style={{ animation:`ship-engine ${3 + (i % 3)}s ease-in-out ${i * 0.3}s infinite` }} />
+      ))}
+      <rect x="160" y="60" width="38" height="14" fill="#2C3541" stroke="#10161E" strokeWidth="0.6" />
+      <line x1="179" y1="46" x2="179" y2="36" stroke="#9AA7B8" strokeWidth="1.2" />
+      <circle cx="179" cy="35" r="1.6" fill="#FF4040" style={{ animation:'ship-blink 1.6s steps(2) infinite' }} />
+      <circle cx="110" cy="40" r="6.4" fill="#3A444F" stroke="#10161E" strokeWidth="1" />
+      <circle cx="108.4" cy="38.6" r="2.6" fill="#7B8896" opacity="0.7" />
+      <rect x="114" y="38.6" width="16" height="2.8" fill="#141A21" />
+      <circle cx="110" cy="88" r="6.4" fill="#3A444F" stroke="#10161E" strokeWidth="1" />
+      <circle cx="108.4" cy="86.6" r="2.6" fill="#7B8896" opacity="0.7" />
+      <rect x="114" y="86.6" width="16" height="2.8" fill="#141A21" />
+      <circle cx="232" cy="88" r="6.4" fill="#3A444F" stroke="#10161E" strokeWidth="1" />
+      <rect x="236" y="86.6" width="14" height="2.8" fill="#141A21" />
+      <g transform="rotate(6 232 40)">
+        <circle cx="232" cy="40" r="6.4" fill="#3A444F" stroke="#FFB040" strokeWidth="1.2" />
+        <circle cx="230.4" cy="38.6" r="2.6" fill="#7B8896" opacity="0.7" />
+        <rect x="236" y="38.6" width="14" height="2.8" fill="#141A21" />
+      </g>
+      <path d="M226 52 L232 46 L238 52 Z" fill="#FFB040" opacity="0.9" />
+      <text x="246" y="59" textAnchor="end" fontSize="4.6" fill="#FFB040" fontFamily="'IBM Plex Mono',monospace" letterSpacing="0.4">6 DEG OFF AXIS</text>
+      <rect x="12" y="38" width="22" height="52" rx="3" fill="#2A313B" stroke="#10161E" strokeWidth="1" />
+      <line x1="14" y1="40" x2="32" y2="40" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.3" />
+      {[46, 58, 70, 82].map((y, i) => (
+        <g key={'n' + y}>
+          <circle cx="18" cy={y} r="5" fill="#080B0F" stroke="#4C5968" strokeWidth="1" />
+          <circle cx="16" cy={y} r="8" fill="url(#vhGlow)" opacity="0.4" style={{ animation:`ship-engine 5s ease-in-out ${i * 0.7}s infinite` }} />
+        </g>
+      ))}
+      <path d="M250 30 L396 46 L434 64 L396 82 L250 98" fill="#080D14" fillOpacity="0.4" stroke="#8CA6C2" strokeWidth="1.4" />
+      <line x1="250" y1="47" x2="420" y2="60" stroke="#7E98B4" strokeWidth="1" opacity="0.8" />
+      <line x1="250" y1="81" x2="420" y2="68" stroke="#7E98B4" strokeWidth="1" opacity="0.8" />
+      <line x1="250" y1="64" x2="434" y2="64" stroke="#2A3646" strokeWidth="3.2" />
+      <line x1="250" y1="64" x2="434" y2="64" stroke="#B2C8E0" strokeWidth="1.2" />
+      {ribX.map((x) => (
+        <g key={'r' + x}>
+          <line x1={x} y1={ribTop(x)} x2={x} y2={98 - (ribTop(x) - 30)} stroke="#2A3646" strokeWidth="2.6" />
+          <line x1={x} y1={ribTop(x)} x2={x} y2={98 - (ribTop(x) - 30)} stroke="#9BB3CE" strokeWidth="1.1" opacity="0.9" />
+        </g>
+      ))}
+      <path d="M252 31 L296 35 L296 63 L252 63 Z" fill="url(#vhHull)" stroke="#10161E" strokeWidth="1" />
+      <line x1="256" y1="33" x2="294" y2="36.4" stroke="#FFFFFF" strokeWidth="1" opacity="0.3" />
+      <path d="M298 37 L332 40 L332 63 L298 63 Z" fill="url(#vhHull)" stroke="#10161E" strokeWidth="1" />
+      <path d="M252 65 L296 65 L296 93 L252 97 Z" fill="url(#vhHull)" stroke="#10161E" strokeWidth="1" />
+      <path d="M320 65 L352 65 L352 86 L320 89 Z" fill="url(#vhHull)" stroke="#10161E" strokeWidth="1" />
+      <ellipse cx="346" cy="40" rx="30" ry="6" fill="#000" opacity="0.4" filter="url(#vhSoft)" />
+      <path d="M334 16 L364 16 L364 28 L334 28 Z" fill="url(#vhPlate)" stroke="#10161E" strokeWidth="1" />
+      <line x1="336" y1="18" x2="362" y2="18" stroke="#FFFFFF" strokeWidth="1" opacity="0.6" />
+      <path d="M346 12 L336 16 M346 12 L362 16" stroke="#C9D6E4" strokeWidth="0.9" />
+      <circle cx="346" cy="12" r="1.8" fill="#E0B020" stroke="#10161E" strokeWidth="0.5" />
+      <circle cx="290" cy="66" r="18" fill="url(#vhSpark)" opacity="0.55" style={{ animation:'ship-spark 1.1s ease-in-out infinite', transformBox:'fill-box', transformOrigin:'center' }} />
+      <circle cx="322" cy="42" r="14" fill="url(#vhSpark)" opacity="0.55" style={{ animation:'ship-spark 1.1s ease-in-out 0.4s infinite', transformBox:'fill-box', transformOrigin:'center' }} />
+      <circle cx="372" cy="72" r="14" fill="url(#vhSpark)" opacity="0.55" style={{ animation:'ship-spark 1.1s ease-in-out 0.8s infinite', transformBox:'fill-box', transformOrigin:'center' }} />
+      <circle cx="290" cy="66" r="1.8" fill="#FFFFFF" />
+      <circle cx="322" cy="42" r="1.6" fill="#FFFFFF" />
+      <circle cx="372" cy="72" r="1.6" fill="#FFFFFF" />
+      {[104, 248, 392].map((x) => (
+        <g key={'l' + x}>
+          <circle cx={x} cy="20" r="18" fill="url(#vhLamp)" opacity="0.6" />
+          <circle cx={x} cy="14" r="3" fill="#FFF3C8" stroke="#16202C" strokeWidth="0.6" />
+        </g>
+      ))}
+      <text x="150" y="122.4" fontSize="5.6" fill="#E8D9A0" opacity="0.85" fontFamily="'IBM Plex Mono',monospace" letterSpacing="1">VALOR CLASS CRUISER · HULL 0417</text>
+      <text x="300" y="10.2" fontSize="5" fill="#16202C" opacity="0.9" fontWeight="700" fontFamily="'IBM Plex Mono',monospace" letterSpacing="1">KDY RING DRYDOCK 2</text>
+    </svg>
+  );
+}
+
+function ShipCzerkaHauler({ accent }) {
+  const cols = [44, 74, 104, 134];
+  const topFills = ['url(#chAmber)', 'url(#chRust)', 'url(#chTan)', 'url(#chGrey)'];
+  const botFills = ['url(#chTeal)', 'url(#chAmber)', null, 'url(#chTan)'];
+  return (
+    <svg viewBox="0 0 224 160" width="224" height="160" style={SHIP_SVG_STYLE}>
+      <defs>
+        <linearGradient id="chHull" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#6B7480" /><stop offset="0.5" stopColor="#3C444F" /><stop offset="1" stopColor="#1B2028" />
+        </linearGradient>
+        <linearGradient id="chAmber" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#D8A23A" /><stop offset="1" stopColor="#6E4C12" /></linearGradient>
+        <linearGradient id="chRust" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#A9532F" /><stop offset="1" stopColor="#4C2112" /></linearGradient>
+        <linearGradient id="chTan" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#BDAA80" /><stop offset="1" stopColor="#625640" /></linearGradient>
+        <linearGradient id="chGrey" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#929AA5" /><stop offset="1" stopColor="#444C57" /></linearGradient>
+        <linearGradient id="chTeal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#47909A" /><stop offset="1" stopColor="#1B4046" /></linearGradient>
+        <linearGradient id="chGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#CFEFFF" /><stop offset="0.5" stopColor="#3A7A98" /><stop offset="1" stopColor="#071A28" /></linearGradient>
+        <radialGradient id="chCore" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#FFFFFF" /><stop offset="0.35" stopColor="#8FD8FF" /><stop offset="1" stopColor="#1F6FC0" stopOpacity="0" />
+        </radialGradient>
+        <filter id="chSoft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7" /></filter>
+        <pattern id="chHazard" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="4" height="8" fill="#E0B020" /><rect x="4" width="4" height="8" fill="#14171B" />
+        </pattern>
+      </defs>
+      <rect x="3" y="3" width="218" height="154" rx="4" fill="#04070B" opacity="0.35" />
+      <rect x="3" y="3" width="218" height="154" rx="4" fill="none" stroke="#C08A2A" strokeWidth="1" strokeDasharray="7 4" opacity="0.45" />
+      <ellipse cx="112" cy="88" rx="100" ry="58" fill="#000" opacity="0.5" filter="url(#chSoft)" />
+      <path d="M34 52 L180 46 L186 114 L34 108 Z" fill="url(#chHull)" stroke="#0E1216" strokeWidth="1.4" />
+      <rect x="36" y="76" width="148" height="8" fill="#2C333D" stroke="#0E1216" strokeWidth="0.8" />
+      <line x1="36" y1="77.2" x2="184" y2="77.2" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.28" />
+      <text x="110" y="82.2" textAnchor="middle" fontSize="5.6" fill="#E0A83A" fontFamily="'IBM Plex Mono',monospace" letterSpacing="1.2">CZERKA CORP · BULK HAULER</text>
+      {cols.map((cx, i) => (
+        <g key={'t' + cx}>
+          <rect x={cx} y="52" width="26" height="24" rx="1.5" fill={i === 1 ? 'url(#chHazard)' : topFills[i]} stroke="#0E1216" strokeWidth="1" />
+          {i === 1 && <rect x={cx + 2} y="54" width="22" height="20" rx="1" fill="url(#chRust)" opacity="0.7" />}
+          <line x1={cx + 1} y1="53.4" x2={cx + 25} y2="53.4" stroke="#FFFFFF" strokeWidth="1" opacity="0.35" />
+          <line x1={cx + 8} y1="52" x2={cx + 8} y2="76" stroke="#0E1216" strokeWidth="0.7" opacity="0.5" />
+          <line x1={cx + 13} y1="52" x2={cx + 13} y2="76" stroke="#0E1216" strokeWidth="0.7" opacity="0.5" />
+          <line x1={cx + 18} y1="52" x2={cx + 18} y2="76" stroke="#0E1216" strokeWidth="0.7" opacity="0.5" />
+        </g>
+      ))}
+      {cols.map((cx, i) => botFills[i] ? (
+        <g key={'b' + cx}>
+          <rect x={cx} y="86" width="26" height="24" rx="1.5" fill={botFills[i]} stroke="#0E1216" strokeWidth="1" />
+          <line x1={cx + 1} y1="87.4" x2={cx + 25} y2="87.4" stroke="#FFFFFF" strokeWidth="1" opacity="0.35" />
+          <line x1={cx + 8} y1="86" x2={cx + 8} y2="110" stroke="#0E1216" strokeWidth="0.7" opacity="0.5" />
+          <line x1={cx + 13} y1="86" x2={cx + 13} y2="110" stroke="#0E1216" strokeWidth="0.7" opacity="0.5" />
+          <line x1={cx + 18} y1="86" x2={cx + 18} y2="110" stroke="#0E1216" strokeWidth="0.7" opacity="0.5" />
+        </g>
+      ) : (
+        <g key={'b' + cx}>
+          <rect x={cx} y="86" width="26" height="24" rx="1.5" fill="#06090D" stroke="#C08A2A" strokeWidth="0.9" strokeDasharray="3 2" />
+          <line x1={cx} y1="86" x2={cx + 26} y2="110" stroke="#C08A2A" strokeWidth="0.6" opacity="0.5" />
+          <line x1={cx + 26} y1="86" x2={cx} y2="110" stroke="#C08A2A" strokeWidth="0.6" opacity="0.5" />
+        </g>
+      ))}
+      <path d="M8 80 Q10 60 38 56 L38 104 Q10 100 8 80 Z" fill="url(#chHull)" stroke="#0E1216" strokeWidth="1.3" />
+      <path d="M12 74 Q16 62 36 59" fill="none" stroke="#FFFFFF" strokeWidth="1.2" opacity="0.35" />
+      <path d="M16 80 Q20 68 34 66 L34 94 Q20 92 16 80 Z" fill="url(#chGlass)" stroke="#0E1216" strokeWidth="0.9" />
+      <path d="M20 76 Q24 70 32 69 Q26 74 22 80 Z" fill="#FFFFFF" opacity="0.4" />
+      <line x1="27" y1="66" x2="27" y2="94" stroke="#0E1216" strokeWidth="0.8" opacity="0.7" />
+      <rect x="184" y="50" width="34" height="60" rx="3" fill="#20262E" stroke="#0E1216" strokeWidth="1.1" />
+      <path d="M188 50 L200 34 L216 36 L216 50 Z" fill="url(#chGrey)" stroke="#0E1216" strokeWidth="1" />
+      <path d="M188 110 L200 126 L216 124 L216 110 Z" fill="url(#chGrey)" stroke="#0E1216" strokeWidth="1" />
+      <line x1="202" y1="36" x2="214" y2="38" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.4" />
+      <circle cx="201" cy="80" r="21" fill="#0F1318" stroke="#5A6673" strokeWidth="2" />
+      <circle cx="201" cy="80" r="16.5" fill="none" stroke="#D8A23A" strokeWidth="2" strokeDasharray="4 3" style={{ animation:'ring-spin 9s linear infinite', transformOrigin:'201px 80px' }} />
+      <circle cx="201" cy="80" r="12" fill="url(#chCore)" style={{ animation:'ship-engine 2.2s ease-in-out infinite' }} />
+      <path d="M194 76 L199 80 L195 84 M208 76 L203 80 L207 84" fill="none" stroke="#DFF6FF" strokeWidth="0.8" opacity="0.8" />
+      <circle cx="201" cy="80" r="3" fill="#FFFFFF" />
+      <path d="M184 46 L218 46 M184 114 L218 114" stroke="#E0B020" strokeWidth="2.2" />
+      <path d="M184 46 L201 34 M218 46 L201 34 M184 114 L201 126 M218 114 L201 126" stroke="#E0B020" strokeWidth="1" opacity="0.7" />
+      <path d="M218 80 Q223 92 220 122" fill="none" stroke="#FF8A1E" strokeWidth="2" />
+      <path d="M218 80 Q223 92 220 122" fill="none" stroke="#FFD9A0" strokeWidth="0.6" opacity="0.6" />
+      <rect x="190" y="98" width="9" height="5" rx="1" fill="#6E7884" stroke="#0E1216" strokeWidth="0.6" />
+      <path d="M190 103 L188 108 M193 103 L193 109 M196 103 L198 108 M199 100 L205 96" stroke="#9AA6B3" strokeWidth="0.8" />
+      <circle cx="210" cy="52" r="10" fill="url(#chCore)" opacity="0.7" style={{ animation:'ship-spark 1.3s ease-in-out infinite', transformBox:'fill-box', transformOrigin:'center' }} />
+      <circle cx="44" cy="40" r="4" fill="#12161C" stroke="#4A5663" strokeWidth="0.7" />
+      <circle cx="170" cy="40" r="4" fill="#12161C" stroke="#4A5663" strokeWidth="0.7" />
+      <circle cx="44" cy="120" r="4" fill="#12161C" stroke="#4A5663" strokeWidth="0.7" />
+      <circle cx="170" cy="120" r="4" fill="#12161C" stroke="#4A5663" strokeWidth="0.7" />
+      <rect x="150" y="122" width="16" height="10" rx="1" fill="url(#chAmber)" stroke="#0E1216" strokeWidth="0.8" />
+      <line x1="150" y1="126" x2="166" y2="126" stroke="#0E1216" strokeWidth="0.6" />
+      <circle cx="176" cy="136" r="14" fill="url(#chCore)" opacity="0.3" />
+      <circle cx="176" cy="136" r="2.6" fill="#FFF3C8" />
+    </svg>
+  );
+}
+
+function ShipKuatYacht({ accent }) {
+  return (
+    <svg viewBox="0 0 160 128" width="160" height="128" style={SHIP_SVG_STYLE}>
+      <defs>
+        <linearGradient id="ykHull" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FAFBFD" /><stop offset="0.5" stopColor="#B9C1CC" /><stop offset="1" stopColor="#5E6877" />
+        </linearGradient>
+        <linearGradient id="ykWing" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#F2F4F8" /><stop offset="1" stopColor="#7A8494" />
+        </linearGradient>
+        <linearGradient id="ykGold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#F6DD86" /><stop offset="0.5" stopColor="#C29A2E" /><stop offset="1" stopColor="#7C5C14" />
+        </linearGradient>
+        <linearGradient id="ykGlass" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#8CC8F0" /><stop offset="0.5" stopColor="#1B4F82" /><stop offset="1" stopColor="#050F20" />
+        </linearGradient>
+        <radialGradient id="ykGlow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.95" /><stop offset="0.4" stopColor="#8FD8FF" stopOpacity="0.8" /><stop offset="1" stopColor="#1A8FD0" stopOpacity="0" />
+        </radialGradient>
+        <filter id="ykSoft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6" /></filter>
+        <filter id="ykBlur"><feGaussianBlur stdDeviation="1.6" /></filter>
+      </defs>
+      <rect x="3" y="3" width="154" height="122" rx="6" fill="#06101A" opacity="0.55" />
+      <rect x="3" y="3" width="154" height="122" rx="6" fill="none" stroke={accent} strokeWidth="1" strokeDasharray="5 4" opacity="0.5" />
+      {[[10, 10], [150, 10], [10, 118], [150, 118]].map(([x, y], i) => (
+        <circle key={'pl' + i} cx={x} cy={y} r="2.4" fill={accent} style={{ animation:`ship-blink 2.4s ease-in-out ${i * 0.4}s infinite` }} />
+      ))}
+      <ellipse cx="84" cy="72" rx="68" ry="38" fill="#000" opacity="0.5" filter="url(#ykSoft)" />
+      <path d="M64 46 L92 12 L130 8 L114 44 Z" fill="url(#ykWing)" stroke="#2A3340" strokeWidth="1" />
+      <path d="M64 82 L92 116 L130 120 L114 84 Z" fill="url(#ykWing)" stroke="#2A3340" strokeWidth="1" />
+      <path d="M64 46 L92 12 L130 8" fill="none" stroke="url(#ykGold)" strokeWidth="1.6" />
+      <path d="M64 82 L92 116 L130 120" fill="none" stroke="url(#ykGold)" strokeWidth="1.6" />
+      <path d="M78 40 L100 16 M88 42 L110 18" stroke="#FFFFFF" strokeWidth="1" opacity="0.5" />
+      <path d="M100 44 L124 12 L130 8 L114 44 Z" fill="#000" opacity="0.14" />
+      <path d="M100 84 L124 116 L130 120 L114 84 Z" fill="#000" opacity="0.18" />
+      <circle cx="129" cy="10" r="2.2" fill="#FF3A3A" style={{ animation:'ship-blink 1.5s steps(2) infinite' }} />
+      <circle cx="129" cy="118" r="2.2" fill="#3AFF6A" style={{ animation:'ship-blink 1.5s steps(2) 0.75s infinite' }} />
+      <path d="M6 64 Q24 54 60 48 L118 44 Q146 46 152 64 Q146 82 118 84 L60 80 Q24 74 6 64 Z" fill="url(#ykHull)" stroke="#2A3340" strokeWidth="1.3" />
+      <path d="M10 62 Q28 54 62 49 L118 45" fill="none" stroke="url(#ykGold)" strokeWidth="1.6" />
+      <path d="M10 66 Q28 74 62 79 L118 83" fill="none" stroke="url(#ykGold)" strokeWidth="1.2" opacity="0.8" />
+      <path d="M26 52 Q60 44 116 43" fill="none" stroke="#FFFFFF" strokeWidth="1.4" opacity="0.55" />
+      <path d="M24 64 L146 64" stroke="#1A8FD0" strokeWidth="5" opacity="0.5" filter="url(#ykBlur)" />
+      <path d="M24 64 L146 64" stroke="#1A8FD0" strokeWidth="2.6" />
+      <path d="M24 63 L146 63" stroke="#8FD8FF" strokeWidth="0.6" opacity="0.7" />
+      <path d="M22 64 Q36 54 68 55 Q78 64 68 73 Q36 74 22 64 Z" fill="url(#ykGlass)" stroke="url(#ykGold)" strokeWidth="1" />
+      <path d="M30 60 Q46 56 62 58 Q48 60 34 63 Z" fill="#FFFFFF" opacity="0.4" />
+      <path d="M46 55 L46 73 M58 55.6 L58 72.4" stroke="#C29A2E" strokeWidth="0.8" opacity="0.8" />
+      {[84, 94, 104, 114, 124, 134].map((x, i) => (
+        <g key={'pt' + x}>
+          <circle cx={x} cy="56" r="1.7" fill="#FFE7A8" style={{ animation:`ship-engine ${4 + (i % 2)}s ease-in-out ${i * 0.5}s infinite` }} />
+          <circle cx={x} cy="72" r="1.7" fill="#FFE7A8" style={{ animation:`ship-engine ${4 + (i % 2)}s ease-in-out ${i * 0.5 + 0.3}s infinite` }} />
+        </g>
+      ))}
+      <circle cx="104" cy="64" r="8" fill="#0F1F33" stroke="url(#ykGold)" strokeWidth="1.2" />
+      <path d="M99 67 L104 59 L109 67 L104 65 Z" fill="#F0D070" stroke="#7C5C14" strokeWidth="0.4" />
+      <ellipse cx="152" cy="54" rx="5" ry="6" fill="#0A0F16" stroke="#4A5663" strokeWidth="0.8" />
+      <ellipse cx="152" cy="74" rx="5" ry="6" fill="#0A0F16" stroke="#4A5663" strokeWidth="0.8" />
+      <circle cx="153" cy="54" r="7" fill="url(#ykGlow)" style={{ animation:'ship-engine 3s ease-in-out infinite' }} opacity="0.55" />
+      <circle cx="153" cy="74" r="7" fill="url(#ykGlow)" style={{ animation:'ship-engine 3s ease-in-out 0.9s infinite' }} opacity="0.55" />
+      <circle cx="50" cy="48" r="2.4" fill="url(#ykGold)" />
+      <circle cx="50" cy="80" r="2.4" fill="url(#ykGold)" />
+      <circle cx="120" cy="46" r="2.4" fill="url(#ykGold)" />
+      <circle cx="120" cy="82" r="2.4" fill="url(#ykGold)" />
+    </svg>
+  );
+}
+
+const ShipSprite = React.memo(function ShipSprite({ kind, accent }) {
+  if (kind === 'free_horizon') return <ShipFreeHorizon accent={accent} />;
+  if (kind === 'republic_shuttle') return <ShipRepublicShuttle accent={accent} />;
+  if (kind === 'valor_frame') return <ShipValorFrame accent={accent} />;
+  if (kind === 'czerka_hauler') return <ShipCzerkaHauler accent={accent} />;
+  if (kind === 'kuat_yacht') return <ShipKuatYacht accent={accent} />;
+  return null;
+});
 
 function FloorTilePattern({ kind }) {
   if (kind === 'marble') return (
@@ -11595,7 +12083,16 @@ function StarWarsRPG() {
 
       const tile = map[y]?.[x];
       if (!tile || tile.type === 'wall') { pushActionLog('Blocked.', zoneId); return; }
-      if (tile.type === 'ship_hull') { pushActionLog('The hull plating is solid. No way through.', zoneId); return; }
+      if (tile.type === 'ship_hull') {
+        const ship = shipAtTile(zone, x, y);
+        if (ship) {
+          pushActionLog(ship.description, zoneId);
+          if (ship.grantsFlag && !questFlags[ship.grantsFlag]) setFlag(ship.grantsFlag);
+          return;
+        }
+        pushActionLog('The hull plating is solid. No way through.', zoneId);
+        return;
+      }
       if (tile.type === 'lava') { pushActionLog('The lava channels are impassable. You can feel the heat from here.', zoneId); return; }
       if (tile.type === 'water') { pushActionLog('The water runs too deep to wade through.', zoneId); return; }
       if (tile.type === 'ship_ramp') { setShowTravel(true); return; }
@@ -11745,7 +12242,7 @@ function StarWarsRPG() {
       </div>
 
       <div style={{ position:'relative',display:'inline-block',alignSelf:'flex-start',zIndex:2 }}>
-        <div style={{ border:`1px solid ${zone.accentDim}`,background:zone.wallDark,boxShadow:`0 0 24px ${zone.accentGlow}` }}>
+        <div style={{ position:'relative',overflow:'hidden',border:`1px solid ${zone.accentDim}`,background:zone.wallDark,boxShadow:`0 0 24px ${zone.accentGlow}` }}>
           {Array.from({ length: VIEWPORT_ROWS }, (_, vy) => {
             const ty = camY + vy;
             return (
@@ -11763,7 +12260,8 @@ function StarWarsRPG() {
                   let bg = zone.wallDark;
                   if (tile.type === 'floor') bg = floorBackground(zone, tx, ty);
                   if (tile.type === 'wall') bg = wallBackground(zone, tx, ty);
-                  if (tile.type === 'ship_hull') bg = 'linear-gradient(135deg, #2A2A3A, #1A1A26)';
+                  const inShip = tile.type === 'ship_hull' && !!shipAtTile(zone, tx, ty);
+                  if (tile.type === 'ship_hull') bg = inShip ? floorBackground(zone, tx, ty) : 'linear-gradient(135deg, #2A2A3A, #1A1A26)';
                   if (tile.type === 'ship_ramp') bg = 'repeating-linear-gradient(45deg, #2C2C3C, #2C2C3C 4px, #383848 4px, #383848 8px)';
                   if (tile.type === 'door') bg = `radial-gradient(circle, ${zone.accentDim}88, #0D0E16)`;
                   if (tile.type === 'lava') bg = 'radial-gradient(circle at 40% 40%, #FF5500, #AA2000)';
@@ -11775,7 +12273,7 @@ function StarWarsRPG() {
                       {tile.type === 'wall' && wallDecorFor(zone, tx, ty) && <DecorIcon kind={wallDecorFor(zone, tx, ty)} accent={zone.accent} />}
                       {tile.type === 'floor' && zone.floorPattern && <FloorTilePattern kind={zone.floorPattern} />}
                       {tile.type === 'floor' && !isPlayer && !npcHere && !collectibleHere && decorFor(zone, tx, ty, map) && <DecorIcon kind={decorFor(zone, tx, ty, map)} accent={zone.accent} />}
-                      {tile.type === 'ship_hull' && (
+                      {tile.type === 'ship_hull' && !inShip && (
                         <svg viewBox="0 0 32 32" width={TILE} height={TILE} style={{ position:'absolute',inset:0,pointerEvents:'none' }}>
                           <line x1="0" y1="8" x2="32" y2="8" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.12" />
                           <line x1="0" y1="16" x2="32" y2="16" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.12" />
@@ -11827,6 +12325,15 @@ function StarWarsRPG() {
                     </div>
                   );
                 })}
+              </div>
+            );
+          })}
+          {zone.ships?.map((sh) => {
+            const d = SHIP_DEFS[sh.kind];
+            if (!d) return null;
+            return (
+              <div key={sh.id} style={{ position:'absolute',left:(sh.x - camX) * TILE,top:(sh.y - camY) * TILE,width:d.w * TILE,height:d.h * TILE,zIndex:3,pointerEvents:'none' }}>
+                <ShipSprite kind={sh.kind} accent={zone.accent} />
               </div>
             );
           })}
