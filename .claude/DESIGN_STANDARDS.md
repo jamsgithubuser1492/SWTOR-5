@@ -2,6 +2,8 @@
 
 These rules are binding for every visual asset in the game: world objects, ships, NPC portraits, decor, enemy sprites, and whole zones. They exist because of a real failure. We once shipped 41 "designed" objects that nobody could see in play, an NPC that rendered as nothing, and an object placed inside a wall. Every one of those passed review because the review looked at the code and a sprite sheet, never at the game.
 
+The look itself (palette, lighting, shapes, character, interface, motion) is defined in `.claude/STYLE_GUIDE.md`. This document defines what must be true before anything ships.
+
 The test is simple. **If you cannot identify the thing in a 1x screenshot of the actual game, it does not exist.**
 
 ---
@@ -27,15 +29,15 @@ The description is the design brief. A player who reads the text and then looks 
 - Era and lore: Old Republic, Kuat Drive Yards flavor where relevant. KDY reads as hazard amber and black striping, blue steel, Kuati stepped arch bronze, brass and copper luxury droids, teal grey heavy loader carapace. The Loremaster signs off on ship classes and designations.
 - If the text does not give enough to draw, ask the Holonet Archivist for a richer description rather than inventing contradicting detail.
 
-### 3. Lit and shaded
+### 3. Built in the house style
 
-Flat shapes look cheap and read poorly. Every asset needs:
+One world, one look. A new asset must look like it came from the same game as the core characters standing next to it. The style is "cel lit noir", fully specified in `.claude/STYLE_GUIDE.md`. In short:
 
-- Light from the upper left: a bright top edge highlight, a gradient from light to dark (top to bottom or corner to corner), and a darker underside.
-- A soft elliptical contact shadow on the floor.
-- Distinct materials: steel, brass, bronze, copper, glass, felt, wood, cloth should look different from each other.
-- Glow for anything emissive (screens, lamps, engines, holograms).
-- A small amount of life: one to three animated elements per asset (blinking lights, scanning line, pulsing glow). More is noise.
+- Forms are flat, hard edged shapes in three tones built with `<Bev>` and colors from the `ART` palette kit. Every color must come from the kit.
+- No gradients, filters, patterns, blur glows, or outlines inside an asset. The engine adds the ink outline, the zone colored rim light, and the contact shadow to every sprite (`spriteFx`), so old and new art are lit identically.
+- Emissive parts are flat bright shapes with `<Glow>` rings. Hazard striping uses `<Hazard>`. Big props and ships carry a flat `<PropShadow>`.
+- Light comes from the upper left. One to three small animated parts at most.
+- Check it with `style-sheet.js`, which puts the asset next to the core characters. If it looks like a different game, it fails.
 
 ### 4. Placed meaningfully
 
@@ -67,6 +69,8 @@ Setup once: `cd .claude/tools && npm install`
 | `node .claude/tools/validate-world.js --zone <id> --strict` | Compiles the game, checks entities on floor and reachable, door integrity, portrait registry, prop and ship registries, footprint overlaps, and flags every object that only has the legacy icon. Exit 0 means pass. |
 | `node .claude/tools/validate-world.js --planet <id>` | Same for a whole planet. |
 | `node .claude/tools/validate-world.js` | Whole game baseline. |
+| `node .claude/tools/lint-art.js` | Style linter: no baked gradients, filters, patterns or outlined forms, every color in the ART palette, text fits the sprite and is readable, viewBox matches the registered footprint. |
+| `node .claude/tools/style-sheet.js --props a,b --ships c` | Puts new art next to the core characters under the same lighting for a consistency review. Open the PNG. |
 | `node .claude/tools/zone-snapshot.js <planet> <zone> x,y x,y` | Boots the real game in headless Chromium at the given player positions and saves PNGs to `.claude/tools/snapshots/`. Open them. |
 
 The validator reads the registries from the code itself, so it cannot drift the way hand written lists do.
@@ -80,7 +84,7 @@ The validator reads the registries from the code itself, so it cannot drift the 
 1. Add `propArt: 'kind'` (and optional `propVariant: 'name'`) to the world object in the zone.
 2. Add the kind to `PROP_DEFS`: `{ w, h, ax, ay }` where w and h are the footprint in tiles and `ax, ay` is where the object's own tile sits inside that footprint.
 3. Add a `case` in `PropArt()` and write the component. Use `viewBox="0 0 W H"` with `W = w * 32` and `H = h * 32`, and `style={PROP_STYLE}`.
-4. Use `<PropDefs p="xx" />` for the shared steel, dark, brass, bronze, copper, teal, red, glass, blue and amber gradients, the hazard stripe pattern, and the soft shadow filter. Give each prop a unique two or three letter prefix. Inline SVGs share one id space across the page, so reused ids collide.
+4. Build with the ART KIT in `star-wars-rpg.jsx`: `<Bev t="rect" c="steel" ... />` for every solid form, colors only from `ART`, `<Glow>` for emissive rings, `<Hazard>` for amber and black stripes, `<PropShadow>` for the floor shadow. No gradients, filters, patterns, or outlines (the engine adds those). See `.claude/STYLE_GUIDE.md` sections 2 and 7.
 5. Text in SVG: a monospace character is about `0.6 * fontSize` wide. Maximum characters = `available width / (0.6 * fontSize)`. Check text at 3x on a contact sheet, then at 1x in game. Small decorative text can go down to about 1.8 but headline text must read.
 6. Props draw at z index 2, below ships (3), NPCs (5), the player (6) and overlays (20 and up). The art is visual only. The player still interacts by walking onto the object tile.
 7. `once` objects disappear after use. Design accordingly.
@@ -91,7 +95,7 @@ The validator reads the registries from the code itself, so it cannot drift the 
 2. Add the kind to `SHIP_DEFS` (footprint in tiles) and a branch in `ShipSprite()`.
 3. Call `carveShips(g, this.ships)` at the end of `buildMap()`.
 4. Bumping the hull shows the description and sets `grantsFlag`. Write the description from the same art brief as the sprite.
-5. Draw with plan view lighting, a landing pad marking, a soft shadow, running lights, and engine glow. Keep a clear walking lane around the footprint.
+5. Draw in plan view with `<Bev>` panels, a landing pad marking, a flat `<PropShadow>`, running lights, and `<Glow>` engines (STYLE_GUIDE section 8). Keep a clear walking lane around the footprint.
 
 ### NPC portraits (`NpcPortrait`)
 
@@ -111,9 +115,11 @@ Follow the Systems Architect prompt. The same five laws apply: legible at 1x, li
 ## Definition of Done (copy into the commit message or report)
 
 - [ ] Art brief written: every concrete detail in the text maps to a visible element
-- [ ] Footprint meets Law 1, fills are solid and lit, shadow and highlight present
+- [ ] Footprint meets Law 1; built with `<Bev>` and ART colors only, flat, no baked lighting
 - [ ] Registered everywhere it must be (`PROP_DEFS` and `PropArt`, `SHIP_DEFS` and `ShipSprite`, `NpcPortrait`)
+- [ ] `lint-art.js` passes (style, palette, text fit, scale)
 - [ ] `validate-world.js --zone <id> --strict` passes
+- [ ] `style-sheet.js` viewed: the asset looks like the same game as the core row
 - [ ] `zone-snapshot.js` run at 2+ positions and the images were viewed
 - [ ] Text fits and is legible at 1x
 - [ ] Pushed, `?v=` in `index.html` bumped, live file confirmed to contain the new code
@@ -130,7 +136,8 @@ Follow the Systems Architect prompt. The same five laws apply: legible at 1x, li
 | Counting "adjacent to a reachable tile" as reachable | Engine blocks walking into walls | BFS to the tile itself, on a floor tile |
 | Using a portrait `kind` that is not registered | Renders nothing, no error | Run the validator, register the kind |
 | Documentation that lists registries by hand | Drifts from code | Trust the validator, which reads the code |
-| Duplicate SVG gradient ids across props | Wrong gradient renders | Unique prefix per prop |
+| Baked gradients, blur glows, drop shadows, or outlines inside an asset | Double lit by the engine pass, looks like a different game | Flat `<Bev>` forms; let the engine light it |
+| One off hex colors | Palette drift, art stops feeling like one family | Use the ART kit; add colors to it deliberately |
 | Text wider than its panel | Clipped, unreadable | Use the character width formula, check at 3x and 1x |
 | Declaring done without looking | Ships invisible work | Law 5 |
 | Shipping a syntax slip (an unescaped apostrophe in a single quoted string) | Blank screen | The validator compiles the file first |

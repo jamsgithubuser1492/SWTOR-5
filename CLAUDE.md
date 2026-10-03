@@ -12,8 +12,9 @@ Single-file React/Babel browser app. No build system.
 | `index.html` | CDN loader (React 18, Babel 7) |
 | `.claude/agents/` | Agent system prompts |
 | `.claude/schemas/` | Data structure contracts |
-| `.claude/DESIGN_STANDARDS.md` | **Binding visual design rules** (read before making any visual asset) |
-| `.claude/tools/` | `validate-world.js` and `zone-snapshot.js`, the enforcement tools |
+| `.claude/STYLE_GUIDE.md` | **The look and feel bible**: palette, house style, world, object, ship, character, UI and motion rules |
+| `.claude/DESIGN_STANDARDS.md` | **Binding visual quality rules and checklist** (read before making any visual asset) |
+| `.claude/tools/` | `validate-world.js`, `lint-art.js`, `style-sheet.js`, `zone-snapshot.js`: the enforcement tools |
 
 Live at: `https://jamsgithubuser1492.github.io/SWTOR-5/`
 
@@ -21,18 +22,20 @@ Live at: `https://jamsgithubuser1492.github.io/SWTOR-5/`
 
 ## Visual Design Standards (binding)
 
-Full rules: `.claude/DESIGN_STANDARDS.md`. Read it before creating or changing any visual asset. The test: **if you cannot identify it in a 1x screenshot of the actual game, it does not exist.**
+Look and feel: `.claude/STYLE_GUIDE.md` (one world, one look: the "cel lit noir" house style). Quality rules and checklist: `.claude/DESIGN_STANDARDS.md`. Read both before creating or changing any visual asset. The test: **if you cannot identify it in a 1x screenshot of the actual game, it does not exist.**
 
 1. **Visible at gameplay scale.** Tiles are 32px, the viewport is 20 by 13 tiles. Set pieces get a real footprint (2 by 2 tiles minimum), solid lit fills, and contrast against dark floors. No outline only or dark on dark art.
 2. **Faithful to the text.** The description is the brief. Write an art brief mapping every concrete detail (counts, colors, signage, damage, states) to a visible element.
-3. **Lit and shaded.** Upper left light, gradients, contact shadow, distinct materials, glow, a few animated parts.
+3. **House style.** Flat three tone shapes built with `<Bev>` and colors from the `ART` palette kit. No baked gradients, filters, or outlines: the engine adds the ink outline, zone colored rim light, and contact shadow to every sprite so old and new art match.
 4. **Placed meaningfully.** Entities on reachable `floor` tiles, never walls. Footprints clear of doors, collectibles, ships, other objects.
 5. **Proven in the engine.** Validate, snapshot, look at the images, confirm the live site.
 
 Before any push that touches zones, objects, ships, portraits, or art (one time setup: `cd .claude/tools && npm install`):
 
 ```
-node .claude/tools/validate-world.js --zone <zone id> --strict
+node .claude/tools/lint-art.js                                   # style, palette, text fit, scale
+node .claude/tools/validate-world.js --zone <zone id> --strict   # placement, reachability, registries
+node .claude/tools/style-sheet.js --props kind,kind --ships kind # new art next to the core characters
 node .claude/tools/zone-snapshot.js <planet> <zone> x,y x,y     # then open and view the PNGs
 ```
 
@@ -91,7 +94,7 @@ Modify `CONQUEST_SECTORS_INIT` or `CONQUEST_UNIT_TYPES` constants (defined aroun
 - NPC `kind` must be registered in `NpcPortrait()` or entities render nothing
 - Entity x,y must land on `floor` tiles or they are unreachable
 - Ships are large sprites declared in a zone's `ships` array (`{ id, kind, x, y, label, description, grantsFlag }`). Each `kind` needs a `SHIP_DEFS` footprint (w, h in tiles) and a branch in `ShipSprite()`. Call `carveShips(g, this.ships)` at the end of `buildMap()` so the footprint becomes solid `ship_hull`. Bumping the hull shows the description and sets `grantsFlag`. Keep ship footprints clear of entities, doors, and the access paths to alcoves (run a BFS check)
-- KDY world objects use big set piece art: add `propArt: 'kind'` (and optional `propVariant`) to the object, give the kind a footprint in `PROP_DEFS` (w, h, plus ax, ay = the object's tile inside the footprint) and a case in `PropArt()`. The art is visual only, drawn behind NPCs and the player. Never place an object or NPC on a `wall` tile (movement is blocked before interaction). Bump the `?v=` on the script tag in `index.html` when you push so browsers drop cached copies
+- KDY world objects use big set piece art built from the ART KIT (`Bev`, `Glow`, `Hazard`, `PropShadow`, `ART` palette; no gradients or outlines): add `propArt: 'kind'` (and optional `propVariant`) to the object, give the kind a footprint in `PROP_DEFS` (w, h, plus ax, ay = the object's tile inside the footprint) and a case in `PropArt()`. The art is visual only, drawn behind NPCs and the player. Never place an object or NPC on a `wall` tile (movement is blocked before interaction). Bump the `?v=` on the script tag in `index.html` when you push so browsers drop cached copies
 - Door pairs must be symmetric — each side lists the other as `targetZone`/`targetPos`
 - All React hooks inside `CoruscantConquestOverlay` must use the `React.useState` / `React.useEffect` form — no shorthand destructuring (single-file Babel constraint)
 - `MapView` inside `CoruscantConquestOverlay` is called as a direct function `MapView()` rather than via `React.createElement(MapView, null)` to prevent remount on every render

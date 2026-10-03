@@ -4,6 +4,8 @@
   "description": "Validation and in-engine screenshot tools for the Star Wars RPG single-file game",
   "scripts": {
     "validate": "node validate-world.js",
+    "lint": "node lint-art.js",
+    "style-sheet": "node style-sheet.js",
     "snapshot": "node zone-snapshot.js"
   },
   "dependencies": {

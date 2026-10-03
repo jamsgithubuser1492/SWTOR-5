@@ -97,17 +97,18 @@ Reference these when building new overlays. Each follows the same pattern: accep
 
 Read `.claude/DESIGN_STANDARDS.md` before drawing anything. The short version: visible at 1x gameplay scale, faithful to the written description, lit and shaded, placed on reachable floor tiles, proven by running the game.
 
-**World objects (set piece art).** Add `propArt: 'kind'` to the object, a footprint in `PROP_DEFS` (`w, h, ax, ay`), and a case in `PropArt()`. Build the component with `viewBox` equal to `w*32` by `h*32`, use `<PropDefs p="xx" />` for shared gradients (unique prefix per prop), and follow the art brief procedure below. Existing examples: `PropFuelRig`, `PropImpoundDoor`, `PropDriveCradle`, `PropForgeBar`.
+**World objects (set piece art).** Add `propArt: 'kind'` to the object, a footprint in `PROP_DEFS` (`w, h, ax, ay`), and a case in `PropArt()`. Build the component with `viewBox` equal to `w*32` by `h*32`. Construct every solid form with the ART KIT: `<Bev t="rect" c="steel" .../>`, colors only from `ART`, `<Glow>` for emissive rings, `<Hazard>` for striping, `<PropShadow>` for the floor shadow. Do not use gradients, filters, patterns or outlines: the engine adds the ink outline, zone rim light and contact shadow (`spriteFx`). Existing examples: `PropFuelRig`, `PropImpoundDoor`, `PropDriveCradle`, `PropForgeBar`. Read `.claude/STYLE_GUIDE.md` first.
 
 **Ships.** Add a footprint to `SHIP_DEFS`, a branch in `ShipSprite()`, declare the ship in the zone's `ships` array, and call `carveShips(g, this.ships)` in `buildMap()`.
 
 **Art brief procedure (narrative text to art).**
 1. Read the object's `description` and any `autoCodex.body`. List every concrete visual detail: counts, colors, materials, quoted signage, damage, and states.
 2. Decide the footprint (2 by 2 tiles minimum for set pieces) and the one or two elements that make it recognisable at a glance.
-3. Build with solid lit fills, an upper left highlight, a light to dark gradient, a contact shadow, and glow on emissive parts.
+3. Build flat three tone forms with `<Bev>`, add a flat `<PropShadow>`, and `<Glow>` rings on emissive parts. Light is implied (upper left) by the bevel; the engine adds the rest.
 4. Put quoted text on the art, sized with the character width formula (`0.6 * fontSize` per character) so it fits.
 5. Draw state changes (locked and cleared, damaged and repaired) as different art.
-6. Verify: contact sheet at 3x for detail, then `zone-snapshot.js` in the real scene at 1x. If it is not identifiable at 1x, redo it.
+6. Verify: `lint-art.js` passes; `style-sheet.js` shows the asset next to the core characters and it looks like the same game; `zone-snapshot.js` shows it in the real scene at 1x. If it is not identifiable at 1x, or looks different from the core art, redo it.
+7. New NPC portraits follow STYLE_GUIDE section 9: flat two tone shapes on a `0 0 30 42` canvas, skin from `ART.skin`, no gradients or outlines.
 
 ## Workflow
 
