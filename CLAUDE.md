@@ -12,8 +12,31 @@ Single-file React/Babel browser app. No build system.
 | `index.html` | CDN loader (React 18, Babel 7) |
 | `.claude/agents/` | Agent system prompts |
 | `.claude/schemas/` | Data structure contracts |
+| `.claude/DESIGN_STANDARDS.md` | **Binding visual design rules** (read before making any visual asset) |
+| `.claude/tools/` | `validate-world.js` and `zone-snapshot.js`, the enforcement tools |
 
 Live at: `https://jamsgithubuser1492.github.io/SWTOR-5/`
+
+---
+
+## Visual Design Standards (binding)
+
+Full rules: `.claude/DESIGN_STANDARDS.md`. Read it before creating or changing any visual asset. The test: **if you cannot identify it in a 1x screenshot of the actual game, it does not exist.**
+
+1. **Visible at gameplay scale.** Tiles are 32px, the viewport is 20 by 13 tiles. Set pieces get a real footprint (2 by 2 tiles minimum), solid lit fills, and contrast against dark floors. No outline only or dark on dark art.
+2. **Faithful to the text.** The description is the brief. Write an art brief mapping every concrete detail (counts, colors, signage, damage, states) to a visible element.
+3. **Lit and shaded.** Upper left light, gradients, contact shadow, distinct materials, glow, a few animated parts.
+4. **Placed meaningfully.** Entities on reachable `floor` tiles, never walls. Footprints clear of doors, collectibles, ships, other objects.
+5. **Proven in the engine.** Validate, snapshot, look at the images, confirm the live site.
+
+Before any push that touches zones, objects, ships, portraits, or art (one time setup: `cd .claude/tools && npm install`):
+
+```
+node .claude/tools/validate-world.js --zone <zone id> --strict
+node .claude/tools/zone-snapshot.js <planet> <zone> x,y x,y     # then open and view the PNGs
+```
+
+New content must pass `--strict` with zero errors and zero warnings. When you touch a zone, upgrade its legacy 26px icons to set piece art in the same change. Report honestly what was seen by eye versus checked only in code.
 
 ---
 
@@ -30,6 +53,7 @@ Invoke any agent by saying: **"Act as [agent name] and [task]."**
 | **The Loremaster** | `loremaster.md` | Canon accuracy review for Old Republic era lore |
 | **The State Logic Validator** | `state-logic-validator.md` | Audits dialogue for broken moral logic and missing states |
 | **The World Architect** | `world-architect.md` | Brainstorms and specs new planets and zones |
+| **The Art Director** | `art-director.md` | Visual sign off: holds all art to the Design Standards and proves it in the running game |
 
 ---
 
@@ -43,10 +67,14 @@ Invoke any agent by saying: **"Act as [agent name] and [task]."**
 5. State Logic Validator → dialogue audit
 6. Protocol QA → integrity check
 7. Systems Architect → new portrait kinds or mechanics if needed
-8. Push to `main`
+8. Art Director → visual sign off (`validate-world.js --strict`, `zone-snapshot.js`, images viewed)
+9. Push to `main` (bump the `?v=` on the script tag in `index.html`)
 
 **New NPC kind (portrait):**
-Systems Architect adds an SVG branch to `NpcPortrait()` in `star-wars-rpg.jsx`.
+Systems Architect adds an SVG branch to `NpcPortrait()` in `star-wars-rpg.jsx`. An unregistered kind renders nothing, so the validator must pass.
+
+**New world object, ship, or prop art:**
+Holonet Archivist writes a drawable description, Systems Architect or Art Director builds the art to the Design Standards, Art Director signs off.
 
 **New mini-game:**
 Systems Architect builds it as an overlay component and wires it to a trigger in the keydown handler.
@@ -120,7 +148,9 @@ The player is a rising crime lord on Coruscant in the Old Republic era. The main
 
 ### NPC Portrait Kinds (registered in `NpcPortrait()`)
 
-`crime_boss`, `enforcer`, `slicer`, `broker`, `republic_guard`, `jedi`, `mechanic`, `smuggler`, `droid`, `assassin`, `generic`, `vigo_vanguard`, `black_sun_vigo_guard`, `black_sun_slicer`, `exchange_bounty_hunter`, `exchange_smuggler_captain`, `csf_swat`, `csf_detective`, `sith_warrior`, `sith_acolyte`, `mandalorian_tracker`, `hutt_lieutenant`, `twilek_dancer`, `syndicate_thug`, `devaronian_scoundrel`, `rodian_sharpshooter`
+`archivist`, `assassin`, `besalisk_boss`, `bith`, `broker`, `cantina_owner`, `crime_boss`, `czerka_liaison`, `deuterium_specialist`, `droid`, `generic`, `imperial_naval_liaison`, `jedi`, `kdy_commander`, `kdy_executive_sentinel`, `kdy_guild_overseer`, `kdy_logistics_officer`, `kdy_ring_sec`, `kdy_security_marine`, `kdy_shipwright`, `kuati_sub_director`, `mechanic`, `medic`, `pit_fighter`, `republic_guard`, `republic_navy_inspector`, `republic_pilot`, `senator`, `slicer`, `smuggler`, `sub_deck_slicer`, `swoop_gang`, `the_architect`, `trandoshan_sniper`, `vectis_droid`, `warden`, `zero_g_welder`
+
+This list is generated from the code. `validate-world.js` is the source of truth.
 
 ### Canvas Object Types (rendered in zone canvas, beyond tiles)
 

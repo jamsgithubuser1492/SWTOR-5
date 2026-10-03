@@ -1,0 +1,15 @@
+{
+  "name": "swtor-tools",
+  "private": true,
+  "description": "Validation and in-engine screenshot tools for the Star Wars RPG single-file game",
+  "scripts": {
+    "validate": "node validate-world.js",
+    "snapshot": "node zone-snapshot.js"
+  },
+  "dependencies": {
+    "@babel/standalone": "^7.23.9",
+    "playwright-core": "^1.48.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

@@ -43,7 +43,7 @@ Currently registered profiles: `syndicate_thug`, `vigo_vanguard`, `black_sun_vig
 
 **`WORLD_OBJECT_SPRITES` registry** — constant defined before `WorldObjectSprite()`. Maps world object IDs to `(accent) => <svg>` functions. When a new world object needs a custom sprite instead of a generic category icon, add one entry here keyed by the object's `id` field.
 
-SVG spec: `viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}`. Use `a` for zone-integrated glows and highlights; use fixed hardcoded colors for story-specific elements:
+LEGACY SPEC (26px icons, do not use for new objects, use set piece art instead): `viewBox="0 0 28 28" width="26" height="26" style={{pointerEvents:'none'}}`. Use `a` for zone-integrated glows and highlights; use fixed hardcoded colors for story-specific elements:
 - `#E8A030` = amber; warnings, discrepancies, provisional/flagged status
 - `#FF4422` = danger red; CRITICAL readings, CLOSED stamps, blast marks
 - `#40C840` = syndicate green; iron chain markings
@@ -93,17 +93,26 @@ Reference these when building new overlays. Each follows the same pattern: accep
 | `TacticalGridCombatOverlay` | (launched by Conquest) | ~line 7800 |
 | `CoruscantConquestOverlay` | `conquest` | ~line 8317 |
 
-## Sprite Derivation Procedure (how to go from narrative text to SVG)
+## Visual Assets: Standards First
 
-1. Read the world object's `description` and `autoCodex.body` if present. Identify the two or three most visually distinctive story-specific elements.
-2. SVG is 28x28. Use `opacity` layers for depth: dark base fill, faint accent fill, then strokes and details on top.
-3. Story-specific elements get the fixed hardcoded colors above. Zone-integrated elements use `a`.
-4. Use `lens-flicker` for pulsing status lights and `mist-drift` for steam or haze.
-5. Keep shapes simple and legible at 26px rendered size. Silhouettes, outlines, and diagonal stamps read better than fine detail.
+Read `.claude/DESIGN_STANDARDS.md` before drawing anything. The short version: visible at 1x gameplay scale, faithful to the written description, lit and shaded, placed on reachable floor tiles, proven by running the game.
+
+**World objects (set piece art).** Add `propArt: 'kind'` to the object, a footprint in `PROP_DEFS` (`w, h, ax, ay`), and a case in `PropArt()`. Build the component with `viewBox` equal to `w*32` by `h*32`, use `<PropDefs p="xx" />` for shared gradients (unique prefix per prop), and follow the art brief procedure below. Existing examples: `PropFuelRig`, `PropImpoundDoor`, `PropDriveCradle`, `PropForgeBar`.
+
+**Ships.** Add a footprint to `SHIP_DEFS`, a branch in `ShipSprite()`, declare the ship in the zone's `ships` array, and call `carveShips(g, this.ships)` in `buildMap()`.
+
+**Art brief procedure (narrative text to art).**
+1. Read the object's `description` and any `autoCodex.body`. List every concrete visual detail: counts, colors, materials, quoted signage, damage, and states.
+2. Decide the footprint (2 by 2 tiles minimum for set pieces) and the one or two elements that make it recognisable at a glance.
+3. Build with solid lit fills, an upper left highlight, a light to dark gradient, a contact shadow, and glow on emissive parts.
+4. Put quoted text on the art, sized with the character width formula (`0.6 * fontSize` per character) so it fits.
+5. Draw state changes (locked and cleared, damaged and repaired) as different art.
+6. Verify: contact sheet at 3x for detail, then `zone-snapshot.js` in the real scene at 1x. If it is not identifiable at 1x, redo it.
 
 ## Workflow
 
 1. Read the relevant section of `star-wars-rpg.jsx` before writing (use offset/limit to target the section).
 2. Write the change. Keep each diff minimal.
 3. Confirm the new portrait kind or component integrates with the existing state and render pipeline.
-4. Push via `mcp__github__create_or_update_file` with the current file SHA.
+4. Run `node .claude/tools/validate-world.js --zone <id> --strict` and `node .claude/tools/zone-snapshot.js <planet> <zone> x,y x,y`, and view the images.
+5. Hand off to the Art Director for sign off, then push to `main`.

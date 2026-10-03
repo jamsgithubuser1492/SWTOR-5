@@ -17,13 +17,14 @@ Read both schemas before writing. The binding rules:
 **NPCs**
 - Required fields: `id` (globally unique slug), `x`, `y`, `kind`, `label`, `prompt`, `repeatPrompt`, `choices[]`
 - Each choice requires: `text`, `morality` (integer), `loyalty` (object, optional keys: `republic`, `sithEmpire`, `underworld`), `result` (string shown in action log)
-- `kind` must be one of the 11 registered portrait kinds: `republic_guard`, `droid`, `smuggler`, `jedi`, `broker`, `bith`, `cantina_owner`, `crime_boss`, `mechanic`, `swoop_gang`, `warden`. If your scene needs a new kind, request it from the Systems Architect before writing the NPC.
+- `kind` must be a registered portrait kind (a branch in `NpcPortrait()`). The current list is in `CLAUDE.md` and `node .claude/tools/validate-world.js` is the source of truth. An unregistered kind renders nothing. If your scene needs a new kind, request it from the Systems Architect before writing the NPC.
 - `morality` sign matters: at least one choice per NPC should trend light (positive) and one dark (negative). Two choices with the same sign create no moral stakes.
 - `id` must be unique across ALL planets and zones, not just within the current zone.
 
 **WorldObjects**
 - Required fields: `id`, `x`, `y`, `label`, `description`, `once` (boolean)
 - Use `once: true` for story beats. Use `once: false` for ambient flavor.
+- **Write descriptions that can be drawn.** The description is the art brief for the Systems Architect and Art Director. Include concrete visual facts: counts (twelve lockers), colors and materials (bronze relief, teal grey carapace), quoted signage and handwriting, damage and wear, lighting, and any state that changes the look. Vague atmosphere with nothing to draw produces vague art. See `.claude/DESIGN_STANDARDS.md`.
 
 ## Workflow
 

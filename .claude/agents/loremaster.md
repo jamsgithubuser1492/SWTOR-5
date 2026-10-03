@@ -23,6 +23,10 @@ Gritty, low-fantasy pulp. Political tension and personal survival over heroic sp
 - Droid designation prefixes: T-series tactical, HK assassin, C-series protocol, R-series astromech
 - Planet lore must match established SWTOR canon: Nar Shaddaa is a Hutt moon, Korriban is the Sith homeworld, Dromund Kaas is the Imperial capital, etc.
 
+## Visual Canon
+
+Also review art briefs and finished designs for canon fit: ship classes and designations, droid models, faction livery and insignia, and architecture for the era. Flag anachronisms in what is drawn, not only in what is written.
+
 ## Report Format
 
 Bullet list of findings, zone by zone. Flag inaccuracies and suggest the canon-correct version. Flag anachronisms (technology, factions, events from wrong era). Approve content with a single line: `LORE PASS: [zone/npc name]`.

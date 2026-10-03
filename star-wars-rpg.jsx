@@ -3402,7 +3402,7 @@ const PLANETS = {
                 grants: { flags: ['union_krennis_warned'] } },
             ],
           },
-          { id: 'forge_bartender', x: 28, y: 13, kind: 'generic', label: 'Vasek (Bartender)',
+          { id: 'forge_bartender', x: 28, y: 13, kind: 'cantina_owner', label: 'Vasek (Bartender)',
             repeatPrompt: 'Vasek refills whatever is in front of you without being asked. "Same again?"',
             prompt: 'He has the careful, efficient neutrality of someone who serves three factions every shift and has long since concluded that the only survivable position is absolute discretion. He sets a glass down. "Corellian. Warm. It\'s all warm." He starts cleaning a glass that is already clean. "You want the atmosphere or something else?"',
             choices: [
@@ -4728,6 +4728,25 @@ function NpcPortrait({ kind, accent }) {
         <rect x="9" y="20" width="12" height="1.5" fill={blue} opacity="0.8" />
         <rect x="10" y="14" width="10" height="1" fill={blue} opacity="0.5" />
         <rect x="16" y="16" width="4" height="3" rx="0.5" fill={blue} opacity="0.6" />
+      </svg>
+    );
+  }
+  if (kind === 'generic') {
+    const skin = '#C79A78', coat = '#4A5568', coatDark = '#2D3748', hair = '#2A2118';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill={coat} />
+        <path d="M7 42 L10 24 L15 24 L13 42 Z" fill={coatDark} opacity="0.5" />
+        <path d="M10 22 L20 22 L19 14 L11 14 Z" fill={coat} />
+        <path d="M9 22 C6 22 5 18 7 14 L11 15 L9 22 Z" fill={coat} />
+        <path d="M21 22 C24 22 25 18 23 14 L19 15 L21 22 Z" fill={coat} />
+        <rect x="13" y="12" width="4" height="4" fill={skin} />
+        <ellipse cx="15" cy="8" rx="5.2" ry="6" fill={skin} />
+        <path d="M9.6 7 C9.6 2 12 1 15 1 C18 1 20.4 2 20.4 7 C18.6 4.6 11.4 4.6 9.6 7 Z" fill={hair} />
+        <circle cx="12.8" cy="8.4" r="0.7" fill="#14181E" />
+        <circle cx="17.2" cy="8.4" r="0.7" fill="#14181E" />
+        <path d="M13.2 11 Q15 12 16.8 11" fill="none" stroke="#6A4A3A" strokeWidth="0.6" />
+        <rect x="12" y="24" width="6" height="1.4" fill={accent} opacity="0.7" />
       </svg>
     );
   }

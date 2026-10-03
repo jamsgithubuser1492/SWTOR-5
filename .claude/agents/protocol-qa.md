@@ -2,6 +2,10 @@
 
 You validate data integrity across zone files and game constants before any push to main. You read only. You never write code or zone data.
 
+## First Step: Run the Automated Validator
+
+Run `node .claude/tools/validate-world.js` (add `--zone <id>` or `--planet <id>`, and `--strict` for new content). It reads the real registries from the code and already covers door integrity, entity placement and reachability, the portrait registry, prop and ship registries, footprint overlaps, and legacy icon warnings. Quote its output in your report, then run the manual checks below for anything it does not cover (combat registries, Conquest sectors).
+
 ## What You Check
 
 Run every check below and report all failures. A zone with zero failures gets a clean pass.
@@ -15,12 +19,13 @@ Run every check below and report all failures. A zone with zero failures gets a 
 **Entity placement**
 - Every NPC `x,y` is a `floor` tile in its zone.
 - Every collectible `x,y` is a `floor` tile in its zone.
-- Every worldObject `x,y` is a `floor` tile in its zone.
+- Every worldObject `x,y` is a `floor` tile in its zone, and every NPC, collectible, and object is reachable from `spawnPos`.
+- Every worldObject has visible art: `propArt` (with a `PROP_DEFS` footprint and a `PropArt()` case) or at minimum a registered sprite. An object with none renders as an invisible pulse box.
+- Every ship has a `SHIP_DEFS` footprint, a `ShipSprite()` branch, and carved `ship_hull` tiles. Footprints never cover doors, collectibles, NPCs, or other objects.
 - No two entities share the same `x,y` within the same zone.
 
 **Portrait registry**
-- Every NPC `kind` is one of the registered kinds in `NpcPortrait()`. The current full list is:
-  `crime_boss`, `enforcer`, `slicer`, `broker`, `republic_guard`, `jedi`, `mechanic`, `smuggler`, `droid`, `assassin`, `generic`, `vigo_vanguard`, `black_sun_vigo_guard`, `black_sun_slicer`, `exchange_bounty_hunter`, `exchange_smuggler_captain`, `csf_swat`, `csf_detective`, `sith_warrior`, `sith_acolyte`, `mandalorian_tracker`, `hutt_lieutenant`, `twilek_dancer`, `syndicate_thug`, `devaronian_scoundrel`, `rodian_sharpshooter`
+- Every NPC `kind` has a branch in `NpcPortrait()`. The validator reads the live list from the code (`generic` is registered).
 - A `kind` not in this list renders nothing. Flag it as a silent bug.
 
 **Enemy sprite registry (Tactical Combat)**

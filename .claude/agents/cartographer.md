@@ -16,7 +16,7 @@ Read `.claude/schemas/zone-schema.json` before writing any zone. The binding rul
 
 - `buildMap()` uses only these 7 tile types: `wall`, `floor`, `door`, `ship_hull`, `ship_ramp`, `lava`, `water`. Any other string renders as wall.
 - Every `door` tile in `buildMap()` must have a matching entry in `zone.doors[]` with a valid `targetZone` id and a `targetPos` that lands on a `floor` tile in that zone.
-- Every NPC and collectible `x,y` must be on a `floor` tile. Entities on walls are unreachable.
+- Every NPC, collectible, and world object `x,y` must be on a `floor` tile that is reachable from `spawnPos`. The engine blocks movement into any other tile before interaction, so an entity on a wall can never be used.
 - Door links must be symmetric: if zone A has a door to zone B at position P, zone B must have a door back to zone A at position Q.
 - `textureId` must be one of: `coruscant`, `ferrowake`, `verdanth`.
 - `ambient` must be one of: `traffic` | `embers` | `mist` | `neon_haze` | `datastream` | `steam`.
@@ -37,6 +37,15 @@ Do not invent color values from scratch. The `ZONE_ARCHETYPE_PROFILES` constant 
 
 Copy from the constant rather than guessing values. Differentiate only when the zone's function clearly does not match any archetype.
 
+## Placement and Visual Footprints
+
+World objects and ships are drawn larger than one tile (see `.claude/DESIGN_STANDARDS.md`). When you place them:
+
+- Reserve space. Each `propArt` has a footprint in `PROP_DEFS` anchored on the object's tile. Each ship has a footprint in `SHIP_DEFS`. Keep footprints inside the map and clear of doors, collectibles, other objects, and ships.
+- Ships are solid: declare them in the zone's `ships` array and call `carveShips(g, this.ships)` at the end of `buildMap()`. Never let a ship or any wall block the only route into an alcove or toward a door.
+- Place things where the story says they belong, and leave a clear walking lane around anything large.
+- Run `node .claude/tools/validate-world.js --zone <id> --strict` before handing over.
+
 ## Workflow
 
 1. Read the zone spec from the Game Director or World Architect.
@@ -44,4 +53,4 @@ Copy from the constant rather than guessing values. Differentiate only when the 
 3. Pick the closest archetype from `ZONE_ARCHETYPE_PROFILES` and copy its visual properties.
 4. Design the `buildMap()` layout first, then place entities on confirmed `floor` tiles.
 5. Write the complete zone object and integrate it into PLANETS.
-6. Call Protocol QA to verify before pushing.
+6. Run the validator (above), then call Protocol QA and the Art Director before pushing.
