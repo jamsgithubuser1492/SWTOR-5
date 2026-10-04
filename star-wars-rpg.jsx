@@ -3509,9 +3509,9 @@ const PLANETS = {
           { x: 15, y: 19, targetZone: 'city_outskirts_bador', targetPos: { x: 15, y: 1 }, label: 'City Outskirts' },
         ],
         worldObjects: [
-          { id: 'vael_tactical_display', x: 20, y: 5, label: 'Tactical Operations Display',
+          { id: 'vael_tactical_display', propArt: 'tactical_table', propVariant: 'bador', x: 20, y: 6, label: 'Tactical Operations Display',
             description: 'Commander Vael\'s battle board. Red markers cluster around Sector 4 and the Engine Wastes. Two positions are marked UNKNOWN STRUCTURE.' },
-          { id: 'bador_intel_drop', x: 8, y: 16, label: 'Intel Drop Point',
+          { id: 'bador_intel_drop', propArt: 'datapad_table', propVariant: 'canister', x: 8, y: 16, label: 'Intel Drop Point',
             description: 'A sealed datacanister left at the extraction point. Inside: partial schematics for a classified KDY vessel class.',
             once: true, requiresFlag: 'ghost_keel_active',
             grantsFlag: 'partial_schematics_found', grantsItem: 'encrypted_kdy_schematics' },
@@ -3552,6 +3552,7 @@ const PLANETS = {
           pt(g, 0, 9, 'door'); pt(g, 0, 10, 'door');
           pt(g, 29, 8, 'door'); pt(g, 29, 9, 'door');
           pt(g, 14, 19, 'door'); pt(g, 15, 19, 'door');
+          pt(g, 20, 7, 'floor'); pt(g, 21, 7, 'floor'); // open the command alcove
           return g;
         },
       },
@@ -3571,13 +3572,13 @@ const PLANETS = {
           { x: 35, y: 11, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Engine Wastes' },
         ],
         worldObjects: [
-          { id: 'assembly_line_terminal', x: 20, y: 6, label: 'Assembly Line Override Terminal',
+          { id: 'assembly_line_terminal', propArt: 'console', propVariant: 'assembly', x: 20, y: 6, label: 'Assembly Line Override Terminal',
             description: 'An unauthorized modification routes assembly output to an off-manifest storage bay. The override code is not in the KDY standard library.',
             triggersMinigame: 'terminal_slicing', requiresFlag: 'ghost_keel_active',
             once: true, grantsFlag: 'assembly_override_accessed', grantsItem: 'corrupt_manifest' },
-          { id: 'mag_lev_crane', x: 18, y: 3, label: 'Mag-Lev Cargo Crane',
+          { id: 'mag_lev_crane', propArt: 'maglev_crane', x: 18, y: 3, label: 'Mag-Lev Cargo Crane',
             description: 'A five-ton crane magnetized to the ceiling rail. The routing manifest reads: PERSONAL CONSIGNMENT.' },
-          { id: 'krax_manifest_safe', x: 30, y: 16, label: 'Overseer\'s Manifest Safe',
+          { id: 'krax_manifest_safe', propArt: 'crate_stack', propVariant: 'lockbox', x: 29, y: 16, label: 'Overseer\'s Manifest Safe',
             description: 'A heavy durasteel lockbox welded to the floor. The serial number has been removed.',
             once: true, requiresFlag: 'krax_revealed',
             grantsFlag: 'overseer_safe_opened', grantsItem: 'ion_charged_coils' },
@@ -3619,6 +3620,7 @@ const PLANETS = {
           pt(g, 28, 14, 'floor'); pt(g, 29, 14, 'floor'); pt(g, 30, 14, 'floor');
           pt(g, 0, 8, 'door'); pt(g, 0, 9, 'door');
           pt(g, 35, 10, 'door'); pt(g, 35, 11, 'door');
+          pt(g, 26, 14, 'floor'); pt(g, 27, 14, 'floor'); carveRect(g, 28, 15, 30, 16, 'floor'); // overseer's safe alcove
           return g;
         },
       },
@@ -3638,10 +3640,10 @@ const PLANETS = {
           { x: 33, y: 11, targetZone: 'outpost_7', targetPos: { x: 1, y: 11 }, label: 'Outpost 7' },
         ],
         worldObjects: [
-          { id: 'bador_republic_terminal', x: 10, y: 10, label: 'Abandoned Republic Terminal',
+          { id: 'bador_republic_terminal', propArt: 'console', propVariant: 'republic_old', x: 10, y: 10, label: 'Abandoned Republic Terminal',
             description: 'A rusted Republic outpost terminal, decommissioned three years prior. The last logged entry is a distress call with no response on record.',
             once: true, grantsFlag: 'bador_republic_history', grantsCodex: 'codex-bador-history' },
-          { id: 'bador_supply_cache', x: 26, y: 15, label: 'Hidden Supply Cache',
+          { id: 'bador_supply_cache', propArt: 'crate_stack', propVariant: 'hidden', x: 26, y: 15, label: 'Hidden Supply Cache',
             description: 'A hidden alcove in the collapsed wall. Someone has been using this as a supply drop.',
             once: true, requiresFlag: 'ghost_keel_active', grantsItem: 'cherit_logbook' },
         ],
@@ -3655,7 +3657,7 @@ const PLANETS = {
             ],
           },
         ],
-        collectibles: [{ id: 'bador_city_cache', x: 28, y: 4, label: 'Salvaged Survival Rations', reward: 150 }],
+        collectibles: [{ id: 'bador_city_cache', x: 26, y: 3, label: 'Salvaged Survival Rations', reward: 150 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 1, 1, 32, 18, 'floor');
@@ -3688,14 +3690,14 @@ const PLANETS = {
           { x: 21, y: 21, targetZone: 'deep_caverns', targetPos: { x: 21, y: 1 }, label: 'Deep Caverns' },
         ],
         worldObjects: [
-          { id: 'ion_storm_capacitor', x: 28, y: 6, label: 'Ion Storm Capacitor',
+          { id: 'ion_storm_capacitor', propArt: 'capacitor_bank', x: 28, y: 6, label: 'Ion Storm Capacitor',
             description: 'A massive industrial capacitor bank still actively cycling. The discharge pattern is not natural — it is deliberately jamming sensor sweeps across a six-kilometer radius.',
             once: true, requiresFlag: 'ghost_keel_active',
             grantsFlag: 'jammer_found', grantsCodex: 'codex-engine-wastes' },
-          { id: 'scan_team_wreckage', x: 34, y: 14, label: 'KDY Scan Team Wreckage',
+          { id: 'scan_team_wreckage', propArt: 'scan_wreck', x: 34, y: 14, label: 'KDY Scan Team Wreckage',
             description: 'The remains of the missing scan team. Their equipment is intact but deliberately disabled. No signs of combat. They were warned off.',
             once: true, requiresFlag: 'vael_briefed', grantsFlag: 'scan_team_fate_known' },
-          { id: 'glassed_crater_lake', x: 10, y: 6, label: 'Glassed Crater Lake',
+          { id: 'glassed_crater_lake', propArt: 'crater_glass', x: 10, y: 6, label: 'Glassed Crater Lake',
             description: 'A shallow basin of fused silica — evidence of catastrophic engine discharge centuries past. Something large once burned here and the ground remembers it.' },
         ],
         npcs: [
@@ -3715,9 +3717,7 @@ const PLANETS = {
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 1, 1, 38, 20, 'floor');
-          for (let wx = 8; wx <= 14; wx++) { pt(g, wx, 4, 'lava'); pt(g, wx, 5, 'lava'); pt(g, wx, 6, 'lava'); }
-          for (let wz = 9; wz <= 13; wz++) pt(g, wz, 4, 'floor');
-          for (let wx = 22; wx <= 30; wx++) { pt(g, wx, 14, 'lava'); pt(g, wx, 15, 'lava'); }
+                    for (let wx = 22; wx <= 30; wx++) { pt(g, wx, 14, 'lava'); pt(g, wx, 15, 'lava'); }
           pt(g, 25, 14, 'floor'); pt(g, 26, 14, 'floor');
           carveRect(g, 36, 2, 38, 10, 'wall');
           pt(g, 36, 4, 'floor'); pt(g, 36, 5, 'floor');
@@ -3742,14 +3742,14 @@ const PLANETS = {
           { x: 31, y: 12, targetZone: 'deep_caverns', targetPos: { x: 1, y: 12 }, label: 'Deep Caverns' },
         ],
         worldObjects: [
-          { id: 'outpost7_holoboard', x: 8, y: 5, label: 'Resistance Planning Board',
+          { id: 'outpost7_holoboard', propArt: 'board', propVariant: 'resistance', x: 8, y: 9, label: 'Resistance Planning Board',
             description: 'Hand-drawn maps of the cavern system, supplemented with stolen KDY grid data. Someone has been planning this longer than Tanner implied.',
             once: true, requiresFlag: 'ghost_keel_active',
             grantsFlag: 'cavern_maps_found', grantsCodex: 'codex-outpost7-resistance' },
-          { id: 'outpost7_armory', x: 26, y: 5, label: 'Hidden Arms Cache',
+          { id: 'outpost7_armory', propArt: 'crate_stack', propVariant: 'resist', x: 26, y: 9, label: 'Hidden Arms Cache',
             description: 'Pre-war blasters, bacta packs, and a cracked slicer spike. Someone prepared for a long stay.',
             once: true, grantsFlag: 'outpost7_armory_raided' },
-          { id: 'outpost7_rebreather', x: 16, y: 18, label: 'Rebreather Station',
+          { id: 'outpost7_rebreather', propArt: 'rebreather_rack', x: 16, y: 18, label: 'Rebreather Station',
             description: 'Emergency atmospheric gear for the cavern descent. The mix is calibrated for the nitrogen-heavy deep cavern air.',
             once: true, grantsFlag: 'rebreather_equipped' },
         ],
@@ -3765,7 +3765,7 @@ const PLANETS = {
               { text: 'Tell Nix about Gharza in the Engine Wastes.', morality: 5, loyalty: { republic: 5 }, result: '"I know her clearance code. She was on Tanner\'s initial contractor list, then removed." A pause. "She was removed because someone at Level Eight overrode the contract. She is not working for Tanner. She is working for the Architect."', grants: { flags: ['nix_consulted', 'gharza_architect_connection'] } },
             ],
           },
-          { id: 'outpost7_contact', x: 10, y: 14, kind: 'generic', label: 'Resistance Contact',
+          { id: 'outpost7_contact', x: 9, y: 14, kind: 'generic', label: 'Resistance Contact',
             repeatPrompt: '"The caverns run deep. Trust the maps."',
             prompt: '"We have been watching Sector 4 for two cycles. KDY is building something that does not appear in any public commission. The shell of a capital ship, assembling in pieces." He spreads the hand-drawn maps. "The final components are in the deep caverns, stored in a decommissioned Republic survey station. Something is already there — and it has been there longer than KDY knows."',
             choices: [
@@ -3773,7 +3773,7 @@ const PLANETS = {
             ],
           },
         ],
-        collectibles: [{ id: 'outpost7_intel', x: 28, y: 18, label: 'Resistance Survey Notes', reward: 300 }],
+        collectibles: [{ id: 'outpost7_intel', x: 8, y: 14, label: 'Resistance Survey Notes', reward: 300 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 1, 1, 30, 20, 'floor');
@@ -3808,14 +3808,14 @@ const PLANETS = {
           { x: 33, y: 12, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 12 }, label: 'Zora IV Wreckage' },
         ],
         worldObjects: [
-          { id: 'republic_survey_cache', x: 18, y: 12, label: 'Republic Survey Station Cache',
+          { id: 'republic_survey_cache', propArt: 'crate_stack', propVariant: 'survey', x: 18, y: 12, label: 'Republic Survey Station Cache',
             description: 'An Old Republic survey station, sealed for decades. Inside: geological samples and an encrypted data core. The encryption pattern is not Republic standard — it was resealed after the initial survey.',
             once: true, requiresFlag: 'ghost_keel_active',
             grantsFlag: 'survey_cache_opened', grantsItem: 'cherit_logbook' },
-          { id: 'cavern_crystal_formation', x: 6, y: 16, label: 'Force-Resonant Crystal Formation',
+          { id: 'cavern_crystal_formation', propArt: 'kyber_cluster', propVariant: 'cavern', x: 6, y: 16, label: 'Force-Resonant Crystal Formation',
             description: 'A natural formation of kyber-adjacent crystal. Whoever designed the cavern installation placed it here deliberately. The resonance pattern is not naturally occurring.',
             once: true, grantsFlag: 'cavern_crystal_found', grantsCodex: 'codex-bador-crystal' },
-          { id: 'cavern_sentinel_inactive', x: 26, y: 6, label: 'Automated Sentinel (Inactive)',
+          { id: 'cavern_sentinel_inactive', propArt: 'sentinel_droid', x: 26, y: 6, label: 'Automated Sentinel (Inactive)',
             description: 'A KDY-pattern security droid, deactivated but recently serviced. Someone turned it off for you — or for themselves.',
             once: true, requiresFlag: 'gharza_allied', grantsFlag: 'sentinel_cleared' },
         ],
@@ -3862,13 +3862,13 @@ const PLANETS = {
           { x: 0, y: 12, targetZone: 'deep_caverns', targetPos: { x: 32, y: 12 }, label: 'Deep Caverns' },
         ],
         worldObjects: [
-          { id: 'hypercore_chamber', x: 28, y: 12, label: 'Experimental Hypercore Chamber',
+          { id: 'hypercore_chamber', propArt: 'hypercore', x: 28, y: 12, label: 'Experimental Hypercore Chamber',
             description: 'A sealed vault integrated into the old ship\'s reactor housing. Inside, the hypercore pulses with a power reading that should not exist outside a full Star Destroyer.',
             once: true, requiresFlag: 'hypercore_location_known', grantsFlag: 'hypercore_visible' },
-          { id: 'zora_iv_bridge', x: 20, y: 5, label: 'Zora IV Bridge',
+          { id: 'zora_iv_bridge', propArt: 'bridge_console', x: 20, y: 5, label: 'Zora IV Bridge',
             description: 'The original bridge of the Zora IV, a Venator-class survivor that limped here after the Drayen Massacre and never left. The flight logs are intact. Three decades of waiting.',
             once: true, grantsFlag: 'zora_iv_history_known', grantsCodex: 'codex-zora-iv', grantsItem: 'cherit_logbook' },
-          { id: 'architect_terminal', x: 16, y: 18, label: 'The Architect\'s Personal Terminal',
+          { id: 'architect_terminal', propArt: 'console', propVariant: 'architect', x: 16, y: 18, label: 'The Architect\'s Personal Terminal',
             description: 'Final access logs, forty-three years of shadow work. The terminal is unlocked — whoever last used it expected someone would come.',
             once: true, requiresFlag: 'architect_identity_known',
             grantsFlag: 'architect_logs_read', grantsCodex: 'codex-the-architect' },
@@ -3912,6 +3912,7 @@ const PLANETS = {
           pt(g, 3, 12, 'floor'); pt(g, 4, 12, 'floor'); pt(g, 5, 12, 'floor'); pt(g, 6, 12, 'floor');
           pt(g, 14, 10, 'floor'); pt(g, 14, 11, 'floor'); pt(g, 14, 12, 'floor');
           pt(g, 0, 11, 'door'); pt(g, 0, 12, 'door');
+          carveRect(g, 1, 11, 2, 12, 'floor'); carveRect(g, 7, 12, 13, 12, 'floor'); // airlock and the corridor into the main bay
           return g;
         },
       },
@@ -8696,6 +8697,9 @@ const CONSOLE_CFG = {
   hnn_official: { l:'desk',  body:'steel',    scr:'cyan',  g:'wave',  t:'HNN OFFICIAL FEED',    r:['SENATE COMMENDS CSF','SMUGGLING NEAR L088','ISOLATED DELAYS','BROADCAST: LOOPING'], d:['soot'] },
   frost:        { l:'desk',  body:'teal',     scr:'cyan',  g:'drop',  t:'TEMPERATURE LOGS',     r:['COOLING THROTTLED','12 DAYS AGO','ARMOR RUN: FINAL'], d:['frost'] },
   syndicate:    { l:'desk',  body:'dark',     scr:'red',   g:'chain', t:'IRON SYNDICATE CMD',   r:['STATUS: ACTIVE','ENCRYPTION: NONE','EXTRACTION TIMETABLE','MANIFESTS  ROTATIONS'], d:['redlights'] },
+  assembly:     { l:'desk',  body:'steel',    scr:'amber', g:'gear',  t:'ASSEMBLY OVERRIDE',    r:['OUTPUT ROUTED OFF','OFF-MANIFEST BAY','CODE: NOT IN KDY LIB','MODIFIED: UNKNOWN'], d:['hazard'] },
+  republic_old: { l:'desk',  body:'concrete', scr:'amber', g:'cog',   t:'REPUBLIC OUTPOST',     r:['DECOMMISSIONED 3 YR','LAST ENTRY: DISTRESS','RESPONSE: NONE LOGGED'], d:['cracked','soot'] },
+  architect:    { l:'desk',  body:'brass',    scr:'amber', g:'eye',   t:'ARCHITECT PERSONAL',   r:['ACCESS LOGS: 43 YRS','STATUS: UNLOCKED','LAST USER EXPECTED','SOMEONE TO COME'], d:['flicker'] },
   substation:   { l:'wall',  body:'rust',     scr:'amber', g:'gear',  t:'SUB-STATION 3',        r:['THERMAL HAZARDS','AMBIENT CONTROL','STATUS: HOLDING'], d:['hazard'] },
 };
 
@@ -9084,6 +9088,20 @@ function PropBoard({ variant }) {
         <text x="14" y="50.4" fontSize="2.4" fill={S.crimson} {...PT}>MARLO</text><text x="62" y="50.4" fontSize="2.4" fill={S.blue} {...PT}>ROOK</text>
       </g>
     );
+  } else if (variant === 'resistance') {
+    body = (
+      <g>
+        <rect x="7" y="7" width="82" height="46" fill={ART.paper.base} />
+        <rect x="7" y="7" width="82" height="46" fill={ART.paper.shade} opacity="0.35" />
+        <text x="48" y="14" textAnchor="middle" fontSize="3.6" fill={ART.note.ink} fontWeight="700" {...PT}>CAVERN PLAN: NOT TANNER'S</text>
+        <g fill="none" stroke={ART.note.blueInk} strokeWidth="0.9"><polyline points={pts([[12, 44], [20, 32], [32, 36], [40, 22], [54, 28], [62, 18]])} /><polyline points={pts([[32, 36], [38, 46], [56, 44]])} /><polyline points={pts([[54, 28], [70, 34], [82, 26]])} /></g>
+        {[[20, 32], [40, 22], [62, 18], [56, 44], [82, 26]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.8" fill={ART.note.redInk} />)}
+        <polygon points={pts([[60, 36], [86, 36], [86, 51], [60, 51]])} fill={ART.screen.cyan} opacity="0.92" /><text x="62" y="41" fontSize="2.4" fill={S.cyanHi} fontWeight="700" {...PT}>STOLEN KDY GRID</text>
+        {[0, 1, 2, 3].map((i) => <line key={i} x1="62" y1={43.4 + i * 2} x2={62 + 14 + (i % 2) * 6} y2={43.4 + i * 2} stroke={S.cyan} strokeWidth="0.6" />)}
+        <g transform="rotate(-5 22 46)"><polygon points={pts([[10, 40], [34, 40], [34, 51], [10, 51]])} fill={ART.note.yellow} /><text x="12" y="45" fontSize="2.3" fill={ART.note.ink} {...PT}>PLANNED LONGER</text><text x="12" y="49" fontSize="2.3" fill={ART.note.redInk} fontWeight="700" {...PT}>THAN HE SAID</text></g>
+        <polygon points={pts([[44, 5], [52, 5], [50, 10], [46, 10]])} fill={ART.steel.base} />
+      </g>
+    );
   } else if (variant === 'clipboard') {
     body = (
       <g>
@@ -9419,6 +9437,7 @@ function PropElevatorDoor() {
 // ---------------------------------------------------------------------------
 function PropDatapadTable({ variant }) {
   const S = ART.signal;
+  const canister = variant === 'canister';
   const logbook = variant === 'logbook', card = variant === 'card', warm = variant === 'warm', lounge = variant === 'lounge';
   return (
     <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
@@ -9450,6 +9469,14 @@ function PropDatapadTable({ variant }) {
           {[0, 1, 2, 3].map((i) => <g key={i}><line x1="17" y1={26 + i * 2.2 - i * 0.2} x2="30" y2={24.4 + i * 2.2} stroke={ART.note.blueInk} strokeWidth="0.4" /><line x1="35" y1={24.4 + i * 2.2} x2="48" y2={26 + i * 2.2 - i * 0.2} stroke={ART.note.blueInk} strokeWidth="0.4" /></g>)}
           <text x="42" y="32.6" textAnchor="middle" fontSize="2.4" fill={ART.note.blueInk} fontWeight="700" {...PT}>Vane, T.</text>
           <polygon points={pts([[12, 22], [22, 21], [20, 27], [12, 28]])} fill={ART.ink} opacity="0.12" />
+        </g>
+      ) : canister ? (
+        <g>
+          <Bev t="polygon" points={pts([[16, 46], [16, 30], [48, 30], [48, 46]])} c="steel" o={0.9} />
+          <ellipse cx="32" cy="30" rx="16" ry="3.4" fill={ART.steel.hi} /><ellipse cx="32" cy="30.4" rx="10" ry="1.8" fill={ART.dark.shade} />
+          <rect x="16" y="34" width="32" height="3" fill={ART.brand.kdy} /><rect x="16" y="41" width="32" height="1.6" fill={ART.dark.shade} />
+          <polygon points={pts([[22, 36], [42, 36], [42, 40], [22, 40]])} fill={ART.paper.base} /><text x="32" y="39.2" textAnchor="middle" fontSize="2.2" fill={ART.note.ink} fontWeight="700" {...PT}>KDY CLASSIFIED</text>
+          <polygon points={pts([[50, 40], [60, 38], [60, 46], [50, 47]])} fill={ART.paper.hi} /><g stroke={ART.note.blueInk} strokeWidth="0.5"><line x1="52" y1="41" x2="58" y2="40.4" /><line x1="52" y1="43" x2="57" y2="42.4" /></g>
         </g>
       ) : card ? (
         <g>
@@ -9582,6 +9609,53 @@ function PropCrateStack({ variant }) {
         <Seams x={30} y={28} w={36} h={24} cols={2} op={0.45} /><Glyph k="chain" x={48} y={40} s={6} c={S.crimson} />
         {[0, 1, 2].map((i) => <g key={i}><Slab x={34 + i * 10} y={21} w={8} h={6} k={1} c="dark" o={0.5} /><rect x={36 + i * 10} y="22.6" width="4" height="2.6" fill={S.lime} style={{ animation:`ship-blink ${2 + i * 0.6}s steps(2) infinite` }} /></g>)}
         <Rivets x={12} y={7} w={72} n={9} /><Hazard x={10} y={54} w={76} h={3} />
+      </g>
+    );
+  } else if (variant === 'lockbox') {
+    body = (
+      <g>
+        <Bev t="polygon" points={pts([[14, 56], [14, 20], [20, 14], [76, 14], [82, 20], [82, 56]])} c="steel" o={1.3} />
+        <Seams x={14} y={14} w={68} h={42} cols={1} rows={2} op={0.5} />
+        <Slab x={36} y={26} w={24} h={20} k={1.6} c="dark" o={0.8} /><polygon points={pts(ngon(48, 36, 6, 6, 8))} fill={ART.steel.shade} /><polygon points={pts(ngon(48, 36, 3.6, 3.6, 8))} fill={ART.brass.base} />
+        <rect x="38" y="48" width="20" height="4" fill={ART.dark.shade} /><text x="48" y="51.2" textAnchor="middle" fontSize="2.2" fill={S.redHi} {...PT}>SERIAL: GROUND OFF</text>
+        {[[18, 52], [76, 52], [18, 18], [76, 18]].map(([x, y], i) => <g key={i}><polygon points={pts([[x - 4, y + 4], [x + 4, y + 4], [x + 2, y - 2], [x - 2, y - 2]])} fill={S.orange} opacity="0.85" /></g>)}
+        <text x="48" y="10" textAnchor="middle" fontSize="2.8" fill={S.warn} fontWeight="700" {...PT}>WELDED TO THE FLOOR</text>
+        <Hazard x={16} y={56} w={64} h={3} />
+      </g>
+    );
+  } else if (variant === 'hidden') {
+    body = (
+      <g>
+        <Slab x={4} y={4} w={88} h={54} k={3} c="concrete" o={1} />
+        <polygon points={pts([[4, 20], [24, 14], [40, 28], [30, 58], [4, 58]])} fill={ART.concrete.shade} /><polygon points={pts([[60, 10], [92, 18], [92, 58], [70, 58], [76, 34]])} fill={ART.concrete.shade} />
+        <polygon points={pts([[28, 56], [30, 26], [44, 20], [64, 22], [70, 56]])} fill={ART.ink} />
+        <CrateBox x={34} y={38} w={20} h={18} c="canvas" hz={false} k={1.2} cols={1} rows={0} /><CrateBox x={50} y={42} w={16} h={14} c="steel" hz={false} k={1} cols={1} rows={0} />
+        {[0, 1, 2].map((i) => <rect key={i} x={38 + i * 6} y="32" width="4" height="6" fill={S.cyanHi} opacity="0.85" />)}
+        <polyline points={pts([[10, 26], [18, 34], [14, 44]])} fill="none" stroke={ART.ink} strokeWidth="1.2" /><polyline points={pts([[78, 24], [86, 34], [80, 44]])} fill="none" stroke={ART.ink} strokeWidth="1.2" />
+        <text x="48" y="12" textAnchor="middle" fontSize="2.8" fill={S.warn} fontWeight="700" {...PT}>COLLAPSED WALL: SUPPLY DROP</text>
+      </g>
+    );
+  } else if (variant === 'resist') {
+    body = (
+      <g>
+        <CrateBox x={6} y={26} w={46} h={32} c="canvas" hz={false} cols={3} rows={0} />
+        {[0, 1, 2].map((i) => <g key={i}><Bev t="polygon" points={pts([[10 + i * 14, 32], [20 + i * 14, 32], [22 + i * 14, 36], [8 + i * 14, 36]])} c="dark" o={0.4} /><rect x={12 + i * 14} y="30" width="12" height="2" fill={ART.steel.hi} /></g>)}
+        <text x="29" y="48" textAnchor="middle" fontSize="2.8" fill={ART.paper.base} fontWeight="700" {...PT}>PRE-WAR BLASTERS</text>
+        <CrateBox x={56} y={34} w={34} h={24} c="dark" hz={false} /><polygon points={pts(ngon(73, 46, 6, 6, 8))} fill={ART.pearl.base} /><rect x="71.6" y="41" width="2.8" height="10" fill={ART.teal.base} /><rect x="68" y="44.6" width="10" height="2.8" fill={ART.teal.base} />
+        <text x="73" y="32" textAnchor="middle" fontSize="2.4" fill={S.cyanHi} {...PT}>BACTA PACKS</text>
+        <g transform="rotate(-20 32 20)"><polygon points={pts([[20, 14], [40, 14], [42, 18], [20, 18]])} fill={ART.steel.hi} /><rect x="38" y="13" width="6" height="6" fill={S.crimson} /></g>
+        <text x="34" y="10" textAnchor="middle" fontSize="2.4" fill={S.warn} {...PT}>CRACKED SLICER SPIKE</text>
+      </g>
+    );
+  } else if (variant === 'survey') {
+    body = (
+      <g>
+        <CrateBox x={6} y={28} w={50} h={30} c="stone" hz={false} cols={3} rows={0} />
+        {Array.from({ length: 6 }, (_, i) => <g key={i}><rect x={10 + i * 7.4} y="30" width="4" height="12" fill={ART.glass.base} opacity="0.8" /><rect x={10 + i * 7.4} y={36 + (i % 3) * 2} width="4" height={6 - (i % 3) * 2} fill={[ART.rust.base, ART.moss.base, ART.sand.base][i % 3]} /></g>)}
+        <text x="31" y="52" textAnchor="middle" fontSize="2.6" fill={ART.paper.base} fontWeight="700" {...PT}>GEOLOGICAL SAMPLES</text>
+        <Bev t="polygon" points={pts([[62, 56], [62, 30], [88, 30], [88, 56]])} c="dark" o={0.9} /><polygon points={pts(ngon(75, 42, 8, 8, 8))} fill={ART.deepglass.base} /><polygon points={pts(ngon(75, 42, 4.4, 4.4, 8))} fill={S.violet} style={{ animation:'ship-blink 2.4s steps(3) infinite' }} />
+        <text x="75" y="27" textAnchor="middle" fontSize="2.4" fill={S.violet} fontWeight="700" {...PT}>RESEALED CORE</text>
+        <polygon points={pts([[64, 50], [86, 50], [86, 55], [64, 55]])} fill={ART.red.base} /><text x="75" y="54" textAnchor="middle" fontSize="2.2" fill={S.white} {...PT}>NOT REPUBLIC</text>
       </g>
     );
   } else {
@@ -10489,7 +10563,8 @@ function Bust({ x, y, s = 1, coat = 'steel', skin, hair = ART.skin.hair, back = 
 function PropTacticalTable({ variant }) {
   const S = ART.signal;
   const war = variant === 'war', conq = variant === 'conquest';
-  const col = war ? S.cyan : conq ? S.amber : S.blue;
+  const bad = variant === 'bador';
+  const col = war ? S.cyan : conq ? S.amber : bad ? S.red : S.blue;
   const top = ngon(48, 78, 44, 12, 8, Math.PI / 8);
   return (
     <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
@@ -10511,7 +10586,13 @@ function PropTacticalTable({ variant }) {
           <g stroke={S.white} strokeWidth="0.6" fill="none" opacity="0.7"><polyline points={pts([[48, 56], [34, 50]])} /><polyline points={pts([[48, 56], [62, 50]])} /><polyline points={pts([[48, 56], [40, 66]])} /><polyline points={pts([[48, 56], [58, 68]])} /></g>
           <text x="48" y="14" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>SECTOR CONTROL: 5 CONTESTED</text>
         </g>}
-        {!war && !conq && <g>
+        {bad && <g>
+          {Array.from({ length: 4 }, (_, i) => <polygon key={i} points={pts(ngon(48, 74 - i * 9, 32 - i * 5, 8 - i * 1.2, 8, Math.PI / 8))} fill="none" stroke={S.redHi} strokeWidth="0.5" opacity="0.7" />)}
+          {[[34, 52], [42, 46], [54, 58], [60, 50], [48, 66], [38, 62]].map(([x, y], i) => <polygon key={i} points={pts([[x - 3, y + 3], [x, y - 3], [x + 3, y + 3]])} fill={S.red} style={{ animation:`ship-blink ${2 + i * 0.3}s steps(3) infinite` }} />)}
+          {[[28, 40], [66, 42]].map(([x, y], i) => <g key={i}><polygon points={pts(ngon(x, y, 4, 4, 6))} fill="none" stroke={S.violet} strokeWidth="0.9" /><text x={x} y={y + 1} textAnchor="middle" fontSize="2.8" fill={S.violet} fontWeight="700" {...PT}>?</text></g>)}
+          <text x="14" y="30" fontSize="2.4" fill={S.redHi} {...PT}>SECTOR 4 + ENGINE WASTES</text><text x="14" y="34" fontSize="2.2" fill={S.violet} {...PT}>2 X UNKNOWN STRUCTURE</text>
+        </g>}
+        {!war && !conq && !bad && <g>
           {Array.from({ length: 6 }, (_, i) => <line key={i} x1={20 + i * 11} y1="72" x2={36 + i * 5} y2="36" stroke={S.blue} strokeWidth="0.4" opacity="0.5" />)}
           {Array.from({ length: 5 }, (_, i) => <polygon key={i} points={pts(ngon(48, 74 - i * 8, 32 - i * 4.4, 8 - i * 1.1, 8, Math.PI / 8))} fill="none" stroke={S.blue} strokeWidth="0.5" opacity="0.7" />)}
           <polyline points={pts([[26, 70], [40, 60], [50, 54], [64, 46]])} fill="none" stroke={S.cyanHi} strokeWidth="0.9" /><polyline points={pts([[30, 62], [44, 66], [60, 62]])} fill="none" stroke={S.cyanHi} strokeWidth="0.9" />
@@ -10934,14 +11015,15 @@ function PropFighterAltar() {
   );
 }
 
-function PropKyberCluster() {
+function PropKyberCluster({ variant }) {
   const S = ART.signal;
+  const cav = variant === 'cavern';
   const crystal = (x, y, w, h, k, tilt) => (
     <g key={k} transform={`rotate(${tilt} ${x} ${y})`}>
       <polygon points={pts([[x - w / 2, y], [x - w / 2, y - h * 0.7], [x, y - h], [x + w / 2, y - h * 0.7], [x + w / 2, y]])} fill={ART.glass.shade} transform="translate(1 1.2)" />
-      <polygon points={pts([[x - w / 2, y], [x - w / 2, y - h * 0.7], [x, y - h], [x + w / 2, y - h * 0.7], [x + w / 2, y]])} fill={S.kyber} />
+      <polygon points={pts([[x - w / 2, y], [x - w / 2, y - h * 0.7], [x, y - h], [x + w / 2, y - h * 0.7], [x + w / 2, y]])} fill={cav ? ART.fabric.hi : S.kyber} />
       <polygon points={pts([[x, y], [x, y - h], [x + w / 2, y - h * 0.7], [x + w / 2, y]])} fill={ART.glass.base} opacity="0.7" />
-      <polyline points={pts([[x - w / 4, y - 4], [x - w / 6, y - h * 0.6], [x + w / 8, y - h * 0.4]])} fill="none" stroke={S.crimson} strokeWidth="0.8" opacity="0.85" />
+      <polyline points={pts([[x - w / 4, y - 4], [x - w / 6, y - h * 0.6], [x + w / 8, y - h * 0.4]])} fill="none" stroke={cav ? S.cyanHi : S.crimson} strokeWidth="0.8" opacity="0.85" />
     </g>
   );
   return (
@@ -10952,7 +11034,7 @@ function PropKyberCluster() {
       <polygon points={pts([[6, 60], [10, 50], [24, 46], [48, 48], [72, 46], [88, 50], [92, 60]])} fill={ART.dark.shade} /><Bev t="polygon" points={pts([[8, 60], [12, 52], [28, 50], [48, 52], [68, 50], [84, 52], [90, 60]])} c="stone" o={0.9} />
       {crystal(30, 56, 12, 30, 'a', -14)}{crystal(66, 56, 12, 34, 'b', 12)}{crystal(48, 56, 16, 46, 'c', -2)}{crystal(18, 58, 8, 18, 'd', -28)}{crystal(78, 58, 8, 20, 'e', 24)}{crystal(40, 58, 8, 22, 'f', 8)}
       <g stroke={S.crimson} strokeWidth="0.7" fill="none" opacity="0.7"><path d="M10 58 C20 54 24 58 30 56" /><path d="M66 58 C74 55 80 58 90 56" /></g>
-      <text x="48" y="8" textAnchor="middle" fontSize="2.8" fill={S.kyber} fontWeight="700" {...PT}>SITH CONTAMINATION: WRONG</text>
+      <text x="48" y="8" textAnchor="middle" fontSize="2.8" fill={cav ? S.violet : S.kyber} fontWeight="700" {...PT}>{cav ? 'RESONANCE: PLACED, NOT NATURAL' : 'SITH CONTAMINATION: WRONG'}</text>
       <Rivets x={10} y={58} w={76} n={10} c="stone" />
       <Grime x={6} y={46} w={84} h={14} seed={590} n={4} op={0.3} /><Scuff x={8} y={48} w={80} h={10} seed={591} n={6} c="stone" />
     </svg>
@@ -11186,6 +11268,205 @@ function PropSentryPost() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// BADOR AND ZORA IV: set pieces for the Kuat expansion zones.
+// ---------------------------------------------------------------------------
+function PropMaglevCrane() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={92} rx={36} ry={3.4} />
+      <Bev t="rect" x="0" y="2" width="96" height="9" c="steel" o={1} />
+      <Hazard x={0} y={9} w={96} h={2.4} />
+      {Array.from({ length: 8 }, (_, i) => <rect key={i} x={4 + i * 12} y="2" width="1.4" height="8" fill={ART.dark.shade} />)}
+      <Bev t="polygon" points={pts([[30, 11], [66, 11], [64, 24], [32, 24]])} c="dark" o={0.9} />
+      <Glow cx={48} cy={24} rx={20} ry={4} c={S.cyan} opacity={0.7} style={{ animation:'ship-engine 2s ease-in-out infinite' }} />
+      <Lights x={36} y={16} n={6} gap={5} seed={3} />
+      <Cable d="M38 24 L38 44" w={2} /><Cable d="M58 24 L58 44" w={2} /><Cable d="M48 24 L48 36" w={2.6} />
+      <Bev t="polygon" points={pts([[44, 36], [52, 36], [52, 42], [44, 42]])} c="amber" o={0.5} />
+      <Bev t="polygon" points={pts([[12, 84], [12, 44], [84, 44], [84, 84]])} c="steel" o={1.2} />
+      {Array.from({ length: 9 }, (_, i) => <rect key={i} x={16 + i * 8} y="46" width="1.6" height="36" fill={ART.dark.shade} opacity="0.35" />)}
+      <rect x="12" y="44" width="72" height="2.4" fill={ART.hull.hi} />
+      <Hazard x={14} y={76} w={68} h={5} />
+      <Slab x={24} y={54} w={48} h={14} k={1.2} c="paper" o={0.3} />
+      <text x="48" y="60" textAnchor="middle" fontSize="3.4" fill={ART.note.ink} fontWeight="700" {...PT}>PERSONAL CONSIGNMENT</text>
+      <text x="48" y="65.4" textAnchor="middle" fontSize="2.6" fill={ART.note.redInk} {...PT}>5 T: NOT ON ANY MANIFEST</text>
+      <Rivets x={14} y={47} w={68} n={9} />
+      <Grime x={12} y={44} w={72} h={40} seed={700} n={6} op={0.25} /><Scuff x={14} y={46} w={68} h={36} seed={701} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropCapacitorBank() {
+  const S = ART.signal;
+  const tops = [14, 30, 46, 62, 78];
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={92} rx={44} ry={3.4} />
+      <Glow cx={48} cy={30} rx={46} ry={22} c={S.cyan} opacity={0.35} style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} />
+      <Bev t="polygon" points={pts([[4, 90], [4, 74], [92, 74], [92, 90]])} c="steel" o={1.1} />
+      <Hazard x={6} y={86} w={84} h={3} />
+      {tops.map((x, i) => (
+        <g key={x}>
+          <Bev t="polygon" points={pts([[x - 6, 76], [x - 6, 34], [x + 6, 34], [x + 6, 76]])} c="amber" o={0.9} />
+          <ellipse cx={x} cy="34" rx="6" ry="2" fill={ART.amber.hi} /><ellipse cx={x} cy="34.4" rx="3.6" ry="1.1" fill={ART.dark.shade} />
+          {[46, 56, 66].map((y) => <rect key={y} x={x - 6} y={y} width="12" height="1.8" fill={ART.dark.shade} />)}
+          <rect x={x - 1.6} y="24" width="3.2" height="10" fill={ART.steel.base} /><circle cx={x} cy="23" r="2.2" fill={S.cyanHi} style={{ animation:`ship-blink ${1 + i * 0.3}s steps(2) infinite` }} />
+        </g>
+      ))}
+      <g fill="none" stroke={S.cyanHi} strokeWidth="1" style={{ animation:'holo-flicker 0.9s ease-in-out infinite' }}>
+        {[0, 1, 2, 3].map((i) => <polyline key={i} points={pts([[tops[i], 23], [tops[i] + 4, 16 - (i % 2) * 4], [tops[i] + 8, 22], [tops[i] + 12, 14 + (i % 2) * 3], [tops[i + 1], 23]])} />)}
+      </g>
+      <Bev t="polygon" points={pts([[38, 74], [58, 74], [58, 62], [38, 62]])} c="dark" o={0.6} /><rect x="40" y="64" width="16" height="8" fill={ART.screen.cyan} /><text x="48" y="68" textAnchor="middle" fontSize="2.2" fill={S.cyanHi} fontWeight="700" {...PT}>JAMMING</text><text x="48" y="71" textAnchor="middle" fontSize="2" fill={S.cyanHi} {...PT}>6 KM RADIUS</text>
+      <text x="48" y="10" textAnchor="middle" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>DISCHARGE: NOT NATURAL</text>
+      <Rivets x={8} y={76} w={80} n={10} />
+      <Grime x={4} y={30} w={88} h={60} seed={710} n={6} op={0.22} /><Scuff x={6} y={32} w={84} h={56} seed={711} n={8} c="amber" />
+    </svg>
+  );
+}
+
+function PropScanWreck() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={60} rx={58} ry={3} />
+      <Bev t="polygon" points={pts([[8, 56], [14, 34], [52, 28], [60, 54]])} c="deepglass" o={1} />
+      <polygon points={pts([[14, 34], [52, 28], [54, 34], [16, 40]])} fill={ART.deepglass.hi} opacity="0.7" /><Seams x={10} y={32} w={48} h={24} cols={2} rows={1} op={0.4} />
+      <Bev t="polygon" points={pts([[64, 56], [64, 38], [96, 38], [96, 56]])} c="steel" o={0.9} /><polygon points={pts([[64, 38], [96, 38], [90, 30], [70, 30]])} fill={ART.steel.hi} opacity="0.7" />
+      <rect x="68" y="42" width="12" height="2" fill={ART.dark.shade} /><rect x="68" y="47" width="20" height="2" fill={ART.dark.shade} />
+      <g transform="rotate(-24 108 50)"><line x1="108" y1="52" x2="108" y2="20" stroke={ART.steel.hi} strokeWidth="2.4" /><Bev t="polygon" points={pts([[100, 20], [116, 20], [112, 12], [104, 12]])} c="hull" o={0.6} /><circle cx="108" cy="16" r="2" fill={ART.dark.shade} /></g>
+      {[[100, 54], [112, 56], [120, 52]].map(([x, y], i) => <line key={i} x1={x} y1={y} x2={x + 5} y2={y + 2} stroke={ART.steel.hi} strokeWidth="1.4" />)}
+      <Cable d="M96 44 C100 48 98 52 104 52" w={1.6} /><polyline points={pts([[100, 50], [104, 54]])} fill="none" stroke={S.warn} strokeWidth="1" />
+      {[22, 38].map((x, i) => <g key={i}><circle cx={x} cy="44" r="4" fill={ART.dark.shade} /><circle cx={x} cy="44" r="2.4" fill={ART.dark.base} /></g>)}
+      <g transform="rotate(4 74 20)"><polygon points={pts([[62, 8], [92, 8], [92, 22], [62, 22]])} fill={ART.paper.base} /><text x="77" y="13.6" textAnchor="middle" fontSize="2.6" fill={ART.note.redInk} fontWeight="700" {...PT}>WARNED OFF</text><text x="77" y="18.4" textAnchor="middle" fontSize="2.4" fill={ART.note.ink} {...PT}>NO SIGN OF COMBAT</text></g>
+      <text x="30" y="14" textAnchor="middle" fontSize="2.8" fill={S.cyanHi} fontWeight="700" {...PT}>KDY SCAN TEAM</text>
+      <text x="30" y="19" textAnchor="middle" fontSize="2.4" fill={S.amberHi} {...PT}>DISABLED, NOT DESTROYED</text>
+      <Hazard x={8} y={58} w={52} h={3} /><Rivets x={66} y={40} w={28} n={5} />
+      <Grime x={6} y={28} w={116} h={32} seed={720} n={6} op={0.26} /><Scuff x={8} y={30} w={112} h={28} seed={721} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropCraterGlass() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={86} rx={58} ry={5} />
+      <polygon points={pts(ngon(64, 52, 62, 38, 14, 0.1))} fill={ART.ink} opacity="0.7" />
+      <polygon points={pts(ngon(64, 52, 56, 34, 14, 0.1))} fill={ART.rust.shade} />
+      <Bev t="polygon" points={pts(ngon(64, 52, 50, 30, 14, 0.1))} c="glass" o={1.2} />
+      <polygon points={pts(ngon(64, 54, 40, 23, 14, 0.1))} fill={ART.glass.base} />
+      <polygon points={pts(ngon(64, 55, 28, 15, 14, 0.1))} fill={ART.glass.hi} opacity="0.8" />
+      <polygon points={pts(ngon(64, 56, 14, 7, 14, 0.1))} fill={S.white} opacity="0.7" />
+      <g stroke={ART.glass.shade} strokeWidth="1" fill="none">{Array.from({ length: 10 }, (_, i) => { const a = (i / 10) * Math.PI * 2 + 0.3; return <polyline key={i} points={pts([[64 + Math.cos(a) * 8, 56 + Math.sin(a) * 4], [64 + Math.cos(a + 0.1) * 24, 54 + Math.sin(a + 0.1) * 13], [64 + Math.cos(a - 0.05) * 42, 52 + Math.sin(a - 0.05) * 24]])} />; })}</g>
+      {[[40, 44, 14], [86, 62, 18], [74, 40, 10]].map(([x, y, w], i) => <polygon key={i} points={pts([[x, y], [x + w, y - 2], [x + w + 4, y]])} fill={S.white} opacity="0.55" />)}
+      <Glow cx={64} cy={56} rx={26} ry={10} c={S.orange} opacity={0.35} style={{ animation:'ship-engine 3s ease-in-out infinite' }} />
+      <g stroke={ART.ink} strokeWidth="1.6" fill="none" opacity="0.6"><polyline points={pts([[8, 50], [16, 56], [12, 64]])} /><polyline points={pts([[116, 44], [112, 52], [118, 60]])} /></g>
+      <text x="64" y="10" textAnchor="middle" fontSize="3.4" fill={S.amberHi} fontWeight="700" {...PT}>FUSED SILICA BASIN</text>
+      <text x="64" y="94" textAnchor="middle" fontSize="2.6" fill={ART.beige.hi} {...PT}>THE GROUND REMEMBERS</text>
+      <Rivets x={20} y={84} w={88} n={10} c="rust" />
+      <Grime x={6} y={20} w={116} h={66} seed={730} n={6} op={0.22} /><Scuff x={8} y={22} w={112} h={60} seed={731} n={8} c="glass" />
+    </svg>
+  );
+}
+
+function PropRebreatherRack() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Slab x={3} y={3} w={90} h={56} k={3} c="steel" o={1} />
+      <Seams x={3} y={3} w={90} h={56} cols={5} rows={1} op={0.3} />
+      <text x="48" y="10" textAnchor="middle" fontSize="3.2" fill={ART.ink} fontWeight="700" {...PT}>REBREATHER STATION</text>
+      {Array.from({ length: 6 }, (_, i) => {
+        const x = 12 + i * 14;
+        return (
+          <g key={i}>
+            <polygon points={pts([[x - 1, 14], [x + 9, 14], [x + 9, 16], [x - 1, 16]])} fill={ART.dark.shade} />
+            <Bev t="polygon" points={pts([[x, 16], [x + 8, 16], [x + 10, 24], [x + 6, 30], [x + 2, 30], [x - 2, 24]])} c="dark" o={0.7} />
+            <polygon points={pts([[x + 1, 19], [x + 7, 19], [x + 8, 23], [x + 4, 26], [x, 23]])} fill={ART.glass.base} opacity="0.7" />
+            <Bev t="polygon" points={pts([[x + 2, 36], [x + 2, 30], [x + 6, 30], [x + 6, 36]])} c="steel" o={0.4} />
+            <Bev t="polygon" points={pts([[x - 1, 54], [x - 1, 38], [x + 9, 38], [x + 9, 54]])} c="teal" o={0.7} />
+            <rect x={x - 1} y="44" width="10" height="1.6" fill={ART.dark.shade} /><rect x={x + 2} y="39.4" width="4" height="2" fill={i === 2 ? S.amber : S.green} />
+          </g>
+        );
+      })}
+      <Slab x={64} y={50} w={26} h={7} k={0.8} c="dark" o={0.5} /><text x="77" y="54.4" textAnchor="middle" fontSize="2.4" fill={S.cyanHi} {...PT}>N2-HEAVY MIX</text>
+      <Hazard x={6} y={55} w={54} h={3} /><Rivets x={7} y={5} w={82} n={10} />
+      <Grime x={4} y={6} w={88} h={52} seed={740} n={5} op={0.22} /><Scuff x={6} y={8} w={84} h={48} seed={741} n={7} c="steel" />
+    </svg>
+  );
+}
+
+function PropSentinelDroid() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={92} rx={24} ry={3} />
+      <Bev t="polygon" points={pts([[10, 92], [10, 82], [54, 82], [54, 92]])} c="steel" o={0.9} /><Hazard x={12} y={87} w={40} h={3} />
+      <Bev t="polygon" points={pts([[16, 84], [18, 56], [28, 56], [28, 84]])} c="deepglass" o={0.9} /><Bev t="polygon" points={pts([[36, 84], [36, 56], [46, 56], [48, 84]])} c="deepglass" o={0.9} />
+      <Bev t="polygon" points={pts([[12, 58], [14, 30], [26, 22], [38, 22], [50, 30], [52, 58]])} c="deepglass" o={1.1} />
+      <Seams x={12} y={24} w={40} h={34} cols={1} rows={2} op={0.4} /><Vent x={22} y={40} w={20} h={10} n={4} />
+      <Bev t="polygon" points={pts([[4, 36], [4, 22], [14, 22], [14, 40]])} c="steel" o={0.8} /><Bev t="polygon" points={pts([[50, 40], [50, 22], [60, 22], [60, 36]])} c="steel" o={0.8} />
+      <Bev t="polygon" points={pts([[4, 40], [8, 70], [14, 70], [14, 44]])} c="deepglass" o={0.7} /><Bev t="polygon" points={pts([[50, 44], [50, 70], [56, 70], [60, 40]])} c="deepglass" o={0.7} />
+      <Bev t="polygon" points={pts([[22, 22], [22, 10], [26, 6], [38, 6], [42, 10], [42, 22]])} c="steel" o={0.9} />
+      <rect x="24" y="12" width="16" height="4" fill={ART.ink} /><rect x="26" y="13" width="12" height="2" fill={ART.dark.hi} />
+      <g transform="rotate(-6 46 62)"><polygon points={pts([[42, 56], [58, 56], [58, 66], [42, 66]])} fill={ART.paper.base} /><rect x="43.6" y="57.6" width="12.8" height="2" fill={S.green} /><text x="50" y="64.4" textAnchor="middle" fontSize="2.2" fill={ART.note.ink} fontWeight="700" {...PT}>SERVICED</text></g>
+      <Cable d="M32 56 C20 70 30 80 18 86" w={2.2} />
+      <Glyph k="cog" x={32} y={32} s={3.6} c={ART.brand.kdy} />
+      <Rivets x={14} y={26} w={36} n={5} />
+      <Grime x={10} y={8} w={46} h={84} seed={750} n={5} op={0.22} /><Scuff x={12} y={10} w={42} h={78} seed={751} n={7} c="deepglass" />
+    </svg>
+  );
+}
+
+function PropHypercore() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={92} rx={44} ry={3.4} />
+      <Slab x={3} y={3} w={90} h={86} k={4} c="dark" o={1.2} />
+      <Seams x={3} y={3} w={90} h={86} cols={3} rows={3} op={0.4} />
+      <polygon points={pts(ngon(48, 46, 38, 38, 16, Math.PI / 16))} fill={ART.ink} />
+      <Glow cx={48} cy={46} r={40} c={S.cyan} opacity={0.5} style={{ animation:'ship-engine 2.2s ease-in-out infinite' }} />
+      <polygon points={pts(ngon(48, 46, 30, 30, 16, Math.PI / 16))} fill={ART.deepglass.shade} />
+      <polygon points={pts(ngon(48, 46, 22, 22, 16, Math.PI / 16))} fill={ART.deepglass.base} />
+      <polygon points={pts(ngon(48, 46, 14, 14, 12))} fill={S.cyan} style={{ animation:'ship-blink 2.6s steps(4) infinite' }} />
+      <polygon points={pts(ngon(48, 46, 8, 8, 8))} fill={S.cyanHi} /><polygon points={pts(ngon(48, 46, 4, 4, 6))} fill={S.white} />
+      <g stroke={S.cyanHi} strokeWidth="0.9" fill="none" style={{ animation:'holo-flicker 1.2s ease-in-out infinite' }}>{Array.from({ length: 8 }, (_, i) => { const a = (i / 8) * Math.PI * 2; return <polyline key={i} points={pts([[48 + Math.cos(a) * 14, 46 + Math.sin(a) * 14], [48 + Math.cos(a + 0.2) * 22, 46 + Math.sin(a + 0.2) * 22], [48 + Math.cos(a - 0.1) * 30, 46 + Math.sin(a - 0.1) * 30]])} />; })}</g>
+      <Bev t="polygon" points={pts(ngon(48, 46, 36, 36, 16, Math.PI / 16))} c="steel" o={0.8} />
+      <polygon points={pts(ngon(48, 46, 30, 30, 16, Math.PI / 16))} fill="none" stroke={ART.steel.shade} strokeWidth="1" />
+      {Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return <circle key={i} cx={48 + Math.cos(a) * 33} cy={46 + Math.sin(a) * 33} r="1.4" fill={ART.steel.hi} />; })}
+      {[[0, 1], [1, 0], [0, -1], [-1, 0]].map(([dx, dy], i) => <polygon key={i} points={pts([[48 + dx * 36 - dy * 6, 46 + dy * 36 + dx * 6], [48 + dx * 26 - dy * 3, 46 + dy * 26 + dx * 3], [48 + dx * 26 + dy * 3, 46 + dy * 26 - dx * 3], [48 + dx * 36 + dy * 6, 46 + dy * 36 - dx * 6]])} fill={ART.steel.shade} opacity="0.9" />)}
+      <Slab x={14} y={80} w={68} h={7} k={1} c="dark" o={0.6} /><text x="48" y="85.2" textAnchor="middle" fontSize="3" fill={S.cyanHi} fontWeight="700" {...PT}>HYPERCORE: STAR DESTROYER CLASS</text>
+      <Hazard x={6} y={88} w={84} h={3} /><Rivets x={7} y={6} w={82} n={10} /><Lights x={10} y={84} n={3} gap={3} seed={7} />
+      <Grime x={4} y={6} w={88} h={80} seed={760} n={7} op={0.24} /><Scuff x={6} y={8} w={84} h={76} seed={761} n={9} c="steel" />
+    </svg>
+  );
+}
+
+function PropBridgeConsole() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={58} ry={2.8} />
+      <Bev t="polygon" points={pts([[4, 36], [10, 4], [118, 4], [124, 36]])} c="dark" o={1.1} />
+      <polygon points={pts([[10, 34], [14, 8], [114, 8], [118, 34]])} fill={ART.screen.space} />
+      {Array.from({ length: 16 }, (_, i) => <rect key={i} x={18 + ((i * 53) % 92)} y={10 + ((i * 7) % 18)} width="1" height="1" fill={S.white} opacity="0.7" />)}
+      <polygon points={pts([[84, 22], [100, 16], [108, 24], [98, 30], [90, 28]])} fill={ART.steel.shade} /><polygon points={pts([[86, 22], [100, 17], [104, 22], [92, 25]])} fill={ART.steel.base} /><polygon points={pts([[40, 28], [52, 22], [58, 28]])} fill={ART.hull.shade} />
+      <g stroke={S.white} strokeWidth="0.5" opacity="0.3">{[26, 46, 66, 86, 106].map((x) => <line key={x} x1={x} y1="8" x2={x - 2} y2="34" />)}</g>
+      <Bev t="polygon" points={pts([[2, 60], [6, 38], [122, 38], [126, 60]])} c="hull" o={1.1} />
+      <polygon points={pts([[6, 38], [122, 38], [120, 42], [8, 42]])} fill={ART.pearl.hi} />
+      {[[14, 'cyan'], [40, 'green'], [66, 'amber'], [92, 'cyan']].map(([x, k], i) => <g key={i}><Bev t="polygon" points={pts([[x, 56], [x + 2, 44], [x + 22, 44], [x + 24, 56]])} c="dark" o={0.7} /><rect x={x + 3} y="46" width="18" height="8" fill={ART.screen[k === 'cyan' ? 'cyan' : k === 'green' ? 'green' : 'amber']} />{[0, 1, 2].map((j) => <rect key={j} x={x + 5} y={47.4 + j * 2.4} width={8 + ((i + j) % 3) * 3} height="1" fill={S[k === 'cyan' ? 'cyanHi' : k === 'green' ? 'greenHi' : 'gold']} />)}</g>)}
+      <Slab x={46} y={30} w={36} h={9} k={1} c="dark" o={0.6} /><text x="64" y="36.2" textAnchor="middle" fontSize="3" fill={S.cyanHi} fontWeight="700" {...PT}>ZORA IV: FLIGHT LOGS INTACT</text>
+      <rect x="116" y="38" width="8" height="2.4" fill={ART.red.base} /><rect x="4" y="38" width="8" height="2.4" fill={ART.red.base} />
+      <Toggles x={14} y={58} cols={20} rows={1} gap={4.6} seed={9} /><Lights x={110} y={58.4} n={3} gap={4} seed={2} />
+      <Seams x={2} y={38} w={124} h={22} cols={7} op={0.3} />
+      <Grime x={4} y={6} w={120} h={54} seed={770} n={6} op={0.2} /><Scuff x={6} y={40} w={116} h={18} seed={771} n={8} c="hull" /><Rivets x={10} y={5.6} w={108} n={13} />
+    </svg>
+  );
+}
+
 // ===== CORUSCANT PROPS END =====
 
 const PROP_DEFS = {
@@ -11300,6 +11581,14 @@ const PROP_DEFS = {
   fountain:             { w: 3, h: 2, ax: 1, ay: 0 },
   scorch_wall:          { w: 3, h: 2, ax: 1, ay: 1 },
   sentry_post:          { w: 3, h: 2, ax: 1, ay: 1 },
+  maglev_crane:         { w: 3, h: 3, ax: 1, ay: 2 },
+  capacitor_bank:       { w: 3, h: 3, ax: 1, ay: 2 },
+  scan_wreck:           { w: 4, h: 2, ax: 1, ay: 1 },
+  crater_glass:         { w: 4, h: 3, ax: 1, ay: 2 },
+  rebreather_rack:      { w: 3, h: 2, ax: 1, ay: 1 },
+  sentinel_droid:       { w: 2, h: 3, ax: 0, ay: 2 },
+  hypercore:            { w: 3, h: 3, ax: 1, ay: 2 },
+  bridge_console:       { w: 4, h: 2, ax: 1, ay: 1 },
   // CORUSCANT DEFS END
 };
 
@@ -11416,6 +11705,14 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'fountain': return <PropFountain variant={variant} active={!!active} />;
     case 'scorch_wall': return <PropScorchWall variant={variant} active={!!active} />;
     case 'sentry_post': return <PropSentryPost variant={variant} active={!!active} />;
+    case 'maglev_crane': return <PropMaglevCrane variant={variant} active={!!active} />;
+    case 'capacitor_bank': return <PropCapacitorBank variant={variant} active={!!active} />;
+    case 'scan_wreck': return <PropScanWreck variant={variant} active={!!active} />;
+    case 'crater_glass': return <PropCraterGlass variant={variant} active={!!active} />;
+    case 'rebreather_rack': return <PropRebreatherRack variant={variant} active={!!active} />;
+    case 'sentinel_droid': return <PropSentinelDroid variant={variant} active={!!active} />;
+    case 'hypercore': return <PropHypercore variant={variant} active={!!active} />;
+    case 'bridge_console': return <PropBridgeConsole variant={variant} active={!!active} />;
     // CORUSCANT CASES END
     default: return null;
   }
