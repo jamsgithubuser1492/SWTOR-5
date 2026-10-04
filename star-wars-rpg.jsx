@@ -74,8 +74,8 @@ const PLANETS = {
           { x: 31, y: 13, targetZone: 'market', targetPos: { x: 1, y: 11 }, label: 'Market' },
         ],
         worldObjects: [
-          { id: 'customs_terminal', x: 23, y: 9, label: 'Customs Terminal', description: 'A flickering datapad logs your entry. Transit clearance: provisional.', once: false },
-          { id: 'fueling_conduit', x: 8, y: 18, label: 'Fueling Conduit', description: 'The conduit hisses with residual pressurised fuel. Someone left this running.', once: true },
+          { id: 'customs_terminal', propArt: 'console', propVariant: 'customs', x: 23, y: 9, label: 'Customs Terminal', description: 'A flickering datapad logs your entry. Transit clearance: provisional.', once: false },
+          { id: 'fueling_conduit', propArt: 'fuel_hose', x: 8, y: 18, label: 'Fueling Conduit', description: 'The conduit hisses with residual pressurised fuel. Someone left this running.', once: true },
         ],
         npcs: [
           { id: 'vane', x: 24, y: 11, kind: 'republic_guard', label: 'Officer Vane',
@@ -144,8 +144,8 @@ const PLANETS = {
           { x: 31, y: 11, targetZone: 'plaza', targetPos: { x: 1, y: 11 }, label: 'Plaza' },
         ],
         worldObjects: [
-          { id: 'wanted_holo', x: 20, y: 4, label: 'Wanted Holo-Poster', description: 'A Republic bounty. The face on the poster looks vaguely familiar.', once: false },
-          { id: 'scrap_bin', x: 6, y: 17, label: 'Scrap Bin', description: 'Buried under junk you find a cracked power cell and a half-eaten protein bar. You take neither.', once: true },
+          { id: 'wanted_holo', propArt: 'board', propVariant: 'wanted', x: 20, y: 4, label: 'Wanted Holo-Poster', description: 'A Republic bounty. The face on the poster looks vaguely familiar.', once: false },
+          { id: 'scrap_bin', propArt: 'scrap_bin', x: 6, y: 17, label: 'Scrap Bin', description: 'Buried under junk you find a cracked power cell and a half-eaten protein bar. You take neither.', once: true },
         ],
         npcs: [
           { id: 'archivist', x: 8, y: 6, kind: 'jedi', label: 'Jedi Archivist Sera',
@@ -214,10 +214,10 @@ const PLANETS = {
           { x: 6, y: 4, targetZone: 'jons_apt_int', targetPos: { x: 9, y: 11 }, label: "Jon's Apt" },
         ],
         worldObjects: [
-          { id: 'jon_apt', x: 6, y: 7, label: "Jon's Apartment", description: 'The smell of caf and burnt wiring. The inner door is unlocked.', once: false },
-          { id: 'dexter_apt', x: 6, y: 15, label: "Dexter's Apartment", description: 'Smells of grease and something frying. A note on the door: Back in 20. Help yourself to the caf.', once: true },
-          { id: 'zillow_terminal', x: 24, y: 6, label: 'Zillow Housing Terminal', description: 'Vacancy listings for Subsurface Level 2: zero. Vacancy listings for Level 5 and above: three thousand. The price makes your eyes water.', once: false },
-          { id: 'speeder_shell', x: 22, y: 16, label: 'Abandoned Speeder Shell', description: 'The repulsor coils are stripped. Someone was living in here recently. The bedroll is still warm.', once: true },
+          { id: 'jon_apt', propArt: 'apt_door', propVariant: 'jon', x: 6, y: 7, label: "Jon's Apartment", description: 'The smell of caf and burnt wiring. The inner door is unlocked.', once: false },
+          { id: 'dexter_apt', propArt: 'apt_door', propVariant: 'dexter', x: 6, y: 15, label: "Dexter's Apartment", description: 'Smells of grease and something frying. A note on the door: Back in 20. Help yourself to the caf.', once: true },
+          { id: 'zillow_terminal', propArt: 'console', propVariant: 'zillow', x: 24, y: 6, label: 'Zillow Housing Terminal', description: 'Vacancy listings for Subsurface Level 2: zero. Vacancy listings for Level 5 and above: three thousand. The price makes your eyes water.', once: false },
+          { id: 'speeder_shell', propArt: 'speeder_wreck', x: 22, y: 16, label: 'Abandoned Speeder Shell', description: 'The repulsor coils are stripped. Someone was living in here recently. The bedroll is still warm.', once: true },
         ],
         npcs: [
           { id: 'anxious_tenant', x: 12, y: 10, kind: 'smuggler', label: 'Anxious Tenant', mobile: true,
@@ -267,9 +267,9 @@ const PLANETS = {
           { x: 31, y: 11, targetZone: 'commercial', targetPos: { x: 1, y: 11 }, label: 'Commercial' },
         ],
         worldObjects: [
-          { id: 'memorial_fountain', x: 15, y: 10, label: 'Memorial Fountain', description: 'The inscription reads: In memory of the Fallen of Malachor. The water runs blue-white, fed from far above.', once: false },
-          { id: 'public_datapad', x: 8, y: 5, label: 'Public Datapad', description: 'The newsfeed headline: SENATE VOTES TO EXTEND EMERGENCY POWERS. Below it, someone has scratched two words in Basic: they know.', once: false },
-          { id: 'graffiti_tag', x: 24, y: 17, label: 'Graffiti Tag', description: 'Spray-etched into the durasteel wall: a stylised flame over a broken chain. The symbol of the Free Coruscant movement.', once: true },
+          { id: 'memorial_fountain', propArt: 'fountain', x: 15, y: 10, label: 'Memorial Fountain', description: 'The inscription reads: In memory of the Fallen of Malachor. The water runs blue-white, fed from far above.', once: false },
+          { id: 'public_datapad', propArt: 'console', propVariant: 'newsfeed', x: 8, y: 5, label: 'Public Datapad', description: 'The newsfeed headline: SENATE VOTES TO EXTEND EMERGENCY POWERS. Below it, someone has scratched two words in Basic: they know.', once: false },
+          { id: 'graffiti_tag', propArt: 'wall_marks', propVariant: 'free', x: 24, y: 17, label: 'Graffiti Tag', description: 'Spray-etched into the durasteel wall: a stylised flame over a broken chain. The symbol of the Free Coruscant movement.', once: true },
         ],
         npcs: [
           { id: 'calla_ren', x: 10, y: 7, kind: 'jedi', label: "Senator's Aide Calla Ren",
@@ -316,9 +316,9 @@ const PLANETS = {
           { x: 15, y: 21, targetZone: 'speeder1', targetPos: { x: 14, y: 1 }, label: 'Speeder Bay 1' },
         ],
         worldObjects: [
-          { id: 'sallys_cantina', x: 10, y: 8, label: "Sally's Cantina", description: 'The neon sign buzzes: SALLYS. No apostrophe. Inside you hear laughter and the clink of glasses. The door is open.', once: false },
-          { id: 'goods_store', x: 24, y: 6, label: 'Goods, Trades and Treasure', description: 'A cluttered shop front. The owner has priced everything at exactly twice what it is worth. Standard practice.', once: false },
-          { id: 'trex_keypad', x: 20, y: 15, label: "Trex's Apt Keypad", description: 'A reinforced door with a seven-digit keypad. Three of the digits are worn smooth from repeated use.', once: true },
+          { id: 'sallys_cantina', propArt: 'shopfront', propVariant: 'sallys', x: 10, y: 8, label: "Sally's Cantina", description: 'The neon sign buzzes: SALLYS. No apostrophe. Inside you hear laughter and the clink of glasses. The door is open.', once: false },
+          { id: 'goods_store', propArt: 'shopfront', propVariant: 'goods', x: 24, y: 6, label: 'Goods, Trades and Treasure', description: 'A cluttered shop front. The owner has priced everything at exactly twice what it is worth. Standard practice.', once: false },
+          { id: 'trex_keypad', propArt: 'apt_door', propVariant: 'trex', x: 20, y: 15, label: "Trex's Apt Keypad", description: 'A reinforced door with a seven-digit keypad. Three of the digits are worn smooth from repeated use.', once: true },
         ],
         npcs: [
           { id: 'sally', x: 8, y: 12, kind: 'cantina_owner', label: 'Sally',
@@ -367,9 +367,9 @@ const PLANETS = {
           { x: 27, y: 10, targetZone: 'speeder2', targetPos: { x: 1, y: 10 }, label: 'Bay 2' },
         ],
         worldObjects: [
-          { id: 'airtaxi_terminal', x: 11, y: 5, label: 'AirTaxi Terminal', description: 'The schedule board lists forty-seven routes. Twenty-nine are marked SUSPENDED. You wonder what happened on the other twenty-nine.', once: false },
-          { id: 'refuel_kiosk', x: 20, y: 5, label: 'Refueling Kiosk', description: 'Out of order. A handwritten sign reads: Use Bay 2. Bay 2 is also probably out of order.', once: true },
-          { id: 'bay_log', x: 6, y: 14, label: 'Speeder Bay Log', description: 'Last entry: Speeder Unit 7 departed 03:14. Destination: classified. Pilot: classified. Good luck finding that one.', once: true },
+          { id: 'airtaxi_terminal', propArt: 'airtaxi', propVariant: 'worn', x: 11, y: 5, label: 'AirTaxi Terminal', description: 'The schedule board lists forty-seven routes. Twenty-nine are marked SUSPENDED. You wonder what happened on the other twenty-nine.', once: false },
+          { id: 'refuel_kiosk', propArt: 'kiosk', propVariant: 'refuel', x: 20, y: 5, label: 'Refueling Kiosk', description: 'Out of order. A handwritten sign reads: Use Bay 2. Bay 2 is also probably out of order.', once: true },
+          { id: 'bay_log', propArt: 'board', propVariant: 'baylog', x: 6, y: 14, label: 'Speeder Bay Log', description: 'Last entry: Speeder Unit 7 departed 03:14. Destination: classified. Pilot: classified. Good luck finding that one.', once: true },
         ],
         npcs: [
           { id: 'at9', x: 16, y: 8, kind: 'droid', label: 'AirTaxi Droid AT-9', triggersOverlay: 'speeder',
@@ -416,9 +416,9 @@ const PLANETS = {
           { x: 0, y: 10, targetZone: 'speeder1', targetPos: { x: 25, y: 10 }, label: 'Bay 1' },
         ],
         worldObjects: [
-          { id: 'airtaxi_terminal2', x: 10, y: 5, label: 'AirTaxi Terminal 2', description: 'This one actually works. The wait time reads: 47 minutes. You decide to walk.', once: false },
-          { id: 'departure_board', x: 18, y: 5, label: 'Departure Board', description: 'One entry is highlighted in red: FLIGHT C-7 OVERDUE. LAST CONTACT: 06:22. That was three days ago.', once: true },
-          { id: 'cargo_container', x: 22, y: 14, label: 'Abandoned Cargo Container', description: 'Duvall was right. Inside you find a set of repulsor coils, a crate of unmarked credit chips, and a datapad with a single message: DO NOT OPEN THIS.', once: true },
+          { id: 'airtaxi_terminal2', propArt: 'airtaxi', propVariant: 'clean', x: 10, y: 5, label: 'AirTaxi Terminal 2', description: 'This one actually works. The wait time reads: 47 minutes. You decide to walk.', once: false },
+          { id: 'departure_board', propArt: 'board', propVariant: 'departures', x: 18, y: 5, label: 'Departure Board', description: 'One entry is highlighted in red: FLIGHT C-7 OVERDUE. LAST CONTACT: 06:22. That was three days ago.', once: true },
+          { id: 'cargo_container', propArt: 'cargo_container', x: 22, y: 14, label: 'Abandoned Cargo Container', description: 'Duvall was right. Inside you find a set of repulsor coils, a crate of unmarked credit chips, and a datapad with a single message: DO NOT OPEN THIS.', once: true },
         ],
         npcs: [
           { id: 'at11', x: 15, y: 8, kind: 'droid', label: 'AirTaxi Droid AT-11', triggersOverlay: 'speeder',
@@ -454,10 +454,10 @@ const PLANETS = {
           { x: 9, y: 13, targetZone: 'apartments', targetPos: { x: 6, y: 5 }, label: 'Residential Corridor' },
         ],
         worldObjects: [
-          { id: 'jon_datapad', x: 12, y: 3, label: 'Encrypted Datapad', description: 'Manifest fragments. Three hub codes, three timestamps, forty-eight hours apart. Someone who knew the routing schedules. The Broken Circle is written in the margin in red.', once: true },
-          { id: 'slicing_bench', x: 14, y: 8, label: 'Slicing Workbench', description: 'A tangle of stripped datachips and bypass leads. Jon apparently does his best work at 0300.', once: false },
-          { id: 'bay14_analysis_board', x: 8, y: 4, once: false, iconKind: 'board', label: 'Bay 14 Analysis Board', description: 'A holographic display pinned with freight logs, blast pattern analyses, and three photographs labeled UNKNOWN. Jon has been working this case longer than he let on. One note in his handwriting reads: "Transit codes -- mine. How?"' },
-          { id: 'faction_tension_chart', x: 3, y: 6, once: false, iconKind: 'board', label: 'Coruscant Faction Chart', description: 'A layered map of Coruscant levels with colored overlays: blue for CSF jurisdiction, red for Iron Syndicate activity, amber for contested freight corridors. The Senate District is circled three times in a different color than the others. No label. Just the circle.' },
+          { id: 'jon_datapad', propArt: 'datapad_table', propVariant: 'jon', x: 12, y: 3, label: 'Encrypted Datapad', description: 'Manifest fragments. Three hub codes, three timestamps, forty-eight hours apart. Someone who knew the routing schedules. The Broken Circle is written in the margin in red.', once: true },
+          { id: 'slicing_bench', propArt: 'workbench', propVariant: 'slicing', x: 14, y: 8, label: 'Slicing Workbench', description: 'A tangle of stripped datachips and bypass leads. Jon apparently does his best work at 0300.', once: false },
+          { id: 'bay14_analysis_board', propArt: 'board', propVariant: 'analysis', x: 8, y: 4, once: false, iconKind: 'board', label: 'Bay 14 Analysis Board', description: 'A holographic display pinned with freight logs, blast pattern analyses, and three photographs labeled UNKNOWN. Jon has been working this case longer than he let on. One note in his handwriting reads: "Transit codes -- mine. How?"' },
+          { id: 'faction_tension_chart', propArt: 'board', propVariant: 'faction', x: 3, y: 6, once: false, iconKind: 'board', label: 'Coruscant Faction Chart', description: 'A layered map of Coruscant levels with colored overlays: blue for CSF jurisdiction, red for Iron Syndicate activity, amber for contested freight corridors. The Senate District is circled three times in a different color than the others. No label. Just the circle.' },
         ],
         npcs: [
           { id: 'jon_apartment', x: 5, y: 3, kind: 'smuggler', label: 'Jon', questNpc: true,
@@ -663,41 +663,41 @@ const PLANETS = {
           { x: 5, y: 0, targetZone: 'senatorial_lounges', targetPos: { x: 16, y: 17 }, label: 'Senatorial Sky-Lounges' },
         ],
         worldObjects: [
-          { id: 'jon_arrival_comlink', x: 5, y: 13, once: true, iconKind: 'comlink', label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
-          { id: 'sky_market_terminal', x: 20, y: 7, once: false, label: 'Trade Exchange Terminal', description: 'Live credit-transfer rates across fourteen systems. One manifest flagged for anomalous routing: SCYLLA FREIGHT. Destination: redacted. Shipper: redacted.' },
-          { id: 'csf_bulletin', x: 28, y: 14, once: false, iconKind: 'board', label: 'CSF Bulletin Board', description: 'Three active investigations listed. Two marked classified. The third — Cargo Anomaly / Bay 14 — shows status: CLOSED. Filed by: Vane, T. Closure date: two days after the incident.' },
-          { id: 'lounge_bar_terminal', x: 5, y: 5, once: false, label: 'Lounge Drink Terminal', description: 'A rotating holographic menu. Thirty-seven varieties of exotic spirits from fourteen systems. One local special listed as "Bay 14 Blend." Whoever named it has a sense of humor or information you do not.' },
-          { id: 'lounge_private_booth', x: 9, y: 8, once: true, iconKind: 'booth', label: 'Occupied Booth', description: 'Two figures in grey coats, backs to the room. Neither is drinking. Both are watching the exit.', grantsFlag: 'syndicate_watchers_seen', grantsCodex: 'codex-iron-syndicate',
+          { id: 'jon_arrival_comlink', propArt: 'comm_relay', propVariant: 'puck', x: 5, y: 13, once: true, iconKind: 'comlink', label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
+          { id: 'sky_market_terminal', propArt: 'console', propVariant: 'exchange', x: 20, y: 7, once: false, label: 'Trade Exchange Terminal', description: 'Live credit-transfer rates across fourteen systems. One manifest flagged for anomalous routing: SCYLLA FREIGHT. Destination: redacted. Shipper: redacted.' },
+          { id: 'csf_bulletin', propArt: 'board', propVariant: 'bulletin', x: 28, y: 14, once: false, iconKind: 'board', label: 'CSF Bulletin Board', description: 'Three active investigations listed. Two marked classified. The third — Cargo Anomaly / Bay 14 — shows status: CLOSED. Filed by: Vane, T. Closure date: two days after the incident.' },
+          { id: 'lounge_bar_terminal', propArt: 'kiosk', propVariant: 'drinks', x: 5, y: 5, once: false, label: 'Lounge Drink Terminal', description: 'A rotating holographic menu. Thirty-seven varieties of exotic spirits from fourteen systems. One local special listed as "Bay 14 Blend." Whoever named it has a sense of humor or information you do not.' },
+          { id: 'lounge_private_booth', propArt: 'booth', propVariant: 'private', x: 9, y: 8, once: true, iconKind: 'booth', label: 'Occupied Booth', description: 'Two figures in grey coats, backs to the room. Neither is drinking. Both are watching the exit.', grantsFlag: 'syndicate_watchers_seen', grantsCodex: 'codex-iron-syndicate',
             autoCodex: { id: 'discovery-lounge-booth-watchers', title: 'Iron Syndicate Watchers', category: 'discoveries', summary: 'Field observers in the Aurebesh Lounge.', body: ['Two figures in grey coats sit with their backs to the room. Neither is drinking. Both are watching the exit. Iron Syndicate field observers — if they recognize you, they will report your presence at the lounge to Vex.', 'Their positioning covers the main entrance and the transit lift. This is a professional surveillance configuration, not a casual meeting.'] } },
-          { id: 'lounge_datapad', x: 3, y: 9, once: true, label: 'Left Behind Datapad', description: 'Encrypted but partially readable. Credit transfers totaling 840,000 credits routed through three shell corporations to a Coruscant financial account. The destination account number matches one field on the Scylla manifest.', grantsFlag: 'credit_trail_found' },
-          { id: 'precinct_evidence_locker', x: 29, y: 6, once: false, iconKind: 'safe', label: 'Evidence Locker — Bay 14', description: "CASE STATUS: CLOSED. PRIMARY EVIDENCE: destroyed in dock fire. PHYSICAL SAMPLES: none recovered. WITNESS STATEMENTS: sealed under Senate Directive 1182-C. The locker is padlocked with a standard CSF code seal. Vane's name is on the closure authorization." },
-          { id: 'precinct_comms_station', x: 33, y: 5, once: false, label: 'CSF Dispatch Station', description: 'Twelve active patrol frequencies. Six are handling routine traffic violations. Five are static. One — Sector 4 Channel B — is broadcasting a continuous loop: "All units stand by. Sector 4 incident classified pending Senate review."' },
-          { id: 'precinct_wanted_board', x: 29, y: 9, once: false, iconKind: 'board', label: 'Sector 4 Active Warrants Board', description: 'Fourteen open warrants. Nine are standard Black Sun identifiers. Four are listed as CLASSIFIED with Senate clearance required to view. The fifteenth entry — Bay 14 strike team — shows status: SUSPENDED. Effective date: two days after the incident.' },
-          { id: 'airtaxi_sky_market', x: 35, y: 20, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Departs on demand.' },
-          { id: 'penthouse_elevator_panel', x: 36, y: 1, once: false, iconKind: 'panel', label: 'Scylla Tower Seven Elevator',
+          { id: 'lounge_datapad', propArt: 'datapad_table', propVariant: 'lounge', x: 3, y: 9, once: true, label: 'Left Behind Datapad', description: 'Encrypted but partially readable. Credit transfers totaling 840,000 credits routed through three shell corporations to a Coruscant financial account. The destination account number matches one field on the Scylla manifest.', grantsFlag: 'credit_trail_found' },
+          { id: 'precinct_evidence_locker', propArt: 'evidence_locker', x: 29, y: 6, once: false, iconKind: 'safe', label: 'Evidence Locker — Bay 14', description: "CASE STATUS: CLOSED. PRIMARY EVIDENCE: destroyed in dock fire. PHYSICAL SAMPLES: none recovered. WITNESS STATEMENTS: sealed under Senate Directive 1182-C. The locker is padlocked with a standard CSF code seal. Vane's name is on the closure authorization." },
+          { id: 'precinct_comms_station', propArt: 'console', propVariant: 'dispatch', x: 33, y: 5, once: false, label: 'CSF Dispatch Station', description: 'Twelve active patrol frequencies. Six are handling routine traffic violations. Five are static. One — Sector 4 Channel B — is broadcasting a continuous loop: "All units stand by. Sector 4 incident classified pending Senate review."' },
+          { id: 'precinct_wanted_board', propArt: 'board', propVariant: 'warrants', x: 29, y: 9, once: false, iconKind: 'board', label: 'Sector 4 Active Warrants Board', description: 'Fourteen open warrants. Nine are standard Black Sun identifiers. Four are listed as CLASSIFIED with Senate clearance required to view. The fifteenth entry — Bay 14 strike team — shows status: SUSPENDED. Effective date: two days after the incident.' },
+          { id: 'airtaxi_sky_market', propArt: 'airtaxi', propVariant: 'clean', x: 35, y: 20, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Departs on demand.' },
+          { id: 'penthouse_elevator_panel', propArt: 'elevator_door', x: 36, y: 1, once: false, iconKind: 'panel', label: 'Scylla Tower Seven Elevator',
             requiresFlag: 'inheritance_active',
             description: 'A private elevator car with no public registration. The panel reads SCYLLA TOWER SEVEN — LEVEL 1452 — AUTHORIZED CLEARANCE ONLY. Your clearance is on file. Step in.' },
-          { id: 'skyline_vista', x: 19, y: 1, once: false, iconKind: 'vista', label: 'Promenade Skyline Overlook', description: 'The promenade edge opens onto open air and three thousand meters of vertical city. Speeders stream in tight formation lanes. Above: the Senate dome, catching the last reflected light from the planet\'s artificial sun cycle. Below: nothing visible. The lower levels begin where the light stops.',
+          { id: 'skyline_vista', propArt: 'skyline', propVariant: 'promenade', x: 19, y: 1, once: false, iconKind: 'vista', label: 'Promenade Skyline Overlook', description: 'The promenade edge opens onto open air and three thousand meters of vertical city. Speeders stream in tight formation lanes. Above: the Senate dome, catching the last reflected light from the planet\'s artificial sun cycle. Below: nothing visible. The lower levels begin where the light stops.',
             worldStateVariant: {
               lawful: 'The view from the law: the Republic\'s skyline, lit and ordered, everything it protects visible from one glance. The lower levels are down there somewhere, past the point where the light gives up.',
               underworld: 'The view from the other side: that Senate dome is where the authorization codes came from. Everything clean and lit up top, everything complicated below. You are already on the wrong level for clean.',
             },
           },
-          { id: 'holonet_kiosk', x: 14, y: 14, once: false, iconKind: 'hologram', label: 'HoloNet News Kiosk', description: '[HNN — PRIORITY FEED] "The Coruscant Port Authority today confirmed that a routine fuel-line incident at Sub-Surface Docking Bay 14 has been fully resolved. Port Director Hadras stated that all cargo logs were destroyed in the secondary fire, consistent with standard emergency protocol. Senate Commerce Committee Chair confirmed there is no active investigation." The kiosk screen cycles to a weather advisory. Coruscant does not have weather.' },
-          { id: 'lounge_corner_conversation', x: 7, y: 9, once: true, iconKind: 'booth', label: 'Overheard Corner Table', description: 'Two men in expensive suits are speaking just below audible. One places a datacard on the table. The other shakes his head. The first slides it closer. The second looks out the window for a long moment, then pockets it. Neither man acknowledges that you passed. The datacard is gone.', grantsFlag: 'corner_deal_witnessed' },
-          { id: 'promenade_patrol_log', x: 24, y: 18, once: false, label: 'CSF Patrol Route Terminal', description: 'A public-facing transit safety board maintained by the CSF. Patrol schedule for Sector 4: suspended pending Senate review. Patrol schedule for Sky-Market Promenade: reduced to single-officer rotating shift. The reduction took effect two days after the Bay 14 incident. The authorization is signed: Vane, T.' },
-          { id: 'overhead_traffic_lanes', x: 18, y: 2, once: false, label: 'Open-Air Promenade Edge', description: 'The skyway opens above you. Repulsorlift traffic moves in tight formation lanes a hundred meters overhead — freight skiffs, executive speeders, municipal transports. The lanes are color-coded by altitude and clearance tier. A constant low-frequency vibration moves through the durasteel walkway beneath your feet. Somewhere below, Level 1222 looks up through the same open air.' },
-          { id: 'aurebesh_neon_sign', x: 16, y: 11, once: false, label: 'Aurebesh Neon Sign Array', description: 'A bank of hand-lettered Aurebesh signs in electric blue and deep crimson mark the vendors along the concourse edge. EXCHANGE CERTIFIED. PHRIK-FREE MATERIALS. SENATE-APPROVED TRANSIT. BEST RATES BETWEEN THE LEVELS. One sign at the end of the row has been unplugged. It read: SCYLLA FREIGHT — REGISTERED CARRIER. The housing still glows faintly from residual charge.' },
-          { id: 'vendor_stall_twi', x: 10, y: 15, once: false, iconKind: 'stall', label: "Twi'lek Fruit Stand", description: "A canopied stall made from canvas weave and a repurposed cargo-crate frame. Lelani, a green-lekku Twi'lek vendor, is arguing cheerfully in three languages with a Ishi Tib buyer over the price of something that glows orange. The canopy overhead is patched in four places with a different fabric each time. It has survived longer than the district's last three CSF precinct commanders." },
-          { id: 'droid_repair_kiosk', x: 22, y: 17, once: false, iconKind: 'stall', label: 'Droid Repair Kiosk', description: 'A narrow stall crammed with disassembled photoreceptors, motivator housings, and at least three different droid torsos in various states of rebuild. The proprietor — a pair of heavily tattooed human hands, the rest of the body hidden behind a parts rack — is precision-soldering a restraining bolt without looking up. A handwritten sign reads: NO DROIDS REFUSED. NO QUESTIONS ASKED. PAYMENT UPFRONT.' },
-          { id: 'freight_crane_alpha', x: 30, y: 20, once: false, label: 'Freight Terrace Crane Arm', description: 'A heavy industrial crane arm extends from the terrace edge over the open air, weighted with a repulsor counterbalance. Below, on a cantilevered platform you can only partially see, a cargo skiff is being unloaded by two astromech units stacking standardized Czerka containers. The crane arm bears three inspection seals, none of which match the current registration cycle.' },
-          { id: 'landing_pad_beacon', x: 14, y: 21, once: false, label: 'Landing Pad 1450 Beacon', description: 'A red collision beacon mounted to the terrace railing flashes in three-second intervals, keeping skiff pilots on approach path. The pad below is rated for two medium-class freighters simultaneously. Currently: four skiffs, two of them unmarked, parked in a configuration that leaves no room for a legitimate arrival. Nobody has filed a complaint with the port authority in six days.' },
-          { id: 'repulsor_fluid_slick', x: 22, y: 20, once: false, label: 'Repulsor Fluid Slick', description: 'A wide iridescent puddle has spread from a leaking repulsor stall fitting across the walkway surface. The fluid catches every neon sign in the concourse and renders them in elongated reflections across the durasteel: electric blue, magenta, amber. Standing in it, you can read the entire Aurebesh sign row backwards in the ground beneath your feet.' },
-          { id: 'maintenance_strut_a', x: 8, y: 20, once: false, label: 'Ferro-Concrete Support Pillar', description: 'One of the ribbed ferro-concrete support pillars that holds the promenade above the freight terraces. The surface is layered with stenciled Aurebesh tags going back decades — territorial markers, love declarations, gang warnings, one very detailed accusation against a port official that has never been scrubbed. Copper conduit runs up the pillar face in bundled loops, patched at two separate points with wire that does not match.' },
-          { id: 'floor_grate_vista', x: 15, y: 23, once: false, label: 'Conduit Underdeck Grate', description: 'A heavy transpariesteel floor grate gives a direct view down through the promenade substructure to the Conduit Underdeck. Exposed municipal piping runs in parallel lines below. Harsh yellow work lights illuminate narrow maintenance catwalks that run the full length of the market floor from beneath. A CSF security node blinks amber at the far end of a catwalk. Someone has been down there recently — a boot print in the condensation on the grate surface.' },
-          { id: 'steam_vent_municipal', x: 8, y: 23, once: false, label: 'Municipal Steam Vent', description: 'A ventilation shaft access point built into the promenade deck. At irregular intervals it exhales a column of hot industrial steam that catches the amber light and briefly turns the lower walkway into something resembling a cloudscape. The vent connects to the underdeck thermal management system for the levels below. Maintenance logs on the panel beside it show no scheduled servicing in eleven months.' },
-          { id: 'conduit_security_node', x: 22, y: 23, once: true, label: 'Underdeck Security Node', description: 'A CSF-issue security node mounted to the underside of the promenade deck, accessible from the maintenance catwalk. It controls the patrol-droid routing across the lower freight terraces. The casing is standard Republic manufacture — but the firmware version is three cycles out of date. Someone who knew what they were doing could slice it and redirect the patrol pattern entirely.', grantsFlag: 'conduit_node_seen' },
-          { id: 'maintenance_catwalk_junction', x: 30, y: 23, once: false, label: 'Maintenance Catwalk Junction', description: 'The narrow catwalk beneath the promenade splits here into three branches: east to the freight crane platforms, west back under the Aurebesh Lounge, and straight down via a ladder access to the Level 1222 ventilation spine. The junction is unmarked. The ladder rungs disappear into darkness forty meters below the grate. Above you, through the floor, you can hear market vendors and the faint pulse of Aurebesh neon.' },
+          { id: 'holonet_kiosk', propArt: 'kiosk', propVariant: 'hnn', x: 14, y: 14, once: false, iconKind: 'hologram', label: 'HoloNet News Kiosk', description: '[HNN — PRIORITY FEED] "The Coruscant Port Authority today confirmed that a routine fuel-line incident at Sub-Surface Docking Bay 14 has been fully resolved. Port Director Hadras stated that all cargo logs were destroyed in the secondary fire, consistent with standard emergency protocol. Senate Commerce Committee Chair confirmed there is no active investigation." The kiosk screen cycles to a weather advisory. Coruscant does not have weather.' },
+          { id: 'lounge_corner_conversation', propArt: 'booth', propVariant: 'corner', x: 6, y: 10, once: true, iconKind: 'booth', label: 'Overheard Corner Table', description: 'Two men in expensive suits are speaking just below audible. One places a datacard on the table. The other shakes his head. The first slides it closer. The second looks out the window for a long moment, then pockets it. Neither man acknowledges that you passed. The datacard is gone.', grantsFlag: 'corner_deal_witnessed' },
+          { id: 'promenade_patrol_log', propArt: 'board', propVariant: 'patrol', x: 24, y: 18, once: false, label: 'CSF Patrol Route Terminal', description: 'A public-facing transit safety board maintained by the CSF. Patrol schedule for Sector 4: suspended pending Senate review. Patrol schedule for Sky-Market Promenade: reduced to single-officer rotating shift. The reduction took effect two days after the Bay 14 incident. The authorization is signed: Vane, T.' },
+          { id: 'overhead_traffic_lanes', propArt: 'skyline', propVariant: 'lanes', x: 24, y: 2, once: false, label: 'Open-Air Promenade Edge', description: 'The skyway opens above you. Repulsorlift traffic moves in tight formation lanes a hundred meters overhead — freight skiffs, executive speeders, municipal transports. The lanes are color-coded by altitude and clearance tier. A constant low-frequency vibration moves through the durasteel walkway beneath your feet. Somewhere below, Level 1222 looks up through the same open air.' },
+          { id: 'aurebesh_neon_sign', propArt: 'sign_array', propVariant: 'vendor', x: 16, y: 11, once: false, label: 'Aurebesh Neon Sign Array', description: 'A bank of hand-lettered Aurebesh signs in electric blue and deep crimson mark the vendors along the concourse edge. EXCHANGE CERTIFIED. PHRIK-FREE MATERIALS. SENATE-APPROVED TRANSIT. BEST RATES BETWEEN THE LEVELS. One sign at the end of the row has been unplugged. It read: SCYLLA FREIGHT — REGISTERED CARRIER. The housing still glows faintly from residual charge.' },
+          { id: 'vendor_stall_twi', propArt: 'vendor_stall', propVariant: 'fruit', x: 10, y: 15, once: false, iconKind: 'stall', label: "Twi'lek Fruit Stand", description: "A canopied stall made from canvas weave and a repurposed cargo-crate frame. Lelani, a green-lekku Twi'lek vendor, is arguing cheerfully in three languages with a Ishi Tib buyer over the price of something that glows orange. The canopy overhead is patched in four places with a different fabric each time. It has survived longer than the district's last three CSF precinct commanders." },
+          { id: 'droid_repair_kiosk', propArt: 'vendor_stall', propVariant: 'droid_repair', x: 21, y: 17, once: false, iconKind: 'stall', label: 'Droid Repair Kiosk', description: 'A narrow stall crammed with disassembled photoreceptors, motivator housings, and at least three different droid torsos in various states of rebuild. The proprietor — a pair of heavily tattooed human hands, the rest of the body hidden behind a parts rack — is precision-soldering a restraining bolt without looking up. A handwritten sign reads: NO DROIDS REFUSED. NO QUESTIONS ASKED. PAYMENT UPFRONT.' },
+          { id: 'freight_crane_alpha', propArt: 'crane_arm', x: 30, y: 20, once: false, label: 'Freight Terrace Crane Arm', description: 'A heavy industrial crane arm extends from the terrace edge over the open air, weighted with a repulsor counterbalance. Below, on a cantilevered platform you can only partially see, a cargo skiff is being unloaded by two astromech units stacking standardized Czerka containers. The crane arm bears three inspection seals, none of which match the current registration cycle.' },
+          { id: 'landing_pad_beacon', propArt: 'landing_beacon', x: 14, y: 21, once: false, label: 'Landing Pad 1450 Beacon', description: 'A red collision beacon mounted to the terrace railing flashes in three-second intervals, keeping skiff pilots on approach path. The pad below is rated for two medium-class freighters simultaneously. Currently: four skiffs, two of them unmarked, parked in a configuration that leaves no room for a legitimate arrival. Nobody has filed a complaint with the port authority in six days.' },
+          { id: 'repulsor_fluid_slick', propArt: 'fluid_slick', x: 22, y: 20, once: false, label: 'Repulsor Fluid Slick', description: 'A wide iridescent puddle has spread from a leaking repulsor stall fitting across the walkway surface. The fluid catches every neon sign in the concourse and renders them in elongated reflections across the durasteel: electric blue, magenta, amber. Standing in it, you can read the entire Aurebesh sign row backwards in the ground beneath your feet.' },
+          { id: 'maintenance_strut_a', propArt: 'support_pillar', x: 8, y: 20, once: false, label: 'Ferro-Concrete Support Pillar', description: 'One of the ribbed ferro-concrete support pillars that holds the promenade above the freight terraces. The surface is layered with stenciled Aurebesh tags going back decades — territorial markers, love declarations, gang warnings, one very detailed accusation against a port official that has never been scrubbed. Copper conduit runs up the pillar face in bundled loops, patched at two separate points with wire that does not match.' },
+          { id: 'floor_grate_vista', propArt: 'floor_grate', x: 15, y: 23, once: false, label: 'Conduit Underdeck Grate', description: 'A heavy transpariesteel floor grate gives a direct view down through the promenade substructure to the Conduit Underdeck. Exposed municipal piping runs in parallel lines below. Harsh yellow work lights illuminate narrow maintenance catwalks that run the full length of the market floor from beneath. A CSF security node blinks amber at the far end of a catwalk. Someone has been down there recently — a boot print in the condensation on the grate surface.' },
+          { id: 'steam_vent_municipal', propArt: 'steam_vent', x: 8, y: 23, once: false, label: 'Municipal Steam Vent', description: 'A ventilation shaft access point built into the promenade deck. At irregular intervals it exhales a column of hot industrial steam that catches the amber light and briefly turns the lower walkway into something resembling a cloudscape. The vent connects to the underdeck thermal management system for the levels below. Maintenance logs on the panel beside it show no scheduled servicing in eleven months.' },
+          { id: 'conduit_security_node', propArt: 'junction_box', propVariant: 'csf', x: 22, y: 23, once: true, label: 'Underdeck Security Node', description: 'A CSF-issue security node mounted to the underside of the promenade deck, accessible from the maintenance catwalk. It controls the patrol-droid routing across the lower freight terraces. The casing is standard Republic manufacture — but the firmware version is three cycles out of date. Someone who knew what they were doing could slice it and redirect the patrol pattern entirely.', grantsFlag: 'conduit_node_seen' },
+          { id: 'maintenance_catwalk_junction', propArt: 'catwalk_junction', x: 30, y: 23, once: false, label: 'Maintenance Catwalk Junction', description: 'The narrow catwalk beneath the promenade splits here into three branches: east to the freight crane platforms, west back under the Aurebesh Lounge, and straight down via a ladder access to the Level 1222 ventilation spine. The junction is unmarked. The ladder rungs disappear into darkness forty meters below the grate. Above you, through the floor, you can hear market vendors and the faint pulse of Aurebesh neon.' },
         ],
         npcs: [
           { id: 'marlo_sky', x: 6, y: 7, kind: 'broker', label: '"Slick" Marlo',
@@ -883,6 +883,7 @@ const PLANETS = {
           pt(g, 0, 12, 'door'); pt(g, 0, 13, 'door');
           pt(g, 15, 25, 'door');
           pt(g, 36, 0, 'door');
+          pt(g, 5, 0, 'door');
           return g;
         },
       },
@@ -898,13 +899,13 @@ const PLANETS = {
           { x: 35, y: 13, targetZone: 'sky_market', targetPos: { x: 1, y: 13 }, label: 'Sky-Market Promenade' },
         ],
         worldObjects: [
-          { id: 'airtaxi_sky_customs', x: 2, y: 12, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Level 1450 Customs Concourse departure point.' },
-          { id: 'customs_scanner_archway', x: 12, y: 7, once: false, label: 'Cargo Scanner Archway', description: 'A Republic-standard cargo scan archway. The readout shows the last twelve items processed. Eleven of them are flagged with a yellow query. None have been followed up. The twelfth is flagged red: PHRIK ALLOY TRACE. The flag was manually cleared three months ago. The operator ID on the clearance is: REDACTED.' },
-          { id: 'manifest_kiosk', x: 18, y: 12, once: true, label: 'Cargo Manifest Registry', description: 'A public cargo manifest terminal. Searching "Scylla Freight" returns zero results. Searching the Bay 14 berth number returns a single entry: CASE CLOSED. RECORDS PURGED. AUTHORIZATION: SENATE DIRECTIVE 1182-C. The terminal\'s own activity log shows the purge command was issued from this terminal, from this building, at the same time the dock fire was reported.', grantsFlag: 'customs_manifest_checked' },
-          { id: 'caf_stand', x: 6, y: 6, once: false, label: 'Caf Stand — Northwest Concourse', description: 'A battered chrome caf dispenser and a fold-out table. A hand-lettered sign reads: BEST CAF BETWEEN THE LEVELS. A smaller sign below it reads: ONLY CAF BETWEEN THE LEVELS. The proprietor is a tired-looking Duros who refills your cup without being asked and does not charge you for it. "New faces are good for business," he says. "Old faces are bad for my nerves."' },
-          { id: 'detention_alcove', x: 6, y: 17, once: false, label: 'CSF Detention Alcove', description: 'A small holding area with two retention rings and a broken binder lock. The cell log shows fourteen detentions in the past six months. Thirteen were released within four hours. The fourteenth — listed only as GREY COAT, NO ID — was transferred off-site per Senate Directive 1182-C. No destination logged. The transfer was authorized by the same officer who filed the Bay 14 closure.' },
-          { id: 'flight_control_booth', x: 28, y: 7, once: true, label: 'Flight Control Booth', description: 'The customs concourse flight control station. The arrival log for the night of the Bay 14 incident shows a twelve-minute gap in the record — all arrivals logged, then nothing, then resuming as if the gap does not exist. The station officer filed a "technical malfunction" report for those twelve minutes. The report was accepted without inquiry.', grantsFlag: 'flight_gap_found' },
-          { id: 'siphon_terminal', x: 22, y: 7, once: true, label: 'Cargo Feed Splice Terminal', description: 'A secondary manifest feed terminal. The uplink is live. Splicing into the customs broadcast frequency would expose every clearance override logged in the past six months. The security lock runs on a frequency-keyed cipher.', triggersMinigame: 'signal_siphon', grantsFlag: 'customs_manifest_decrypted', grantsCodex: 'codex-sector-4-freight-corridors' },
+          { id: 'airtaxi_sky_customs', propArt: 'airtaxi', propVariant: 'clean', x: 2, y: 12, once: false, label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network terminal. Level 1450 Customs Concourse departure point.' },
+          { id: 'customs_scanner_archway', propArt: 'scanner_arch', propVariant: 'customs', x: 12, y: 7, once: false, label: 'Cargo Scanner Archway', description: 'A Republic-standard cargo scan archway. The readout shows the last twelve items processed. Eleven of them are flagged with a yellow query. None have been followed up. The twelfth is flagged red: PHRIK ALLOY TRACE. The flag was manually cleared three months ago. The operator ID on the clearance is: REDACTED.' },
+          { id: 'manifest_kiosk', propArt: 'kiosk', propVariant: 'manifest', x: 18, y: 12, once: true, label: 'Cargo Manifest Registry', description: 'A public cargo manifest terminal. Searching "Scylla Freight" returns zero results. Searching the Bay 14 berth number returns a single entry: CASE CLOSED. RECORDS PURGED. AUTHORIZATION: SENATE DIRECTIVE 1182-C. The terminal\'s own activity log shows the purge command was issued from this terminal, from this building, at the same time the dock fire was reported.', grantsFlag: 'customs_manifest_checked' },
+          { id: 'caf_stand', propArt: 'vendor_stall', propVariant: 'caf', x: 6, y: 6, once: false, label: 'Caf Stand — Northwest Concourse', description: 'A battered chrome caf dispenser and a fold-out table. A hand-lettered sign reads: BEST CAF BETWEEN THE LEVELS. A smaller sign below it reads: ONLY CAF BETWEEN THE LEVELS. The proprietor is a tired-looking Duros who refills your cup without being asked and does not charge you for it. "New faces are good for business," he says. "Old faces are bad for my nerves."' },
+          { id: 'detention_alcove', propArt: 'booth', propVariant: 'detention', x: 6, y: 17, once: false, label: 'CSF Detention Alcove', description: 'A small holding area with two retention rings and a broken binder lock. The cell log shows fourteen detentions in the past six months. Thirteen were released within four hours. The fourteenth — listed only as GREY COAT, NO ID — was transferred off-site per Senate Directive 1182-C. No destination logged. The transfer was authorized by the same officer who filed the Bay 14 closure.' },
+          { id: 'flight_control_booth', propArt: 'booth', propVariant: 'flight', x: 28, y: 7, once: true, label: 'Flight Control Booth', description: 'The customs concourse flight control station. The arrival log for the night of the Bay 14 incident shows a twelve-minute gap in the record — all arrivals logged, then nothing, then resuming as if the gap does not exist. The station officer filed a "technical malfunction" report for those twelve minutes. The report was accepted without inquiry.', grantsFlag: 'flight_gap_found' },
+          { id: 'siphon_terminal', propArt: 'console', propVariant: 'siphon', x: 22, y: 7, once: true, label: 'Cargo Feed Splice Terminal', description: 'A secondary manifest feed terminal. The uplink is live. Splicing into the customs broadcast frequency would expose every clearance override logged in the past six months. The security lock runs on a frequency-keyed cipher.', triggersMinigame: 'signal_siphon', grantsFlag: 'customs_manifest_decrypted', grantsCodex: 'codex-sector-4-freight-corridors' },
         ],
         npcs: [
           { id: 'csf_customs_officer', x: 16, y: 12, kind: 'republic_guard', label: 'CSF Customs Officer Rael',
@@ -959,13 +960,13 @@ const PLANETS = {
           { x: 21, y: 27, targetZone: 'catwalk_underdeck', targetPos: { x: 21, y: 1 }, label: 'Catwalk Underdeck' },
         ],
         worldObjects: [
-          { id: 'airtaxi_heat_sink', x: 16, y: 20, once: false, label: 'AirTaxi Terminal', description: 'A battered AirTaxi terminal mounted to the underdeck support strut. The casing is cracked and the screen flickers, but it works. Barely.' },
-          { id: 'cantina_entrance_sign', x: 8, y: 4, once: false, label: 'Cantina Sign — The Exhaust', description: 'A hand-painted sign above the cantina entrance reads THE EXHAUST in faded Aurebesh. Below, someone has added in smaller lettering: "Est. after the last time this level flooded." The door is open. The smell of grilled protein and something spiced with too much heat wafts out.' },
-          { id: 'cantina_gorg_spit', x: 5, y: 8, once: false, label: 'Gorg Spit — The Exhaust', description: 'A rotating gorg spit occupies the corner of the cantina near the bar. Whatever the gorg ate before it became the gorg, it was clearly living its best life. The fat drips and sizzles. The cantina keep claims the spit has not been turned off in three years. Nobody has contradicted this.' },
-          { id: 'sabacc_table', x: 10, y: 10, once: true, label: 'Sabacc Table — Back Corner', description: 'Four players, a mixed pile of credits and vouchers, and a fifth person watching from behind a column. The watcher is not playing. The watcher is counting cards. Nobody at the table has noticed. You have.', grantsFlag: 'sabacc_observer_seen' },
-          { id: 'hab_capsule_stack', x: 28, y: 8, once: false, label: 'Hab Capsule Block', description: 'Forty-eight stacked sleep capsules in a converted freight container, each one a meter and a half of foam mat and a ventilation slot. The occupancy board shows thirty-nine occupied. Rate: two credits per sleep cycle. The manager\'s station is empty — the manager lives in capsule forty-seven.' },
-          { id: 'exhaust_radiator_vent', x: 32, y: 20, once: false, label: 'Thermal Exhaust Radiator', description: 'A massive heat-sink radiator panel mounted to the outer wall, channeling heat from the manufacturing zones below upward through the residential level. On cold cycles it is a gathering point — a dozen residents crouch near the vents for warmth. The panel is rated for industrial output. The residential zone it is venting through is not.' },
-          { id: 'informant_booth', x: 20, y: 18, once: true, label: 'Curtained Booth', description: 'A makeshift privacy booth constructed from cargo curtain and wire frame. A datapad left on the table inside displays a partial credit transfer log — the same shell corporation chain visible on the lounge datapad upstairs, traced one step further to an account registered under the Senate District financial authority. Someone has been following the same thread you have.', grantsFlag: 'informant_found' },
+          { id: 'airtaxi_heat_sink', propArt: 'airtaxi', propVariant: 'cracked', x: 16, y: 20, once: false, label: 'AirTaxi Terminal', description: 'A battered AirTaxi terminal mounted to the underdeck support strut. The casing is cracked and the screen flickers, but it works. Barely.' },
+          { id: 'cantina_entrance_sign', propArt: 'sign_array', propVariant: 'exhaust', x: 8, y: 4, once: false, label: 'Cantina Sign — The Exhaust', description: 'A hand-painted sign above the cantina entrance reads THE EXHAUST in faded Aurebesh. Below, someone has added in smaller lettering: "Est. after the last time this level flooded." The door is open. The smell of grilled protein and something spiced with too much heat wafts out.' },
+          { id: 'cantina_gorg_spit', propArt: 'gorg_spit', x: 5, y: 8, once: false, label: 'Gorg Spit — The Exhaust', description: 'A rotating gorg spit occupies the corner of the cantina near the bar. Whatever the gorg ate before it became the gorg, it was clearly living its best life. The fat drips and sizzles. The cantina keep claims the spit has not been turned off in three years. Nobody has contradicted this.' },
+          { id: 'sabacc_table', propArt: 'sabacc_table', x: 10, y: 10, once: true, label: 'Sabacc Table — Back Corner', description: 'Four players, a mixed pile of credits and vouchers, and a fifth person watching from behind a column. The watcher is not playing. The watcher is counting cards. Nobody at the table has noticed. You have.', grantsFlag: 'sabacc_observer_seen' },
+          { id: 'hab_capsule_stack', propArt: 'hab_block', x: 28, y: 8, once: false, label: 'Hab Capsule Block', description: 'Forty-eight stacked sleep capsules in a converted freight container, each one a meter and a half of foam mat and a ventilation slot. The occupancy board shows thirty-nine occupied. Rate: two credits per sleep cycle. The manager\'s station is empty — the manager lives in capsule forty-seven.' },
+          { id: 'exhaust_radiator_vent', propArt: 'radiator', x: 32, y: 20, once: false, label: 'Thermal Exhaust Radiator', description: 'A massive heat-sink radiator panel mounted to the outer wall, channeling heat from the manufacturing zones below upward through the residential level. On cold cycles it is a gathering point — a dozen residents crouch near the vents for warmth. The panel is rated for industrial output. The residential zone it is venting through is not.' },
+          { id: 'informant_booth', propArt: 'booth', propVariant: 'curtain', x: 20, y: 18, once: true, label: 'Curtained Booth', description: 'A makeshift privacy booth constructed from cargo curtain and wire frame. A datapad left on the table inside displays a partial credit transfer log — the same shell corporation chain visible on the lounge datapad upstairs, traced one step further to an account registered under the Senate District financial authority. Someone has been following the same thread you have.', grantsFlag: 'informant_found' },
         ],
         npcs: [
           { id: 'reelo_informant', x: 22, y: 18, kind: 'broker', label: 'Reelo — Street Broker',
@@ -1013,12 +1014,12 @@ const PLANETS = {
           { x: 21, y: 0, targetZone: 'heat_sink_slums', targetPos: { x: 21, y: 26 }, label: 'Heat Sink Slums' },
         ],
         worldObjects: [
-          { id: 'airtaxi_underdeck', x: 2, y: 11, once: false, label: 'AirTaxi Terminal', description: 'A stripped-down AirTaxi terminal bolted to the underdeck strut framework. The screen is dark but the interface responds. Someone installed this without filing a permit.' },
-          { id: 'security_junction_box', x: 22, y: 6, once: true, label: 'CSF Patrol Routing Junction', description: 'A Republic-standard security routing node controlling patrol droid movements across the lower freight terraces. The firmware is three cycles out of date. The patrol schedule loaded into memory routes all droids away from Corridor 14-Sub between the third and fifth hour of the sleep cycle — a twelve-minute window, recurring. The window matches the Bay 14 incident timeline exactly.', grantsFlag: 'patrol_window_found', grantsCodex: 'codex-csf-protocol' },
-          { id: 'hydraulic_damper', x: 6, y: 6, once: false, label: 'Hydraulic Damper Array', description: 'The underdeck is held together by a series of hydraulic dampers that absorb the structural vibration from the freight terraces above. Each damper is stamped with a maintenance date. The most recent stamp is eight months old. The recommended interval is thirty days. The noise from above — a constant low throb — makes more sense now.' },
-          { id: 'conduit_tap_node', x: 32, y: 14, once: true, label: 'Unauthorized Power Tap Node', description: 'A jury-rigged power tap drilled directly into the municipal conduit line and drawing a continuous bleed of current to somewhere below. The cable runs down through a floor grate and disappears. The draw is small enough to stay below automated monitoring thresholds. Someone who knew exactly how the monitoring worked installed this.', grantsFlag: 'power_tap_found' },
-          { id: 'drop_shaft_view', x: 7, y: 17, once: false, label: 'Vertical Drop Shaft', description: 'An open maintenance shaft drops straight down from the underdeck floor into the levels below. No safety railing. A flickering work light thirty meters down illuminates a narrow platform, and below that — nothing visible. The shaft connects to the Level 1222 ventilation spine. If you could get down there without falling, you could move between levels without touching a single transit checkpoint.' },
-          { id: 'syndicate_marker', x: 30, y: 18, once: true, label: 'Iron Syndicate Transit Marker', description: 'A small iron chain emblem, stamp-pressed into the conduit housing — the Iron Syndicate\'s territorial marker. This route belongs to them. The stamp is recent: the metal around the impression is still bright, not yet oxidized. They have been using this underdeck as a cargo transit route within the last few days.', grantsFlag: 'syndicate_route_found' },
+          { id: 'airtaxi_underdeck', propArt: 'airtaxi', propVariant: 'dark', x: 2, y: 11, once: false, label: 'AirTaxi Terminal', description: 'A stripped-down AirTaxi terminal bolted to the underdeck strut framework. The screen is dark but the interface responds. Someone installed this without filing a permit.' },
+          { id: 'security_junction_box', propArt: 'junction_box', propVariant: 'csf', x: 22, y: 6, once: true, label: 'CSF Patrol Routing Junction', description: 'A Republic-standard security routing node controlling patrol droid movements across the lower freight terraces. The firmware is three cycles out of date. The patrol schedule loaded into memory routes all droids away from Corridor 14-Sub between the third and fifth hour of the sleep cycle — a twelve-minute window, recurring. The window matches the Bay 14 incident timeline exactly.', grantsFlag: 'patrol_window_found', grantsCodex: 'codex-csf-protocol' },
+          { id: 'hydraulic_damper', propArt: 'damper_array', x: 6, y: 6, once: false, label: 'Hydraulic Damper Array', description: 'The underdeck is held together by a series of hydraulic dampers that absorb the structural vibration from the freight terraces above. Each damper is stamped with a maintenance date. The most recent stamp is eight months old. The recommended interval is thirty days. The noise from above — a constant low throb — makes more sense now.' },
+          { id: 'conduit_tap_node', propArt: 'power_tap', x: 32, y: 14, once: true, label: 'Unauthorized Power Tap Node', description: 'A jury-rigged power tap drilled directly into the municipal conduit line and drawing a continuous bleed of current to somewhere below. The cable runs down through a floor grate and disappears. The draw is small enough to stay below automated monitoring thresholds. Someone who knew exactly how the monitoring worked installed this.', grantsFlag: 'power_tap_found' },
+          { id: 'drop_shaft_view', propArt: 'drop_shaft', x: 7, y: 17, once: false, label: 'Vertical Drop Shaft', description: 'An open maintenance shaft drops straight down from the underdeck floor into the levels below. No safety railing. A flickering work light thirty meters down illuminates a narrow platform, and below that — nothing visible. The shaft connects to the Level 1222 ventilation spine. If you could get down there without falling, you could move between levels without touching a single transit checkpoint.' },
+          { id: 'syndicate_marker', propArt: 'wall_marks', propVariant: 'stamp', x: 30, y: 18, once: true, label: 'Iron Syndicate Transit Marker', description: 'A small iron chain emblem, stamp-pressed into the conduit housing — the Iron Syndicate\'s territorial marker. This route belongs to them. The stamp is recent: the metal around the impression is still bright, not yet oxidized. They have been using this underdeck as a cargo transit route within the last few days.', grantsFlag: 'syndicate_route_found' },
         ],
         npcs: [
           { id: 'maintenance_droid_14sub', x: 20, y: 14, kind: 'droid', label: 'Maintenance Droid M-7', mobile: true,
@@ -1058,22 +1059,22 @@ const PLANETS = {
           { x: 21, y: 27, targetZone: 'mag_rail_corridor', targetPos: { x: 21, y: 1 }, label: 'Mag-Rail Corridor' },
         ],
         worldObjects: [
-          { id: 'bay14_crime_scene', x: 20, y: 6, once: true, iconKind: 'evidence', label: 'Bay 14 Blast Marks', description: 'Scorch marks on the dock wall. The pattern is from shaped charges, not a fuel fire.',
+          { id: 'bay14_crime_scene', propArt: 'scorch_wall', x: 20, y: 6, once: true, iconKind: 'evidence', label: 'Bay 14 Blast Marks', description: 'Scorch marks on the dock wall. The pattern is from shaped charges, not a fuel fire.',
             grantsItem: 'stolen_manifest',
             autoCodex: { id: 'discovery-bay14-blast-marks', title: 'Bay 14: Blast Evidence', category: 'discoveries', summary: 'Shaped charges destroyed the loading manifest records.', body: ['The dock wall is scorched. Not from a fuel fire — the scorch pattern is from shaped charges placed against the loading manifest kiosk. Someone destroyed the primary records on the way out. Whoever did this knew exactly which terminal held the cargo authorization log. One cargo disk survives in the debris — partially melted, but the freight entries are still readable.'] } },
-          { id: 'discarded_keycard', x: 32, y: 18, once: true, label: 'Discarded Passcode', description: 'Half-melted but readable: an underworld bypass key. Grants sub-level transit without checkpoint flags. You pocket it.', grantsItem: 'scrambler_keycard' },
-          { id: 'shipping_crate_b14', x: 10, y: 20, once: true, label: 'Unsealed Shipping Crate', description: 'Marked as "agricultural supplies." Contains Glitterstim vials and unregistered blaster power packs. Clearly staged to be found.', grantsItem: 'item_spice_vial' },
-          { id: 'customs_terminal_088', x: 26, y: 4, once: true, label: 'Customs Manifest Registry', description: 'Three containers marked with Senate sub-committee routing stamps. One flags as anomalous — destination redacted, shipper redacted, authorization code valid. The code traces to a sub-committee that officially does not exist.' },
-          { id: 'crane_node_088', x: 22, y: 4, once: true, label: 'Crane Automation Node', description: 'The bay exterior crane control system. A code input here can drop a heavy repulsor-crate onto the loading yard — opening a breach point into the warehouse without triggering external alarms.' },
-          { id: 'undercity_radio_terminal', x: 4, y: 4, once: false, label: 'Under-Grit Radio Intercept', description: '[Signal 104.9 Sub-Grit — Unauthorized] "They are calling Docking Bay 14 a logistical delay while Black Sun heavy gunners run it like a private toll booth. CSF sent fresh academy blood into Sector 4. Place your bets at Vond\'s shop — three to one the new badge sells out before end of shift..."' },
-          { id: 'airtaxi_freight_hub', x: 38, y: 6, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Transit terminal. Level access pending clearance.' },
-          { id: 'bay14_storage_alcove', x: 14, y: 18, once: true, iconKind: 'datapad', label: 'Restricted Storage Alcove',
+          { id: 'discarded_keycard', propArt: 'datapad_table', propVariant: 'card', x: 32, y: 18, once: true, label: 'Discarded Passcode', description: 'Half-melted but readable: an underworld bypass key. Grants sub-level transit without checkpoint flags. You pocket it.', grantsItem: 'scrambler_keycard' },
+          { id: 'shipping_crate_b14', propArt: 'crate_stack', propVariant: 'agri', x: 10, y: 20, once: true, label: 'Unsealed Shipping Crate', description: 'Marked as "agricultural supplies." Contains Glitterstim vials and unregistered blaster power packs. Clearly staged to be found.', grantsItem: 'item_spice_vial' },
+          { id: 'customs_terminal_088', propArt: 'console', propVariant: 'manifest088', x: 26, y: 4, once: true, label: 'Customs Manifest Registry', description: 'Three containers marked with Senate sub-committee routing stamps. One flags as anomalous — destination redacted, shipper redacted, authorization code valid. The code traces to a sub-committee that officially does not exist.' },
+          { id: 'crane_node_088', propArt: 'console', propVariant: 'crane', x: 22, y: 4, once: true, label: 'Crane Automation Node', description: 'The bay exterior crane control system. A code input here can drop a heavy repulsor-crate onto the loading yard — opening a breach point into the warehouse without triggering external alarms.' },
+          { id: 'undercity_radio_terminal', propArt: 'console', propVariant: 'radio', x: 4, y: 4, once: false, label: 'Under-Grit Radio Intercept', description: '[Signal 104.9 Sub-Grit — Unauthorized] "They are calling Docking Bay 14 a logistical delay while Black Sun heavy gunners run it like a private toll booth. CSF sent fresh academy blood into Sector 4. Place your bets at Vond\'s shop — three to one the new badge sells out before end of shift..."' },
+          { id: 'airtaxi_freight_hub', propArt: 'airtaxi', propVariant: 'worn', x: 38, y: 6, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Transit terminal. Level access pending clearance.' },
+          { id: 'bay14_storage_alcove', propArt: 'storage_alcoves', x: 14, y: 18, once: true, iconKind: 'datapad', label: 'Restricted Storage Alcove',
             description: 'Third alcove on the left, just as Vex described. The storage container is sealed under Syndicate lock. Inside: a data cylinder wrapped in lead foil. The foil is standard anti-scan practice. Whatever is on this cylinder, someone spent money keeping it undetected.',
             grantsItem: 'syndicate_ledger',
             grantsFlag: 'syndicate_ledger_found',
             grantsCodex: 'codex-syndicate-ledger',
             requires: { item: 'smugglers_keycard' } },
-          { id: 'bay14_weapon_cache', x: 32, y: 8, once: true, iconKind: 'crate', label: 'Weapons Shipment Cache',
+          { id: 'bay14_weapon_cache', propArt: 'crate_stack', propVariant: 'weapons', x: 32, y: 8, once: true, iconKind: 'crate', label: 'Weapons Shipment Cache',
             requiresFlag: 'inheritance_active',
             description: 'Thirty-two sealed crates marked AGRICULTURAL EQUIPMENT. The cargo manifest tucked beneath the top lid tells a different story: Merr-Sonn G-8 blasters, thermal detonators, Phrik plating strips. Jon wants this delivered to a contact at Level 1312. The CSF inventory counted boxes. They did not open them.',
             grantsItem: 'bay14_weapon_manifest',
@@ -1185,14 +1186,14 @@ const PLANETS = {
           { x: 41, y: 13, targetZone: 'fueling_depot', targetPos: { x: 1, y: 13 }, label: 'Fueling Depot' },
         ],
         worldObjects: [
-          { id: 'airtaxi_mag_rail', x: 4, y: 13, once: false, label: 'AirTaxi Terminal', description: 'A CSF-maintained AirTaxi terminal serving the Sector 4 freight corridor. The departure board shows three routes. Two are suspended pending security review.' },
-          { id: 'mag_rail_manifest_board', x: 20, y: 5, once: false, label: 'Cargo Manifest Display Board', description: 'A wall-mounted manifest board listing every freight car scheduled through the Sector 4 mag-rail in the current cycle. Car 14-B is listed twice — once as agricultural supplies, once as cleared industrial equipment. The two entries have different weights. The discrepancy is flagged in amber. The flag has been open for eleven days.' },
-          { id: 'platform_security_scanner', x: 14, y: 13, once: true, label: 'Platform Security Scanner', description: 'A Republic-standard cargo scanner mounted at the platform gate. The scan log shows that three freight cars in the past month were cleared without completing a full scan cycle. Each clearance was manually authorized. The authorization code is the same each time — a Senate-tier override that should not exist at this checkpoint level.', grantsFlag: 'scanner_override_found' },
-          { id: 'north_platform_terminal', x: 8, y: 7, once: false, label: 'North Platform Freight Terminal', description: 'The loading terminal for the north bay platforms. Consignment records go back fourteen months. The system shows no gap in the record sequence — but three consignment numbers have been reused. Reused consignment numbers overwrite the original entry. Whatever moved through those numbers the first time has been erased.' },
-          { id: 'east_cargo_bay_locker', x: 34, y: 7, once: true, label: 'Sealed Cargo Bay Locker', description: 'A standard freight locker with a non-standard lock — the override code is a military-issue cipher, not a Republic transit cipher. Inside: three manifest strips printed on thermal flimsi, each listing the same destination account. The account number matches the shell corporation routing from the Scylla manifest.', grantsFlag: 'freight_chain_confirmed', grantsCodex: 'codex-sector-4-freight-corridors' },
-          { id: 'south_platform_crate_stack', x: 8, y: 19, once: false, label: 'Numbered Cargo Stack — Platform South', description: 'Forty-eight standardized gray containers stacked three high on the south loading platform. Each bears a Senate commerce committee seal. Each seal is from a different committee session. The committees do not overlap in their stated jurisdictions. What they all share: a signature from the same undersecretary, on the same date, for cargoes described as "legislative materials."' },
-          { id: 'rail_junction_box', x: 26, y: 19, once: true, label: 'Rail Junction Control Box', description: 'The mag-rail switching junction for the Sector 4 corridor. The switching schedule shows a recurring twelve-minute hold every fourth cycle — the rail is stopped, the platform cameras are on maintenance loop, and no personnel are scheduled. The hold began eight months ago. It runs like clockwork. Nothing in the official record explains it.', grantsFlag: 'rail_window_found' },
-          { id: 'pursuit_start', x: 34, y: 19, once: true, label: 'Emergency Speeder Bay', description: 'A single repulsor speeder, engine warm, tethered to a quick-release bay mount. A Syndicate courier was spotted boarding the mag-rail three minutes ago heading for The Works. This speeder can intercept if you move now. The rail corridor is active.', triggersMinigame: 'speeder_pursuit', grantsFlag: 'chase_resolved' },
+          { id: 'airtaxi_mag_rail', propArt: 'airtaxi', propVariant: 'official', x: 4, y: 13, once: false, label: 'AirTaxi Terminal', description: 'A CSF-maintained AirTaxi terminal serving the Sector 4 freight corridor. The departure board shows three routes. Two are suspended pending security review.' },
+          { id: 'mag_rail_manifest_board', propArt: 'board', propVariant: 'manifest', x: 20, y: 5, once: false, label: 'Cargo Manifest Display Board', description: 'A wall-mounted manifest board listing every freight car scheduled through the Sector 4 mag-rail in the current cycle. Car 14-B is listed twice — once as agricultural supplies, once as cleared industrial equipment. The two entries have different weights. The discrepancy is flagged in amber. The flag has been open for eleven days.' },
+          { id: 'platform_security_scanner', propArt: 'scanner_arch', propVariant: 'platform', x: 14, y: 13, once: true, label: 'Platform Security Scanner', description: 'A Republic-standard cargo scanner mounted at the platform gate. The scan log shows that three freight cars in the past month were cleared without completing a full scan cycle. Each clearance was manually authorized. The authorization code is the same each time — a Senate-tier override that should not exist at this checkpoint level.', grantsFlag: 'scanner_override_found' },
+          { id: 'north_platform_terminal', propArt: 'console', propVariant: 'freight', x: 8, y: 7, once: false, label: 'North Platform Freight Terminal', description: 'The loading terminal for the north bay platforms. Consignment records go back fourteen months. The system shows no gap in the record sequence — but three consignment numbers have been reused. Reused consignment numbers overwrite the original entry. Whatever moved through those numbers the first time has been erased.' },
+          { id: 'east_cargo_bay_locker', propArt: 'crate_stack', propVariant: 'locker', x: 34, y: 7, once: true, label: 'Sealed Cargo Bay Locker', description: 'A standard freight locker with a non-standard lock — the override code is a military-issue cipher, not a Republic transit cipher. Inside: three manifest strips printed on thermal flimsi, each listing the same destination account. The account number matches the shell corporation routing from the Scylla manifest.', grantsFlag: 'freight_chain_confirmed', grantsCodex: 'codex-sector-4-freight-corridors' },
+          { id: 'south_platform_crate_stack', propArt: 'container_stack', x: 8, y: 19, once: false, label: 'Numbered Cargo Stack — Platform South', description: 'Forty-eight standardized gray containers stacked three high on the south loading platform. Each bears a Senate commerce committee seal. Each seal is from a different committee session. The committees do not overlap in their stated jurisdictions. What they all share: a signature from the same undersecretary, on the same date, for cargoes described as "legislative materials."' },
+          { id: 'rail_junction_box', propArt: 'junction_box', propVariant: 'rail', x: 26, y: 19, once: true, label: 'Rail Junction Control Box', description: 'The mag-rail switching junction for the Sector 4 corridor. The switching schedule shows a recurring twelve-minute hold every fourth cycle — the rail is stopped, the platform cameras are on maintenance loop, and no personnel are scheduled. The hold began eight months ago. It runs like clockwork. Nothing in the official record explains it.', grantsFlag: 'rail_window_found' },
+          { id: 'pursuit_start', propArt: 'speeder_bay', x: 34, y: 19, once: true, label: 'Emergency Speeder Bay', description: 'A single repulsor speeder, engine warm, tethered to a quick-release bay mount. A Syndicate courier was spotted boarding the mag-rail three minutes ago heading for The Works. This speeder can intercept if you move now. The rail corridor is active.', triggersMinigame: 'speeder_pursuit', grantsFlag: 'chase_resolved' },
         ],
         npcs: [
           { id: 'checkpoint_officer_drel', x: 20, y: 13, kind: 'republic_guard', label: 'Checkpoint Officer Drel',
@@ -1245,11 +1246,11 @@ const PLANETS = {
           { x: 19, y: 25, targetZone: 'drainage_pipes', targetPos: { x: 19, y: 1 }, label: 'Lower Drainage' },
         ],
         worldObjects: [
-          { id: 'airtaxi_fueling_depot', x: 16, y: 13, once: false, label: 'AirTaxi Terminal', description: 'A weather-beaten AirTaxi terminal on the depot concourse. The routing display is covered in fuel-transfer grime but functional.' },
-          { id: 'fuel_register_terminal', x: 6, y: 6, once: true, label: 'Fuel Transfer Register', description: 'The bay fuel accounting terminal. Cross-referencing usage logs against departure manifests reveals a forty-liter discrepancy per cycle — consistent for six months. The fuel is not being logged as waste. It is not being logged at all. Forty liters per cycle is enough to run a mid-size repulsor platform continuously for eighteen hours.', grantsFlag: 'fuel_discrepancy_found' },
-          { id: 'bay_b_work_order', x: 26, y: 6, once: true, label: 'Bay B Work Order Clipboard', description: 'A physical clipboard of maintenance work orders. The third sheet from the bottom is printed on different flimsi from the rest — thicker, higher grade, the kind used for official Senate documents. The work order it describes is routine repulsor servicing. The authorization signature at the bottom is not a depot supervisor. It is a Senate sub-committee seal. A fueling depot work order, sealed by the Senate.', grantsFlag: 'bay_b_order_found' },
-          { id: 'maintenance_pit_console', x: 8, y: 19, once: true, label: 'Maintenance Pit Access Console', description: 'The control console for the below-deck maintenance pit. The activity log shows seventeen access events in the past two months. Each entry lists the same user ID: TEMP-TRANSIT. Temp transit IDs are issued for single-use clearance and expire in four hours. These ones were all used on the same day, at the same time, for the same access — which should be impossible for single-use IDs.', grantsFlag: 'temp_id_exploit_found' },
-          { id: 'fuel_drum_stack', x: 28, y: 19, once: false, label: 'Repulsor Fuel Drum Array', description: 'Fifty sealed drums of Type-4 repulsor fuel stacked in the depot\'s overflow area. Each drum is stamped with a Republic Military supply chain code — civilian depots are not authorized to hold military-grade fuel. The authorization exemption on the stack is signed by the same Senate sub-committee that cleared the Bay 14 cargo.' },
+          { id: 'airtaxi_fueling_depot', propArt: 'airtaxi', propVariant: 'worn', x: 16, y: 13, once: false, label: 'AirTaxi Terminal', description: 'A weather-beaten AirTaxi terminal on the depot concourse. The routing display is covered in fuel-transfer grime but functional.' },
+          { id: 'fuel_register_terminal', propArt: 'console', propVariant: 'fuel', x: 6, y: 6, once: true, label: 'Fuel Transfer Register', description: 'The bay fuel accounting terminal. Cross-referencing usage logs against departure manifests reveals a forty-liter discrepancy per cycle — consistent for six months. The fuel is not being logged as waste. It is not being logged at all. Forty liters per cycle is enough to run a mid-size repulsor platform continuously for eighteen hours.', grantsFlag: 'fuel_discrepancy_found' },
+          { id: 'bay_b_work_order', propArt: 'board', propVariant: 'clipboard', x: 26, y: 6, once: true, label: 'Bay B Work Order Clipboard', description: 'A physical clipboard of maintenance work orders. The third sheet from the bottom is printed on different flimsi from the rest — thicker, higher grade, the kind used for official Senate documents. The work order it describes is routine repulsor servicing. The authorization signature at the bottom is not a depot supervisor. It is a Senate sub-committee seal. A fueling depot work order, sealed by the Senate.', grantsFlag: 'bay_b_order_found' },
+          { id: 'maintenance_pit_console', propArt: 'console', propVariant: 'pit', x: 8, y: 19, once: true, label: 'Maintenance Pit Access Console', description: 'The control console for the below-deck maintenance pit. The activity log shows seventeen access events in the past two months. Each entry lists the same user ID: TEMP-TRANSIT. Temp transit IDs are issued for single-use clearance and expire in four hours. These ones were all used on the same day, at the same time, for the same access — which should be impossible for single-use IDs.', grantsFlag: 'temp_id_exploit_found' },
+          { id: 'fuel_drum_stack', propArt: 'drum_array', x: 28, y: 19, once: false, label: 'Repulsor Fuel Drum Array', description: 'Fifty sealed drums of Type-4 repulsor fuel stacked in the depot\'s overflow area. Each drum is stamped with a Republic Military supply chain code — civilian depots are not authorized to hold military-grade fuel. The authorization exemption on the stack is signed by the same Senate sub-committee that cleared the Bay 14 cargo.' },
         ],
         npcs: [
           { id: 'depot_mechanic_torb', x: 6, y: 5, kind: 'mechanic', label: 'Fuel Tech Torb',
@@ -1301,12 +1302,12 @@ const PLANETS = {
           { x: 19, y: 0, targetZone: 'fueling_depot', targetPos: { x: 19, y: 24 }, label: 'Fueling Depot' },
         ],
         worldObjects: [
-          { id: 'airtaxi_drainage', x: 2, y: 11, once: false, label: 'AirTaxi Terminal', description: 'An ancient AirTaxi terminal grafted onto the drainage tunnel wall. It should not work. It does. The destination list shows zones that are no longer accessible from any other terminal.' },
-          { id: 'drainage_channel_main', x: 17, y: 12, once: false, label: 'Main Drainage Channel', description: 'A wide channel cut through the durasteel floor carries thermal runoff from the fueling depot above. The liquid moves slowly, hot enough to steam in the cold tunnel air. The color is the pale amber of industrial lubricant mixed with coolant fluid. Whatever process generates this much waste runs continuously. The channel is not on any Level 088 maintenance map.' },
-          { id: 'syndicate_cache_drainage', x: 6, y: 7, once: true, label: 'Maintenance Alcove Cache', description: 'Behind a false panel in the maintenance alcove wall: a sealed container marked with the iron chain emblem. Inside, three cargo relay chips — each one a transit authorization for a different Level 005 loading dock. Each authorization is blank, ready to be written with any cargo description. A full set of ready-made blank transit passes for The Works.', grantsFlag: 'transit_pass_cache_found', grantsItem: 'scrambler_keycard' },
-          { id: 'drainage_graffiti_wall', x: 24, y: 7, once: false, label: 'Drainage Tunnel Wall', description: 'The tunnel wall is layered with markings going back decades — maintenance crew tallies, territorial tags from three different gang factions, one very detailed Aurebesh map of the drainage system drawn in conductive paint that still faintly glows. The Iron Syndicate\'s iron chain emblem appears four times, each one over a different gang\'s markings. The Syndicate has been here longer than anyone admits.' },
-          { id: 'junction_box_drainage', x: 28, y: 16, once: true, label: 'Ventilation Junction Control', description: 'The junction control box for the Level 088 ventilation spine. The routing table inside has been modified — Level 005 airflow is being vented up through this drainage system instead of out through the designated exhaust ports. The modification is deliberate. Someone is using the drainage vents to circulate air to Level 005 workers without triggering environmental monitoring on that level.', grantsFlag: 'vent_route_005_found' },
-          { id: 'syndicate_marker_drainage', x: 32, y: 18, once: true, label: 'Recent Syndicate Transit Mark', description: 'A fresh iron chain emblem stamp on the tunnel floor — the mark is crisp, the metal around it bright. This route was used within the last forty-eight hours. The cargo moved east along the main channel, turned south at the junction, and went down. Toward Level 005.', grantsFlag: 'fresh_syndicate_trail' },
+          { id: 'airtaxi_drainage', propArt: 'airtaxi', propVariant: 'ancient', x: 2, y: 11, once: false, label: 'AirTaxi Terminal', description: 'An ancient AirTaxi terminal grafted onto the drainage tunnel wall. It should not work. It does. The destination list shows zones that are no longer accessible from any other terminal.' },
+          { id: 'drainage_channel_main', propArt: 'drain_channel', x: 17, y: 12, once: false, label: 'Main Drainage Channel', description: 'A wide channel cut through the durasteel floor carries thermal runoff from the fueling depot above. The liquid moves slowly, hot enough to steam in the cold tunnel air. The color is the pale amber of industrial lubricant mixed with coolant fluid. Whatever process generates this much waste runs continuously. The channel is not on any Level 088 maintenance map.' },
+          { id: 'syndicate_cache_drainage', propArt: 'crate_stack', propVariant: 'false_panel', x: 6, y: 7, once: true, label: 'Maintenance Alcove Cache', description: 'Behind a false panel in the maintenance alcove wall: a sealed container marked with the iron chain emblem. Inside, three cargo relay chips — each one a transit authorization for a different Level 005 loading dock. Each authorization is blank, ready to be written with any cargo description. A full set of ready-made blank transit passes for The Works.', grantsFlag: 'transit_pass_cache_found', grantsItem: 'scrambler_keycard' },
+          { id: 'drainage_graffiti_wall', propArt: 'wall_marks', propVariant: 'drain', x: 24, y: 7, once: false, label: 'Drainage Tunnel Wall', description: 'The tunnel wall is layered with markings going back decades — maintenance crew tallies, territorial tags from three different gang factions, one very detailed Aurebesh map of the drainage system drawn in conductive paint that still faintly glows. The Iron Syndicate\'s iron chain emblem appears four times, each one over a different gang\'s markings. The Syndicate has been here longer than anyone admits.' },
+          { id: 'junction_box_drainage', propArt: 'junction_box', propVariant: 'vent', x: 28, y: 16, once: true, label: 'Ventilation Junction Control', description: 'The junction control box for the Level 088 ventilation spine. The routing table inside has been modified — Level 005 airflow is being vented up through this drainage system instead of out through the designated exhaust ports. The modification is deliberate. Someone is using the drainage vents to circulate air to Level 005 workers without triggering environmental monitoring on that level.', grantsFlag: 'vent_route_005_found' },
+          { id: 'syndicate_marker_drainage', propArt: 'wall_marks', propVariant: 'stamp', x: 32, y: 18, once: true, label: 'Recent Syndicate Transit Mark', description: 'A fresh iron chain emblem stamp on the tunnel floor — the mark is crisp, the metal around it bright. This route was used within the last forty-eight hours. The cargo moved east along the main channel, turned south at the junction, and went down. Toward Level 005.', grantsFlag: 'fresh_syndicate_trail' },
         ],
         npcs: [
           { id: 'fugitive_mek', x: 30, y: 17, kind: 'mechanic', label: 'Mek — Level 005 Fugitive',
@@ -1350,17 +1351,17 @@ const PLANETS = {
           { x: 34, y: 12, targetZone: 'undercity_outskirts', targetPos: { x: 2, y: 12 }, label: 'Undercity Outskirts' },
         ],
         worldObjects: [
-          { id: 'syndicate_cargo_cache', x: 18, y: 10, once: true, iconKind: 'crate', label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with an iron chain. Phrik plating, combat chassis, and an empty Jedi archive canister.',
+          { id: 'syndicate_cargo_cache', propArt: 'crate_stack', propVariant: 'syndicate', x: 18, y: 10, once: true, iconKind: 'crate', label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with an iron chain. Phrik plating, combat chassis, and an empty Jedi archive canister.',
             autoCodex: { id: 'discovery-works-syndicate-cache', title: 'Iron Syndicate Cache', category: 'discoveries', summary: 'Phrik plating cut to pauldron dimensions.', body: ['Stacked crates stamped with a stylised iron chain. Inside: Phrik plating cut to pauldron dimensions, half-assembled combat chassis, and one empty Jedi archive canister. Someone opened it already.'] } },
-          { id: 'plasma_conduit_005', x: 8, y: 18, once: false, label: 'Leaking Plasma Conduit', description: 'The pipe groans under pressure. A slow leak fills the air with acrid chemical haze. This entire sub-level is one spark away from a chain event.' },
-          { id: 'sub_station_terminal', x: 10, y: 20, once: true, iconKind: 'panel', label: 'Deep Sub-Station Controls', description: 'Power sub-station 3. Controls ambient thermal hazards in the surrounding corridor.', grantsItem: null,
+          { id: 'plasma_conduit_005', propArt: 'leaking_pipe', propVariant: 'plasma', x: 8, y: 18, once: false, label: 'Leaking Plasma Conduit', description: 'The pipe groans under pressure. A slow leak fills the air with acrid chemical haze. This entire sub-level is one spark away from a chain event.' },
+          { id: 'sub_station_terminal', propArt: 'console', propVariant: 'substation', x: 10, y: 20, once: true, iconKind: 'panel', label: 'Deep Sub-Station Controls', description: 'Power sub-station 3. Controls ambient thermal hazards in the surrounding corridor.', grantsItem: null,
             autoCodex: { id: 'discovery-sub-station-3', title: 'Sub-Station 3: Thermal Grid', category: 'discoveries', summary: 'The Works thermal hazard routing mapped.', body: ['Power sub-station 3 controls the thermal vent routing for the Level 005 lower corridor. The hazard configuration is non-standard — vents have been aimed laterally rather than exhausting upward. Someone reconfigured this intentionally. The most likely purpose: to discourage unauthorized access to the smelter corridor without triggering alarms that would appear on Republic monitoring feeds.'] } },
-          { id: 'syndicate_relay_node', x: 24, y: 6, once: true, label: 'Syndicate Relay Node', description: 'Iron Syndicate tactical communications. Slicing this intercepts live patrol data — every enemy position in The Works becomes visible on your minimap for the duration of the assault.' },
-          { id: 'plasma_valve_a', x: 4, y: 18, once: true, iconKind: 'valve', label: 'Pressure Valve Alpha', description: 'Main coolant line junction. The pressure gauge reads critical. One override and the flow stabilizes.', triggersMinigame: 'valve_override', grantsFlag: 'valve_a_closed' },
-          { id: 'plasma_valve_b', x: 14, y: 20, once: true, iconKind: 'valve', label: 'Pressure Valve Beta', description: 'Secondary coolant junction. Steam vents from the seal around the handle.', triggersMinigame: 'valve_override', grantsFlag: 'valve_b_closed' },
-          { id: 'plasma_valve_c', x: 8, y: 14, once: true, iconKind: 'valve', label: 'Pressure Valve Gamma', description: 'Tertiary coolant junction. Closing this one stabilizes the entire pressure network.', triggersMinigame: 'valve_override', grantsFlag: 'valve_c_closed' },
-          { id: 'holonet_official_terminal', x: 30, y: 20, once: false, label: 'HNN Official Feed', description: '[HNN Priority Core Broadcast] "The Senate Committee on Inner-Rim Trade commended the CSF for maintaining unprecedented safety standards across the Mid-Levels. Reports of industrial smuggling near Level 088 have been dismissed as isolated logistical delays." The broadcast loops. The terminal is covered in soot.' },
-          { id: 'airtaxi_the_works', x: 34, y: 12, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'A terminal barely functioning under the heat. Miracle it still works.' },
+          { id: 'syndicate_relay_node', propArt: 'comm_relay', propVariant: 'node', x: 24, y: 6, once: true, label: 'Syndicate Relay Node', description: 'Iron Syndicate tactical communications. Slicing this intercepts live patrol data — every enemy position in The Works becomes visible on your minimap for the duration of the assault.' },
+          { id: 'plasma_valve_a', propArt: 'pressure_valve', propVariant: 'a', x: 4, y: 18, once: true, iconKind: 'valve', label: 'Pressure Valve Alpha', description: 'Main coolant line junction. The pressure gauge reads critical. One override and the flow stabilizes.', triggersMinigame: 'valve_override', grantsFlag: 'valve_a_closed' },
+          { id: 'plasma_valve_b', propArt: 'pressure_valve', propVariant: 'b', x: 14, y: 20, once: true, iconKind: 'valve', label: 'Pressure Valve Beta', description: 'Secondary coolant junction. Steam vents from the seal around the handle.', triggersMinigame: 'valve_override', grantsFlag: 'valve_b_closed' },
+          { id: 'plasma_valve_c', propArt: 'pressure_valve', propVariant: 'c', x: 8, y: 14, once: true, iconKind: 'valve', label: 'Pressure Valve Gamma', description: 'Tertiary coolant junction. Closing this one stabilizes the entire pressure network.', triggersMinigame: 'valve_override', grantsFlag: 'valve_c_closed' },
+          { id: 'holonet_official_terminal', propArt: 'console', propVariant: 'hnn_official', x: 30, y: 20, once: false, label: 'HNN Official Feed', description: '[HNN Priority Core Broadcast] "The Senate Committee on Inner-Rim Trade commended the CSF for maintaining unprecedented safety standards across the Mid-Levels. Reports of industrial smuggling near Level 088 have been dismissed as isolated logistical delays." The broadcast loops. The terminal is covered in soot.' },
+          { id: 'airtaxi_the_works', propArt: 'airtaxi', propVariant: 'scorched', x: 33, y: 10, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'A terminal barely functioning under the heat. Miracle it still works.' },
         ],
         npcs: [
           { id: 'vex', x: 22, y: 7, kind: 'crime_boss', label: 'Vex',
@@ -1424,6 +1425,7 @@ const PLANETS = {
           carveRect(g, 3, 3, 7, 7, 'floor');
           pt(g, 5, 8, 'floor');
           pt(g, 15, 7, 'floor');
+          pt(g, 34, 12, 'door');
           pt(g, 20, 23, 'door'); pt(g, 21, 23, 'door');
           return g;
         },
@@ -1441,11 +1443,11 @@ const PLANETS = {
           { x: 35, y: 13, targetZone: 'syndicate_command', targetPos: { x: 1, y: 13 }, label: 'Syndicate Command' },
         ],
         worldObjects: [
-          { id: 'airtaxi_cooling_ducts', x: 2, y: 13, label: 'AirTaxi Terminal', description: 'A terminal barely functional in the thermal haze. Emergency transit only.' },
-          { id: 'coolant_manifold', x: 10, y: 13, label: 'Coolant Manifold Junction', description: 'Superchilled gas hisses through cracked seals. The flow rate is wrong — someone has been bleeding coolant toward the smelter cores.' },
-          { id: 'duct_access_panel', x: 21, y: 18, once: true, label: 'Duct Access Panel', description: 'A maintenance crawl route into the syndicate warehouse. Wide enough for a person. The hinges are freshly oiled.', grantsFlag: 'duct_route_found' },
-          { id: 'frost_buildup_terminal', x: 6, y: 5, once: true, label: 'Frost-Coated Terminal', description: 'Temperature logs. The cooling system was deliberately throttled twelve days ago — precisely when the Iron Syndicate began the final stage of their armor production run.', grantsFlag: 'coolant_sabotage_confirmed', grantsCodex: 'codex-the-works-forges' },
-          { id: 'watcher_post', x: 26, y: 5, once: false, label: 'Observation Post', description: 'A crude sentry position overlooking the main duct junction. Scorch marks from a blaster. Someone held this position against something — or someone — coming from the south.' },
+          { id: 'airtaxi_cooling_ducts', propArt: 'airtaxi', propVariant: 'cracked', x: 2, y: 13, label: 'AirTaxi Terminal', description: 'A terminal barely functional in the thermal haze. Emergency transit only.' },
+          { id: 'coolant_manifold', propArt: 'leaking_pipe', propVariant: 'coolant', x: 10, y: 13, label: 'Coolant Manifold Junction', description: 'Superchilled gas hisses through cracked seals. The flow rate is wrong — someone has been bleeding coolant toward the smelter cores.' },
+          { id: 'duct_access_panel', propArt: 'access_hatch', propVariant: 'crawl', x: 21, y: 18, once: true, label: 'Duct Access Panel', description: 'A maintenance crawl route into the syndicate warehouse. Wide enough for a person. The hinges are freshly oiled.', grantsFlag: 'duct_route_found' },
+          { id: 'frost_buildup_terminal', propArt: 'console', propVariant: 'frost', x: 6, y: 5, once: true, label: 'Frost-Coated Terminal', description: 'Temperature logs. The cooling system was deliberately throttled twelve days ago — precisely when the Iron Syndicate began the final stage of their armor production run.', grantsFlag: 'coolant_sabotage_confirmed', grantsCodex: 'codex-the-works-forges' },
+          { id: 'watcher_post', propArt: 'sentry_post', x: 26, y: 5, once: false, label: 'Observation Post', description: 'A crude sentry position overlooking the main duct junction. Scorch marks from a blaster. Someone held this position against something — or someone — coming from the south.' },
         ],
         npcs: [
           { id: 'cooling_tech_ardis', x: 6, y: 7, kind: 'mechanic', label: 'Maintenance Tech Ardis',
@@ -1495,10 +1497,10 @@ const PLANETS = {
           { x: 19, y: 25, targetZone: 'extraction_vault', targetPos: { x: 19, y: 1 }, label: 'Extraction Vault' },
         ],
         worldObjects: [
-          { id: 'airtaxi_syndicate_command', x: 2, y: 13, label: 'AirTaxi Terminal', description: 'Syndicate-rigged transit terminal. The departure codes are wrong — it still works.' },
-          { id: 'command_data_terminal', x: 7, y: 5, once: true, label: 'Iron Syndicate Command Terminal', description: 'Active. Unencrypted. The Syndicate was confident nobody would reach this level. Shipping manifests, crew rotations, and one file simply labeled EXTRACTION TIMETABLE.', grantsFlag: 'syndicate_plans_found', grantsCodex: 'codex-iron-syndicate' },
-          { id: 'armory_rack', x: 28, y: 18, once: true, label: 'Syndicate Armory Rack', description: 'Phrik-composite pauldrons. Six sets, each sized for Republic-standard troopers. The Syndicate is not planning to sell this armor — they are equipping their own people to look like Republic soldiers.', grantsFlag: 'armor_ruse_discovered' },
-          { id: 'comm_relay_hub', x: 18, y: 13, once: false, label: 'Encrypted Comm Relay', description: 'Burst-transmitting on a Senate sub-frequency. The source is Level 1900. Someone very senior is listening to every operation report from this room.' },
+          { id: 'airtaxi_syndicate_command', propArt: 'airtaxi', propVariant: 'rigged', x: 2, y: 13, label: 'AirTaxi Terminal', description: 'Syndicate-rigged transit terminal. The departure codes are wrong — it still works.' },
+          { id: 'command_data_terminal', propArt: 'console', propVariant: 'syndicate', x: 7, y: 5, once: true, label: 'Iron Syndicate Command Terminal', description: 'Active. Unencrypted. The Syndicate was confident nobody would reach this level. Shipping manifests, crew rotations, and one file simply labeled EXTRACTION TIMETABLE.', grantsFlag: 'syndicate_plans_found', grantsCodex: 'codex-iron-syndicate' },
+          { id: 'armory_rack', propArt: 'weapon_rack', propVariant: 'pauldron', x: 28, y: 18, once: true, label: 'Syndicate Armory Rack', description: 'Phrik-composite pauldrons. Six sets, each sized for Republic-standard troopers. The Syndicate is not planning to sell this armor — they are equipping their own people to look like Republic soldiers.', grantsFlag: 'armor_ruse_discovered' },
+          { id: 'comm_relay_hub', propArt: 'comm_relay', propVariant: 'hub', x: 18, y: 13, once: false, label: 'Encrypted Comm Relay', description: 'Burst-transmitting on a Senate sub-frequency. The source is Level 1900. Someone very senior is listening to every operation report from this room.' },
         ],
         npcs: [
           { id: 'syndicate_lt_braeven', x: 7, y: 7, kind: 'crime_boss', label: 'Lt. Braeven — Iron Syndicate',
@@ -1540,11 +1542,11 @@ const PLANETS = {
           { x: 19, y: 0, targetZone: 'syndicate_command', targetPos: { x: 19, y: 24 }, label: 'Syndicate Command' },
         ],
         worldObjects: [
-          { id: 'airtaxi_extraction_vault', x: 2, y: 10, label: 'AirTaxi Terminal', description: 'Emergency transit. The Syndicate kept an exit route. Of course they did.' },
-          { id: 'vault_main_door', x: 11, y: 10, once: true, label: 'Vault Main Door', description: 'Phrik-reinforced. A standard slicer rig will not touch it. But the magnetic coupling on the secondary hinge is corroded — a calibrated hydrospanner could shear it clean.', grantsFlag: 'vault_door_assessed' },
-          { id: 'vault_interior_cache', x: 18, y: 10, once: true, label: 'Syndicate Arms Cache', description: 'Twenty completed Phrik pauldrons. Six sets of Republic trooper underarmor, modified for the Syndicate frame. And one sealed Senate diplomatic pouch — addressed to a committee chair, from an account that does not officially exist.', grantsFlag: 'vault_contents_found', grantsItem: 'senate_conspiracy_file' },
-          { id: 'vault_east_access', x: 25, y: 10, once: true, label: 'East Vault Exit', description: 'The secondary egress. A repulsor-lift is rigged to move the armor cache to a waiting transport. Whoever designed this operation planned every detail.', grantsFlag: 'vault_exit_found' },
-          { id: 'syndicate_prisoner_log', x: 22, y: 15, once: true, label: 'Prisoner Transfer Log', description: 'Four detainees. Two transferred to Level 001 — the log does not say why. One released on Senate authority. One still listed as active: RIANNA, T. — Sub-Level 3, Block B.', grantsFlag: 'rianna_location_confirmed' },
+          { id: 'airtaxi_extraction_vault', propArt: 'airtaxi', propVariant: 'rigged', x: 2, y: 10, label: 'AirTaxi Terminal', description: 'Emergency transit. The Syndicate kept an exit route. Of course they did.' },
+          { id: 'vault_main_door', propArt: 'vault_door', x: 11, y: 10, once: true, label: 'Vault Main Door', description: 'Phrik-reinforced. A standard slicer rig will not touch it. But the magnetic coupling on the secondary hinge is corroded — a calibrated hydrospanner could shear it clean.', grantsFlag: 'vault_door_assessed' },
+          { id: 'vault_interior_cache', propArt: 'crate_stack', propVariant: 'arms_cache', x: 18, y: 10, once: true, label: 'Syndicate Arms Cache', description: 'Twenty completed Phrik pauldrons. Six sets of Republic trooper underarmor, modified for the Syndicate frame. And one sealed Senate diplomatic pouch — addressed to a committee chair, from an account that does not officially exist.', grantsFlag: 'vault_contents_found', grantsItem: 'senate_conspiracy_file' },
+          { id: 'vault_east_access', propArt: 'cargo_lift', x: 25, y: 10, once: true, label: 'East Vault Exit', description: 'The secondary egress. A repulsor-lift is rigged to move the armor cache to a waiting transport. Whoever designed this operation planned every detail.', grantsFlag: 'vault_exit_found' },
+          { id: 'syndicate_prisoner_log', propArt: 'board', propVariant: 'prisoners', x: 22, y: 15, once: true, label: 'Prisoner Transfer Log', description: 'Four detainees. Two transferred to Level 001 — the log does not say why. One released on Senate authority. One still listed as active: RIANNA, T. — Sub-Level 3, Block B.', grantsFlag: 'rianna_location_confirmed' },
         ],
         npcs: [
           { id: 'rianna_vault', x: 18, y: 10, kind: 'warden', label: 'Rianna',
@@ -1579,15 +1581,15 @@ const PLANETS = {
         decor: ['archive', 'pillar', 'scan_arch'],
         doors: [],
         worldObjects: [
-          { id: 'induction_terminal', x: 10, y: 6, once: true, label: 'CSF Induction Terminal', description: 'Your Auxiliary Corps enrollment is confirmed. Designation: AX-7. Access level: provisional. Supervisor: Vane, T. Welcome to the Coruscant Security Force.', grantsItem: 'csf_aux_badge' },
-          { id: 'drill_holotable', x: 20, y: 6, once: false, label: 'Tactical Holotable', description: 'A 3D grid of Sector 4 showing current patrol routes, Black Sun safe house locations, and three markers labeled UNKNOWN — each in a different sub-level. Someone is mapping something.' },
-          { id: 'holding_cell_log', x: 6, y: 25, once: true, label: 'Cell Block Log', description: 'Entry 847: Detainee refuses to identify employing organization. Grey coat. No ID chip. Transferred off-site per Senate directive 1182-C. Authorized by: [REDACTED].' },
-          { id: 'module_a_terminal', x: 36, y: 12, once: true, requiresFlag: 'csf_briefed', label: 'Training Module A: Non-Lethal Combat', description: 'CSF Certification Module A. Simulated Syndicate droids are live on the training range in full-engagement mode. Stun configuration only — one lethal discharge ends your certification run. Droids do not telegraph. They do not pause. Clear the course clean.', triggersMinigame: 'pit_fight', minigameConfig: { opponentName: 'Syndicate Training Droid Mk.IV', opponentHp: 4, accent: '#4A9FFF' }, grantsFlag: 'module_a_complete' },
-          { id: 'module_b_terminal', x: 36, y: 16, once: true, requiresFlag: 'module_a_complete', label: 'Training Module B: Forensic Slicing', description: 'CSF Certification Module B. A reconstructed simulation of Docking Bay 14 — scorched manifests, altered routing codes, a ghost cargo layer in the customs log. The chain of custody is broken in three places. Find all three breaks and reconstruct the full trail. No assumptions. Only evidence.', triggersMinigame: 'signal_siphon', grantsItem: 'forensic_slicing_suite', grantsCodex: 'codex-csf-chain-of-custody', grantsFlag: 'module_b_complete' },
-          { id: 'holding_block_b', x: 6, y: 24, once: true, requiresFlag: 'module_b_complete', label: 'Training Module C: High-Stress Interrogation', description: 'CSF Certification Module C. The Black Sun informant in Holding Block B has resisted four certified detectives. Thirty minutes. No weapons discharges. No civil rights violations on record. Break the suspect using psychological pressure before time runs out.', triggersMinigame: 'interrogation', grantsFlag: 'module_c_complete' },
-          { id: 'senate_honor_ceremony', x: 20, y: 14, once: true, requiresFlag: 'csf_training_complete', label: 'Senate Honor Ceremony', description: 'Certification confirmed. The Senate Honor Cross is awarded in a holographic broadcast to Precinct Command. Officer Vane promotes you to Special Lead Investigator of the CSF Auxiliary Division. Sector 4 deployment is now authorized.', grantsFlag: 'vane_record_commend' },
-          { id: 'airtaxi_csf_academy', x: 38, y: 22, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Republic transit terminal. Authorized personnel only. Connects to the Coruscant AirTaxi Network.' },
-          { id: 'precinct42_warrant_terminal', x: 28, y: 22, once: true, iconKind: 'terminal', label: 'Precinct 42 Remote Terminal',
+          { id: 'induction_terminal', propArt: 'console', propVariant: 'induction', x: 10, y: 6, once: true, label: 'CSF Induction Terminal', description: 'Your Auxiliary Corps enrollment is confirmed. Designation: AX-7. Access level: provisional. Supervisor: Vane, T. Welcome to the Coruscant Security Force.', grantsItem: 'csf_aux_badge' },
+          { id: 'drill_holotable', propArt: 'tactical_table', propVariant: 'drill', x: 20, y: 6, once: false, label: 'Tactical Holotable', description: 'A 3D grid of Sector 4 showing current patrol routes, Black Sun safe house locations, and three markers labeled UNKNOWN — each in a different sub-level. Someone is mapping something.' },
+          { id: 'holding_cell_log', propArt: 'board', propVariant: 'cellog', x: 9, y: 27, once: true, label: 'Cell Block Log', description: 'Entry 847: Detainee refuses to identify employing organization. Grey coat. No ID chip. Transferred off-site per Senate directive 1182-C. Authorized by: [REDACTED].' },
+          { id: 'module_a_terminal', propArt: 'console', propVariant: 'module_a', x: 36, y: 12, once: true, requiresFlag: 'csf_briefed', label: 'Training Module A: Non-Lethal Combat', description: 'CSF Certification Module A. Simulated Syndicate droids are live on the training range in full-engagement mode. Stun configuration only — one lethal discharge ends your certification run. Droids do not telegraph. They do not pause. Clear the course clean.', triggersMinigame: 'pit_fight', minigameConfig: { opponentName: 'Syndicate Training Droid Mk.IV', opponentHp: 4, accent: '#4A9FFF' }, grantsFlag: 'module_a_complete' },
+          { id: 'module_b_terminal', propArt: 'console', propVariant: 'module_b', x: 36, y: 16, once: true, requiresFlag: 'module_a_complete', label: 'Training Module B: Forensic Slicing', description: 'CSF Certification Module B. A reconstructed simulation of Docking Bay 14 — scorched manifests, altered routing codes, a ghost cargo layer in the customs log. The chain of custody is broken in three places. Find all three breaks and reconstruct the full trail. No assumptions. Only evidence.', triggersMinigame: 'signal_siphon', grantsItem: 'forensic_slicing_suite', grantsCodex: 'codex-csf-chain-of-custody', grantsFlag: 'module_b_complete' },
+          { id: 'holding_block_b', propArt: 'interrogation_rig', x: 6, y: 24, once: true, requiresFlag: 'module_b_complete', label: 'Training Module C: High-Stress Interrogation', description: 'CSF Certification Module C. The Black Sun informant in Holding Block B has resisted four certified detectives. Thirty minutes. No weapons discharges. No civil rights violations on record. Break the suspect using psychological pressure before time runs out.', triggersMinigame: 'interrogation', grantsFlag: 'module_c_complete' },
+          { id: 'senate_honor_ceremony', propArt: 'ceremony_dais', x: 20, y: 14, once: true, requiresFlag: 'csf_training_complete', label: 'Senate Honor Ceremony', description: 'Certification confirmed. The Senate Honor Cross is awarded in a holographic broadcast to Precinct Command. Officer Vane promotes you to Special Lead Investigator of the CSF Auxiliary Division. Sector 4 deployment is now authorized.', grantsFlag: 'vane_record_commend' },
+          { id: 'airtaxi_csf_academy', propArt: 'airtaxi', propVariant: 'official', x: 38, y: 22, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Republic transit terminal. Authorized personnel only. Connects to the Coruscant AirTaxi Network.' },
+          { id: 'precinct42_warrant_terminal', propArt: 'console', propVariant: 'warrant', x: 28, y: 22, once: true, iconKind: 'terminal', label: 'Precinct 42 Remote Terminal',
             requiresFlag: 'reya_warrant_mission_active',
             requires: { item: 'reya_warrant_disk' },
             description: 'A CSF remote access terminal with a clearance tunnel to the Level 1220 warrant archive. The terminal should not be accessible from the training wing, but someone wired it in wrong during the last facility expansion. The warrant ID on your disk matches an active record in the Precinct 42 database.',
@@ -1777,9 +1779,9 @@ const PLANETS = {
           { x: 36, y: 10, targetZone: 'slicer_alleyway', targetPos: { x: 2, y: 10 }, label: 'Slicer Alleyway' },
         ],
         worldObjects: [
-          { id: 'marlo_hideout_board', x: 4, y: 10, once: false, label: 'Ops Planning Board', description: 'A holographic layout of three Coruscant levels. Marlo\'s territory in red. Rook\'s in blue. Significant overlap. Someone has been drawing lines.' },
-          { id: 'rook_comms_terminal', x: 28, y: 16, once: true, label: "Rook's Comm Array", description: 'The speeder nav system is wired into this terminal. One code cylinder could redirect his entire route.' },
-          { id: 'airtaxi_lower_sky_market', x: 20, y: 24, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Exit from lower promenade.' },
+          { id: 'marlo_hideout_board', propArt: 'board', propVariant: 'ops', x: 4, y: 10, once: false, label: 'Ops Planning Board', description: 'A holographic layout of three Coruscant levels. Marlo\'s territory in red. Rook\'s in blue. Significant overlap. Someone has been drawing lines.' },
+          { id: 'rook_comms_terminal', propArt: 'console', propVariant: 'rook', x: 28, y: 16, once: true, label: "Rook's Comm Array", description: 'The speeder nav system is wired into this terminal. One code cylinder could redirect his entire route.' },
+          { id: 'airtaxi_lower_sky_market', propArt: 'airtaxi', propVariant: 'worn', x: 20, y: 24, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Exit from lower promenade.' },
         ],
         npcs: [
           { id: 'marlo_1100', x: 8, y: 8, kind: 'broker', label: '"Slick" Marlo',
@@ -1822,46 +1824,46 @@ const PLANETS = {
         decor: ['pillar', 'archive', 'scan_arch'],
         doors: [],
         worldObjects: [
-          { id: 'senate_phantom_freight_file', x: 4, y: 4, once: true, iconKind: 'archive', label: 'Committee Dossier 7-Theta',
+          { id: 'senate_phantom_freight_file', propArt: 'archive_cabinet', propVariant: 'dossier', x: 4, y: 4, once: true, iconKind: 'archive', label: 'Committee Dossier 7-Theta',
             requiresFlag: 'echo7_stakes_known',
             description: 'A sealed committee dossier marked PHANTOM FREIGHT OVERSIGHT (CLASSIFIED). The file number matches one of the suppressed archives Echo-7 described. Three pages are intact. They contain the names of six Senate subcommittee members who co-signed a standing exemption order for the Bay 14 cargo pathway, renewed every fiscal cycle for thirty years. One name is currently serving as the Deputy Chair of the Senate Commerce Authority.',
             grantsFlag: 'phantom_freight_senate_link',
             grantsCodex: 'codex-senate-precinct' },
-          { id: 'holo_news_kiosk_senate', x: 10, y: 8, once: false, iconKind: 'terminal', label: 'HNN Kiosk — Senate Wing',
+          { id: 'holo_news_kiosk_senate', propArt: 'kiosk', propVariant: 'senate', x: 10, y: 8, once: false, iconKind: 'terminal', label: 'HNN Kiosk — Senate Wing',
             description: '[HNN PRIORITY] "The Senate Commerce Authority has issued a statement calling the Bay 14 irregularities an administrative matter under routine review. Deputy Chair Torvenn described media coverage as irresponsible speculation. In unrelated news, fourteen tonnes of unmanifested cargo cleared Coruscant Customs without inspection under an emergency security protocol." The terminal has three active response threads. All of them have been flagged by Senate information security.' },
-          { id: 'senate_surveillance_array', x: 20, y: 6, once: true, iconKind: 'terminal', label: 'HoloNet Surveillance Hub',
+          { id: 'senate_surveillance_array', propArt: 'console', propVariant: 'surveil', x: 20, y: 6, once: true, iconKind: 'terminal', label: 'HoloNet Surveillance Hub',
             requiresFlag: 'vane_sublevel_connection_found',
             description: 'A Commerce Authority surveillance node routing encrypted monitoring data to four Senate offices simultaneously. The uplink log shows Vane\'s inspection report from eleven years ago was accessed twice in the last forty-eight hours, both times from a terminal registered to Deputy Chair Torvenn\'s office.',
             triggersMinigame: 'signal_siphon',
             grantsFlag: 'senate_surveillance_tapped',
             grantsCodex: 'codex-senate-precinct' },
-          { id: 'senate_classified_briefing', x: 35, y: 6, once: true, iconKind: 'archive', label: 'Sealed Briefing Chamber',
+          { id: 'senate_classified_briefing', propArt: 'archive_cabinet', propVariant: 'sealed', x: 35, y: 6, once: true, iconKind: 'archive', label: 'Sealed Briefing Chamber',
             requiresFlag: 'senate_access_granted',
             description: 'A secure briefing room last active three months ago. The session transcript is still cached in the chamber\'s closed-loop system. Twelve senators. One agenda item: how to contain the Level 1313 access question before it reached the standing committee. The resolution passed eleven to one. The dissenting vote is not attributed to any name in the record. That space is blank, as if someone removed the attribution before the session closed.',
             grantsFlag: 'senate_dissent_found',
             grantsCodex: 'codex-senate-precinct' },
-          { id: 'senate_committee_minutes', x: 35, y: 8, once: true, iconKind: 'datapad', label: 'Committee Meeting Log',
+          { id: 'senate_committee_minutes', propArt: 'archive_cabinet', propVariant: 'minutes', x: 35, y: 8, once: true, iconKind: 'datapad', label: 'Committee Meeting Log',
             description: 'Three years of Commerce Authority subcommittee meeting logs. Cross-referenced against the Bay 14 manifest irregularities, they form a clear pattern: every cargo review request that touched Bay 14 was tabled, deferred, or simply removed from the agenda before discussion. The removals are stamped as routine calendar management. The name authorising them appears twenty-three times. It is always the same: Deputy Chair Torvenn.',
             grantsFlag: 'torvenn_named',
             requiresFlag: 'phantom_freight_senate_link' },
-          { id: 'senate_archive_core', x: 8, y: 24, once: true, iconKind: 'terminal', label: 'Archive Sub-Node',
+          { id: 'senate_archive_core', propArt: 'server_stack', propVariant: 'archive', x: 8, y: 24, once: true, iconKind: 'terminal', label: 'Archive Sub-Node',
             requiresFlag: 'echo7_vault_details_known',
             description: 'A secondary archive node running a fragmented index of the original Level 1313 records purge. The index itself survived the purge because it was stored as a maintenance file rather than a document record. It lists four hundred and twelve archive entries marked DESTROYED in the purge order. The last twelve entries in the list are marked LOCATION UNVERIFIED. They include a line item reading: ARCHIVIST CONSCIOUSNESS TRANSFER PROTOCOL. AUTHORIZED. SIGNED: TORVENN, W.',
             grantsFlag: 'echo7_archive_origin_found',
             grantsCodex: 'codex-senate-precinct' },
-          { id: 'senate_bribe_ledger', x: 15, y: 26, once: true, iconKind: 'archive', label: 'Commerce Authority Payment Log',
+          { id: 'senate_bribe_ledger', propArt: 'archive_cabinet', propVariant: 'ledger', x: 15, y: 26, once: true, iconKind: 'archive', label: 'Commerce Authority Payment Log',
             requiresFlag: 'vault_heist_complete',
             description: 'A physical payment ledger from the Commerce Authority bursary. Forty-three named accounts. Cross-referenced against the Iron Syndicate bribe schedule from Jon\'s vault, eleven of them match. The accounts belong to clerks, inspectors, and subcommittee aides across four Senate offices. The money moved from Syndicate accounts through three shell companies before landing in Republic payroll. Someone built this channel over years. It did not happen by accident.',
             grantsFlag: 'bribe_network_mapped',
             grantsCodex: 'codex-senate-precinct' },
-          { id: 'senate_maintenance_access', x: 36, y: 26, once: true, iconKind: 'panel', label: 'Emergency Maintenance Shaft',
+          { id: 'senate_maintenance_access', propArt: 'access_hatch', propVariant: 'panel', x: 33, y: 27, once: true, iconKind: 'panel', label: 'Emergency Maintenance Shaft',
             requiresNoneFlags: ['senate_maintenance_opened'],
             description: 'A panel behind the archive stacks, unlocked. A maintenance shaft runs down through the precinct sub-structure. Access logs show it has not been officially entered in eleven years. The dust on the interior ladder is disturbed. Someone has been using this route without signing in.',
             grantsFlag: 'senate_maintenance_opened',
             grantsCodex: 'codex-senate-precinct' },
-          { id: 'senate_guard_post', x: 6, y: 16, once: false, iconKind: 'prop', label: 'Republic Guard Post',
+          { id: 'senate_guard_post', propArt: 'guard_post', x: 6, y: 16, once: false, iconKind: 'prop', label: 'Republic Guard Post',
             description: 'Standard Senate precinct guard station. Emergency response time is four minutes at this level. The duty log shows three unlogged visitor entries in the last week, each flagged by the guard on duty and subsequently deleted from the official record by a Commerce Authority clearance override. The guard who flagged them is listed as transferred. The destination is blank.' },
-          { id: 'airtaxi_senate_district', x: 37, y: 25, once: false, iconKind: 'beacon', label: 'Senate Express Terminal',
+          { id: 'airtaxi_senate_district', propArt: 'airtaxi', propVariant: 'clean', x: 37, y: 25, once: false, iconKind: 'beacon', label: 'Senate Express Terminal',
             description: 'A high-security transit terminal with biometric clearance requirements. The Republic crest above the boarding gate is polished. Everything here is polished. That is the point.' },
         ],
         npcs: [
@@ -1973,29 +1975,29 @@ const PLANETS = {
           { x: 33, y: 6, targetZone: 'shadow_town', targetPos: { x: 2, y: 12 }, label: 'Shadow Town' },
         ],
         worldObjects: [
-          { id: 'ancient_broadcast_terminal', x: 8, y: 4, once: true, iconKind: 'terminal', label: 'Derelict Broadcast Terminal',
+          { id: 'ancient_broadcast_terminal', propArt: 'console', propVariant: 'derelict', x: 8, y: 4, once: true, iconKind: 'terminal', label: 'Derelict Broadcast Terminal',
             description: 'An old Republic emergency-band relay terminal, abandoned and overgrown with data cable. The display flickers. An audio signal is running on a frequency that stopped being authorised eighty years ago.',
             grantsFlag: 'echo7_found', grantsItem: 'echo_7_core',
             autoCodex: { id: 'codex-echo-7', title: 'Echo-7: The Preserved Mind', category: 'dossier', summary: 'An ancient AI core carrying the uploaded consciousness of a Republic archivist.', body: ['The broadcast signature matches a protocol droid core designation that was flagged as decommissioned in Republic records three centuries ago. The core is still transmitting. It says it has something important to tell you.'] } },
-          { id: 'overrun_server_stack', x: 20, y: 6, once: true, iconKind: 'terminal', label: 'Overrun Server Stack',
+          { id: 'overrun_server_stack', propArt: 'server_stack', propVariant: 'black_market', x: 20, y: 6, once: true, iconKind: 'terminal', label: 'Overrun Server Stack',
             description: 'A rack of black-market server nodes bolted to the wall. Echo-7 says the first memory fragment is stored here. The data is encrypted behind a layered slicer lock.',
             triggersMinigame: 'signal_siphon', grantsFlag: 'echo7_node1_extracted',
             requiresFlag: 'echo7_found' },
-          { id: 'penthouse_relay_tap', x: 28, y: 14, once: true, iconKind: 'panel', label: 'Sky-Market Penthouse Tap',
+          { id: 'penthouse_relay_tap', propArt: 'ceiling_tap', x: 28, y: 14, once: true, iconKind: 'panel', label: 'Sky-Market Penthouse Tap',
             description: 'A hardwire tap running upward through the ceiling into the Sky-Market penthouse tower. This is how the second memory fragment was rerouted here to keep it hidden. Getting it out means cracking the tower relay.',
             triggersMinigame: 'signal_siphon', grantsFlag: 'echo7_node2_extracted',
             requiresFlag: 'echo7_node1_extracted' },
-          { id: 'oza_shop_terminal', x: 6, y: 15, once: false, iconKind: 'terminal', label: "OZA-2's Shop Display",
+          { id: 'oza_shop_terminal', propArt: 'console', propVariant: 'oza', x: 6, y: 15, once: false, iconKind: 'terminal', label: "OZA-2's Shop Display",
             description: 'A battered terminal listing available hardware with prices that do not appear in any legitimate catalogue. Matte-black casing. Red indicator lights. A hand-written sign reads: LEGAL INQUIRIES DELETED ON RECEIPT.' },
-          { id: 'airtaxi_slicer_alley', x: 30, y: 3, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal',
+          { id: 'airtaxi_slicer_alley', propArt: 'airtaxi', propVariant: 'jury', x: 30, y: 3, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal',
             description: 'An unmarked terminal spliced into the legitimate AirTaxi network. No one on record approved this installation.' },
-          { id: 'slicer_alley_graffiti', x: 14, y: 2, once: false, iconKind: 'prop', label: 'Alleyway Wall Markings',
+          { id: 'slicer_alley_graffiti', propArt: 'wall_marks', propVariant: 'alley', x: 14, y: 2, once: false, iconKind: 'prop', label: 'Alleyway Wall Markings',
             description: 'The wall is layered with Aurebesh tags, data-runner insignia, and at least three separate gang territorial marks crossed out by the next. Newest text reads: THIS ALLEY BELONGS TO NO ONE. KEEP YOUR HANDS OFF THE HARDWARE.' },
-          { id: 'slicer_alley_abandoned_pad', x: 22, y: 17, once: true, iconKind: 'datapad', label: 'Abandoned Datapad',
+          { id: 'slicer_alley_abandoned_pad', propArt: 'datapad_table', propVariant: 'warm', x: 22, y: 17, once: true, iconKind: 'datapad', label: 'Abandoned Datapad',
             description: 'Left on a crate and still warm. Partial download log. Someone was pulling records from a Bay 14 customs node three hours ago, then stopped mid-operation. The last entry reads: "They found the marker. Going dark."',
             grantsFlag: 'slicer_trail_found',
             autoCodex: { id: 'codex-slicer-alleyway', title: 'The Slicer Alleyway Network', category: 'lore', summary: 'A hidden corridor of data-runners below the Sky-Market towers.', body: ['The datapad belongs to a regular of the alleyway network. The stopped download and the last log entry suggest whoever was running this operation knew something was coming.'] } },
-          { id: 'holo_news_kiosk', x: 16, y: 10, once: false, iconKind: 'terminal', label: 'HNN Kiosk — Slicer Alley',
+          { id: 'holo_news_kiosk', propArt: 'kiosk', propVariant: 'slicer', x: 16, y: 10, once: false, iconKind: 'terminal', label: 'HNN Kiosk — Slicer Alley',
             description: '[HNN PRIORITY UPDATE] "Senate Committee on Information Security has voted to expand encrypted-band monitoring across all civilian relay networks. The measure passed nine to three. Officials called it a necessary step for public safety." The screen is cracked. Someone stamped it with a Black Sun stencil.' },
         ],
         npcs: [
@@ -2087,36 +2089,36 @@ const PLANETS = {
           { x: 28, y: 10, targetZone: 'spice_refining_vaults', targetPos: { x: 2, y: 11 }, label: 'Spice Refinery' },
         ],
         worldObjects: [
-          { id: 'vault_access_gate', x: 6, y: 3, once: false, iconKind: 'panel', label: 'CSF Access Gate',
+          { id: 'vault_access_gate', propArt: 'security_gate', x: 6, y: 3, once: false, iconKind: 'panel', label: 'CSF Access Gate',
             description: 'A heavy security gate with a biometric scanner and clearance reader. The Republic seal is still legible through the rust.',
             requiresFlag: 'echo7_vault_approach_active' },
-          { id: 'republic_archive_server', x: 18, y: 5, once: true, iconKind: 'terminal', label: 'Republic Archive Core',
+          { id: 'republic_archive_server', propArt: 'server_stack', propVariant: 'republic', x: 18, y: 5, once: true, iconKind: 'terminal', label: 'Republic Archive Core',
             description: 'The central server node of the Level 1313 archive burial site. Active. The transfer port is open, as if someone left this connection deliberately unfinished.',
             triggersMinigame: 'willpower_override',
             grantsFlag: 'echo7_climax_reached',
             requiresFlag: 'echo7_vault_approach_active' },
-          { id: 'ancient_vault_entrance', x: 24, y: 18, once: true, iconKind: 'crate', label: 'Sealed Maintenance Shaft',
+          { id: 'ancient_vault_entrance', propArt: 'access_hatch', propVariant: 'sealed', x: 24, y: 18, once: true, iconKind: 'crate', label: 'Sealed Maintenance Shaft',
             description: 'A durasteel hatch welded shut with three independent seals. Below it: a maintenance shaft descending into carved stone. This is Garrus\'s coordinates. Whatever is down there has been sealed for a very long time.',
             grantsFlag: 'sublevels_entrance_found',
             requires: { item: 'sublevel_coordinates' } },
-          { id: 'spore_containment_node', x: 26, y: 14, once: true, iconKind: 'valve', label: 'Ancient Containment Seal',
+          { id: 'spore_containment_node', propArt: 'containment_seal', x: 26, y: 14, once: true, iconKind: 'valve', label: 'Ancient Containment Seal',
             description: 'A containment node of non-Republic design, older than anything else in this vault. Something warm emanates from the sealed chamber beyond it. Not heat. Something biological.',
             triggersMinigame: 'signal_siphon',
             grantsFlag: 'spore_chamber_entered',
             requiresFlag: 'sublevels_entrance_found' },
-          { id: 'kyber_crystal_cache', x: 28, y: 16, once: true, iconKind: 'artifact', label: 'Kyber Crystal Cache',
+          { id: 'kyber_crystal_cache', propArt: 'kyber_cluster', x: 28, y: 16, once: true, iconKind: 'artifact', label: 'Kyber Crystal Cache',
             description: 'A cluster of crystalline growths on the vault floor, pulsing with cold white light. Sith-era contamination has warped the Kyber structure. The air around them smells wrong in a way you cannot name.',
             grantsItem: 'kyber_spore_crystal',
             grantsCodex: 'codex-spore-contamination',
             requiresFlag: 'spore_chamber_entered' },
-          { id: 'sublevel_jedi_marker', x: 22, y: 16, once: true, iconKind: 'artifact', label: 'Jedi Survey Marker',
+          { id: 'sublevel_jedi_marker', propArt: 'survey_marker', x: 22, y: 16, once: true, iconKind: 'artifact', label: 'Jedi Survey Marker',
             description: 'A hollow aurodium cylinder half-buried in the stone floor. Jedi survey glyphs. Pre-Clone Wars. A hand-etched note inside reads: "Sealed. Do not return without specialist containment."',
             grantsItem: 'ancient_force_relic',
             requiresFlag: 'spore_chamber_entered',
             grantsCodex: 'codex-ancient-sublevels' },
-          { id: 'sublevel_holo_display', x: 20, y: 12, once: false, iconKind: 'prop', label: 'Collapsed HNN Terminal',
+          { id: 'sublevel_holo_display', propArt: 'kiosk', propVariant: 'collapsed', x: 20, y: 12, once: false, iconKind: 'prop', label: 'Collapsed HNN Terminal',
             description: 'A terminal that has not received a broadcast signal in at least forty years. The last cached headline reads: "Republic Confirms Level 1313 Infrastructure Sealed for Ongoing Safety Assessment." The date stamp is sixty-two years old.' },
-          { id: 'sublevel_csf_log', x: 10, y: 18, once: true, iconKind: 'datapad', label: 'CSF Archive Entry Log',
+          { id: 'sublevel_csf_log', propArt: 'datapad_table', propVariant: 'logbook', x: 10, y: 18, once: true, iconKind: 'datapad', label: 'CSF Archive Entry Log',
             description: 'A physical logbook from the last CSF inspection of this vault, dated eleven years prior. The signature of the inspecting officer is familiar: Vane, T. The inspection report reads: "Nothing of interest. Recommend permanent closure."',
             grantsFlag: 'vane_sublevel_connection_found' },
         ],
@@ -2165,6 +2167,7 @@ const PLANETS = {
           // Lower chamber (ancient vault section)
           carveRect(g, 10, 12, 28, 20, 'floor');
           pt(g, 1, 10, 'door');
+          pt(g, 28, 10, 'door');
           return g;
         },
       },
@@ -2179,19 +2182,19 @@ const PLANETS = {
           { x: 1, y: 12, targetZone: 'slicer_alleyway', targetPos: { x: 32, y: 6 }, label: 'Slicer Alleyway' },
         ],
         worldObjects: [
-          { id: 'pit_arena_sands', x: 17, y: 13, once: false, label: 'The Pit Arena', iconKind: 'floor',
+          { id: 'pit_arena_sands', propArt: 'arena_ring', x: 17, y: 13, once: false, label: 'The Pit Arena', iconKind: 'floor',
             description: 'Sand packed hard with decades of blood and sweat. A ring of low lights, two meters of drop to the lower tier, and no referees. The only rule is that the winner walks out.' },
-          { id: 'shadow_arms_cache', x: 31, y: 5, once: true, label: 'Skimmed Arms Cache', iconKind: 'crate',
+          { id: 'shadow_arms_cache', propArt: 'crate_stack', propVariant: 'arms', x: 31, y: 5, once: true, label: 'Skimmed Arms Cache', iconKind: 'crate',
             requiresFlag: 'cargo_skimmed',
             requires: { item: 'shadow_arms_cache_key' },
             description: 'Ten crates of Merr-Sonn hardware you pulled from the Bay 14 manifest. They have been here two days and no one has touched them. That is either because Malak has not looked, or because he already knows and is waiting to see what you do with them.',
             grantsFlag: 'shadow_cache_confirmed',
             grantsCodex: 'codex-shadow-town' },
-          { id: 'arena_betting_board', x: 18, y: 3, once: false, label: 'Betting Board', iconKind: 'board',
+          { id: 'arena_betting_board', propArt: 'board', propVariant: 'betting', x: 18, y: 3, once: false, label: 'Betting Board', iconKind: 'board',
             description: "Tonight's card. Twelve bouts, four odds-on favourites, one main event listed only as MALAK vs. TBD. The space under TBD is blank. The odds on Malak are three to one in his favour. Someone has underlined them twice in ink." },
-          { id: 'arena_observation_rail', x: 12, y: 7, once: false, label: 'Observation Rail', iconKind: 'pipe',
+          { id: 'arena_observation_rail', propArt: 'rail_run', x: 12, y: 7, once: false, label: 'Observation Rail', iconKind: 'pipe',
             description: 'Corroded permasteel railing along the upper deck. From here you can see the whole pit floor and everyone on it. Someone with good eyes could watch the exits from here and never be seen watching.' },
-          { id: 'malak_pit_entrance', x: 10, y: 13, once: true, label: 'Enter the Arena', iconKind: 'floor',
+          { id: 'malak_pit_entrance', propArt: 'pit_gate', propVariant: 'pit', x: 10, y: 13, once: true, label: 'Enter the Arena', iconKind: 'floor',
             requiresFlag: 'malak_pit_challenged',
             requiresNoneFlags: ['malak_turned', 'malak_dead'],
             description: 'The pit floor. Sand hard underfoot from decades of use. Malak is waiting at the center. This settles it.',
@@ -2199,26 +2202,26 @@ const PLANETS = {
             minigameConfig: { opponentProfile: 'malak_enforcer', flavorText: 'The pit floor is hard sand, worn smooth by decades of use. Malak stands at the center — massive, unreadable, blaster already clear of its holster. The crowd above is silent. This is the only way through.' },
             grantsFlag: 'malak_turned',
             grantsCodex: 'codex-malak' },
-          { id: 'shadow_town_codex_terminal', x: 5, y: 3, once: true, iconKind: 'terminal', label: 'Sub-Level Registry Post',
+          { id: 'shadow_town_codex_terminal', propArt: 'console', propVariant: 'registry', x: 5, y: 3, once: true, iconKind: 'terminal', label: 'Sub-Level Registry Post',
             description: 'A cracked terminal running an automated registry loop for sub-level business licences. Level 1312 has forty-three registered businesses. Thirty-seven of them list the same registered agent: IRON SYNDICATE HOLDINGS LLC.',
             grantsCodex: 'codex-shadow-town' },
-          { id: 'airtaxi_shadow_town', x: 8, y: 20, once: false, iconKind: 'beacon', label: 'Sub-Level Transit Node',
+          { id: 'airtaxi_shadow_town', propArt: 'airtaxi', propVariant: 'jury', x: 8, y: 20, once: false, iconKind: 'beacon', label: 'Sub-Level Transit Node',
             description: 'An unofficial transit splice wired into the AirTaxi network three levels above. The routing fee is charged as a food delivery surcharge. Nobody has complained.' },
-          { id: 'shadow_town_armory_rack', x: 31, y: 8, once: false, iconKind: 'crate', label: 'Weapons Rack',
+          { id: 'shadow_town_armory_rack', propArt: 'weapon_rack', propVariant: 'vibro', x: 31, y: 8, once: false, iconKind: 'crate', label: 'Weapons Rack',
             description: 'A wall-mounted rack of contest hardware: electroblades with cracked casings, vibroshivs with the safety locks removed, and one stripped-down blaster pistol with the stun setting shorted out. A handwritten sign reads: FIGHT NIGHT ONLY. PAY FOR WHAT YOU BREAK. No price list is posted. The prices are not the kind that get written down.' },
-          { id: 'arena_challenger_register', x: 21, y: 3, once: false, iconKind: 'board', label: 'Challenger Register',
+          { id: 'arena_challenger_register', propArt: 'board', propVariant: 'register', x: 21, y: 3, once: false, iconKind: 'board', label: 'Challenger Register',
             description: 'A physical board where fighters sign up for the night\'s card in their own handwriting. Forty-three names over the course of a month. You recognise three of them from CSF missing persons reports. A fourth is crossed out with two short lines, which in Shadow Town means he lost the final bout.' },
-          { id: 'fighter_shrine', x: 5, y: 18, once: true, iconKind: 'artifact', label: 'Pit Fighter\'s Altar',
+          { id: 'fighter_shrine', propArt: 'fighter_altar', x: 5, y: 18, once: true, iconKind: 'artifact', label: 'Pit Fighter\'s Altar',
             description: 'A shelf nailed to the wall with offerings left by fighters before matches: a pair of worn hand wraps, a data chip with a name burned into the casing, a single unspent cartridge case turned upward like a candle. The shrine has been maintained for at least twelve years. Someone comes here every fight night, regardless of who they are fighting.',
             grantsCodex: 'codex-shadow-town' },
-          { id: 'black_sun_territorial_mark', x: 5, y: 20, once: true, iconKind: 'prop', label: 'Black Sun Mark',
+          { id: 'black_sun_territorial_mark', propArt: 'wall_marks', propVariant: 'blacksun', x: 5, y: 20, once: true, iconKind: 'prop', label: 'Black Sun Mark',
             description: 'A Black Sun emblem stamped into the permasteel wall in industrial dye: a stylised starburst inside a circle, twelve points, each one representing one of the twelve original Black Sun Vigos of the Galactic War period. This section of Level 1312 has been Black Sun territory for forty years. No one has successfully contested it in that time. Malak holds the pit because the Black Sun let him. That has always been the arrangement.',
             grantsCodex: 'codex-shadow-town' },
-          { id: 'old_ventshaft_hatch', x: 31, y: 12, once: true, iconKind: 'valve', label: 'Old Infrastructure Hatch',
+          { id: 'old_ventshaft_hatch', propArt: 'access_hatch', propVariant: 'ancient', x: 31, y: 12, once: true, iconKind: 'valve', label: 'Old Infrastructure Hatch',
             description: 'A hatch cover bolted over a ventilation shaft that predates anything else in this structure by at least two hundred years. The permasteel around it is a different grade, a different alloy, cast when Coruscant was being sealed level by level rather than built upward. Below this hatch is a Level 1312 that nobody has officially surveyed since before the Republic-era urban codes were written. The bolts are welded shut.',
             grantsFlag: 'shadow_town_sublevel_found',
             grantsCodex: 'codex-shadow-town' },
-          { id: 'pit_medic_supplies', x: 31, y: 18, once: false, iconKind: 'supply', label: 'Medic Station',
+          { id: 'pit_medic_supplies', propArt: 'medic_crate', x: 31, y: 18, once: false, iconKind: 'supply', label: 'Medic Station',
             description: 'A repurposed cargo crate serving as a medical supply station. Bacta patches, coagulant foam, and two syringes of combat stims, all clearly sourced from legitimate medical channels and therefore clearly brought here by someone who had access to legitimate medical channels. No questions are asked at the medic station. That is the entire point of its existence.' },
         ],
         npcs: [
@@ -2422,16 +2425,16 @@ const PLANETS = {
           { x: 14, y: 19, targetZone: 'sky_market', targetPos: { x: 35, y: 1 }, label: 'Elevator to Sky-Market' },
         ],
         worldObjects: [
-          { id: 'war_table', x: 14, y: 10, once: false, iconKind: 'terminal', label: 'Holo-War Table',
+          { id: 'war_table', propArt: 'tactical_table', propVariant: 'war', x: 14, y: 10, once: false, iconKind: 'terminal', label: 'Holo-War Table',
             requiresFlag: 'syndicateManagement_active',
             description: 'A holographic tactical display showing your territories, active agents, and contract queue. The Iron Syndicate operational map, rendered in cold blue light over a relief projection of Coruscant sub-levels 800 through 1450.',
             triggersMinigame: 'syndicate_management' },
-          { id: 'conquest_table', x: 10, y: 10, once: false, iconKind: 'terminal', label: 'Sector Control Holo',
+          { id: 'conquest_table', propArt: 'tactical_table', propVariant: 'conquest', x: 10, y: 10, once: false, iconKind: 'terminal', label: 'Sector Control Holo',
             requiresFlag: 'syndicateManagement_active',
             description: 'A secondary tactical display overlaying the five contested sectors of Coruscant mid-city. Garrison strength, income flows, defense ratings, and faction aggression indicators scroll in real time. From here you direct the long war: deploy units, build infrastructure, launch assaults, and respond to crisis events before they destabilize your hold.',
             triggersMinigame: 'coruscant_conquest',
             minigameConfig: { startCredits: 5000 } },
-          { id: 'vault_terminal', x: 25, y: 4, once: true, iconKind: 'terminal', label: 'Credit Vault Terminal',
+          { id: 'vault_terminal', propArt: 'console', propVariant: 'vault', x: 25, y: 4, once: true, iconKind: 'terminal', label: 'Credit Vault Terminal',
             requiresFlag: 'inheritance_active',
             requires: { item: 'vane_vault_keycard' },
             requiresNoneFlags: ['vault_heist_complete'],
@@ -2439,21 +2442,21 @@ const PLANETS = {
             triggersMinigame: 'signal_siphon',
             grantsFlag: 'vault_heist_complete',
             grantsCodex: 'codex-penthouse' },
-          { id: 'trophy_armory', x: 5, y: 4, once: false, iconKind: 'crate', label: 'Trophy Room',
+          { id: 'trophy_armory', propArt: 'trophy_wall', x: 5, y: 4, once: false, iconKind: 'crate', label: 'Trophy Room',
             description: 'Weapons, plaques, commendations from fifteen years of operation. Some of them Jon earned. Most of them he took from the person who had them before him.' },
-          { id: 'security_console', x: 25, y: 16, once: false, iconKind: 'terminal', label: 'Security Console',
+          { id: 'security_console', propArt: 'monitor_wall', x: 25, y: 16, once: false, iconKind: 'terminal', label: 'Security Console',
             requiresFlag: 'syndicateManagement_active',
             description: 'Fifteen surveillance feeds across Level 1450. Three CSF patrol routes mapped in real time. One heat meter currently showing a number that will keep climbing as long as the Syndicate operates.' },
-          { id: 'roster_lounge', x: 5, y: 16, once: false, iconKind: 'archive', label: 'Agent Roster',
+          { id: 'roster_lounge', propArt: 'roster_wall', x: 5, y: 16, once: false, iconKind: 'archive', label: 'Agent Roster',
             requiresFlag: 'syndicateManagement_active',
             description: 'Your people. Enforcers, slicers, smugglers, fixers. Each one costs something. Each one is worth something. The question is whether those two numbers ever match.' },
-          { id: 'penthouse_viewport', x: 14, y: 1, once: false, iconKind: 'vista', label: 'Transparisteel Viewport',
+          { id: 'penthouse_viewport', propArt: 'skyline', propVariant: 'viewport', x: 14, y: 1, once: false, iconKind: 'vista', label: 'Transparisteel Viewport',
             description: 'Floor-to-ceiling transparisteel. Level 1452. The skylanes run like rivers of light below. The Senate dome is visible on the horizon, white and permanent. From up here, things feel very clear.',
             worldStateVariant: {
               underworld: 'Your city. You can see it from here in a way that most people never will. Everything the Syndicate touches, visible at once. It is a remarkable amount of ground to own.',
               lawful: 'The Republic\'s skyline. The Senate dome in the distance. You are standing in a criminal\'s living room looking at the seat of Republic government and wondering if the view is different from either side.',
             } },
-          { id: 'jon_fight_start', x: 14, y: 7, once: true, label: 'Confront Jon', iconKind: 'floor',
+          { id: 'jon_fight_start', propArt: 'duel_ring', x: 14, y: 7, once: true, label: 'Confront Jon', iconKind: 'floor',
             requiresFlag: 'jon_confrontation_path_a_chosen',
             requiresNoneFlags: ['jon_status_dead'],
             description: 'The space between you and Jon Vane. Twelve years of operation about to end. You have both made your calculation.',
@@ -2462,9 +2465,9 @@ const PLANETS = {
             grantsFlag: 'jon_status_dead',
             grantsItem: 'weapon_vane_custom_blaster',
             grantsCodex: 'codex-penthouse' },
-          { id: 'airtaxi_penthouse', x: 28, y: 10, once: false, iconKind: 'beacon', label: 'Private Transit Terminal',
+          { id: 'airtaxi_penthouse', propArt: 'airtaxi', propVariant: 'private', x: 28, y: 10, once: false, iconKind: 'beacon', label: 'Private Transit Terminal',
             description: 'A private transit node registered to Scylla Tower Seven Holdings. No destination log. No arrival record. Complete transit discretion for an additional surcharge billed to an account that does not appear in any public registry.' },
-          { id: 'holonet_transmission_index', x: 20, y: 3, once: true, iconKind: 'terminal', label: 'Encrypted Holonet Transmission',
+          { id: 'holonet_transmission_index', propArt: 'console', propVariant: 'transmission', x: 20, y: 3, once: true, iconKind: 'terminal', label: 'Encrypted Holonet Transmission',
             requiresFlag: 'senate_line_secured',
             requiresNoneFlags: ['kuat_summons_received'],
             description: 'No sender name. No origin trace. The routing signature is cleaner than any unsolicited message has a right to be. Three lines: "The Senate matter. You handled it well. I have been watching this city for a long time and I rarely see work done that cleanly. I have a use for someone who operates the way you operate. Ring Berth Seven, Kuat orbital. When you are ready." A KDY docking beacon is appended at the end. Nothing else.',
@@ -2519,7 +2522,7 @@ const PLANETS = {
             ],
           },
         ],
-        collectibles: [{ id: 'penthouse_credstick', x: 24, y: 16, label: 'Vault Overflow Credstick', reward: 200 }],
+        collectibles: [{ id: 'penthouse_credstick', x: 23, y: 16, label: 'Vault Overflow Credstick', reward: 200 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 1, 1, 28, 18, 'floor');
@@ -2558,21 +2561,21 @@ const PLANETS = {
           { x: 16, y: 19, targetZone: 'sky_market', targetPos: { x: 5, y: 1 }, label: 'Return to Sky-Market' },
         ],
         worldObjects: [
-          { id: 'senator_conversation', x: 10, y: 5, once: true, label: 'Overhear Senate Conversation', iconKind: 'booth',
+          { id: 'senator_conversation', propArt: 'booth', propVariant: 'senators', x: 10, y: 5, once: true, label: 'Overhear Senate Conversation', iconKind: 'booth',
             requiresFlag: 'syndicateManagement_active',
             description: 'Two senators speaking in undertones. Procurement codes. Defense budget line items. Words that should not be said here. You catch enough to know this is leverage.',
             triggersMinigame: 'interrogation',
             grantsFlag: 'senate_intel_acquired',
             grantsCodex: 'codex-black-sun' },
-          { id: 'landspeeder_showroom', x: 25, y: 5, once: true, label: 'Ubrikkian Lux-Skiff Showroom', iconKind: 'panel',
+          { id: 'landspeeder_showroom', propArt: 'lux_skiff', x: 25, y: 5, once: true, label: 'Ubrikkian Lux-Skiff Showroom', iconKind: 'panel',
             description: 'A Lux-Skiff configured for Senate-district transit. The permit alone is worth 200 credits to the right broker. The owner is currently in session. The registration terminal is unattended.',
             grantsItem: 'luxury_landspeeder_permit' },
-          { id: 'shipping_authority_terminal', x: 16, y: 10, once: false, label: 'Coruscant Shipping Authority Terminal', iconKind: 'terminal',
+          { id: 'shipping_authority_terminal', propArt: 'console', propVariant: 'shipping', x: 16, y: 10, once: false, label: 'Coruscant Shipping Authority Terminal', iconKind: 'terminal',
             triggersMinigame: 'signal_siphon',
             grantsFlag: 'manifest_falsified',
             description: 'The Senate-adjacent manifest clearance terminal. Freight routes, Senate supply chains, diplomatic cargo exemptions. Access requires a slicing run.' },
-          { id: 'airtaxi_senatorial', x: 18, y: 18, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Senate District AirTaxi terminal.' },
-          { id: 'senate_slush_funds', x: 28, y: 15, once: true, label: 'Discretionary Fund Terminal', iconKind: 'panel',
+          { id: 'airtaxi_senatorial', propArt: 'airtaxi', propVariant: 'clean', x: 18, y: 18, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Senate District AirTaxi terminal.' },
+          { id: 'senate_slush_funds', propArt: 'console', propVariant: 'slush', x: 28, y: 15, once: true, label: 'Discretionary Fund Terminal', iconKind: 'panel',
             description: 'A discretionary account terminal left unlocked between sessions. The authorization window is still open.',
             grantsItem: null },
         ],
@@ -2638,18 +2641,18 @@ const PLANETS = {
           { x: 1, y: 11, targetZone: 'level_1313_subvault', targetPos: { x: 27, y: 10 }, label: 'Level 1313 Sub-Vault' },
         ],
         worldObjects: [
-          { id: 'black_market_exchange', x: 30, y: 3, once: false, label: 'Black Market Commodity Exchange', iconKind: 'terminal',
+          { id: 'black_market_exchange', propArt: 'console', propVariant: 'exchange_bm', x: 30, y: 3, once: false, label: 'Black Market Commodity Exchange', iconKind: 'terminal',
             triggersMinigame: 'contraband_market',
             description: 'A hidden trading node embedded in the refinery control interface. Five commodities. Live prices. No customs declaration required.' },
-          { id: 'refinery_control', x: 10, y: 10, once: false, label: 'Refinery Valve Array', iconKind: 'panel',
+          { id: 'refinery_control', propArt: 'pressure_valve', propVariant: 'refinery', x: 10, y: 10, once: false, label: 'Refinery Valve Array', iconKind: 'panel',
             triggersMinigame: 'valve_override',
             grantsFlag: 'spice_batch_diverted',
             description: 'Manual valve controls for the spice processing line. Divert a batch. Adjust the flow. The foreman is three levels up.' },
-          { id: 'droid_arena_entrance', x: 20, y: 18, once: false, label: 'Underground Droid Arena', iconKind: 'beacon',
+          { id: 'droid_arena_entrance', propArt: 'pit_gate', propVariant: 'droid', x: 20, y: 18, once: false, label: 'Underground Droid Arena', iconKind: 'beacon',
             triggersMinigame: 'droid_arena',
             description: 'A converted pressurization chamber. The betting slips are still warm. Step in.' },
-          { id: 'airtaxi_vaults', x: 11, y: 19, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Return to the sub-level transit network.' },
-          { id: 'vault_stash', x: 35, y: 18, once: true, label: 'Hidden Vault Stash', iconKind: 'crate',
+          { id: 'airtaxi_vaults', propArt: 'airtaxi', propVariant: 'worn', x: 11, y: 19, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Return to the sub-level transit network.' },
+          { id: 'vault_stash', propArt: 'crate_stack', propVariant: 'stash', x: 35, y: 18, once: true, label: 'Hidden Vault Stash', iconKind: 'crate',
             description: 'A durasteel box welded behind a coolant drum. Someone did not come back for this.' },
         ],
         collectibles: [{ id: 'vault_stash_cr', x: 35, y: 19, label: 'Vault Hidden Stash', reward: 120 }],
@@ -2751,25 +2754,25 @@ const PLANETS = {
           { x: 1, y: 12, targetZone: 'the_works', targetPos: { x: 33, y: 12 }, label: 'The Works' },
         ],
         worldObjects: [
-          { id: 'jedi_ruin_fragment', x: 10, y: 5, once: true, label: 'Ancient Jedi Temple Outskirt', iconKind: 'panel',
+          { id: 'jedi_ruin_fragment', propArt: 'ruin_stone', x: 10, y: 5, once: true, label: 'Ancient Jedi Temple Outskirt', iconKind: 'panel',
             description: 'Moss-covered stone that does not match the architecture around it. Older. The Force does not speak here, but something resonates faintly under the weight of centuries. Whoever built this was speaking to something larger than themselves.',
             grantsItem: 'ancient_force_relic',
             grantsCodex: 'codex-jedi-ruins' },
-          { id: 'toxic_waste_terminal', x: 30, y: 7, once: false, label: 'Reclamation Facility Controls', iconKind: 'panel',
+          { id: 'toxic_waste_terminal', propArt: 'console', propVariant: 'reclaim', x: 30, y: 7, once: false, label: 'Reclamation Facility Controls', iconKind: 'panel',
             triggersMinigame: 'valve_override',
             grantsFlag: 'waste_reclamation_diverted',
             description: 'Waste processing controls for the undercity reclamation facility. The overflow valve is stuck open. Someone locked it intentionally.' },
-          { id: 'arms_bench_station', x: 35, y: 5, once: false, label: 'Black-Market Arms Bench', iconKind: 'crate',
+          { id: 'arms_bench_station', propArt: 'workbench', propVariant: 'arms', x: 35, y: 5, once: false, label: 'Black-Market Arms Bench', iconKind: 'crate',
             triggersMinigame: 'arms_bench',
             description: 'A bench covered in components, tools, and two unfinished weapons. Whoever built this station knows what they are doing. The equipment is unlocked.' },
-          { id: 'outcast_camp_fire', x: 8, y: 18, once: true, label: 'Outcast Settlement', iconKind: 'brazier',
+          { id: 'outcast_camp_fire', propArt: 'outcast_camp', x: 8, y: 18, once: true, label: 'Outcast Settlement', iconKind: 'brazier',
             description: 'A cluster of shelters built from scavenged hull plating. Survivors of forgotten levels. Some arrived by accident. Some by design. All of them are waiting.',
             grantsCodex: 'codex-undercity-outcasts' },
-          { id: 'airtaxi_undercity', x: 20, y: 22, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Undercity transit beacon. Rarely maintained.' },
-          { id: 'ruin_scavenge', x: 10, y: 8, once: true, label: 'Temple Scavenge Cache', iconKind: 'crate',
+          { id: 'airtaxi_undercity', propArt: 'airtaxi', propVariant: 'worn', x: 20, y: 22, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Undercity transit beacon. Rarely maintained.' },
+          { id: 'ruin_scavenge', propArt: 'crate_stack', propVariant: 'ruin', x: 10, y: 8, once: true, label: 'Temple Scavenge Cache', iconKind: 'crate',
             description: 'Fragments of pre-Republic stonework pried loose by earlier explorers. The pieces are worth something to the right collector.' },
         ],
-        collectibles: [{ id: 'ruin_scavenge_cr', x: 11, y: 8, label: 'Temple Ruin Fragments', reward: 100 }],
+        collectibles: [{ id: 'ruin_scavenge_cr', x: 12, y: 8, label: 'Temple Ruin Fragments', reward: 100 }],
         npcs: [
           {
             id: 'disgraced_csf_inspector', x: 6, y: 18, kind: 'republic_guard', label: 'Marro',
@@ -7136,11 +7139,17 @@ const ART = {
   paper:    { hi:'#FFF8DC', base:'#E6DCBC', shade:'#B0A47C' },
   glass:    { hi:'#C8E6F4', base:'#6A9FBD', shade:'#2C5670' },
   deepglass:{ hi:'#4F8CBF', base:'#1D4F82', shade:'#0B2442' },
+  concrete: { hi:'#A29E96', base:'#6F6C66', shade:'#403E3A' },
+  stone:    { hi:'#9C9482', base:'#6A6454', shade:'#3A362C' },
+  moss:     { hi:'#8FAE6A', base:'#56743F', shade:'#2E4222' },
+  sand:     { hi:'#E0C890', base:'#B89C64', shade:'#7C6A40' },
+  fabric:   { hi:'#8A5A7A', base:'#5E3A52', shade:'#35202E' },
   // Emissive and signal colors: screens, lamps, status lights, holograms. Never used for solid bodies.
   signal: {
     cyan:'#7FD0FF', cyanHi:'#BFF4FF', cyanLo:'#2A8A9A', amber:'#FFB844', amberHi:'#FFE9B0', gold:'#F4DA86',
     green:'#3AFF8A', greenHi:'#7CFFB0', red:'#FF4040', redHi:'#FF9090', warn:'#E0A818', orange:'#E8731A',
     white:'#FFFFFF', black:'#000000', anomaly:'#9A78E8',
+    blue:'#4A8CFF', crimson:'#E02A55', lime:'#B6FF5A', violet:'#B07CFF', kyber:'#E8F6FF', magenta:'#FF4FC8', taxi:'#F2C230',
   },
   // Fixed story colors shared with the rest of the game (see STYLE_GUIDE).
   story: { amber:'#E8A030', danger:'#FF4422', syndicate:'#40C840', senate:'#9966FF', csf:'#4A9FFF', tape:'#FFB800' },
@@ -8604,6 +8613,2581 @@ function PropProtocolDroid() {
   );
 }
 
+// ===== CORUSCANT PROPS BEGIN =====
+// ---------------------------------------------------------------------------
+// CORUSCANT SET PIECES (kit v3). Shared helpers first, then one component per kind.
+// ---------------------------------------------------------------------------
+const SCR = {
+  cyan:  { bg:ART.screen.cyan,  ink:ART.signal.cyanHi,  trim:ART.signal.cyan },
+  amber: { bg:ART.screen.amber, ink:ART.signal.gold,    trim:ART.signal.amber },
+  green: { bg:ART.screen.green, ink:ART.signal.greenHi, trim:ART.signal.green },
+  red:   { bg:ART.screen.red,   ink:ART.signal.redHi,   trim:ART.signal.red },
+  off:   { bg:ART.screen.off,   ink:ART.dark.hi,        trim:ART.dark.base },
+};
+
+// A lit screen with a header bar, up to a few rows of text, and an optional scan line. Text is clamped to fit.
+function Screen({ x, y, w, h, s, title, rows = [], fs = 2.4, scan = true, hl = -1, flick = false }) {
+  const mc = Math.max(1, Math.floor((w - 3) / (0.6 * fs)));
+  const tc = Math.max(1, Math.floor((w - 3) / (0.6 * (fs + 0.4))));
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} fill={s.bg} />
+      <rect x={x} y={y} width={w} height={fs * 2} fill={s.trim} opacity="0.3" />
+      <g style={flick ? { animation:'holo-flicker 2.6s ease-in-out infinite' } : undefined}>
+        {title && <text x={x + 1.6} y={y + fs * 1.45} fontSize={fs + 0.4} fill={s.ink} fontWeight="700" {...PT}>{title.slice(0, tc)}</text>}
+        {rows.map((r, i) => <text key={i} x={x + 2} y={y + fs * 2 + 2.8 + i * fs * 1.8} fontSize={fs} fill={i === hl ? ART.signal.amberHi : s.ink} opacity={0.96 - i * 0.07} {...PT}>{('> ' + r).slice(0, mc)}</text>)}
+      </g>
+      {scan && h >= 22 && <rect x={x} y={y} width={w} height="1.4" fill={s.ink} opacity="0.3" style={{ animation:'prop-scan 3.4s linear infinite' }} />}
+    </g>
+  );
+}
+
+// Small flat emblems (about 2s wide) drawn around a centre point.
+function Glyph({ k, x = 0, y = 0, s = 4, c = ART.signal.white }) {
+  const t = `translate(${x} ${y})`;
+  const ring = (n, r1, r2) => Array.from({ length: n }, (_, i) => { const a = (i / n) * Math.PI * 2, r = i % 2 ? r2 : r1; return [+(Math.cos(a) * r).toFixed(2), +(Math.sin(a) * r).toFixed(2)]; });
+  switch (k) {
+    case 'cog': return <g transform={t}><polygon points={pts(ring(12, s, s * 0.72))} fill={c} /><circle r={s * 0.34} fill={ART.ink} /></g>;
+    case 'gear': return <g transform={t}><polygon points={pts(ring(16, s, s * 0.74))} fill={c} /><circle r={s * 0.3} fill={ART.ink} /></g>;
+    case 'chain': return <g transform={t} fill="none" stroke={c} strokeWidth="0.9"><polygon points={pts(ngon(-s * 0.45, 0, s * 0.7, s * 0.45, 6))} /><polygon points={pts(ngon(s * 0.45, 0, s * 0.7, s * 0.45, 6))} /></g>;
+    case 'star': return <g transform={t} stroke={c} strokeWidth="0.6" fill="none">{Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return <line key={i} x1={Math.cos(a) * s * 0.42} y1={Math.sin(a) * s * 0.42} x2={Math.cos(a) * s} y2={Math.sin(a) * s} />; })}<circle r={s * 0.42} /></g>;
+    case 'drop': return <polygon transform={t} points={pts([[0, -s], [s * 0.7, s * 0.2], [s * 0.45, s * 0.8], [-s * 0.45, s * 0.8], [-s * 0.7, s * 0.2]])} fill={c} />;
+    case 'wave': return <polyline transform={t} points={pts([[-s, 0], [-s * 0.5, -s * 0.7], [0, s * 0.7], [s * 0.5, -s * 0.7], [s, 0]])} fill="none" stroke={c} strokeWidth="0.9" />;
+    case 'eye': return <g transform={t}><polygon points={pts([[-s, 0], [0, -s * 0.6], [s, 0], [0, s * 0.6]])} fill="none" stroke={c} strokeWidth="0.8" /><circle r={s * 0.28} fill={c} /></g>;
+    case 'env': return <g transform={t} fill="none" stroke={c} strokeWidth="0.8"><polygon points={pts([[-s, -s * 0.6], [s, -s * 0.6], [s, s * 0.6], [-s, s * 0.6]])} /><polyline points={pts([[-s, -s * 0.6], [0, s * 0.1], [s, -s * 0.6]])} /></g>;
+    case 'badge': return <polygon transform={t} points={pts([[-s * 0.8, -s], [s * 0.8, -s], [s * 0.8, s * 0.2], [0, s], [-s * 0.8, s * 0.2]])} fill={c} />;
+    case 'coin': return <g transform={t}><polygon points={pts(ngon(0, 0, s * 0.9, s * 0.9, 8))} fill={c} /><polygon points={pts(ngon(0, 0, s * 0.5, s * 0.5, 8))} fill={ART.ink} /></g>;
+    case 'key': return <g transform={t} fill={c}><polygon points={pts(ngon(-s * 0.4, 0, s * 0.5, s * 0.5, 6))} /><rect x={-s * 0.1} y={-s * 0.15} width={s * 1.1} height={s * 0.3} /></g>;
+    default: return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CONSOLE: the workhorse terminal. Three housings (desk, wall, slate), each with its own screen text.
+// ---------------------------------------------------------------------------
+const CONSOLE_CFG = {
+  customs:      { l:'desk',  body:'steel',    scr:'cyan',  g:'cog',   t:'CUSTOMS ENTRY LOG',    r:['TRANSIT CLEARANCE','STATUS: PROVISIONAL','ENTRY TIME LOGGED','SIGNAL: FLICKERING'], d:['flicker'] },
+  zillow:       { l:'desk',  body:'pearl',    scr:'amber', g:'key',   t:'ZILLOW HOUSING',       r:['SUBSURFACE L2: 0','LEVEL 5 AND UP: 3000','PRICE: SEE LISTING','(YOUR EYES WATER)'], d:['note'] },
+  newsfeed:     { l:'slate', body:'steel',    scr:'cyan',  g:'wave',  t:'HNN NEWSFEED',         r:['SENATE VOTES TO','EXTEND EMERGENCY','POWERS'], d:['scratch'] },
+  exchange:     { l:'desk',  body:'brass',    scr:'amber', g:'coin',  t:'TRADE EXCHANGE',       r:['14 SYSTEMS: LIVE','FLAGGED MANIFEST:','SCYLLA FREIGHT','DEST: REDACTED'], d:[] },
+  dispatch:     { l:'desk',  body:'deepglass',scr:'cyan',  g:'badge', t:'CSF DISPATCH',         r:['12 PATROL CHANNELS','6 ROUTINE  5 STATIC','S4 CH B: LOOP ACTIVE','ALL UNITS STAND BY'], d:['headset'] },
+  siphon:       { l:'desk',  body:'dark',     scr:'green', g:'wave',  t:'CARGO FEED SPLICE',    r:['UPLINK: LIVE','BAND: CUSTOMS BCAST','OVERRIDES: 6 MONTHS','LOCK: FREQ KEYED'], d:['cables'] },
+  manifest088:  { l:'desk',  body:'rust',     scr:'amber', g:'cog',   t:'MANIFEST REGISTRY',    r:['3 CONTAINERS STAMPED','SENATE SUBCOMMITTEE','1 ANOMALOUS: REDACTED','CODE VALID: NO RECORD'], d:['hazard'] },
+  crane:        { l:'wall',  body:'rust',     scr:'amber', g:'gear',  t:'CRANE AUTOMATION',     r:['BAY 088 EXTERIOR','HOIST: ARMED','CODE INPUT: OPEN'], d:['hazard'] },
+  radio:        { l:'desk',  body:'dark',     scr:'green', g:'wave',  t:'SUB-GRIT 104.9',       r:['UNAUTHORIZED SIGNAL','BAY 14: LOGISTICS','BLACK SUN TOLL BOOTH','BETS AT VONDS: 3 TO 1'], d:['antenna'] },
+  freight:      { l:'desk',  body:'steel',    scr:'cyan',  g:'cog',   t:'NORTH PLATFORM',       r:['CONSIGNMENTS: 14 MO','SEQUENCE: NO GAP','3 NUMBERS REUSED','ORIGINALS: ERASED'], d:[] },
+  fuel:         { l:'desk',  body:'rust',     scr:'amber', g:'drop',  t:'FUEL TRANSFER REG',    r:['USAGE VS DEPARTURES','LOSS: 40 L PER CYCLE','LOGGED AS WASTE: NO','LOGGED AT ALL: NO'], d:['hazard'] },
+  pit:          { l:'wall',  body:'rust',     scr:'red',   g:'gear',  t:'PIT ACCESS',           r:['17 EVENTS IN 2 MO','USER: TEMP-TRANSIT','SINGLE USE: ALL SAME','DAY AND SAME HOUR'], d:[] },
+  surveil:      { l:'desk',  body:'deepglass',scr:'cyan',  g:'eye',   t:'HOLONET SURVEILLANCE', r:['4 SENATE OFFICES','VANE REPORT OPENED','2X IN 48 HOURS','TERMINAL: TORVENN'], d:['scanner'] },
+  derelict:     { l:'desk',  body:'steel',    scr:'green', g:'wave',  t:'EMERGENCY BAND RELAY', r:['FREQ NOT AUTHORISED','LAPSED 80 YEARS AGO','SIGNAL: STILL ACTIVE','DISPLAY: UNSTABLE'], d:['overgrown','flicker','cracked'] },
+  oza:          { l:'desk',  body:'dark',     scr:'red',   g:'eye',   t:'OZA-2 HARDWARE',       r:['PRICES: UNLISTED','STOCK: ASK','LEGAL INQUIRIES','DELETED ON RECEIPT'], d:['redlights'] },
+  registry:     { l:'desk',  body:'steel',    scr:'amber', g:'chain', t:'SUB-LEVEL REGISTRY',   r:['L1312 BUSINESSES: 43','REGISTERED AGENT:','IRON SYNDICATE','HOLDINGS LLC'], d:['cracked'] },
+  vault:        { l:'wall',  body:'dark',     scr:'amber', g:'coin',  t:'CREDIT ROUTING',       r:['PAYROLL: TONIGHT','9 CSF OFFICERS','38 SECURITY STAFF','11 ANON ACCOUNTS'], d:['scanner'] },
+  transmission: { l:'desk',  body:'dark',     scr:'cyan',  g:'env',   t:'HOLONET MESSAGE',      r:['SENDER: NONE','ORIGIN: NO TRACE','ROUTING: TOO CLEAN','BERTH 7 KUAT ORBITAL'], d:[] },
+  shipping:     { l:'desk',  body:'pearl',    scr:'cyan',  g:'cog',   t:'SHIPPING AUTHORITY',   r:['FREIGHT ROUTES','SENATE SUPPLY CHAINS','DIPLOMATIC EXEMPTS','ACCESS: SLICING RUN'], d:[] },
+  slush:        { l:'desk',  body:'pearl',    scr:'amber', g:'coin',  t:'DISCRETIONARY FUND',   r:['ACCOUNT: UNLOCKED','AUTH WINDOW: OPEN','SESSION: IN PROGRESS'], d:[] },
+  exchange_bm:  { l:'desk',  body:'dark',     scr:'amber', g:'star',  t:'COMMODITY EXCHANGE',   r:['GLITTERSTIM  LIVE','BLASTERS  LIVE','SLICING CHIPS  LIVE','NO CUSTOMS FORM'], d:['antenna'] },
+  reclaim:      { l:'wall',  body:'rust',     scr:'green', g:'gear',  t:'RECLAMATION CTRL',     r:['OVERFLOW VALVE: OPEN','LOCKED BY: UNKNOWN','WASTE LEVEL: HIGH'], d:['hazard'] },
+  induction:    { l:'desk',  body:'deepglass',scr:'cyan',  g:'badge', t:'CSF INDUCTION',        r:['AUXILIARY CORPS','DESIGNATION: AX-7','ACCESS: PROVISIONAL','SUPERVISOR: VANE T'], d:[] },
+  module_a:     { l:'wall',  body:'deepglass',scr:'red',   g:'badge', t:'MODULE A: COMBAT',     r:['NON LETHAL ONLY','STUN CONFIG','ONE LETHAL: RUN ENDS'], d:['hazard'] },
+  module_b:     { l:'wall',  body:'deepglass',scr:'green', g:'eye',   t:'MODULE B: FORENSIC',   r:['BAY 14 SIMULATION','CHAIN BREAKS: 3','FIND ALL THREE'], d:[] },
+  warrant:      { l:'desk',  body:'deepglass',scr:'cyan',  g:'badge', t:'PRECINCT 42 REMOTE',   r:['L1220 WARRANT ARCHIVE','WIRED IN WRONG','DISK ID: MATCH'], d:['scanner'] },
+  rook:         { l:'desk',  body:'dark',     scr:'cyan',  g:'wave',  t:'SPEEDER NAV ARRAY',    r:['ROOK ROUTE: LOADED','CODE CYLINDER: SLOT','REDIRECT: READY'], d:['cables'] },
+  hnn_official: { l:'desk',  body:'steel',    scr:'cyan',  g:'wave',  t:'HNN OFFICIAL FEED',    r:['SENATE COMMENDS CSF','SMUGGLING NEAR L088','ISOLATED DELAYS','BROADCAST: LOOPING'], d:['soot'] },
+  frost:        { l:'desk',  body:'teal',     scr:'cyan',  g:'drop',  t:'TEMPERATURE LOGS',     r:['COOLING THROTTLED','12 DAYS AGO','ARMOR RUN: FINAL'], d:['frost'] },
+  syndicate:    { l:'desk',  body:'dark',     scr:'red',   g:'chain', t:'IRON SYNDICATE CMD',   r:['STATUS: ACTIVE','ENCRYPTION: NONE','EXTRACTION TIMETABLE','MANIFESTS  ROTATIONS'], d:['redlights'] },
+  substation:   { l:'wall',  body:'rust',     scr:'amber', g:'gear',  t:'SUB-STATION 3',        r:['THERMAL HAZARDS','AMBIENT CONTROL','STATUS: HOLDING'], d:['hazard'] },
+};
+
+function PropConsole({ variant }) {
+  const c = CONSOLE_CFG[variant] || CONSOLE_CFG.customs;
+  const s = SCR[c.scr], B = c.body, S = ART.signal, has = (k) => c.d.includes(k);
+  const seed = (variant || 'x').length * 7 + 3;
+  const L = c.l;
+  const screen = L === 'slate' ? { x:18, y:8, w:28, h:30, fs:2.2 } : L === 'wall' ? { x:7, y:14, w:38, h:26, fs:2.2 } : { x:9, y:9, w:46, h:26, fs:2.4 };
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={L === 'slate' ? 18 : 25} ry={3.4} />
+      {L === 'desk' && <g>
+        <Slab x={22} y={44} w={20} h={12} k={1.4} c="dark" /><Vent x={25} y={47} w={14} h={6} n={3} />
+        <Slab x={12} y={54} w={40} h={5} k={1.4} c="steel" o={0.8} />
+        <Bev t="polygon" points={pts([[8, 5], [56, 5], [60, 10], [60, 42], [56, 46], [8, 46], [4, 42], [4, 10]])} c={B} o={1} />
+        <Seams x={4} y={5} w={56} h={41} rows={1} cols={1} op={0.25} />
+      </g>}
+      {L === 'wall' && <g>
+        <Slab x={8} y={54} w={10} h={5} k={1} c="dark" /><Slab x={46} y={54} w={10} h={5} k={1} c="dark" />
+        <Cable d="M10 8 L10 0" w={2.4} /><Cable d="M52 8 C52 4 56 3 56 0" w={2} />
+        <Slab x={2} y={8} w={60} h={47} k={2} c={B} o={1} />
+        <Seams x={2} y={8} w={60} h={47} rows={1} cols={2} op={0.22} />
+      </g>}
+      {L === 'slate' && <g>
+        <Slab x={20} y={53} w={24} h={6} k={1.2} c="steel" />
+        <Slab x={28} y={38} w={8} h={16} k={1} c="dark" />
+        <Bev t="polygon" points={pts([[16, 4], [48, 4], [51, 8], [51, 38], [48, 42], [16, 42], [13, 38], [13, 8]])} c={B} o={1} />
+      </g>}
+      <Screen {...screen} s={s} title={c.t} rows={c.r} flick={has('flicker')} scan={!has('cracked')} />
+      <Glyph k={c.g} x={screen.x + screen.w - 5} y={screen.y + screen.h - 6} s={3.4} c={s.ink} />
+      {L === 'desk' && <g>
+        <rect x="8" y="5" width="48" height="2" fill={s.trim} opacity="0.55" />
+        <Toggles x={8} y={37} cols={10} rows={2} gap={3.6} seed={seed} />
+        <Slab x={46} y={36} w={11} h={7} k={0.8} c="dark" o={0.4} /><Lights x={47.5} y={39.5} n={4} gap={2.6} seed={seed + 1} />
+      </g>}
+      {L === 'wall' && <g>
+        {[['red', 17], ['amber', 24], ['green', 31]].map(([k, y]) => <g key={k}><Slab x={49} y={y - 3} w={10} h={5.6} k={1} c="dark" o={0.5} /><rect x="50.4" y={y - 1.6} width="7.2" height="2.8" fill={S[k]} style={k === 'red' ? { animation:'ship-blink 1.6s steps(2) infinite' } : undefined} /></g>)}
+        <Slab x={8} y={43} w={26} h={8} k={1} c="dark" o={0.5} /><Toggles x={10} y={44.4} cols={7} rows={2} gap={3.3} seed={seed} />
+        <Vent x={38} y={44} w={20} h={7} n={3} />
+        <Rivets x={6} y={11} w={52} n={7} />
+      </g>}
+      {L === 'slate' && <g>
+        <Lights x={19} y={39.4} n={6} gap={5} seed={seed} />
+        <Rivets x={16} y={6} w={32} n={5} c="steel" />
+        <line x1="32" y1="4" x2="32" y2="0.5" stroke={ART.steel.hi} strokeWidth="0.9" /><circle cx="32" cy="0.8" r="0.9" fill={S.red} style={{ animation:'ship-blink 1.6s steps(2) infinite' }} />
+      </g>}
+      {has('hazard') && <Hazard x={L === 'wall' ? 4 : 6} y={L === 'wall' ? 51 : 56} w={L === 'wall' ? 56 : 52} h={3} />}
+      {has('cracked') && <g fill="none"><polyline points={pts([[screen.x + screen.w - 14, screen.y + screen.h], [screen.x + screen.w - 9, screen.y + screen.h - 8], [screen.x + screen.w - 12, screen.y + screen.h - 14]])} stroke={ART.ink} strokeWidth="0.7" /><polyline points={pts([[screen.x + screen.w - 9, screen.y + screen.h - 8], [screen.x + screen.w - 2, screen.y + screen.h - 10]])} stroke={s.ink} strokeWidth="0.4" opacity="0.8" /></g>}
+      {has('scorch') && <polygon points={pts([[6, 6], [24, 6], [16, 16], [6, 20]])} fill={ART.ink} opacity="0.3" />}
+      {has('soot') && <g fill={ART.ink} opacity="0.42"><polygon points={pts([[4, 5], [34, 5], [28, 13], [14, 22], [4, 28]])} /><polygon points={pts([[44, 38], [60, 36], [60, 46], [46, 46]])} /></g>}
+      {has('frost') && <g fill={ART.pearl.hi} opacity="0.75"><polygon points={pts([[4, 10], [14, 8], [12, 18], [4, 22]])} /><polygon points={pts([[48, 40], [60, 36], [60, 46], [50, 46]])} /><polygon points={pts([[8, 42], [22, 40], [18, 46], [8, 46]])} /><polygon points={pts([[40, 9], [52, 9], [48, 15]])} opacity="0.7" /></g>}
+      {has('cables') && <g><Cable d="M58 10 C64 22 52 34 60 54" w={2.2} /><Cable d="M6 44 C-2 50 8 56 4 60" w={1.8} /></g>}
+      {has('overgrown') && <g><Cable d="M4 6 C-2 20 14 28 6 44" w={2.4} c={ART.moss.shade} hi="moss" /><Cable d="M60 4 C66 18 50 30 58 50" w={2.4} c={ART.moss.shade} hi="moss" /><Cable d="M14 46 C24 52 38 48 52 54" w={1.8} /><Cable d="M20 5 C26 -1 36 -1 40 4" w={1.6} /></g>}
+      {has('headset') && <g><polyline points={pts([[58, 12], [63, 8], [63, 2], [57, 0.5]])} fill="none" stroke={ART.dark.hi} strokeWidth="1.6" /><Slab x={57} y={11} w={6} h={9} k={1.4} c="dark" o={0.5} /></g>}
+      {has('scanner') && <g><Slab x={L === 'wall' ? 44 : 46} y={L === 'wall' ? 43 : 36} w={13} h={9} k={1.2} c="dark" o={0.5} /><rect x={L === 'wall' ? 46 : 48} y={L === 'wall' ? 45 : 38} width="9" height="5" fill={S.cyan} opacity="0.85" style={{ animation:'ship-blink 2.4s steps(2) infinite' }} /></g>}
+      {has('antenna') && <g><line x1="55" y1="5" x2="55" y2="-1" stroke={ART.steel.hi} strokeWidth="0.9" /><line x1="50" y1="5" x2="52" y2="0" stroke={ART.steel.base} strokeWidth="0.7" /><circle cx="55" cy="-0.4" r="1" fill={S.red} style={{ animation:'ship-blink 1.6s steps(2) infinite' }} /></g>}
+      {has('redlights') && <g><circle cx="7" cy="44" r="1" fill={S.red} /><circle cx="11" cy="44" r="1" fill={S.red} style={{ animation:'ship-blink 1.2s steps(2) infinite' }} /><circle cx="15" cy="44" r="1" fill={S.red} /></g>}
+      {has('note') && <g transform="rotate(-6 54 40)"><polygon points={pts([[48, 32], [60, 32], [60, 43], [48, 43]])} fill={ART.note.yellow} /><line x1="50" y1="35.5" x2="58" y2="35.5" stroke={ART.note.ink} strokeWidth="0.5" /><line x1="50" y1="38" x2="57" y2="38" stroke={ART.note.ink} strokeWidth="0.5" /><line x1="50" y1="40.5" x2="55" y2="40.5" stroke={ART.note.ink} strokeWidth="0.5" /></g>}
+      {has('scratch') && <g transform="rotate(-4 32 34)"><text x="17" y="35" fontSize="3.4" fill={ART.steel.hi} opacity="0.9" {...PT}>they know</text></g>}
+      <Grime x={5} y={L === 'wall' ? 42 : 38} w={54} h={L === 'wall' ? 12 : 8} seed={seed + 9} n={4} op={0.18} /><Scuff x={6} y={L === 'wall' ? 42 : 38} w={50} h={L === 'wall' ? 10 : 8} seed={seed + 4} n={7} c={B} />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// KIOSK: pedestal that projects a flat holo display. Used for news feeds, menus, registries.
+// ---------------------------------------------------------------------------
+const KIOSK_CFG = {
+  hnn:       { t:'HNN PRIORITY FEED', scr:'cyan',  r:['PORT AUTHORITY: BAY 14','FUEL LINE INCIDENT','RESOLVED. LOGS DESTROYED','WEATHER ADVISORY: NONE'], hl:3, badge:'LIVE' },
+  senate:    { t:'HNN: SENATE WING',  scr:'cyan',  r:['COMMERCE AUTHORITY:','BAY 14 IS ADMIN MATTER','3 THREADS: ALL FLAGGED','14 T CLEARED UNSEEN'], hl:3, badge:'LIVE' },
+  manifest:  { t:'CARGO MANIFEST REG',scr:'cyan',  r:['QUERY: SCYLLA FREIGHT','RESULTS: 0','BAY 14 BERTH: 1 ENTRY','CASE CLOSED. PURGED.'], hl:3 },
+  drinks:    { t:'37 SPIRITS 14 SYS', scr:'amber', r:['LOCAL SPECIAL:','BAY 14 BLEND'], hl:1, bottles:true },
+  refuel:    { t:'OUT OF ORDER',      scr:'red',   r:['PUMP 3: OFFLINE','PUMP 4: OFFLINE'], note:'USE BAY 2' },
+  collapsed: { t:'HNN: CACHED',       scr:'off',   r:['REPUBLIC CONFIRMS L1313','INFRASTRUCTURE SEALED','DATE STAMP: 62 YEARS'], dead:true },
+  slicer:    { t:'HNN PRIORITY',      scr:'cyan',  r:['INFO SECURITY VOTES','TO EXPAND MONITORING','PASSED 9 TO 3'], cracked:true, stencil:true },
+};
+
+function PropKiosk({ variant }) {
+  const c = KIOSK_CFG[variant] || KIOSK_CFG.hnn;
+  const s = SCR[c.scr], S = ART.signal;
+  const lean = c.dead ? 'rotate(-5 48 58)' : undefined;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={59} rx={24} ry={3.4} />
+      <g transform={lean}>
+        {!c.dead && <polygon points={pts([[39, 32], [57, 32], [84, 29], [12, 29]])} fill={s.trim} opacity="0.13" />}
+        <Bev t="polygon" points={pts([[28, 58], [68, 58], [62, 50], [34, 50]])} c="steel" o={0.9} />
+        <Hazard x={36} y={52.6} w={24} h={2.6} />
+        <Bev t="polygon" points={pts([[43, 50], [53, 50], [52, 36], [44, 36]])} c="dark" o={0.8} />
+        <Seams x={43} y={36} w={10} h={14} rows={2} op={0.4} />
+        <Lights x={45.4} y={47} n={3} gap={2.6} r={0.8} seed={5} />
+        <Bev t="polygon" points={pts(ngon(48, 34, 14, 4.2, 8, Math.PI / 8))} c="steel" o={0.9} />
+        <polygon points={pts(ngon(48, 33.6, 9.4, 2.6, 8, Math.PI / 8))} fill={c.dead ? ART.dark.base : s.ink} />
+        {!c.dead && <Glow cx={48} cy={33.4} rx={11} ry={3} c={s.trim} opacity={0.6} />}
+        <Rivets x={37} y={56} w={22} n={5} />
+      </g>
+      <g transform={lean} opacity={c.dead ? 0.85 : 1}>
+        <rect x="11" y="1" width="74" height="28" fill={s.bg} opacity="0.94" />
+        <rect x="11" y="1" width="74" height="28" fill="none" stroke={s.trim} strokeWidth="0.9" />
+        {[[11, 1, 1, 1], [85, 1, -1, 1], [11, 29, 1, -1], [85, 29, -1, -1]].map(([x, y, dx, dy], i) => <polyline key={i} points={pts([[x + dx * 5, y], [x, y], [x, y + dy * 5]])} fill="none" stroke={s.ink} strokeWidth="1.4" />)}
+        <Screen x={13} y={4} w={70} h={23} s={{ bg:'none', ink:s.ink, trim:s.trim }} title={c.t} rows={c.r} hl={c.hl ?? -1} fs={2.5} scan={false} flick={!c.dead} />
+        {c.badge && <g><Slab x={70} y={4.6} w={12} h={4.6} k={0.8} c="red" o={0.4} /><text x="76" y="8" textAnchor="middle" fontSize="2.6" fill={S.white} fontWeight="700" {...PT}>{c.badge}</text></g>}
+        {c.bottles && <g>{[[62, 'amber'], [68, 'cyan'], [74, 'red'], [80, 'green']].map(([x, k], i) => <g key={i}><rect x={x - 2} y="13" width="4" height="9" fill={S[k]} opacity="0.9" /><rect x={x - 0.8} y="10" width="1.6" height="3.2" fill={S[k]} opacity="0.9" /></g>)}</g>}
+        {c.cracked && <polyline points={pts([[20, 4], [28, 14], [24, 20], [40, 27]])} fill="none" stroke={ART.ink} strokeWidth="0.8" />}
+        {c.stencil && <Glyph k="star" x={72} y={19} s={4.4} c={S.crimson} />}
+        {c.dead && <rect x="11" y="1" width="74" height="28" fill={ART.ink} opacity="0.4" />}
+      </g>
+      {c.note && <g transform="rotate(5 70 38)"><polygon points={pts([[60, 33], [82, 33], [82, 45], [60, 45]])} fill={ART.paper.base} /><polygon points={pts([[60, 33], [82, 33], [82, 35], [60, 35]])} fill={ART.paper.shade} /><text x="71" y="42" textAnchor="middle" fontSize="3.6" fill={ART.note.ink} fontWeight="700" {...PT}>{c.note}</text></g>}
+      {c.dead && <g><Cable d="M62 54 C70 50 78 58 88 52" w={1.8} /><polygon points={pts([[72, 56], [76, 52], [78, 57]])} fill={S.warn} /></g>}
+      <Grime x={34} y={36} w={28} h={22} seed={14} n={3} op={0.2} /><Scuff x={32} y={40} w={32} h={18} seed={6} n={5} />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// AIRTAXI: yellow roof sign, call terminal, painted landing mark. One silhouette, nine states of repair.
+// ---------------------------------------------------------------------------
+const TAXI_CFG = {
+  clean:    { body:'pearl',     scr:'cyan',  r:['DEPARTS','ON DEMAND'] },
+  worn:     { body:'steel',     scr:'cyan',  r:['ROUTES: 47','HELD: 29'], grime:true },
+  cracked:  { body:'steel',     scr:'cyan',  r:['SIGNAL','UNSTABLE'], cracked:true, grime:true },
+  dark:     { body:'dark',      scr:'off',   r:['',''], led:true },
+  jury:     { body:'steel',     scr:'green', r:['NO PERMIT','LINKED'], cables:true },
+  ancient:  { body:'brass',     scr:'amber', r:['ROUTES: ??','LEGACY NET'], grime:true },
+  scorched: { body:'rust',      scr:'amber', r:['HEAT WARN','STILL WORKS'], soot:true },
+  rigged:   { body:'dark',      scr:'red',   r:['CODE ERROR','STILL WORKS'], cables:true },
+  official: { body:'deepglass', scr:'cyan',  r:['CSF ONLY','AUTH REQ'] },
+  private:  { body:'bronze',    scr:'amber', r:['PRIVATE NODE','NO LOG'] },
+};
+
+function PropAirTaxi({ variant }) {
+  const c = TAXI_CFG[variant] || TAXI_CFG.worn;
+  const s = SCR[c.scr], S = ART.signal, B = c.body;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={28} ry={3.6} />
+      {/* painted landing mark with corner lamps */}
+      <polygon points={pts(ngon(47, 49, 15, 8.4, 8, Math.PI / 8))} fill={ART.dark.shade} />
+      <polygon points={pts(ngon(47, 48.4, 13, 7.2, 8, Math.PI / 8))} fill={ART.dark.base} />
+      <polyline points={pts([[40, 45], [54, 45]])} fill="none" stroke={S.taxi} strokeWidth="1.6" /><polyline points={pts([[47, 45], [47, 53]])} fill="none" stroke={S.taxi} strokeWidth="1.6" />
+      {[[35, 49], [59, 49], [47, 42], [47, 56]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="0.9" fill={S.amber} style={{ animation:`ship-blink ${1.6 + i * 0.3}s steps(2) infinite` }} />)}
+      {/* terminal post */}
+      <Slab x={6} y={52} w={26} h={6} k={1.2} c="steel" />
+      <Slab x={7} y={14} w={25} h={40} k={2} c={B} o={1} />
+      <Seams x={7} y={14} w={25} h={40} rows={2} op={0.3} />
+      <Screen x={9.4} y={17} w={20.2} h={15} s={s} rows={c.r} fs={2.1} scan={false} flick={c.scr !== 'off'} />
+      {c.led && <circle cx="19.5" cy="25" r="1.4" fill={S.green} style={{ animation:'ship-blink 2s steps(2) infinite' }} />}
+      {c.cracked && <polyline points={pts([[13, 17], [18, 24], [16, 28], [24, 32]])} fill="none" stroke={ART.ink} strokeWidth="0.7" />}
+      <Toggles x={10} y={35} cols={6} rows={2} gap={3.3} seed={9} />
+      <Slab x={10} y={43} w={9} h={5} k={0.8} c="dark" o={0.4} /><circle cx="25" cy="45.4" r="2.4" fill={S.red} style={{ animation:'ship-blink 1.8s steps(2) infinite' }} />
+      <Hazard x={9} y={49} w={21} h={3} />
+      {/* roof sign: taxi yellow with a checker band */}
+      <Bev t="polygon" points={pts([[4, 4], [34, 4], [36, 6], [36, 12], [34, 14], [4, 14], [2, 12], [2, 6]])} c="amber" o={0.9} />
+      <text x="19" y="10.6" textAnchor="middle" fontSize="4.2" fill={ART.ink} fontWeight="700" {...PT}>AIRTAXI</text>
+      {Array.from({ length: 12 }, (_, i) => <rect key={i} x={4 + i * 2.5} y={i % 2 ? 11.8 : 13} width="2.5" height="1.2" fill={ART.ink} />)}
+      <Rivets x={5} y={5.4} w={28} n={6} c="amber" r={0.45} />
+      <line x1="31" y1="4" x2="31" y2="0.6" stroke={ART.steel.hi} strokeWidth="0.8" /><circle cx="31" cy="0.8" r="0.9" fill={S.red} style={{ animation:'ship-blink 1.6s steps(2) infinite' }} />
+      {c.cables && <g><Cable d="M28 38 C36 40 30 50 40 56" w={1.8} /><polygon points={pts([[38, 55], [42, 54], [41, 58]])} fill={S.warn} /></g>}
+      {c.soot && <polygon points={pts([[9, 14], [24, 14], [18, 24], [9, 30]])} fill={ART.ink} opacity="0.4" />}
+      {c.grime && <Grime x={9} y={16} w={20} h={36} seed={21} n={5} op={0.25} />}
+      <Grime x={9} y={16} w={20} h={36} seed={22} n={3} op={0.12} /><Scuff x={9} y={18} w={20} h={34} seed={23} n={6} c={B} />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// COMM RELAY: a dish, a hub, or a comlink puck throwing a call hologram.
+// ---------------------------------------------------------------------------
+function PropCommRelay({ variant }) {
+  const S = ART.signal;
+  const dish = (cx, cy, r, rot, k) => (
+    <g key={k} transform={`rotate(${rot} ${cx} ${cy})`}>
+      <polygon points={pts(ngon(cx + 1.2, cy + 1.6, r, r * 0.62, 10))} fill={ART.steel.shade} />
+      <Bev t="polygon" points={pts(ngon(cx, cy, r, r * 0.62, 10))} c="hull" o={0.8} />
+      <polygon points={pts(ngon(cx, cy, r * 0.8, r * 0.46, 10))} fill={ART.steel.shade} />
+      <polygon points={pts(ngon(cx - r * 0.06, cy - r * 0.04, r * 0.5, r * 0.28, 10))} fill={ART.steel.base} />
+      <line x1={cx} y1={cy} x2={cx + r * 0.1} y2={cy - r * 1.1} stroke={ART.steel.hi} strokeWidth="0.9" />
+      <circle cx={cx + r * 0.1} cy={cy - r * 1.12} r="1.1" fill={S.red} style={{ animation:'ship-blink 1.4s steps(2) infinite' }} />
+    </g>
+  );
+  if (variant === 'puck') {
+    return (
+      <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+        <PropShadow cx={32} cy={56} rx={18} ry={4} />
+        <polygon points={pts([[22, 52], [42, 52], [52, 22], [12, 22]])} fill={S.cyan} opacity="0.1" />
+        <g style={{ animation:'holo-flicker 2.2s ease-in-out infinite' }}>
+          <polygon points={pts([[24, 44], [40, 44], [44, 36], [38, 30], [26, 30], [20, 36]])} fill={S.cyan} opacity="0.55" />
+          <polygon points={pts(ngon(32, 22, 6.4, 7.4, 8))} fill={S.cyanHi} opacity="0.7" />
+          {[16, 24, 32, 40].map((y) => <line key={y} x1="16" y1={y} x2="48" y2={y} stroke={S.cyanHi} strokeWidth="0.4" opacity="0.35" />)}
+        </g>
+        <Bev t="polygon" points={pts(ngon(32, 52, 15, 5.6, 10))} c="dark" o={1} />
+        <polygon points={pts(ngon(32, 51.4, 11, 3.8, 10))} fill={ART.screen.cyan} />
+        <polygon points={pts(ngon(32, 51.4, 7, 2.2, 10))} fill={S.cyan} style={{ animation:'ship-blink 1.2s steps(2) infinite' }} />
+        <text x="32" y="9" textAnchor="middle" fontSize="3.6" fill={S.cyanHi} fontWeight="700" {...PT}>INCOMING</text>
+        <Rivets x={20} y={55.4} w={24} n={6} /><Grime x={18} y={48} w={28} h={8} seed={3} n={3} op={0.2} /><Scuff x={18} y={48} w={28} h={8} seed={8} n={4} c="dark" />
+      </svg>
+    );
+  }
+  const hub = variant === 'hub';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={24} ry={3.6} />
+      {/* tripod legs */}
+      <polygon points={pts([[32, 36], [14, 58], [18, 58], [33, 42]])} fill={ART.steel.shade} /><polygon points={pts([[32, 36], [50, 58], [46, 58], [31, 42]])} fill={ART.steel.shade} />
+      <Bev t="polygon" points={pts([[29, 14], [35, 14], [36, 40], [28, 40]])} c="steel" o={0.8} />
+      <g stroke={ART.steel.shade} strokeWidth="0.7">{[18, 24, 30, 36].map((y) => <line key={y} x1="29.4" y1={y} x2="34.6" y2={y + 6} />)}</g>
+      {hub ? <g>{dish(18, 17, 12, -22, 'a')}{dish(46, 22, 10, 18, 'b')}</g> : dish(32, 17, 15, -14, 'a')}
+      <Slab x={14} y={42} w={36} h={14} k={2} c="dark" o={1} />
+      <Seams x={14} y={42} w={36} h={14} cols={2} op={0.35} />
+      <Vent x={17} y={45} w={12} h={8} n={3} />
+      {variant === 'node' && <g><Slab x={31} y={44.6} w={16} h={9} k={1.2} c="red" o={0.6} /><Glyph k="chain" x={39} y={49} s={3.6} c={S.white} /></g>}
+      {hub && <g><rect x="32" y="45" width="16" height="8" fill={ART.screen.cyan} /><text x="40" y="49.2" textAnchor="middle" fontSize="2.4" fill={S.cyanHi} {...PT}>SRC L1900</text><text x="40" y="52.2" textAnchor="middle" fontSize="2.1" fill={S.cyan} {...PT}>BURST TX</text></g>}
+      <Lights x={17} y={44} n={5} gap={2.4} r={0.6} seed={variant === 'hub' ? 3 : 6} />
+      {hub && <g fill="none" stroke={S.cyanHi} strokeWidth="0.7" style={{ animation:'holo-flicker 1.8s ease-in-out infinite' }}><polyline points={pts([[20, 4], [26, 1], [32, 4], [38, 1], [44, 4]])} /><polyline points={pts([[14, 8], [20, 5]])} /></g>}
+      {variant === 'node' && <g stroke={S.red} strokeWidth="0.7" fill="none" style={{ animation:'holo-flicker 1.4s ease-in-out infinite' }}><path d="M44 8 C48 10 48 16 44 18" /><path d="M48 5 C54 9 54 17 48 21" /></g>}
+      <Rivets x={16} y={55} w={32} n={7} />
+      <Grime x={14} y={42} w={36} h={14} seed={4} n={4} op={0.22} /><Scuff x={14} y={42} w={36} h={14} seed={9} n={6} c="dark" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// SERVER STACK: a tall rack of blades. Black market, Republic archive, or Senate index node.
+// ---------------------------------------------------------------------------
+function PropServerStack({ variant }) {
+  const S = ART.signal;
+  const bm = variant === 'black_market', rep = variant === 'republic';
+  const body = bm ? 'dark' : rep ? 'hull' : 'pearl';
+  const lamp = bm ? ['red', 'green'] : rep ? ['cyan'] : ['cyan', 'amber'];
+  const label = bm ? 'SLICER LOCK' : rep ? 'ARCHIVE CORE' : 'INDEX NODE';
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={90} rx={26} ry={4} />
+      <Slab x={6} y={86} w={52} h={6} k={1.4} c="steel" />
+      <Bev t="polygon" points={pts([[8, 6], [56, 6], [58, 9], [58, 86], [6, 86], [6, 9]])} c={body} o={1} />
+      {Array.from({ length: 6 }, (_, i) => {
+        const y = 12 + i * 12.4;
+        return (
+          <g key={i}>
+            <Slab x={11} y={y} w={42} h={10} k={1} c="dark" o={0.6} />
+            <Vent x={13} y={y + 2} w={16} h={6} n={3} />
+            <Lights x={33} y={y + 3} n={4} gap={3.2} r={0.8} colors={lamp} seed={i + (bm ? 3 : 8)} />
+            <rect x="33" y={y + 5.6} width={10 + ((i * 7) % 9)} height="1.4" fill={S[lamp[0]]} opacity="0.55" />
+            <circle cx="49" cy={y + 5} r="1.2" fill={ART.steel.hi} />
+          </g>
+        );
+      })}
+      <Slab x={12} y={2} w={40} h={6} k={1.2} c={body} o={0.8} />
+      <text x="32" y="6.6" textAnchor="middle" fontSize="3" fill={bm ? S.crimson : rep ? S.cyanHi : ART.ink} fontWeight="700" {...PT}>{label}</text>
+      {rep && <g><rect x="22" y="36" width="20" height="9" fill={ART.ink} /><rect x="24" y="38" width="16" height="5" fill={S.cyan} style={{ animation:'ship-blink 2s ease-in-out infinite' }} /><Cable d="M32 45 C26 56 40 62 30 74" w={2.6} /><polygon points={pts([[27, 73], [33, 73], [32, 78], [28, 78]])} fill={ART.brass.base} /></g>}
+      {bm && <g><Cable d="M58 20 C66 34 52 46 60 70" w={2.4} /><Cable d="M6 30 C-2 44 10 54 4 72" w={2} /><polygon points={pts([[40, 56], [52, 54], [52, 62], [40, 63]])} fill={ART.note.pink} /><Glyph k="eye" x={46} y={58.6} s={3} c={ART.note.ink} /></g>}
+      {variant === 'archive' && <g><Glyph k="cog" x={49} y={5.2} s={2.4} c={S.cyanHi} /><Cable d="M58 24 C64 38 54 50 60 66" w={2} /></g>}
+      <Rivets x={10} y={84} w={44} n={8} /><Seams x={6} y={6} w={52} h={80} cols={1} op={0.2} />
+      <Grime x={6} y={8} w={52} h={78} seed={31} n={6} op={0.2} /><Scuff x={8} y={10} w={48} h={74} seed={32} n={9} c={body} />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// BOARD: wall mounted holo boards, ledgers and posters. One frame, many contents.
+// ---------------------------------------------------------------------------
+const BOARD_LIST = {
+  baylog:     { scr:'cyan',  t:'SPEEDER BAY LOG',        r:['LAST ENTRY: UNIT 7 OUT 03:14','DESTINATION: CLASSIFIED','PILOT: CLASSIFIED','STATUS: NO RETURN LOGGED'], hl:3 },
+  departures: { scr:'amber', t:'DEPARTURE BOARD',        r:['C-4   ON TIME','C-5   BOARDING','C-7   OVERDUE','LAST CONTACT 06:22: 3 DAYS'], hl:2, red:true },
+  bulletin:   { scr:'cyan',  t:'CSF BULLETIN BOARD',     r:['CASE 1  CLASSIFIED','CASE 2  CLASSIFIED','CARGO ANOMALY / BAY 14','STATUS: CLOSED  FILED: VANE T'], hl:3, red:true },
+  warrants:   { scr:'red',   t:'SECTOR 4 WARRANTS',      r:['OPEN: 14   BLACK SUN IDS: 9','CLASSIFIED: 4 (SENATE ONLY)','15: BAY 14 STRIKE TEAM','STATUS: SUSPENDED'], hl:3 },
+  patrol:     { scr:'cyan',  t:'CSF PATROL ROUTES',      r:['SECTOR 4: SUSPENDED','PROMENADE: 1 OFFICER ROTA','CUT: 2 DAYS POST BAY 14','SIGNED: VANE T'], hl:3 },
+  manifest:   { scr:'amber', t:'MAG-RAIL FREIGHT CARS',  r:['14-B  AGRICULTURAL  1.2 T','14-B  CLEARED IND  3.8 T','WEIGHT MISMATCH: 11 DAYS','FLAG: OPEN'], hl:2 },
+  prisoners:  { scr:'red',   t:'PRISONER TRANSFER LOG',  r:['DETAINEES: 4','2 TO LEVEL 001: NO REASON','1 RELEASED: SENATE AUTH','ACTIVE: RIANNA T  SUB-3 B'], hl:3 },
+  cellog:     { scr:'cyan',  t:'CELL BLOCK LOG',         r:['ENTRY 847','GREY COAT  NO ID CHIP','OFFSITE: DIRECTIVE 1182-C','AUTH: [REDACTED]'], hl:3 },
+};
+
+function PropBoard({ variant }) {
+  const S = ART.signal;
+  const L = BOARD_LIST[variant];
+  const frame = (
+    <g>
+      <PropShadow cx={48} cy={60} rx={42} ry={3} />
+      <Slab x={2} y={2} w={92} h={56} k={3} c="dark" o={1} />
+      <Rivets x={6} y={5} w={84} n={10} /><Rivets x={6} y={55} w={84} n={10} />
+      <Slab x={30} y={57} w={36} h={4} k={1} c="steel" o={0.6} />
+    </g>
+  );
+  let body = null;
+  if (L) {
+    const s = SCR[L.scr];
+    body = (
+      <g>
+        <Screen x={7} y={7} w={82} h={46} s={s} title={L.t} rows={L.r} hl={L.hl} fs={3.6} scan={false} flick />
+        {L.red && <rect x="8" y={7 + 3.6 * 2 + 2.8 + L.hl * 3.6 * 1.8 - 3.8} width="80" height="5.4" fill={S.red} opacity="0.28" />}
+        <rect x="7" y="7" width="82" height="1.5" fill={s.ink} opacity="0.35" />
+        <Toggles x={7} y={53.6} cols={6} rows={1} gap={3.2} seed={4} />
+      </g>
+    );
+  } else if (variant === 'wanted') {
+    body = (
+      <g>
+        <rect x="7" y="7" width="82" height="46" fill={ART.screen.red} />
+        <rect x="7" y="7" width="82" height="9" fill={S.red} opacity="0.85" />
+        <text x="48" y="14.6" textAnchor="middle" fontSize="7.4" fill={ART.pearl.hi} fontWeight="700" {...PT}>WANTED</text>
+        <g style={{ animation:'holo-flicker 2.4s ease-in-out infinite' }}>
+          <polygon points={pts(ngon(31, 29, 10, 11.5, 8))} fill={S.orange} opacity="0.85" />
+          <polygon points={pts([[14, 52], [16, 41], [24, 38], [38, 38], [46, 41], [48, 52]])} fill={S.orange} opacity="0.7" />
+          <rect x="24" y="26" width="5" height="1.8" fill={ART.screen.red} /><rect x="33" y="26" width="5" height="1.8" fill={ART.screen.red} />
+          <polygon points={pts([[28, 35], [34, 35], [31, 33]])} fill={ART.screen.red} />
+          {[20, 26, 32, 38, 44, 50].map((y) => <line key={y} x1="8" y1={y} x2="50" y2={y} stroke={S.redHi} strokeWidth="0.35" opacity="0.35" />)}
+        </g>
+        <text x="54" y="26" fontSize="3.4" fill={S.redHi} fontWeight="700" {...PT}>REPUBLIC BOUNTY</text>
+        <text x="54" y="32" fontSize="3" fill={S.redHi} {...PT}>ALIVE PREFERRED</text>
+        <text x="54" y="42" fontSize="3.6" fill={S.amberHi} fontWeight="700" {...PT}>10,000 CR</text>
+        <text x="54" y="48" fontSize="2.6" fill={S.redHi} opacity="0.8" {...PT}>FACE ON FILE: ???</text>
+      </g>
+    );
+  } else if (variant === 'analysis') {
+    const photo = (x, y, k) => (
+      <g key={k}>
+        <polygon points={pts([[x, y], [x + 15, y], [x + 15, y + 17], [x, y + 17]])} fill={ART.paper.base} />
+        <polygon points={pts([[x + 1.5, y + 1.5], [x + 13.5, y + 1.5], [x + 13.5, y + 12], [x + 1.5, y + 12]])} fill={ART.dark.base} />
+        <polygon points={pts(ngon(x + 7.5, y + 6, 2.6, 3, 6))} fill={ART.dark.hi} /><polygon points={pts([[x + 3, y + 12], [x + 4, y + 9], [x + 11, y + 9], [x + 12, y + 12]])} fill={ART.dark.hi} />
+        <text x={x + 7.5} y={y + 15.6} textAnchor="middle" fontSize="2.4" fill={ART.note.ink} fontWeight="700" {...PT}>UNKNOWN</text>
+      </g>
+    );
+    body = (
+      <g>
+        <rect x="7" y="7" width="82" height="46" fill={ART.screen.cyan} />
+        <text x="10" y="12.4" fontSize="3.2" fill={S.cyanHi} fontWeight="700" {...PT}>BAY 14 ANALYSIS</text>
+        {photo(10, 16, 'a')}{photo(28, 22, 'b')}{photo(46, 16, 'c')}
+        <g stroke={S.crimson} strokeWidth="0.6" fill="none"><polyline points={pts([[17, 24], [35, 30], [53, 24]])} /><polyline points={pts([[35, 30], [62, 44]])} /></g>
+        <g transform="translate(74 15)"><circle r="1.4" fill={S.amber} />{Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return <line key={i} x1={Math.cos(a) * 2.6} y1={Math.sin(a) * 2.6} x2={Math.cos(a) * (6 + (i % 3) * 2)} y2={Math.sin(a) * (6 + (i % 3) * 2)} stroke={S.amber} strokeWidth="0.6" />; })}</g>
+        <text x="64" y="29" fontSize="2.3" fill={S.amber} {...PT}>BLAST PATTERN</text>
+        {[0, 1, 2].map((i) => <line key={i} x1="64" y1={32 + i * 3} x2={84 - i * 4} y2={32 + i * 3} stroke={S.cyan} strokeWidth="0.6" opacity="0.7" />)}
+        <g transform="rotate(-4 70 48)"><polygon points={pts([[56, 41], [86, 41], [86, 52], [56, 52]])} fill={ART.note.yellow} /><text x="58" y="45.6" fontSize="2.3" fill={ART.note.blueInk} {...PT}>Transit codes -- mine.</text><text x="58" y="49.6" fontSize="2.6" fill={ART.note.blueInk} fontWeight="700" {...PT}>How?</text></g>
+        <Lights x={10} y={49.4} n={8} gap={3} seed={7} />
+      </g>
+    );
+  } else if (variant === 'faction') {
+    const tower = (x, h, c) => <rect key={x} x={x} y={52 - h} width="5" height={h} fill={c} />;
+    body = (
+      <g>
+        <rect x="7" y="7" width="82" height="46" fill={ART.screen.cyan} />
+        <text x="10" y="12.4" fontSize="3.2" fill={S.cyanHi} fontWeight="700" {...PT}>CORUSCANT LEVELS</text>
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((i) => tower(10 + i * 5.4, 10 + ((i * 7) % 5) * 5 + (i % 3) * 3, ART.dark.hi))}
+        <polygon points={pts([[8, 52], [8, 30], [34, 30], [40, 52]])} fill={S.blue} opacity="0.4" />
+        <polygon points={pts([[36, 52], [44, 28], [68, 28], [62, 52]])} fill={S.red} opacity="0.4" />
+        <polygon points={pts([[52, 46], [56, 38], [88, 36], [88, 46]])} fill={S.amber} opacity="0.45" />
+        <g fill="none" stroke={S.violet} strokeWidth="0.8"><ellipse cx="74" cy="22" rx="10" ry="5.4" /><ellipse cx="74" cy="22" rx="11.6" ry="6.4" /><ellipse cx="74" cy="22" rx="13.2" ry="7.4" /></g>
+        <polygon points={pts([[68, 20], [80, 20], [74, 14]])} fill={ART.pearl.base} />
+        <g fontSize="2.3" {...PT}><text x="10" y="50" fill={S.blue}>CSF</text><text x="38" y="50" fill={S.redHi}>SYNDICATE</text><text x="62" y="50" fill={S.amberHi}>FREIGHT</text></g>
+      </g>
+    );
+  } else if (variant === 'betting') {
+    body = (
+      <g>
+        <rect x="7" y="7" width="82" height="46" fill={ART.screen.off} />
+        <text x="48" y="14" textAnchor="middle" fontSize="4.4" fill={S.gold} fontWeight="700" {...PT}>TONIGHT'S CARD</text>
+        {['BOUT 1   ROZEK  2:1', 'BOUT 2   TARN   5:2', 'BOUT 3   VESH   4:1', 'MAIN: MALAK VS TBD'].map((t, i) => <text key={i} x="12" y={22 + i * 6.4} fontSize="3.2" fill={i === 3 ? S.amberHi : ART.beige.hi} fontWeight={i === 3 ? '700' : '400'} {...PT}>{t}</text>)}
+        <text x="12" y="47.6" fontSize="3.6" fill={S.crimson} fontWeight="700" {...PT}>MALAK  3 TO 1</text>
+        <g stroke={S.crimson} strokeWidth="0.9"><line x1="12" y1="49" x2="52" y2="49" /><line x1="12" y1="51" x2="52" y2="51" /></g>
+        <text x="60" y="28" fontSize="2.6" fill={ART.beige.base} {...PT}>12 BOUTS</text><text x="60" y="33" fontSize="2.6" fill={ART.beige.base} {...PT}>4 FAVOURITES</text>
+        <polygon points={pts([[66, 40], [84, 40], [84, 50], [66, 50]])} fill={ART.screen.red} /><text x="75" y="46.6" textAnchor="middle" fontSize="3" fill={S.redHi} fontWeight="700" {...PT}>TBD  ???</text>
+        <Lights x={10} y={9.4} n={6} gap={3} seed={11} />
+      </g>
+    );
+  } else if (variant === 'register') {
+    body = (
+      <g>
+        <rect x="7" y="7" width="82" height="46" fill={ART.wood.base} />
+        <polygon points={pts([[10, 10], [86, 10], [86, 50], [10, 50]])} fill={ART.paper.base} />
+        <text x="48" y="16" textAnchor="middle" fontSize="3.8" fill={ART.note.ink} fontWeight="700" {...PT}>CHALLENGER REGISTER</text>
+        {Array.from({ length: 7 }, (_, i) => {
+          const y = 22 + i * 4.2, r = rng(i + 40), w = 18 + r() * 24;
+          return <g key={i}><polyline points={pts([[14, y], [14 + w * 0.25, y - 1.2], [14 + w * 0.5, y + 0.6], [14 + w * 0.75, y - 1], [14 + w, y]])} fill="none" stroke={ART.note.blueInk} strokeWidth="0.7" /><line x1="14" y1={y + 1.2} x2="84" y2={y + 1.2} stroke={ART.paper.shade} strokeWidth="0.3" />{i === 4 && <g stroke={ART.note.redInk} strokeWidth="0.9"><line x1="13" y1={y - 2} x2={14 + w} y2={y + 1.6} /><line x1="13" y1={y + 1.6} x2={14 + w} y2={y - 2} /></g>}</g>;
+        })}
+        <polygon points={pts([[44, 5], [52, 5], [50, 10], [46, 10]])} fill={ART.steel.base} />
+      </g>
+    );
+  } else if (variant === 'ops') {
+    body = (
+      <g>
+        <rect x="7" y="7" width="82" height="46" fill={ART.screen.cyan} />
+        <text x="10" y="12.4" fontSize="3.2" fill={S.cyanHi} fontWeight="700" {...PT}>OPS PLANNING</text>
+        {[0, 1, 2].map((i) => <g key={i}><polygon points={pts([[12 + i * 4, 40 - i * 11], [78 - i * 4, 40 - i * 11], [84 - i * 4, 46 - i * 11], [6 + i * 4, 46 - i * 11]])} fill={ART.dark.base} opacity="0.9" /><polyline points={pts([[12 + i * 4, 40 - i * 11], [78 - i * 4, 40 - i * 11], [84 - i * 4, 46 - i * 11], [6 + i * 4, 46 - i * 11], [12 + i * 4, 40 - i * 11]])} fill="none" stroke={S.cyan} strokeWidth="0.5" /></g>)}
+        <ellipse cx="38" cy="37" rx="16" ry="5" fill={S.crimson} opacity="0.5" /><ellipse cx="54" cy="36" rx="16" ry="5" fill={S.blue} opacity="0.5" />
+        <g stroke={S.amberHi} strokeWidth="0.6" fill="none"><polyline points={pts([[30, 38], [48, 16], [64, 34]])} /><polyline points={pts([[48, 16], [44, 28]])} /></g>
+        <text x="14" y="50.4" fontSize="2.4" fill={S.crimson} {...PT}>MARLO</text><text x="62" y="50.4" fontSize="2.4" fill={S.blue} {...PT}>ROOK</text>
+      </g>
+    );
+  } else if (variant === 'clipboard') {
+    body = (
+      <g>
+        <rect x="7" y="7" width="82" height="46" fill={ART.dark.base} />
+        <Bev t="polygon" points={pts([[24, 7], [72, 7], [74, 9], [74, 53], [22, 53], [22, 9]])} c="wood" o={1} />
+        <polygon points={pts([[27, 12], [69, 12], [69, 51], [27, 51]])} fill={ART.paper.hi} />
+        <polygon points={pts([[28, 15], [70, 13], [70, 52], [28, 52]])} fill={ART.paper.base} />
+        <Slab x={38} y={4} w={20} h={7} k={1.4} c="steel" o={0.8} />
+        <text x="48" y="22" textAnchor="middle" fontSize="3" fill={ART.note.ink} fontWeight="700" {...PT}>WORK ORDER: BAY B</text>
+        {[28, 33, 38, 43].map((y, i) => <line key={y} x1="31" y1={y} x2={66 - i * 4} y2={y} stroke={ART.note.blueInk} strokeWidth="0.5" />)}
+        <polygon points={pts([[48, 38], [68, 38], [68, 50], [48, 50]])} fill={ART.pearl.base} />
+        <circle cx="58" cy="44" r="4.4" fill={ART.red.base} /><text x="58" y="45.2" textAnchor="middle" fontSize="2.6" fill={S.white} fontWeight="700" {...PT}>SEN</text>
+        <polygon points={pts([[32, 40], [44, 40], [44, 49], [32, 49]])} fill={ART.paper.shade} /><text x="38" y="46" textAnchor="middle" fontSize="2.2" fill={ART.note.ink} {...PT}>SIGNED</text>
+      </g>
+    );
+  }
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      {frame}{body}
+      <Seams x={2} y={2} w={92} h={56} cols={3} op={0.15} />
+      <Grime x={4} y={46} w={88} h={12} seed={(variant || 'b').length + 70} n={5} op={0.22} /><Scuff x={4} y={50} w={88} h={7} seed={(variant || 'b').length + 71} n={6} c="dark" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// SIGN ARRAY: hung neon vendor signs, or the hand painted cantina plate over an open door.
+// ---------------------------------------------------------------------------
+function PropSignArray({ variant }) {
+  const S = ART.signal;
+  const neon = (x, y, w, h, c, l1, l2, on = true, k) => (
+    <g key={k}>
+      <Slab x={x} y={y} w={w} h={h} k={1.4} c="dark" o={0.6} />
+      <Glow cx={x + w / 2} cy={y + h / 2} rx={w * 0.52} ry={h * 0.8} c={c} opacity={on ? 0.45 : 0.14} />
+      <rect x={x + 1.4} y={y + 1.4} width={w - 2.8} height={h - 2.8} fill="none" stroke={c} strokeWidth="1" opacity={on ? 1 : 0.35} />
+      <text x={x + w / 2} y={y + (l2 ? h / 2 - 0.4 : h / 2 + 1)} textAnchor="middle" fontSize="2.6" fill={on ? S.white : c} opacity={on ? 1 : 0.4} fontWeight="700" {...PT}>{l1}</text>
+      {l2 && <text x={x + w / 2} y={y + h / 2 + 3.6} textAnchor="middle" fontSize="2.6" fill={on ? S.white : c} opacity={on ? 1 : 0.4} fontWeight="700" {...PT}>{l2}</text>}
+      <line x1={x + 6} y1={y} x2={x + 6} y2={y - 3} stroke={ART.steel.base} strokeWidth="0.8" /><line x1={x + w - 6} y1={y} x2={x + w - 6} y2={y - 3} stroke={ART.steel.base} strokeWidth="0.8" />
+    </g>
+  );
+  if (variant === 'exhaust') {
+    return (
+      <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+        <PropShadow cx={64} cy={61} rx={54} ry={2.6} />
+        <Bev t="polygon" points={pts([[6, 4], [122, 4], [124, 6], [124, 36], [122, 38], [6, 38], [4, 36], [4, 6]])} c="rust" o={1} />
+        <Seams x={4} y={4} w={120} h={34} cols={3} op={0.3} />
+        <text x="72" y="21" textAnchor="middle" fontSize="12" fill={ART.amber.hi} fontWeight="700" {...PT} opacity="0.88">THE EXHAUST</text>
+        <text x="72" y="31.4" textAnchor="middle" fontSize="3" fill={ART.beige.hi} {...PT}>Est. after the last time this level flooded</text>
+        <Bev t="polygon" points={pts([[10, 12], [22, 12], [24, 14], [24, 28], [10, 28]])} c="steel" o={0.6} /><Glyph k="drop" x={17} y={20} s={4} c={S.orange} />
+        
+        <Bev t="polygon" points={pts([[40, 62], [40, 42], [44, 38], [84, 38], [88, 42], [88, 62]])} c="dark" o={0.8} />
+        <polygon points={pts([[44, 62], [44, 44], [47, 41], [81, 41], [84, 44], [84, 62]])} fill={ART.amber.base} opacity="0.75" /><polygon points={pts([[50, 62], [50, 46], [78, 46], [78, 62]])} fill={ART.amber.hi} opacity="0.8" />
+        <Glow cx={64} cy={56} rx={26} ry={6} c={S.amber} opacity={0.5} />
+        <Rivets x={8} y={36} w={112} n={14} /><Grime x={4} y={4} w={120} h={34} seed={5} n={6} op={0.22} /><Scuff x={6} y={6} w={116} h={30} seed={9} n={8} c="rust" />
+        <Lights x={96} y={14} n={4} gap={4} seed={3} />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={58} ry={2.4} />
+      <Bev t="rect" x="4" y="3" width="120" height="2.6" c="steel" o={0.7} /><Bev t="rect" x="4" y="33" width="120" height="2.6" c="steel" o={0.7} />
+      {neon(6, 8, 38, 14, S.blue, 'EXCHANGE', 'CERTIFIED', true, 'a')}
+      {neon(47, 8, 38, 14, S.crimson, 'PHRIK-FREE', 'MATERIALS', true, 'b')}
+      {neon(88, 8, 34, 14, S.blue, 'SENATE-', 'APPROVED TRANSIT', true, 'c')}
+      {neon(6, 38, 40, 14, S.crimson, 'BEST RATES', 'BETWEEN THE LEVELS', true, 'd')}
+      {neon(50, 38, 40, 14, S.blue, 'TRANSIT', 'CLEARANCE', true, 'e')}
+      {neon(94, 38, 28, 14, S.crimson, 'SCYLLA', 'FREIGHT', false, 'f')}
+      {[10, 52, 94].map((x) => <g key={x} fill="none" stroke={S.white} strokeWidth="0.5" opacity="0.4"><polyline points={pts([[x, 26], [x + 3, 24], [x + 6, 27], [x + 9, 25]])} /></g>)}
+      <Cable d="M122 20 C128 26 122 34 126 42" w={1.8} />
+      <Seams x={4} y={3} w={120} h={50} cols={2} op={0.12} /><Rivets x={8} y={4.4} w={112} n={14} />
+      <Grime x={4} y={8} w={120} h={46} seed={12} n={5} op={0.18} /><Scuff x={6} y={10} w={116} h={42} seed={13} n={7} />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// SHOPFRONT: a street level facade with an awning, a window, an open door and a sign.
+// ---------------------------------------------------------------------------
+function PropShopfront({ variant }) {
+  const S = ART.signal;
+  const sally = variant === 'sallys';
+  const awn = sally ? [ART.red.base, ART.pearl.base] : [ART.teal.base, ART.tan.base];
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={58} ry={2.6} />
+      <Bev t="polygon" points={pts([[4, 22], [124, 22], [124, 60], [4, 60]])} c={sally ? 'bronze' : 'concrete'} o={1} />
+      <Seams x={4} y={22} w={120} h={38} cols={5} op={0.25} />
+      {/* awning stripes */}
+      <polygon points={pts([[2, 22], [126, 22], [118, 12], [10, 12]])} fill={awn[1]} />
+      {Array.from({ length: 12 }, (_, i) => <polygon key={i} points={pts([[2 + i * 10.33, 22], [2 + i * 10.33 + 5.16, 22], [10 + i * 9.0 + 4.5, 12], [10 + i * 9.0, 12]])} fill={awn[0]} opacity={i % 2 ? 0 : 1} />)}
+      <rect x="2" y="21" width="124" height="2.4" fill={ART.dark.shade} />
+      {/* sign */}
+      {sally ? (
+        <g>
+          <Slab x={32} y={1} w={64} h={11} k={1.6} c="dark" o={0.6} />
+          <Glow cx={64} cy={6.5} rx={34} ry={8} c={S.magenta} opacity={0.5} />
+          <text x="64" y="10.4" textAnchor="middle" fontSize="9" fill={S.white} fontWeight="700" {...PT} style={{ animation:'holo-flicker 1.4s ease-in-out infinite' }}>SALLYS</text>
+          <rect x="34" y="2.6" width="60" height="7.8" fill="none" stroke={S.magenta} strokeWidth="1" />
+        </g>
+      ) : (
+        <g>
+          <Slab x={14} y={1} w={100} h={10} k={1.4} c="wood" o={0.8} />
+          <text x="64" y="8.6" textAnchor="middle" fontSize="5" fill={ART.paper.hi} fontWeight="700" {...PT}>GOODS, TRADES AND TREASURE</text>
+        </g>
+      )}
+      {/* open door with warm light */}
+      <Bev t="polygon" points={pts([[52, 60], [52, 28], [56, 25], [72, 25], [76, 28], [76, 60]])} c="dark" o={0.8} />
+      <polygon points={pts([[55, 60], [55, 30], [58, 28], [70, 28], [73, 30], [73, 60]])} fill={sally ? ART.amber.hi : ART.beige.base} opacity="0.85" />
+      <polygon points={pts([[55, 60], [55, 30], [58, 28], [62, 29], [62, 60]])} fill={ART.dark.base} opacity="0.7" />
+      {/* window */}
+      <Bev t="polygon" points={pts([[8, 28], [46, 28], [46, 52], [8, 52]])} c="dark" o={0.8} />
+      <rect x="10" y="30" width="34" height="20" fill={sally ? ART.amber.shade : ART.screen.amber} />
+      {sally && <g>
+        {[[14, 'cyan'], [20, 'amber'], [26, 'red'], [32, 'green'], [38, 'amber']].map(([x, k], i) => <g key={i}><rect x={x} y="36" width="3.4" height="9" fill={S[k]} opacity="0.9" /><rect x={x + 0.9} y="33.4" width="1.6" height="3" fill={S[k]} opacity="0.9" /></g>)}
+        <rect x="10" y="45" width="34" height="2" fill={ART.wood.base} />
+      </g>}
+      {!sally && <g>
+        {[[12, 40, 8, 10, 'amber'], [22, 36, 6, 14, 'brass'], [30, 42, 10, 8, 'copper'], [14, 32, 5, 5, 'teal'], [34, 33, 6, 8, 'rust']].map(([x, y, w, h, c], i) => <Slab key={i} x={x} y={y} w={w} h={h} k={1} c={c} o={0.6} />)}
+        {[[16, 41], [26, 38], [35, 44]].map(([x, y], i) => <g key={i}><polygon points={pts([[x, y], [x + 8, y], [x + 8, y + 3.4], [x, y + 3.4]])} fill={ART.red.base} /><text x={x + 4} y={y + 2.6} textAnchor="middle" fontSize="2.2" fill={S.white} fontWeight="700" {...PT}>2X</text></g>)}
+      </g>}
+      {/* right window */}
+      <Bev t="polygon" points={pts([[82, 28], [120, 28], [120, 52], [82, 52]])} c="dark" o={0.8} />
+      <rect x="84" y="30" width="34" height="20" fill={sally ? ART.amber.shade : ART.screen.amber} />
+      {sally ? <g><Glyph k="coin" x={101} y={40} s={5} c={S.gold} /><text x="101" y="49" textAnchor="middle" fontSize="2.6" fill={S.amberHi} {...PT}>OPEN LATE</text></g> : <g>{[[86, 38, 12, 12, 'steel'], [100, 34, 8, 16, 'bronze'], [110, 40, 8, 10, 'copper']].map(([x, y, w, h, c], i) => <Slab key={i} x={x} y={y} w={w} h={h} k={1} c={c} o={0.6} />)}</g>}
+      <Rivets x={6} y={58} w={116} n={14} />
+      <Grime x={4} y={24} w={120} h={36} seed={sally ? 7 : 17} n={6} op={0.2} /><Scuff x={6} y={26} w={116} h={32} seed={sally ? 8 : 18} n={8} c="concrete" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// APARTMENT DOOR: a numbered door in a frame. Three residents, three states.
+// ---------------------------------------------------------------------------
+function PropAptDoor({ variant }) {
+  const S = ART.signal;
+  const jon = variant === 'jon', dex = variant === 'dexter', trex = variant === 'trex';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={26} ry={2.8} />
+      <Bev t="polygon" points={pts([[8, 60], [8, 8], [12, 4], [52, 4], [56, 8], [56, 60]])} c={trex ? 'dark' : 'concrete'} o={1} />
+      <Seams x={8} y={4} w={48} h={56} cols={1} op={0.25} />
+      <Bev t="polygon" points={pts([[17, 60], [17, 14], [21, 10], [43, 10], [47, 14], [47, 60]])} c={trex ? 'steel' : 'steel'} o={0.9} />
+      <polygon points={pts([[21, 60], [21, 16], [24, 13], [40, 13], [43, 16], [43, 60]])} fill={trex ? ART.steel.base : ART.steel.base} />
+      {trex && <g><Seams x={21} y={13} w={22} h={47} rows={3} cols={1} op={0.5} /><Rivets x={23} y={16} w={18} n={4} c="steel" /><Rivets x={23} y={57} w={18} n={4} c="steel" /><Hazard x={21} y={52} w={22} h={4} /></g>}
+      {jon && <g>
+        <polygon points={pts([[36, 60], [36, 16], [40, 13], [43, 16], [43, 60]])} fill={ART.amber.hi} opacity="0.9" /><polygon points={pts([[40, 60], [40, 15], [43, 16], [43, 60]])} fill={ART.amber.hi} />
+        <polygon points={pts([[21, 60], [21, 16], [24, 13], [34, 13], [34, 60]])} fill={ART.steel.base} /><Seams x={21} y={13} w={13} h={47} rows={2} op={0.4} />
+        <path d="M14 8 C10 14 16 18 12 26" fill="none" stroke={ART.dark.shade} strokeWidth="1.4" /><circle cx="12.4" cy="25" r="1.2" fill={S.amberHi} style={{ animation:'ship-spark 1.6s steps(2) infinite' }} />
+        <polygon points={pts([[14, 4], [22, 4], [20, 10], [14, 10]])} fill={ART.ink} opacity="0.5" />
+      </g>}
+      {dex && <g>
+        <rect x="26" y="20" width="12" height="5" fill={ART.amber.hi} opacity="0.85" /><rect x="26" y="20" width="12" height="5" fill="none" stroke={ART.dark.shade} strokeWidth="0.8" />
+        <g transform="rotate(-4 32 34)"><polygon points={pts([[24, 28], [41, 28], [41, 40], [24, 40]])} fill={ART.note.yellow} /><text x="32.5" y="33" textAnchor="middle" fontSize="3" fill={ART.note.ink} fontWeight="700" {...PT}>BACK IN</text><text x="32.5" y="37.6" textAnchor="middle" fontSize="3.6" fill={ART.note.redInk} fontWeight="700" {...PT}>20</text></g>
+        <polygon points={pts([[22, 46], [30, 44], [34, 52], [24, 54]])} fill={ART.ink} opacity="0.25" />
+        <polygon points={pts([[44, 3], [56, 3], [56, 9]])} fill={ART.pearl.base} opacity="0.35" />
+      </g>}
+      {trex && <g>
+        <Slab x={44} y={30} w={11} h={17} k={1.2} c="dark" o={0.6} />
+        {Array.from({ length: 9 }, (_, i) => { const kx = 45.4 + (i % 3) * 3.2, ky = 32 + Math.floor(i / 3) * 3.6, worn = i === 1 || i === 4 || i === 7; return <rect key={i} x={kx} y={ky} width="2.4" height="2.6" fill={worn ? ART.steel.hi : ART.dark.hi} />; })}
+        <rect x="45.4" y="43" width="8.4" height="2" fill={ART.screen.red} /><circle cx="49.6" cy="44" r="0.7" fill={S.red} style={{ animation:'ship-blink 1.4s steps(2) infinite' }} />
+        <text x="37" y="8.4" textAnchor="middle" fontSize="2.6" fill={S.redHi} {...PT}>7 DIGIT LOCK</text>
+      </g>}
+      {!trex && <g><Slab x={26} y={5} w={12} h={4.4} k={0.8} c="brass" o={0.5} /><text x="32" y="8.4" textAnchor="middle" fontSize="2.8" fill={ART.ink} fontWeight="700" {...PT}>{jon ? 'APT 4' : 'APT 9'}</text></g>}
+      <Slab x={37} y={34} w={4} h={8} k={0.8} c="brass" o={0.5} />
+      <Rivets x={11} y={6} w={42} n={6} /><Grime x={8} y={6} w={48} h={52} seed={jon ? 31 : dex ? 33 : 35} n={5} op={0.2} /><Scuff x={10} y={8} w={44} h={48} seed={jon ? 32 : dex ? 34 : 36} n={7} />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// WALL MARKS: tags, stencils and stamps on a plated wall.
+// ---------------------------------------------------------------------------
+function PropWallMarks({ variant }) {
+  const S = ART.signal;
+  const plate = variant === 'stamp' ? 'steel' : 'concrete';
+  const base = (
+    <g>
+      <PropShadow cx={48} cy={60} rx={42} ry={2.6} />
+      <Bev t="polygon" points={pts([[3, 60], [3, 5], [8, 2], [88, 2], [93, 5], [93, 60]])} c={plate} o={1} />
+      <Seams x={3} y={2} w={90} h={58} cols={2} rows={1} op={0.4} />
+      <Rivets x={7} y={5} w={82} n={10} c="steel" /><Rivets x={7} y={57} w={82} n={10} c="steel" />
+    </g>
+  );
+  let art = null;
+  if (variant === 'free') {
+    art = (
+      <g>
+        <polygon points={pts([[48, 6], [58, 18], [55, 24], [60, 30], [48, 38], [36, 30], [41, 24], [38, 18]])} fill={S.orange} />
+        <polygon points={pts([[48, 14], [53, 22], [51, 28], [48, 33], [45, 28], [43, 22]])} fill={S.amberHi} />
+        <g fill="none" stroke={ART.beige.hi} strokeWidth="1.8"><polygon points={pts(ngon(30, 48, 7, 4.6, 6))} /><polygon points={pts(ngon(42, 48, 7, 4.6, 6))} /><polygon points={pts(ngon(58, 49, 7, 4.6, 6))} /><polygon points={pts(ngon(70, 48, 7, 4.6, 6))} /></g>
+        <polygon points={pts([[47, 44], [51, 44], [49, 52]])} fill={plate === 'concrete' ? ART.concrete.base : ART.steel.base} />
+        <text x="48" y="58.6" textAnchor="middle" fontSize="2.6" fill={S.amberHi} {...PT}>FREE CORUSCANT</text>
+      </g>
+    );
+  } else if (variant === 'tags' || variant === 'drain' || variant === 'alley') {
+    const chain = (x, y, c, k) => <Glyph key={k} k="chain" x={x} y={y} s={6} c={c} />;
+    art = (
+      <g>
+        {(variant === 'alley' ? [] : [[12, 14, 'blue', 18], [28, 10, 'crimson', 14], [8, 30, 'lime', 20], [40, 34, 'amber', 16]]).map(([x, y, k, w], i) => <g key={i} stroke={S[k]} strokeWidth="1.8" fill="none" opacity="0.85"><polyline points={pts([[x, y], [x + w * 0.3, y + 5], [x + w * 0.6, y - 2], [x + w, y + 4]])} /><line x1={x} y1={y + 8} x2={x + w * 0.8} y2={y + 8} /></g>)}
+        {[[60, 14], [74, 24], [20, 44]].map(([x, y], i) => <g key={i}><polygon points={pts([[x - 6, y + 5], [x, y - 6], [x + 6, y + 5]])} fill="none" stroke={S[i === 1 ? 'crimson' : 'warn']} strokeWidth="1.4" /><line x1={x - 8} y1={y + 8} x2={x + 8} y2={y - 8} stroke={S.red} strokeWidth="1" /></g>)}
+        {variant === 'drain' && <g fill="none" stroke={S.lime} strokeWidth="0.9" style={{ animation:'holo-flicker 3s ease-in-out infinite' }}><polyline points={pts([[10, 54], [24, 54], [24, 46], [44, 46], [44, 54], [62, 54]])} /><polyline points={pts([[44, 46], [44, 38], [70, 38], [70, 28], [86, 28]])} /><polyline points={pts([[62, 54], [62, 46], [86, 46]])} />{[[24, 46], [44, 38], [70, 28], [62, 46]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.6" fill={S.lime} />)}</g>}
+        {variant === 'drain' && <g>{[[52, 10], [70, 12], [82, 18], [30, 24]].map(([x, y], i) => chain(x, y, S.crimson, i))}{[0, 1, 2, 3, 4].map((i) => <line key={i} x1={8 + i * 2.4} y1="6" x2={8 + i * 2.4} y2="12" stroke={ART.beige.hi} strokeWidth="0.8" />)}</g>}
+        {variant === 'alley' && <g><text x="48" y="22" textAnchor="middle" fontSize="3.6" fill={S.limeHi || S.lime} fontWeight="700" {...PT}>THIS ALLEY BELONGS TO NO ONE</text><text x="48" y="50" textAnchor="middle" fontSize="2.8" fill={S.white} {...PT}>KEEP YOUR HANDS OFF THE HARDWARE</text><g stroke={S.lime} strokeWidth="1"><polygon points={pts(ngon(74, 36, 6, 6, 4, Math.PI / 4))} fill="none" /><line x1="68" y1="36" x2="80" y2="36" /></g></g>}
+        {variant === 'tags' && <g>{chain(76, 44, S.crimson, 'c')}</g>}
+      </g>
+    );
+  } else if (variant === 'blacksun') {
+    art = (
+      <g>
+        <circle cx="48" cy="31" r="22" fill={ART.ink} opacity="0.55" />
+        <circle cx="48" cy="31" r="22" fill="none" stroke={S.crimson} strokeWidth="1.8" />
+        <circle cx="48" cy="31" r="8" fill={S.crimson} />
+        {Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return <polygon key={i} points={pts([[48 + Math.cos(a - 0.12) * 10, 31 + Math.sin(a - 0.12) * 10], [48 + Math.cos(a) * 20, 31 + Math.sin(a) * 20], [48 + Math.cos(a + 0.12) * 10, 31 + Math.sin(a + 0.12) * 10]])} fill={S.crimson} />; })}
+        <circle cx="48" cy="31" r="3.4" fill={ART.ink} />
+      </g>
+    );
+  } else {
+    art = (
+      <g>
+        <polygon points={pts([[12, 16], [84, 16], [84, 46], [12, 46]])} fill={ART.steel.shade} />
+        <Slab x={14} y={18} w={68} h={26} k={2} c="steel" o={0.8} />
+        <g fill="none" stroke={S.crimson} strokeWidth="2.6"><polygon points={pts(ngon(36, 31, 11, 7, 6))} /><polygon points={pts(ngon(52, 31, 11, 7, 6))} /><polygon points={pts(ngon(68, 31, 11, 7, 6))} /></g>
+        <g fill="none" stroke={ART.steel.hi} strokeWidth="0.8"><polygon points={pts(ngon(36, 31, 11, 7, 6))} /><polygon points={pts(ngon(52, 31, 11, 7, 6))} /></g>
+        <text x="48" y="12.4" textAnchor="middle" fontSize="2.8" fill={S.warn} {...PT}>{variant === 'stamp' ? 'STAMP: FRESH METAL' : 'IRON CHAIN'}</text>
+        <polygon points={pts([[6, 52], [90, 52], [90, 58], [6, 58]])} fill={ART.dark.shade} /><Hazard x={6} y={52} w={84} h={3} />
+      </g>
+    );
+  }
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      {base}{art}
+      <Grime x={4} y={4} w={88} h={54} seed={(variant || 'w').length + 80} n={6} op={0.22} /><Scuff x={6} y={6} w={84} h={50} seed={(variant || 'w').length + 81} n={9} c={plate} />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// SKYLINE: the city seen from a promenade edge, a traffic overlook, or the penthouse viewport.
+// ---------------------------------------------------------------------------
+function PropSkyline({ variant }) {
+  const S = ART.signal;
+  const lanes = variant === 'lanes', view = variant === 'viewport';
+  const tower = (x, w, h, base, k, lit) => {
+    const top = 46 - h, r = rng(k);
+    return (
+      <g key={k}>
+        <polygon points={pts([[x, 46], [x, top + 3], [x + 2, top], [x + w - 2, top], [x + w, top + 3], [x + w, 46]])} fill={ART[base].base} />
+        <rect x={x} y={top + 3} width="1.4" height={h - 3} fill={ART[base].hi} opacity="0.6" />
+        {k % 3 === 0 && <rect x={x + w / 2 - 0.5} y={top - 6} width="1" height="6" fill={ART[base].hi} />}
+        {Array.from({ length: Math.floor(h / 5) }, (_, j) => Array.from({ length: Math.floor(w / 4) }, (_, i) => r() < lit ? <rect key={i + '_' + j} x={x + 2 + i * 4} y={top + 5 + j * 5} width="2" height="2" fill={r() < 0.7 ? S.amberHi : S.cyanHi} opacity="0.85" /> : null))}
+      </g>
+    );
+  };
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={58} ry={2.6} />
+      <Slab x={2} y={2} w={124} h={46} k={3} c="dark" o={1} />
+      <rect x="6" y="5" width="116" height="41" fill={ART.screen.space} />
+      {lanes ? (
+        <g>
+          <rect x="6" y="5" width="116" height="9" fill={ART.dark.shade} /><rect x="6" y="14" width="116" height="9" fill={ART.dark.base} opacity="0.6" />
+          {[[9, 'cyan', 'TIER 1'], [20, 'amber', 'TIER 2'], [31, 'red', 'CLEARANCE']].map(([y, k, t], i) => (
+            <g key={k}>
+              <rect x="6" y={y} width="116" height="1.6" fill={S[k]} opacity="0.9" />
+              <text x="8" y={y - 1.4} fontSize="2.4" fill={S[k]} {...PT}>{t}</text>
+              {Array.from({ length: 5 }, (_, j) => { const x = 14 + ((j * 23 + i * 11) % 100); return <g key={j}><polygon points={pts([[x, y + 4], [x + 9, y + 4], [x + 11, y + 6], [x + 9, y + 8], [x, y + 8]])} fill={ART[i === 0 ? 'teal' : i === 1 ? 'amber' : 'red'].base} /><rect x={x + 1} y={y + 5} width="5" height="1.4" fill={S[k]} /><rect x={x - 3} y={y + 5.4} width="3" height="1.2" fill={S[k]} opacity="0.5" /></g>; })}
+            </g>
+          ))}
+          <g stroke={S.white} strokeWidth="0.4" opacity="0.35">{[10, 40, 70, 100].map((x) => <line key={x} x1={x} y1="6" x2={x + 8} y2="46" />)}</g>
+        </g>
+      ) : view ? (
+        <g>
+          <rect x="6" y="5" width="116" height="14" fill={ART.deepglass.shade} /><rect x="6" y="19" width="116" height="12" fill={ART.deepglass.base} opacity="0.5" /><rect x="6" y="31" width="116" height="15" fill={ART.amber.shade} opacity="0.55" />
+          {Array.from({ length: 14 }, (_, i) => <rect key={i} x={10 + ((i * 37) % 108)} y={7 + ((i * 11) % 18)} width="1" height="1" fill={S.white} opacity="0.7" style={{ animation:`twinkle ${2 + (i % 3)}s ease-in-out infinite` }} />)}
+          {[18, 34, 60, 90, 106].map((x, i) => tower(x, 10 + (i % 2) * 4, 12 + ((i * 7) % 4) * 4, 'dark', i + 3, 0.3))}
+          <polygon points={pts(ngon(78, 33, 14, 9, 12).filter((p) => p[1] <= 33))} fill={ART.pearl.base} /><rect x="64" y="33" width="28" height="4" fill={ART.pearl.shade} />
+          {[67, 72, 77, 82, 87].map((x) => <rect key={x} x={x} y="33" width="1.6" height="4" fill={ART.pearl.hi} />)}
+          <path d="M6 44 C30 36 50 46 70 40 C90 34 104 44 122 38" fill="none" stroke={S.amberHi} strokeWidth="2.2" /><path d="M6 41 C26 33 54 42 74 37 C94 32 108 40 122 35" fill="none" stroke={S.white} strokeWidth="1" opacity="0.8" />
+          {[6, 36, 66, 96].map((x) => <polygon key={x} points={pts([[x + 8, 5], [x + 12, 5], [x + 4, 46], [x, 46]])} fill={ART.pearl.hi} opacity="0.1" />)}
+        </g>
+      ) : (
+        <g>
+          <rect x="6" y="5" width="116" height="12" fill={ART.deepglass.shade} /><rect x="6" y="17" width="116" height="10" fill={ART.deepglass.base} opacity="0.4" /><rect x="6" y="27" width="116" height="9" fill={ART.amber.shade} opacity="0.5" /><rect x="6" y="38" width="116" height="8" fill={ART.ink} opacity="0.55" />
+          {tower(10, 12, 20, 'dark', 1, 0.15)}{tower(26, 9, 26, 'dark', 2, 0.15)}{tower(40, 14, 18, 'dark', 3, 0.15)}{tower(96, 10, 24, 'dark', 4, 0.15)}{tower(108, 11, 17, 'dark', 5, 0.15)}
+          {tower(18, 11, 30, 'steel', 6, 0.35)}{tower(70, 12, 34, 'steel', 7, 0.35)}{tower(56, 8, 22, 'steel', 8, 0.35)}{tower(84, 10, 28, 'steel', 9, 0.35)}
+          <polygon points={pts(ngon(48, 28, 12, 8, 12).filter((p) => p[1] <= 28))} fill={ART.pearl.base} /><rect x="36" y="28" width="24" height="3" fill={ART.pearl.shade} />
+          {[[8, 11, 'amber'], [30, 15, 'white'], [58, 12, 'cyan'], [86, 19, 'amber'], [104, 14, 'white']].map(([x, y, k], i) => <g key={i}><rect x={x} y={y} width="9" height="1.6" fill={S[k]} /><rect x={x - 5} y={y + 0.2} width="5" height="1.2" fill={S[k]} opacity="0.5" /></g>)}
+          {[[12, 23], [44, 25], [74, 21], [102, 24]].map(([x, y], i) => <g key={i}><rect x={x} y={y} width="8" height="1.4" fill={S.amberHi} opacity="0.8" /><rect x={x - 4} y={y + 0.2} width="4" height="1" fill={S.amberHi} opacity="0.4" /></g>)}
+        </g>
+      )}
+      {/* foreground rail and sill */}
+      <Bev t="rect" x="4" y="46" width="120" height="3" c="steel" o={0.7} />
+      {Array.from({ length: 10 }, (_, i) => <polygon key={i} points={pts([[8 + i * 12.4, 58], [8 + i * 12.4, 40], [10 + i * 12.4, 40], [10 + i * 12.4, 58]])} fill={ART.steel.base} opacity={view ? 0 : 1} />)}
+      {!view && <g><Bev t="rect" x="6" y="41" width="116" height="2.4" c="steel" o={0.6} /><Hazard x={6} y={55} w={116} h={3} /></g>}
+      {view && <g><Bev t="rect" x="6" y="49" width="116" height="9" c="bronze" o={0.9} /><Seams x={6} y={49} w={116} h={9} cols={8} op={0.3} /><Lights x={12} y={53.6} n={12} gap={9} seed={5} /></g>}
+      {[6, 35, 64, 93, 122].map((x) => <rect key={x} x={x - 1.2} y="3" width="2.4" height="44" fill={ART.dark.hi} opacity={view ? 1 : 0} />)}
+      <Rivets x={8} y={4} w={112} n={14} />
+      <Grime x={4} y={4} w={120} h={44} seed={view ? 5 : lanes ? 6 : 7} n={5} op={0.12} /><Scuff x={6} y={48} w={116} h={10} seed={view ? 8 : 9} n={8} />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ELEVATOR DOOR: the private Scylla Tower car.
+// ---------------------------------------------------------------------------
+function PropElevatorDoor() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={61} rx={26} ry={2.4} />
+      <Bev t="polygon" points={pts([[6, 62], [6, 8], [10, 3], [54, 3], [58, 8], [58, 62]])} c="bronze" o={1} />
+      <Slab x={12} y={6} w={40} h={9} k={1.4} c="dark" o={0.7} />
+      <rect x="14" y="8" width="36" height="5" fill={ART.screen.green} /><text x="32" y="12.4" textAnchor="middle" fontSize="4.4" fill={S.greenHi} fontWeight="700" {...PT}>1452</text>
+      <polygon points={pts([[43, 12], [47, 12], [45, 9]])} fill={S.greenHi} style={{ animation:'ship-blink 1.6s steps(2) infinite' }} />
+      <Bev t="polygon" points={pts([[12, 62], [12, 18], [32, 18], [32, 62]])} c="brass" o={0.9} />
+      <Bev t="polygon" points={pts([[32, 62], [32, 18], [52, 18], [52, 62]])} c="brass" o={0.9} />
+      <rect x="31" y="18" width="2" height="44" fill={ART.ink} />
+      <Seams x={12} y={18} w={40} h={44} rows={2} op={0.28} />
+      {[16, 36].map((x) => <polygon key={x} points={pts([[x, 52], [x + 8, 24], [x + 12, 24], [x + 4, 52]])} fill={ART.pearl.hi} opacity="0.12" />)}
+      <Slab x={53} y={30} w={5} h={14} k={0.8} c="dark" o={0.5} /><circle cx="55.5" cy="34" r="1.2" fill={S.greenHi} /><polygon points={pts([[54, 40], [57, 40], [55.5, 37.6]])} fill={S.amberHi} />
+      <Slab x={12} y={55} w={40} h={5} k={1} c="dark" o={0.6} />
+      <text x="32" y="58.4" textAnchor="middle" fontSize="2.5" fill={S.amberHi} {...PT}>SCYLLA TOWER SEVEN</text>
+      <text x="32" y="16.6" textAnchor="middle" fontSize="1.9" fill={S.white} opacity="0.9" {...PT}>AUTHORIZED CLEARANCE ONLY</text>
+      <Rivets x={9} y={20} w={46} n={2} c="brass" /><Rivets x={9} y={50} w={46} n={2} c="brass" />
+      <Grime x={6} y={4} w={52} h={58} seed={41} n={4} op={0.14} /><Scuff x={12} y={20} w={40} h={38} seed={42} n={6} c="brass" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// DATAPAD TABLE: a datapad left on a surface. Five surfaces, five stories.
+// ---------------------------------------------------------------------------
+function PropDatapadTable({ variant }) {
+  const S = ART.signal;
+  const logbook = variant === 'logbook', card = variant === 'card', warm = variant === 'warm', lounge = variant === 'lounge';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={24} ry={3.4} />
+      {lounge ? (
+        <g>
+          <Slab x={29} y={42} w={6} h={14} k={1} c="dark" /><Bev t="polygon" points={pts(ngon(32, 56, 12, 3.2, 8))} c="steel" o={0.7} />
+          <Bev t="polygon" points={pts(ngon(32, 40, 25, 9, 10, Math.PI / 10))} c="bronze" o={1} />
+          <polygon points={pts(ngon(32, 39, 22, 7.4, 10, Math.PI / 10))} fill={ART.wood.hi} opacity="0.5" />
+          <g><polygon points={pts([[46, 34], [52, 34], [51, 42], [47, 42]])} fill={ART.glass.base} opacity="0.85" /><polygon points={pts([[47.4, 38], [50.6, 38], [50.2, 41.4], [47.8, 41.4]])} fill={ART.amber.hi} /></g>
+        </g>
+      ) : logbook ? (
+        <g>
+          <Slab x={26} y={34} w={12} h={22} k={1.2} c="rust" /><Slab x={16} y={54} w={32} h={5} k={1.2} c="rust" o={0.8} />
+          <Bev t="polygon" points={pts([[8, 36], [56, 36], [52, 20], [12, 20]])} c="rust" o={1} />
+        </g>
+      ) : (
+        <g>
+          <Slab x={8} y={30} w={48} h={26} k={2.4} c={card ? 'dark' : 'steel'} o={1} />
+          <Seams x={8} y={30} w={48} h={26} cols={2} rows={1} op={0.4} />
+          <Hazard x={10} y={48} w={44} h={4} /><Rivets x={11} y={33} w={42} n={6} c="steel" />
+        </g>
+      )}
+      {/* the item on the surface */}
+      {logbook ? (
+        <g>
+          <polygon points={pts([[14, 35], [32, 31], [32, 20], [14, 24]])} fill={ART.paper.base} /><polygon points={pts([[50, 35], [32, 31], [32, 20], [50, 24]])} fill={ART.paper.hi} />
+          <line x1="32" y1="20" x2="32" y2="31" stroke={ART.paper.shade} strokeWidth="0.8" />
+          {[0, 1, 2, 3].map((i) => <g key={i}><line x1="17" y1={26 + i * 2.2 - i * 0.2} x2="30" y2={24.4 + i * 2.2} stroke={ART.note.blueInk} strokeWidth="0.4" /><line x1="35" y1={24.4 + i * 2.2} x2="48" y2={26 + i * 2.2 - i * 0.2} stroke={ART.note.blueInk} strokeWidth="0.4" /></g>)}
+          <text x="42" y="32.6" textAnchor="middle" fontSize="2.4" fill={ART.note.blueInk} fontWeight="700" {...PT}>Vane, T.</text>
+          <polygon points={pts([[12, 22], [22, 21], [20, 27], [12, 28]])} fill={ART.ink} opacity="0.12" />
+        </g>
+      ) : card ? (
+        <g>
+          <polygon points={pts([[18, 40], [36, 36], [44, 40], [42, 46], [34, 44], [22, 47]])} fill={ART.red.shade} />
+          <polygon points={pts([[17, 39], [35, 35], [43, 39], [41, 45], [33, 43], [21, 46]])} fill={ART.steel.base} />
+          <polygon points={pts([[28, 37], [38, 37], [41, 40], [34, 42], [28, 41]])} fill={ART.dark.base} />
+          <polygon points={pts([[20, 41], [27, 40], [27, 43], [21, 44]])} fill={ART.amber.hi} />
+          <polygon points={pts([[17, 39], [24, 38], [22, 41], [18, 42]])} fill={S.orange} style={{ animation:'ship-blink 2.4s ease-in-out infinite' }} />
+          <path d="M36 38 C38 33 34 31 37 27" fill="none" stroke={ART.dark.hi} strokeWidth="1.4" opacity="0.6" />
+        </g>
+      ) : (
+        <g transform="rotate(-5 32 34)">
+          <Bev t="polygon" points={pts([[16, 40], [44, 40], [44, 22], [16, 22]])} c="dark" o={0.9} />
+          <rect x="18" y="24" width="24" height="14" fill={warm ? ART.screen.amber : ART.screen.cyan} />
+          <rect x="18" y="24" width="24" height="3" fill={warm ? S.amber : S.cyan} opacity="0.35" />
+          {(variant === 'jon' ? ['HUB A 02:00', 'HUB B 04:00', 'HUB C 06:00'] : lounge ? ['CR 840,000', '3 SHELL CORPS', 'CORUSCANT ACCT'] : ['PULLING BAY 14', 'DL 71% STOPPED', 'GOING DARK']).map((t, i) => <text key={i} x="19.4" y={30.6 + i * 3.6} fontSize="2.3" fill={warm ? S.amberHi : S.cyanHi} {...PT}>{'> ' + t}</text>)}
+          <circle cx="40" cy="38" r="0.9" fill={S.green} />
+        </g>
+      )}
+      {variant === 'jon' && <g><polygon points={pts([[40, 44], [54, 42], [54, 52], [41, 53]])} fill={ART.paper.base} /><path d="M44 46 C50 44 52 50 46 51 C42 51 42 47 46 46" fill="none" stroke={ART.note.redInk} strokeWidth="1" /></g>}
+      {warm && <g fill="none" stroke={S.orange} strokeWidth="0.8" opacity="0.7">{[24, 32, 40].map((x, i) => <path key={x} d={`M${x} 20 C${x + 3} 16 ${x - 3} 12 ${x} 8`} style={{ animation:`holo-flicker ${1.6 + i * 0.4}s ease-in-out infinite` }} />)}</g>}
+      <Lights x={12} y={54} n={5} gap={4} r={0.7} seed={9} />
+      <Grime x={8} y={32} w={48} h={24} seed={(variant || 'd').length + 90} n={4} op={0.22} /><Scuff x={8} y={34} w={48} h={22} seed={(variant || 'd').length + 91} n={6} />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// STORAGE: crates, containers, drums, racks, lockers. The cargo language of the underworld and the dock.
+// ---------------------------------------------------------------------------
+function CrateBox({ x, y, w, h, c = 'dark', hz = true, k = 1.6, cols, rows }) {
+  return (
+    <g>
+      <Slab x={x} y={y} w={w} h={h} k={k} c={c} o={0.9} />
+      <Seams x={x} y={y} w={w} h={h} cols={cols ?? (w > 20 ? 2 : 1)} rows={rows ?? (h > 18 ? 1 : 0)} op={0.4} />
+      <rect x={x + 1.4} y={y + 1.2} width={w - 2.8} height="1.2" fill={ART[c].hi} opacity="0.8" />
+      {hz && h > 9 && <Hazard x={x + 1} y={y + h - 4.2} w={w - 2} h={3.2} />}
+    </g>
+  );
+}
+
+function PropCrateStack({ variant }) {
+  const S = ART.signal;
+  let body = null;
+  if (variant === 'agri') {
+    body = (
+      <g>
+        <polygon points={pts([[6, 28], [14, 14], [50, 14], [54, 28]])} fill={ART.steel.shade} />
+        <CrateBox x={6} y={28} w={48} h={30} c="steel" hz={false} cols={3} rows={0} />
+        <rect x="9" y="31" width="42" height="9" fill={ART.ink} />
+        {Array.from({ length: 9 }, (_, i) => <g key={i}><rect x={11 + i * 4.5} y="31.4" width="2.6" height="6.4" fill={[S.cyanHi, S.white, S.magenta][i % 3]} opacity="0.9" /><rect x={11.5 + i * 4.5} y="30" width="1.6" height="1.8" fill={ART.steel.hi} /></g>)}
+        <text x="30" y="48" textAnchor="middle" fontSize="3" fill={ART.paper.base} fontWeight="700" {...PT}>AGRICULTURAL SUPPLIES</text>
+        <text x="30" y="53.6" textAnchor="middle" fontSize="2.3" fill={S.warn} {...PT}>SEAL: CUT. CONTENTS: STAGED</text>
+        <CrateBox x={58} y={36} w={32} h={22} c="dark" /><CrateBox x={62} y={18} w={26} h={19} c="dark" />
+        {[0, 1, 2].map((i) => <g key={i}><Slab x={66 + i * 7} y={52 + (i % 2)} w={5} h={7} k={0.8} c="amber" o={0.4} /></g>)}
+      </g>
+    );
+  } else if (variant === 'weapons') {
+    body = (
+      <g>
+        {Array.from({ length: 32 }, (_, i) => { const col = i % 8, row = Math.floor(i / 8); return <CrateBox key={i} x={4 + col * 11.3} y={10 + row * 11.6} w={10} h={10.2} c={(col + row) % 3 ? 'dark' : 'steel'} hz={false} k={1} cols={1} rows={0} />; })}
+        <polygon points={pts([[70, 20], [88, 18], [89, 27], [71, 29]])} fill={ART.paper.base} /><text x="79.5" y="24" textAnchor="middle" fontSize="2.2" fill={ART.note.ink} fontWeight="700" {...PT}>MANIFEST</text>
+        <text x="48" y="7.6" textAnchor="middle" fontSize="3.2" fill={S.warn} fontWeight="700" {...PT}>AGRICULTURAL EQUIPMENT x32</text>
+        <Hazard x={4} y={58} w={88} h={3} />
+      </g>
+    );
+  } else if (variant === 'syndicate') {
+    body = (
+      <g>
+        <CrateBox x={4} y={30} w={34} h={28} c="dark" /><Glyph k="chain" x={21} y={42} s={5.4} c={S.crimson} />
+        <CrateBox x={8} y={12} w={28} h={19} c="dark" hz={false} /><Glyph k="chain" x={22} y={22} s={4.4} c={S.crimson} />
+        {[0, 1, 2, 3].map((i) => <Bev key={i} t="polygon" points={pts([[42, 56 - i * 3], [64, 56 - i * 3], [66, 58 - i * 3], [44, 58 - i * 3]])} c="steel" o={0.5} />)}
+        <Bev t="polygon" points={pts([[44, 42], [62, 42], [64, 36], [60, 28], [46, 28], [42, 36]])} c="dark" o={0.9} /><rect x="49" y="30" width="8" height="2.4" fill={S.amber} /><polygon points={pts([[46, 42], [60, 42], [58, 46], [48, 46]])} fill={ART.dark.shade} />
+        <Bev t="polygon" points={pts([[72, 58], [72, 28], [90, 28], [90, 58]])} c="pearl" o={0.8} /><ellipse cx="81" cy="28" rx="9" ry="3" fill={ART.pearl.hi} /><ellipse cx="81" cy="28.4" rx="6" ry="2" fill={ART.ink} />
+        <Glyph k="cog" x={81} y={44} s={5} c={S.cyan} /><line x1="73" y1="52" x2="89" y2="52" stroke={ART.pearl.shade} strokeWidth="0.8" />
+        <text x="81" y="24" textAnchor="middle" fontSize="2.4" fill={S.cyanHi} {...PT}>EMPTY</text>
+      </g>
+    );
+  } else if (variant === 'arms') {
+    body = (
+      <g>
+        {Array.from({ length: 10 }, (_, i) => { const col = i % 5, row = Math.floor(i / 5); return <g key={i}><CrateBox x={4 + col * 18} y={14 + row * 21} w={17} h={20} c={(col + row) % 2 ? 'dark' : 'steel'} hz={false} k={1.2} cols={1} rows={0} /><rect x={6 + col * 18} y={22 + row * 21} width="13" height="4.4" fill={S.orange} /><text x={12.5 + col * 18} y={25.6 + row * 21} textAnchor="middle" fontSize="2.3" fill={ART.ink} fontWeight="700" {...PT}>M-SONN</text></g>; })}
+        <Hazard x={4} y={56} w={88} h={3} />
+      </g>
+    );
+  } else if (variant === 'arms_cache') {
+    body = (
+      <g>
+        <CrateBox x={4} y={28} w={50} h={30} c="steel" hz={false} cols={3} rows={0} />
+        {Array.from({ length: 5 }, (_, i) => <g key={i}><path d={`M${10 + i * 8} 40 C${10 + i * 8} 28 ${18 + i * 8} 28 ${18 + i * 8} 40 Z`} fill={ART.hull.base} /><path d={`M${10 + i * 8} 40 C${10 + i * 8} 31 ${14 + i * 8} 29 ${16 + i * 8} 31`} fill="none" stroke={ART.hull.hi} strokeWidth="0.9" /><rect x={10 + i * 8} y="39" width="8" height="1.6" fill={S.crimson} /></g>)}
+        <text x="29" y="50" textAnchor="middle" fontSize="2.6" fill={ART.paper.base} fontWeight="700" {...PT}>PHRIK x20  UNDERARMOR x6</text>
+        <CrateBox x={58} y={38} w={32} h={20} c="dark" /><CrateBox x={60} y={20} w={26} h={19} c="dark" hz={false} />
+        <Bev t="polygon" points={pts([[66, 30], [84, 30], [86, 36], [82, 40], [68, 40], [64, 36]])} c="pearl" o={0.6} /><circle cx="75" cy="34.6" r="3.2" fill={ART.red.base} /><text x="75" y="35.6" textAnchor="middle" fontSize="2.2" fill={S.white} fontWeight="700" {...PT}>SEN</text>
+      </g>
+    );
+  } else if (variant === 'locker') {
+    body = (
+      <g>
+        <Slab x={22} y={4} w={52} h={54} k={3} c="steel" o={1} />
+        <Seams x={22} y={4} w={52} h={54} cols={1} rows={3} op={0.5} />
+        <Vent x={26} y={8} w={20} h={8} n={4} /><Vent x={50} y={8} w={20} h={8} n={4} />
+        <Slab x={52} y={26} w={18} h={22} k={1.4} c="dark" o={0.7} />
+        {Array.from({ length: 6 }, (_, i) => <rect key={i} x={54.4 + (i % 3) * 5} y={29 + Math.floor(i / 3) * 5} width="3.6" height="3.6" fill={ART.dark.hi} />)}
+        <rect x="54" y="40" width="14" height="3" fill={ART.screen.red} /><circle cx="56" cy="41.5" r="0.8" fill={S.red} style={{ animation:'ship-blink 1.4s steps(2) infinite' }} /><text x="62" y="42.6" fontSize="2" fill={S.redHi} {...PT}>MIL CIPHER</text>
+        {[0, 1, 2].map((i) => <polygon key={i} points={pts([[26 + i * 5, 58], [28 + i * 5, 40], [31 + i * 5, 40], [29 + i * 5, 58]])} fill={ART.paper.hi} />)}
+        <Slab x={28} y={30} w={20} h={6} k={0.8} c="amber" o={0.4} /><text x="38" y="34.4" textAnchor="middle" fontSize="2.3" fill={ART.ink} fontWeight="700" {...PT}>FREIGHT 34-E</text>
+        <Hazard x={24} y={52} w={48} h={4} />
+      </g>
+    );
+  } else if (variant === 'stash') {
+    body = (
+      <g>
+        <CrateBox x={26} y={8} w={46} h={40} c="steel" hz={false} cols={2} rows={1} />
+        <g stroke={ART.amber.hi} strokeWidth="1.2" opacity="0.9"><line x1="26" y1="28" x2="72" y2="28" strokeDasharray="3 2" /><line x1="49" y1="8" x2="49" y2="48" strokeDasharray="3 2" /></g>
+        <Slab x={52} y={28} w={14} h={9} k={1} c="dark" o={0.5} /><circle cx="59" cy="32.6" r="1.4" fill={S.amber} />
+        <Bev t="polygon" points={pts([[10, 58], [10, 28], [14, 24], [40, 24], [44, 28], [44, 58]])} c="teal" o={1} />
+        <ellipse cx="27" cy="24" rx="15" ry="3.6" fill={ART.teal.hi} /><ellipse cx="27" cy="24.4" rx="11" ry="2.4" fill={ART.dark.shade} />
+        <rect x="10" y="34" width="34" height="2.6" fill={ART.dark.shade} /><rect x="10" y="48" width="34" height="2.6" fill={ART.dark.shade} />
+        <Hazard x={14} y={40} w={26} h={5} /><text x="27" y="55.4" textAnchor="middle" fontSize="2.2" fill={ART.pearl.hi} {...PT}>COOLANT</text>
+      </g>
+    );
+  } else if (variant === 'false_panel') {
+    body = (
+      <g>
+        <Slab x={8} y={4} w={80} h={54} k={3} c="concrete" o={1} />
+        <Seams x={8} y={4} w={80} h={54} cols={3} rows={1} op={0.4} />
+        <rect x="26" y="12" width="44" height="40" fill={ART.ink} />
+        <polygon points={pts([[26, 12], [14, 16], [14, 56], [26, 52]])} fill={ART.concrete.hi} /><polygon points={pts([[26, 12], [14, 16], [14, 20], [26, 16]])} fill={ART.concrete.shade} />
+        <Bev t="polygon" points={pts([[30, 52], [30, 28], [66, 28], [66, 52]])} c="dark" o={0.9} />
+        <Seams x={30} y={28} w={36} h={24} cols={2} op={0.45} /><Glyph k="chain" x={48} y={40} s={6} c={S.crimson} />
+        {[0, 1, 2].map((i) => <g key={i}><Slab x={34 + i * 10} y={21} w={8} h={6} k={1} c="dark" o={0.5} /><rect x={36 + i * 10} y="22.6" width="4" height="2.6" fill={S.lime} style={{ animation:`ship-blink ${2 + i * 0.6}s steps(2) infinite` }} /></g>)}
+        <Rivets x={12} y={7} w={72} n={9} /><Hazard x={10} y={54} w={76} h={3} />
+      </g>
+    );
+  } else {
+    body = (
+      <g>
+        {[[6, 34, 30, 24, 'stone'], [34, 24, 28, 34, 'stone'], [60, 38, 28, 20, 'stone'], [20, 16, 20, 20, 'stone']].map(([x, y, w, h, c], i) => <Bev key={i} t="polygon" points={pts([[x, y + h], [x + 2, y + 5], [x + w * 0.4, y], [x + w * 0.8, y + 3], [x + w, y + h * 0.4], [x + w - 2, y + h]])} c={c} o={1} />)}
+        <g stroke={ART.stone.shade} strokeWidth="0.9" fill="none"><polyline points={pts([[40, 30], [46, 36], [52, 30], [58, 40]])} /><polyline points={pts([[12, 44], [20, 48], [26, 44]])} /><polygon points={pts(ngon(72, 48, 5, 5, 4, Math.PI / 4))} /></g>
+        <polygon points={pts([[22, 20], [34, 22], [32, 32], [24, 30]])} fill={ART.moss.base} opacity="0.85" /><polygon points={pts([[36, 28], [48, 28], [44, 34]])} fill={ART.moss.hi} opacity="0.7" />
+        <text x="48" y="60" textAnchor="middle" fontSize="2.2" fill={ART.beige.hi} {...PT}>PRE-REPUBLIC STONEWORK</text>
+      </g>
+    );
+  }
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      {body}
+      <Rivets x={6} y={61.4} w={84} n={10} />
+      <Grime x={4} y={8} w={88} h={52} seed={(variant || 'c').length + 100} n={5} op={0.2} /><Scuff x={6} y={10} w={84} h={48} seed={(variant || 'c').length + 101} n={8} c="dark" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CONTAINER STACK: three high Senate sealed grey containers on a platform.
+// ---------------------------------------------------------------------------
+function PropContainerStack() {
+  const S = ART.signal;
+  const seals = ['blue', 'amber', 'red', 'cyan', 'green', 'violet'];
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={60} ry={2.6} />
+      {[0, 1, 2].map((row) => [0, 1, 2, 3].map((col) => {
+        const x = 3 + col * 31, y = 4 + row * 18, i = row * 4 + col;
+        return (
+          <g key={i}>
+            <Slab x={x} y={y} w={30} h={17} k={1.4} c={(row + col) % 2 ? 'hull' : 'steel'} o={0.8} />
+            {Array.from({ length: 7 }, (_, j) => <rect key={j} x={x + 3 + j * 3.6} y={y + 2.6} width="1.2" height="12" fill={ART.ink} opacity="0.28" />)}
+            <rect x={x} y={y} width="30" height="1.4" fill={ART.hull.hi} opacity="0.8" />
+            <polygon points={pts(ngon(x + 24, y + 8.6, 3.4, 3.4, 8))} fill={S[seals[i % 6]]} /><polygon points={pts(ngon(x + 24, y + 8.6, 1.6, 1.6, 8))} fill={ART.ink} />
+            <text x={x + 3} y={y + 15.4} fontSize="2.2" fill={ART.ink} fontWeight="700" {...PT}>{'SCC-' + (140 + i * 7)}</text>
+          </g>
+        );
+      }))}
+      <text x="64" y="62" textAnchor="middle" fontSize="2.8" fill={ART.beige.hi} {...PT}>LEGISLATIVE MATERIALS x48</text>
+      <Rivets x={4} y={3.4} w={120} n={14} /><Grime x={3} y={4} w={122} h={54} seed={110} n={6} op={0.2} /><Scuff x={4} y={6} w={120} h={50} seed={111} n={9} c="hull" />
+    </svg>
+  );
+}
+
+function PropCargoContainer() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Bev t="polygon" points={pts([[4, 58], [4, 12], [8, 8], [88, 8], [92, 12], [92, 58]])} c="rust" o={1} />
+      {Array.from({ length: 14 }, (_, j) => <rect key={j} x={9 + j * 5.6} y="12" width="1.8" height="42" fill={ART.ink} opacity="0.25" />)}
+      <rect x="4" y="8" width="88" height="2" fill={ART.rust.hi} />
+      <Bev t="polygon" points={pts([[56, 58], [56, 14], [88, 14], [88, 58]])} c="dark" o={0.8} />
+      <polygon points={pts([[60, 58], [60, 18], [84, 18], [84, 58]])} fill={ART.ink} />
+      <polygon points={pts([[56, 14], [40, 18], [40, 58], [56, 58]])} fill={ART.rust.base} /><polygon points={pts([[56, 14], [40, 18], [40, 20], [56, 16]])} fill={ART.rust.hi} /><Seams x={40} y={18} w={16} h={40} rows={2} op={0.4} />
+      <g transform="rotate(-8 70 52)"><CrateBox x={62} y={44} w={16} h={12} c="steel" hz={false} cols={1} rows={0} /></g>
+      <Slab x={64} y={54} w={12} h={4} k={0.8} c="amber" o={0.4} />
+      <polygon points={pts([[20, 38], [36, 38], [36, 50], [20, 50]])} fill={ART.ink} opacity="0.45" />
+      <text x="28" y="43.6" textAnchor="middle" fontSize="2.8" fill={S.warn} fontWeight="700" {...PT}>DO NOT</text><text x="28" y="48" textAnchor="middle" fontSize="2.8" fill={S.warn} fontWeight="700" {...PT}>OPEN THIS</text>
+      <g stroke={S.orange} strokeWidth="1.1"><line x1="18" y1="34" x2="38" y2="52" /></g>
+      <text x="22" y="26" fontSize="3.2" fill={ART.rust.hi} fontWeight="700" {...PT}>CZK-4471</text>
+      <Rivets x={7} y={56} w={82} n={10} />
+      <Grime x={4} y={8} w={88} h={50} seed={120} n={6} op={0.26} /><Scuff x={6} y={10} w={84} h={46} seed={121} n={8} c="rust" />
+    </svg>
+  );
+}
+
+function PropDrumArray() {
+  const S = ART.signal;
+  const drum = (x, y, k) => (
+    <g key={k}>
+      <Bev t="polygon" points={pts([[x, y + 22], [x, y + 5], [x + 14, y + 5], [x + 14, y + 22]])} c="teal" o={0.8} />
+      <ellipse cx={x + 7} cy={y + 5} rx="7" ry="2.4" fill={ART.teal.hi} /><ellipse cx={x + 7} cy={y + 5.2} rx="4.6" ry="1.4" fill={ART.dark.shade} />
+      <rect x={x} y={y + 10} width="14" height="1.6" fill={ART.dark.shade} /><rect x={x} y={y + 17} width="14" height="1.6" fill={ART.dark.shade} />
+      <rect x={x + 3} y={y + 12} width="8" height="4.4" fill={ART.amber.base} /><text x={x + 7} y={y + 15.4} textAnchor="middle" fontSize="2" fill={ART.ink} fontWeight="700" {...PT}>T-4</text>
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      {[0, 1, 2, 3, 4, 5].map((i) => drum(5 + i * 15, 12, 'a' + i))}
+      {[0, 1, 2, 3, 4].map((i) => drum(12 + i * 15, 34, 'b' + i))}
+      <text x="48" y="9" textAnchor="middle" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>TYPE-4 REPULSOR FUEL x50</text>
+      <polygon points={pts([[30, 56], [66, 56], [66, 62], [30, 62]])} fill={ART.red.base} /><text x="48" y="60.6" textAnchor="middle" fontSize="2.6" fill={S.white} fontWeight="700" {...PT}>REPUBLIC MILITARY SUPPLY</text>
+      <Rivets x={6} y={63} w={84} n={10} />
+      <Grime x={4} y={14} w={88} h={46} seed={130} n={6} op={0.22} /><Scuff x={6} y={16} w={84} h={40} seed={131} n={8} c="teal" />
+    </svg>
+  );
+}
+
+function PropHabBlock() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={91} rx={58} ry={3.4} />
+      <Bev t="polygon" points={pts([[4, 88], [4, 8], [8, 4], [120, 4], [124, 8], [124, 88]])} c="steel" o={1.1} />
+      <rect x="4" y="4" width="120" height="3" fill={ART.hull.hi} opacity="0.7" />
+      {Array.from({ length: 48 }, (_, i) => {
+        const col = i % 8, row = Math.floor(i / 8), x = 10 + col * 13.4, y = 12 + row * 10.6, lit = i !== 5 && i % 5 !== 3;
+        return (
+          <g key={i}>
+            <Slab x={x} y={y} w={12} h={9.4} k={1.2} c="dark" o={0.5} />
+            <rect x={x + 1.6} y={y + 1.8} width="8.8" height="1.6" fill={lit ? ART.amber.hi : ART.dark.shade} /><rect x={x + 1.6} y={y + 4.4} width="8.8" height="1.2" fill={ART.ink} opacity="0.7" />
+            <circle cx={x + 9.6} cy={y + 7.6} r="0.8" fill={lit ? S.amber : S.green} />
+            <text x={x + 1.6} y={y + 8.4} fontSize="1.8" fill={ART.beige.base} opacity="0.7" {...PT}>{i + 1}</text>
+          </g>
+        );
+      })}
+      <Slab x={10} y={76} w={44} h={10} k={1.2} c="dark" o={0.6} />
+      <text x="32" y="81.4" textAnchor="middle" fontSize="3" fill={S.amberHi} fontWeight="700" {...PT}>OCCUPIED 39 / 48</text><text x="32" y="85" textAnchor="middle" fontSize="2.2" fill={S.amber} {...PT}>2 CR PER SLEEP CYCLE</text>
+      <Slab x={64} y={77} w={26} h={9} k={1} c="wood" o={0.7} /><text x="77" y="82.6" textAnchor="middle" fontSize="2" fill={ART.paper.hi} {...PT}>MGR: CAPSULE 47</text>
+      <Vent x={96} y={77} w={24} h={9} n={4} />
+      <Rivets x={7} y={89} w={114} n={14} /><Seams x={4} y={4} w={120} h={84} cols={3} op={0.2} />
+      <Grime x={4} y={6} w={120} h={82} seed={140} n={8} op={0.22} /><Scuff x={6} y={8} w={116} h={78} seed={141} n={10} c="steel" />
+    </svg>
+  );
+}
+
+function PropEvidenceLocker() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Slab x={3} y={3} w={90} h={56} k={3} c="deepglass" o={1} />
+      {Array.from({ length: 12 }, (_, i) => {
+        const col = i % 4, row = Math.floor(i / 4), x = 7 + col * 21.4, y = 8 + row * 16.6, hot = i === 6;
+        return (
+          <g key={i}>
+            <Slab x={x} y={y} w={20} h={15} k={1.2} c="steel" o={0.7} />
+            <Slab x={x + 2} y={y + 2} w={16} h={5} k={0.6} c="dark" o={0.4} /><Lights x={x + 4} y={y + 4.6} n={3} gap={4} r={0.7} colors={hot ? ['red'] : ['green']} blink={false} />
+            <Slab x={x + 14} y={y + 9} w={4} h={4} k={0.6} c="brass" o={0.4} />
+            {hot && <g><polygon points={pts([[x + 1, y + 9], [x + 12, y + 9], [x + 12, y + 14], [x + 1, y + 14]])} fill={S.red} /><text x={x + 6.5} y={y + 12.8} textAnchor="middle" fontSize="2.2" fill={S.white} fontWeight="700" {...PT}>CLOSED</text></g>}
+          </g>
+        );
+      })}
+      <polygon points={pts([[3, 54], [93, 54], [93, 59], [3, 59]])} fill={ART.dark.shade} /><text x="48" y="58" textAnchor="middle" fontSize="3" fill={S.cyanHi} fontWeight="700" {...PT}>BAY 14: CASE CLOSED. SEAL: CSF CODE</text>
+      <g transform="rotate(-6 60 30)"><polygon points={pts([[52, 30], [70, 30], [70, 36], [52, 36]])} fill={ART.paper.base} /><text x="61" y="34.4" textAnchor="middle" fontSize="2.2" fill={ART.note.ink} fontWeight="700" {...PT}>SEN 1182-C</text></g>
+      <Rivets x={7} y={5} w={82} n={10} /><Seams x={3} y={3} w={90} h={56} cols={3} op={0.2} />
+      <Grime x={4} y={6} w={88} h={50} seed={150} n={5} op={0.2} /><Scuff x={6} y={8} w={84} h={46} seed={151} n={8} c="steel" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// RACKS, BENCHES AND DOORS
+// ---------------------------------------------------------------------------
+function PropWeaponRack({ variant }) {
+  const S = ART.signal;
+  const pauld = variant === 'pauldron';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Slab x={3} y={3} w={90} h={56} k={3} c={pauld ? 'dark' : 'rust'} o={1} />
+      <Seams x={3} y={3} w={90} h={56} cols={5} rows={2} op={0.25} />
+      {Array.from({ length: 8 }, (_, i) => <circle key={i} cx={8 + i * 11.4} cy="9" r="0.9" fill={ART.dark.shade} />)}
+      {pauld ? (
+        <g>
+          {Array.from({ length: 6 }, (_, i) => {
+            const x = 8 + i * 14.4;
+            return (
+              <g key={i}>
+                <Slab x={x + 4} y={34} w={4} h={16} k={0.8} c="steel" o={0.5} />
+                <Bev t="polygon" points={pts([[x, 34], [x + 12, 34], [x + 13, 26], [x + 8, 17], [x + 4, 17], [x - 1, 26]])} c="hull" o={0.8} />
+                <path d={`M${x + 1} 28 C${x + 3} 20 ${x + 9} 20 ${x + 11} 28`} fill="none" stroke={ART.hull.hi} strokeWidth="0.9" />
+                <rect x={x} y="31" width="12" height="2" fill={S.crimson} opacity="0.85" />
+                <Slab x={x + 1} y={50} w={10} h={3} k={0.6} c="steel" o={0.4} />
+              </g>
+            );
+          })}
+          <text x="48" y="14" textAnchor="middle" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>PHRIK COMPOSITE x6</text>
+          <text x="48" y="57.2" textAnchor="middle" fontSize="2.3" fill={ART.beige.hi} {...PT}>REPUBLIC TROOPER SIZING</text>
+        </g>
+      ) : (
+        <g>
+          <Bev t="rect" x="8" y="14" width="80" height="2.4" c="steel" o={0.6} /><Bev t="rect" x="8" y="34" width="80" height="2.4" c="steel" o={0.6} />
+          {[0, 1, 2].map((i) => <g key={i}><Bev t="polygon" points={pts([[12 + i * 14, 14], [18 + i * 14, 14], [18 + i * 14, 20], [12 + i * 14, 20]])} c="dark" o={0.6} /><polygon points={pts([[14 + i * 14, 20], [16 + i * 14, 20], [16 + i * 14, 33], [14 + i * 14, 33]])} fill={S.cyanHi} opacity={0.85} /><polyline points={pts([[12 + i * 14, 15], [16 + i * 14, 18], [14 + i * 14, 20]])} fill="none" stroke={ART.ink} strokeWidth="0.6" /></g>)}
+          {[0, 1, 2].map((i) => <g key={i}><polygon points={pts([[56 + i * 11, 36], [60 + i * 11, 36], [62 + i * 11, 52], [58 + i * 11, 53]])} fill={ART.steel.hi} /><Slab x={55 + i * 11} y={30} w={7} h={6} k={0.8} c="dark" o={0.5} /><rect x={57 + i * 11} y="31" width="3" height="2" fill={S.red} /></g>)}
+          <Bev t="polygon" points={pts([[10, 42], [34, 42], [36, 46], [24, 48], [24, 54], [18, 54], [18, 48], [10, 46]])} c="steel" o={0.6} /><polyline points={pts([[12, 46], [20, 44]])} fill="none" stroke={ART.ink} strokeWidth="0.8" />
+          <g transform="rotate(-4 78 14)"><polygon points={pts([[56, 5], [92, 5], [92, 13], [56, 13]])} fill={ART.paper.base} /><text x="74" y="9" textAnchor="middle" fontSize="2.2" fill={ART.note.ink} fontWeight="700" {...PT}>FIGHT NIGHT ONLY.</text><text x="74" y="12" textAnchor="middle" fontSize="2.2" fill={ART.note.redInk} fontWeight="700" {...PT}>PAY FOR WHAT YOU BREAK.</text></g>
+        </g>
+      )}
+      <Rivets x={7} y={56} w={82} n={10} />
+      <Grime x={4} y={5} w={88} h={52} seed={pauld ? 160 : 162} n={6} op={0.22} /><Scuff x={6} y={7} w={84} h={48} seed={pauld ? 161 : 163} n={8} c="dark" />
+    </svg>
+  );
+}
+
+function PropMedicCrate() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={26} ry={3} />
+      <polygon points={pts([[8, 28], [14, 14], [50, 14], [56, 28]])} fill={ART.steel.shade} />
+      <CrateBox x={6} y={28} w={52} h={29} c="canvas" hz={false} cols={3} rows={0} />
+      <polygon points={pts(ngon(20, 40, 8, 8, 8))} fill={ART.pearl.base} /><rect x="18.6" y="34" width="2.8" height="12" fill={ART.red.base} /><rect x="14" y="38.6" width="12" height="2.8" fill={ART.red.base} />
+      {[0, 1, 2].map((i) => <polygon key={i} points={pts([[32 + i * 8, 22], [38 + i * 8, 22], [38 + i * 8, 27], [32 + i * 8, 27]])} fill={ART.teal.hi} />)}
+      <Bev t="polygon" points={pts([[32, 36], [38, 36], [38, 50], [32, 50]])} c="pearl" o={0.6} /><rect x="32" y="36" width="6" height="3" fill={S.red} />
+      {[0, 1].map((i) => <g key={i}><rect x={42 + i * 5} y="40" width="2.2" height="9" fill={S.cyanHi} /><rect x={41.6 + i * 5} y="38" width="3" height="2" fill={ART.steel.hi} /><line x1={43 + i * 5} y1="49" x2={43 + i * 5} y2="52" stroke={ART.steel.hi} strokeWidth="0.6" /></g>)}
+      <g transform="rotate(-5 32 55)"><polygon points={pts([[14, 52], [50, 52], [50, 59], [14, 59]])} fill={ART.paper.base} /><text x="32" y="57.6" textAnchor="middle" fontSize="3" fill={ART.note.ink} fontWeight="700" {...PT}>NO QUESTIONS ASKED</text></g>
+      <Rivets x={9} y={30} w={46} n={6} c="canvas" />
+      <Grime x={6} y={28} w={52} h={30} seed={170} n={4} op={0.2} /><Scuff x={8} y={30} w={48} h={26} seed={171} n={6} c="canvas" />
+    </svg>
+  );
+}
+
+function PropScrapBin() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={26} ry={3} />
+      <Bev t="polygon" points={pts([[6, 58], [10, 24], [54, 24], [58, 58]])} c="canvas" o={1} />
+      <Seams x={8} y={24} w={48} h={34} cols={3} rows={1} op={0.4} />
+      <polygon points={pts([[8, 24], [56, 24], [58, 20], [6, 20]])} fill={ART.canvas.hi} />
+      <g transform="rotate(-14 8 20)"><Bev t="polygon" points={pts([[6, 22], [34, 22], [34, 14], [8, 14]])} c="steel" o={0.8} /></g>
+      <path d="M14 22 C12 12 20 8 22 18" fill="none" stroke={ART.copper.base} strokeWidth="2" /><path d="M38 22 C42 10 50 12 46 22" fill="none" stroke={ART.dark.hi} strokeWidth="2.4" />
+      <rect x="28" y="12" width="4" height="9" fill={ART.steel.base} transform="rotate(20 30 16)" /><Slab x={42} y={14} w={8} h={7} k={1} c="teal" o={0.5} />
+      <g transform="rotate(12 22 30)"><Bev t="rect" x="14" y="26" width="9" height="12" c="dark" o={0.6} /><rect x="16" y="24.4" width="5" height="2" fill={ART.steel.hi} /><polyline points={pts([[15, 28], [19, 32], [17, 36], [21, 38]])} fill="none" stroke={S.amber} strokeWidth="0.7" /></g>
+      <g transform="rotate(-8 40 34)"><polygon points={pts([[32, 30], [46, 30], [47, 37], [33, 38]])} fill={ART.paper.base} /><polygon points={pts([[44, 30], [47, 31], [46, 34], [44, 33]])} fill={ART.dark.base} /><rect x="34" y="32" width="8" height="2.4" fill={ART.red.base} /></g>
+      <Slab x={10} y={44} w={44} h={9} k={1} c="dark" o={0.5} /><text x="32" y="50.4" textAnchor="middle" fontSize="3.2" fill={S.warn} fontWeight="700" {...PT}>SCRAP ONLY</text>
+      <Rivets x={11} y={26} w={42} n={5} c="canvas" />
+      <Grime x={6} y={24} w={52} h={34} seed={180} n={5} op={0.28} /><Scuff x={8} y={26} w={48} h={30} seed={181} n={7} c="canvas" />
+    </svg>
+  );
+}
+
+function PropFuelHose() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={26} ry={3} />
+      <Slab x={8} y={52} w={26} h={7} k={1.2} c="steel" />
+      <Bev t="polygon" points={pts([[12, 52], [12, 10], [16, 6], [30, 6], [34, 10], [34, 52]])} c="rust" o={1} />
+      <Seams x={12} y={6} w={22} h={46} rows={2} op={0.4} />
+      <rect x="15" y="10" width="16" height="10" fill={ART.screen.amber} /><text x="23" y="16.6" textAnchor="middle" fontSize="3.6" fill={S.gold} fontWeight="700" {...PT}>FUEL</text>
+      <rect x="15" y="14" width="16" height="1" fill={S.amber} opacity="0.4" />
+      <polygon points={pts(ngon(23, 28, 5.4, 5.4, 10))} fill={ART.dark.shade} /><polygon points={pts(ngon(23, 28, 4, 4, 10))} fill={ART.paper.hi} /><line x1="23" y1="28" x2="26" y2="25" stroke={S.red} strokeWidth="0.9" />
+      <Glyph k="drop" x={23} y={40} s={4} c={S.orange} />
+      <Hazard x={13} y={46} w={20} h={4} />
+      <Cable d="M34 24 C48 20 56 30 50 40 C46 48 36 46 38 54" c={ART.dark.base} w={3.4} />
+      <Bev t="polygon" points={pts([[35, 54], [42, 54], [41, 60], [36, 60]])} c="brass" o={0.6} />
+      <g fill={ART.pearl.base} opacity="0.55" style={{ animation:'steam-rise 3s ease-out infinite' }}><polygon points={pts(ngon(40, 50, 3.6, 2.6, 7))} /><polygon points={pts(ngon(44, 44, 4.4, 3, 7))} opacity="0.7" /></g>
+      <g fill={ART.pearl.base} opacity="0.4" style={{ animation:'steam-rise 3.8s ease-out 1s infinite' }}><polygon points={pts(ngon(38, 46, 3, 2.2, 7))} /></g>
+      <polygon points={pts([[36, 60], [38, 63], [40, 60]])} fill={S.amber} opacity="0.8" />
+      <Rivets x={14} y={8} w={18} n={4} c="rust" />
+      <Grime x={12} y={8} w={22} h={44} seed={190} n={5} op={0.28} /><Scuff x={12} y={10} w={22} h={40} seed={191} n={6} c="rust" />
+    </svg>
+  );
+}
+
+function PropStorageAlcoves() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Slab x={2} y={2} w={92} h={57} k={3} c="concrete" o={1} />
+      {[0, 1, 2, 3, 4].map((i) => {
+        const x = 6 + i * 17.6, hot = i === 2;
+        return (
+          <g key={i}>
+            <Bev t="polygon" points={pts([[x, 56], [x, 22], [x + 3, 17], [x + 13, 17], [x + 16, 22], [x + 16, 56]])} c="dark" o={0.9} />
+            <polygon points={pts([[x + 2, 56], [x + 2, 23], [x + 4, 19.6], [x + 12, 19.6], [x + 14, 23], [x + 14, 56]])} fill={hot ? ART.amber.shade : ART.ink} />
+            <text x={x + 8} y="13.6" textAnchor="middle" fontSize="4" fill={hot ? S.amberHi : ART.beige.base} fontWeight="700" {...PT}>{i + 1}</text>
+            {hot ? (
+              <g>
+                <Bev t="polygon" points={pts([[x + 3, 56], [x + 3, 36], [x + 13, 36], [x + 13, 56]])} c="steel" o={0.6} />
+                <Slab x={x + 5} y={42} w={6} h={7} k={0.8} c="red" o={0.4} /><circle cx={x + 8} cy="45.5" r="1.4" fill={S.red} style={{ animation:'ship-blink 1.4s steps(2) infinite' }} />
+                <Glow cx={x + 8} cy={28} rx={5} ry={6} c={S.cyan} opacity={0.5} /><rect x={x + 6.4} y="24" width="3.2" height="9" fill={ART.pearl.base} /><rect x={x + 6.4} y="24" width="3.2" height="2" fill={ART.steel.hi} />
+              </g>
+            ) : <g><rect x={x + 4} y="50" width="8" height="5" fill={ART.dark.base} /></g>}
+          </g>
+        );
+      })}
+      <text x="48" y="8" textAnchor="middle" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>RESTRICTED STORAGE: THIRD ON THE LEFT</text>
+      <Hazard x={4} y={57} w={88} h={2.6} /><Rivets x={6} y={4} w={84} n={10} /><Seams x={2} y={2} w={92} h={57} cols={4} op={0.2} />
+      <Grime x={4} y={6} w={88} h={50} seed={200} n={6} op={0.24} /><Scuff x={6} y={8} w={84} h={46} seed={201} n={8} c="concrete" />
+    </svg>
+  );
+}
+
+function PropArchiveCabinet({ variant }) {
+  const S = ART.signal;
+  let body = null;
+  if (variant === 'dossier') {
+    body = (
+      <g>
+        <Slab x={12} y={6} w={40} h={52} k={2} c="steel" o={1} />
+        {[0, 1, 2, 3].map((i) => <g key={i}><Slab x={15} y={9 + i * 12.4} w={34} h={11} k={1} c="dark" o={0.5} /><Slab x={26} y={13 + i * 12.4} w={12} h={3} k={0.6} c="steel" o={0.4} /><rect x="17" y={10.6 + i * 12.4} width="9" height="3.4" fill={ART.paper.base} /></g>)}
+        <rect x="15" y="22" width="34" height="3" fill={S.red} /><text x="32" y="24.4" textAnchor="middle" fontSize="2.3" fill={S.white} fontWeight="700" {...PT}>CLASSIFIED</text>
+        <g transform="rotate(6 42 20)"><polygon points={pts([[34, 8], [50, 8], [50, 18], [34, 18]])} fill={ART.paper.hi} /><text x="42" y="12.6" textAnchor="middle" fontSize="2" fill={ART.note.ink} fontWeight="700" {...PT}>DOSSIER 7-THETA</text><rect x="35" y="14" width="14" height="1" fill={ART.note.redInk} /></g>
+      </g>
+    );
+  } else if (variant === 'sealed') {
+    body = (
+      <g>
+        <Bev t="polygon" points={pts([[8, 58], [8, 14], [14, 6], [50, 6], [56, 14], [56, 58]])} c="pearl" o={1} />
+        <polygon points={pts(ngon(32, 32, 18, 18, 12))} fill={ART.steel.shade} /><Bev t="polygon" points={pts(ngon(32, 32, 16, 16, 12))} c="steel" o={0.8} />
+        <Glyph k="cog" x={32} y={32} s={9} c={ART.hull.hi} />
+        <rect x="14" y="12" width="36" height="5" fill={ART.screen.red} /><text x="32" y="16" textAnchor="middle" fontSize="2.8" fill={S.redHi} fontWeight="700" {...PT}>SESSION SEALED</text>
+        <circle cx="32" cy="54" r="2" fill={S.red} style={{ animation:'ship-blink 1.6s steps(2) infinite' }} /><text x="32" y="58" textAnchor="middle" fontSize="2" fill={ART.ink} {...PT}>VOTE 11 TO 1</text>
+        {Array.from({ length: 12 }, (_, i) => <rect key={i} x={13 + i * 3} y="46" width="2" height="2" fill={i === 7 ? ART.dark.base : S.cyan} opacity="0.9" />)}
+      </g>
+    );
+  } else if (variant === 'minutes') {
+    body = (
+      <g>
+        <Slab x={8} y={4} w={48} h={55} k={2} c="dark" o={1} />
+        {[0, 1, 2].map((r) => Array.from({ length: 5 }, (_, i) => { const x = 11 + i * 9.2, y = 8 + r * 17; return <g key={r + '_' + i}><Bev t="polygon" points={pts([[x, y + 15], [x, y + 2], [x + 7, y + 2], [x + 7, y + 15]])} c={i === 2 && r === 1 ? 'red' : 'steel'} o={0.6} /><ellipse cx={x + 3.5} cy={y + 2} rx="3.5" ry="1.2" fill={ART.steel.hi} /><rect x={x + 1} y={y + 6} width="5" height="3.6" fill={ART.paper.base} /></g>; }))}
+        {[0, 1].map((i) => <rect key={i} x="9" y={25 + i * 17} width="46" height="1.6" fill={ART.dark.hi} />)}
+        <text x="32" y="57.4" textAnchor="middle" fontSize="2.4" fill={S.cyanHi} {...PT}>TORVENN x23</text>
+      </g>
+    );
+  } else {
+    body = (
+      <g>
+        <Slab x={26} y={34} w={12} h={22} k={1.2} c="bronze" /><Slab x={14} y={54} w={36} h={5} k={1.2} c="bronze" o={0.8} />
+        <Bev t="polygon" points={pts([[6, 36], [58, 36], [54, 14], [10, 14]])} c="bronze" o={1} />
+        <polygon points={pts([[10, 35], [32, 31], [32, 16], [10, 18]])} fill={ART.paper.base} /><polygon points={pts([[54, 35], [32, 31], [32, 16], [54, 18]])} fill={ART.paper.hi} />
+        <line x1="32" y1="16" x2="32" y2="31" stroke={ART.paper.shade} strokeWidth="0.8" />
+        {[0, 1, 2, 3, 4].map((i) => <g key={i}><line x1="13" y1={21 + i * 2.8} x2="30" y2={19.6 + i * 2.8} stroke={ART.note.blueInk} strokeWidth="0.4" /><line x1="35" y1={19.6 + i * 2.8} x2="51" y2={21 + i * 2.8} stroke={ART.note.blueInk} strokeWidth="0.4" /></g>)}
+        <Glyph k="cog" x={44} y={28} s={3.6} c={ART.red.base} />
+        <text x="21" y="33.4" textAnchor="middle" fontSize="2" fill={ART.note.ink} {...PT}>43 ACCOUNTS</text>
+        <Bev t="polygon" points={pts([[52, 20], [60, 14], [62, 17], [56, 24]])} c="brass" o={0.5} /><polygon points={pts([[56, 22], [62, 17], [64, 21]])} fill={S.amberHi} opacity="0.7" />
+      </g>
+    );
+  }
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={26} ry={3} />
+      {body}
+      <Rivets x={11} y={8} w={42} n={5} />
+      <Grime x={8} y={8} w={48} h={50} seed={(variant || 'a').length + 210} n={4} op={0.2} /><Scuff x={10} y={10} w={44} h={46} seed={(variant || 'a').length + 211} n={6} />
+    </svg>
+  );
+}
+
+function PropWorkbench({ variant }) {
+  const S = ART.signal;
+  const arms = variant === 'arms';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      {[10, 78].map((x) => <Bev key={x} t="polygon" points={pts([[x, 60], [x, 38], [x + 8, 38], [x + 8, 60]])} c="dark" o={0.7} />)}
+      <Bev t="polygon" points={pts([[4, 42], [92, 42], [88, 34], [8, 34]])} c={arms ? 'steel' : 'dark'} o={1} />
+      <Slab x={4} y={42} w={88} h={7} k={1} c="dark" o={0.7} />
+      <Seams x={4} y={42} w={88} h={7} cols={7} op={0.4} />
+      {arms ? (
+        <g>
+          <polygon points={pts([[8, 34], [28, 34], [28, 20], [8, 20]])} fill={ART.dark.shade} />
+          <Bev t="polygon" points={pts([[10, 32], [26, 32], [26, 26], [18, 22], [10, 24]])} c="steel" o={0.6} /><rect x="12" y="26" width="10" height="2" fill={S.amber} />
+          <Bev t="polygon" points={pts([[34, 32], [64, 32], [66, 29], [58, 27], [36, 27], [34, 29]])} c="dark" o={0.6} /><rect x="38" y="29" width="18" height="1.6" fill={S.cyan} />
+          <Bev t="polygon" points={pts([[70, 33], [86, 33], [86, 24], [78, 22], [70, 26]])} c="hull" o={0.6} /><polygon points={pts([[72, 28], [84, 28], [84, 30], [72, 30]])} fill={ART.dark.shade} />
+          <Bev t="polygon" points={pts([[66, 20], [74, 14], [78, 16], [70, 24]])} c="amber" o={0.5} />
+          {[0, 1, 2, 3].map((i) => <polygon key={i} points={pts([[32 + i * 7, 22], [36 + i * 7, 22], [37 + i * 7, 26], [31 + i * 7, 26]])} fill={[S.cyan, S.amber, S.green, S.red][i]} opacity="0.85" />)}
+          <line x1="40" y1="14" x2="40" y2="8" stroke={ART.steel.hi} strokeWidth="1.6" /><polygon points={pts([[36, 8], [44, 8], [42, 5], [38, 5]])} fill={ART.steel.base} />
+        </g>
+      ) : (
+        <g>
+          <Bev t="polygon" points={pts([[8, 32], [40, 32], [40, 12], [8, 12]])} c="dark" o={0.8} /><rect x="10" y="14" width="28" height="16" fill={ART.screen.green} />
+          {[0, 1, 2, 3].map((i) => <text key={i} x="12" y={19.6 + i * 3.6} fontSize="2.4" fill={S.greenHi} opacity={0.95 - i * 0.12} {...PT}>{['> BYPASS 0x7F', '> ROUTE HUB C', '> SCHEDULE 48H', '> 03:00 ...'][i]}</text>)}
+          {[[48, 'amber'], [54, 'cyan'], [60, 'green'], [66, 'red'], [72, 'amber']].map(([x, k], i) => <g key={i}><Slab x={x} y={28 + (i % 2)} w={5} h={4} k={0.6} c="dark" o={0.4} /><rect x={x + 0.8} y={29 + (i % 2)} width="3.4" height="1.2" fill={S[k]} /></g>)}
+          <Cable d="M46 31 C56 20 66 36 78 30 C84 26 88 32 90 28" w={1.6} /><Cable d="M44 33 C50 26 62 38 70 33" w={1.4} hi="copper" />
+          <polygon points={pts([[78, 30], [86, 20], [88, 22], [80, 32]])} fill={ART.steel.hi} /><polygon points={pts([[85, 20], [89, 18], [89, 22]])} fill={S.orange} />
+          <Bev t="polygon" points={pts([[82, 18], [92, 18], [92, 8], [82, 8]])} c="amber" o={0.5} /><text x="87" y="15" textAnchor="middle" fontSize="3.6" fill={ART.ink} fontWeight="700" {...PT}>0300</text>
+        </g>
+      )}
+      <Vent x={22} y={51} w={20} h={7} n={3} /><Vent x={54} y={51} w={20} h={7} n={3} /><Rivets x={7} y={44} w={82} n={10} />
+      <Grime x={4} y={34} w={88} h={25} seed={arms ? 220 : 222} n={6} op={0.24} /><Scuff x={6} y={36} w={84} h={18} seed={arms ? 221 : 223} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropCargoLift() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={44} ry={3} />
+      <polygon points={pts(ngon(48, 46, 44, 13, 10, Math.PI / 10))} fill={ART.dark.shade} />
+      <Bev t="polygon" points={pts(ngon(48, 44, 42, 12, 10, Math.PI / 10))} c="steel" o={1.1} />
+      <polygon points={pts(ngon(48, 43, 34, 9, 10, Math.PI / 10))} fill={ART.dark.base} />
+      <polygon points={pts(ngon(48, 43, 26, 6.6, 10, Math.PI / 10))} fill={ART.dark.shade} />
+      <Hazard x={6} y={50} w={84} h={5} />
+      <Glow cx={48} cy={43} rx={22} ry={6} c={S.cyan} opacity={0.5} style={{ animation:'ship-engine 2.4s ease-in-out infinite' }} />
+      {[[20, 26], [38, 20], [58, 24]].map(([x, y], i) => <g key={i}><CrateBox x={x} y={y} w={18} h={20} c="steel" hz={false} k={1.2} cols={1} rows={0} /><path d={`M${x + 3} ${y + 12} C${x + 3} ${y + 5} ${x + 15} ${y + 5} ${x + 15} ${y + 12}`} fill="none" stroke={ART.hull.hi} strokeWidth="1.2" /></g>)}
+      <Slab x={74} y={22} w={16} h={14} k={1.2} c="dark" o={0.6} /><rect x="76" y="24" width="12" height="5" fill={ART.screen.amber} /><text x="82" y="28" textAnchor="middle" fontSize="2.6" fill={S.gold} fontWeight="700" {...PT}>LIFT RIGGED</text>
+      <Cable d="M80 36 C70 40 60 46 58 54" w={2} /><Cable d="M84 36 C90 44 80 52 70 56" w={1.8} hi="copper" />
+      <polygon points={pts([[8, 30], [14, 22], [20, 30]])} fill={S.amber} opacity="0.85" /><polygon points={pts([[8, 38], [14, 30], [20, 38]])} fill={S.amber} opacity="0.55" />
+      <Rivets x={10} y={52} w={76} n={10} />
+      <Grime x={4} y={18} w={88} h={42} seed={230} n={5} op={0.2} /><Scuff x={6} y={20} w={84} h={38} seed={231} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropVaultDoor() {
+  const S = ART.signal;
+  const spokes = Array.from({ length: 6 }, (_, i) => { const a = (i / 6) * Math.PI * 2; return [48 + Math.cos(a) * 14, 50 + Math.sin(a) * 14]; });
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={91} rx={44} ry={3.4} />
+      <Slab x={3} y={3} w={90} h={86} k={4} c="dark" o={1.2} />
+      <Seams x={3} y={3} w={90} h={86} cols={3} rows={3} op={0.4} />
+      <polygon points={pts(ngon(48, 48, 38, 38, 16, Math.PI / 16))} fill={ART.ink} />
+      <Bev t="polygon" points={pts(ngon(48, 48, 36, 36, 16, Math.PI / 16))} c="steel" o={1.2} />
+      <polygon points={pts(ngon(48, 48, 29, 29, 16, Math.PI / 16))} fill={ART.steel.shade} />
+      <Bev t="polygon" points={pts(ngon(48, 48, 25, 25, 16, Math.PI / 16))} c="hull" o={0.9} />
+      {Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return <circle key={i} cx={48 + Math.cos(a) * 32.4} cy={48 + Math.sin(a) * 32.4} r="1.6" fill={ART.steel.hi} />; })}
+      <polygon points={pts(ngon(48, 48, 10, 10, 8))} fill={ART.dark.shade} /><polygon points={pts(ngon(48, 48, 7, 7, 8))} fill={ART.steel.base} />
+      {spokes.map(([x, y], i) => <g key={i}><line x1="48" y1="50" x2={x} y2={y} stroke={ART.dark.shade} strokeWidth="4" /><line x1="48" y1="49" x2={x} y2={y - 1} stroke={ART.steel.hi} strokeWidth="1.4" /><polygon points={pts(ngon(x, y, 3, 3, 6))} fill={ART.steel.base} /></g>)}
+      {/* corroded secondary hinge */}
+      <Bev t="polygon" points={pts([[80, 24], [92, 24], [92, 40], [80, 40]])} c="copper" o={0.8} />
+      <polygon points={pts([[80, 30], [92, 28], [92, 36], [80, 38]])} fill={ART.moss.base} opacity="0.85" /><polygon points={pts([[82, 24], [88, 24], [86, 30]])} fill={ART.moss.hi} opacity="0.8" />
+      <Glow cx={86} cy={32} rx={8} ry={8} c={S.amber} opacity={0.45} /><text x="86" y="45" textAnchor="middle" fontSize="2.2" fill={S.amberHi} {...PT}>HINGE 2</text>
+      <Slab x={30} y={80} w={36} h={7} k={1} c="dark" o={0.7} /><text x="48" y="85.2" textAnchor="middle" fontSize="3.4" fill={S.warn} fontWeight="700" {...PT}>PHRIK REINFORCED</text>
+      <Hazard x={6} y={90} w={84} h={3} /><Rivets x={7} y={6} w={82} n={10} /><Lights x={8} y={81} n={4} gap={4} seed={5} />
+      <Grime x={4} y={6} w={88} h={82} seed={240} n={8} op={0.24} /><Scuff x={6} y={8} w={84} h={78} seed={241} n={10} c="steel" />
+    </svg>
+  );
+}
+
+function PropSecurityGate() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Bev t="polygon" points={pts([[3, 60], [3, 8], [9, 3], [87, 3], [93, 8], [93, 60]])} c="dark" o={1} />
+      <polygon points={pts([[10, 60], [10, 11], [14, 8], [82, 8], [86, 11], [86, 60]])} fill={ART.ink} />
+      {Array.from({ length: 11 }, (_, i) => <g key={i}><rect x={13 + i * 6.4} y="9" width="3" height="51" fill={ART.steel.base} /><rect x={13 + i * 6.4} y="9" width="1" height="51" fill={ART.steel.hi} /></g>)}
+      <rect x="10" y="24" width="76" height="3" fill={ART.steel.shade} /><rect x="10" y="44" width="76" height="3" fill={ART.steel.shade} />
+      <g fill={ART.rust.base} opacity="0.8"><polygon points={pts([[13, 9], [30, 9], [26, 30], [16, 52]])} opacity="0.5" /><polygon points={pts([[60, 60], [86, 60], [86, 38], [70, 50]])} opacity="0.6" /></g>
+      <Bev t="polygon" points={pts([[34, 22], [62, 22], [62, 52], [34, 52]])} c="rust" o={0.9} />
+      <polygon points={pts(ngon(48, 33, 7, 7, 12))} fill={ART.rust.shade} /><Glyph k="cog" x={48} y={33} s={6} c={ART.beige.base} />
+      <text x="48" y="45" textAnchor="middle" fontSize="2.6" fill={ART.beige.hi} fontWeight="700" {...PT}>CSF ACCESS GATE</text>
+      <Slab x={64} y={26} w={18} h={22} k={1.2} c="dark" o={0.7} /><rect x="66" y="28" width="14" height="6" fill={ART.screen.red} /><circle cx="73" cy="31" r="1.6" fill={S.red} style={{ animation:'ship-blink 1.6s steps(2) infinite' }} />
+      <g stroke={S.cyan} strokeWidth="0.6" fill="none"><polygon points={pts(ngon(73, 41, 4, 4, 6))} /><line x1="69" y1="41" x2="77" y2="41" /></g>
+      <Slab x={12} y={28} w={18} h={14} k={1} c="dark" o={0.6} /><Toggles x={14} y={30} cols={4} rows={3} gap={3.4} seed={8} />
+      <Hazard x={6} y={55} w={84} h={3} /><Rivets x={8} y={5} w={80} n={10} />
+      <Grime x={4} y={6} w={88} h={52} seed={250} n={7} op={0.3} /><Scuff x={6} y={8} w={84} h={48} seed={251} n={8} c="steel" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// INFRASTRUCTURE: junction boxes, pipes, valves, vents, hatches, scanners, dampers.
+// ---------------------------------------------------------------------------
+function PropJunctionBox({ variant }) {
+  const S = ART.signal;
+  const cfg = {
+    csf:  { body:'deepglass', scr:'cyan',  t:'PATROL ROUTING', r:['FW: 3 CYCLES OLD', 'GAP 14-SUB 12 MIN'], g:'badge' },
+    rail: { body:'amber',     scr:'amber', t:'RAIL SWITCHING', r:['HOLD: 12 MIN / 4TH', 'CAMS: MAINT LOOP'], g:'gear' },
+    vent: { body:'steel',     scr:'green', t:'VENT SPINE 088', r:['L005 AIR: REROUTED', 'MONITOR: BLIND'], g:'wave' },
+  }[variant] || {};
+  const s = SCR[cfg.scr];
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={24} ry={3} />
+      <Cable d="M18 6 L18 0" w={3} /><Cable d="M46 6 C46 3 50 2 50 0" w={2.4} />
+      <Slab x={8} y={6} w={48} h={50} k={2.4} c={cfg.body} o={1} />
+      <Seams x={8} y={6} w={48} h={50} cols={1} rows={2} op={0.3} />
+      <Screen x={13} y={11} w={38} h={19} s={s} title={cfg.t} rows={cfg.r} fs={2.2} scan={false} flick />
+      <Glyph k={cfg.g} x={46} y={26} s={2.6} c={s.ink} />
+      <Slab x={13} y={34} w={20} h={13} k={1} c="dark" o={0.6} /><Toggles x={15} y={36} cols={5} rows={3} gap={3.6} seed={variant === 'rail' ? 5 : 8} />
+      <g><Slab x={38} y={34} w={14} h={18} k={1} c="dark" o={0.6} /><rect x="44" y="37" width="2" height="10" fill={ART.steel.hi} /><polygon points={pts([[41, 37], [49, 37], [45, 33]])} fill={S.red} /></g>
+      {variant === 'vent' && <g fill="none" stroke={ART.steel.hi} strokeWidth="0.8"><path d="M16 52 L24 52 M20 49 L24 52 L20 55" /><path d="M30 52 L38 52" /></g>}
+      <Hazard x={10} y={52} w={44} h={3} /><Rivets x={11} y={8} w={42} n={6} />
+      <Slab x={10} y={57} w={8} h={3} k={0.6} c="dark" o={0.4} /><Slab x={46} y={57} w={8} h={3} k={0.6} c="dark" o={0.4} />
+      <Grime x={8} y={8} w={48} h={48} seed={(variant || 'j').length + 260} n={5} op={0.22} /><Scuff x={10} y={10} w={44} h={44} seed={(variant || 'j').length + 261} n={7} c={cfg.body} />
+    </svg>
+  );
+}
+
+function PropLeakingPipe({ variant }) {
+  const S = ART.signal;
+  const cool = variant === 'coolant';
+  const pipe = cool ? 'teal' : 'rust';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      {cool ? (
+        <g fill={ART.pearl.hi} opacity="0.5" style={{ animation:'steam-rise 3.2s ease-out infinite' }}><polygon points={pts(ngon(46, 26, 7, 4, 8))} /><polygon points={pts(ngon(54, 18, 6, 3.6, 8))} opacity="0.7" /></g>
+      ) : (
+        <g>
+          <polygon points={pts([[30, 62], [30, 46], [44, 40], [66, 42], [80, 48], [84, 62]])} fill={S.lime} opacity="0.2" />
+          <polygon points={pts([[40, 62], [42, 50], [54, 46], [68, 50], [70, 62]])} fill={S.lime} opacity="0.28" />
+        </g>
+      )}
+      <Bev t="polygon" points={pts([[2, 50], [2, 26], [94, 26], [94, 50]])} c={pipe} o={1.2} />
+      <rect x="2" y="26" width="92" height="3" fill={ART[pipe].hi} />
+      <rect x="2" y="46" width="92" height="3" fill={ART[pipe].shade} />
+      {[14, 46, 78].map((x) => <g key={x}><Bev t="polygon" points={pts([[x - 4, 54], [x - 4, 22], [x + 4, 22], [x + 4, 54]])} c="steel" o={0.8} /><Rivets x={x - 2.4} y={26} w={0} n={1} /><circle cx={x} cy="30" r="0.9" fill={ART.steel.hi} /><circle cx={x} cy="46" r="0.9" fill={ART.steel.hi} /></g>)}
+      <Slab x={36} y={52} w={24} h={8} k={1} c="dark" o={0.5} />
+      <polygon points={pts([[44, 50], [48, 56], [52, 50]])} fill={cool ? ART.pearl.hi : S.lime} />
+      {cool ? (
+        <g>
+          <polygon points={pts([[10, 26], [24, 26], [20, 34], [12, 36]])} fill={ART.pearl.hi} opacity="0.85" /><polygon points={pts([[60, 26], [76, 26], [72, 33], [64, 31]])} fill={ART.pearl.hi} opacity="0.85" /><polygon points={pts([[84, 38], [94, 36], [94, 50], [86, 48]])} fill={ART.pearl.hi} opacity="0.7" />
+          <polyline points={pts([[40, 28], [44, 36], [42, 42], [48, 50]])} fill="none" stroke={ART.ink} strokeWidth="0.8" />
+          <text x="30" y="60" fontSize="2.6" fill={S.cyanHi} {...PT}>COOLANT: BLEEDING</text>
+        </g>
+      ) : (
+        <g>
+          <polyline points={pts([[38, 28], [46, 38], [42, 44], [52, 50]])} fill="none" stroke={ART.ink} strokeWidth="1" />
+          <Glow cx={48} cy={48} rx={9} ry={5} c={S.lime} opacity={0.7} style={{ animation:'ship-engine 2.2s ease-in-out infinite' }} />
+          <g stroke={ART.ink} strokeWidth="0.6" opacity="0.5"><path d="M20 22 C22 20 18 18 20 16" fill="none" /><path d="M70 22 C72 20 68 18 70 16" fill="none" /></g>
+          <text x="4" y="14" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>CHEMICAL HAZE: ACRID</text>
+        </g>
+      )}
+      <Hazard x={4} y={50} w={26} h={3} />
+      <Seams x={2} y={26} w={92} h={24} cols={5} op={0.35} />
+      <Grime x={2} y={26} w={92} h={34} seed={cool ? 270 : 272} n={6} op={0.25} /><Scuff x={4} y={28} w={88} h={20} seed={cool ? 271 : 273} n={8} c={pipe} />
+    </svg>
+  );
+}
+
+function PropPressureValve({ variant }) {
+  const S = ART.signal;
+  const crit = variant === 'a', steam = variant === 'b', stable = variant === 'c', refinery = variant === 'refinery';
+  const needle = crit ? 62 : steam ? 18 : stable ? -28 : 6;
+  const wheel = ngon(32, 22, 15, 6, 8, Math.PI / 8);
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={26} ry={3} />
+      {steam && <g fill={ART.pearl.base} opacity="0.6" style={{ animation:'steam-rise 2.4s ease-out infinite' }}><polygon points={pts(ngon(32, 22, 7, 4, 8))} /><polygon points={pts(ngon(40, 14, 6, 3.4, 8))} opacity="0.7" /></g>}
+      <Bev t="polygon" points={pts([[2, 58], [2, 40], [62, 40], [62, 58]])} c={refinery ? 'bronze' : 'teal'} o={1.1} />
+      <rect x="2" y="40" width="60" height="2.6" fill={ART[refinery ? 'bronze' : 'teal'].hi} />
+      <Bev t="polygon" points={pts([[24, 44], [24, 26], [40, 26], [40, 44]])} c="steel" o={0.9} />
+      <Slab x={0} y={42} w={8} h={14} k={1} c="steel" o={0.7} /><Slab x={56} y={42} w={8} h={14} k={1} c="steel" o={0.7} />
+      <line x1="32" y1="24" x2="32" y2="30" stroke={ART.dark.shade} strokeWidth="3" />
+      <polygon points={pts(wheel)} fill={ART.ink} opacity="0.5" transform="translate(1 2)" />
+      <Bev t="polygon" points={pts(wheel)} c={crit ? 'red' : refinery ? 'bronze' : 'red'} o={0.8} />
+      <polygon points={pts(ngon(32, 22, 11, 3.6, 8, Math.PI / 8))} fill={ART.dark.shade} />
+      <polygon points={pts(ngon(32, 21.6, 4, 1.6, 8))} fill={ART.steel.base} />
+      {[0, 1, 2].map((i) => <line key={i} x1={32 + (i - 1) * 9} y1="22" x2={32 + (i - 1) * 12} y2="22" stroke={ART.red.hi} strokeWidth="1.2" />)}
+      {/* gauge */}
+      <polygon points={pts(ngon(14, 46, 8, 8, 12))} fill={ART.dark.shade} /><polygon points={pts(ngon(14, 46, 6.4, 6.4, 12))} fill={ART.paper.hi} />
+      <path d="M8 46 A6 6 0 0 1 20 46" fill="none" stroke={S.green} strokeWidth="1.4" /><path d="M16 41 A6 6 0 0 1 20 46" fill="none" stroke={S.red} strokeWidth="1.6" />
+      <line x1="14" y1="46" x2={14 + Math.cos((needle - 90) * Math.PI / 180) * 5.4} y2={46 + Math.sin((needle - 90) * Math.PI / 180) * 5.4} stroke={ART.ink} strokeWidth="0.9" /><circle cx="14" cy="46" r="1" fill={ART.ink} />
+      {crit && <g><circle cx="52" cy="46" r="2.6" fill={S.red} style={{ animation:'ship-blink 0.9s steps(2) infinite' }} /><text x="52" y="54" textAnchor="middle" fontSize="2.4" fill={S.redHi} fontWeight="700" {...PT}>CRIT</text></g>}
+      {stable && <g><circle cx="52" cy="46" r="2.6" fill={S.green} /><text x="52" y="54" textAnchor="middle" fontSize="2.4" fill={S.greenHi} fontWeight="700" {...PT}>OK</text></g>}
+      {steam && <g><circle cx="52" cy="46" r="2.6" fill={S.amber} style={{ animation:'ship-blink 1.6s steps(2) infinite' }} /><text x="52" y="54" textAnchor="middle" fontSize="2.4" fill={S.amberHi} fontWeight="700" {...PT}>LEAK</text></g>}
+      {refinery && <g>{[[46, 'magenta'], [54, 'violet']].map(([x, k]) => <g key={x}><Bev t="polygon" points={pts(ngon(x, 24, 6, 2.6, 6))} c="bronze" o={0.5} /><rect x={x - 1} y="24" width="2" height="12" fill={ART.dark.shade} /><circle cx={x} cy="48" r="2" fill={S[k]} /></g>)}<Glow cx={32} cy={46} rx={14} ry={4} c={S.violet} opacity={0.35} /></g>}
+      <Hazard x={4} y={56} w={56} h={3} /><Rivets x={6} y={43} w={52} n={8} c="teal" />
+      <Grime x={2} y={40} w={60} h={19} seed={(variant || 'v').length + 280} n={5} op={0.25} /><Scuff x={4} y={42} w={56} h={14} seed={(variant || 'v').length + 281} n={6} c="teal" />
+    </svg>
+  );
+}
+
+function PropSteamVent() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={26} ry={4} />
+      {[[30, 24, 9, 0], [40, 16, 8, 1.2], [26, 12, 7, 2.2]].map(([x, y, r, d], i) => <g key={i} fill={ART.pearl.hi} opacity="0.55" style={{ animation:`steam-rise 3.4s ease-out ${d}s infinite` }}><polygon points={pts(ngon(x, y, r, r * 0.66, 8))} /></g>)}
+      <polygon points={pts(ngon(28, 48, 25, 9, 8, Math.PI / 8))} fill={ART.dark.shade} />
+      <Bev t="polygon" points={pts(ngon(28, 46, 23, 8, 8, Math.PI / 8))} c="steel" o={1} />
+      <polygon points={pts(ngon(28, 45.4, 18, 5.6, 8, Math.PI / 8))} fill={ART.ink} />
+      {Array.from({ length: 7 }, (_, i) => <rect key={i} x={13 + i * 4.2} y="41" width="2" height="9" fill={ART.steel.base} />)}
+      <Glow cx={28} cy={44} rx={14} ry={4} c={S.amber} opacity={0.4} />
+      <Slab x={46} y={36} w={14} h={20} k={1.2} c="dark" o={0.7} /><rect x="48" y="38" width="10" height="7" fill={ART.screen.amber} /><text x="53" y="42" textAnchor="middle" fontSize="2" fill={S.gold} {...PT}>SERVICE</text><text x="53" y="44.2" textAnchor="middle" fontSize="2" fill={S.gold} {...PT}>11 MO</text>
+      <Lights x={49} y={49} n={3} gap={3.4} seed={3} /><Hazard x={47} y={52} w={12} h={3} />
+      <Rivets x={10} y={54} w={36} n={6} />
+      <Grime x={4} y={38} w={56} h={20} seed={290} n={5} op={0.28} /><Scuff x={6} y={40} w={50} h={14} seed={291} n={6} />
+    </svg>
+  );
+}
+
+function PropAccessHatch({ variant }) {
+  const S = ART.signal;
+  const sealed = variant === 'sealed', ancient = variant === 'ancient', crawl = variant === 'crawl';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={26} ry={4} />
+      {crawl || variant === 'panel' ? (
+        <g>
+          <Slab x={6} y={8} w={52} h={48} k={3} c="concrete" o={1} />
+          <rect x="12" y="14" width="40" height="36" fill={ART.ink} />
+          <g stroke={ART.steel.shade} strokeWidth="1.2">{[22, 30, 38, 46].map((y) => <line key={y} x1="14" y1={y} x2="50" y2={y} />)}</g>
+          {variant === 'panel' && <g><rect x="22" y="14" width="3" height="36" fill={ART.steel.base} /><rect x="39" y="14" width="3" height="36" fill={ART.steel.base} />{[16, 24, 32, 40, 48].map((y) => <rect key={y} x="22" y={y} width="20" height="1.6" fill={ART.steel.hi} />)}</g>}
+          <polygon points={pts([[12, 14], [2, 18], [2, 54], [12, 50]])} fill={ART.steel.base} /><polygon points={pts([[12, 14], [2, 18], [2, 22], [12, 18]])} fill={ART.steel.hi} /><Seams x={2} y={18} w={10} h={36} rows={2} op={0.4} />
+          {crawl && <g><rect x="9" y="22" width="3" height="3" fill={S.amberHi} /><rect x="9" y="42" width="3" height="3" fill={S.amberHi} /><text x="32" y="12" textAnchor="middle" fontSize="2.6" fill={S.amberHi} {...PT}>HINGES: FRESHLY OILED</text></g>}
+          {variant === 'panel' && <g fill={ART.beige.base} opacity="0.75">{[[28, 30], [34, 38], [30, 44]].map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="3" ry="1.2" />)}<text x="32" y="12" textAnchor="middle" fontSize="2.6" fill={S.amberHi} {...PT}>DUST DISTURBED</text></g>}
+          <Rivets x={9} y={10} w={46} n={7} />
+        </g>
+      ) : (
+        <g>
+          <polygon points={pts(ngon(32, 36, 28, 18, 14, Math.PI / 14))} fill={ART.dark.shade} />
+          <Bev t="polygon" points={pts(ngon(32, 34, 26, 16, 14, Math.PI / 14))} c={ancient ? 'brass' : 'steel'} o={1.1} />
+          <polygon points={pts(ngon(32, 33, 20, 11.6, 14, Math.PI / 14))} fill={ancient ? ART.bronze.base : ART.steel.base} />
+          {Array.from({ length: 10 }, (_, i) => { const a = (i / 10) * Math.PI * 2; return <circle key={i} cx={32 + Math.cos(a) * 23} cy={34 + Math.sin(a) * 13.6} r="1.3" fill={ancient ? ART.brass.hi : ART.steel.hi} />; })}
+          {sealed && [[-1, 'a'], [0, 'b'], [1, 'c']].map(([i, k]) => <g key={k}><polygon points={pts([[32 + i * 12 - 2, 26], [32 + i * 12 + 2, 26], [32 + i * 12 + 4, 40], [32 + i * 12 - 4, 40]])} fill={S.orange} opacity="0.9" /><circle cx={32 + i * 12} cy="43" r="1.6" fill={S.red} style={{ animation:`ship-blink ${1.8 + i * 0.3}s steps(2) infinite` }} /></g>)}
+          {ancient && <g><polyline points={pts([[20, 32], [28, 28], [36, 34], [44, 30]])} fill="none" stroke={ART.brass.shade} strokeWidth="1.2" /><text x="32" y="50.4" textAnchor="middle" fontSize="2.4" fill={ART.brass.hi} {...PT}>WELDED SHUT: ALLOY 2 CENTURIES OLD</text></g>}
+          {sealed && <text x="32" y="53" textAnchor="middle" fontSize="2.6" fill={S.amberHi} fontWeight="700" {...PT}>3 SEALS</text>}
+        </g>
+      )}
+      <Seams x={6} y={8} w={52} h={48} cols={1} op={0.2} />
+      <Grime x={4} y={10} w={56} h={46} seed={(variant || 'h').length + 300} n={6} op={0.28} /><Scuff x={6} y={12} w={52} h={42} seed={(variant || 'h').length + 301} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropScannerArch({ variant }) {
+  const S = ART.signal;
+  const plat = variant === 'platform';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <polygon points={pts([[20, 56], [76, 56], [86, 62], [10, 62]])} fill={ART.dark.base} opacity="0.7" />
+      <polygon points={pts([[26, 54], [70, 54], [66, 12], [30, 12]])} fill={plat ? S.amber : S.cyan} opacity="0.1" />
+      {[18, 28, 38, 48].map((y, i) => <line key={y} x1={30 - i * 0.6} y1={y} x2={66 + i * 0.6} y2={y} stroke={plat ? S.amberHi : S.cyanHi} strokeWidth="0.7" opacity="0.5" style={{ animation:`holo-flicker ${1.4 + i * 0.3}s ease-in-out infinite` }} />)}
+      {[[10, 'a'], [76, 'b']].map(([x, k]) => <g key={k}><Bev t="polygon" points={pts([[x, 60], [x, 8], [x + 10, 8], [x + 10, 60]])} c={plat ? 'deepglass' : 'steel'} o={1} /><Seams x={x} y={8} w={10} h={52} rows={3} op={0.4} /><Vent x={x + 1.4} y={16} w={7} h={8} n={3} /><Lights x={x + 2.4} y={30} n={2} gap={4} seed={x} /><Hazard x={x} y={52} w={10} h={6} /></g>)}
+      <Bev t="polygon" points={pts([[6, 16], [90, 16], [90, 4], [6, 4]])} c={plat ? 'deepglass' : 'steel'} o={1} />
+      <Screen x={12} y={5} w={72} h={10} s={plat ? SCR.amber : SCR.cyan} rows={[]} fs={2.2} scan={false} flick />
+      {plat ? <text x="48" y="12.4" textAnchor="middle" fontSize="3" fill={S.amberHi} fontWeight="700" {...PT}>3 CARS CLEARED: SENATE OVERRIDE</text> : <g>{Array.from({ length: 12 }, (_, i) => <rect key={i} x={14 + i * 5.6} y="8" width="4" height="4" fill={i === 11 ? S.red : S.warn} opacity="0.95" />)}<text x="86" y="14.4" textAnchor="end" fontSize="2.2" fill={S.redHi} {...PT}>PHRIK ALLOY TRACE: CLEARED</text></g>}
+      <Rivets x={8} y={17.4} w={80} n={10} />
+      <Grime x={6} y={4} w={84} h={56} seed={plat ? 310 : 312} n={5} op={0.22} /><Scuff x={8} y={6} w={80} h={50} seed={plat ? 311 : 313} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropDamperArray() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Bev t="rect" x="4" y="6" width="88" height="5" c="steel" o={0.9} /><Bev t="rect" x="4" y="54" width="88" height="5" c="steel" o={0.9} />
+      {[0, 1, 2, 3].map((i) => {
+        const x = 10 + i * 21, ext = [14, 22, 8, 18][i];
+        return (
+          <g key={i}>
+            <Bev t="polygon" points={pts([[x, 54], [x, 30], [x + 14, 30], [x + 14, 54]])} c="amber" o={0.8} />
+            <rect x={x} y="36" width="14" height="2" fill={ART.dark.shade} /><rect x={x} y="46" width="14" height="2" fill={ART.dark.shade} />
+            <rect x={x + 5} y={30 - ext + 6} width="4" height={ext - 2} fill={ART.steel.hi} /><rect x={x + 5} y={30 - ext + 6} width="1.4" height={ext - 2} fill={ART.pearl.hi} />
+            <Slab x={x + 2} y={10} w={10} h={14} k={1} c="steel" o={0.5} />
+            <Slab x={x + 1} y={40} w={12} h={6} k={0.8} c="paper" o={0.3} /><text x={x + 7} y={44.4} textAnchor="middle" fontSize="2" fill={ART.note.ink} fontWeight="700" {...PT}>{['8 MO', '8 MO', '9 MO', '8 MO'][i]}</text>
+          </g>
+        );
+      })}
+      <text x="48" y="64" textAnchor="middle" fontSize="2.6" fill={S.warn} fontWeight="700" {...PT}>SERVICE INTERVAL: 30 DAYS</text>
+      <g stroke={S.amber} strokeWidth="0.6" opacity="0.6" fill="none">{[18, 39, 60, 81].map((x, i) => <path key={x} d={`M${x} 28 C${x - 3} 24 ${x + 3} 20 ${x} 16`} style={{ animation:`holo-flicker ${1.2 + i * 0.2}s ease-in-out infinite` }} />)}</g>
+      <Rivets x={8} y={8.4} w={80} n={10} /><Lights x={10} y={56.6} n={14} gap={6} r={0.7} seed={6} />
+      <Grime x={4} y={8} w={88} h={50} seed={320} n={6} op={0.26} /><Scuff x={6} y={10} w={84} h={46} seed={321} n={8} c="amber" />
+    </svg>
+  );
+}
+
+function PropPowerTap() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={26} ry={4} />
+      <polygon points={pts(ngon(36, 48, 26, 9, 8, Math.PI / 8))} fill={ART.dark.shade} /><Bev t="polygon" points={pts(ngon(36, 46, 24, 8, 8, Math.PI / 8))} c="steel" o={0.9} />
+      <polygon points={pts(ngon(36, 45.6, 19, 5.6, 8, Math.PI / 8))} fill={ART.ink} />{Array.from({ length: 6 }, (_, i) => <rect key={i} x={22 + i * 4.6} y="41" width="2" height="9" fill={ART.steel.base} />)}
+      <Bev t="polygon" points={pts([[2, 36], [2, 22], [40, 22], [40, 36]])} c="copper" o={1} />
+      <rect x="2" y="22" width="38" height="2.4" fill={ART.copper.hi} />
+      {[12, 28].map((x) => <g key={x}><Bev t="polygon" points={pts([[x - 3, 40], [x - 3, 18], [x + 3, 18], [x + 3, 40]])} c="steel" o={0.7} /><rect x={x - 3} y="26" width="6" height="2" fill={ART.dark.shade} /></g>)}
+      <Slab x={16} y={12} w={14} h={12} k={1.2} c="dark" o={0.7} /><circle cx="23" cy="18" r="2" fill={S.green} style={{ animation:'ship-blink 1.8s steps(2) infinite' }} /><text x="23" y="23" textAnchor="middle" fontSize="1.9" fill={S.greenHi} {...PT}>DRAW LOW</text>
+      <Cable d="M23 24 C28 30 22 40 30 46 C34 50 36 56 34 62" c={ART.dark.base} w={3} />
+      <polygon points={pts([[6, 28], [14, 28], [12, 36], [8, 36]])} fill={ART.amber.hi} opacity="0.85" />
+      <g fill={S.amberHi} opacity="0.85"><polygon points={pts([[34, 56], [36, 59], [38, 56]])} /></g>
+      <Rivets x={4} y={34} w={34} n={5} c="copper" />
+      <Grime x={2} y={20} w={60} h={38} seed={330} n={5} op={0.26} /><Scuff x={4} y={22} w={56} h={32} seed={331} n={7} c="copper" />
+    </svg>
+  );
+}
+
+function PropDropShaft() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.4} />
+      <polygon points={pts(ngon(48, 36, 44, 24, 12, Math.PI / 12))} fill={ART.steel.shade} />
+      <Bev t="polygon" points={pts(ngon(48, 34, 42, 22, 12, Math.PI / 12))} c="steel" o={1.1} />
+      <polygon points={pts(ngon(48, 33, 34, 16, 12, Math.PI / 12))} fill={ART.dark.base} />
+      <polygon points={pts(ngon(48, 33, 28, 12, 12, Math.PI / 12))} fill={ART.dark.shade} />
+      <polygon points={pts(ngon(48, 34, 20, 8, 12, Math.PI / 12))} fill={ART.ink} />
+      <polygon points={pts(ngon(48, 35, 11, 4, 12, Math.PI / 12))} fill={ART.ink2} />
+      {/* ladder rungs down the far wall */}
+      {[0, 1, 2, 3].map((i) => <rect key={i} x={32 + i * 1.4} y={22 + i * 3.4} width={18 - i * 2.4} height="1.4" fill={ART.steel.base} opacity={0.9 - i * 0.2} />)}
+      {/* a work light far below */}
+      <Glow cx={56} cy={37} rx={7} ry={3} c={S.amber} opacity={0.8} style={{ animation:'ship-blink 2.6s steps(3) infinite' }} />
+      <rect x="53" y="36" width="6" height="1.6" fill={ART.amberHi || S.amberHi} />
+      {/* broken rail stubs and hazard rim */}
+      <Hazard x={4} y={46} w={22} h={4} /><Hazard x={70} y={46} w={22} h={4} />
+      {[10, 20, 76, 86].map((x) => <g key={x}><Bev t="polygon" points={pts([[x, 52], [x, 36], [x + 3, 36], [x + 3, 52]])} c="steel" o={0.5} /></g>)}
+      <polyline points={pts([[10, 38], [20, 38]])} fill="none" stroke={ART.steel.hi} strokeWidth="1.4" /><polyline points={pts([[76, 38], [86, 38]])} fill="none" stroke={ART.steel.hi} strokeWidth="1.4" />
+      <text x="48" y="10" textAnchor="middle" fontSize="3.2" fill={S.warn} fontWeight="700" {...PT}>NO RAILING: 30 M DROP</text>
+      <polygon points={pts([[44, 14], [52, 14], [48, 20]])} fill={S.red} opacity="0.9" />
+      <Rivets x={8} y={58} w={80} n={10} />
+      <Grime x={4} y={14} w={88} h={44} seed={340} n={6} op={0.26} /><Scuff x={6} y={16} w={84} h={40} seed={341} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropCatwalkJunction() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={91} rx={44} ry={3} />
+      <polygon points={pts([[4, 46], [92, 46], [92, 60], [58, 60], [58, 90], [38, 90], [38, 60], [4, 60]])} fill={ART.dark.shade} transform="translate(2 4)" />
+      <Bev t="polygon" points={pts([[4, 46], [92, 46], [92, 60], [58, 60], [58, 90], [38, 90], [38, 60], [4, 60]])} c="steel" o={1} />
+      {Array.from({ length: 14 }, (_, i) => <line key={i} x1={8 + i * 6.2} y1="48" x2={8 + i * 6.2} y2="58" stroke={ART.dark.base} strokeWidth="1.2" />)}
+      {Array.from({ length: 5 }, (_, i) => <line key={i} x1="40" y1={62 + i * 6} x2="56" y2={62 + i * 6} stroke={ART.dark.base} strokeWidth="1.2" />)}
+      <polygon points={pts(ngon(48, 54, 5, 3, 8))} fill={ART.ink} />{[0, 1, 2].map((i) => <rect key={i} x="45" y={52 + i * 1.4} width="6" height="0.8" fill={ART.steel.base} />)}
+      {[[6, 38, 30], [60, 38, 30]].map(([x, y, w], i) => <g key={i}><rect x={x} y={y} width={w} height="2" fill={ART.steel.hi} /><rect x={x} y={y + 8} width={w} height="1.6" fill={ART.steel.base} />{[0, 1, 2, 3].map((j) => <rect key={j} x={x + j * (w / 3) - (j === 3 ? 2 : 0)} y={y} width="2" height="10" fill={ART.steel.base} />)}</g>)}
+      {[36, 56].map((x) => <g key={x}><rect x={x} y="62" width="2" height="26" fill={ART.steel.hi} /></g>)}
+      <g fontSize="2.8" fill={S.amberHi} fontWeight="700" {...PT}><text x="8" y="34">W: UNDER LOUNGE</text><text x="62" y="34">E: CRANES</text><text x="26" y="94">DOWN: L1222 SPINE</text></g>
+      <g fill={S.amberHi}><polygon points={pts([[4, 52], [10, 49], [10, 55]])} /><polygon points={pts([[92, 52], [86, 49], [86, 55]])} /><polygon points={pts([[48, 88], [45, 82], [51, 82]])} /></g>
+      <Hazard x={4} y={58} w={32} h={2.6} /><Hazard x={60} y={58} w={32} h={2.6} />
+      <Rivets x={8} y={47.6} w={80} n={10} />
+      <Grime x={4} y={46} w={88} h={44} seed={350} n={6} op={0.26} /><Scuff x={6} y={48} w={84} h={40} seed={351} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropFloorGrate() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={28} ry={3.4} />
+      <polygon points={pts(ngon(32, 38, 30, 20, 8, Math.PI / 8))} fill={ART.dark.shade} /><Bev t="polygon" points={pts(ngon(32, 36, 28, 18, 8, Math.PI / 8))} c="steel" o={1} />
+      <polygon points={pts(ngon(32, 36, 23, 14, 8, Math.PI / 8))} fill={ART.screen.space} />
+      <rect x="12" y="30" width="40" height="3" fill={ART.dark.hi} /><rect x="12" y="37" width="40" height="3" fill={ART.dark.hi} /><rect x="12" y="43" width="40" height="3" fill={ART.dark.base} />
+      <rect x="14" y="30" width="36" height="0.8" fill={ART.pearl.base} opacity="0.5" />
+      <Glow cx={44} cy={40} rx={9} ry={4} c={S.amber} opacity={0.7} /><rect x="38" y="38" width="12" height="3" fill={S.amberHi} />
+      <Glow cx={18} cy={34} rx={5} ry={2.4} c={S.amber} opacity={0.5} />
+      <g fill={ART.glass.base} opacity="0.5"><polygon points={pts([[22, 38], [28, 36], [30, 41], [24, 43]])} /></g>
+      {Array.from({ length: 8 }, (_, i) => <rect key={i} x={14 + i * 5} y="22" width="1.8" height="28" fill={ART.steel.base} opacity="0.9" />)}
+      {Array.from({ length: 3 }, (_, i) => <rect key={i} x="10" y={26 + i * 8} width="44" height="1.4" fill={ART.steel.base} />)}
+      <polygon points={pts([[8, 20], [14, 14], [20, 20]])} fill={ART.pearl.base} opacity="0.2" />
+      <Rivets x={10} y={52} w={44} n={8} /><Lights x={48} y={16} n={2} gap={4} seed={2} />
+      <Grime x={6} y={22} w={52} h={32} seed={360} n={5} op={0.2} /><Scuff x={8} y={24} w={48} h={28} seed={361} n={7} c="steel" />
+    </svg>
+  );
+}
+
+function PropDrainChannel() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.6} />
+      {[[24, 8, 0], [48, 4, 1.2], [70, 10, 2.2]].map(([x, y, d], i) => <g key={i} fill={ART.pearl.base} opacity="0.5" style={{ animation:`steam-rise 3.6s ease-out ${d}s infinite` }}><polygon points={pts(ngon(x, y + 14, 9, 6, 8))} /></g>)}
+      <Bev t="polygon" points={pts([[2, 58], [2, 24], [94, 24], [94, 58]])} c="steel" o={1.2} />
+      <polygon points={pts([[8, 54], [8, 30], [88, 30], [88, 54]])} fill={ART.dark.shade} />
+      <polygon points={pts([[8, 54], [8, 34], [88, 34], [88, 54]])} fill={ART.amber.shade} />
+      <polygon points={pts([[8, 48], [8, 40], [88, 40], [88, 48]])} fill={ART.amber.base} />
+      <polygon points={pts([[8, 46], [8, 42], [88, 42], [88, 46]])} fill={ART.amber.hi} />
+      <Glow cx={48} cy={42} rx={36} ry={8} c={S.amber} opacity={0.35} />
+      {Array.from({ length: 10 }, (_, i) => <rect key={i} x={10 + i * 8} y="30" width="2.2" height="24" fill={ART.steel.base} />)}
+      <rect x="8" y="30" width="80" height="2" fill={ART.steel.hi} />
+      <Hazard x={4} y={56} w={88} h={3} /><text x="48" y="22" textAnchor="middle" fontSize="2.8" fill={S.warn} fontWeight="700" {...PT}>NOT ON ANY L088 MAP</text>
+      <Rivets x={6} y={26} w={84} n={12} />
+      <Grime x={2} y={24} w={92} h={34} seed={370} n={6} op={0.26} /><Scuff x={4} y={26} w={88} h={30} seed={371} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropSupportPillar() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={92} rx={26} ry={3} />
+      <Slab x={6} y={84} w={52} h={8} k={1.4} c="concrete" o={0.9} />
+      <Bev t="polygon" points={pts([[12, 86], [12, 4], [52, 4], [52, 86]])} c="concrete" o={1.2} />
+      {Array.from({ length: 7 }, (_, i) => <rect key={i} x="12" y={10 + i * 11} width="40" height="2.6" fill={ART.concrete.shade} opacity="0.7" />)}
+      <rect x="12" y="4" width="40" height="3" fill={ART.concrete.hi} />
+      {/* stenciled tags */}
+      <g fill="none" strokeWidth="1.4">
+        <polyline points={pts([[16, 20], [22, 16], [28, 22], [34, 17]])} stroke={S.blue} /><polygon points={pts([[38, 34], [44, 26], [50, 34]])} stroke={S.crimson} />
+        <polyline points={pts([[16, 40], [24, 44], [30, 38], [36, 44]])} stroke={S.lime} /><polyline points={pts([[18, 56], [26, 52], [32, 58]])} stroke={S.amber} />
+      </g>
+      <text x="44" y="66" textAnchor="middle" fontSize="2.1" fill={ART.beige.hi} {...PT}>PORT OFFICIAL</text>
+      <text x="44" y="69" textAnchor="middle" fontSize="2.1" fill={ART.beige.hi} {...PT}>IS A THIEF</text>
+      <text x="44" y="74" textAnchor="middle" fontSize="1.8" fill={S.crimson} {...PT}>MAREL+KEN</text>
+      {/* copper conduit loops with mismatched patches */}
+      <Cable d="M20 4 L20 80" c={ART.copper.base} w={2.4} hi="copper" /><Cable d="M26 4 C26 20 34 24 34 36 L34 80" c={ART.copper.base} w={2.4} hi="copper" />
+      {[28, 54].map((y) => <rect key={y} x="17" y={y} width="20" height="3.4" fill={ART.dark.hi} />)}
+      <polygon points={pts([[17, 28], [37, 28], [37, 31.4], [17, 31.4]])} fill={ART.steel.base} /><polygon points={pts([[17, 54], [37, 54], [37, 57.4], [17, 57.4]])} fill={ART.steel.hi} opacity="0.7" />
+      <Hazard x={12} y={80} w={40} h={4} />
+      <Grime x={12} y={6} w={40} h={78} seed={380} n={7} op={0.3} /><Scuff x={14} y={8} w={36} h={74} seed={381} n={9} c="concrete" /><Rivets x={14} y={9} w={36} n={4} c="concrete" />
+    </svg>
+  );
+}
+
+function PropRadiator() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <g fill={S.orange} opacity="0.2">{[14, 34, 54, 74].map((x, i) => <polygon key={x} points={pts([[x, 40], [x + 8, 40], [x + 5, 10], [x + 3, 10]])} style={{ animation:`holo-flicker ${1.6 + i * 0.3}s ease-in-out infinite` }} />)}</g>
+      <Bev t="polygon" points={pts([[3, 50], [3, 8], [8, 4], [88, 4], [93, 8], [93, 50]])} c="rust" o={1.1} />
+      {Array.from({ length: 14 }, (_, i) => <g key={i}><rect x={8 + i * 5.8} y="8" width="3.6" height="38" fill={ART.dark.shade} /><rect x={8 + i * 5.8} y="8" width="1.4" height="38" fill={S.orange} opacity={0.55 + (i % 3) * 0.15} /></g>)}
+      <rect x="3" y="4" width="90" height="3" fill={ART.rust.hi} /><rect x="3" y="46" width="90" height="4" fill={ART.rust.shade} />
+      <Hazard x={6} y={46} w={84} h={3} />
+      {[16, 34, 50, 64, 80].map((x, i) => <g key={x} fill={ART.ink} opacity="0.92"><polygon points={pts(ngon(x, 52 + (i % 2), 3.6, 4, 7))} /><polygon points={pts([[x - 7, 62], [x - 5, 56], [x + 5, 56], [x + 7, 62]])} /></g>)}
+      <Lights x={10} y={48} n={6} gap={5} r={0.7} seed={3} />
+      <Rivets x={6} y={6} w={84} n={12} />
+      <Grime x={3} y={4} w={90} h={46} seed={390} n={6} op={0.3} /><Scuff x={5} y={6} w={86} h={40} seed={391} n={8} c="rust" />
+    </svg>
+  );
+}
+
+function PropFluidSlick() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={50} rx={44} ry={12} />
+      <polygon points={pts(ngon(52, 44, 42, 13, 14, 0.2))} fill={ART.dark.shade} />
+      <polygon points={pts(ngon(52, 43, 40, 11.6, 14, 0.2))} fill={ART.deepglass.shade} />
+      {[[24, 'blue', 18, 5], [48, 'magenta', 22, 6], [72, 'amber', 16, 5]].map(([x, k, w, h], i) => <g key={i}><polygon points={pts(ngon(x, 42 + (i % 2), w, h, 8))} fill={S[k]} opacity="0.5" /><polygon points={pts(ngon(x, 42 + (i % 2), w * 0.5, h * 0.5, 8))} fill={S.white} opacity="0.4" /></g>)}
+      {[[18, 40], [44, 46], [66, 38], [78, 48]].map(([x, y], i) => <g key={i}><rect x={x} y={y} width="14" height="1.4" fill={S[['cyan', 'magenta', 'amber', 'blue'][i]]} opacity="0.8" /><rect x={x + 2} y={y + 2.4} width="9" height="1" fill={S.white} opacity="0.4" /></g>)}
+      <polygon points={pts(ngon(52, 43, 30, 8.4, 14, 0.2))} fill="none" stroke={S.anomaly} strokeWidth="0.6" opacity="0.5" />
+      <Bev t="polygon" points={pts([[6, 36], [20, 36], [20, 26], [12, 22], [6, 26]])} c="steel" o={0.7} />
+      <Slab x={8} y={26} w={10} h={6} k={0.8} c="dark" o={0.5} /><polygon points={pts([[10, 36], [12, 42], [14, 36]])} fill={S.cyanHi} />
+      <Lights x={8} y={34} n={2} gap={4} r={0.7} seed={4} />
+      <text x="62" y="60" textAnchor="middle" fontSize="2.8" fill={ART.beige.hi} {...PT}>SIGNS READ BACKWARDS HERE</text>
+      <Grime x={4} y={32} w={88} h={20} seed={400} n={4} op={0.2} /><Scuff x={6} y={34} w={84} h={14} seed={401} n={6} c="steel" /><Rivets x={7} y={30} w={11} n={3} />
+    </svg>
+  );
+}
+
+function PropCraneArm() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={92} rx={58} ry={3} />
+      <Bev t="polygon" points={pts([[6, 90], [6, 30], [28, 30], [28, 90]])} c="amber" o={1.1} />
+      <Seams x={6} y={30} w={22} h={60} rows={4} op={0.4} />
+      {[40, 54, 68].map((y) => <line key={y} x1="8" y1={y} x2="26" y2={y + 8} stroke={ART.dark.shade} strokeWidth="1.2" />)}
+      <Slab x={2} y={14} w={26} h={18} k={2} c="dark" o={0.9} /><Vent x={5} y={18} w={14} h={9} n={3} /><Lights x={21} y={20} n={3} gap={2.6} seed={4} />
+      <Bev t="polygon" points={pts([[10, 24], [10, 12], [124, 12], [124, 22]])} c="amber" o={1} />
+      {Array.from({ length: 12 }, (_, i) => <line key={i} x1={14 + i * 9.4} y1="22" x2={22 + i * 9.4} y2="14" stroke={ART.dark.shade} strokeWidth="1.4" />)}
+      <Bev t="polygon" points={pts([[0, 28], [0, 6], [14, 6], [14, 28]])} c="steel" o={0.9} /><text x="7" y="19" textAnchor="middle" fontSize="2.8" fill={ART.ink} fontWeight="700" {...PT}>CW</text>
+      <line x1="96" y1="22" x2="96" y2="56" stroke={ART.dark.hi} strokeWidth="2" /><line x1="96" y1="22" x2="96" y2="56" stroke={ART.steel.hi} strokeWidth="0.6" />
+      <Bev t="polygon" points={pts([[92, 58], [100, 58], [101, 64], [91, 64]])} c="steel" o={0.6} />
+      <Bev t="polygon" points={pts([[76, 82], [76, 64], [116, 64], [116, 82]])} c="brass" o={0.9} />
+      {Array.from({ length: 6 }, (_, i) => <rect key={i} x={80 + i * 6} y="66" width="1.4" height="14" fill={ART.dark.shade} opacity="0.5" />)}
+      <Slab x={82} y={69} w={28} h={7} k={1} c="red" o={0.5} /><text x="96" y="74.4" textAnchor="middle" fontSize="3.2" fill={ART.pearl.hi} fontWeight="700" {...PT}>CZERKA</text>
+      {/* platform and astromechs */}
+      <Bev t="rect" x="64" y="84" width="60" height="5" c="steel" o={0.8} /><Hazard x={64} y={88} w={60} h={2.4} />
+      {[[70, 'a'], [112, 'b']].map(([x, k]) => <g key={k}><Bev t="polygon" points={pts([[x - 4, 84], [x - 4, 76], [x + 4, 76], [x + 4, 84]])} c="pearl" o={0.5} /><polygon points={pts([[x - 4, 76], [x - 3, 72], [x + 3, 72], [x + 4, 76]])} fill={ART.pearl.base} /><rect x={x - 1.2} y="73" width="2.4" height="1.6" fill={S.blue} /><rect x={x - 3.6} y="79" width="7.2" height="1.4" fill={ART.deepglass.base} /></g>)}
+      {[44, 58, 72].map((x, i) => <g key={x}><circle cx={x} cy="36" r="2.6" fill={[S.red, S.amber, S.green][i]} opacity="0.35" /><circle cx={x} cy="36" r="1.2" fill={S.white} opacity="0.7" /></g>)}
+      <text x="58" y="42" textAnchor="middle" fontSize="2.4" fill={S.warn} {...PT}>3 SEALS: EXPIRED CYCLE</text>
+      <Hazard x={6} y={86} w={22} h={4} /><Rivets x={10} y={13.6} w={110} n={14} />
+      <Grime x={2} y={8} w={122} h={82} seed={410} n={7} op={0.24} /><Scuff x={4} y={10} w={118} h={76} seed={411} n={9} c="amber" />
+    </svg>
+  );
+}
+
+function PropLandingBeacon() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={28} ry={3.4} />
+      <Bev t="rect" x="2" y="38" width="60" height="3" c="steel" o={0.7} /><Bev t="rect" x="2" y="48" width="60" height="3" c="steel" o={0.7} />
+      {[4, 22, 46, 58].map((x) => <Bev key={x} t="polygon" points={pts([[x, 58], [x, 34], [x + 3, 34], [x + 3, 58]])} c="steel" o={0.6} />)}
+      <Hazard x={4} y={55} w={56} h={3} />
+      <g fill={S.red} opacity="0.2" style={{ animation:'ship-blink 3s steps(2) infinite' }}><polygon points={pts(ngon(32, 22, 30, 16, 12))} /></g>
+      <Slab x={24} y={32} w={16} h={22} k={1.6} c="dark" o={0.9} /><Seams x={24} y={32} w={16} h={22} rows={2} op={0.5} />
+      <Bev t="polygon" points={pts([[24, 32], [24, 24], [28, 18], [36, 18], [40, 24], [40, 32]])} c="red" o={0.8} />
+      <Glow cx={32} cy={24} r={9} c={S.red} opacity={0.9} style={{ animation:'ship-blink 3s steps(2) infinite' }} />
+      <polygon points={pts([[29, 28], [29, 22], [32, 19], [35, 22], [35, 28]])} fill={S.redHi} style={{ animation:'ship-blink 3s steps(2) infinite' }} />
+      <Slab x={24} y={42} w={16} h={7} k={0.8} c="amber" o={0.4} /><text x="32" y="47.6" textAnchor="middle" fontSize="3" fill={ART.ink} fontWeight="700" {...PT}>PAD 1450</text>
+      <polygon points={pts([[6, 58], [12, 54], [12, 58]])} fill={S.amber} /><polygon points={pts([[58, 58], [52, 54], [52, 58]])} fill={S.amber} />
+      <Rivets x={26} y={34} w={12} n={3} />
+      <Grime x={2} y={32} w={60} h={26} seed={420} n={5} op={0.26} /><Scuff x={4} y={34} w={56} h={22} seed={421} n={6} c="steel" />
+    </svg>
+  );
+}
+
+function PropCeilingTap() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={92} rx={24} ry={3} />
+      <Cable d="M24 0 L24 60" c={ART.dark.base} w={4} /><Cable d="M32 0 C32 20 40 30 40 56" c={ART.dark.base} w={4} /><Cable d="M42 0 L42 50 C42 56 36 58 34 62" c={ART.dark.base} w={3} />
+      <Bev t="polygon" points={pts([[16, 24], [50, 24], [48, 30], [18, 30]])} c="steel" o={0.6} />
+      <Slab x={10} y={56} w={44} h={34} k={2.4} c="dark" o={1} />
+      <Seams x={10} y={56} w={44} h={34} cols={2} rows={1} op={0.4} />
+      <Screen x={14} y={60} w={36} h={14} s={SCR.green} title="PENTHOUSE TAP" rows={['HARDWIRE: LIVE']} fs={2.2} scan={false} flick />
+      <Toggles x={14} y={77} cols={6} rows={2} gap={3.6} seed={6} />
+      <polygon points={pts([[14, 84], [28, 84], [28, 88], [14, 88]])} fill={ART.amber.hi} opacity="0.85" />
+      <Hazard x={12} y={86} w={40} h={3} />
+      <Rivets x={13} y={58} w={38} n={6} />
+      <Grime x={10} y={56} w={44} h={34} seed={430} n={5} op={0.26} /><Scuff x={12} y={58} w={40} h={30} seed={431} n={6} c="dark" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// PEOPLE AND PLACES: tables, stalls, booths, posts. Figures are simple three tone busts, as in the portraits.
+// ---------------------------------------------------------------------------
+function Bust({ x, y, s = 1, coat = 'steel', skin, hair = ART.skin.hair, back = false }) {
+  const sk = skin || ART.skin.mid;
+  return (
+    <g>
+      <Bev t="polygon" points={pts([[x - 7 * s, y + 14 * s], [x - 6 * s, y + 4 * s], [x - 2.5 * s, y + 1.4 * s], [x + 2.5 * s, y + 1.4 * s], [x + 6 * s, y + 4 * s], [x + 7 * s, y + 14 * s]])} c={coat} o={0.6} />
+      <polygon points={pts(ngon(x, y - 2 * s, 3.4 * s, 3.9 * s, 8))} fill={back ? hair : sk} />
+      {!back && <polygon points={pts([[x - 3.4 * s, y - 3 * s], [x - 2 * s, y - 6 * s], [x + 2 * s, y - 6 * s], [x + 3.4 * s, y - 3 * s], [x + 1 * s, y - 4.4 * s]])} fill={hair} />}
+    </g>
+  );
+}
+
+function PropTacticalTable({ variant }) {
+  const S = ART.signal;
+  const war = variant === 'war', conq = variant === 'conquest';
+  const col = war ? S.cyan : conq ? S.amber : S.blue;
+  const top = ngon(48, 78, 44, 12, 8, Math.PI / 8);
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={90} rx={44} ry={4.4} />
+      <Slab x={34} y={80} w={28} h={10} k={1.6} c="dark" />
+      <Bev t="polygon" points={pts(top)} c="steel" o={1.4} />
+      <polygon points={pts(ngon(48, 77.4, 36, 9.4, 8, Math.PI / 8))} fill={ART.screen.cyan} stroke={col} strokeWidth="0.8" />
+      {top.map(([x, y], i) => <circle key={i} cx={x} cy={y - 1} r="1" fill={i % 2 ? S.cyan : S.amber} style={{ animation:`ship-blink ${2 + i * 0.3}s ease-in-out infinite` }} />)}
+      <polygon points={pts([[22, 76], [74, 76], [62, 18], [34, 18]])} fill={col} opacity="0.1" />
+      <g style={{ animation:'holo-flicker 3s ease-in-out infinite' }}>
+        {war && <g>
+          {[0, 1, 2, 3].map((i) => <polygon key={i} points={pts(ngon(48, 72 - i * 11, 30 - i * 5, 7.6 - i * 1.2, 8, Math.PI / 8))} fill={S.cyan} opacity={0.12 + i * 0.04} stroke={S.cyanHi} strokeWidth="0.5" />)}
+          {[[34, 60], [44, 50], [56, 44], [62, 58], [48, 66], [40, 38]].map(([x, y], i) => <g key={i}><rect x={x - 1.4} y={y - 8 - (i % 3) * 3} width="2.8" height={8 + (i % 3) * 3} fill={S.cyanHi} opacity="0.85" /></g>)}
+          {[[34, 60], [62, 58], [48, 66]].map(([x, y], i) => <polygon key={i} points={pts(ngon(x, y, 3.4, 1.6, 6))} fill={S.syndicate || S.green} />)}
+          <polygon points={pts([[66, 20], [92, 20], [92, 42], [66, 42]])} fill={ART.screen.cyan} opacity="0.9" /><text x="68" y="25" fontSize="2.4" fill={S.cyanHi} fontWeight="700" {...PT}>TERRITORIES 4</text><text x="68" y="29.6" fontSize="2.2" fill={S.cyanHi} {...PT}>AGENTS ACTIVE</text><text x="68" y="34" fontSize="2.2" fill={S.amberHi} {...PT}>CONTRACT QUEUE</text><text x="68" y="38.6" fontSize="2.2" fill={S.cyanHi} {...PT}>L800 TO L1450</text>
+        </g>}
+        {conq && <g>
+          {[[48, 56, 'green'], [34, 50, 'blue'], [62, 50, 'amber'], [40, 66, 'cyan'], [58, 68, 'red']].map(([x, y, k], i) => <g key={i}><polygon points={pts(ngon(x, y, 9, 4.2, 6))} fill={S[k]} opacity="0.55" stroke={S[k]} strokeWidth="0.8" /><rect x={x - 1} y={y - 12} width="2" height="9" fill={S[k]} /></g>)}
+          <g stroke={S.white} strokeWidth="0.6" fill="none" opacity="0.7"><polyline points={pts([[48, 56], [34, 50]])} /><polyline points={pts([[48, 56], [62, 50]])} /><polyline points={pts([[48, 56], [40, 66]])} /><polyline points={pts([[48, 56], [58, 68]])} /></g>
+          <text x="48" y="14" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>SECTOR CONTROL: 5 CONTESTED</text>
+        </g>}
+        {!war && !conq && <g>
+          {Array.from({ length: 6 }, (_, i) => <line key={i} x1={20 + i * 11} y1="72" x2={36 + i * 5} y2="36" stroke={S.blue} strokeWidth="0.4" opacity="0.5" />)}
+          {Array.from({ length: 5 }, (_, i) => <polygon key={i} points={pts(ngon(48, 74 - i * 8, 32 - i * 4.4, 8 - i * 1.1, 8, Math.PI / 8))} fill="none" stroke={S.blue} strokeWidth="0.5" opacity="0.7" />)}
+          <polyline points={pts([[26, 70], [40, 60], [50, 54], [64, 46]])} fill="none" stroke={S.cyanHi} strokeWidth="0.9" /><polyline points={pts([[30, 62], [44, 66], [60, 62]])} fill="none" stroke={S.cyanHi} strokeWidth="0.9" />
+          {[[38, 54], [58, 60]].map(([x, y], i) => <polygon key={i} points={pts([[x - 3, y + 3], [x, y - 3], [x + 3, y + 3]])} fill={S.crimson} />)}
+          {[[30, 44], [50, 36], [66, 52]].map(([x, y], i) => <g key={i}><polygon points={pts(ngon(x, y, 4, 4, 6))} fill="none" stroke={S.violet} strokeWidth="0.9" /><text x={x} y={y + 1} textAnchor="middle" fontSize="2.8" fill={S.violet} fontWeight="700" {...PT}>?</text></g>)}
+          <text x="14" y="30" fontSize="2.4" fill={S.violet} {...PT}>UNKNOWN x3</text><text x="14" y="34" fontSize="2.2" fill={S.crimson} {...PT}>BLACK SUN HOUSES</text><text x="14" y="38" fontSize="2.2" fill={S.cyanHi} {...PT}>S4 PATROLS</text>
+        </g>}
+      </g>
+      <Glow cx={48} cy={77} rx={26} ry={6} c={col} opacity={0.4} />
+      <Rivets x={18} y={84} w={60} n={9} /><Grime x={8} y={70} w={80} h={20} seed={war ? 440 : conq ? 442 : 444} n={5} op={0.22} /><Scuff x={8} y={68} w={80} h={22} seed={war ? 441 : conq ? 443 : 445} n={8} />
+    </svg>
+  );
+}
+
+function PropVendorStall({ variant }) {
+  const S = ART.signal;
+  const fruit = variant === 'fruit', droid = variant === 'droid_repair';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      {[8, 86].map((x) => <Bev key={x} t="polygon" points={pts([[x, 60], [x, 14], [x + 3, 14], [x + 3, 60]])} c={fruit ? 'wood' : 'steel'} o={0.6} />)}
+      {/* canopy */}
+      <polygon points={pts([[2, 24], [94, 24], [86, 6], [10, 6]])} fill={ART[fruit ? 'canvas' : droid ? 'dark' : 'tan'].base} />
+      {fruit && <g>
+        <polygon points={pts([[20, 8], [34, 8], [32, 20], [22, 18]])} fill={ART.tan.base} /><polygon points={pts([[44, 10], [58, 7], [60, 18], [48, 20]])} fill={ART.red.base} /><polygon points={pts([[66, 12], [80, 8], [82, 20], [70, 21]])} fill={ART.teal.base} /><polygon points={pts([[8, 14], [18, 14], [18, 22], [6, 22]])} fill={ART.fabric.base} />
+        <g stroke={ART.ink} strokeWidth="0.5" opacity="0.5" fill="none"><polyline points={pts([[20, 8], [34, 8], [32, 20], [22, 18], [20, 8]])} /><polyline points={pts([[44, 10], [58, 7], [60, 18], [48, 20], [44, 10]])} /></g>
+      </g>}
+      {Array.from({ length: 8 }, (_, i) => <polygon key={i} points={pts([[2 + i * 11.5, 24], [13.5 + i * 11.5, 24], [14.4 + i * 10.6, 6], [10 + i * 10.6, 6]])} fill={fruit ? ART.canvas.hi : droid ? ART.dark.hi : ART.tan.hi} opacity={i % 2 ? 0.28 : 0} />)}
+      <rect x="2" y="23" width="92" height="2.6" fill={ART.dark.shade} />
+      {fruit && <g>
+        <Bev t="polygon" points={pts([[8, 58], [8, 42], [88, 42], [88, 58]])} c="wood" o={1} /><Seams x={8} y={42} w={80} h={16} cols={6} op={0.4} />
+        {Array.from({ length: 11 }, (_, i) => <circle key={i} cx={16 + i * 6.4} cy={40 - (i % 3)} r="3.4" fill={S.orange} />)}
+        {Array.from({ length: 6 }, (_, i) => <circle key={i} cx={20 + i * 11} cy={36 - (i % 2) * 2} r="2.8" fill={S.amberHi} />)}
+        <Glow cx={48} cy={38} rx={36} ry={6} c={S.orange} opacity={0.4} />
+        <Slab x={62} y={26} w={24} h={8} k={1} c="paper" o={0.3} /><text x="74" y="31.6" textAnchor="middle" fontSize="2.6" fill={ART.note.ink} fontWeight="700" {...PT}>GLOWS ORANGE</text>
+      </g>}
+      {droid && <g>
+        <Bev t="polygon" points={pts([[8, 58], [8, 44], [88, 44], [88, 58]])} c="dark" o={1} />
+        {[[14, 'steel'], [32, 'amber'], [50, 'teal']].map(([x, c], i) => <g key={i}><Bev t="polygon" points={pts([[x, 44], [x, 30], [x + 4, 26], [x + 14, 26], [x + 18, 30], [x + 18, 44]])} c={c} o={0.8} /><circle cx={x + 9} cy="33" r="3" fill={ART.ink} /><circle cx={x + 9} cy="33" r="1.4" fill={i === 1 ? S.red : S.cyan} /><rect x={x + 2} y="38" width="14" height="1.4" fill={ART.dark.shade} /></g>)}
+        {Array.from({ length: 6 }, (_, i) => <g key={i}><circle cx={74 + (i % 3) * 5} cy={30 + Math.floor(i / 3) * 6} r="2" fill={ART.dark.shade} /><circle cx={74 + (i % 3) * 5} cy={30 + Math.floor(i / 3) * 6} r="1" fill={[S.cyan, S.amber, S.red][i % 3]} /></g>)}
+        <g><Bev t="polygon" points={pts([[40, 52], [58, 52], [60, 46], [38, 46]])} c="dark" o={0.4} /><polygon points={pts([[44, 50], [50, 44], [54, 46], [48, 52]])} fill={ART.skin.mid} /><polygon points={pts([[56, 50], [52, 44], [48, 45], [52, 52]])} fill={ART.skin.dark} /><polyline points={pts([[45, 48], [49, 46]])} fill="none" stroke={ART.ink} strokeWidth="0.7" /><polygon points={pts([[50, 44], [54, 40], [55, 42]])} fill={ART.steel.hi} /><circle cx="55" cy="40" r="1.4" fill={S.amberHi} style={{ animation:'ship-spark 0.9s steps(2) infinite' }} /></g>
+        <polygon points={pts([[10, 6], [86, 6], [86, 17], [10, 17]])} fill={ART.paper.base} opacity="0.92" /><text x="48" y="10.4" textAnchor="middle" fontSize="2.8" fill={ART.note.ink} fontWeight="700" {...PT}>NO DROIDS REFUSED. NO QUESTIONS ASKED.</text><text x="48" y="14.6" textAnchor="middle" fontSize="2.8" fill={ART.note.redInk} fontWeight="700" {...PT}>PAYMENT UPFRONT.</text>
+      </g>}
+      {!fruit && !droid && <g>
+        <Bev t="polygon" points={pts([[8, 58], [8, 46], [88, 46], [88, 58]])} c="steel" o={1} />
+        <Bev t="polygon" points={pts([[12, 46], [12, 26], [16, 22], [30, 22], [34, 26], [34, 46]])} c="hull" o={1} /><rect x="12" y="30" width="22" height="2" fill={ART.dark.shade} /><rect x="12" y="38" width="22" height="2" fill={ART.dark.shade} />
+        <rect x="18" y="33" width="10" height="4" fill={ART.screen.amber} /><circle cx="23" cy="43" r="1.8" fill={ART.dark.shade} /><polygon points={pts([[20, 46], [26, 46], [24, 48], [22, 48]])} fill={ART.steel.base} /><rect x="36" y="38" width="3" height="2" fill={ART.dark.shade} />
+        <polygon points={pts([[46, 46], [84, 46], [88, 52], [42, 52]])} fill={ART.tan.base} />{[50, 62, 74].map((x) => <g key={x}><Bev t="polygon" points={pts([[x, 46], [x + 1, 40], [x + 6, 40], [x + 7, 46]])} c="pearl" o={0.4} /><polygon points={pts([[x + 1, 40], [x + 6, 40], [x + 5, 37], [x + 2, 37]])} fill={ART.amber.hi} opacity="0.6" /></g>)}
+        <Slab x={40} y={8} w={50} h={9} k={1} c="wood" o={0.6} /><text x="65" y="14" textAnchor="middle" fontSize="2.8" fill={ART.paper.hi} fontWeight="700" {...PT}>BEST CAF BETWEEN THE LEVELS</text>
+        <g transform="rotate(-3 65 22)"><polygon points={pts([[46, 18], [88, 18], [88, 24], [46, 24]])} fill={ART.paper.base} /><text x="67" y="22.4" textAnchor="middle" fontSize="2.4" fill={ART.note.ink} {...PT}>only caf between the levels</text></g>
+      </g>}
+      <Rivets x={10} y={56} w={76} n={10} />
+      <Grime x={4} y={8} w={88} h={52} seed={(variant || 'v').length + 450} n={6} op={0.24} /><Scuff x={6} y={10} w={84} h={48} seed={(variant || 'v').length + 451} n={8} />
+    </svg>
+  );
+}
+
+function PropGorgSpit() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Bev t="polygon" points={pts([[4, 60], [4, 44], [92, 44], [92, 60]])} c="rust" o={1.1} />
+      <polygon points={pts([[10, 44], [86, 44], [80, 38], [16, 38]])} fill={ART.ink} />
+      {Array.from({ length: 12 }, (_, i) => <polygon key={i} points={pts([[12 + i * 6.2, 44], [15 + i * 6.2, 44], [14 + i * 6.2, 34 - (i % 3) * 3], [12 + i * 6.2, 36]])} fill={[S.orange, S.amber, S.red][i % 3]} style={{ animation:`ship-blink ${0.9 + (i % 4) * 0.25}s steps(3) infinite` }} />)}
+      <Glow cx={48} cy={38} rx={38} ry={6} c={S.orange} opacity={0.55} />
+      <Bev t="polygon" points={pts([[2, 30], [2, 22], [8, 18], [8, 44], [2, 44]])} c="steel" o={0.7} /><Bev t="polygon" points={pts([[94, 30], [94, 22], [88, 18], [88, 44], [94, 44]])} c="steel" o={0.7} />
+      <rect x="6" y="28" width="86" height="3" fill={ART.steel.hi} /><rect x="6" y="28" width="86" height="1" fill={ART.pearl.base} />
+      <polygon points={pts([[16, 30], [18, 20], [30, 14], [50, 12], [70, 14], [80, 22], [80, 30], [60, 34], [34, 34]])} fill={ART.rust.shade} transform="translate(1.4 1.6)" />
+      <Bev t="polygon" points={pts([[16, 30], [18, 20], [30, 14], [50, 12], [70, 14], [80, 22], [80, 30], [60, 34], [34, 34]])} c="copper" o={1} />
+      <polygon points={pts([[24, 22], [40, 17], [56, 16], [72, 20], [62, 26], [38, 28]])} fill={ART.copper.hi} opacity="0.7" />
+      <polygon points={pts([[78, 22], [90, 20], [92, 26], [80, 30]])} fill={ART.rust.base} /><circle cx="86" cy="24" r="1.2" fill={ART.ink} />
+      <g><Bev t="polygon" points={pts([[22, 30], [18, 38], [22, 40], [28, 32]])} c="copper" o={0.5} /><Bev t="polygon" points={pts([[64, 32], [68, 40], [72, 38], [70, 30]])} c="copper" o={0.5} /><polygon points={pts([[28, 16], [44, 14], [60, 15]])} fill="none" stroke={ART.copper.hi} strokeWidth="1" opacity="0.7" /></g>
+      <Bev t="polygon" points={pts([[0, 30], [4, 30], [4, 40], [0, 40]])} c="steel" o={0.4} /><Bev t="polygon" points={pts([[0, 34], [-1, 34], [-1, 40], [0, 40]])} c="steel" o={0.3} />
+      <polygon points={pts([[48, 34], [49, 40], [47, 40]])} fill={S.amberHi} /><polygon points={pts([[60, 35], [61, 42], [59, 42]])} fill={S.amberHi} opacity="0.8" />
+      <text x="48" y="54" textAnchor="middle" fontSize="3.2" fill={ART.paper.hi} fontWeight="700" {...PT}>SPIT NOT OFF IN 3 YEARS</text>
+      <Rivets x={8} y={46} w={80} n={10} />
+      <Grime x={4} y={44} w={88} h={16} seed={460} n={5} op={0.3} /><Scuff x={6} y={46} w={84} h={12} seed={461} n={6} c="rust" />
+    </svg>
+  );
+}
+
+function PropBooth({ variant }) {
+  const S = ART.signal;
+  const flight = variant === 'flight', curtain = variant === 'curtain', det = variant === 'detention';
+  let inner = null;
+  if (variant === 'private') {
+    inner = (
+      <g>
+        <Bev t="polygon" points={pts([[6, 56], [6, 20], [14, 14], [82, 14], [90, 20], [90, 56]])} c="fabric" o={1} />
+        <Seams x={6} y={14} w={84} h={42} cols={6} op={0.35} />
+        <Bust x={34} y={26} s={1.4} coat="steel" back hair={ART.skin.hair} /><Bust x={58} y={26} s={1.4} coat="steel" back hair={ART.dark.hi} />
+        <Bev t="polygon" points={pts([[12, 56], [12, 46], [84, 46], [84, 56]])} c="wood" o={0.8} />
+        <g stroke={S.amberHi} strokeWidth="0.7" opacity="0.7"><line x1="64" y1="22" x2="92" y2="30" /><line x1="64" y1="26" x2="92" y2="40" /></g><polygon points={pts([[84, 34], [94, 34], [94, 46], [84, 46]])} fill={ART.amber.hi} opacity="0.6" /><text x="89" y="52" textAnchor="middle" fontSize="2.2" fill={S.amberHi} {...PT}>EXIT</text>
+        <text x="48" y="10" textAnchor="middle" fontSize="2.6" fill={ART.beige.base} {...PT}>2 GREY COATS: NO DRINKS</text>
+      </g>
+    );
+  } else if (variant === 'corner' || variant === 'senators') {
+    const sen = variant === 'senators';
+    inner = (
+      <g>
+        <Bev t="polygon" points={pts([[6, 58], [6, 10], [90, 10], [90, 58]])} c="deepglass" o={0.9} />
+        <rect x="10" y="14" width="76" height="30" fill={ART.screen.space} />{sen ? null : [20, 40, 62].map((x) => <rect key={x} x={x} y={32 + (x % 3) * 2} width="6" height={12 - (x % 3) * 2} fill={ART.dark.hi} />)}
+        <Glow cx={72} cy={22} r={7} c={S.amber} opacity={0.5} />
+        <Bev t="polygon" points={pts(ngon(48, 54, 30, 6, 10))} c="bronze" o={0.9} />
+        <Bust x={30} y={30} s={1.5} coat={sen ? 'deepglass' : 'dark'} skin={ART.skin.light} />
+        <Bust x={66} y={30} s={1.5} coat={sen ? 'fabric' : 'steel'} skin={ART.skin.dark} hair={ART.dark.hi} />
+        {sen ? <g>{[30, 66].map((x) => <g key={x}><polygon points={pts([[x - 6, 34], [x + 6, 34], [x + 4, 40], [x - 4, 40]])} fill={ART.brass.base} /></g>)}<Slab x={40} y={46} w={16} h={5} k={0.8} c="dark" o={0.5} /><text x="48" y="49.8" textAnchor="middle" fontSize="2.2" fill={S.cyanHi} {...PT}>BUDGET LINES</text></g> : <g><polygon points={pts([[42, 48], [54, 48], [54, 53], [42, 53]])} fill={S.cyan} style={{ animation:'ship-blink 3s steps(2) infinite' }} /><text x="48" y="8" textAnchor="middle" fontSize="2.4" fill={ART.beige.base} {...PT}>DATACARD: SLID ACROSS. POCKETED.</text></g>}
+        {sen && <g stroke={S.violet} strokeWidth="0.7" fill="none" opacity="0.8"><path d="M46 22 C48 18 52 18 54 22" /><path d="M44 20 C48 14 52 14 56 20" /></g>}
+      </g>
+    );
+  } else if (det) {
+    inner = (
+      <g>
+        <Bev t="polygon" points={pts([[6, 58], [6, 12], [90, 12], [90, 58]])} c="dark" o={1} />
+        <Seams x={6} y={12} w={84} h={46} cols={5} op={0.35} />
+        {[28, 66].map((x) => <g key={x}><Bev t="polygon" points={pts(ngon(x, 32, 9, 9, 8))} c="steel" o={0.7} /><polygon points={pts(ngon(x, 32, 5, 5, 8))} fill={ART.dark.shade} /><polygon points={pts(ngon(x, 32, 7.2, 7.2, 8))} fill="none" stroke={S.cyan} strokeWidth="0.9" style={{ animation:'holo-flicker 2s ease-in-out infinite' }} /></g>)}
+        <g><Bev t="polygon" points={pts([[40, 40], [56, 40], [56, 48], [40, 48]])} c="dark" o={0.5} /><polygon points={pts([[44, 40], [48, 36], [50, 40]])} fill={ART.steel.hi} /><circle cx="51" cy="37" r="1.2" fill={S.amberHi} style={{ animation:'ship-spark 1.2s steps(2) infinite' }} /><text x="48" y="45.6" textAnchor="middle" fontSize="2" fill={S.redHi} {...PT}>LOCK BROKEN</text></g>
+        <Bev t="polygon" points={pts([[10, 56], [10, 48], [86, 48], [86, 56]])} c="steel" o={0.7} />
+        <rect x="30" y="16" width="36" height="9" fill={ART.screen.red} /><text x="48" y="22" textAnchor="middle" fontSize="2.8" fill={S.redHi} fontWeight="700" {...PT}>14 DETAINED / 6 MO</text>
+      </g>
+    );
+  } else if (flight) {
+    inner = (
+      <g>
+        <Bev t="polygon" points={pts([[6, 58], [6, 10], [90, 10], [90, 58]])} c="deepglass" o={1} />
+        <rect x="10" y="14" width="76" height="22" fill={ART.glass.base} opacity="0.55" /><rect x="10" y="14" width="76" height="3" fill={ART.glass.hi} opacity="0.7" />
+        {[20, 46, 72].map((x) => <g key={x}><polygon points={pts([[x, 36], [x + 4, 36], [x + 14, 14], [x + 10, 14]])} fill={ART.glass.hi} opacity="0.25" /></g>)}
+        <Bev t="polygon" points={pts([[10, 56], [10, 38], [86, 38], [86, 56]])} c="dark" o={0.9} />
+        {[0, 1, 2].map((i) => <g key={i}><rect x={14 + i * 26} y="40" width="22" height="12" fill={ART.screen.green} />{i === 0 ? <g><polygon points={pts(ngon(25, 46, 5, 5, 12))} fill="none" stroke={S.green} strokeWidth="0.6" /><line x1="25" y1="46" x2="29" y2="42" stroke={S.greenHi} strokeWidth="0.8" style={{ animation:'holo-flicker 1.4s ease-in-out infinite' }} /></g> : <g>{[0, 1, 2].map((j) => <rect key={j} x={16 + i * 26} y={42 + j * 3.4} width={14 + ((i + j) % 3) * 3} height="1.2" fill={S.greenHi} />)}</g>}</g>)}
+        <rect x="66" y="40" width="16" height="12" fill={ART.screen.red} /><text x="74" y="45" textAnchor="middle" fontSize="2.4" fill={S.redHi} fontWeight="700" {...PT}>GAP 12 MIN</text><text x="74" y="49.4" textAnchor="middle" fontSize="2" fill={S.redHi} {...PT}>MALFUNCTION</text>
+        <Lights x={12} y={54} n={10} gap={7} r={0.8} seed={4} />
+      </g>
+    );
+  } else {
+    inner = (
+      <g>
+        <Bev t="polygon" points={pts([[6, 58], [6, 12], [90, 12], [90, 58]])} c="dark" o={1} />
+        <polygon points={pts([[10, 56], [10, 14], [48, 14], [48, 56]])} fill={ART.fabric.base} /><polygon points={pts([[10, 56], [10, 14], [16, 14], [16, 56]])} fill={ART.fabric.hi} opacity="0.6" />
+        {Array.from({ length: 6 }, (_, i) => <line key={i} x1={14 + i * 6} y1="14" x2={13 + i * 6} y2="56" stroke={ART.fabric.shade} strokeWidth="1.4" />)}
+        <rect x="8" y="12" width="42" height="2.4" fill={ART.steel.hi} />
+        <Bev t="polygon" points={pts([[54, 54], [54, 40], [86, 40], [86, 54]])} c="wood" o={0.8} />
+        <g transform="rotate(-6 70 36)"><Bev t="polygon" points={pts([[58, 40], [80, 40], [80, 26], [58, 26]])} c="dark" o={0.6} /><rect x="60" y="28" width="18" height="10" fill={ART.screen.cyan} />{[0, 1, 2].map((i) => <rect key={i} x="62" y={30 + i * 2.8} width={10 + (i % 2) * 4} height="1.2" fill={S.cyanHi} />)}</g>
+        <text x="70" y="22" textAnchor="middle" fontSize="2.4" fill={S.cyanHi} {...PT}>SHELL CORP TRACE: +1 STEP</text>
+        <polygon points={pts([[50, 14], [58, 14], [54, 56], [48, 56]])} fill={ART.fabric.shade} opacity="0.5" />
+      </g>
+    );
+  }
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      {inner}
+      <Rivets x={8} y={59} w={80} n={10} />
+      <Grime x={6} y={12} w={84} h={46} seed={(variant || 'b').length + 470} n={5} op={0.22} /><Scuff x={8} y={14} w={80} h={42} seed={(variant || 'b').length + 471} n={7} />
+    </svg>
+  );
+}
+
+function PropGuardPost() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Bev t="polygon" points={pts([[6, 58], [6, 8], [90, 8], [90, 58]])} c="pearl" o={1} />
+      {[8, 78].map((x) => <g key={x}><polygon points={pts([[x, 8], [x + 10, 8], [x + 10, 34], [x + 5, 40], [x, 34]])} fill={ART.red.base} /><polygon points={pts([[x, 8], [x + 3, 8], [x + 3, 36], [x, 34]])} fill={ART.red.hi} opacity="0.7" /><Glyph k="cog" x={x + 5} y={20} s={3.4} c={S.gold} /></g>)}
+      <Glyph k="cog" x={48} y={22} s={9} c={ART.hull.base} /><polygon points={pts(ngon(48, 22, 11, 11, 16))} fill="none" stroke={ART.steel.hi} strokeWidth="0.8" />
+      <text x="62" y="40" textAnchor="middle" fontSize="3.2" fill={ART.ink} fontWeight="700" {...PT}>SENATE GUARD POST</text>
+      <Bev t="polygon" points={pts([[10, 58], [10, 44], [86, 44], [86, 58]])} c="steel" o={1} />
+      <Slab x={14} y={34} w={22} h={12} k={1} c="dark" o={0.6} /><rect x="16" y="36" width="18" height="7" fill={ART.screen.cyan} /><text x="25" y="41.6" textAnchor="middle" fontSize="2.2" fill={S.cyanHi} {...PT}>RESP 4 MIN</text>
+      <g><Bev t="polygon" points={pts([[58, 46], [76, 46], [76, 40], [58, 40]])} c="paper" o={0.3} /><text x="67" y="44.6" textAnchor="middle" fontSize="2.2" fill={ART.note.ink} {...PT}>3 UNLOGGED</text></g>
+      <g><Bev t="polygon" points={pts(ngon(50, 50, 4, 2.4, 6))} c="red" o={0.4} /></g><Lights x={40} y={53} n={4} gap={3.6} seed={6} />
+      <Hazard x={10} y={55} w={76} h={3} /><Seams x={6} y={8} w={84} h={50} cols={4} op={0.2} /><Rivets x={9} y={10} w={78} n={10} />
+      <Grime x={6} y={10} w={84} h={48} seed={480} n={5} op={0.16} /><Scuff x={8} y={12} w={80} h={44} seed={481} n={7} c="pearl" />
+    </svg>
+  );
+}
+
+function PropInterrogationRig() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Bev t="polygon" points={pts([[6, 38], [6, 6], [90, 6], [90, 38]])} c="dark" o={1} />
+      <rect x="12" y="10" width="40" height="24" fill={ART.glass.shade} /><rect x="12" y="10" width="40" height="3" fill={ART.glass.base} opacity="0.7" /><polygon points={pts([[16, 34], [24, 10], [30, 10], [22, 34]])} fill={ART.glass.hi} opacity="0.3" />
+      <text x="24" y="32.6" textAnchor="middle" fontSize="2.2" fill={ART.glass.hi} {...PT}>ONE WAY GLASS</text>
+      <Slab x={58} y={10} w={28} h={14} k={1} c="dark" o={0.6} /><rect x="60" y="12" width="24" height="10" fill={ART.screen.red} /><text x="72" y="20.4" textAnchor="middle" fontSize="6" fill={S.red} fontWeight="700" {...PT}>30:00</text>
+      <Slab x={58} y={26} w={28} h={7} k={0.8} c="dark" o={0.5} /><text x="72" y="31" textAnchor="middle" fontSize="2.4" fill={S.redHi} {...PT}>FOUR DETECTIVES FAILED</text>
+      <polygon points={pts([[34, 6], [38, 6], [40, 18], [32, 18]])} fill={ART.steel.shade} /><Bev t="polygon" points={pts([[26, 18], [46, 18], [48, 24], [24, 24]])} c="steel" o={0.8} /><polygon points={pts([[26, 24], [46, 24], [52, 56], [20, 56]])} fill={S.amberHi} opacity="0.12" />
+      <Bev t="polygon" points={pts([[24, 58], [24, 42], [28, 36], [44, 36], [48, 42], [48, 58]])} c="steel" o={1} />
+      <Bev t="polygon" points={pts([[22, 46], [22, 40], [26, 40], [26, 46]])} c="dark" o={0.5} /><Bev t="polygon" points={pts([[46, 46], [46, 40], [50, 40], [50, 46]])} c="dark" o={0.5} />
+      {[[24, 44], [48, 44], [30, 56], [42, 56]].map(([x, y], i) => <polygon key={i} points={pts(ngon(x, y, 2.6, 2.6, 6))} fill="none" stroke={ART.steel.hi} strokeWidth="1" />)}
+      <Bev t="polygon" points={pts([[60, 56], [60, 46], [88, 46], [88, 56]])} c="steel" o={0.8} /><Slab x={64} y={42} w={10} h={5} k={0.8} c="dark" o={0.5} /><circle cx="69" cy="44.4" r="1.2" fill={S.red} style={{ animation:'ship-blink 1.4s steps(2) infinite' }} />
+      <Bev t="polygon" points={pts([[78, 44], [86, 44], [86, 38], [80, 38]])} c="dark" o={0.4} />
+      <Rivets x={8} y={59} w={80} n={10} /><Seams x={6} y={6} w={84} h={32} cols={3} op={0.3} />
+      <Grime x={6} y={8} w={84} h={50} seed={490} n={5} op={0.22} /><Scuff x={8} y={10} w={80} h={46} seed={491} n={7} c="steel" />
+    </svg>
+  );
+}
+
+function PropCeremonyDais() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={59} rx={44} ry={4.4} />
+      <polygon points={pts([[40, 46], [56, 46], [66, 6], [30, 6]])} fill={S.cyan} opacity="0.12" />
+      <g style={{ animation:'holo-flicker 3s ease-in-out infinite' }}>
+        <polygon points={pts([[48, 6], [51, 14], [59, 14], [53, 19], [55, 27], [48, 22], [41, 27], [43, 19], [37, 14], [45, 14]])} fill={S.gold} />
+        <polygon points={pts(ngon(48, 18, 4, 4, 8))} fill={S.cyan} /><polygon points={pts([[44, 28], [52, 28], [52, 38], [48, 35], [44, 38]])} fill={ART.red.base} />
+        <text x="48" y="43" textAnchor="middle" fontSize="2.8" fill={S.cyanHi} fontWeight="700" {...PT}>SENATE HONOR CROSS</text>
+        <ellipse cx="48" cy="46" rx="22" ry="3" fill="none" stroke={S.cyanHi} strokeWidth="0.6" opacity="0.7" />
+      </g>
+      <polygon points={pts(ngon(48, 54, 42, 9, 10, Math.PI / 10))} fill={ART.dark.shade} /><Bev t="polygon" points={pts(ngon(48, 52, 40, 8, 10, Math.PI / 10))} c="steel" o={1.2} />
+      <polygon points={pts(ngon(48, 51, 32, 6, 10, Math.PI / 10))} fill={ART.pearl.base} /><polygon points={pts(ngon(48, 51, 24, 4.4, 10, Math.PI / 10))} fill={ART.pearl.hi} />
+      <Glyph k="cog" x={48} y={51} s={5} c={ART.red.base} />
+      <Bev t="polygon" points={pts([[8, 54], [8, 46], [18, 46], [18, 54]])} c="dark" o={0.5} /><Bev t="polygon" points={pts([[78, 54], [78, 46], [88, 46], [88, 54]])} c="dark" o={0.5} /><rect x="10" y="47.4" width="6" height="2" fill={S.cyan} /><rect x="80" y="47.4" width="6" height="2" fill={S.cyan} />
+      <Hazard x={8} y={58} w={80} h={3} /><Rivets x={10} y={55} w={76} n={10} />
+      <Grime x={6} y={44} w={84} h={16} seed={500} n={4} op={0.16} /><Scuff x={8} y={46} w={80} h={12} seed={501} n={6} c="steel" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// PENTHOUSE, ARENA AND SPECIAL SET PIECES
+// ---------------------------------------------------------------------------
+function PropMonitorWall() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={58} ry={2.8} />
+      <Slab x={2} y={2} w={124} h={56} k={3} c="dark" o={1.1} />
+      {Array.from({ length: 15 }, (_, i) => {
+        const col = i % 5, row = Math.floor(i / 5), x = 28 + col * 19.4, y = 8 + row * 16.6, hot = i === 7;
+        return (
+          <g key={i}>
+            <Slab x={x} y={y} w={18} h={15} k={0.8} c="steel" o={0.5} />
+            <rect x={x + 1.4} y={y + 1.4} width="15.2" height="12.2" fill={hot ? ART.screen.red : ART.screen.green} />
+            {i % 3 === 0 ? <g stroke={S.greenHi} strokeWidth="0.5" fill="none"><polyline points={pts([[x + 3, y + 11], [x + 3, y + 4], [x + 8, y + 4], [x + 8, y + 8], [x + 14, y + 8]])} /></g> : i % 3 === 1 ? <g fill={hot ? S.redHi : S.greenHi} opacity="0.85"><rect x={x + 4} y={y + 4} width="3" height="7" /><rect x={x + 9} y={y + 6} width="3" height="5" /></g> : <polygon points={pts(ngon(x + 9, y + 7.4, 3.6, 3.6, 6))} fill="none" stroke={S.greenHi} strokeWidth="0.6" />}
+            <rect x={x + 1.4} y={y + 1.4} width="15.2" height="1" fill={S.greenHi} opacity="0.35" style={{ animation:`ship-blink ${2 + (i % 4)}s steps(2) infinite` }} />
+            <text x={x + 2} y={y + 13} fontSize="1.8" fill={S.greenHi} {...PT}>{'FEED ' + (i + 1)}</text>
+          </g>
+        );
+      })}
+      {/* heat meter */}
+      <Slab x={7} y={8} w={16} h={48} k={1.4} c="dark" o={0.7} />
+      <text x="15" y="14" textAnchor="middle" fontSize="2.6" fill={S.amberHi} fontWeight="700" {...PT}>HEAT</text>
+      {[['green', 18], ['amber', 26], ['warn', 34], ['red', 42]].map(([k, y]) => <rect key={k} x="10" y={y} width="10" height="7" fill={S[k]} opacity={k === 'red' ? 0.9 : 0.5} />)}
+      <polygon points={pts([[8, 31], [10, 29], [10, 33]])} fill={S.white} />
+      <text x="15" y="53" textAnchor="middle" fontSize="2.4" fill={S.redHi} {...PT}>CLIMBING</text>
+      <text x="64" y="6.4" textAnchor="middle" fontSize="2.6" fill={S.cyanHi} fontWeight="700" {...PT}>L1450 SURVEILLANCE: 15 FEEDS, 3 CSF ROUTES</text>
+      <Rivets x={6} y={4} w={116} n={14} /><Lights x={30} y={57} n={14} gap={6} r={0.7} seed={7} />
+      <Grime x={4} y={6} w={120} h={50} seed={510} n={6} op={0.2} /><Scuff x={6} y={8} w={116} h={46} seed={511} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropRosterWall() {
+  const S = ART.signal;
+  const roles = [['badge', 'ENFORCER', 'red'], ['wave', 'SLICER', 'green'], ['drop', 'SMUGGLER', 'amber'], ['coin', 'FIXER', 'cyan']];
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Slab x={2} y={2} w={92} h={56} k={3} c="dark" o={1} />
+      <text x="48" y="9" textAnchor="middle" fontSize="3.4" fill={S.cyanHi} fontWeight="700" {...PT}>AGENT ROSTER</text>
+      {Array.from({ length: 6 }, (_, i) => {
+        const col = i % 3, row = Math.floor(i / 3), x = 6 + col * 29.4, y = 14 + row * 22, role = roles[i];
+        return (
+          <g key={i}>
+            <Slab x={x} y={y} w={27} h={20} k={1.2} c="steel" o={0.7} />
+            <rect x={x + 1.6} y={y + 1.6} width="23.8" height="16.8" fill={role ? ART.screen.cyan : ART.screen.off} />
+            {role ? <g><Glyph k={role[0]} x={x + 8} y={y + 8.4} s={4} c={S[role[2]]} /><text x={x + 15} y={y + 7} fontSize="2.2" fill={S.cyanHi} fontWeight="700" {...PT}>{role[1]}</text><rect x={x + 15} y={y + 9} width="8" height="1.2" fill={S.cyan} opacity="0.7" /><rect x={x + 15} y={y + 11.4} width="5" height="1.2" fill={S.cyan} opacity="0.5" /><circle cx={x + 22} cy={y + 15} r="1.2" fill={i === 1 ? S.red : S.green} /></g> : <text x={x + 13.5} y={y + 11} textAnchor="middle" fontSize="2.4" fill={ART.dark.hi} {...PT}>EMPTY SLOT</text>}
+            <rect x={x + 1.6} y={y + 1.6} width="23.8" height="1" fill={S.cyanHi} opacity="0.3" />
+          </g>
+        );
+      })}
+      <text x="48" y="58.4" textAnchor="middle" fontSize="2.2" fill={S.amberHi} {...PT}>COST VS WORTH: DO THEY MATCH?</text>
+      <Rivets x={6} y={4} w={84} n={10} />
+      <Grime x={4} y={6} w={88} h={50} seed={520} n={5} op={0.2} /><Scuff x={6} y={8} w={84} h={46} seed={521} n={7} c="steel" />
+    </svg>
+  );
+}
+
+function PropTrophyWall() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={58} ry={2.8} />
+      <Slab x={2} y={2} w={124} h={56} k={3} c="wood" o={1.1} />
+      <Seams x={2} y={2} w={124} h={56} cols={7} op={0.3} />
+      {[[10, 'brass'], [34, 'bronze'], [58, 'brass'], [82, 'copper'], [106, 'brass']].map(([x, c], i) => <g key={i}><Slab x={x} y={8} w={18} h={11} k={1} c={c} o={0.6} /><rect x={x + 2} y="10.4" width="14" height="1.4" fill={ART.ink} opacity="0.5" /><rect x={x + 2} y="13.4" width="10" height="1.2" fill={ART.ink} opacity="0.4" /><rect x={x + 2} y="15.8" width="12" height="1.2" fill={ART.ink} opacity="0.4" /></g>)}
+      <g><Bev t="polygon" points={pts([[12, 38], [38, 24], [40, 27], [14, 41]])} c="hull" o={0.5} /><Bev t="polygon" points={pts([[12, 24], [38, 38], [40, 35], [14, 21]])} c="hull" o={0.5} /><polygon points={pts(ngon(26, 31, 4, 4, 8))} fill={ART.brass.base} /></g>
+      <g><Bev t="polygon" points={pts([[50, 42], [50, 28], [60, 26], [76, 28], [82, 36], [78, 44], [60, 44]])} c="dark" o={0.7} /><polygon points={pts([[78, 36], [92, 34], [92, 40], [80, 42]])} fill={ART.steel.base} /><rect x="54" y="32" width="8" height="2" fill={S.amber} /></g>
+      <g><Bev t="polygon" points={pts([[100, 44], [96, 30], [102, 22], [114, 22], [120, 30], [116, 44]])} c="steel" o={0.8} /><polygon points={pts([[102, 32], [114, 32], [114, 36], [102, 36]])} fill={ART.ink} /><rect x="106" y="25" width="4" height="4" fill={S.crimson} /></g>
+      {[[10, 48], [34, 48], [58, 50], [82, 48]].map(([x, y], i) => <g key={i}><polygon points={pts([[x, y], [x + 14, y], [x + 14, y + 8], [x, y + 8]])} fill={ART.paper.base} /><circle cx={x + 11} cy={y + 4} r="2.2" fill={ART.red.base} /><rect x={x + 2} y={y + 2} width="6" height="1" fill={ART.note.ink} /><rect x={x + 2} y={y + 4.4} width="5" height="1" fill={ART.note.ink} /></g>)}
+      <g><Bev t="polygon" points={pts([[104, 52], [124, 52], [124, 56], [104, 56]])} c="brass" o={0.5} /></g>
+      <text x="64" y="6.4" textAnchor="middle" fontSize="2.6" fill={S.gold} fontWeight="700" {...PT}>15 YEARS: SOME EARNED, MOST TAKEN</text>
+      <Rivets x={6} y={4} w={116} n={14} />
+      <Grime x={4} y={6} w={120} h={50} seed={530} n={6} op={0.2} /><Scuff x={6} y={8} w={116} h={46} seed={531} n={9} c="wood" />
+    </svg>
+  );
+}
+
+function PropDuelRing() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <polygon points={pts(ngon(48, 62, 46, 28, 12, Math.PI / 12))} fill={ART.dark.shade} opacity="0.85" />
+      <polygon points={pts(ngon(48, 60, 44, 26, 12, Math.PI / 12))} fill={ART.dark.base} />
+      <polygon points={pts(ngon(48, 60, 38, 21, 12, Math.PI / 12))} fill="none" stroke={S.gold} strokeWidth="1.6" />
+      <polygon points={pts(ngon(48, 60, 33, 17, 12, Math.PI / 12))} fill="none" stroke={S.amber} strokeWidth="0.7" opacity="0.7" />
+      <Glow cx={48} cy={60} rx={34} ry={17} c={S.amber} opacity={0.3} />
+      <line x1="48" y1="38" x2="48" y2="82" stroke={S.gold} strokeWidth="0.8" strokeDasharray="3 2.4" opacity="0.8" />
+      <line x1="10" y1="60" x2="86" y2="60" stroke={S.gold} strokeWidth="0.8" strokeDasharray="3 2.4" opacity="0.6" />
+      {[[48, 44], [48, 76]].map(([x, y], i) => <g key={i}><polygon points={pts(ngon(x, y, 8, 4, 8))} fill={ART.ink} opacity="0.6" /><polygon points={pts(ngon(x, y, 6, 3, 8))} fill={i ? S.cyan : S.crimson} opacity="0.7" style={{ animation:`ship-blink ${2 + i}s steps(3) infinite` }} /></g>)}
+      <g fill={S.amberHi}>{[[16, 60], [80, 60], [48, 38], [48, 82]].map(([x, y], i) => <polygon key={i} points={pts([[x - 2.6, y + 1.6], [x, y - 2.6], [x + 2.6, y + 1.6]])} />)}</g>
+      <text x="48" y="18" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>12 YEARS</text>
+      <text x="48" y="24" textAnchor="middle" fontSize="2.6" fill={ART.beige.base} {...PT}>BOTH HAVE MADE THEIR CALCULATION</text>
+      <polygon points={pts([[40, 28], [56, 28], [52, 36], [44, 36]])} fill={S.amber} opacity="0.12" />
+      <Rivets x={10} y={88} w={76} n={10} /><Lights x={20} y={86} n={9} gap={7} r={0.8} seed={9} />
+      <Grime x={6} y={36} w={84} h={50} seed={540} n={5} op={0.2} /><Scuff x={8} y={38} w={80} h={46} seed={541} n={8} c="dark" />
+    </svg>
+  );
+}
+
+function PropArenaRing() {
+  const S = ART.signal;
+  const ring = (rx, ry, n = 12) => pts(ngon(80, 62, rx, ry, n, Math.PI / n));
+  return (
+    <svg viewBox="0 0 160 128" width="160" height="128" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={118} rx={74} ry={6} />
+      <polygon points={ring(76, 56)} fill={ART.dark.shade} /><Bev t="polygon" points={pts(ngon(80, 60, 74, 54, 12, Math.PI / 12))} c="steel" o={1.4} />
+      <polygon points={pts(ngon(80, 62, 66, 46, 12, Math.PI / 12))} fill={ART.steel.shade} />
+      <polygon points={pts(ngon(80, 66, 62, 42, 12, Math.PI / 12))} fill={ART.rust.shade} />
+      <polygon points={pts(ngon(80, 68, 56, 36, 12, Math.PI / 12))} fill={ART.sand.base} />
+      <polygon points={pts(ngon(80, 68, 56, 36, 12, Math.PI / 12))} fill="none" stroke={ART.sand.shade} strokeWidth="1.4" />
+      <polygon points={pts(ngon(78, 66, 44, 26, 12, Math.PI / 12))} fill={ART.sand.hi} opacity="0.5" />
+      <polygon points={pts(ngon(80, 68, 18, 10, 10))} fill="none" stroke={ART.sand.shade} strokeWidth="1.2" />
+      <line x1="80" y1="58" x2="80" y2="78" stroke={ART.sand.shade} strokeWidth="1" />
+      {[[56, 62, 8, 3], [100, 74, 10, 4], [84, 52, 6, 2.4], [66, 80, 7, 3]].map(([x, y, rx, ry], i) => <polygon key={i} points={pts(ngon(x, y, rx, ry, 7))} fill={ART.red.shade} opacity="0.8" />)}
+      <g stroke={ART.sand.shade} strokeWidth="0.9" fill="none">{[[40, 70], [112, 62], [90, 86]].map(([x, y], i) => <g key={i}><line x1={x} y1={y} x2={x + 7} y2={y - 2} /><line x1={x} y1={y + 2} x2={x + 7} y2={y} /><line x1={x} y1={y + 4} x2={x + 7} y2={y + 2} /></g>)}</g>
+      {Array.from({ length: 16 }, (_, i) => { const a = (i / 16) * Math.PI * 2 + 0.2; return <g key={i}><circle cx={80 + Math.cos(a) * 68} cy={62 + Math.sin(a) * 49} r="1.8" fill={ART.dark.shade} /><circle cx={80 + Math.cos(a) * 68} cy={62 + Math.sin(a) * 49} r="1.1" fill={i % 4 === 0 ? S.red : S.amberHi} style={{ animation:`ship-blink ${1.6 + (i % 5) * 0.4}s steps(2) infinite` }} /></g>; })}
+      {[[10, 62], [150, 62]].map(([x, y], i) => <g key={i}><Bev t="polygon" points={pts([[x - 8, y + 10], [x - 8, y - 10], [x + 8, y - 10], [x + 8, y + 10]])} c="dark" o={0.8} /><polygon points={pts([[x - 5, y + 10], [x - 5, y - 6], [x + 5, y - 6], [x + 5, y + 10]])} fill={ART.ink} /><rect x={x - 6} y={y - 12} width="12" height="2" fill={S.red} /></g>)}
+      <Slab x={56} y={4} w={48} h={9} k={1.2} c="dark" o={0.8} /><text x="80" y="10.6" textAnchor="middle" fontSize="4.6" fill={S.crimson} fontWeight="700" {...PT}>THE PIT</text>
+      <text x="80" y="124" textAnchor="middle" fontSize="2.8" fill={ART.beige.hi} {...PT}>2 M DROP. NO REFEREES. WINNER WALKS OUT.</text>
+      <Rivets x={20} y={112} w={120} n={14} />
+      <Grime x={10} y={30} w={140} h={86} seed={550} n={7} op={0.22} /><Scuff x={12} y={32} w={136} h={82} seed={551} n={10} c="steel" />
+    </svg>
+  );
+}
+
+function PropPitGate({ variant }) {
+  const S = ART.signal;
+  const droid = variant === 'droid';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Bev t="polygon" points={pts([[4, 60], [4, 10], [10, 4], [86, 4], [92, 10], [92, 60]])} c="rust" o={1.1} />
+      <Seams x={4} y={4} w={88} h={56} cols={4} rows={1} op={0.3} />
+      {droid ? (
+        <g>
+          <polygon points={pts(ngon(48, 34, 26, 26, 12))} fill={ART.ink} /><Bev t="polygon" points={pts(ngon(48, 34, 24, 24, 12))} c="steel" o={1} /><polygon points={pts(ngon(48, 34, 18, 18, 12))} fill={ART.ink} />
+          {Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return <circle key={i} cx={48 + Math.cos(a) * 21} cy={34 + Math.sin(a) * 21} r="1.2" fill={ART.steel.hi} />; })}
+          <polygon points={pts([[48, 34], [66, 16], [70, 22], [52, 40]])} fill={ART.steel.base} />
+          <Glow cx={48} cy={38} r={12} c={S.amber} opacity={0.5} />
+          {[[16, 54], [26, 56], [70, 55], [78, 57]].map(([x, y], i) => <g key={i} transform={`rotate(${(i * 23) % 40 - 20} ${x} ${y})`}><polygon points={pts([[x, y], [x + 8, y], [x + 8, y + 4], [x, y + 4]])} fill={ART.paper.base} /><rect x={x + 1.4} y={y + 1.4} width="4" height="0.9" fill={ART.note.redInk} /></g>)}
+          <text x="48" y="12" textAnchor="middle" fontSize="3.4" fill={S.magenta} fontWeight="700" {...PT}>DROID ARENA</text>
+          <text x="48" y="62" textAnchor="middle" fontSize="2.4" fill={S.amberHi} {...PT}>BETTING SLIPS: STILL WARM</text>
+        </g>
+      ) : (
+        <g>
+          <polygon points={pts([[22, 60], [22, 18], [30, 10], [66, 10], [74, 18], [74, 60]])} fill={ART.ink} />
+          {[0, 1, 2, 3, 4, 5].map((i) => <polygon key={i} points={pts([[26 + i * 8, 60], [26 + i * 8, 22], [28 + i * 8, 22], [28 + i * 8, 60]])} fill={ART.steel.base} />)}
+          <polygon points={pts([[22, 28], [74, 28], [74, 24], [22, 24]])} fill={ART.steel.shade} />
+          <Hazard x={22} y={54} w={52} h={5} />
+          <polygon points={pts([[28, 60], [68, 60], [76, 63], [20, 63]])} fill={ART.sand.base} /><polygon points={pts([[34, 60], [62, 60], [66, 62], [30, 62]])} fill={ART.sand.hi} />
+          <Slab x={30} y={4} w={36} h={8} k={1} c="dark" o={0.7} /><text x="48" y="10" textAnchor="middle" fontSize="4" fill={S.crimson} fontWeight="700" {...PT}>THE ARENA</text>
+          <polygon points={pts([[8, 20], [18, 20], [18, 50], [8, 50]])} fill={ART.dark.base} /><polygon points={pts([[78, 20], [88, 20], [88, 50], [78, 50]])} fill={ART.dark.base} />
+          <rect x="9" y="24" width="8" height="6" fill={ART.paper.base} /><rect x="79" y="24" width="8" height="6" fill={ART.paper.base} /><text x="13" y="29" textAnchor="middle" fontSize="2" fill={ART.note.ink} {...PT}>ENTER</text><text x="83" y="29" textAnchor="middle" fontSize="2" fill={ART.note.ink} {...PT}>ENTER</text>
+        </g>
+      )}
+      <Rivets x={8} y={6} w={80} n={10} />
+      <Grime x={4} y={6} w={88} h={54} seed={droid ? 560 : 562} n={6} op={0.28} /><Scuff x={6} y={8} w={84} h={50} seed={droid ? 561 : 563} n={8} c="rust" />
+    </svg>
+  );
+}
+
+function PropRailRun() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={58} ry={2.6} />
+      <polygon points={pts([[4, 62], [124, 62], [118, 54], [10, 54]])} fill={ART.dark.shade} opacity="0.6" />
+      {Array.from({ length: 11 }, (_, i) => <Bev key={i} t="polygon" points={pts([[6 + i * 11.6, 58], [6 + i * 11.6, 18], [9 + i * 11.6, 18], [9 + i * 11.6, 58]])} c="rust" o={0.7} />)}
+      {[22, 34, 46].map((y) => <g key={y}><rect x="6" y={y} width="116" height="3" fill={ART.rust.base} /><rect x="6" y={y} width="116" height="1" fill={ART.rust.hi} /><rect x="6" y={y + 3} width="116" height="1" fill={ART.rust.shade} /></g>)}
+      <g fill={ART.steel.base} opacity="0.7">{[14, 58, 98].map((x) => <polygon key={x} points={pts([[x, 22], [x + 10, 22], [x + 6, 30], [x + 2, 30]])} />)}</g>
+      <polygon points={pts([[40, 18], [48, 12], [52, 14], [44, 22]])} fill={ART.dark.hi} /><Bev t="polygon" points={pts([[36, 20], [46, 20], [46, 24], [36, 24]])} c="dark" o={0.4} /><circle cx="50" cy="13" r="2" fill={ART.dark.shade} /><circle cx="50" cy="13" r="1" fill={S.cyan} />
+      <text x="64" y="12" textAnchor="middle" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>UPPER DECK: WATCH THE EXITS</text>
+      <Hazard x={6} y={56} w={116} h={3} /><Rivets x={7} y={20} w={114} n={14} c="rust" />
+      <Grime x={4} y={16} w={120} h={42} seed={570} n={8} op={0.34} /><Scuff x={6} y={18} w={116} h={38} seed={571} n={10} c="rust" />
+    </svg>
+  );
+}
+
+function PropFighterAltar() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={26} ry={2.6} />
+      <Bev t="polygon" points={pts([[4, 56], [4, 8], [60, 8], [60, 56]])} c="concrete" o={1} />
+      <Seams x={4} y={8} w={56} h={48} cols={2} rows={1} op={0.3} />
+      <Bev t="polygon" points={pts([[8, 40], [56, 40], [58, 46], [6, 46]])} c="wood" o={0.9} />
+      <Rivets x={10} y={43} w={44} n={6} c="wood" />
+      <g><Bev t="polygon" points={pts([[12, 40], [12, 34], [20, 32], [26, 34], [26, 40]])} c="pearl" o={0.5} /><g stroke={ART.beige.shade} strokeWidth="0.7">{[34, 36, 38].map((y) => <line key={y} x1="12" y1={y} x2="26" y2={y - 1.4} />)}</g></g>
+      <g><Slab x={32} y={34} w={8} h={6} k={0.8} c="dark" o={0.4} /><rect x="33.4" y="35.4" width="5.2" height="1" fill={S.amber} /><rect x="33.4" y="37.4" width="3.6" height="1" fill={S.amber} opacity="0.7" /></g>
+      <g><Bev t="polygon" points={pts([[46, 40], [46, 31], [52, 31], [52, 40]])} c="brass" o={0.5} /><ellipse cx="49" cy="31" rx="3" ry="1.2" fill={ART.ink} /><polygon points={pts([[47.4, 31], [49, 24], [50.6, 31]])} fill={S.amberHi} style={{ animation:'ship-blink 1.4s steps(3) infinite' }} /><Glow cx={49} cy={28} r={7} c={S.amber} opacity={0.6} /></g>
+      <polygon points={pts([[40, 26], [46, 22], [48, 26]])} fill={ART.paper.base} opacity="0.3" />
+      <text x="32" y="16" textAnchor="middle" fontSize="2.8" fill={ART.beige.hi} fontWeight="700" {...PT}>FIGHTERS OFFER</text>
+      <text x="32" y="52" textAnchor="middle" fontSize="2.2" fill={ART.beige.base} {...PT}>MAINTAINED 12 YEARS</text>
+      <Grime x={4} y={10} w={56} h={46} seed={580} n={5} op={0.26} /><Scuff x={6} y={12} w={52} h={42} seed={581} n={7} c="concrete" />
+    </svg>
+  );
+}
+
+function PropKyberCluster() {
+  const S = ART.signal;
+  const crystal = (x, y, w, h, k, tilt) => (
+    <g key={k} transform={`rotate(${tilt} ${x} ${y})`}>
+      <polygon points={pts([[x - w / 2, y], [x - w / 2, y - h * 0.7], [x, y - h], [x + w / 2, y - h * 0.7], [x + w / 2, y]])} fill={ART.glass.shade} transform="translate(1 1.2)" />
+      <polygon points={pts([[x - w / 2, y], [x - w / 2, y - h * 0.7], [x, y - h], [x + w / 2, y - h * 0.7], [x + w / 2, y]])} fill={S.kyber} />
+      <polygon points={pts([[x, y], [x, y - h], [x + w / 2, y - h * 0.7], [x + w / 2, y]])} fill={ART.glass.base} opacity="0.7" />
+      <polyline points={pts([[x - w / 4, y - 4], [x - w / 6, y - h * 0.6], [x + w / 8, y - h * 0.4]])} fill="none" stroke={S.crimson} strokeWidth="0.8" opacity="0.85" />
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={42} ry={3.4} />
+      <Glow cx={48} cy={40} rx={44} ry={20} c={S.kyber} opacity={0.4} style={{ animation:'ship-engine 2.6s ease-in-out infinite' }} />
+      <g fill={S.crimson} opacity="0.2" style={{ animation:'steam-rise 4s ease-out infinite' }}><polygon points={pts(ngon(48, 20, 14, 8, 7))} /></g>
+      <polygon points={pts([[6, 60], [10, 50], [24, 46], [48, 48], [72, 46], [88, 50], [92, 60]])} fill={ART.dark.shade} /><Bev t="polygon" points={pts([[8, 60], [12, 52], [28, 50], [48, 52], [68, 50], [84, 52], [90, 60]])} c="stone" o={0.9} />
+      {crystal(30, 56, 12, 30, 'a', -14)}{crystal(66, 56, 12, 34, 'b', 12)}{crystal(48, 56, 16, 46, 'c', -2)}{crystal(18, 58, 8, 18, 'd', -28)}{crystal(78, 58, 8, 20, 'e', 24)}{crystal(40, 58, 8, 22, 'f', 8)}
+      <g stroke={S.crimson} strokeWidth="0.7" fill="none" opacity="0.7"><path d="M10 58 C20 54 24 58 30 56" /><path d="M66 58 C74 55 80 58 90 56" /></g>
+      <text x="48" y="8" textAnchor="middle" fontSize="2.8" fill={S.kyber} fontWeight="700" {...PT}>SITH CONTAMINATION: WRONG</text>
+      <Rivets x={10} y={58} w={76} n={10} c="stone" />
+      <Grime x={6} y={46} w={84} h={14} seed={590} n={4} op={0.3} /><Scuff x={8} y={48} w={80} h={10} seed={591} n={6} c="stone" />
+    </svg>
+  );
+}
+
+function PropSurveyMarker() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={26} ry={4} />
+      <polygon points={pts([[6, 60], [10, 50], [26, 46], [46, 47], [58, 52], [60, 60]])} fill={ART.dark.shade} /><Bev t="polygon" points={pts([[8, 60], [12, 52], [28, 49], [46, 50], [56, 54], [58, 60]])} c="stone" o={0.9} />
+      <g transform="rotate(-18 34 36)">
+        <Bev t="polygon" points={pts([[24, 52], [24, 14], [26, 10], [40, 10], [42, 14], [42, 52]])} c="brass" o={1} />
+        <ellipse cx="33" cy="10" rx="9" ry="3" fill={ART.brass.hi} /><ellipse cx="33" cy="10.6" rx="6.4" ry="1.9" fill={ART.ink} />
+        <g stroke={ART.brass.shade} strokeWidth="1" fill="none"><circle cx="33" cy="24" r="4" /><line x1="33" y1="20" x2="33" y2="28" /><line x1="29" y1="24" x2="37" y2="24" /><polyline points={pts([[27, 34], [33, 38], [39, 34]])} /><polyline points={pts([[27, 42], [33, 46], [39, 42]])} /></g>
+        <rect x="24" y="14" width="2.4" height="38" fill={ART.brass.hi} opacity="0.7" />
+      </g>
+      <g transform="rotate(8 14 50)"><polygon points={pts([[6, 52], [18, 50], [19, 57], [7, 58]])} fill={ART.paper.base} /><text x="12.5" y="55" textAnchor="middle" fontSize="1.7" fill={ART.note.ink} {...PT}>SEALED</text></g>
+      <text x="32" y="8" textAnchor="middle" fontSize="2.6" fill={S.amberHi} fontWeight="700" {...PT}>DO NOT RETURN</text>
+      <text x="32" y="63" textAnchor="middle" fontSize="2.2" fill={ART.beige.base} {...PT}>WITHOUT SPECIALIST CONTAINMENT</text>
+      <Rivets x={26} y={50} w={22} n={4} c="brass" />
+      <Grime x={6} y={10} w={52} h={50} seed={600} n={5} op={0.26} /><Scuff x={8} y={12} w={48} h={46} seed={601} n={6} c="brass" />
+    </svg>
+  );
+}
+
+function PropContainmentSeal() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={42} ry={3.4} />
+      <Glow cx={48} cy={34} rx={44} ry={26} c={S.magenta} opacity={0.3} style={{ animation:'ship-engine 3s ease-in-out infinite' }} />
+      <Bev t="polygon" points={pts([[6, 60], [6, 10], [14, 4], [82, 4], [90, 10], [90, 60]])} c="stone" o={1.2} />
+      <Seams x={6} y={4} w={84} h={56} cols={3} rows={1} op={0.35} />
+      <polygon points={pts(ngon(48, 34, 26, 26, 12))} fill={ART.ink} /><Bev t="polygon" points={pts(ngon(48, 34, 24, 24, 12))} c="dark" o={1} />
+      {[18, 12, 6].map((r, i) => <polygon key={r} points={pts(ngon(48, 34, r, r, 12, i * 0.3))} fill="none" stroke={[S.magenta, S.orange, S.amberHi][i]} strokeWidth="1.2" opacity={0.8 - i * 0.1} />)}
+      {Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return <g key={i}><line x1={48 + Math.cos(a) * 7} y1={34 + Math.sin(a) * 7} x2={48 + Math.cos(a) * 17} y2={34 + Math.sin(a) * 17} stroke={S.magenta} strokeWidth="0.8" opacity="0.6" /></g>; })}
+      <polygon points={pts(ngon(48, 34, 4, 4, 8))} fill={S.amberHi} style={{ animation:'ship-blink 2s steps(3) infinite' }} />
+      <g fill="none" stroke={S.magenta} strokeWidth="1.2" opacity="0.8"><path d="M24 34 C14 40 12 52 20 58" /><path d="M72 34 C82 40 86 50 78 58" /><path d="M48 10 C44 6 40 6 38 4" /></g>
+      <g stroke={ART.stone.hi} strokeWidth="0.8" fill="none">{[[12, 20], [78, 22], [14, 48], [80, 50]].map(([x, y], i) => <g key={i}><polyline points={pts([[x, y], [x + 4, y - 3], [x + 8, y]])} /><line x1={x + 4} y1={y - 3} x2={x + 4} y2={y + 4} /></g>)}</g>
+      <text x="48" y="63" textAnchor="middle" fontSize="2.6" fill={S.magenta} fontWeight="700" {...PT}>WARM: NOT HEAT. BIOLOGICAL.</text>
+      <Grime x={6} y={6} w={84} h={52} seed={610} n={6} op={0.28} /><Scuff x={8} y={8} w={80} h={48} seed={611} n={8} c="stone" /><Rivets x={10} y={7} w={76} n={9} c="stone" />
+    </svg>
+  );
+}
+
+function PropRuinStone() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={42} ry={3.4} />
+      <g fill="none" stroke={S.cyanHi} strokeWidth="0.8">{[22, 30, 38].map((r, i) => <ellipse key={r} cx="48" cy="34" rx={r + 8} ry={r * 0.5} opacity={0.4 - i * 0.1} style={{ animation:`holo-flicker ${2.4 + i * 0.6}s ease-in-out infinite` }} />)}</g>
+      <Bev t="polygon" points={pts([[8, 60], [8, 36], [14, 30], [30, 28], [32, 60]])} c="stone" o={1.2} />
+      <Bev t="polygon" points={pts([[64, 60], [66, 28], [82, 30], [88, 36], [88, 60]])} c="stone" o={1.2} />
+      <Bev t="polygon" points={pts([[6, 36], [10, 14], [20, 6], [76, 6], [86, 14], [90, 36], [72, 30], [24, 30]])} c="stone" o={1.3} />
+      <g stroke={ART.stone.shade} strokeWidth="1.1" fill="none">
+        <circle cx="48" cy="17" r="6" /><line x1="48" y1="9" x2="48" y2="25" /><line x1="40" y1="17" x2="56" y2="17" /><polyline points={pts([[30, 22], [36, 12], [42, 22]])} /><polyline points={pts([[54, 22], [60, 12], [66, 22]])} />
+        <polyline points={pts([[14, 48], [20, 42], [26, 48]])} /><polyline points={pts([[70, 48], [76, 42], [82, 48]])} /><polyline points={pts([[10, 40], [30, 40]])} /><polyline points={pts([[66, 40], [86, 40]])} />
+      </g>
+      {[[12, 30, 14, 9], [64, 32, 18, 8], [30, 6, 20, 6], [74, 8, 10, 7]].map(([x, y, w, h], i) => <polygon key={i} points={pts([[x, y + h], [x + 2, y + 2], [x + w * 0.5, y], [x + w, y + 3], [x + w - 2, y + h]])} fill={i % 2 ? ART.moss.base : ART.moss.hi} opacity="0.85" />)}
+      <rect x="32" y="40" width="32" height="20" fill={ART.ink} opacity="0.55" />
+      <text x="48" y="52" textAnchor="middle" fontSize="2.8" fill={S.cyanHi} {...PT}>THE FORCE: SILENT.</text><text x="48" y="56" textAnchor="middle" fontSize="2.8" fill={S.cyanHi} {...PT}>SOMETHING RESONATES.</text>
+      <Grime x={6} y={8} w={84} h={52} seed={620} n={6} op={0.3} /><Scuff x={8} y={10} w={80} h={48} seed={621} n={8} c="stone" /><Rivets x={30} y={32} w={36} n={5} c="stone" />
+    </svg>
+  );
+}
+
+function PropOutcastCamp() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={91} rx={58} ry={3.4} />
+      {/* lean to shelters from hull plating */}
+      {[[6, 'hull'], [84, 'steel']].map(([x, c], i) => <g key={i}>
+        <Bev t="polygon" points={pts([[x, 84], [x, 36], [x + 38, 28], [x + 38, 84]])} c={c} o={1.1} />
+        <Seams x={x} y={30} w={38} h={54} cols={2} rows={2} op={0.4} /><polygon points={pts([[x + 4, 84], [x + 4, 52], [x + 22, 50], [x + 22, 84]])} fill={ART.ink} opacity="0.85" />
+        <rect x={x + 22} y="30" width="4" height="54" fill={ART.dark.shade} opacity="0.4" /><Rivets x={x + 3} y={36} w={32} n={5} c={c} />
+        <polygon points={pts([[x + 6, 84], [x + 20, 82], [x + 20, 86], [x + 6, 88]])} fill={ART.fabric.base} />
+      </g>)}
+      <Bev t="polygon" points={pts([[44, 80], [44, 54], [80, 50], [80, 80]])} c="rust" o={0.9} /><polygon points={pts([[48, 80], [48, 58], [76, 56], [76, 80]])} fill={ART.canvas.shade} />
+      <polygon points={pts([[40, 54], [84, 48], [88, 56], [38, 62]])} fill={ART.canvas.base} />{[46, 58, 70].map((x) => <line key={x} x1={x} y1="56" x2={x + 2} y2="50" stroke={ART.canvas.shade} strokeWidth="1" />)}
+      {/* central fire in a drum */}
+      <Bev t="polygon" points={pts([[52, 86], [52, 70], [74, 70], [74, 86]])} c="rust" o={0.9} /><ellipse cx="63" cy="70" rx="11" ry="3" fill={ART.ink} />
+      {[[58, 62, 8], [64, 56, 12], [69, 63, 7]].map(([x, y, h], i) => <polygon key={i} points={pts([[x - 3.4, 70], [x, y - 4], [x + 3.4, 70]])} fill={[S.orange, S.amberHi, S.red][i]} style={{ animation:`ship-blink ${0.9 + i * 0.3}s steps(3) infinite` }} />)}
+      <Glow cx={63} cy={64} rx={32} ry={14} c={S.orange} opacity={0.5} />
+      {[[38, 88], [90, 88]].map(([x, y], i) => <g key={i}><polygon points={pts([[x, y], [x + 16, y], [x + 18, y + 3], [x - 2, y + 3]])} fill={ART.fabric.shade} /><polygon points={pts(ngon(x + 4, y - 1, 3, 2, 6))} fill={ART.skin.dark} /></g>)}
+      <g>{[[16, 22], [96, 20]].map(([x, y], i) => <g key={i}><polygon points={pts([[x, y], [x + 18, y], [x + 16, y + 10], [x + 2, y + 10]])} fill={ART.paper.base} opacity="0.9" /><text x={x + 9} y={y + 6.4} textAnchor="middle" fontSize="2" fill={ART.note.ink} {...PT}>{i ? 'ALL WAITING' : 'FORGOTTEN'}</text></g>)}</g>
+      <text x="64" y="12" textAnchor="middle" fontSize="3.4" fill={S.amberHi} fontWeight="700" {...PT}>OUTCAST SETTLEMENT</text>
+      <Grime x={4} y={28} w={120} h={60} seed={630} n={7} op={0.3} /><Scuff x={6} y={30} w={116} h={56} seed={631} n={9} c="hull" />
+    </svg>
+  );
+}
+
+function PropLuxSkiff() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={88} rx={58} ry={5} />
+      <polygon points={pts(ngon(58, 72, 52, 12, 12, Math.PI / 12))} fill={ART.dark.shade} /><Bev t="polygon" points={pts(ngon(58, 70, 50, 11, 12, Math.PI / 12))} c="bronze" o={1.2} />
+      <polygon points={pts(ngon(58, 69, 44, 8.6, 12, Math.PI / 12))} fill={ART.dark.base} />
+      <Glow cx={58} cy={68} rx={36} ry={6} c={S.cyan} opacity={0.4} style={{ animation:'ship-engine 2.6s ease-in-out infinite' }} />
+      {/* the skiff: a swept wedge with a glass canopy */}
+      <polygon points={pts([[8, 60], [30, 42], [74, 36], [104, 46], [112, 56], [76, 66], [30, 66]])} fill={ART.dark.shade} transform="translate(1.6 2)" />
+      <Bev t="polygon" points={pts([[8, 60], [30, 42], [74, 36], [104, 46], [112, 56], [76, 66], [30, 66]])} c="pearl" o={1.2} />
+      <polygon points={pts([[30, 42], [74, 36], [104, 46], [60, 52]])} fill={ART.pearl.hi} opacity="0.7" />
+      <Bev t="polygon" points={pts([[46, 50], [54, 36], [78, 34], [88, 46], [80, 52]])} c="glass" o={0.7} />
+      <polygon points={pts([[56, 38], [74, 36], [84, 46], [70, 48]])} fill={ART.glass.hi} opacity="0.6" />
+      <polygon points={pts([[10, 60], [30, 56], [76, 60], [110, 56], [76, 66], [30, 66]])} fill={ART.pearl.shade} />
+      <polygon points={pts([[14, 60], [26, 56], [26, 62]])} fill={ART.brass.base} /><rect x="30" y="58" width="60" height="1.6" fill={ART.brass.hi} />
+      <polygon points={pts([[8, 60], [4, 62], [8, 66], [20, 64]])} fill={ART.steel.base} /><Glow cx={8} cy={62} r={5} c={S.cyan} opacity={0.9} />
+      <polygon points={pts([[30, 66], [38, 70], [44, 66]])} fill={S.cyan} opacity="0.8" /><polygon points={pts([[84, 64], [92, 68], [98, 62]])} fill={S.cyan} opacity="0.8" />
+      <Slab x={98} y={20} w={28} h={34} k={1.6} c="dark" o={0.9} /><rect x="101" y="23" width="22" height="16" fill={ART.screen.amber} /><text x="112" y="28" textAnchor="middle" fontSize="2.6" fill={S.gold} fontWeight="700" {...PT}>UBRIKKIAN</text><text x="112" y="32.4" textAnchor="middle" fontSize="2.2" fill={S.gold} {...PT}>REG: UNATTENDED</text><text x="112" y="36.6" textAnchor="middle" fontSize="2.2" fill={S.amberHi} {...PT}>PERMIT 200 CR</text>
+      <Toggles x={101} y={42} cols={6} rows={2} gap={3.6} seed={6} />
+      <text x="48" y="14" textAnchor="middle" fontSize="3.8" fill={S.gold} fontWeight="700" {...PT}>LUX-SKIFF: SENATE DISTRICT CONFIG</text>
+      <Rivets x={14} y={72} w={88} n={10} c="bronze" />
+      <Grime x={6} y={36} w={116} h={50} seed={640} n={5} op={0.16} /><Scuff x={8} y={38} w={112} h={46} seed={641} n={8} c="pearl" />
+    </svg>
+  );
+}
+
+function PropSpeederWreck() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={60} rx={58} ry={3.4} />
+      <polygon points={pts([[6, 52], [18, 36], [60, 30], [98, 38], [120, 50], [112, 58], [14, 58]])} fill={ART.dark.shade} transform="translate(1.4 2)" />
+      <Bev t="polygon" points={pts([[6, 52], [18, 36], [60, 30], [98, 38], [120, 50], [112, 58], [14, 58]])} c="rust" o={1.2} />
+      <polygon points={pts([[18, 36], [60, 30], [98, 38], [60, 42]])} fill={ART.rust.hi} opacity="0.7" />
+      <polygon points={pts([[34, 44], [52, 34], [84, 36], [92, 44], [60, 50]])} fill={ART.ink} />
+      <polygon points={pts([[42, 46], [52, 38], [76, 40], [82, 46], [58, 50]])} fill={ART.fabric.base} /><polygon points={pts([[42, 46], [52, 38], [60, 40], [50, 48]])} fill={ART.fabric.hi} opacity="0.7" /><polygon points={pts([[50, 40], [60, 38], [66, 42], [54, 46]])} fill={ART.skin.mid} opacity="0.0" />
+      <Glow cx={62} cy={44} rx={16} ry={5} c={S.orange} opacity={0.55} />
+      {/* stripped coil bays */}
+      {[[18, 52], [96, 52]].map(([x, y], i) => <g key={i}><polygon points={pts(ngon(x + 6, y + 2, 9, 5, 8))} fill={ART.ink} /><polygon points={pts(ngon(x + 6, y + 2, 5.4, 3, 8))} fill={ART.dark.base} /><path d={`M${x + 4} ${y + 2} C${x} ${y + 8} ${x + 8} ${y + 10} ${x + 4} ${y + 12}`} fill="none" stroke={ART.copper.base} strokeWidth="1.2" /></g>)}
+      <polygon points={pts([[100, 36], [118, 44], [118, 50], [102, 44]])} fill={ART.steel.base} /><polygon points={pts([[100, 36], [96, 30], [104, 34]])} fill={ART.glass.base} opacity="0.5" />
+      <polyline points={pts([[70, 30], [78, 24], [86, 28]])} fill="none" stroke={ART.dark.hi} strokeWidth="1.4" />
+      <text x="64" y="12" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>RECENTLY OCCUPIED: BEDROLL WARM</text>
+      <text x="64" y="63" textAnchor="middle" fontSize="2.4" fill={ART.beige.base} {...PT}>REPULSOR COILS: STRIPPED</text>
+      <Rivets x={12} y={54} w={98} n={12} c="rust" />
+      <Grime x={6} y={32} w={114} h={28} seed={650} n={7} op={0.3} /><Scuff x={8} y={34} w={110} h={22} seed={651} n={9} c="rust" />
+    </svg>
+  );
+}
+
+function PropSpeederBay() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={44} ry={3.4} />
+      <polygon points={pts(ngon(44, 50, 42, 10, 10, Math.PI / 10))} fill={ART.dark.shade} /><Bev t="polygon" points={pts(ngon(44, 48, 40, 9, 10, Math.PI / 10))} c="steel" o={1} />
+      <Hazard x={10} y={50} w={68} h={4} />
+      {/* the speeder, engine warm */}
+      <polygon points={pts([[14, 44], [30, 28], [62, 24], [84, 34], [86, 44], [54, 50], [24, 50]])} fill={ART.dark.shade} transform="translate(1.4 1.8)" />
+      <Bev t="polygon" points={pts([[14, 44], [30, 28], [62, 24], [84, 34], [86, 44], [54, 50], [24, 50]])} c="deepglass" o={1.1} />
+      <polygon points={pts([[30, 28], [62, 24], [84, 34], [54, 34]])} fill={ART.deepglass.hi} opacity="0.7" />
+      <Bev t="polygon" points={pts([[38, 36], [44, 26], [60, 24], [68, 34]])} c="glass" o={0.6} />
+      <rect x="24" y="44" width="56" height="1.6" fill={S.amberHi} opacity="0.9" />
+      <Glow cx={14} cy={46} rx={10} ry={5} c={S.orange} opacity={0.9} style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} /><polygon points={pts([[10, 42], [4, 46], [10, 50]])} fill={S.amberHi} style={{ animation:'ship-blink 1.2s steps(3) infinite' }} />
+      <g fill={ART.pearl.base} opacity="0.4" style={{ animation:'steam-rise 2.6s ease-out infinite' }}><polygon points={pts(ngon(10, 38, 4, 3, 7))} /></g>
+      {/* quick release tethers */}
+      {[[26, 52], [74, 52]].map(([x, y], i) => <g key={i}><Bev t="polygon" points={pts([[x - 4, y + 6], [x - 4, y - 4], [x + 4, y - 4], [x + 4, y + 6]])} c="dark" o={0.6} /><rect x={x - 1.4} y={y - 2} width="2.8" height="4" fill={S.red} style={{ animation:'ship-blink 1.4s steps(2) infinite' }} /><Cable d={`M${x} ${y - 4} C${x} ${y - 10} ${x + (i ? -6 : 6)} ${y - 10} ${x + (i ? -8 : 8)} ${y - 6}`} w={1.4} /></g>)}
+      <Slab x={36} y={4} w={34} h={9} k={1} c="dark" o={0.7} /><text x="53" y="10.4" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>INTERCEPT READY</text>
+      <text x="48" y="63" textAnchor="middle" fontSize="2.4" fill={ART.beige.base} {...PT}>COURIER BOARDED MAG-RAIL 3 MIN AGO</text>
+      <Rivets x={12} y={50} w={64} n={8} />
+      <Grime x={4} y={38} w={88} h={22} seed={660} n={5} op={0.26} /><Scuff x={6} y={40} w={84} h={18} seed={661} n={7} c="steel" />
+    </svg>
+  );
+}
+
+function PropFountain() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={44} ry={3.4} />
+      <polygon points={pts(ngon(48, 50, 46, 11, 12, Math.PI / 12))} fill={ART.dark.shade} /><Bev t="polygon" points={pts(ngon(48, 48, 44, 10, 12, Math.PI / 12))} c="stone" o={1.2} />
+      <polygon points={pts(ngon(48, 47.6, 38, 7.4, 12, Math.PI / 12))} fill={ART.deepglass.base} />
+      <polygon points={pts(ngon(48, 47.4, 30, 5.4, 12, Math.PI / 12))} fill={ART.glass.base} opacity="0.7" />
+      {[[22, 'a'], [74, 'b']].map(([x, k]) => <g key={k} fill="none" stroke={S.kyber} strokeWidth="1.2"><path d={`M${x} 46 C${x + (x < 48 ? 8 : -8)} 30 ${x + (x < 48 ? 14 : -14)} 30 ${x + (x < 48 ? 18 : -18)} 44`} opacity="0.85" /></g>)}
+      <g style={{ animation:'steam-rise 3s ease-out infinite' }} fill="none" stroke={S.kyber} strokeWidth="1.4" opacity="0.8"><path d="M48 16 C44 28 40 36 36 44" /><path d="M48 16 C52 28 56 36 60 44" /><path d="M48 14 L48 40" /></g>
+      <Bev t="polygon" points={pts([[37, 48], [39, 6], [48, 2], [57, 6], [59, 48]])} c="stone" o={1.2} />
+      <Bev t="polygon" points={pts([[40, 36], [40, 12], [56, 12], [56, 36]])} c="bronze" o={0.7} />
+      <text x="48" y="19.6" textAnchor="middle" fontSize="1.8" fill={ART.ink} fontWeight="700" {...PT}>IN MEMORY</text><text x="48" y="23.2" textAnchor="middle" fontSize="1.8" fill={ART.ink} fontWeight="700" {...PT}>OF THE FALLEN</text><text x="48" y="26.8" textAnchor="middle" fontSize="1.8" fill={ART.ink} fontWeight="700" {...PT}>OF MALACHOR</text>
+      <polygon points={pts([[44, 5], [52, 5], [48, 0]])} fill={S.kyber} />
+      <Rivets x={46} y={30} w={4} n={2} c="bronze" />
+      <Glow cx={48} cy={47} rx={34} ry={5} c={S.cyan} opacity={0.35} />
+      <Grime x={4} y={40} w={88} h={20} seed={670} n={5} op={0.2} /><Scuff x={6} y={42} w={84} h={14} seed={671} n={6} c="stone" />
+    </svg>
+  );
+}
+
+function PropScorchWall() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Bev t="polygon" points={pts([[3, 60], [3, 6], [9, 2], [87, 2], [93, 6], [93, 60]])} c="concrete" o={1} />
+      <Seams x={3} y={2} w={90} h={58} cols={3} rows={1} op={0.4} />
+      {[[22, 28], [48, 24], [74, 30]].map(([x, y], i) => <g key={i}>
+        <polygon points={pts(ngon(x, y, 15, 12, 10))} fill={ART.ink} opacity="0.5" />
+        <polygon points={pts(ngon(x, y, 9, 7, 10))} fill={ART.ink} opacity="0.7" />
+        {Array.from({ length: 10 }, (_, j) => { const a = (j / 10) * Math.PI * 2; return <line key={j} x1={x + Math.cos(a) * 9} y1={y + Math.sin(a) * 7} x2={x + Math.cos(a) * (15 + (j % 3) * 3)} y2={y + Math.sin(a) * (12 + (j % 3) * 2)} stroke={ART.ink} strokeWidth="1.2" opacity="0.5" />; })}
+      </g>)}
+      {[[18, 42, 1], [44, 40, 2], [70, 46, 3], [84, 22, 4]].map(([x, y, n]) => <g key={n}><polygon points={pts([[x, y + 10], [x + 3, y], [x + 6, y + 10]])} fill={S.warn} /><text x={x + 3} y={y + 9} textAnchor="middle" fontSize="3.2" fill={ART.ink} fontWeight="700" {...PT}>{n}</text></g>)}
+      <g stroke={S.warn} strokeWidth="1"><line x1="3" y1="52" x2="93" y2="50" strokeDasharray="4 3" /></g>
+      <text x="48" y="10" textAnchor="middle" fontSize="3.2" fill={S.warn} fontWeight="700" {...PT}>3 SHAPED CHARGES. NOT A FUEL FIRE.</text>
+      <text x="48" y="57" textAnchor="middle" fontSize="2.4" fill={S.cyanHi} {...PT}>CSF EVIDENCE TAPE: CLOSED CASE</text>
+      <Rivets x={7} y={4} w={82} n={10} />
+      <Grime x={4} y={6} w={88} h={54} seed={680} n={6} op={0.3} /><Scuff x={6} y={8} w={84} h={50} seed={681} n={8} c="concrete" />
+    </svg>
+  );
+}
+
+function PropSentryPost() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Bev t="polygon" points={pts([[4, 58], [4, 30], [10, 26], [86, 26], [92, 30], [92, 58]])} c="steel" o={1.1} />
+      <Seams x={4} y={26} w={88} h={32} cols={4} rows={1} op={0.35} />
+      {[[10, 'dark'], [38, 'rust'], [66, 'dark']].map(([x, c], i) => <g key={i}><Slab x={x} y={34} w={20} h={22} k={1.4} c={c} o={0.8} /><Hazard x={x + 1} y={50} w={18} h={4} /></g>)}
+      <polygon points={pts([[30, 30], [66, 30], [66, 36], [30, 36]])} fill={ART.ink} /><rect x="30" y="30" width="36" height="1.2" fill={ART.steel.hi} />
+      <g>{[[18, 34, 6], [44, 38, 8], [74, 36, 7], [58, 46, 5]].map(([x, y, r], i) => <g key={i}><polygon points={pts(ngon(x, y, r, r * 0.8, 8))} fill={ART.ink} opacity="0.55" /><polygon points={pts(ngon(x, y, r * 0.5, r * 0.4, 8))} fill={ART.ink} opacity="0.7" /></g>)}</g>
+      <g><Bev t="polygon" points={pts([[76, 58], [76, 46], [86, 46], [86, 58]])} c="wood" o={0.5} /><Slab x={74} y={42} w={14} h={5} k={0.8} c="wood" o={0.5} /></g>
+      <g transform="rotate(-8 26 24)"><Bev t="polygon" points={pts([[16, 26], [34, 26], [34, 20], [16, 20]])} c="dark" o={0.4} /><circle cx="22" cy="20" r="2.4" fill={ART.dark.shade} /><circle cx="22" cy="20" r="1.2" fill={S.cyan} /><circle cx="30" cy="20" r="2.4" fill={ART.dark.shade} /><circle cx="30" cy="20" r="1.2" fill={S.cyan} /></g>
+      <g>{[0, 1, 2].map((i) => <Slab key={i} x={46 + i * 6} y={20} w={5} h={6} k={0.6} c="amber" o={0.3} />)}</g>
+      <text x="48" y="14" textAnchor="middle" fontSize="3.2" fill={S.warn} fontWeight="700" {...PT}>HELD AGAINST SOMETHING FROM THE SOUTH</text>
+      <polygon points={pts([[40, 6], [56, 6], [48, 12]])} fill={S.amber} opacity="0.5" />
+      <Rivets x={8} y={28} w={80} n={10} />
+      <Grime x={4} y={28} w={88} h={30} seed={690} n={6} op={0.3} /><Scuff x={6} y={30} w={84} h={26} seed={691} n={8} c="steel" />
+    </svg>
+  );
+}
+
+// ===== CORUSCANT PROPS END =====
+
 const PROP_DEFS = {
   fuel_rig:           { w: 2, h: 2, ax: 1, ay: 1 },
   manifest_terminal:  { w: 2, h: 2, ax: 1, ay: 1 },
@@ -8642,6 +11226,81 @@ const PROP_DEFS = {
   bronze_mural:       { w: 3, h: 2, ax: 0, ay: 1 },
   panoramic_viewport: { w: 4, h: 2, ax: 1, ay: 1 },
   protocol_droid:     { w: 1, h: 2, ax: 0, ay: 1 },
+  // CORUSCANT DEFS BEGIN
+  console:              { w: 2, h: 2, ax: 0, ay: 1 },
+  kiosk:                { w: 3, h: 2, ax: 1, ay: 1 },
+  airtaxi:              { w: 2, h: 2, ax: 0, ay: 1 },
+  comm_relay:           { w: 2, h: 2, ax: 0, ay: 1 },
+  server_stack:         { w: 2, h: 3, ax: 0, ay: 2 },
+  board:                { w: 3, h: 2, ax: 1, ay: 1 },
+  sign_array:           { w: 4, h: 2, ax: 1, ay: 1 },
+  shopfront:            { w: 4, h: 2, ax: 1, ay: 1 },
+  apt_door:             { w: 2, h: 2, ax: 0, ay: 1 },
+  wall_marks:           { w: 3, h: 2, ax: 1, ay: 1 },
+  skyline:              { w: 4, h: 2, ax: 1, ay: 1 },
+  elevator_door:        { w: 2, h: 2, ax: 0, ay: 0 },
+  datapad_table:        { w: 2, h: 2, ax: 0, ay: 1 },
+  crate_stack:          { w: 3, h: 2, ax: 1, ay: 1 },
+  container_stack:      { w: 4, h: 2, ax: 1, ay: 1 },
+  cargo_container:      { w: 3, h: 2, ax: 1, ay: 1 },
+  drum_array:           { w: 3, h: 2, ax: 1, ay: 1 },
+  hab_block:            { w: 4, h: 3, ax: 1, ay: 2 },
+  evidence_locker:      { w: 3, h: 2, ax: 1, ay: 1 },
+  weapon_rack:          { w: 3, h: 2, ax: 1, ay: 1 },
+  medic_crate:          { w: 2, h: 2, ax: 0, ay: 1 },
+  scrap_bin:            { w: 2, h: 2, ax: 0, ay: 1 },
+  fuel_hose:            { w: 2, h: 2, ax: 0, ay: 1 },
+  storage_alcoves:      { w: 3, h: 2, ax: 1, ay: 1 },
+  archive_cabinet:      { w: 2, h: 2, ax: 0, ay: 1 },
+  workbench:            { w: 3, h: 2, ax: 1, ay: 1 },
+  cargo_lift:           { w: 3, h: 2, ax: 1, ay: 1 },
+  vault_door:           { w: 3, h: 3, ax: 1, ay: 2 },
+  security_gate:        { w: 3, h: 2, ax: 1, ay: 1 },
+  junction_box:         { w: 2, h: 2, ax: 0, ay: 1 },
+  leaking_pipe:         { w: 3, h: 2, ax: 1, ay: 1 },
+  pressure_valve:       { w: 2, h: 2, ax: 0, ay: 1 },
+  steam_vent:           { w: 2, h: 2, ax: 0, ay: 1 },
+  access_hatch:         { w: 2, h: 2, ax: 0, ay: 1 },
+  scanner_arch:         { w: 3, h: 2, ax: 1, ay: 1 },
+  damper_array:         { w: 3, h: 2, ax: 1, ay: 1 },
+  power_tap:            { w: 2, h: 2, ax: 0, ay: 1 },
+  drop_shaft:           { w: 3, h: 2, ax: 1, ay: 1 },
+  catwalk_junction:     { w: 3, h: 3, ax: 1, ay: 2 },
+  floor_grate:          { w: 2, h: 2, ax: 0, ay: 1 },
+  drain_channel:        { w: 3, h: 2, ax: 1, ay: 1 },
+  support_pillar:       { w: 2, h: 3, ax: 0, ay: 2 },
+  radiator:             { w: 3, h: 2, ax: 1, ay: 1 },
+  fluid_slick:          { w: 3, h: 2, ax: 1, ay: 1 },
+  crane_arm:            { w: 4, h: 3, ax: 1, ay: 2 },
+  landing_beacon:       { w: 2, h: 2, ax: 0, ay: 1 },
+  ceiling_tap:          { w: 2, h: 3, ax: 0, ay: 2 },
+  tactical_table:       { w: 3, h: 3, ax: 1, ay: 2 },
+  vendor_stall:         { w: 3, h: 2, ax: 1, ay: 1 },
+  gorg_spit:            { w: 3, h: 2, ax: 1, ay: 1 },
+  booth:                { w: 3, h: 2, ax: 1, ay: 1 },
+  guard_post:           { w: 3, h: 2, ax: 1, ay: 1 },
+  interrogation_rig:    { w: 3, h: 2, ax: 1, ay: 1 },
+  ceremony_dais:        { w: 3, h: 2, ax: 1, ay: 1 },
+  monitor_wall:         { w: 4, h: 2, ax: 1, ay: 1 },
+  roster_wall:          { w: 3, h: 2, ax: 1, ay: 1 },
+  trophy_wall:          { w: 4, h: 2, ax: 1, ay: 1 },
+  duel_ring:            { w: 3, h: 3, ax: 1, ay: 2 },
+  arena_ring:           { w: 5, h: 4, ax: 2, ay: 3 },
+  pit_gate:             { w: 3, h: 2, ax: 1, ay: 1 },
+  rail_run:             { w: 4, h: 2, ax: 1, ay: 1 },
+  fighter_altar:        { w: 2, h: 2, ax: 0, ay: 1 },
+  kyber_cluster:        { w: 3, h: 2, ax: 1, ay: 1 },
+  survey_marker:        { w: 2, h: 2, ax: 0, ay: 1 },
+  containment_seal:     { w: 3, h: 2, ax: 1, ay: 1 },
+  ruin_stone:           { w: 3, h: 2, ax: 1, ay: 1 },
+  outcast_camp:         { w: 4, h: 3, ax: 1, ay: 2 },
+  lux_skiff:            { w: 4, h: 3, ax: 2, ay: 2 },
+  speeder_wreck:        { w: 4, h: 2, ax: 1, ay: 1 },
+  speeder_bay:          { w: 3, h: 2, ax: 1, ay: 1 },
+  fountain:             { w: 3, h: 2, ax: 1, ay: 0 },
+  scorch_wall:          { w: 3, h: 2, ax: 1, ay: 1 },
+  sentry_post:          { w: 3, h: 2, ax: 1, ay: 1 },
+  // CORUSCANT DEFS END
 };
 
 const PropArt = React.memo(function PropArt({ kind, variant, active }) {
@@ -8683,6 +11342,81 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'bronze_mural': return <PropBronzeMural />;
     case 'panoramic_viewport': return <PropPanoramicViewport />;
     case 'protocol_droid': return <PropProtocolDroid />;
+    // CORUSCANT CASES BEGIN
+    case 'console': return <PropConsole variant={variant} active={!!active} />;
+    case 'kiosk': return <PropKiosk variant={variant} active={!!active} />;
+    case 'airtaxi': return <PropAirTaxi variant={variant} active={!!active} />;
+    case 'comm_relay': return <PropCommRelay variant={variant} active={!!active} />;
+    case 'server_stack': return <PropServerStack variant={variant} active={!!active} />;
+    case 'board': return <PropBoard variant={variant} active={!!active} />;
+    case 'sign_array': return <PropSignArray variant={variant} active={!!active} />;
+    case 'shopfront': return <PropShopfront variant={variant} active={!!active} />;
+    case 'apt_door': return <PropAptDoor variant={variant} active={!!active} />;
+    case 'wall_marks': return <PropWallMarks variant={variant} active={!!active} />;
+    case 'skyline': return <PropSkyline variant={variant} active={!!active} />;
+    case 'elevator_door': return <PropElevatorDoor variant={variant} active={!!active} />;
+    case 'datapad_table': return <PropDatapadTable variant={variant} active={!!active} />;
+    case 'crate_stack': return <PropCrateStack variant={variant} active={!!active} />;
+    case 'container_stack': return <PropContainerStack variant={variant} active={!!active} />;
+    case 'cargo_container': return <PropCargoContainer variant={variant} active={!!active} />;
+    case 'drum_array': return <PropDrumArray variant={variant} active={!!active} />;
+    case 'hab_block': return <PropHabBlock variant={variant} active={!!active} />;
+    case 'evidence_locker': return <PropEvidenceLocker variant={variant} active={!!active} />;
+    case 'weapon_rack': return <PropWeaponRack variant={variant} active={!!active} />;
+    case 'medic_crate': return <PropMedicCrate variant={variant} active={!!active} />;
+    case 'scrap_bin': return <PropScrapBin variant={variant} active={!!active} />;
+    case 'fuel_hose': return <PropFuelHose variant={variant} active={!!active} />;
+    case 'storage_alcoves': return <PropStorageAlcoves variant={variant} active={!!active} />;
+    case 'archive_cabinet': return <PropArchiveCabinet variant={variant} active={!!active} />;
+    case 'workbench': return <PropWorkbench variant={variant} active={!!active} />;
+    case 'cargo_lift': return <PropCargoLift variant={variant} active={!!active} />;
+    case 'vault_door': return <PropVaultDoor variant={variant} active={!!active} />;
+    case 'security_gate': return <PropSecurityGate variant={variant} active={!!active} />;
+    case 'junction_box': return <PropJunctionBox variant={variant} active={!!active} />;
+    case 'leaking_pipe': return <PropLeakingPipe variant={variant} active={!!active} />;
+    case 'pressure_valve': return <PropPressureValve variant={variant} active={!!active} />;
+    case 'steam_vent': return <PropSteamVent variant={variant} active={!!active} />;
+    case 'access_hatch': return <PropAccessHatch variant={variant} active={!!active} />;
+    case 'scanner_arch': return <PropScannerArch variant={variant} active={!!active} />;
+    case 'damper_array': return <PropDamperArray variant={variant} active={!!active} />;
+    case 'power_tap': return <PropPowerTap variant={variant} active={!!active} />;
+    case 'drop_shaft': return <PropDropShaft variant={variant} active={!!active} />;
+    case 'catwalk_junction': return <PropCatwalkJunction variant={variant} active={!!active} />;
+    case 'floor_grate': return <PropFloorGrate variant={variant} active={!!active} />;
+    case 'drain_channel': return <PropDrainChannel variant={variant} active={!!active} />;
+    case 'support_pillar': return <PropSupportPillar variant={variant} active={!!active} />;
+    case 'radiator': return <PropRadiator variant={variant} active={!!active} />;
+    case 'fluid_slick': return <PropFluidSlick variant={variant} active={!!active} />;
+    case 'crane_arm': return <PropCraneArm variant={variant} active={!!active} />;
+    case 'landing_beacon': return <PropLandingBeacon variant={variant} active={!!active} />;
+    case 'ceiling_tap': return <PropCeilingTap variant={variant} active={!!active} />;
+    case 'tactical_table': return <PropTacticalTable variant={variant} active={!!active} />;
+    case 'vendor_stall': return <PropVendorStall variant={variant} active={!!active} />;
+    case 'gorg_spit': return <PropGorgSpit variant={variant} active={!!active} />;
+    case 'booth': return <PropBooth variant={variant} active={!!active} />;
+    case 'guard_post': return <PropGuardPost variant={variant} active={!!active} />;
+    case 'interrogation_rig': return <PropInterrogationRig variant={variant} active={!!active} />;
+    case 'ceremony_dais': return <PropCeremonyDais variant={variant} active={!!active} />;
+    case 'monitor_wall': return <PropMonitorWall variant={variant} active={!!active} />;
+    case 'roster_wall': return <PropRosterWall variant={variant} active={!!active} />;
+    case 'trophy_wall': return <PropTrophyWall variant={variant} active={!!active} />;
+    case 'duel_ring': return <PropDuelRing variant={variant} active={!!active} />;
+    case 'arena_ring': return <PropArenaRing variant={variant} active={!!active} />;
+    case 'pit_gate': return <PropPitGate variant={variant} active={!!active} />;
+    case 'rail_run': return <PropRailRun variant={variant} active={!!active} />;
+    case 'fighter_altar': return <PropFighterAltar variant={variant} active={!!active} />;
+    case 'kyber_cluster': return <PropKyberCluster variant={variant} active={!!active} />;
+    case 'survey_marker': return <PropSurveyMarker variant={variant} active={!!active} />;
+    case 'containment_seal': return <PropContainmentSeal variant={variant} active={!!active} />;
+    case 'ruin_stone': return <PropRuinStone variant={variant} active={!!active} />;
+    case 'outcast_camp': return <PropOutcastCamp variant={variant} active={!!active} />;
+    case 'lux_skiff': return <PropLuxSkiff variant={variant} active={!!active} />;
+    case 'speeder_wreck': return <PropSpeederWreck variant={variant} active={!!active} />;
+    case 'speeder_bay': return <PropSpeederBay variant={variant} active={!!active} />;
+    case 'fountain': return <PropFountain variant={variant} active={!!active} />;
+    case 'scorch_wall': return <PropScorchWall variant={variant} active={!!active} />;
+    case 'sentry_post': return <PropSentryPost variant={variant} active={!!active} />;
+    // CORUSCANT CASES END
     default: return null;
   }
 });

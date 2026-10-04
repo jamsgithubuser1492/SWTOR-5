@@ -67,7 +67,7 @@ Setup once: `cd .claude/tools && npm install`
 
 | Command | What it does |
 |---|---|
-| `node .claude/tools/validate-world.js --zone <id> --strict` | Compiles the game, checks entities on floor and reachable, door integrity, portrait registry, prop and ship registries, footprint overlaps, and flags every object that only has the legacy icon. Exit 0 means pass. |
+| `node .claude/tools/validate-world.js --zone <id> --strict` | Compiles the game, checks entities on floor and reachable, door integrity (including that every door entry sits on a door tile), portrait registry, prop and ship registries, footprint overlaps, and flags every object that only has the legacy icon. Exit 0 means pass. |
 | `node .claude/tools/validate-world.js --planet <id>` | Same for a whole planet. |
 | `node .claude/tools/validate-world.js` | Whole game baseline. |
 | `node .claude/tools/lint-art.js` | Style linter: no baked gradients, filters, patterns or outlined forms, no pill shaped rects, every color in the ART palette, text fits the sprite and is readable, viewBox matches the registered footprint, every prop and ship has surface detail and wear. |

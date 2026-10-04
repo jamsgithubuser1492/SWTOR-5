@@ -78,11 +78,12 @@ Why this split: the original characters were already flat shapes, so the engine 
 
 ### Building blocks (in `star-wars-rpg.jsx`, the "ART KIT")
 
-- `ART` palette (weathered and muted, used future): materials (`steel`, `dark`, `hull`, `pearl`, `brass`, `bronze`, `copper`, `teal`, `red`, `amber`, `rust`, `tan`, `wood`, `canvas`, `beige`, `paper`, `glass`, `deepglass`) each with `hi`, `base`, `shade`; plus `signal`, `story`, `screen`, `skin`, `note`, `brand`, `cloth`.
+- `ART` palette (weathered and muted, used future): materials (`steel`, `dark`, `hull`, `pearl`, `brass`, `bronze`, `copper`, `teal`, `red`, `amber`, `rust`, `tan`, `wood`, `canvas`, `beige`, `paper`, `glass`, `deepglass`, `concrete`, `stone`, `moss`, `sand`, `fabric`) each with `hi`, `base`, `shade`; plus `signal`, `story`, `screen`, `skin`, `note`, `brand`, `cloth`.
 - `<Bev t="rect|path|circle|ellipse|polygon" c="steel" ...shape attrs />` draws the shade layer offset down right, the highlight offset up left, and the base on top. This is how every solid form is made.
 - `<Slab x y w h k c />` a chamfered box (cut corners). Use it instead of rounded rects.
 - Surface detail (greebles): `<Seams>` panel lines, `<Rivets>`, `<Vent>` louvres, `<Greeble>` clusters of small boxes, `<Lights>` rows of status lights, `<Toggles>` console button banks, `<Cable>` thick cable runs.
 - Wear: `<Grime>` dark streaks and `<Scuff>` bright scratches. Every prop and ship needs both detail and wear (the linter enforces it).
+- Scene helpers (reuse, do not rewrite): `<Screen>` a lit display with a clamped title and rows of text, `<Glyph k="cog|gear|chain|star|drop|wave|eye|env|badge|coin|key">` small emblems, `<Bust>` a three tone head and shoulders figure, `<CrateBox>` a chamfered cargo box. `SCR` holds the four screen colorways (cyan, amber, green, red).
 - Helpers: `ngon(cx,cy,rx,ry,n)` for faceted discs and hexes, `pts([[x,y],...])` for polygon points, `rng(seed)` for deterministic variation.
 - `<Glow cx cy r c />` three flat concentric rings. `<Hazard x y w h />` amber and black stripes. `<PropShadow cx cy rx ry />`.
 
@@ -185,6 +186,86 @@ Method: write the **art brief** from the description (every concrete detail mapp
 - **State:** if the object changes (locked then cleared, damaged then repaired), draw both states.
 - **Wear:** add one or two marks of age (scorch, patch, scratch, sticky note). Keep them flat shapes.
 - **Animation:** at most one to three small loops (`ship-blink`, `ship-engine`, `holo-flicker`, `prop-scan`).
+
+### The reusable prop library (Coruscant and beyond)
+
+Before drawing a new object, look here. Most objects are an existing kind with a new variant. A `variant` is a key into a small config table inside the component (screen text, colorway, state), so adding one is a few lines, not a new drawing. To add a variant, extend that kind's table (for example `CONSOLE_CFG`, `KIOSK_CFG`, `TAXI_CFG`, `BOARD_LIST`) and set `propVariant` on the object.
+
+| Kind | Footprint (tiles) | Variants |
+|---|---|---|
+| `console` | 2x2 | `customs`, `zillow`, `newsfeed`, `exchange`, `dispatch`, `siphon`, `manifest088`, `crane`, `radio`, `freight`, `fuel`, `pit`, `surveil`, `derelict`, `oza`, `registry`, `vault`, `transmission`, `shipping`, `slush`, `exchange_bm`, `reclaim`, `induction`, `module_a`, `module_b`, `warrant`, `rook`, `hnn_official`, `frost`, `syndicate`, `substation` |
+| `kiosk` | 3x2 | `hnn`, `senate`, `manifest`, `drinks`, `refuel`, `collapsed`, `slicer` |
+| `airtaxi` | 2x2 | `clean`, `worn`, `cracked`, `dark`, `jury`, `ancient`, `scorched`, `rigged`, `official`, `private` |
+| `comm_relay` | 2x2 | `node`, `hub`, `puck` |
+| `server_stack` | 2x3 | `archive`, `black_market`, `republic` |
+| `board` | 3x2 | `baylog`, `departures`, `bulletin`, `warrants`, `patrol`, `manifest`, `prisoners`, `cellog`, `wanted`, `analysis`, `faction`, `betting`, `register`, `ops`, `clipboard` |
+| `sign_array` | 4x2 | `vendor`, `exhaust` |
+| `shopfront` | 4x2 | `sallys`, `goods` |
+| `apt_door` | 2x2 | `jon`, `dexter`, `trex` |
+| `wall_marks` | 3x2 | `free`, `tags`, `drain`, `alley`, `blacksun`, `stamp` |
+| `skyline` | 4x2 | `promenade`, `lanes`, `viewport` |
+| `elevator_door` | 2x2 | (none) |
+| `datapad_table` | 2x2 | `jon`, `lounge`, `card`, `warm`, `logbook` |
+| `crate_stack` | 3x2 | `agri`, `weapons`, `syndicate`, `arms`, `arms_cache`, `locker`, `stash`, `false_panel`, `ruin` |
+| `container_stack` | 4x2 | (none) |
+| `cargo_container` | 3x2 | (none) |
+| `drum_array` | 3x2 | (none) |
+| `hab_block` | 4x3 | (none) |
+| `evidence_locker` | 3x2 | (none) |
+| `weapon_rack` | 3x2 | `vibro`, `pauldron` |
+| `medic_crate` | 2x2 | (none) |
+| `scrap_bin` | 2x2 | (none) |
+| `fuel_hose` | 2x2 | (none) |
+| `storage_alcoves` | 3x2 | (none) |
+| `archive_cabinet` | 2x2 | `dossier`, `sealed`, `minutes`, `ledger` |
+| `workbench` | 3x2 | `slicing`, `arms` |
+| `cargo_lift` | 3x2 | (none) |
+| `vault_door` | 3x3 | (none) |
+| `security_gate` | 3x2 | (none) |
+| `junction_box` | 2x2 | `csf`, `rail`, `vent` |
+| `leaking_pipe` | 3x2 | `plasma`, `coolant` |
+| `pressure_valve` | 2x2 | `a`, `b`, `c`, `refinery` |
+| `steam_vent` | 2x2 | (none) |
+| `access_hatch` | 2x2 | `crawl`, `panel`, `sealed`, `ancient` |
+| `scanner_arch` | 3x2 | `customs`, `platform` |
+| `damper_array` | 3x2 | (none) |
+| `power_tap` | 2x2 | (none) |
+| `drop_shaft` | 3x2 | (none) |
+| `catwalk_junction` | 3x3 | (none) |
+| `floor_grate` | 2x2 | (none) |
+| `drain_channel` | 3x2 | (none) |
+| `support_pillar` | 2x3 | (none) |
+| `radiator` | 3x2 | (none) |
+| `fluid_slick` | 3x2 | (none) |
+| `crane_arm` | 4x3 | (none) |
+| `landing_beacon` | 2x2 | (none) |
+| `ceiling_tap` | 2x3 | (none) |
+| `tactical_table` | 3x3 | `war`, `conquest`, `drill` |
+| `vendor_stall` | 3x2 | `fruit`, `droid_repair`, `caf` |
+| `gorg_spit` | 3x2 | (none) |
+| `booth` | 3x2 | `private`, `corner`, `senators`, `detention`, `flight`, `curtain` |
+| `guard_post` | 3x2 | (none) |
+| `interrogation_rig` | 3x2 | (none) |
+| `ceremony_dais` | 3x2 | (none) |
+| `monitor_wall` | 4x2 | (none) |
+| `roster_wall` | 3x2 | (none) |
+| `trophy_wall` | 4x2 | (none) |
+| `duel_ring` | 3x3 | (none) |
+| `arena_ring` | 5x4 | (none) |
+| `pit_gate` | 3x2 | `pit`, `droid` |
+| `rail_run` | 4x2 | (none) |
+| `fighter_altar` | 2x2 | (none) |
+| `kyber_cluster` | 3x2 | (none) |
+| `survey_marker` | 2x2 | (none) |
+| `containment_seal` | 3x2 | (none) |
+| `ruin_stone` | 3x2 | (none) |
+| `outcast_camp` | 4x3 | (none) |
+| `lux_skiff` | 4x3 | (none) |
+| `speeder_wreck` | 4x2 | (none) |
+| `speeder_bay` | 3x2 | (none) |
+| `fountain` | 3x2 | (none) |
+| `scorch_wall` | 3x2 | (none) |
+| `sentry_post` | 3x2 | (none) |
 
 Reference set pieces: `PropFuelRig` (silhouette and grime), `PropImpoundDoor` (text and hazard), `PropDriveCradle` (tags and state), `PropForgeBar` (written detail), `PropTransitPod` (two subjects in one footprint).
 
@@ -299,10 +380,11 @@ Extend this table whenever a faction gains art.
 
 ## 15. Legacy upgrade path and style changelog
 
-**Legacy art** is anything still in the original small outline style: the 28 x 28 line icons in `WorldObjectSprite` and the `iconKind` objects (about 197 across the game, listed by `validate-world.js` as warnings). They already receive the engine lighting pass, so they sit acceptably, but they are small and dim. Upgrade rule: when you touch a zone, convert its objects to set piece art (`propArt`) in the same change.
+**Legacy art** is anything still in the original small outline style: the 28 x 28 line icons in `WorldObjectSprite` and the `iconKind` objects. All of Coruscant (199 objects) is now set piece art; what remains is a handful in the older Kuat zones (listed by `validate-world.js` as warnings). They already receive the engine lighting pass, so they sit acceptably, but they are small and dim. Upgrade rule: when you touch a zone, convert its objects to set piece art (`propArt`) in the same change.
 
 **Changelog**
 
+- **v4:** All 199 Coruscant world objects rebuilt as set pieces from a reusable library of 73 kinds (section 7). Kit gained the `concrete`, `stone`, `moss`, `sand` and `fabric` materials, extra neon and signal colors, and the shared `Screen`, `Glyph`, `Bust` and `CrateBox` helpers. The validator now also checks that every `zone.doors[]` entry sits on a door tile (three Coruscant exits had silently never worked).
 - **v3:** Star Wars design language (section 1b) written from the franchise's own principles and Old Republic lore. Palette made weathered and muted. Kit gained `Slab`, `Seams`, `Rivets`, `Vent`, `Greeble`, `Lights`, `Toggles`, `Grime`, `Scuff`, `Cable`, `ngon`. All ships and objects redrawn: the Valor cruiser now follows its lore (bulbous hull, command tower, side hangars, gun batteries, seven thrusters), the freighter is a Corellian saucer with cockpit tube and prong, consoles are chunky and greebled. Large props and ships no longer get the engine outline. Linter gained no pill shapes (S7) and used future detail and wear (S8) rules.
 - **v2:** Added the ART palette kit and shaded building blocks. Added the engine wide lighting pass (ink outline, zone rim light, contact shadows) applied to characters, the player, objects and ships. Rebuilt all KDY ships and objects in this style. Added `lint-art.js` and `style-sheet.js`.
 - **v1:** Original look: flat portraits, pixel combat sprites, dim accent line icons, no shared lighting.

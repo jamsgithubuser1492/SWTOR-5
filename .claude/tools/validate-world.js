@@ -107,6 +107,7 @@ for (const [zid, { pid, z }] of Object.entries(allZones)) {
     if (g[y][x].type === 'door' && !(z.doors || []).some((d) => d.x === x && d.y === y)) E(tag, `door tile (${x},${y}) has no entry in zone.doors[]`);
   }
   for (const d of z.doors || []) {
+    if (tile(d.x, d.y) !== 'door') E(tag, `zone.doors[] entry (${d.x},${d.y}) is on a "${tile(d.x, d.y)}" tile, not a door tile. The engine only travels through tiles of type door, so this exit never works.`);
     const tz = allZones[d.targetZone];
     if (!tz) { E(tag, `door (${d.x},${d.y}) targets unknown zone "${d.targetZone}"`); continue; }
     let tg; try { tg = tz.z.buildMap(); } catch (e) { continue; }

@@ -8,7 +8,7 @@ Single-file React/Babel browser app. No build system.
 
 | File | Purpose |
 |---|---|
-| `star-wars-rpg.jsx` | The entire game (~10,068 lines as of last push) |
+| `star-wars-rpg.jsx` | The entire game (~17,000 lines as of last push) |
 | `index.html` | CDN loader (React 18, Babel 7) |
 | `.claude/agents/` | Agent system prompts |
 | `.claude/schemas/` | Data structure contracts |
@@ -94,7 +94,7 @@ Modify `CONQUEST_SECTORS_INIT` or `CONQUEST_UNIT_TYPES` constants (defined aroun
 - NPC `kind` must be registered in `NpcPortrait()` or entities render nothing
 - Entity x,y must land on `floor` tiles or they are unreachable
 - Ships are large sprites declared in a zone's `ships` array (`{ id, kind, x, y, label, description, grantsFlag }`). Each `kind` needs a `SHIP_DEFS` footprint (w, h in tiles) and a branch in `ShipSprite()`. Call `carveShips(g, this.ships)` at the end of `buildMap()` so the footprint becomes solid `ship_hull`. Bumping the hull shows the description and sets `grantsFlag`. Keep ship footprints clear of entities, doors, and the access paths to alcoves (run a BFS check)
-- KDY world objects use big set piece art built from the ART KIT (`Bev`, `Glow`, `Hazard`, `PropShadow`, `ART` palette; no gradients or outlines): add `propArt: 'kind'` (and optional `propVariant`) to the object, give the kind a footprint in `PROP_DEFS` (w, h, plus ax, ay = the object's tile inside the footprint) and a case in `PropArt()`. The art is visual only, drawn behind NPCs and the player. Never place an object or NPC on a `wall` tile (movement is blocked before interaction). Bump the `?v=` on the script tag in `index.html` when you push so browsers drop cached copies
+- World objects use big set piece art built from the ART KIT (all of Coruscant and KDY; reuse the prop library in STYLE_GUIDE section 7 before drawing anything new) (`Bev`, `Glow`, `Hazard`, `PropShadow`, `ART` palette; no gradients or outlines): add `propArt: 'kind'` (and optional `propVariant`) to the object, give the kind a footprint in `PROP_DEFS` (w, h, plus ax, ay = the object's tile inside the footprint) and a case in `PropArt()`. The art is visual only, drawn behind NPCs and the player. Never place an object or NPC on a `wall` tile (movement is blocked before interaction). Bump the `?v=` on the script tag in `index.html` when you push so browsers drop cached copies
 - Door pairs must be symmetric — each side lists the other as `targetZone`/`targetPos`
 - All React hooks inside `CoruscantConquestOverlay` must use the `React.useState` / `React.useEffect` form — no shorthand destructuring (single-file Babel constraint)
 - `MapView` inside `CoruscantConquestOverlay` is called as a direct function `MapView()` rather than via `React.createElement(MapView, null)` to prevent remount on every render
