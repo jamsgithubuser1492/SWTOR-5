@@ -1,6 +1,6 @@
 # Style Guide: Look and Feel
 
-Style version 2. This is the visual bible for the game: brand, world, objects, ships, characters, interface, and motion. It exists so that everything the player sees, whether drawn in the first week or the fiftieth, looks like it belongs to one world.
+Style version 3. This is the visual bible for the game: brand, world, objects, ships, characters, interface, and motion. It exists so that everything the player sees, whether drawn in the first week or the fiftieth, looks like it belongs to one world.
 
 How it fits with the other documents:
 
@@ -25,6 +25,39 @@ Visual pillars:
 
 ---
 
+## 1b. The Star Wars design language
+
+Everything must feel like **Star Wars**, not generic sci fi and not a cartoon. These are the franchise's own design principles (Lucas, McQuarrie and the Lucasfilm art department; Doug Chiang's published guidelines) translated into rules for this game.
+
+**The principles**
+
+1. **Strong silhouette, three second rule.** A design must be recognisable in profile and its purpose understood in about three seconds. Build the silhouette from a few bold primary shapes before adding any detail.
+2. **Iconic shapes.** Star Wars is built from a small family of forms: wedges, saucers and discs, domes, cones, spindles and cylinders, hammerheads and prongs. Start from one of these.
+3. **Used future.** Nothing is new. Everything is worn, patched, scorched and repaired with mismatched parts. This is the "lived in universe".
+4. **Greebles.** Lucas's word for small functional surface detail (pipes, vents, panel lines, antennae, light rows). Simple shapes get their visual complexity from greebles, not from decoration.
+5. **Hard edged, functional geometry.** Machines are angular and chamfered, built from facets and panels. Avoid soft pill shapes, perfect circles for everything, and "cute" proportions. Sleek means long, low, tapered, and precise.
+6. **Visual contrast and unified aesthetic.** Clear palettes per faction; nothing stands out of the world it belongs to. Beautiful, never glossy.
+7. **Familiar yet exotic.** Real world industrial objects (cranes, pallets, consoles, lockers) dressed in alien detail.
+8. **Toy factor last.** Add flair only after silhouette, purpose and believability are solved.
+
+**What cartoony looks like (avoid):** rounded pill rectangles, uniform thick outlines, glossy gradients, oversized round gauges and lenses, saturated candy colors, clean uncluttered surfaces, big friendly eyes on droids.
+
+**What Star Wars looks like (aim for):** chamfered slabs, panel seams and rivets, vent louvres, rows of tiny colored lights and toggle banks, exposed cable runs, hazard decals, dark recesses, muted weathered metals with one small bright emissive accent, scorch marks and scuffs.
+
+**Old Republic era ship language** (from the lore, applied to our ships)
+
+- **Republic:** Corellian influenced, rounded and bulbous capital ships in white with red stripes. The Valor class cruiser is the model: a bulbous center section, gun batteries on the front, sides and stern, a dorsal command tower, seven thrusters on a ventral tower, hangars lining the sides.
+- **Sith Empire:** aggressive wedge and dagger hulls, black with red, split prongs on the largest ships (the Harrower class dreadnought).
+- **Corellian freighters:** the saucer with a cockpit tube and forward prongs; asymmetric, patched, overloaded.
+- **Kuat Drive Yards:** heavy industrial shipyard work: gantries, drydocks, hazard striping, steel blue hulls, ships built and rebuilt in the open.
+- **Luxury and executive craft:** slender, polished, swept, pearl and gold.
+
+**Console and tech language:** consoles are chunky and analog: wedge shaped housings, button and toggle banks, small amber, green or cyan readouts, vents, exposed cable. Holograms are cyan line art with scan lines and a flicker, projected from an emitter. Droids are functional machines: slender brass protocol droids with visible actuators, boxy teal loaders, never cute.
+
+Sources consulted: Doug Chiang's four principles and five guidelines of Star Wars design (vfxblog), the Wookieepedia entries for the Valor class cruiser, Hammerhead class cruiser and Harrower class dreadnought, and accounts of the original trilogy's used future design by Ralph McQuarrie and George Lucas.
+
+---
+
 ## 2. The house style on one page: "cel lit noir"
 
 Every sprite is built from **flat, hard edged shapes in three tones** (highlight, base, shade). There are no baked gradients, filters, patterns, blur glows or outlines inside an asset. The **engine** then lights every sprite the same way when it draws it.
@@ -35,17 +68,22 @@ Every sprite is built from **flat, hard edged shapes in three tones** (highlight
 | Emissive parts (screens, lamps, engines) | The asset | Flat bright shapes; `<Glow>` for stepped glow rings |
 | Hazard striping | The asset | `<Hazard>` |
 | Floor shadow under big props and ships | The asset | `<PropShadow>`: two flat translucent ellipses |
-| Ink outline, zone colored rim light | The engine | `spriteFx(accent, size)` applied to every sprite wrapper |
+| Ink outline and rim light (characters, player, small icons) | The engine | `spriteFx(accent)` applied to every character wrapper |
+| Soft zone colored rim glow only (large props and ships, so their surface detail reads) | The engine | `spriteFx(accent, 'prop' or 'ship')` |
 | Contact shadow under characters | The engine | `ACTOR_SHADOW` ellipse |
 
 Why this split: the original characters were already flat shapes, so the engine pass lifts them and the new art together without redrawing anything. The old and new art cannot drift apart because the lighting is not drawn into either one.
 
-**Never** draw your own outline, drop shadow, blur, gradient or glow into an asset. You would be double lighting it and it would stand out.
+**Never** draw your own outline, drop shadow, blur, gradient or glow into an asset. Large props and ships are deliberately not outlined by the engine: their panel lines, greebles and chamfered edges carry the form. You would be double lighting it and it would stand out.
 
 ### Building blocks (in `star-wars-rpg.jsx`, the "ART KIT")
 
-- `ART` palette: materials (`steel`, `dark`, `hull`, `pearl`, `brass`, `bronze`, `copper`, `teal`, `red`, `amber`, `rust`, `tan`, `wood`, `canvas`, `beige`, `paper`, `glass`, `deepglass`) each with `hi`, `base`, `shade`; plus `signal`, `story`, `screen`, `skin`, `note`, `brand`, `cloth`.
+- `ART` palette (weathered and muted, used future): materials (`steel`, `dark`, `hull`, `pearl`, `brass`, `bronze`, `copper`, `teal`, `red`, `amber`, `rust`, `tan`, `wood`, `canvas`, `beige`, `paper`, `glass`, `deepglass`) each with `hi`, `base`, `shade`; plus `signal`, `story`, `screen`, `skin`, `note`, `brand`, `cloth`.
 - `<Bev t="rect|path|circle|ellipse|polygon" c="steel" ...shape attrs />` draws the shade layer offset down right, the highlight offset up left, and the base on top. This is how every solid form is made.
+- `<Slab x y w h k c />` a chamfered box (cut corners). Use it instead of rounded rects.
+- Surface detail (greebles): `<Seams>` panel lines, `<Rivets>`, `<Vent>` louvres, `<Greeble>` clusters of small boxes, `<Lights>` rows of status lights, `<Toggles>` console button banks, `<Cable>` thick cable runs.
+- Wear: `<Grime>` dark streaks and `<Scuff>` bright scratches. Every prop and ship needs both detail and wear (the linter enforces it).
+- Helpers: `ngon(cx,cy,rx,ry,n)` for faceted discs and hexes, `pts([[x,y],...])` for polygon points, `rng(seed)` for deterministic variation.
 - `<Glow cx cy r c />` three flat concentric rings. `<Hazard x y w h />` amber and black stripes. `<PropShadow cx cy rx ry />`.
 
 ---
@@ -139,7 +177,9 @@ Proportions: a standing character is about one tile tall (36 px). A console is a
 
 Method: write the **art brief** from the description (every concrete detail mapped to a visible element), choose a footprint, block the silhouette, build with `<Bev>`, add the emissive element, add the story text.
 
-- **Silhouette first.** Squint: can you tell a fuel rig from a locker bank? Different silhouettes for different jobs.
+- **Silhouette first.** Squint: can you tell a fuel rig from a locker bank? Different silhouettes for different jobs. Apply the three second rule.
+- **Chamfer, don't round.** Build bodies with `<Slab>`, polygons and `ngon` facets. Rounded rects over 2 units are rejected by the linter.
+- **Greeble and wear every surface** with `<Seams>`, `<Rivets>`, `<Vent>`, `<Greeble>`, `<Lights>`, `<Toggles>`, `<Grime>`, `<Scuff>`.
 - **Affordance:** anything the player can use has at least one emissive element (screen, lamp, status light). Dead set dressing does not.
 - **Text on art:** quote signage from the description; size it with 0.6 x fontSize per character; keep headline text at 2.4 or larger and fine print at 1.6 or larger. `lint-art.js` checks fit.
 - **State:** if the object changes (locked then cleared, damaged then repaired), draw both states.
@@ -153,7 +193,7 @@ Reference set pieces: `PropFuelRig` (silhouette and grime), `PropImpoundDoor` (t
 ## 8. Ship and vehicle design
 
 - **View:** plan (top down), bow pointing anywhere that suits the pad. Landing pad marking and soft floor shadow included in the sprite.
-- **Construction:** `<Bev>` for hull panels; panel lines as thin flat strokes; one cockpit canopy (`glass` or `deepglass`); running lights (red port, green starboard) and engine glow.
+- **Construction:** faceted polygon hulls with `<Bev>`; panel seams, `<Greeble>` clusters, vents and turrets; one faceted cockpit canopy (`glass` or `deepglass`); running lights (red port, green starboard) and `<Glow>` engine exhausts. Real lore silhouettes: see section 1b.
 - **Silhouette by role:** freighters are rounded and asymmetric; military ships are long and symmetric; luxury yachts are swept and slender; haulers are boxy with cargo.
 - **Wear tells the owner:** impounded free trader (scorched, patched, clamped); Republic navy (clean, stripe, crest); Czerka (corporate amber, neglected maintenance); House Kuat (pearl and gold, polished).
 - **Ships are solid in the world:** declare in `ships`, carve with `carveShips`, bumping examines.
@@ -231,7 +271,9 @@ Extend this table whenever a faction gains art.
 
 | Do | Don't |
 |---|---|
-| Build forms with `<Bev>` from the ART palette | Use gradients, blur filters, pattern fills |
+| Build forms with `<Bev>` and `<Slab>` from the ART palette | Use gradients, blur filters, pattern fills |
+| Chamfer corners, greeble surfaces, add wear | Use rounded pills, clean factory surfaces, cute proportions |
+| Start from a strong silhouette in an iconic shape | Start from detail |
 | Let the engine add outline, rim and shadow | Draw your own outline or glow |
 | Use `<Glow>` rings and flat emissive shapes | Use radial gradient glows |
 | Quote the description's signage on the art | Use lorem ipsum or generic labels |
@@ -247,7 +289,7 @@ Extend this table whenever a faction gains art.
 
 1. Read the description and write the art brief.
 2. Build with the ART KIT. Keep the viewBox equal to the footprint times 32.
-3. `node .claude/tools/lint-art.js` must pass (flat construction, palette, text fit, scale).
+3. `node .claude/tools/lint-art.js` must pass (flat construction, palette, text fit, scale, no pill shapes, surface detail and wear).
 4. `node .claude/tools/validate-world.js --zone <id> --strict` must pass (placement, reachability, registries).
 5. `node .claude/tools/style-sheet.js --props <kinds> --ships <kinds> --accent <zone accent> --floor <zone floor>` and look at the PNG. The new art must look like the same game as the core row.
 6. `node .claude/tools/zone-snapshot.js <planet> <zone> x,y x,y` and look at the scene at 1x.
@@ -261,6 +303,7 @@ Extend this table whenever a faction gains art.
 
 **Changelog**
 
+- **v3:** Star Wars design language (section 1b) written from the franchise's own principles and Old Republic lore. Palette made weathered and muted. Kit gained `Slab`, `Seams`, `Rivets`, `Vent`, `Greeble`, `Lights`, `Toggles`, `Grime`, `Scuff`, `Cable`, `ngon`. All ships and objects redrawn: the Valor cruiser now follows its lore (bulbous hull, command tower, side hangars, gun batteries, seven thrusters), the freighter is a Corellian saucer with cockpit tube and prong, consoles are chunky and greebled. Large props and ships no longer get the engine outline. Linter gained no pill shapes (S7) and used future detail and wear (S8) rules.
 - **v2:** Added the ART palette kit and shaded building blocks. Added the engine wide lighting pass (ink outline, zone rim light, contact shadows) applied to characters, the player, objects and ships. Rebuilt all KDY ships and objects in this style. Added `lint-art.js` and `style-sheet.js`.
 - **v1:** Original look: flat portraits, pixel combat sprites, dim accent line icons, no shared lighting.
 

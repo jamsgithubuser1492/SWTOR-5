@@ -15,6 +15,8 @@
  *  S4  Literal text must fit inside the sprite and be at least 1.6 units tall (0.6 * fontSize per character).
  *  S5  No blur style glows or full viewport animations (world-obj-pulse, scanDown) inside props and ships.
  *  S6  Every literal color in art must be a color in the ART kit (palette). Add new colors to the kit deliberately.
+ *  S7  No pill shapes: rounded rects (rx above 2) read as cartoon. Star Wars tech is hard edged, use <Slab> (chamfered).
+ *  S8  Used future: every prop and ship needs surface detail (Seams, Greeble, Vent, Rivets, Toggles or Lights) AND wear (Grime or Scuff).
  */
 const fs = require('fs');
 const path = require('path');
@@ -71,12 +73,16 @@ for (const name of artFns) {
   const b = bodyOf(name);
   const vb = /viewBox="0 0 (\d+) (\d+)"/.exec(b);
   const W_ = vb ? +vb[1] : 0, H_ = vb ? +vb[2] : 0;
+  const hasDetail = /<(Seams|Greeble|Vent|Rivets|Toggles|Lights)\b/.test(b), hasWear = /<(Grime|Scuff)\b/.test(b);
+  if (!hasDetail) E(name, 'S8 no surface detail. Add Seams, Greeble, Vent, Rivets, Toggles or Lights (used future).');
+  if (!hasWear) E(name, 'S8 no wear. Add Grime or Scuff: nothing in this galaxy is factory clean.');
   if (/world-obj-pulse|scanDown/.test(b)) E(name, 'S5 uses world-obj-pulse or scanDown (box shadow pulse / viewport scroll). Use ship-engine, ship-blink, holo-flicker or prop-scan.');
   for (const el of elements(b)) {
     const fill = attr(el.raw, 'fill'), stroke = attr(el.raw, 'stroke'), sw = parseFloat(attr(el.raw, 'strokeWidth') || '1');
     if (el.tag !== 'text' && el.tag !== 'Bev' && fill && fill !== 'none' && !fill.includes('{') && stroke && stroke !== 'none' && sw > 1.2 && !/^#?[0-9a-f]{0}$/.test(stroke))
       E(name, `S2 outlined form (${el.tag}, stroke ${stroke} width ${sw}). Do not outline forms, the engine adds the outline.`);
     if (el.tag === 'Bev' && stroke) E(name, 'S2 <Bev> must not carry a stroke.');
+    if (el.tag === 'rect') { const rx = parseFloat(attr(el.raw, 'rx') || '0'); if (rx > 2) E(name, `S7 pill shaped rect (rx ${rx}). Use <Slab> with chamfered corners.`); }
     if (el.tag === 'text') {
       const after = b.slice(el.end, b.indexOf('</text>', el.end));
       const fs_ = parseFloat(attr(el.raw, 'fontSize') || '0');

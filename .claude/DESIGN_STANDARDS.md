@@ -33,7 +33,8 @@ The description is the design brief. A player who reads the text and then looks 
 
 One world, one look. A new asset must look like it came from the same game as the core characters standing next to it. The style is "cel lit noir", fully specified in `.claude/STYLE_GUIDE.md`. In short:
 
-- Forms are flat, hard edged shapes in three tones built with `<Bev>` and colors from the `ART` palette kit. Every color must come from the kit.
+- Forms are flat, hard edged shapes in three tones built with `<Bev>` and `<Slab>` and colors from the `ART` palette kit. Every color must come from the kit.
+- It must read as Star Wars (STYLE_GUIDE section 1b): a strong silhouette from an iconic shape, chamfered not rounded, greebled surfaces, visible wear. Pill shapes, clean factory surfaces, and cute proportions fail review.
 - No gradients, filters, patterns, blur glows, or outlines inside an asset. The engine adds the ink outline, the zone colored rim light, and the contact shadow to every sprite (`spriteFx`), so old and new art are lit identically.
 - Emissive parts are flat bright shapes with `<Glow>` rings. Hazard striping uses `<Hazard>`. Big props and ships carry a flat `<PropShadow>`.
 - Light comes from the upper left. One to three small animated parts at most.
@@ -69,7 +70,7 @@ Setup once: `cd .claude/tools && npm install`
 | `node .claude/tools/validate-world.js --zone <id> --strict` | Compiles the game, checks entities on floor and reachable, door integrity, portrait registry, prop and ship registries, footprint overlaps, and flags every object that only has the legacy icon. Exit 0 means pass. |
 | `node .claude/tools/validate-world.js --planet <id>` | Same for a whole planet. |
 | `node .claude/tools/validate-world.js` | Whole game baseline. |
-| `node .claude/tools/lint-art.js` | Style linter: no baked gradients, filters, patterns or outlined forms, every color in the ART palette, text fits the sprite and is readable, viewBox matches the registered footprint. |
+| `node .claude/tools/lint-art.js` | Style linter: no baked gradients, filters, patterns or outlined forms, no pill shaped rects, every color in the ART palette, text fits the sprite and is readable, viewBox matches the registered footprint, every prop and ship has surface detail and wear. |
 | `node .claude/tools/style-sheet.js --props a,b --ships c` | Puts new art next to the core characters under the same lighting for a consistency review. Open the PNG. |
 | `node .claude/tools/zone-snapshot.js <planet> <zone> x,y x,y` | Boots the real game in headless Chromium at the given player positions and saves PNGs to `.claude/tools/snapshots/`. Open them. |
 

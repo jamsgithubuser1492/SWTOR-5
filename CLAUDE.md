@@ -26,14 +26,14 @@ Look and feel: `.claude/STYLE_GUIDE.md` (one world, one look: the "cel lit noir"
 
 1. **Visible at gameplay scale.** Tiles are 32px, the viewport is 20 by 13 tiles. Set pieces get a real footprint (2 by 2 tiles minimum), solid lit fills, and contrast against dark floors. No outline only or dark on dark art.
 2. **Faithful to the text.** The description is the brief. Write an art brief mapping every concrete detail (counts, colors, signage, damage, states) to a visible element.
-3. **House style.** Flat three tone shapes built with `<Bev>` and colors from the `ART` palette kit. No baked gradients, filters, or outlines: the engine adds the ink outline, zone colored rim light, and contact shadow to every sprite so old and new art match.
+3. **House style and Star Wars design language.** Flat three tone shapes built with `<Bev>`/`<Slab>` and colors from the `ART` palette kit; chamfered, greebled, worn, strong silhouette from an iconic shape (STYLE_GUIDE section 1b: used future, lore accurate ships). No baked gradients, filters, or outlines: the engine adds the lighting so old and new art match. Never cartoony.
 4. **Placed meaningfully.** Entities on reachable `floor` tiles, never walls. Footprints clear of doors, collectibles, ships, other objects.
 5. **Proven in the engine.** Validate, snapshot, look at the images, confirm the live site.
 
 Before any push that touches zones, objects, ships, portraits, or art (one time setup: `cd .claude/tools && npm install`):
 
 ```
-node .claude/tools/lint-art.js                                   # style, palette, text fit, scale
+node .claude/tools/lint-art.js                                   # style, palette, text fit, scale, detail and wear
 node .claude/tools/validate-world.js --zone <zone id> --strict   # placement, reachability, registries
 node .claude/tools/style-sheet.js --props kind,kind --ships kind # new art next to the core characters
 node .claude/tools/zone-snapshot.js <planet> <zone> x,y x,y     # then open and view the PNGs
