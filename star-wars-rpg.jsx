@@ -74,7 +74,7 @@ const PLANETS = {
           { x: 31, y: 13, targetZone: 'market', targetPos: { x: 1, y: 11 }, label: 'Market' },
         ],
         worldObjects: [
-          { id: 'customs_terminal', x: 22, y: 9, label: 'Customs Terminal', description: 'A flickering datapad logs your entry. Transit clearance: provisional.', once: false },
+          { id: 'customs_terminal', x: 23, y: 9, label: 'Customs Terminal', description: 'A flickering datapad logs your entry. Transit clearance: provisional.', once: false },
           { id: 'fueling_conduit', x: 8, y: 18, label: 'Fueling Conduit', description: 'The conduit hisses with residual pressurised fuel. Someone left this running.', once: true },
         ],
         npcs: [
@@ -189,7 +189,7 @@ const PLANETS = {
             ],
           },
         ],
-        collectibles: [{ id: 'datachip', x: 14, y: 5, label: 'Encrypted Datachip', reward: 30 }],
+        collectibles: [{ id: 'datachip', x: 15, y: 5, label: 'Encrypted Datachip', reward: 30 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 1, 1, 30, 20, 'floor');
@@ -249,6 +249,7 @@ const PLANETS = {
           carveRect(g, 20, 4, 26, 8, 'floor');
           [[6,11],[6,12],[6,13]].forEach(([x,y]) => pt(g,x,y,'floor'));
           pt(g,14,21,'door'); pt(g,15,21,'door'); pt(g,6,4,'door');
+          pt(g, 19, 6, 'floor'); pt(g, 19, 7, 'floor'); // Zillow office doorway
           return g;
         },
       },
@@ -297,6 +298,7 @@ const PLANETS = {
           [[4,4],[5,4],[4,5],[25,4],[26,4],[26,5],[4,16],[5,16],[4,17],[25,16],[26,16],[26,17]].forEach(([x,y]) => pt(g,x,y,'wall'));
           pt(g,0,10,'door'); pt(g,0,11,'door');
           pt(g,31,10,'door'); pt(g,31,11,'door');
+          pt(g, 15, 8, 'floor'); pt(g, 15, 9, 'floor'); // causeway to the memorial island
           return g;
         },
       },
@@ -347,6 +349,7 @@ const PLANETS = {
           [[9,14],[10,14],[11,14],[12,14]].forEach(([x,y]) => pt(g,x,y,'floor'));
           pt(g,0,10,'door'); pt(g,0,11,'door');
           pt(g,14,21,'door'); pt(g,15,21,'door');
+          pt(g, 18, 6, 'floor'); pt(g, 18, 7, 'floor'); // shop front doorway
           return g;
         },
       },
@@ -654,10 +657,10 @@ const PLANETS = {
         decor: ['pillar', 'neon_sign', 'brazier', 'neon_sign', 'cargo_crate', 'pipe', 'girder'],
         doors: [
           { x: 0, y: 12, targetZone: 'sky_customs', targetPos: { x: 33, y: 12 }, label: 'Skyway Customs' },
-          { x: 0, y: 13, targetZone: 'sky_customs', targetPos: { x: 33, y: 13 }, label: 'Skyway Customs' },
+          { x: 0, y: 13, targetZone: 'sky_customs', targetPos: { x: 33, y: 11 }, label: 'Skyway Customs' },
           { x: 15, y: 25, targetZone: 'heat_sink_slums', targetPos: { x: 15, y: 1 }, label: 'Heat Sink Slums' },
           { x: 36, y: 0, targetZone: 'penthouse', targetPos: { x: 14, y: 17 }, label: 'Penthouse Elevator' },
-          { x: 5, y: 0, targetZone: 'senatorial_lounges', targetPos: { x: 16, y: 18 }, label: 'Senatorial Sky-Lounges' },
+          { x: 5, y: 0, targetZone: 'senatorial_lounges', targetPos: { x: 16, y: 17 }, label: 'Senatorial Sky-Lounges' },
         ],
         worldObjects: [
           { id: 'jon_arrival_comlink', x: 5, y: 13, once: true, iconKind: 'comlink', label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
@@ -1000,7 +1003,7 @@ const PLANETS = {
       },
       catwalk_underdeck: {
         id: 'catwalk_underdeck', name: 'Vent Sector 14-Sub — Catwalk Underdeck', subtitle: 'Coruscant · L.1450 — Industrial Substructure',
-        width: 40, height: 22, spawnPos: { x: 20, y: 2 }, textureId: 'coruscant',
+        width: 40, height: 22, spawnPos: { x: 20, y: 1 }, textureId: 'coruscant',
         accent: '#C87800', accentGlow: 'rgba(200,120,0,0.22)', accentDim: '#604000',
         floorColor: '#0E0C08', floorAlt: '#161208', wallDark: '#060402', wallLight: '#0E0A06',
         bg: 'radial-gradient(circle at 50% 100%, #180C00 0%, #0C0800 40%, #050402 80%, #030202 100%)',
@@ -1299,7 +1302,7 @@ const PLANETS = {
         ],
         worldObjects: [
           { id: 'airtaxi_drainage', x: 2, y: 11, once: false, label: 'AirTaxi Terminal', description: 'An ancient AirTaxi terminal grafted onto the drainage tunnel wall. It should not work. It does. The destination list shows zones that are no longer accessible from any other terminal.' },
-          { id: 'drainage_channel_main', x: 14, y: 11, once: false, label: 'Main Drainage Channel', description: 'A wide channel cut through the durasteel floor carries thermal runoff from the fueling depot above. The liquid moves slowly, hot enough to steam in the cold tunnel air. The color is the pale amber of industrial lubricant mixed with coolant fluid. Whatever process generates this much waste runs continuously. The channel is not on any Level 088 maintenance map.' },
+          { id: 'drainage_channel_main', x: 17, y: 12, once: false, label: 'Main Drainage Channel', description: 'A wide channel cut through the durasteel floor carries thermal runoff from the fueling depot above. The liquid moves slowly, hot enough to steam in the cold tunnel air. The color is the pale amber of industrial lubricant mixed with coolant fluid. Whatever process generates this much waste runs continuously. The channel is not on any Level 088 maintenance map.' },
           { id: 'syndicate_cache_drainage', x: 6, y: 7, once: true, label: 'Maintenance Alcove Cache', description: 'Behind a false panel in the maintenance alcove wall: a sealed container marked with the iron chain emblem. Inside, three cargo relay chips — each one a transit authorization for a different Level 005 loading dock. Each authorization is blank, ready to be written with any cargo description. A full set of ready-made blank transit passes for The Works.', grantsFlag: 'transit_pass_cache_found', grantsItem: 'scrambler_keycard' },
           { id: 'drainage_graffiti_wall', x: 24, y: 7, once: false, label: 'Drainage Tunnel Wall', description: 'The tunnel wall is layered with markings going back decades — maintenance crew tallies, territorial tags from three different gang factions, one very detailed Aurebesh map of the drainage system drawn in conductive paint that still faintly glows. The Iron Syndicate\'s iron chain emblem appears four times, each one over a different gang\'s markings. The Syndicate has been here longer than anyone admits.' },
           { id: 'junction_box_drainage', x: 28, y: 16, once: true, label: 'Ventilation Junction Control', description: 'The junction control box for the Level 088 ventilation spine. The routing table inside has been modified — Level 005 airflow is being vented up through this drainage system instead of out through the designated exhaust ports. The modification is deliberate. Someone is using the drainage vents to circulate air to Level 005 workers without triggering environmental monitoring on that level.', grantsFlag: 'vent_route_005_found' },
@@ -1344,7 +1347,7 @@ const PLANETS = {
         doors: [
           { x: 20, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 20, y: 1 }, label: 'Cooling Ducts' },
           { x: 21, y: 23, targetZone: 'cooling_ducts', targetPos: { x: 21, y: 1 }, label: 'Cooling Ducts' },
-          { x: 34, y: 12, targetZone: 'undercity_outskirts', targetPos: { x: 1, y: 12 }, label: 'Undercity Outskirts' },
+          { x: 34, y: 12, targetZone: 'undercity_outskirts', targetPos: { x: 2, y: 12 }, label: 'Undercity Outskirts' },
         ],
         worldObjects: [
           { id: 'syndicate_cargo_cache', x: 18, y: 10, once: true, iconKind: 'crate', label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with an iron chain. Phrik plating, combat chassis, and an empty Jedi archive canister.',
@@ -1440,7 +1443,7 @@ const PLANETS = {
         worldObjects: [
           { id: 'airtaxi_cooling_ducts', x: 2, y: 13, label: 'AirTaxi Terminal', description: 'A terminal barely functional in the thermal haze. Emergency transit only.' },
           { id: 'coolant_manifold', x: 10, y: 13, label: 'Coolant Manifold Junction', description: 'Superchilled gas hisses through cracked seals. The flow rate is wrong — someone has been bleeding coolant toward the smelter cores.' },
-          { id: 'duct_access_panel', x: 20, y: 18, once: true, label: 'Duct Access Panel', description: 'A maintenance crawl route into the syndicate warehouse. Wide enough for a person. The hinges are freshly oiled.', grantsFlag: 'duct_route_found' },
+          { id: 'duct_access_panel', x: 21, y: 18, once: true, label: 'Duct Access Panel', description: 'A maintenance crawl route into the syndicate warehouse. Wide enough for a person. The hinges are freshly oiled.', grantsFlag: 'duct_route_found' },
           { id: 'frost_buildup_terminal', x: 6, y: 5, once: true, label: 'Frost-Coated Terminal', description: 'Temperature logs. The cooling system was deliberately throttled twelve days ago — precisely when the Iron Syndicate began the final stage of their armor production run.', grantsFlag: 'coolant_sabotage_confirmed', grantsCodex: 'codex-the-works-forges' },
           { id: 'watcher_post', x: 26, y: 5, once: false, label: 'Observation Post', description: 'A crude sentry position overlooking the main duct junction. Scorch marks from a blaster. Someone held this position against something — or someone — coming from the south.' },
         ],
@@ -1521,6 +1524,7 @@ const PLANETS = {
           carveRect(g, 18, 4, 18, 20, 'lava');
           pt(g, 0, 13, 'door');
           pt(g, 18, 25, 'door'); pt(g, 19, 25, 'door');
+          pt(g, 18, 13, 'floor'); // relay hub bridge over the lava channel
           return g;
         },
       },
@@ -1964,7 +1968,7 @@ const PLANETS = {
         bg: 'radial-gradient(circle at 30% 60%, #071410 0%, #030806 70%)', ambient: 'datastream', floorPattern: 'grid',
         decor: ['cable_bundle', 'pipe', 'girder', 'scan_arch'],
         doors: [
-          { x: 1, y: 10, targetZone: 'lower_sky_market', targetPos: { x: 36, y: 13 }, label: 'Lower Promenade' },
+          { x: 1, y: 10, targetZone: 'lower_sky_market', targetPos: { x: 35, y: 10 }, label: 'Lower Promenade' },
           { x: 33, y: 10, targetZone: 'level_1313_subvault', targetPos: { x: 1, y: 9 }, label: 'Level 1313 Access' },
           { x: 33, y: 6, targetZone: 'shadow_town', targetPos: { x: 2, y: 12 }, label: 'Shadow Town' },
         ],
@@ -2080,7 +2084,7 @@ const PLANETS = {
         decor: ['rubble', 'pipe', 'warning_beacon', 'girder', 'slag'],
         doors: [
           { x: 1, y: 10, targetZone: 'slicer_alleyway', targetPos: { x: 32, y: 10 }, label: 'Slicer Alleyway' },
-          { x: 28, y: 10, targetZone: 'spice_refining_vaults', targetPos: { x: 1, y: 11 }, label: 'Spice Refinery' },
+          { x: 28, y: 10, targetZone: 'spice_refining_vaults', targetPos: { x: 2, y: 11 }, label: 'Spice Refinery' },
         ],
         worldObjects: [
           { id: 'vault_access_gate', x: 6, y: 3, once: false, iconKind: 'panel', label: 'CSF Access Gate',
@@ -2567,15 +2571,15 @@ const PLANETS = {
             triggersMinigame: 'signal_siphon',
             grantsFlag: 'manifest_falsified',
             description: 'The Senate-adjacent manifest clearance terminal. Freight routes, Senate supply chains, diplomatic cargo exemptions. Access requires a slicing run.' },
-          { id: 'airtaxi_senatorial', x: 16, y: 18, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Senate District AirTaxi terminal.' },
+          { id: 'airtaxi_senatorial', x: 18, y: 18, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Senate District AirTaxi terminal.' },
           { id: 'senate_slush_funds', x: 28, y: 15, once: true, label: 'Discretionary Fund Terminal', iconKind: 'panel',
             description: 'A discretionary account terminal left unlocked between sessions. The authorization window is still open.',
             grantsItem: null },
         ],
-        collectibles: [{ id: 'senate_slush_funds', x: 28, y: 15, label: 'Senate Slush Fund Transfer', reward: 150 }],
+        collectibles: [{ id: 'senate_slush_funds_cr', x: 27, y: 15, label: 'Senate Slush Fund Transfer', reward: 150 }],
         npcs: [
           {
-            id: 'senator_aide', x: 8, y: 5, kind: 'republic_guard', label: 'Senate Aide',
+            id: 'senator_aide', x: 9, y: 4, kind: 'republic_guard', label: 'Senate Aide',
             phases: [
               { prompt: 'The aide holds a datapad at parade rest. They assess you once and look away. "This floor is for registered Senate personnel and cleared guests. I assume your clearance is in order."',
                 choices: [
@@ -2586,7 +2590,7 @@ const PLANETS = {
             ],
           },
           {
-            id: 'black_sun_vigo', x: 22, y: 5, kind: 'crime_boss', label: 'Malis',
+            id: 'black_sun_vigo', x: 21, y: 6, kind: 'crime_boss', label: 'Malis',
             phases: [
               { requiresNoneFlags: ['black_sun_allied', 'black_sun_hostile'],
                 prompt: 'A woman in Senate-blue finery. No datapad. No aide. Just her and the view of the landing pad below. She turns when you approach. "You have been making noise. I appreciate noise, when it points in the right direction. My name is Malis. I represent certain interests that extend considerably further than this level."',
@@ -2617,7 +2621,8 @@ const PLANETS = {
           carveRect(g, 23, 1, 30, 8, 'wall'); carveRect(g, 24, 2, 29, 7, 'floor');
           carveRect(g, 1, 12, 8, 18, 'wall'); carveRect(g, 2, 13, 7, 17, 'floor');
           carveRect(g, 23, 12, 30, 18, 'wall'); carveRect(g, 24, 13, 29, 17, 'floor');
-          pt(g, 16, 18, 'door'); pt(g, 16, 19, 'door');
+          pt(g, 16, 19, 'door');
+          [[8,5],[23,5],[8,15],[23,15]].forEach(([x,y]) => pt(g, x, y, 'floor')); // lounge suite doorways
           return g;
         },
       },
@@ -2633,7 +2638,7 @@ const PLANETS = {
           { x: 1, y: 11, targetZone: 'level_1313_subvault', targetPos: { x: 27, y: 10 }, label: 'Level 1313 Sub-Vault' },
         ],
         worldObjects: [
-          { id: 'black_market_exchange', x: 30, y: 5, once: false, label: 'Black Market Commodity Exchange', iconKind: 'terminal',
+          { id: 'black_market_exchange', x: 30, y: 3, once: false, label: 'Black Market Commodity Exchange', iconKind: 'terminal',
             triggersMinigame: 'contraband_market',
             description: 'A hidden trading node embedded in the refinery control interface. Five commodities. Live prices. No customs declaration required.' },
           { id: 'refinery_control', x: 10, y: 10, once: false, label: 'Refinery Valve Array', iconKind: 'panel',
@@ -2643,11 +2648,11 @@ const PLANETS = {
           { id: 'droid_arena_entrance', x: 20, y: 18, once: false, label: 'Underground Droid Arena', iconKind: 'beacon',
             triggersMinigame: 'droid_arena',
             description: 'A converted pressurization chamber. The betting slips are still warm. Step in.' },
-          { id: 'airtaxi_vaults', x: 19, y: 21, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Return to the sub-level transit network.' },
+          { id: 'airtaxi_vaults', x: 11, y: 19, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Return to the sub-level transit network.' },
           { id: 'vault_stash', x: 35, y: 18, once: true, label: 'Hidden Vault Stash', iconKind: 'crate',
             description: 'A durasteel box welded behind a coolant drum. Someone did not come back for this.' },
         ],
-        collectibles: [{ id: 'vault_stash', x: 35, y: 18, label: 'Vault Hidden Stash', reward: 120 }],
+        collectibles: [{ id: 'vault_stash_cr', x: 35, y: 19, label: 'Vault Hidden Stash', reward: 120 }],
         npcs: [
           {
             id: 'exchange_tariff_lord', x: 6, y: 4, kind: 'broker', label: 'Karrn',
@@ -2677,7 +2682,7 @@ const PLANETS = {
             ],
           },
           {
-            id: 'devaronian_captain', x: 32, y: 5, kind: 'smuggler', label: 'Grix',
+            id: 'devaronian_captain', x: 33, y: 4, kind: 'smuggler', label: 'Grix',
             phases: [
               { requiresNoneFlags: ['grix_recruited'],
                 prompt: 'A Devaronian with filed-down horns and a scarred chin leans against the wall, cleaning a blaster component with practiced disinterest. "Grix. Import-export specialist. You look like someone who moves things that should not be moved. We might have things to discuss."',
@@ -2730,6 +2735,7 @@ const PLANETS = {
           carveRect(g, 25, 1, 36, 5, 'wall'); carveRect(g, 26, 2, 35, 4, 'floor');
           carveRect(g, 14, 13, 24, 20, 'wall'); carveRect(g, 15, 14, 23, 19, 'floor');
           pt(g, 1, 11, 'door');
+          [[30,5],[31,5],[32,5],[6,5],[7,5],[19,13],[20,13]].forEach(([x,y]) => pt(g, x, y, 'floor')); // exchange alcove, tariff office and arena chamber doorways
           return g;
         },
       },
@@ -2759,11 +2765,11 @@ const PLANETS = {
           { id: 'outcast_camp_fire', x: 8, y: 18, once: true, label: 'Outcast Settlement', iconKind: 'brazier',
             description: 'A cluster of shelters built from scavenged hull plating. Survivors of forgotten levels. Some arrived by accident. Some by design. All of them are waiting.',
             grantsCodex: 'codex-undercity-outcasts' },
-          { id: 'airtaxi_undercity', x: 20, y: 23, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Undercity transit beacon. Rarely maintained.' },
+          { id: 'airtaxi_undercity', x: 20, y: 22, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Undercity transit beacon. Rarely maintained.' },
           { id: 'ruin_scavenge', x: 10, y: 8, once: true, label: 'Temple Scavenge Cache', iconKind: 'crate',
             description: 'Fragments of pre-Republic stonework pried loose by earlier explorers. The pieces are worth something to the right collector.' },
         ],
-        collectibles: [{ id: 'ruin_scavenge', x: 10, y: 8, label: 'Temple Ruin Fragments', reward: 100 }],
+        collectibles: [{ id: 'ruin_scavenge_cr', x: 11, y: 8, label: 'Temple Ruin Fragments', reward: 100 }],
         npcs: [
           {
             id: 'disgraced_csf_inspector', x: 6, y: 18, kind: 'republic_guard', label: 'Marro',
@@ -2842,7 +2848,7 @@ const PLANETS = {
           carveRect(g, 1, 1, 15, 10, 'wall'); carveRect(g, 2, 2, 14, 9, 'floor');
           carveRect(g, 22, 1, 38, 10, 'wall'); carveRect(g, 23, 2, 37, 9, 'floor');
           carveRect(g, 12, 14, 30, 22, 'wall'); carveRect(g, 13, 15, 29, 21, 'floor');
-          pt(g, 1, 12, 'door'); pt(g, 20, 23, 'door');
+          pt(g, 1, 12, 'door');
           // NW building south entrance
           pt(g, 8, 10, 'floor');
           // NE building south entrance
