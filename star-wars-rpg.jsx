@@ -594,20 +594,31 @@ const PLANETS = {
                 repeatPrompt: '"The Senate transit terminal is the end of the thread. Go finish it."',
               },
               {
+                id: 'phase_jon_pursue',
+                requiresAllFlags: ['jon_endgame_known'],
+                requiresNoneFlags: ['senate_line_secured'],
+                prompt: '"Level 005, The Works. Vex runs the Syndicate end of this." Jon is at the viewport with his jacket on, as if he might leave at any moment. "The Iron Syndicate kept its command hub below the cooling ducts. Their files will say what they are really building, and where. Bring me what you find, or stop it yourself if I am too slow."',
+                choices: [
+                  { text: '"I will go to The Works now."', morality: 0, loyalty: { underworld: 3 }, result: '"Take the cooling ducts. The Syndicate command terminal is at the end. Be careful with what you copy."' },
+                  { text: '"Is there anything you are still not telling me?"', morality: 3, loyalty: {}, result: '"Almost certainly." A small, honest smile. "But nothing that changes where you go next."' },
+                ],
+                repeatPrompt: '"The Works, Level 005. The command terminal at the end of the cooling ducts."',
+              },
+              {
                 id: 'phase_finale',
                 requiresAllFlags: ['senate_line_secured'],
-                requiresNoneFlags: ['inheritance_active'],
+                requiresNoneFlags: ['inheritance_active', 'jon_finale_seen'],
                 prompt: '"It is done." He says it quietly. No celebration. Just acknowledgment. "Whatever path you took to get here -- Republic badge, underworld leverage, or something in between -- the alloy is gone and the Senator is exposed." He looks at the viewport. "I am going to close the apartment for a while. Let things settle." A pause. "You did good work."',
                 choices: [
-                  { text: '"What happens to your operation now?"', morality: 0, loyalty: {}, result: '"Smaller. Cleaner. The old routes are burned. But I still know people." He almost smiles. "I will find something."' },
-                  { text: '"It did not have to go this way. But I am glad you were in it."', morality: 8, loyalty: { underworld: 5, republic: 5 }, result: '"Yeah." He picks up his jacket. "Me too." He means it.', grants: { flags: ['jon_farewell_warm'] } },
-                  { text: '"We should talk about what comes next. There is more work to be done."', morality: 5, loyalty: { underworld: 8 }, result: '"There is always more work." He locks the terminal. "Give me a week. Then come back." He walks to the door without turning around. The invitation is open.', grants: { flags: ['jon_future_open'] } },
+                  { text: '"What happens to your operation now?"', morality: 0, loyalty: {}, result: '"Smaller. Cleaner. The old routes are burned. But I still know people." He almost smiles. "I will find something."', grants: { flags: ['jon_finale_seen'] } },
+                  { text: '"It did not have to go this way. But I am glad you were in it."', morality: 8, loyalty: { underworld: 5, republic: 5 }, result: '"Yeah." He picks up his jacket. "Me too." He means it.', grants: { flags: ['jon_finale_seen', 'jon_farewell_warm'] } },
+                  { text: '"We should talk about what comes next. There is more work to be done."', morality: 5, loyalty: { underworld: 8 }, result: '"There is always more work." He locks the terminal. "Give me a week. Then come back." He walks to the door without turning around. The invitation is open.', grants: { flags: ['jon_finale_seen', 'jon_future_open'] } },
                 ],
                 repeatPrompt: '"It is done. The rest is the Republic\'s problem now."',
               },
               {
                 id: 'phase_inheritance_offer',
-                requiresAllFlags: ['senate_line_secured'],
+                requiresAllFlags: ['senate_line_secured', 'jon_finale_seen'],
                 requiresNoneFlags: ['inheritance_active'],
                 prompt: '"The Scylla route is gone. The Senate connection is burned. The CSF knows my name now, and I cannot run freight through the official channels for at least two years." He pours two cups of caf and pushes one across the table without asking. "But the network still exists. The pit, the Alleyway, the warehouse agreements, the bribe schedule. Fifteen years of infrastructure. I need someone I can trust to stand beside me and run half of it. I am asking you." He holds your gaze. "I am not asking for an answer right now. But I am asking."',
                 choices: [
@@ -617,8 +628,29 @@ const PLANETS = {
                 repeatPrompt: '"The offer stands. Bay 14. Manifest. Come back when you have it."',
               },
               {
-                id: 'phase_manifest_choice',
+                id: 'phase_manifest_pending',
                 requiresAllFlags: ['inheritance_active'],
+                requiresNoneFlags: ['weapons_manifest_acquired', 'cargo_skimmed', 'cargo_delivered_full'],
+                prompt: '"First step. The Bay 14 cache at the Freight Hub, northeast bay. Thirty-two crates marked agricultural equipment. The CSF counted boxes and never opened them." He taps the table. "Under the top lid there is a manifest. I need it in my hand before I decide what you carry and where it goes."',
+                choices: [
+                  { text: '"Northeast bay, Freight Hub. I am on it."', morality: 0, loyalty: { underworld: 3 }, result: '"Do not stay long. Evidence tape is not a lock, but it is a promise someone will check."' },
+                  { text: '"Why do you need the manifest and not the crates?"', morality: 3, loyalty: {}, result: '"Because the crates are what everyone expects me to move. The manifest is what tells me who is expecting them."' },
+                ],
+                repeatPrompt: '"The manifest. Bay 14, northeast bay at the Freight Hub. Bring it here."',
+              },
+              {
+                id: 'phase_inheritance_ongoing',
+                requiresAllFlags: ['inheritance_active'],
+                requiresAnyFlag: ['cargo_skimmed', 'cargo_delivered_full'],
+                prompt: '"Malak, Reya, the vault." Jon counts them off without looking at you. "The network is moving whether I watch or not. Do not stop to ask my permission. If you need me, you know where the viewport is."',
+                choices: [
+                  { text: '"I will see it through."', morality: 0, loyalty: { underworld: 3 }, result: '"I know." He turns back to the city.' },
+                ],
+                repeatPrompt: '"Shadow Town. Reya. The vault. In that order, or whichever order keeps you alive."',
+              },
+              {
+                id: 'phase_manifest_choice',
+                requiresAllFlags: ['inheritance_active', 'weapons_manifest_acquired'],
                 requiresNoneFlags: ['cargo_skimmed', 'cargo_delivered_full'],
                 prompt: '"You got it. Good." Jon takes the manifest, scans it, and sets it down. "Level 1312 contact is waiting. Straight delivery, every crate, and you walk in as my Enforcer. Or..." He slides the manifest back toward you with one finger. "...there is a storage alcove at the south end of the arena. You could pull ten crates, lock them there, and I would never know. I would have leverage over you. But you would have leverage over me. Depending on what you want from this arrangement, that might be more useful."',
                 choices: [
@@ -1077,17 +1109,26 @@ const PLANETS = {
             requires: { item: 'smugglers_keycard' } },
           { id: 'bay14_weapon_cache', propArt: 'crate_stack', propVariant: 'weapons', x: 32, y: 8, once: true, iconKind: 'crate', label: 'Weapons Shipment Cache',
             requiresFlag: 'inheritance_active',
+            lockedMessage: 'The cache is sealed under CSF evidence tape. Jon has not given you the go ahead, and touching it now would be a job for the Precinct, not for you.',
             description: 'Thirty-two sealed crates marked AGRICULTURAL EQUIPMENT. The cargo manifest tucked beneath the top lid tells a different story: Merr-Sonn G-8 blasters, thermal detonators, Phrik plating strips. Jon wants this delivered to a contact at Level 1312. The CSF inventory counted boxes. They did not open them.',
             grantsItem: 'bay14_weapon_manifest',
+            grantsFlag: 'weapons_manifest_acquired',
             grantsCodex: 'codex-jon-inheritance' },
+          { id: 'bay14_raid_breach', propArt: 'security_gate', x: 27, y: 9, once: true, iconKind: 'door', label: 'Bay 14 Sealed Cargo Door',
+            requiresFlag: 'bay14_reported',
+            lockedMessage: 'The sealed door beyond the blast marks carries a CSF evidence tag. No breach is authorized until the Bay 14 findings are filed with Vane at the Academy.',
+            description: "A sealed cargo door at the back of the hub, scored by the old blast and welded shut from the inside. The CSF breach team stacks up behind you, Vane's authorization glowing on your comlink. When the charge goes, the door falls inward and the Iron Syndicate's staging crew is already on its feet.",
+            triggersMinigame: 'tactical_combat',
+            minigameConfig: { opponentProfile: 'syndicate_thug', flavorText: 'The charge blows and the door comes down into a haze of dust and phrik shavings. A Syndicate staging crew is waiting, weapons half raised. Bay 14 ends tonight.' },
+            grantsFlags: ['sector4_raid_complete'] },
         ],
         npcs: [
           { id: 'jax_freight', x: 18, y: 6, kind: 'mechanic', label: 'Dock Engineer Jax',
             repeatPrompt: 'Jax is running diagnostics on a loading claw. He does not acknowledge you.',
             prompt: '"Whatever you are here for, I did not see anything. Go find someone else."',
             choices: [
-              { text: '"The CSF sent me. Here is my Auxiliary Pass."', morality: 5, loyalty: { republic: 8 }, requires: { item: 'csf_aux_pass' }, result: 'He glances at the pass and exhales. "Fine. I was in the maintenance shaft when they came through. Fourteen of them. Grey coats. Republic security codes that checked out clean. They loaded the Phrik onto two unmarked lifters and went sub-level."', grants: { flags: ['jax_talked', 'freight_hub_investigated'], codex: ['codex-docking-bay-14'] } },
-              { text: 'Offer him 200 credits and ask what he saw.', morality: -8, loyalty: { underworld: 8 }, result: 'He pockets the credits without counting them. "Two lifters. Unmarked. Grey coats with Republic codes. Went down. That is all I am giving you."', grants: { flags: ['jax_bribed', 'freight_hub_investigated'] } },
+              { text: '"The CSF sent me. Here is my Auxiliary Pass."', morality: 5, loyalty: { republic: 8 }, requires: { item: 'csf_aux_pass' }, result: 'He glances at the pass and exhales. "Fine. I was in the maintenance shaft when they came through. Fourteen of them. Grey coats. Republic security codes that checked out clean. They loaded the Phrik onto two unmarked lifters and went sub-level."', grants: { flags: ['jax_talked', 'jaxxon_arrested', 'freight_hub_investigated'], codex: ['codex-docking-bay-14'] } },
+              { text: 'Offer him 200 credits and ask what he saw.', morality: -8, loyalty: { underworld: 8 }, result: 'He pockets the credits without counting them. "Two lifters. Unmarked. Grey coats with Republic codes. Went down. That is all I am giving you."', grants: { flags: ['jax_bribed', 'jaxxon_deal', 'freight_hub_investigated'] } },
               { text: '"I know you were in the shaft. Tell me what you saw or I will tell them you were."', morality: -15, loyalty: { underworld: 12 }, result: 'His jaw tightens. "You are going to fit right in around here." He tells you what he saw.', grants: { flags: ['jax_intimidated', 'freight_hub_investigated'] } },
             ],
           },
@@ -1194,6 +1235,13 @@ const PLANETS = {
           { id: 'east_cargo_bay_locker', propArt: 'crate_stack', propVariant: 'locker', x: 34, y: 7, once: true, label: 'Sealed Cargo Bay Locker', description: 'A standard freight locker with a non-standard lock — the override code is a military-issue cipher, not a Republic transit cipher. Inside: three manifest strips printed on thermal flimsi, each listing the same destination account. The account number matches the shell corporation routing from the Scylla manifest.', grantsFlag: 'freight_chain_confirmed', grantsCodex: 'codex-sector-4-freight-corridors' },
           { id: 'south_platform_crate_stack', propArt: 'container_stack', x: 8, y: 19, once: false, label: 'Numbered Cargo Stack — Platform South', description: 'Forty-eight standardized gray containers stacked three high on the south loading platform. Each bears a Senate commerce committee seal. Each seal is from a different committee session. The committees do not overlap in their stated jurisdictions. What they all share: a signature from the same undersecretary, on the same date, for cargoes described as "legislative materials."' },
           { id: 'rail_junction_box', propArt: 'junction_box', propVariant: 'rail', x: 26, y: 19, once: true, label: 'Rail Junction Control Box', description: 'The mag-rail switching junction for the Sector 4 corridor. The switching schedule shows a recurring twelve-minute hold every fourth cycle — the rail is stopped, the platform cameras are on maintenance loop, and no personnel are scheduled. The hold began eight months ago. It runs like clockwork. Nothing in the official record explains it.', grantsFlag: 'rail_window_found' },
+          { id: 'senate_transit_charge', propArt: 'transit_pod', x: 36, y: 9, once: true, iconKind: 'terminal', label: 'Senate Transit Car 12',
+            requiresFlag: 'bomb_reached',
+            requires: { item: 'master_senate_transit_drive' },
+            lockedMessage: 'A Senate transit car idles at the platform with its service hatch sealed. It looks routine, and you do not yet know what to look for. The Syndicate command terminal in the undercity would tell you.',
+            description: "Car 12 of the Senate express, parked on the siding with its service hatch sealed. The drive from the Syndicate command terminal unlocks the hatch and the schematic is exactly as the file promised: a seismic charge wired under the passenger floor, counting down to the opening of the next session. You pry the casing, close the vents and jettison the charge into the incinerator shaft before the timer reaches zero.",
+            triggersMinigame: 'valve_override',
+            grantsFlag: 'senate_line_secured' },
           { id: 'pursuit_start', propArt: 'speeder_bay', x: 34, y: 19, once: true, label: 'Emergency Speeder Bay', description: 'A single repulsor speeder, engine warm, tethered to a quick-release bay mount. A Syndicate courier was spotted boarding the mag-rail three minutes ago heading for The Works. This speeder can intercept if you move now. The rail corridor is active.', triggersMinigame: 'speeder_pursuit', grantsFlag: 'chase_resolved' },
         ],
         npcs: [
@@ -1352,7 +1400,7 @@ const PLANETS = {
           { x: 34, y: 12, targetZone: 'undercity_outskirts', targetPos: { x: 2, y: 12 }, label: 'Undercity Outskirts' },
         ],
         worldObjects: [
-          { id: 'syndicate_cargo_cache', propArt: 'crate_stack', propVariant: 'syndicate', x: 18, y: 10, once: true, iconKind: 'crate', label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with an iron chain. Phrik plating, combat chassis, and an empty Jedi archive canister.',
+          { id: 'syndicate_cargo_cache', propArt: 'crate_stack', propVariant: 'syndicate', x: 18, y: 10, once: true, iconKind: 'crate', label: 'Syndicate Cargo Cache', description: 'Stacked crates stamped with an iron chain. Phrik plating, combat chassis, and an empty Jedi archive canister. Wedged behind the canister, a fist-sized crystal still whispers.', grantsItem: 'encrypted_shard',
             autoCodex: { id: 'discovery-works-syndicate-cache', title: 'Iron Syndicate Cache', category: 'discoveries', summary: 'Phrik plating cut to pauldron dimensions.', body: ['Stacked crates stamped with a stylised iron chain. Inside: Phrik plating cut to pauldron dimensions, half-assembled combat chassis, and one empty Jedi archive canister. Someone opened it already.'] } },
           { id: 'plasma_conduit_005', propArt: 'leaking_pipe', propVariant: 'plasma', x: 8, y: 18, once: false, label: 'Leaking Plasma Conduit', description: 'The pipe groans under pressure. A slow leak fills the air with acrid chemical haze. This entire sub-level is one spark away from a chain event.' },
           { id: 'sub_station_terminal', propArt: 'console', propVariant: 'substation', x: 10, y: 20, once: true, iconKind: 'panel', label: 'Deep Sub-Station Controls', description: 'Power sub-station 3. Controls ambient thermal hazards in the surrounding corridor.', grantsItem: null,
@@ -1499,7 +1547,11 @@ const PLANETS = {
         ],
         worldObjects: [
           { id: 'airtaxi_syndicate_command', propArt: 'airtaxi', propVariant: 'rigged', x: 2, y: 13, label: 'AirTaxi Terminal', description: 'Syndicate-rigged transit terminal. The departure codes are wrong — it still works.' },
-          { id: 'command_data_terminal', propArt: 'console', propVariant: 'syndicate', x: 7, y: 5, once: true, label: 'Iron Syndicate Command Terminal', description: 'Active. Unencrypted. The Syndicate was confident nobody would reach this level. Shipping manifests, crew rotations, and one file simply labeled EXTRACTION TIMETABLE.', grantsFlag: 'syndicate_plans_found', grantsCodex: 'codex-iron-syndicate' },
+          { id: 'command_data_terminal', propArt: 'console', propVariant: 'syndicate', x: 7, y: 5, once: true, label: 'Iron Syndicate Command Terminal',
+            requiresFlag: 'jon_endgame_known',
+            lockedMessage: 'Active and unencrypted, a wall of Syndicate files with no way to know which one matters. Debrief Jon on the Sector 4 raid first. He knows what you are looking for.',
+            description: 'Active. Unencrypted. The Syndicate was confident nobody would reach this level. Shipping manifests, crew rotations, and one file simply labeled EXTRACTION TIMETABLE. It names the real target: a seismic charge aboard a Senate transit car on the mag-rail corridor, timed for the next session. Every Syndicate bypass code for the transit line burns onto a slicer drive as you copy it.',
+            grantsFlags: ['syndicate_plans_found', 'bomb_reached'], grantsItem: 'master_senate_transit_drive', grantsCodex: 'codex-iron-syndicate' },
           { id: 'armory_rack', propArt: 'weapon_rack', propVariant: 'pauldron', x: 28, y: 18, once: true, label: 'Syndicate Armory Rack', description: 'Phrik-composite pauldrons. Six sets, each sized for Republic-standard troopers. The Syndicate is not planning to sell this armor — they are equipping their own people to look like Republic soldiers.', grantsFlag: 'armor_ruse_discovered' },
           { id: 'comm_relay_hub', propArt: 'comm_relay', propVariant: 'hub', x: 18, y: 13, once: false, label: 'Encrypted Comm Relay', description: 'Burst-transmitting on a Senate sub-frequency. The source is Level 1900. Someone very senior is listening to every operation report from this room.' },
         ],
@@ -1597,6 +1649,11 @@ const PLANETS = {
             triggersMinigame: 'signal_siphon',
             grantsFlag: 'reya_warrant_cleared',
             grantsCodex: 'codex-reya' },
+          { id: 'precinct_report_desk', propArt: 'datapad_table', propVariant: 'logbook', x: 10, y: 8, once: true, iconKind: 'terminal', label: 'Precinct Command Report Desk',
+            requiresAllFlags: ['csf_training_complete', 'freight_hub_investigated'],
+            lockedMessage: 'The sealed report tray waits for field findings. Finish your training and investigate Bay 14 first.',
+            description: "The evidence tray beside Vane's desk, stamped with the Precinct Command seal. You file the Bay 14 findings in order: the stripped dock, the forged keycard, the sealed cargo door at Platform 09. The tray clicks shut and a breach authorization prints on the spool. Vane will see it within the hour.",
+            grantsFlags: ['bay14_reported', 'sector4_raid_authorized'] },
         ],
         npcs: [
           { id: 'vane_academy', x: 6, y: 6, kind: 'republic_guard', label: 'Officer Vane',
@@ -1637,7 +1694,7 @@ const PLANETS = {
                 choices: [
                   { text: '[Diplomatic] "I found evidence that clears your name, Detective. I want to help you, not expose you."', morality: 8, loyalty: { republic: 5 }, result: 'Something shifts behind his eyes. The hand moves away from the comlink. "Evidence." He says the word like he is tasting it. A long pause. "Transfer Code 99-Delta is flagged at sub-level access point 1313-J. If you find what is down there and it clears the record, you never spoke to me." He slides a keycard across the desk.', grants: { flags: ['echo7_clearance_acquired'], items: ['csf_clearance_pass_1313'] } },
                   { text: '[Neural Hijack] Echo-7 pushes forward in your mind. You feel it lock onto Vane. "Ask him about Transfer Code 99-Delta."', morality: -5, loyalty: { underworld: 8 }, requires: { flag: 'trait_neural_vessel' }, result: 'Vane stiffens. His eyes go distant. "Transfer Code... 99-Delta. Sub-level 1313-J." The words come out hollow, extracted. He blinks. He does not know what just happened. He stares at the keycard he somehow placed on the desk. You take it before he reconsiders.', grants: { flags: ['echo7_clearance_acquired', 'echo7_neural_hijack_used'], items: ['csf_clearance_pass_1313'] } },
-                  { text: '[Intimidation] "The Syndicate ledger has your authorization codes on three separate transfer nights, Vane. Talk or this goes to Internal Affairs."', morality: -3, loyalty: { underworld: 5 }, requires: { item: 'syndicate_ledger' }, result: 'The color leaves his face. "You have no idea what you are holding." A beat. "You want access to Sub-Level 1313. Fine. But you owe me silence when this is over." He shoves a keycard at you without meeting your eyes.', grants: { flags: ['echo7_clearance_acquired', 'vane_compromised'], items: ['csf_clearance_pass_1313'] } },
+                  { text: '[Intimidation] "The Syndicate ledger has your authorization codes on three separate transfer nights, Vane. Talk or this goes to Internal Affairs."', morality: -3, loyalty: { underworld: 5 }, requires: { item: 'syndicate_ledger' }, result: 'The color leaves his face. "You have no idea what you are holding." A beat. "You want access to Sub-Level 1313. Fine. But you owe me silence when this is over." He shoves a keycard at you without meeting your eyes.', grants: { flags: ['echo7_clearance_acquired', 'vane_compromised', 'ledger_leaked'], items: ['csf_clearance_pass_1313'] } },
                 ],
               },
               { id: 'phase_post_clearance',
@@ -1645,8 +1702,20 @@ const PLANETS = {
                 prompt: 'Vane does not look up when you approach. "Whatever you find down there, I had no knowledge of it. That is my official position and I am keeping it." He turns back to his files.',
                 choices: [
                   { text: '"Understood, Detective."', morality: 5, loyalty: { republic: 3 }, result: 'He gives a single short nod. The conversation is over.' },
-                  { text: '"The ledger still exists, Vane. Remember that."', morality: -3, loyalty: { underworld: 5 }, result: '"I remember everything." His voice is flat. "Get out of my office."' },
+                  { text: '"The ledger still exists, Vane. Remember that."', morality: -3, loyalty: { underworld: 5 }, result: '"I remember everything." His voice is flat. "Get out of my office."', grants: { flags: ['ledger_leaked'] } },
                 ],
+              },
+              {
+                id: 'phase_bay14_report',
+                requiresAllFlags: ['csf_training_complete', 'freight_hub_investigated'],
+                requiresNoneFlags: ['bay14_reported', 'echo7_vane_leverage_offered'],
+                prompt: "Vane is waiting behind a desk stacked with sealed evidence trays, his coat already on. \"Investigator. Tell me what Bay 14 gave you. Everything, in order.\" He listens without interrupting, and when you finish he is silent for a long moment. \"The sealed cargo door at the back of the Freight Hub. The Syndicate staged their shipments behind it. I have a breach team on standby and a warrant that says I cannot use it without a witness on the floor.\" He slides a breach authorization across the desk. \"You are the witness.\"",
+                choices: [
+                  { text: "\"Give me the authorization. I will be at the cargo door.\"", morality: 5, loyalty: { republic: 5 }, result: "\"Platform 09, the sealed door beyond the blast marks. The team stacks up at your signal. Do not go in without them.\"", grants: { flags: ['bay14_reported', 'sector4_raid_authorized'] } },
+                  { text: "\"What if what is behind that door implicates someone in the Precinct?\"", morality: 8, loyalty: { republic: 8 }, result: "He does not look away. \"Then it implicates them. I will take the heat for that. Go.\"", grants: { flags: ['bay14_reported', 'sector4_raid_authorized', 'vane_confidential_channel'] } },
+                  { text: "\"Jon Vane's route runs through that door. You know that.\"", morality: -3, loyalty: { underworld: 3 }, result: "\"The route is not the man.\" Something tired crosses his face. \"I will decide about the man when I know what is inside. The authorization stands.\"", grants: { flags: ['bay14_reported', 'sector4_raid_authorized'] } },
+                ],
+                repeatPrompt: '"The breach team is at Platform 09. Do not make them wait."',
               },
             ],
           },
@@ -1693,8 +1762,8 @@ const PLANETS = {
                 requiresNoneFlags: ['csf_training_complete'],
                 prompt: '"All three modules cleared." He crosses his arms. "I am not going to tell you that you did well, because this was training and what is waiting in Sector 4 does not grade on a curve. What I will tell you is: you did not cut corners. Report to Vane. He will finalize your certification."',
                 choices: [
-                  { text: '"Thank you, Sergeant."', morality: 5, loyalty: { republic: 5 }, result: '"Do not thank me. Bring back a clean record from Sector 4. That is the only thanks worth giving." He turns back to the drill yard.' },
-                  { text: '"Anything I should know about Sector 4?"', morality: 3, loyalty: {}, result: '"Phantom manifests. Ghost cargo layers in the Bay 14 logging system. Someone is very good at staying invisible. Be better." He nods once. "Dismissed."' },
+                  { text: '"Thank you, Sergeant."', morality: 5, loyalty: { republic: 5 }, result: '"Do not thank me. Bring back a clean record from Sector 4. That is the only thanks worth giving." He turns back to the drill yard.', grants: { flags: ['csf_training_complete'] } },
+                  { text: '"Anything I should know about Sector 4?"', morality: 3, loyalty: {}, result: '"Phantom manifests. Ghost cargo layers in the Bay 14 logging system. Someone is very good at staying invisible. Be better." He nods once. "Dismissed."', grants: { flags: ['csf_training_complete'] } },
                 ],
               },
               { id: 'torren_certified',
@@ -1874,7 +1943,7 @@ const PLANETS = {
             phases: [
               {
                 id: 'phase_meln_initial',
-                requiresNoneFlags: ['torvenn_named', 'phantom_freight_senate_link', 'meln_confronted'],
+                requiresNoneFlags: ['phantom_freight_senate_link', 'meln_confronted'],
                 prompt: 'The Muun undersecretary turns from his terminal with a smile that reaches exactly nowhere. "The precinct is restricted to authorised personnel. You have authorisation, or you would not be here. That is the extent of my interest in why you are here." He returns to his filing. The deliberate dismissal of a man who has decided you are not yet a problem.',
                 choices: [
                   { text: '"I am looking into the Bay 14 irregularities."', morality: 5, loyalty: { republic: 3 }, result: '"Bay 14 is under routine Commerce Authority review." He does not look up. "Any further inquiries should be directed to the subcommittee clerk. That office is located on Level 1880. Good day."', grants: {} },
@@ -1908,6 +1977,14 @@ const PLANETS = {
                 prompt: '"Dax knows where the original authorisation is. The retention key is the only thing standing between the sealed archive and you." He keeps his voice flat and level. In this building, that is the most dangerous thing a person can be.',
                 choices: [{ text: '"I understand. Thank you."', grants: {} }],
                 repeatPrompt: 'Meln gives a single, precise nod. He has said what he had to say.',
+              },
+              {
+                id: 'phase_meln_bribed',
+                requiresAllFlags: ['meln_bribed'],
+                requiresNoneFlags: ['meln_turned'],
+                prompt: 'Meln does not look up from his terminal. A chip the size of a thumbnail has already vanished from his desk. "We have nothing further to discuss. If anyone asks, we never did."',
+                choices: [{ text: 'Leave without a word.', grants: {} }],
+                repeatPrompt: 'Meln keeps his eyes on the screen. The conversation did not happen.',
               },
             ],
           },
@@ -1988,6 +2065,13 @@ const PLANETS = {
             description: 'A hardwire tap running upward through the ceiling into the Sky-Market penthouse tower. This is how the second memory fragment was rerouted here to keep it hidden. Getting it out means cracking the tower relay.',
             triggersMinigame: 'signal_siphon', grantsFlag: 'echo7_node2_extracted',
             requiresFlag: 'echo7_node1_extracted' },
+          { id: 'csf_ambush_point', propArt: 'guard_post', x: 28, y: 10, iconKind: 'beacon', label: 'CSF Courier Checkpoint',
+            requiresFlag: 'heat_high_active', requiresNoneFlags: ['ambush_survived'],
+            lockedMessage: 'An empty stretch of alley with a tripod and a dead floodlight. Nothing is happening here yet.',
+            description: "A CSF courier checkpoint, thrown up overnight: a tripod floodlight, a fold out barrier and four troopers who were not here yesterday. Syndicate heat has put your name on a very long list.",
+            triggersMinigame: 'tactical_combat',
+            minigameConfig: { opponentProfile: 'csf_swat', flavorText: 'The floodlight snaps on. Four silhouettes spread across the alley and a voice you have heard on the CSF net says your name. This is the courier ambush and it was always going to find you.' },
+            grantsFlag: 'ambush_survived', heatDeltaOnSuccess: -15 },
           { id: 'oza_shop_terminal', propArt: 'console', propVariant: 'oza', x: 6, y: 15, once: false, iconKind: 'terminal', label: "OZA-2's Shop Display",
             description: 'A battered terminal listing available hardware with prices that do not appear in any legitimate catalogue. Matte-black casing. Red indicator lights. A hand-written sign reads: LEGAL INQUIRIES DELETED ON RECEIPT.' },
           { id: 'airtaxi_slicer_alley', propArt: 'airtaxi', propVariant: 'jury', x: 30, y: 3, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal',
@@ -2011,7 +2095,7 @@ const PLANETS = {
               { text: '"Do you know anything about the shaft below Bay 14?"', morality: 0, loyalty: { underworld: 4 }, result: '"Coordinates have been circulating for weeks. A Rodian named Garrus has been selling them in the Sky-Market. What is down there is a question the alley has opinions about but no proof. The proof is below, sealed and breathing."', grants: { flags: ['garrus_named_by_oza2'] } },
             ],
           },
-          { id: 'echo7_npc', x: 22, y: 10, kind: 'droid', label: 'Echo-7',
+          { id: 'echo7_npc', x: 22, y: 10, kind: 'droid', label: 'Echo-7', hideAfterFlags: ['echo7_climax_reached'],
             requiresFlag: 'echo7_found',
             repeatPrompt: '"I am still here, Vessel. The fragments await. My patience was calibrated for centuries."',
             phases: [
@@ -2096,7 +2180,9 @@ const PLANETS = {
           { id: 'republic_archive_server', propArt: 'server_stack', propVariant: 'republic', x: 18, y: 5, once: true, iconKind: 'terminal', label: 'Republic Archive Core',
             description: 'The central server node of the Level 1313 archive burial site. Active. The transfer port is open, as if someone left this connection deliberately unfinished.',
             triggersMinigame: 'willpower_override',
-            grantsFlag: 'echo7_climax_reached',
+            grantsFlags: ['echo7_climax_reached', 'echo7_purged'],
+            failGrantsFlags: ['echo7_climax_reached', 'echo7_fused', 'echo7_dominant'],
+            failMessage: 'Neural integrity lost. Echo-7 takes hold of the archive core and of you. Two frequencies settle into one.',
             requiresFlag: 'echo7_vault_approach_active' },
           { id: 'ancient_vault_entrance', propArt: 'access_hatch', propVariant: 'sealed', x: 24, y: 18, once: true, iconKind: 'crate', label: 'Sealed Maintenance Shaft',
             description: 'A durasteel hatch welded shut with three independent seals. Below it: a maintenance shaft descending into carved stone. This is Garrus\'s coordinates. Whatever is down there has been sealed for a very long time.',
@@ -2188,6 +2274,7 @@ const PLANETS = {
           { id: 'shadow_arms_cache', propArt: 'crate_stack', propVariant: 'arms', x: 31, y: 5, once: true, label: 'Skimmed Arms Cache', iconKind: 'crate',
             requiresFlag: 'cargo_skimmed',
             requires: { item: 'shadow_arms_cache_key' },
+            lockedMessage: 'The alcove locker is sealed and nobody here will open it for you. The cache only exists if you skimmed the Bay 14 cargo: bring the weapons manifest to Jon and take the insurance, and he hands you the key.',
             description: 'Ten crates of Merr-Sonn hardware you pulled from the Bay 14 manifest. They have been here two days and no one has touched them. That is either because Malak has not looked, or because he already knows and is waiting to see what you do with them.',
             grantsFlag: 'shadow_cache_confirmed',
             grantsCodex: 'codex-shadow-town' },
@@ -2238,12 +2325,21 @@ const PLANETS = {
                 choices: [{ text: 'Walk away.', grants: {} }],
               },
               {
-                id: 'phase_malak_skimmed_offer',
+                id: 'phase_malak_cache_pending',
                 requiresAllFlags: ['cargo_skimmed'],
+                requiresNoneFlags: ['shadow_cache_confirmed', 'malak_turned', 'malak_dead'],
+                prompt: 'Malak does not turn his head. "There is a rumor going around the pit that somebody is holding back a crate count." A pause. "A rumor is not stock. Come back when you have something on a shelf I can walk to."',
+                choices: [{ text: 'Walk away.', grants: {} }],
+                repeatPrompt: 'Malak watches the sand. "Shelf. Not rumor."',
+              },
+              {
+                id: 'phase_malak_skimmed_offer',
+                requiresAllFlags: ['cargo_skimmed', 'shadow_cache_confirmed'],
                 requiresNoneFlags: ['malak_turned', 'malak_dead'],
                 prompt: '"Ten missing crates." He already knows. He looks at you with something that is not quite respect and not quite threat. "Jon does not know. Which means you are either very smart or you are about to be very dead." He watches your face. "Or you are offering them to me."',
                 choices: [
                   { text: '"They are yours. All ten. And I need you on my side when this moves."', morality: -5, loyalty: { underworld: 15 }, result: '"Done." He nods once. No surprise. No gratitude. Just a transaction that has now been completed. "Tell me when it is time."', grants: { flags: ['malak_turned'], codex: ['codex-malak'] } },
+                  { text: '[Draw on him before he can move. A man who knows does not get to keep knowing.]', morality: -15, loyalty: { underworld: 8 }, result: 'Your hand finds the grip before the thought finishes. Malak sees it and, for the first time, he looks pleased. The pit lights drop and the crowd above goes silent. "There it is."', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'malak_enforcer', flavorText: 'Malak steps off the rail onto the sand with the grace of a man who has been waiting for this honesty. The pit floor is hard and cold. Whoever leaves does not need to explain it.' }, onSuccessFlags: ['malak_dead'] },
                   { text: '"Try harder to find out."', morality: 0, loyalty: {}, result: 'He almost smiles. It does not reach his eyes. "Fair enough." He goes back to watching the pit floor.' },
                 ],
               },
@@ -2307,18 +2403,38 @@ const PLANETS = {
                 repeatPrompt: '"Warrant archive is still active. CSF Academy training wing."',
               },
               {
+                id: 'phase_reya_cleared_pending',
+                requiresAllFlags: ['reya_warrant_cleared'],
+                requiresNoneFlags: ['reya_loyal', 'reya_blackmailed'],
+                prompt: 'Reya looks up before you reach the table. She knows already. The Precinct 42 feed has gone quiet and a murder warrant that has hung over her for three years is no longer on any CSF list. "It is gone." She says it as if testing the words. "One question, and I will know if you lie. Did you keep a copy of the data?"',
+                choices: [
+                  { text: '"I deleted it. Clean slate."', morality: 10, loyalty: { republic: 5 }, result: 'She exhales, slow and quiet. "Then we are even." She opens a desk drawer and sets a keycard on the table without ceremony. "Vane\'s vault override. Jon never had it. I did, and I kept it for a day like this. Freeze the payroll."', grants: { flags: ['reya_loyal', 'reya_card_given'], items: ['vane_vault_keycard'] } },
+                  { text: '"I kept a copy. You work harder knowing I have it."', morality: -10, loyalty: { underworld: 5 }, result: 'Her face does not change. She sets a keycard on the table with two fingers and does not look at you. "You will have what you need. You will also have a reason to be afraid of me one day."', grants: { flags: ['reya_blackmailed', 'reya_card_given'], items: ['vane_vault_keycard'] } },
+                ],
+                repeatPrompt: '"Is the warrant gone or not?"',
+              },
+              {
                 id: 'phase_reya_cleared_loyal',
                 requiresAllFlags: ['reya_warrant_cleared', 'reya_loyal'],
+                requiresNoneFlags: ['reya_card_given'],
                 prompt: '"It is done. The record is erased and the auditor\'s transaction data is in the archive as exculpatory evidence." She exhales once, quietly. "I have been carrying that for three years." She opens a desk drawer and sets a keycard on the table without fanfare. "Jon\'s vault. My clearance. I made a copy two months ago when I realised this day was coming. Use it."',
-                choices: [{ text: '"Thank you, Reya."', grants: { items: ['vane_vault_keycard'] } }],
+                choices: [{ text: '"Thank you, Reya."', grants: { flags: ['reya_card_given'], items: ['vane_vault_keycard'] } }],
                 repeatPrompt: 'Reya gives you a measured nod. She is not warm. She is committed. There is a difference.',
               },
               {
                 id: 'phase_reya_blackmailed',
                 requiresAllFlags: ['reya_blackmailed'],
+                requiresNoneFlags: ['reya_card_given'],
                 prompt: 'She knows you kept the warrant data copy. She does not say anything about it. She sets the vault keycard on the table with two fingers and does not look at you when she does it.',
-                choices: [{ text: 'Take the keycard.', grants: { items: ['vane_vault_keycard'] } }],
+                choices: [{ text: 'Take the keycard.', grants: { flags: ['reya_card_given'], items: ['vane_vault_keycard'] } }],
                 repeatPrompt: '"The vault keycard is yours. Do not lose it."',
+              },
+              {
+                id: 'phase_reya_working',
+                requiresAllFlags: ['reya_card_given'],
+                prompt: 'Reya does not look up. "The books are open. Run the vault whenever you are ready. I will cover the rest."',
+                choices: [{ text: '"I will move tonight."', grants: {} }],
+                repeatPrompt: '"The vault terminal at the Penthouse. The keycard does the rest."',
               },
             ],
           },
@@ -2354,6 +2470,17 @@ const PLANETS = {
                   { text: '"Do you want to keep fighting here?"', morality: 5, loyalty: {}, result: '"I do not fight for Malak. I fight because it is what I know." He considers. "But if the Pit is going to be something other than what it has been, I would rather see what that looks like." He meets your gaze. "I will work with you."', grants: { flags: ['voss_allied'], codex: ['codex-shadow-town'] } },
                   { text: '"This place is changing. Be ready."', grants: { flags: ['voss_aware'] } },
                 ],
+              },
+              {
+                id: 'phase_voss_malak_dead',
+                requiresAllFlags: ['malak_dead'],
+                requiresNoneFlags: ['malak_turned'],
+                prompt: 'Voss is standing at the rail where Malak used to stand, looking at the sand that is now only sand. He does not turn when you speak. "Forty seconds, forty two seconds." He shakes his head slowly. "You did what I never could. Nobody here will say it to your face. They will remember it."',
+                choices: [
+                  { text: '"Do you want the fight to continue?"', morality: 0, loyalty: {}, result: '"No." He considers it, then again. "Maybe. Under rules that are not his."', grants: { flags: ['voss_aware'] } },
+                  { text: '"Keep the pit running. Somebody has to."', morality: 3, loyalty: { underworld: 3 }, result: '"I can do that." He straightens, like a man handed a job he did not know he wanted.', grants: { flags: ['voss_allied'] } },
+                ],
+                repeatPrompt: 'Voss watches the empty sand. "The pit is quiet tonight."',
               },
             ],
           },
@@ -2463,7 +2590,7 @@ const PLANETS = {
             description: 'The space between you and Jon Vane. Twelve years of operation about to end. You have both made your calculation.',
             triggersMinigame: 'tactical_combat',
             minigameConfig: { opponentProfile: 'jon_vane', flavorText: "Jon Vane draws the Merr-Sonn with the cortosis-inlaid grip — twelve years in operation ending in a penthouse overlooking the entire city. He looks almost relieved. 'Whoever walks out of this room just proved it.' The viewport is behind him. This is where it ends." },
-            grantsFlag: 'jon_status_dead',
+            grantsFlags: ['jon_status_dead', 'syndicateManagement_active'],
             grantsItem: 'weapon_vane_custom_blaster',
             grantsCodex: 'codex-penthouse' },
           { id: 'airtaxi_penthouse', propArt: 'airtaxi', propVariant: 'private', x: 28, y: 10, once: false, iconKind: 'beacon', label: 'Private Transit Terminal',
@@ -3149,10 +3276,10 @@ const PLANETS = {
             choices: [
               { text: 'You\'re perceptive. How much to let me look at that impound manifest?', morality: -5, loyalty: { underworld: 8 },
                 result: 'He stops chewing for one full second. Then resumes. "Off-world liquor. Not the synthetic kind — the real kind, from somewhere that has trees." He does not look at the impound terminal. "I can\'t see what happens if you happen to use the access panel while I\'m on my rounds. Which happen to take me to the north end of the bay in about four minutes." He walks north.',
-                grants: { flags: ['dren_bribed_item'], items: [] } },
+                grants: { flags: ['dren_bribed_item', 'vectis_standard_cleared'], items: [] } },
               { text: 'Tell him you\'re here on KDY business.', morality: 0, loyalty: {},
                 result: 'He processes this with the slow metabolism of a man who has heard every story. "Ring clearance gets you the standard transit. Executive berths need a Director code or a Sentinel escort." He jerks his chin toward the Vectis terminal. "Droid handles the paperwork." He goes back to his stim strip.',
-                grants: { flags: ['dren_standard_briefed'] } },
+                grants: { flags: ['dren_standard_briefed', 'vectis_standard_cleared'] } },
               { text: 'Ask about the man whose ship is impounded in Bay 7.', morality: 5, loyalty: { republic: 5 },
                 result: '"Jaxen. Free Horizon. Corellia registry." He recites it from memory, not looking at anything. "Three days in Bay 7. Claims his cargo manifest was falsified before docking. Claims he was set up." He pauses. "Ring-Sec doesn\'t care who set up who. Manifest discrepancy is a manifest discrepancy." Another pause, slightly longer. "He might be telling the truth. The discrepancy is oddly clean for a working smuggler. Working smugglers make messy mistakes."',
                 grants: { flags: ['dren_jaxen_discussed'] } },
@@ -3433,13 +3560,13 @@ const PLANETS = {
             choices: [
               { text: 'Agree to disable the surveillance node.', morality: 5, loyalty: { republic: 10 },
                 result: '"Second block, third junction. Gray housing, blue indicator light. You\'ll need a T-7 hex driver — Garrok sells them." She exhales slowly. "Seven people have been injured on Deck 4. Three of them are back at work already because they cannot afford not to be. I am not asking for a rebellion. I am asking for one conversation that Ring-Sec doesn\'t get to record."',
-                grants: { flags: ['union_mission_accepted'] } },
+                grants: { flags: ['union_mission_accepted', 'union_leader_met'] } },
               { text: 'Ask what happens if Ring-Sec identifies her before then.', morality: 0, loyalty: {},
                 result: '"They arrest me and three others. The meeting doesn\'t happen. Deck 4 runs another cycle of mandatory overtime and the review board\'s next meeting date gets moved back another quarter." She says this without self-pity, which makes it worse. "I have been doing this for two years. I know the arithmetic."',
-                grants: { flags: ['union_prenn_risk_discussed'] } },
+                grants: { flags: ['union_prenn_risk_discussed', 'union_leader_met'] } },
               { text: 'Warn her that Krennis is already monitoring the market ring.', morality: 8, loyalty: { republic: 12 },
                 result: '"I know. We have been meeting in groups of three for the last month." A pause. "Thank you for confirming the method. It helps to know it is hardline feed and not wireless." She adjusts her timing slightly, a tell she does not know she has. "The node. Tonight."',
-                grants: { flags: ['union_krennis_warned'] } },
+                grants: { flags: ['union_krennis_warned', 'union_leader_met'] } },
             ],
           },
           { id: 'forge_bartender', x: 28, y: 13, kind: 'cantina_owner', label: 'Vasek (Bartender)',
@@ -4186,7 +4313,7 @@ const PLANETS = {
             choices: [
               { text: 'Input the assembly override code.', morality: 0, loyalty: {}, result: '"CODE ACCEPTED. THREAT ASSESSMENT SUSPENDED." The droid\'s posture shifts. "SECONDARY QUERY: MANIFEST REFERENCE GHOST KEEL. CONFIRM IDENTITY." It waits.', requiresFlag: 'assembly_override_accessed', grants: { flags: ['unit8x_interacted'] } },
               { text: 'Tell it the Architect sent you.', morality: 0, loyalty: {}, result: '"AUTHORIZATION CONFIRMED — LEVEL EIGHT." The droid stands down completely. "UNIT 8-X AWAITING RELOCATION ORDERS. HYPERCORE STATUS: SECURED AT GRID REFERENCE ALPHA-7. ZORA IV SECTOR."', requiresFlag: 'architect_identity_known', grants: { flags: ['unit8x_reprogrammed', 'hypercore_location_known'] } },
-              { text: 'Engage it in combat.', morality: -5, loyalty: { underworld: 3 }, result: 'The droid\'s full weapons array activates. It was built to stop exactly this.', grants: { flags: ['unit8x_hostile'] }, triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'unit_8x', flavorText: 'Unit 8-X locks on. It was built to stop exactly this.' } },
+              { text: 'Engage it in combat.', morality: -5, loyalty: { underworld: 3 }, result: 'The droid\'s full weapons array activates. It was built to stop exactly this.', grants: { flags: ['unit8x_hostile'] }, triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'unit_8x', flavorText: 'Unit 8-X locks on. It was built to stop exactly this.' }, onSuccessFlags: ['unit8x_destroyed'] },
             ],
           },
         ],
@@ -5701,7 +5828,7 @@ const ITEMS = {
   thermal_vest:               { id:'thermal_vest',               name:'Reinforced Thermal Vest',              type:'gear',       iconKind:'gear',     value:150, description:'Insulated against plasma discharge and steam vent hazards. Required for extended operations in Level 005.' },
   calibrated_hydrospanner:    { id:'calibrated_hydrospanner',    name:'Calibrated Hydrospanner',              type:'tool',       iconKind:'tool',     value:80,  description:"Jax's custom calibration rig. Grants +1 to all mechanical and repair checks." },
   decrypted_senate_audio:     { id:'decrypted_senate_audio',     name:'Decrypted Senate Audio Log',           type:'quest',      iconKind:'datapad',  value:0,   description:'A recovered audio record exposing a Senate aide coordinating weapons trafficking through underbelly drop points.' },
-  master_senate_transit_drive:{ id:'master_senate_transit_drive',name:'Master Senate Transit Decryption Drive',type:'quest',      iconKind:'datapad',  value:0,   description:"Kaelen's personal slicer drive. Contains every Syndicate bypass code for the Senate transit line." },
+  master_senate_transit_drive:{ id:'master_senate_transit_drive',name:'Master Senate Transit Decryption Drive',type:'quest',      iconKind:'datapad',  value:0,   description:"A slicer drive burned from the Iron Syndicate command terminal. Contains every Syndicate bypass code for the Senate transit line." },
   // Ghost in the Datastream
   echo_7_core:               { id:'echo_7_core',               name:'Echo-7 Data Core',                      type:'quest',      iconKind:'artifact', value:0,   description:'A cracked protocol droid memory core, ancient and highly illegal. Something is still running inside it.' },
   slicer_spike_mk2:          { id:'slicer_spike_mk2',          name:'Slicer Spike Mk.II',                    type:'tool',       iconKind:'tool',     value:140, description:'OZA-2 custom hardware. Extends the slicing window by fifteen seconds and flags fewer security alerts.' },
@@ -17948,19 +18075,25 @@ function StarWarsRPG() {
       if (!questFlags.scan_team_fate_known) return '[BADOR] Find the lost scan team and the overdue supply skiff. Sweep Sector 4 and the Engine Wastes.';
     }
     if (questFlags.syndicateManagement_active && !questFlags.syndicate_first_contract_run) return '[SYNDICATE] Open the War Table at the Penthouse and run your first contract.';
+    if (questFlags.syndicateManagement_active) return '[SYNDICATE] Run the network from the Penthouse War Table. Expand your territory, recruit lieutenants, and take the Sector Control campaign to 7,000 credits per turn.';
     if (questFlags.vault_heist_complete && !questFlags.jon_status_dead && !questFlags.jon_status_subjugated && !questFlags.jon_status_rival) return '[INHERITANCE] Go to the Penthouse. Your lieutenants are ready. Jon has nowhere to run.';
     if ((questFlags.malak_turned || questFlags.malak_dead) && (questFlags.reya_loyal || questFlags.reya_blackmailed) && !questFlags.vault_heist_complete) return '[INHERITANCE] Use Reya\'s keycard at the Penthouse vault terminal. Freeze the payroll.';
     if ((questFlags.malak_turned || questFlags.malak_dead) && !questFlags.reya_loyal && !questFlags.reya_blackmailed && !questFlags.reya_warrant_mission_active) return '[INHERITANCE] Speak with Reya in Shadow Town. She has a condition.';
+    if (questFlags.reya_warrant_cleared && !questFlags.reya_loyal && !questFlags.reya_blackmailed) return '[INHERITANCE] The warrant is gone. Return to Reya in Shadow Town for the vault keycard.';
     if (questFlags.reya_warrant_mission_active && !questFlags.reya_warrant_cleared) return '[INHERITANCE] Slice Precinct 42 at the CSF Academy and clear Reya\'s warrant.';
+    if (questFlags.cargo_skimmed && !questFlags.shadow_cache_confirmed && !questFlags.malak_turned && !questFlags.malak_dead) return '[INHERITANCE] Stash the ten skimmed crates. Use the cache key at the arms cache in the northeast alcove of Shadow Town, Level 1312.';
     if ((questFlags.cargo_skimmed || questFlags.cargo_delivered_full) && !questFlags.malak_turned && !questFlags.malak_dead) return '[INHERITANCE] Find Malak at Shadow Town, Level 1312. Turn him or remove him.';
-    if (questFlags.inheritance_active && !questFlags.cargo_skimmed && !questFlags.cargo_delivered_full) return '[INHERITANCE] Go to Shadow Town, Level 1312 (The Pits). Find the skimmed arms cache in the northeast alcove and bring the manifest back to Jon.';
+    if (questFlags.inheritance_active && !questFlags.weapons_manifest_acquired && !questFlags.cargo_skimmed && !questFlags.cargo_delivered_full) return '[INHERITANCE] Go to the Sector 4 Freight Hub. Take the Bay 14 weapons manifest from the cache in the northeast bay.';
+    if (questFlags.inheritance_active && questFlags.weapons_manifest_acquired && !questFlags.cargo_skimmed && !questFlags.cargo_delivered_full) return '[INHERITANCE] Bring the Bay 14 weapons manifest back to Jon.';
     if (questFlags.senate_line_secured && !questFlags.inheritance_active) return 'Jon has a new proposition. Return to his apartment.';
-    if (questFlags.bomb_reached) return 'Neutralize the weapon on the Senate transit line.';
+    if (questFlags.bomb_reached && !questFlags.senate_line_secured) return 'Neutralize the weapon on the Senate transit line. Car 12, east cargo bay of the mag-rail corridor. Bring the drive from the Syndicate command terminal.';
     if (questFlags.sector4_raid_complete && !questFlags.jon_endgame_known) return 'Debrief Jon on the raid. He has intel on the Senate connection you need.';
     if (questFlags.sector4_raid_complete) return 'Pursue the Iron Syndicate to Level 005. Find Vex.';
     if (questFlags.csf_briefed && !questFlags.jon_confrontation_done) return 'Jon needs to see your CSF badge. Return to his apartment now.';
-    if (questFlags.csf_training_complete && questFlags.freight_hub_investigated) return 'Return to Vane at CSF Academy. Report your Bay 14 findings.';
+    if (questFlags.bay14_reported && !questFlags.sector4_raid_complete) return '[CSF] Breach the sealed cargo door at Platform 09 in the Sector 4 Freight Hub. Vane\'s team is waiting.';
+    if (questFlags.csf_training_complete && questFlags.freight_hub_investigated && !questFlags.bay14_reported) return 'Return to Vane at CSF Academy. Report your Bay 14 findings.';
     if (questFlags.csf_training_complete) return 'Report to Vane at Sector 4 Freight Hub. Investigate Bay 14.';
+    if (questFlags.module_a_complete && questFlags.module_b_complete && questFlags.module_c_complete && !questFlags.csf_training_complete) return 'All three modules are cleared. Report to Sergeant Torren in the drill yard for certification.';
     if (questFlags.csf_briefed) return 'Complete all three training modules at the CSF Academy.';
     if ((questFlags.marlo_sky_talked || questFlags.vane_sky_cooperated) && !questFlags.jon_sky_market_debriefed) return 'Check in with Jon. He will want to know which side you picked at the Sky-Market.';
     if (questFlags.republic_path_open) return 'Travel to CSF Tactical Command, Level 1222.';
@@ -17978,7 +18111,6 @@ function StarWarsRPG() {
     if (questFlags.syndicate_ledger_found && !questFlags.echo7_clearance_acquired) return '[SIDE QUEST] The Syndicate ledger gives you leverage over Vane. Visit the CSF Academy.';
     if (questFlags.sabacc_won && !questFlags.syndicate_ledger_found) return '[SIDE QUEST] Use the keycard from Madame Vex to access Bay 14 restricted storage alcove.';
     if (questFlags.vex_sabacc_offered && !questFlags.sabacc_won) return '[SIDE QUEST] Return to Madame Vex in Sky-Market for the high-stakes Sabacc match.';
-    if (questFlags.sublevel_coordinates && !questFlags.sublevels_entrance_found) return '[SIDE QUEST] Follow Garrus\'s coordinates to the sealed maintenance shaft in Sub-Level 1313.';
     if (questFlags.garrus_coordinates_sold && !questFlags.sublevels_entrance_found) return '[SIDE QUEST] Head to Sub-Level 1313 to investigate the pre-Republic vault Garrus described.';
     return 'Find your contact Jon at Coruscant Spaceport, Docking Bay 14.';
   }, [questFlags, zoneId]);
@@ -18119,12 +18251,6 @@ function StarWarsRPG() {
   }, [zone, map]);
 
   useEffect(() => {
-    if (questFlags.module_a_complete && questFlags.module_b_complete && questFlags.module_c_complete && !questFlags.csf_training_complete) {
-      setFlag('csf_training_complete');
-    }
-  }, [questFlags]);
-
-  useEffect(() => {
     if (questFlags.echo7_fused && !questFlags.trait_neural_vessel) setFlag('trait_neural_vessel');
     if (questFlags.echo7_purged && !questFlags.trait_iron_will) setFlag('trait_iron_will');
     if (questFlags.echo7_dominant && !questFlags.trait_ai_overlord) setFlag('trait_ai_overlord');
@@ -18158,9 +18284,10 @@ function StarWarsRPG() {
   }, [questFlags, syndicateRoster]);
 
   useEffect(() => {
+    if (questFlags.syndicateManagement_active && syndicateActiveContracts.length > 0 && !questFlags.syndicate_first_contract_run) setFlag('syndicate_first_contract_run');
     if (syndicateHeat >= 70 && !questFlags.heat_high_active) setFlag('heat_high_active');
     else if (syndicateHeat >= 40 && !questFlags.heat_mid_active) setFlag('heat_mid_active');
-  }, [syndicateHeat, questFlags]);
+  }, [syndicateHeat, questFlags, syndicateActiveContracts]);
 
   useEffect(() => {
     STORY_CHECKPOINTS.forEach(({ flag, entry }) => {
@@ -18214,7 +18341,7 @@ function StarWarsRPG() {
     setActiveDialogue(null);
     if (choice.triggersMinigame) {
       setActiveMinigame({ type: choice.triggersMinigame, ...(choice.minigameConfig ?? {}), context: choice,
-        onSuccess: (loot) => { if (loot && loot.credits) { setCredits((c) => c + loot.credits); pushActionLog(`+${loot.credits} credits recovered from the engagement.`, zoneId); } if (loot && loot.item) addItem(loot.item); pushActionLog('Engagement concluded.', zoneId); setActiveMinigame(null); },
+        onSuccess: (loot) => { [].concat(choice.onSuccessFlags || []).forEach((f) => setFlag(f)); if (loot && loot.credits) { setCredits((c) => c + loot.credits); pushActionLog(`+${loot.credits} credits recovered from the engagement.`, zoneId); } if (loot && loot.item) addItem(loot.item); pushActionLog('Engagement concluded.', zoneId); setActiveMinigame(null); },
         onFailure: () => { pushActionLog('You fell back. The attempt failed.', zoneId); setActiveMinigame(null); } });
     }
   }, [zoneId, pushActionLog, setFlag, addItem, unlockCodex, activeDialogue]);
@@ -18335,6 +18462,7 @@ function StarWarsRPG() {
               if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) { addItem(ITEMS[worldObjHere.grantsItem]); pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId); }
               if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
               if (worldObjHere.once) setCompletedInteractions(prev => new Set([...prev, worldObjHere.id]));
+              if (worldObjHere.heatDeltaOnSuccess) setSyndicateHeat(h => Math.max(0, Math.min(100, h + worldObjHere.heatDeltaOnSuccess)));
               if (loot && loot.credits) { setCredits(c => c + loot.credits); pushActionLog(`+${loot.credits} credits recovered from the engagement.`, zoneId); }
               if (loot && loot.item) { addItem(loot.item); pushActionLog(`Salvaged: ${loot.item.name}`, zoneId); }
               pushActionLog(`[${worldObjHere.label}] Engagement concluded.`, zoneId);
