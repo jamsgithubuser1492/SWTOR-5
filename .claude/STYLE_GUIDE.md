@@ -398,3 +398,11 @@ Extend this table whenever a faction gains art.
 - **v1:** Original look: flat portraits, pixel combat sprites, dim accent line icons, no shared lighting.
 
 Future candidates: apply the lighting pass to tactical enemy sprites, redraw legacy line icons as set pieces, add a shared portrait palette helper.
+
+
+## v5 changelog: Kuati Forward Directorate Hub (Bador)
+
+- 16 new prop kinds: `landing_pad`, `thoroughfare`, `hq_dome`, `floor_inlay` (backdrop ground pieces), `bacta_pod`, `repulsor_crane`, `robotics_bench`, `weapon_bench`, `target_range`, `fuel_diag_terminal`, `sanctum_holo`, `command_board`, `kuati_terminal` (variants `security`, `manifest`, `ledger`), `facility_sign` (variants `medic`, `goods`, `trike`, `barracks`, `hq`), `kuati_banner`, `terminal_bank`.
+- Backdrop props (`backdrop: true` in PROP_DEFS) are large ground level pieces that sit under other props, NPCs and doors. The validator skips footprint overlap checks for them.
+- Kuati palette, used for noble and command architecture: alabaster `ART.pearl`, slate blue `ART.deepglass`, burnished gold `ART.brass`, cyan holo light `ART.signal.cyan`. Industrial and manufacturing areas keep the amber, rust and hazard stripe palette.
+- 11 new NPC portrait kinds: `k_series_droid`, `ge3_protocol`, `binary_loader`, `gnk_power`, `kuati_astromech`, `zabrak_techwright`, `devaronian_inspector`, `nautolan_engineer`, `kdy_contractor`, `cyborg_mechanic`, `kuati_officer`. `kdy_commander` was redrawn as Commander Vael (slate blue coat, alabaster epaulets, gold clasps, cyan cybernetic optic).

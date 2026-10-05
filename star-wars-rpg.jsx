@@ -3526,79 +3526,379 @@ const PLANETS = {
       bador_main_base: {
         id: 'bador_main_base', name: 'KDY Main Base — Bador',
         ships: [
-          { id: 'ship_kdy_shuttle', kind: 'kdy_shuttle', x: 1, y: 12, label: 'KDY Shuttle K-14',
-            description: 'The Guild shuttle that carried you down, still ticking as the hull sheds heat. The pearl plating is scored by slag dust from the landing and the blue KDY stripe runs the length of the fuselage. A flight plan placard is clipped to the ramp: KUAT ORBITAL ARRAY, ROUND TRIP, CLEARED GUEST. The pilot waits at the nose.',
+          { id: 'ship_kdy_shuttle', kind: 'kdy_shuttle', x: 4, y: 10, label: 'KDY Shuttle K-14',
+            description: "The Guild shuttle that carried you down, still ticking as the hull sheds heat. Pearl plating scored by slag dust from the landing, the blue KDY stripe running the length of the fuselage, twin engines venting low steam into the floodlights. A flight plan placard is clipped to the ramp: KUATI ORBITAL ARRAY, ROUND TRIP, CLEARED GUEST. The ramp is down. Your berth, your safe point and your way off this rock.",
             grantsFlag: 'kdy_shuttle_examined' },
         ],
-        subtitle: 'Bador Moon · Sector Control',
-        width: 30, height: 20, spawnPos: { x: 2, y: 9 }, textureId: 'ferrowake',
-        accent: '#4A7A9B', accentGlow: 'rgba(74,122,155,0.28)', accentDim: '#1C3848',
-        floorColor: '#1C2228', floorAlt: '#22292E', wallDark: '#0A0E12', wallLight: '#141A1E',
-        bg: 'radial-gradient(circle at 40% 20%, #12181E 0%, #080C10 70%)', ambient: 'traffic',
+        subtitle: 'Bador Moon · Kuati Forward Directorate Hub',
+        paAnnouncements: [
+          'All quartermasters report to Goods and Materials for the incoming supply skiff. Skiff KDY-9 remains overdue.',
+          'Yellow Alert remains in effect. All personnel remain inside the perimeter lights.',
+          'Dust scrubber cycle begins on Pad Alpha in five minutes. Seal your collar rebreathers.',
+          'Contractors are reminded that unlicensed droid modification is a matter for the Guild board. Trike has asked that the board stop calling him.',
+          'Medical staff to the bacta tent, please. Medical staff to the bacta tent.',
+        ],
+        width: 44, height: 28, spawnPos: { x: 10, y: 14 }, textureId: 'ferrowake',
+        accent: '#5A9BD0', accentGlow: 'rgba(90,155,208,0.3)', accentDim: '#24435E',
+        floorColor: '#1E2228', floorAlt: '#252B33', wallDark: '#0C1016', wallLight: '#1A222C',
+        bg: 'radial-gradient(circle at 40% 30%, #221C18 0%, #080A0E 70%)', ambient: 'dust',
         decor: ['pipe', 'girder'],
         doors: [
-          { x: 29, y: 8, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 8 }, label: 'Sector 4 Facilities' },
-          { x: 29, y: 9, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 9 }, label: 'Sector 4 Facilities' },
-          { x: 14, y: 19, targetZone: 'city_outskirts_bador', targetPos: { x: 14, y: 1 }, label: 'City Outskirts' },
-          { x: 15, y: 19, targetZone: 'city_outskirts_bador', targetPos: { x: 15, y: 1 }, label: 'City Outskirts' },
+          { x: 29, y: 13, targetZone: 'bador_hq_interior', targetPos: { x: 2, y: 10 }, label: 'Main HQ Airlock', requiresFlag: 'bador_pass_issued', lockedMessage: 'The blast doors stay sealed. A synthetic voice repeats: BASE ACCESS PASS REQUIRED. Check in with Lieutenant Vane on the landing deck.', cinematic: 'airlock' },
+          { x: 29, y: 14, targetZone: 'bador_hq_interior', targetPos: { x: 2, y: 11 }, label: 'Main HQ Airlock', requiresFlag: 'bador_pass_issued', lockedMessage: 'The blast doors stay sealed. A synthetic voice repeats: BASE ACCESS PASS REQUIRED. Check in with Lieutenant Vane on the landing deck.', cinematic: 'airlock' },
+          { x: 43, y: 13, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 8 }, label: 'Sector 4 Facilities' },
+          { x: 43, y: 14, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 9 }, label: 'Sector 4 Facilities' },
+          { x: 16, y: 27, targetZone: 'city_outskirts_bador', targetPos: { x: 14, y: 1 }, label: 'City Outskirts' },
+          { x: 17, y: 27, targetZone: 'city_outskirts_bador', targetPos: { x: 15, y: 1 }, label: 'City Outskirts' },
         ],
         worldObjects: [
-          { id: 'vael_tactical_display', propArt: 'tactical_table', propVariant: 'bador', x: 20, y: 6, label: 'Tactical Operations Display',
-            description: 'Commander Vael\'s battle board. Red markers cluster around Sector 4 and the Engine Wastes. Two positions are marked UNKNOWN STRUCTURE.' },
+          // ---- Landing Pad Alpha
+          { id: 'landing_pad_alpha', propArt: 'landing_pad', x: 7, y: 9, label: 'Landing Pad Alpha',
+            description: "A reinforced circular pad cast in one piece, ringed in amber and black hazard striping. Thruster scorch has burned dark scars into the durasteel, eight magnetic tie down clamps hold the shuttle at its marks, and coaxium conduits run from the fuel manifolds to the pad grates. Red runway diodes chase each other around the rim.",
+            grantsCodex: 'codex-bador-hub', once: true },
+          { id: 'pad_fuel_terminal', propArt: 'fuel_diag_terminal', x: 11, y: 13, label: 'Fueling and Diagnostic Terminal',
+            description: "An alabaster pedestal with slate blue side panels and an inclined amber screen: SHUTTLE K-14, FUEL 92, HULL 100, HYPERDRIVE ALIGNMENT NOMINAL. Two ribbed coaxium hoses run from the back into the pad grates. A second tab holds the planetary navigation log: every sortie flown from this pad, and the three that never logged a return.",
+            grantsFlag: 'bador_nav_logs_read', grantsCodex: 'codex-bador-nav-logs', once: true },
+          { id: 'pad_cargo_crates', propArt: 'crate_stack', x: 2, y: 12, label: 'Sealed Starter Cargo',
+            description: "Two KDY crates stamped with the gold gear and anvil crest, left under a tarp at the edge of the pad. Magnetic lock strips glow red along the lids. The seals are standard Guild grade, which is to say a patient slicer could talk them open.",
+            triggersMinigame: 'terminal_slicing', once: true, grantsFlag: 'pad_crates_opened', grantsItem: 'kdy_circuit_boards' },
+          { id: 'pad_coaxium_drums', propArt: 'drum_array', x: 3, y: 9, label: 'Coaxium Fuel Canisters',
+            description: "Bright hazard orange canisters in a locked rack, red pressure gauges ticking upward in the cold. A stencil on every drum reads FIRE HAZARD, KEEP CLEAR OF THRUSTER WASH. Somebody has added in marker: AND OF TRIKE." },
+          { id: 'pad_beacon_east', propArt: 'landing_beacon', x: 11, y: 15, label: 'Pad Landing Beacon',
+            description: "A red strobe beacon on a tripod of steel struts, pulsing every three seconds so inbound shuttles can find the pad through the dust." },
+          { id: 'pad_beacon_west', propArt: 'landing_beacon', x: 2, y: 15, label: 'Pad Landing Beacon',
+            description: "The twin of the east beacon. Its housing has been dented by a loader claw and patched with hazard tape." },
+          { id: 'pad_rest_module', propArt: 'hab_block', x: 4, y: 18, label: 'Crew Rest Module',
+            description: "A prefabricated rest module with four stacked bunks behind a sliding hatch, sound baffled against the thruster hum. Fresh linens, a water ration and a note from the quartermaster: ALERT STATUS YELLOW, SLEEP IN YOUR BOOTS. A few quiet hours here cools the trail you leave behind.",
+            heatDelta: -8 },
           { id: 'bador_intel_drop', propArt: 'datapad_table', propVariant: 'canister', x: 8, y: 16, label: 'Intel Drop Point',
-            description: 'A sealed datacanister left at the extraction point. Inside: partial schematics for a classified KDY vessel class.',
-            once: true, requiresFlag: 'ghost_keel_active',
+            description: "A sealed datacanister left at the extraction point. Inside: partial schematics for a classified KDY vessel class.",
+            once: true, requiresFlag: 'ghost_keel_active', lockedMessage: 'A dead drop canister sits in a recess, sealed under a Guild lock. It will not open for someone Commander Vael has not briefed.',
             grantsFlag: 'partial_schematics_found', grantsItem: 'encrypted_kdy_schematics' },
+          // ---- Main thoroughfare and guard posts
+          { id: 'main_thoroughfare', propArt: 'thoroughfare', x: 18, y: 11, label: 'Main Thoroughfare',
+            description: "A paved durasteel walkway sweeps from Pad Alpha toward the HQ in two long orange arcs, lit by amber guide lights and marked with chevrons. Directional holo signs read PAD A to the west and HQ 400 METERS to the east. Heavy boots have worn the center bright." },
+          { id: 'guard_post_north', propArt: 'guard_post', x: 22, y: 10, label: 'Perimeter Guard Post',
+            description: "A sandbagged guard post of ceramic composite with a firing slit, a floodlight on a swivel mast and a thermos of something that is not caf. The duty log is open: Yellow Alert, hourly sweeps, no contacts. The last entry has been crossed out and rewritten twice." },
+          { id: 'guard_post_south', propArt: 'guard_post', x: 23, y: 16, label: 'Perimeter Guard Post',
+            description: "The southern post covers the Thoroughfare and the yard. Its floodlight points out past the fence, into the dark crater field, and stays there." },
+          // ---- Medic Tent
+          { id: 'medic_sign', propArt: 'facility_sign', propVariant: 'medic', x: 26, y: 8, label: 'Medic Tent Sign',
+            description: "A teal board over the tent flap: MEDIC TENT, TRIAGE AND BACTA. Below it, in smaller print: WALK IN, WALK OUT, NO QUESTIONS ABOUT HOW YOU GOT HURT." },
+          { id: 'bacta_pod', propArt: 'bacta_pod', x: 22, y: 5, label: 'Bacta Rejuvenation Pod',
+            description: "A transparisteel cylinder two and a half meters tall on a brass and titanium base, filled with warm emerald bacta and slow rising bubbles. A bio scanner ring slides top to bottom as you step on the floor plate, a cyan sweep that finds every bruise. You step out restored, steam venting off your collar. Wounded syndicate hands recover too.",
+            healsRoster: true },
+          { id: 'medical_locker', propArt: 'medic_crate', x: 27, y: 3, label: 'Medical Supplies Locker',
+            description: "A white field locker with the red cross of the Guild medical corps: stimpacks, antidotes, triage kits and burn gel in labeled trays. Dr. Tessa keeps the key on a cord around her neck and the stock on her tablet. Ask her what is for sale." },
+          { id: 'vital_monitors', propArt: 'monitor_wall', x: 24, y: 2, label: 'Vital Monitors',
+            description: "Six cots, six monitors. Heart rates tick along in green while a seventh trace, labeled TEB, M., climbs in amber: elevated temperature, tremor, fixation on a sound no one else can hear. Three more charts in the pile carry the same note: MINER, SURFACE EXPOSURE, UNEXPLAINED.",
+            grantsFlag: 'miner_symptoms_noted', grantsCodex: 'codex-bador-miner-sickness', once: true },
+          // ---- Goods and Materials Depot
+          { id: 'depot_sign', propArt: 'facility_sign', propVariant: 'goods', x: 38, y: 8, label: 'Goods and Materials Sign',
+            description: "A mustard yellow board: GOODS AND MATERIALS, DEPOT AND SUPPLY SKIFFS. A chalk marker has been hung on a chain and the schedule scrawled below it: SKIFF KDY-9, DUE DAWN, STILL DUE." },
+          { id: 'depot_manifest_terminal', propArt: 'kuati_terminal', propVariant: 'manifest', x: 33, y: 3, label: 'Supply Manifest Terminal',
+            description: "Alabaster console with a gold trimmed amber screen: SKIFF KDY-9, OVERDUE. ALLOYS 412 TONNES. BUY AND SELL OPEN. Incoming cargo is listed by tonnage, outgoing by what Dax can get away with. Trade goods can be bought and sold from Dax at the depot.",
+            grantsFlag: 'depot_manifest_read', once: true },
+          { id: 'depot_secure_crate', propArt: 'cargo_container', x: 36, y: 2, label: 'KDY Secure Storage Crate',
+            description: "An octagonal KDY crate sealed with a glowing red magnetic lock strip. The stencil reads HIGH TIER CRAFTING STOCK, CLEARANCE LEVEL SIX. You do not have level six. You have fingers and patience.",
+            triggersMinigame: 'terminal_slicing', once: true, grantsFlag: 'depot_secure_crate_opened', grantsItem: 'kdy_alloy_ingot' },
+          { id: 'depot_repulsor_crane', propArt: 'repulsor_crane', x: 40, y: 5, label: 'Heavy Repulsor Crane',
+            description: "A mustard yellow gantry spans the depot. The motor block carries a downward tractor dish that glows violet when live, flanked by four locking clamps. The control pedestal has twin joysticks and a red safety button. You rotate the crane, lift a five ton alloy stack on the repulsor and set it down clear of the north platform. The way to the high shelf is open.",
+            once: true, grantsFlag: 'depot_crane_cleared' },
+          { id: 'depot_platform_cache', propArt: 'crate_stack', x: 40, y: 2, label: 'High Platform Cache',
+            description: "Sealed crates stacked on the high platform, finally within reach: rare lunar alloy billets wrapped in blue Guild film, and a lockbox of unlogged credits.",
+            requiresFlag: 'depot_crane_cleared', lockedMessage: 'The north platform is buried under a five ton alloy stack. The repulsor crane could shift it.',
+            once: true, grantsFlag: 'depot_cache_taken', grantsItem: 'kdy_coaxium_vial', grantsCredits: 350 },
+          { id: 'depot_cargo_stacks', propArt: 'cargo_container', x: 34, y: 6, label: 'Raw Alloy Stacks',
+            description: "Raw mineral alloy billets and starship plating stacked on repulsor pallets, each tagged with a lunar grid reference and a refining grade. A lot of it is marked ORIGIN: UNLISTED." },
+          // ---- Main HQ exterior
+          { id: 'hq_dome_facade', propArt: 'hq_dome', x: 27, y: 13, label: 'Kuat Main HQ, Bador',
+            description: "The Main HQ is a semi dome of alabaster ceramic ribbed in slate blue and burnished gold, its prow shaped like the nose of a KDY battlecruiser. Solar slates line the east wing, antenna masts blink red, and ribbed transparisteel windows slope downward at forty five degrees. Against the ash grey regolith it looks like a palace dropped on a battlefield.",
+            grantsCodex: 'codex-kuati-architecture', once: true },
+          { id: 'hq_security_terminal', propArt: 'kuati_terminal', propVariant: 'security', x: 28, y: 12, label: 'HQ Security Terminal',
+            description: "The checkpoint console at the blast doors: CLEARANCE, PASS. BASE LOGS, LOCKED. ALERT LEVEL, YELLOW. It logs every pass that touches the door. Yours is on the list, if you have been to see the Lieutenant.",
+            grantsFlag: 'hq_security_log_seen', once: true },
+          { id: 'hq_command_board', propArt: 'command_board', x: 27, y: 15, label: 'Command Notice Board',
+            description: "Pinned slips from the garrison: overdue supply skiff, miners reporting tremors, a missing deep scan team, a lost glove. A red panel lists open bounties: three raider crews working the Engine Wastes and City Outskirts, ten thousand credits per crew, no questions about the paperwork.",
+            grantsFlag: 'hq_bounties_read', once: true },
+          // ---- Trike's Robotics
+          { id: 'trike_sign', propArt: 'facility_sign', propVariant: 'trike', x: 10, y: 20, label: "Trike's Robotics Sign",
+            description: "A copper board with hand welded letters: TRIKE'S ROBOTICS, REPAIR AND UPGRADES. Underneath, on a scrap of tin: WE FIX WHAT THE GUILD WON'T. WE ALSO FIX THE GUILD." },
+          { id: 'trike_upgrade_bench', propArt: 'robotics_bench', x: 6, y: 23, label: 'Robot and Gear Upgrade Bench',
+            description: "An L shaped cast iron bench with deep oil stains and weld burns. An overhead articulated arm hovers over a half dismantled pit droid, micro torch glowing cyan, while two amber diagnostic screens scroll schematics. Work the bench and it runs the scan, weld and coolant spray cycle on whatever you feed it.",
+            triggersMinigame: 'arms_bench', grantsFlag: 'trike_bench_used' },
+          { id: 'trike_salvage_bin', propArt: 'scrap_bin', x: 10, y: 23, label: 'Salvage Bin',
+            description: "A dented bin of scrap metal, burnt circuit boards and loose wiring. Trike swears something new falls into it every night. You dig out a handful of usable scrap before the sparks start.",
+            once: true, grantsItem: 'kdy_scrap_bundle' },
+          { id: 'trike_repair_bay', propArt: 'workbench', x: 9, y: 25, label: 'Repair Bay',
+            description: "A cradle bench with clamps and a coolant rail for droid repairs: pit droid chassis, a cracked astromech dome, an unlabeled protocol torso. A grease pencil tally on the wall counts droids returned to service. It is a long tally." },
+          // ---- Weapons Barracks
+          { id: 'barracks_sign', propArt: 'facility_sign', propVariant: 'barracks', x: 30, y: 20, label: 'Weapons Barracks Sign',
+            description: "A red board over the barracks door: WEAPONS BARRACKS, ARMORY AND RANGE. A smaller notice says: LIVE FIRE ONLY ON THE RANGE. THE RANGE IS INDOORS. WE MEAN IT." },
+          { id: 'barracks_weapon_bench', propArt: 'weapon_bench', x: 24, y: 22, label: 'Weapon Bench',
+            description: "A reinforced wall bench with power couplings, magnetic tool clamps and an ammo press. A rack above holds six blaster frames in slotted cutouts. You lock your sidearm in the magnetic vise while an orange optic scanner measures the frame and offers attachment, ammunition and damage options.",
+            triggersMinigame: 'arms_bench', grantsFlag: 'weapon_bench_used' },
+          { id: 'barracks_armory_locker', propArt: 'armory_locker', x: 28, y: 22, label: 'Armory Locker',
+            description: "A steel armory locker with a quartermaster seal. Ammunition cells, gas grenades and a single EMP grenade in a foam slot. The seal is a courtesy tag, and the quartermaster looks the other way for cleared guests.",
+            once: true, grantsItem: 'emp_grenade' },
+          { id: 'barracks_weapon_racks', propArt: 'weapon_rack', x: 27, y: 25, label: 'Weapon Racks',
+            description: "Racks of KDY security carbines, stun batons and thermal charges behind sliding mesh gates. Every slot has a stenciled name. Two slots are empty and have been for forty hours." },
+          { id: 'barracks_bunks', propArt: 'hab_block', x: 23, y: 25, label: 'Contractor Bunk Bays',
+            description: "Fortified bunk bays for security forces and contractors: neatly made on one side, rumpled on the other. Boots stand at the end of each bed, laces tied, ready." },
+          { id: 'target_simulator', propArt: 'target_range', x: 31, y: 24, label: 'Target Simulator',
+            description: "A three lane indoor range with pop up silhouettes, red and white target rings and a lane console reading SIM 03. A training drone waits in the loading rail. It tests your loadout before you walk through the perimeter gate.",
+            triggersMinigame: 'tactical_combat', once: true, grantsFlag: 'target_sim_cleared',
+            minigameConfig: { opponentProfile: 'repulsor_drone', flavorText: 'The lane console chimes. SIM 03, LIVE TARGET. A KDY training drone lifts off its rail with a high violet whine, plasma blade spinning. No heat, no consequences, just the practice.' } },
         ],
         npcs: [
-          { id: 'pilot_bador_ketz', x: 4, y: 11, kind: 'kdy_pilot', label: 'Pilot Maren Ketz (KDY Shuttle)', triggersOverlay: 'shuttle',
-            greeting: '\"Shuttle K-14 is fueled and ready. Back to the Array whenever you are.\"',
-            repeatPrompt: 'The pilot taps the shuttle manifest and waits for a destination.',
-            prompt: 'A KDY shuttle pilot in the blue Kuati flight uniform.', choices: [] },
-          { id: 'base_trooper_sorn', x: 12, y: 12, wander: 5, kind: 'kdy_security_marine', label: 'Trooper Sorn',
-            repeatPrompt: 'Sorn gives you a short nod. \"Perimeter is holding. Stay inside the lights.\"',
-            prompt: 'A KDY trooper in sealed grey armor walks the perimeter lights, helmet rebreather hissing. He is on your side, and he makes sure you know it.',
-            choices: [ { text: 'Ask what is out on the plains.', morality: 0, loyalty: {}, result: '\"Raiders and scavengers, mostly. Something worse in the caverns. We hold the base, you clear the sectors, and nobody shoots the wrong people.\"' } ] },
-          { id: 'base_technician_lio', x: 16, y: 15, wander: 4, kind: 'mechanic', label: 'Technician Lio',
-            repeatPrompt: 'Lio waves a spanner in greeting and keeps walking.',
-            prompt: 'A base technician trudges between the maintenance panels with a diagnostic slate, muttering about glass dust in the filters.',
-            choices: [ { text: 'Ask about the glassed bedrock.', morality: 0, loyalty: {}, result: '\"Whatever scorched this moon did it fast. Everything here is fused to glass. The filters hate it, and so do I.\"' } ] },
-          { id: 'commander_vael', x: 20, y: 8, kind: 'kdy_commander', label: 'Commander Vael',
-            questNpc: true,
-            requiresFlag: 'tanner_briefed',
-            repeatPrompt: 'Vael keeps scanning the tactical board. "Sector 4 and the Engine Wastes are your priority targets."',
-            prompt: '"Tanner\'s contact. Good." Vael does not turn from the tactical display. Her voice is flat, professional. "Bador is a Class-C restricted moon. Population zero — officially. What we are finding is inconsistent with that classification. Sector 4 is running unauthorized assembly, the Engine Wastes have structures that predate our survey by three decades, and our last deep-scan team stopped transmitting forty hours ago."',
+          { id: 'lt_vane', x: 14, y: 12, kind: 'kuati_officer', label: 'Lieutenant Ardan Vane', questNpc: true,
+            repeatPrompt: 'Vane taps his datapad without looking up. "Pass is on you. Commander Vael is inside Main HQ. Do not keep him waiting."',
+            prompt: "He is a tall man in a slate blue Kuati duty tunic with an alabaster chest swath, rank cylinders clipped at the breast and a peaked cap set exactly level. The gilded holdout at his hip has never been drawn in anger. \"Cleared guest, Guild shuttle K-14, passenger manifest one. Lieutenant Ardan Vane, escort officer. Welcome to Bador.\" He glances at the floodlit dark beyond the pad. \"The base is on Yellow Alert. I am obliged to issue your Base Access Pass before you take another step.\"",
             choices: [
-              { text: 'What happened to the scan team?', morality: 0, loyalty: {}, result: '"Unknown. Comms cut at grid reference seven-seven-nine. I have two squads at the perimeter and orders not to advance without clearance from KDY." She turns. "That clearance is you."', grants: { flags: ['vael_briefed'] } },
-              { text: 'I want full access to your intel before I move.', morality: 5, loyalty: { republic: 5 }, result: '"Reasonable." She uploads the tactical packet to your comlink. "Sector 4 manufacturing, Engine Wastes survey, and partial readings from a structure at grid nine-one. Do not trust the south readings — something is jamming them."', grants: { flags: ['vael_briefed', 'vael_intel_shared'] } },
-              { text: 'Forty hours. Your team is likely dead.', morality: -10, loyalty: { underworld: 5 }, result: 'Vael holds eye contact two seconds longer than expected. "Yes. Probably. Which is why I need someone with a different risk calculation than a uniformed officer." She loads the grid data. "Move carefully."', grants: { flags: ['vael_briefed'] } },
+              { text: 'Present your clearance and take the pass.', morality: 0, loyalty: {},
+                result: "He scans the clearance and slides a Base Access Pass into your palm, a brass edged card stamped with the Kuat wheel. \"Wear it where the sentries can see it. The HQ blast doors read it and nothing else. Report to Commander Vael in the Tactical Sanctum. Walk the Thoroughfare, it is lit. Stay on it.\"",
+                grants: { flags: ['bador_pass_issued', 'bador_vane_met', 'bador_alert_briefed'], items: ['bador_access_pass'] } },
+              { text: 'Ask what the Yellow Alert is about.', morality: 5, loyalty: { republic: 3 },
+                result: "\"Energy spikes beyond the perimeter, three nights running. They knocked out the automated mining droids in the outer sectors, and the supply skiff bound for Main HQ, KDY-9, is overdue. It has not been reported lost. It has not been reported at all.\" He hands you the pass. \"That is all I can say on the deck. The Commander will say the rest.\"",
+                grants: { flags: ['bador_pass_issued', 'bador_vane_met', 'bador_alert_briefed', 'bador_skiff_overdue'], items: ['bador_access_pass'] } },
+              { text: 'Ask about the name. Vane is common where you come from.', morality: 0, loyalty: {},
+                result: "A very small smile, the first all day. \"Common on Kuat. Ask my cousins in the Senate lobby, they sell the name by the pound. I have no relation to anyone you have had dealings with on Coruscant.\" The smile goes away. \"The pass. Take it.\"",
+                grants: { flags: ['bador_pass_issued', 'bador_vane_met', 'bador_alert_briefed'], items: ['bador_access_pass'] } },
             ],
           },
-          { id: 'bador_squad_kaelin', x: 9, y: 15, wander: 4, kind: 'republic_guard', label: 'Squad Leader Kaelin',
+          { id: 'pilot_bador_ketz', x: 9, y: 14, kind: 'kdy_pilot', label: 'Pilot Maren Ketz (KDY Shuttle)', triggersOverlay: 'shuttle',
+            greeting: '"Shuttle K-14 is fueled and ready. Back to the Array whenever you are."',
+            repeatPrompt: 'The pilot taps the shuttle manifest and waits for a destination.',
+            prompt: 'A KDY shuttle pilot in the blue Kuati flight uniform.', choices: [] },
+          { id: 'dr_tessa', x: 25, y: 4, kind: 'medic', label: 'Dr. Tessa (Chief Medical Officer)',
+            isVendor: true, vendorFaction: 'republic', repeatable: true,
+            vendorStock: ['kdy_stimpack', 'kdy_antidote', 'kdy_triage_kit', 'field_rations'],
+            prompt: 'Dr. Tessa runs the medic tent.', choices: [] },
+          { id: 'miner_teb', x: 21, y: 4, kind: 'kdy_contractor', label: 'Miner Teb (Patient)',
+            repeatPrompt: 'Teb is staring at the tent wall, humming a note no one else can hear.',
+            prompt: "He sits on the edge of the cot with his helmet on his knee, hazard orange suit stripped to the waist and tubes in his arm. His hands will not stay still. \"I was on the lunar shelf when the lights died. Not our lights. The sky ones. There was a sound under my boots like the whole moon clearing its throat.\"",
+            choices: [
+              { text: 'Ask where the sound came from.', morality: 0, loyalty: {},
+                result: "\"South. Always south. Past the Engine Wastes, where the old survey stops.\" He grips your sleeve. \"Dr. Tessa says it is exposure. I know exposure. This is the moon calling.\"",
+                grants: { flags: ['teb_sound_south', 'miner_symptoms_known'] } },
+              { text: 'Tell him to rest. You will look into it.', morality: 5, loyalty: { republic: 3 },
+                result: "He lets go. \"The others are the same. Ask the doctor to show you the charts. Someone has to count how many of us hear it.\"",
+                grants: { flags: ['miner_symptoms_known', 'tessa_side_quest_open'] } },
+            ],
+          },
+          { id: 'trike', x: 9, y: 22, kind: 'cyborg_mechanic', label: 'Trike (Master Mechanic)',
+            repeatPrompt: 'Trike waves a torch at you without looking up. "Bring me something broken or go away. Preferably both."',
+            prompt: "A grease stained cyborg in a leather apron, one orange optic whirring as it focuses on you and the other eye lost behind a welder's lens. Half of his jaw is brushed steel. He is up to the elbow in the chassis of a pit droid and arguing with it. \"Do not touch that. Do not touch that either. Hold this. No, the other end. You are the Guild's new freelancer? Good. Do you know anything about Aratech engines? Because I do, and nobody on this rock will listen.\"",
+            choices: [
+              { text: 'Ask him about vintage starfighter engines.', morality: 0, loyalty: {},
+                result: "He nearly drops the torch. \"Finally. A person with taste.\" Twenty minutes of Aratech thrust curves, Incom afterburners and the sweetest ion exhaust in the Outer Rim follow. At the end he presses a handful of burnt boards into your hand. \"For the trouble. Come back when your gear starts complaining.\"",
+                grants: { flags: ['trike_met', 'trike_engine_talk'], items: ['kdy_circuit_boards'] } },
+              { text: 'Ask what he can do for your gear and droids.', morality: 0, loyalty: {},
+                result: "\"Upgrade them, repair them, tune them, occasionally resurrect them. The bench is yours, the bay is yours, the bin is yours if you promise to sort it.\" The optic whirs. \"Do not mention the Guild board. They do not pay me enough to be this fond of them.\"",
+                grants: { flags: ['trike_met'] } },
+              { text: 'Ask about the energy spikes that knocked out the mining droids.', morality: 5, loyalty: { republic: 3 },
+                result: "His torch goes out. \"Eleven of my droids came back from the outer sectors with their memory cores scrubbed to the factory default. Not damaged. Scrubbed. Something talked to them, and then cleaned up after itself.\" He leans in. \"That is not weather.\"",
+                grants: { flags: ['trike_met', 'trike_droid_wipe_known'] } },
+            ],
+          },
+          { id: 'dax', x: 37, y: 6, kind: 'kdy_logistics_officer', label: 'Dax (Supply Logistics Chief)',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true,
+            vendorStock: ['kdy_alloy_ingot', 'kdy_hull_plate', 'kdy_coaxium_vial', 'tool_hydrospanner', 'emp_grenade'],
+            prompt: 'Dax runs the depot.', choices: [] },
+          { id: 'bador_squad_kaelin', x: 27, y: 23, wander: 2, kind: 'republic_guard', label: 'Squad Leader Kaelin',
             repeatPrompt: 'Kaelin keeps his hand near his carbine. "Stay behind the perimeter and we stay in good standing."',
             prompt: '"You are the freelancer Vael authorized." A statement, not a question. "I have twelve troopers on this base and six more at forward position seven. What I do not have is answers about what is in the wastes." He glances toward the southern exits. "Something knocked out our sensor drones. Not equipment failure."',
             choices: [
               { text: 'Tell him about the unknown structure marker.', morality: 5, loyalty: { republic: 8 }, result: '"We know. We have had it marked for three days. Whatever it is, it has a heat signature inconsistent with standard KDY construction." He lowers his voice. "Vael thinks it is a ship."', grants: { flags: ['kaelin_structure_discussed'] } },
-              { text: 'Ask what knocked out the drones.', morality: 0, loyalty: {}, result: '"Our diagnostics say plasma interference. Natural sources would register differently — it is targeted." He shakes his head. "Someone does not want us scanning that grid."', grants: { flags: ['kaelin_drone_discussed'] } },
+              { text: 'Ask what knocked out the drones.', morality: 0, loyalty: {}, result: '"Our diagnostics say plasma interference. Natural sources would register differently. It is targeted." He shakes his head. "Someone does not want us scanning that grid."', grants: { flags: ['kaelin_drone_discussed'] } },
             ],
           },
+          // ---- K-series guard droids on a synchronized perimeter loop
+          { id: 'k_sentinel_alpha', x: 16, y: 12, kind: 'k_series_droid', label: 'K-Series Security Automaton K-01',
+            patrol: [[25, 12], [25, 15], [16, 15], [16, 12]],
+            repeatPrompt: 'K-01 pans its red ocular slot across you, then resumes its patrol. "Proceed. Remain within the lit area."',
+            prompt: "A two meter, two hundred millimeter automaton of overlapping alabaster ceramic plate over a dark titanium endoskeleton, a single horizontal red lens in its angular helm and the gold Kuat wheel stamped on its chest. A blue energy edged shield panel rides its left forearm, a repeating blaster barrel its right. Its footfalls ring on the deck like struck anvils.",
+            choices: [
+              { text: 'Stand still and let it scan you.', morality: 0, loyalty: {},
+                result: "The red lens sweeps from your boots to your collar rebreather and back. \"Visitor, cleared, pass confirmed.\" A pause of exactly one second. \"KDY security automata do not engage cleared personnel. Do not leave the lights.\"",
+                grants: { flags: ['met_k_series'], codex: ['codex-k-series'] } },
+            ],
+          },
+          { id: 'k_sentinel_beta', x: 25, y: 15, kind: 'k_series_droid', label: 'K-Series Security Automaton K-02',
+            patrol: [[16, 15], [16, 12], [25, 12], [25, 15]],
+            repeatPrompt: 'K-02 turns exactly forty five degrees and sweeps its lens. "Proceed."',
+            prompt: "The second sentinel walks the loop in perfect antiphase with the first, so that one is always at the Thoroughfare's west end when the other is at its east. Same alabaster plate, same crimson slot, same rhythm.",
+            choices: [
+              { text: 'Ask if it has seen anything beyond the perimeter.', morality: 0, loyalty: {},
+                result: "\"Sensor drones ceased transmitting at grid reference seven seven nine. K-series sensors record a repeating thermal signature of unknown origin.\" The lens holds on you for four seconds. \"Query exceeds guest clearance.\"",
+                grants: { flags: ['met_k_series'], codex: ['codex-k-series'] } },
+            ],
+          },
+          // ---- Walking staff, droids and aliens
+          { id: 'patrol_marine_ross', x: 24, y: 17, wander: 3, kind: 'kdy_security_marine', label: 'KDY Security Patrol Ross',
+            repeatPrompt: 'Ross nods without breaking stride. "Yellow Alert. Keep moving."',
+            prompt: 'A KDY security marine in sealed grey armor patrols the yard, rebreather hissing on the exhale. He gives your pass a long look and decides you are not his problem.',
+            choices: [{ text: 'Ask how the watch is going.', morality: 0, loyalty: {}, result: '"Quiet, which is worse. Three nights the perimeter lights flicker at the same minute. I have started to set my watch by it."' }] },
+          { id: 'patrol_marine_cael', x: 31, y: 8, wander: 3, kind: 'kdy_security_marine', label: 'KDY Security Patrol Cael',
+            repeatPrompt: 'Cael steps aside to let you pass. "Move along."',
+            prompt: 'A second patrolman keeps to the corridor between the depot and the HQ. He has a stim patch on his neck and the look of a man who has not slept since the alert.',
+            choices: [{ text: 'Ask if the HQ checkpoint is strict.', morality: 0, loyalty: {}, result: '"Pass or no pass, no exceptions. The Commander tore the last corporal who waved a visitor through a new one."' }] },
+          { id: 'ge3_diplomat', x: 39, y: 6, wander: 1, kind: 'ge3_protocol', label: 'GE3-Series Protocol Droid Gee-Three',
+            repeatPrompt: 'Gee-Three bows with perfect formality. "Do forgive me, I am in the middle of a negotiation."',
+            prompt: "A Kuati diplomatic variant GE3 in mirror polished silver with brushed gold trim rings at every joint and soft golden photoreceptors. It stands at Dax's elbow translating trade agreements between a Zabrak crew chief and a Devaronian inspector, with gestures too elegant for this depot.",
+            choices: [{ text: 'Ask what it is translating.', morality: 0, loyalty: {}, result: '"Eleven contractors, four languages, and one disagreement over whether Skiff KDY-9 is late or merely unpunctual. I have translated both positions. Neither is moved."' }] },
+          { id: 'loader_unit_one', x: 36, y: 8, wander: 2, kind: 'binary_loader', label: 'Heavy Binary Loader BL-4',
+            repeatPrompt: 'BL-4 whirs, claws opening and closing in what might be a greeting.',
+            prompt: 'A scratched industrial yellow loader droid on heavy treads, twin hydraulic claws stacking a pallet of alloy billets. Oil weeps from its pistons. An orange warning strobe flashes on its dome as it backs up, beeping.',
+            choices: [{ text: 'Step aside and let it work.', morality: 0, loyalty: {}, result: 'It beeps twice, which in binary means thank you or move depending on the pitch. You decide it was thank you.' }] },
+          { id: 'loader_unit_two', x: 41, y: 10, wander: 3, kind: 'binary_loader', label: 'Heavy Binary Loader BL-7',
+            repeatPrompt: 'BL-7 chirps a warning and waits for you to clear the path.',
+            prompt: 'A twin of BL-4 hauling a durasteel plate down the east corridor, claws locked and strobe turning. It is, by some margin, the loudest thing on the base.',
+            choices: [{ text: 'Wave it through.', morality: 0, loyalty: {}, result: 'It rumbles past, plate swaying, and spits a short puff of venting steam at your boots.' }] },
+          { id: 'gnk_unit_nine', x: 9, y: 17, wander: 2, kind: 'gnk_power', label: 'GNK Power Droid',
+            repeatPrompt: 'The GNK repeats its single word. "Gnk."',
+            prompt: 'A blocky matte grey power droid on short stubby legs, a yellow umbilical cable trailing from its flank to a pad welding rig. It says one thing, constantly.',
+            choices: [{ text: 'Say hello.', morality: 0, loyalty: {}, result: '"Gnk gnk." It trundles around you, cable dragging, and plugs into the next rig. You feel understood.' }] },
+          { id: 'astromech_r4', x: 12, y: 11, wander: 4, kind: 'kuati_astromech', label: 'Kuati Astromech R4-K1',
+            repeatPrompt: 'R4-K1 chirps and rolls a polite circle around you.',
+            prompt: 'An R series astromech in Kuati livery: pearlescent white dome, sapphire blue body panels, gold stripe along the collar ring. It rolls between the shuttle ramp and the fuel terminal on some errand of its own, chirping softly.',
+            choices: [{ text: 'Ask it for a pad status.', morality: 0, loyalty: {}, result: 'It beeps a rising scale and projects a flickering blue schematic of Pad Alpha: all clamps green, fuel ninety two, one red mark far to the south. It will not say what the mark is.' }] },
+          { id: 'zabrak_wright_ghan', x: 3, y: 14, wander: 2, kind: 'zabrak_techwright', label: 'Zabrak Tech-Wright Ghan',
+            repeatPrompt: 'Ghan glances up from his holopad. "Ask me later, I am counting."',
+            prompt: 'A six horned Zabrak in a dust stained leather apron over an open slate grey work shirt, geometric tattoos running down the bridge of his nose and jaw. He studies a holopad of blueprint schematics and hums as he checks them against the crate stencils.',
+            choices: [{ text: 'Ask what he is counting.', morality: 0, loyalty: {}, result: '"Crates. The manifest says forty. I count thirty six. Someone on Kuat is lying and someone on Bador is stealing. I would like to know which of us is going to be blamed."' }] },
+          { id: 'devaronian_inspector_rhok', x: 34, y: 4, wander: 2, kind: 'devaronian_inspector', label: 'Devaronian Freight Inspector Rhok',
+            repeatPrompt: 'Rhok flashes a sharp smile. "Your manifest is in order, so far."',
+            prompt: 'A crimson skinned Devaronian in a tailored maroon vest over a high collared cream shirt, long black horns polished, a gold chain across his chest and a stylus tucked behind one ear. He reads the depot manifest the way a hawk reads a field.',
+            choices: [{ text: 'Ask what he is looking for.', morality: 0, loyalty: {}, result: '"Weight. Cargo that weighs more going out than coming in, and cargo that does not appear on the schedule at all. The second kind is the more interesting."' }] },
+          { id: 'nautolan_hydro_veel', x: 36, y: 22, wander: 3, kind: 'nautolan_engineer', label: 'Nautolan Hydro-Engineer Veel',
+            repeatPrompt: 'Veel adjusts a coolant tube at his throat. "Moisture is life, friend."',
+            prompt: 'A Nautolan in a pressurized moisture suit, blue coolant tubes running along his neck and head tresses, copper bands cinching the tails. His great black eyes catch every floodlight. He is monitoring a coolant junction that feeds the shield generators.',
+            choices: [{ text: 'Ask how the shield generators are holding.', morality: 0, loyalty: {}, result: '"Better than the engineers. Three nights now, the load spikes at the exact same minute, then drops to nothing, like something tested our shield and decided it was not worth the trouble."' }] },
+          { id: 'kuati_logistics_mara', x: 20, y: 13, wander: 3, kind: 'kuati_officer', label: 'Logistics Officer Mara Orsk',
+            repeatPrompt: 'Orsk consults her datapad. "Walk with me, or let me walk."',
+            prompt: 'A Kuati logistics officer in a double breasted slate blue tunic with polished gold rank cylinders, walking the Thoroughfare with a datapad and the unhurried stride of someone who has never needed to run.',
+            choices: [{ text: 'Ask about the overdue skiff.', morality: 0, loyalty: {}, result: '"Skiff KDY-9 left Kuat on schedule. It cleared the last relay on schedule. After that, no telemetry. I filed the delay report myself, then I filed another, then I stopped filing and started walking."', grants: { flags: ['bador_skiff_overdue'] } }] },
+          { id: 'contractor_brek', x: 41, y: 15, wander: 3, kind: 'kdy_contractor', label: 'Contractor Brek',
+            repeatPrompt: 'Brek flips down his visor and goes back to the cable run.',
+            prompt: 'A heavy contractor in hazard orange synth rubber, grease stained charcoal pads at the knee and elbow, a rear micro generator humming on his harness. His welding helmet is flipped up to show a smudged and tired face.',
+            choices: [{ text: 'Ask how the work is going.', morality: 0, loyalty: {}, result: '"Fine, until the lights flicker. Then everything stops and we all look south. Nobody says why."' }] },
         ],
-        collectibles: [{ id: 'bador_base_intel', x: 26, y: 4, label: 'KDY Survey Report', reward: 200 }],
+        collectibles: [],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 28, 18, 'floor');
-          carveRect(g, 3, 3, 10, 7, 'wall');
-          pt(g, 6, 3, 'floor'); pt(g, 7, 3, 'floor');
-          pt(g, 10, 5, 'floor'); pt(g, 10, 6, 'floor');
-          carveRect(g, 15, 3, 25, 7, 'wall');
-          pt(g, 18, 3, 'floor'); pt(g, 19, 3, 'floor');
-          pt(g, 20, 6, 'floor'); pt(g, 21, 6, 'floor');
-          carveRect(g, 20, 12, 28, 18, 'wall');
-          pt(g, 22, 12, 'floor'); pt(g, 23, 12, 'floor');
-          pt(g, 29, 8, 'door'); pt(g, 29, 9, 'door');
-          pt(g, 14, 19, 'door'); pt(g, 15, 19, 'door');
-          pt(g, 20, 7, 'floor'); pt(g, 21, 7, 'floor'); // open the command alcove
+          carveRect(g, 1, 1, 42, 26, 'floor');
+          const hall = (x0, y0, x1, y1, gaps) => { carveRect(g, x0, y0, x1, y1, 'wall'); carveRect(g, x0 + 1, y0 + 1, x1 - 1, y1 - 1, 'floor'); gaps.forEach(([gx, gy]) => pt(g, gx, gy, 'floor')); };
+          hall(20, 1, 29, 7, [[23, 7], [24, 7]]);      // medic tent
+          hall(32, 1, 41, 7, [[35, 7], [36, 7]]);      // goods and materials depot
+          hall(3, 21, 12, 26, [[7, 21], [8, 21]]);     // Trike's Robotics
+          hall(21, 21, 33, 26, [[26, 21], [27, 21]]);  // weapons barracks
+          carveRect(g, 27, 9, 39, 19, 'wall');         // main HQ shell
+          [[27, 9], [28, 9], [27, 10], [27, 18], [27, 19], [28, 19]].forEach(([x, y]) => pt(g, x, y, 'floor'));
+          carveRect(g, 27, 12, 28, 15, 'floor');       // HQ approach recess
+          pt(g, 29, 13, 'door'); pt(g, 29, 14, 'door');
+          pt(g, 43, 13, 'door'); pt(g, 43, 14, 'door');
+          pt(g, 16, 27, 'door'); pt(g, 17, 27, 'door');
           carveShips(g, this.ships);
+          pt(g, 6, 14, 'ship_ramp'); pt(g, 7, 14, 'ship_ramp');
+          return g;
+        },
+      },
+
+      bador_hq_interior: {
+        id: 'bador_hq_interior', name: 'KDY Main HQ — Grand Vault Hall',
+        subtitle: 'Bador Moon · Tactical Sanctum',
+        paAnnouncements: [
+          'Tactical Sanctum, orbital defense cone update in ten minutes.',
+          'Duty officers, Yellow Alert logs are due to the Commander by the hour.',
+          'Technicians, please keep the sunken terminal banks clear of coolant.',
+        ],
+        width: 32, height: 22, spawnPos: { x: 2, y: 10 }, textureId: 'kuati',
+        accent: '#D4AF37', accentGlow: 'rgba(212,175,55,0.28)', accentDim: '#5E4A1E',
+        floorColor: '#4A566C', floorAlt: '#58667F', wallDark: '#1C2A39', wallLight: '#34496A',
+        bg: 'radial-gradient(circle at 70% 50%, #16283A 0%, #060A12 75%)', ambient: 'datastream',
+        decor: ['pillar', 'girder'],
+        doors: [
+          { x: 0, y: 10, targetZone: 'bador_main_base', targetPos: { x: 28, y: 13 }, label: 'Primary Airlock', cinematic: 'airlock_out' },
+          { x: 0, y: 11, targetZone: 'bador_main_base', targetPos: { x: 28, y: 14 }, label: 'Primary Airlock', cinematic: 'airlock_out' },
+        ],
+        worldObjects: [
+          { id: 'hq_rebreather_rack', propArt: 'rebreather_rack', x: 3, y: 4, label: 'Airlock Rebreather Rack',
+            description: "Rebreather masks hang in racks along the airlock walls, collar units charging on blue indicator strips. A stenciled card reads: ATMOSPHERIC SEAL CONFIRMED. YOU MAY SPEAK." },
+          { id: 'hall_banner_one', propArt: 'kuati_banner', x: 8, y: 3, label: 'House Kuat Banner',
+            description: "A floor to ceiling slate blue banner with the gold wheel of Kuat and an alabaster border, hung between the structural arches. The ribbing above it echoes a Star Dreadnought's hull frame." },
+          { id: 'hall_banner_two', propArt: 'kuati_banner', x: 13, y: 3, label: 'Directorate Banner',
+            description: "The Forward Directorate banner: the Kuat wheel crossed with a single gold keel line and the motto of the Guild, WE BUILD WHAT HOLDS THE GALAXY TOGETHER." },
+          { id: 'hall_banner_three', propArt: 'kuati_banner', x: 18, y: 3, label: 'Ten Families Banner',
+            description: "Ten small gold wheels in two rows beneath the great one: the Ten Families of Kuat, each named in Aurebesh along the border. One wheel has been polished more than the rest." },
+          { id: 'hall_banner_four', propArt: 'kuati_banner', x: 13, y: 18, label: 'Founders Banner',
+            description: "An older banner, its gold thread faded to brass, commemorating the first hull frame cast above Kuat. The Directorate keeps it here as proof of how long the Families have been building." },
+          { id: 'hall_banner_five', propArt: 'kuati_banner', x: 24, y: 3, label: 'Sanctum Banner',
+            description: "A pair of banners frame the approach to the Sanctum dais: slate blue, gold wheel, a single white keel line down the center. Anyone who walks between them walks toward the Commander." },
+          { id: 'hall_banner_six', propArt: 'kuati_banner', x: 24, y: 18, label: 'Sanctum Banner',
+            description: "The southern twin of the Sanctum banner. Behind it, a service hatch the Guild would like you to leave closed." },
+          { id: 'vault_floor_inlay', propArt: 'floor_inlay', x: 14, y: 10, label: 'Kuat Wheel Inlay',
+            description: "Seamless alabaster synthetic marble inlaid with a burnished gold wheel of Kuat, twelve spokes around a sapphire hub. Gold pathways run from the wheel in every direction, guiding visitors toward the Sanctum dais. Your boots click on it like a ship's deck." },
+          { id: 'sunken_terminal_bank_north', propArt: 'terminal_bank', x: 9, y: 6, label: 'Sunken Terminal Bank',
+            description: "A recessed control pit lined with dark transparisteel interfaces, blue vector screens and mechanical switches with gold trim. Four technicians' stations, each logging the same flickering energy trace under the heading EXTERNAL SOURCE, UNCLASSIFIED.",
+            grantsFlag: 'hq_terminal_trace_seen', once: true },
+          { id: 'sunken_terminal_bank_south', propArt: 'terminal_bank', x: 9, y: 15, label: 'Sunken Terminal Bank',
+            description: "The southern bank handles base logistics: shield generator loads, airlock cycles, scrubber duty and the skiff manifest, still blinking OVERDUE in amber." },
+          { id: 'vael_tactical_display', propArt: 'sanctum_holo', x: 26, y: 10, label: 'Tactical Holo-Table',
+            description: "A circular holoprojector ringed in slate titan glass on an alabaster pedestal with a gold inlay ring. The cyan projection of Bador turns at two revolutions a minute: crater networks, subsurface lunar mineral veins, orbital defense cones and flashing amber waypoints where patrols walk. Red markers cluster around Sector 4 and the Engine Wastes. Two positions are marked UNKNOWN STRUCTURE.",
+            grantsFlag: 'bador_tactical_map_viewed', once: true },
+          { id: 'sanctum_viewport_north', propArt: 'panoramic_viewport', x: 28, y: 3, label: 'Sanctum Viewport',
+            description: "Ribbed transparisteel angled downward at forty five degrees, built to give a panoramic tactical view while keeping every weapon on the moon out of its eyeline. Beyond it the cratered regolith runs to a black horizon, and the dust drifts across the pad floodlights in orange sheets." },
+          { id: 'sanctum_viewport_south', propArt: 'panoramic_viewport', x: 28, y: 18, label: 'Sanctum Viewport',
+            description: "The southern window looks over the yard: the barracks roof, Trike's chimney glowing amber, and the City Outskirts beyond the fence. Every sentry post is lit and not one of them is looking inward." },
+        ],
+        npcs: [
+          { id: 'commander_vael', x: 26, y: 11, kind: 'kdy_commander', label: 'Commander Vael',
+            questNpc: true,
+            requiresFlag: 'tanner_briefed',
+            repeatPrompt: 'Vael keeps his gloved hands flat on the console rim. "Sector 4 and the Engine Wastes are your priority. Do not make me read your name off a casualty list."',
+            prompt: "He is hunched low over the projector, gloved fingertips twitching across the interface, the cyan of the holo map lighting his stern face, deep brow and the bronze cased cybernetic optic over his left eye. A battle tested Kuati commander in a slate blue command coat with gold clasps and alabaster epaulets. He zooms in on a glowing fault line near the southern pole before he lifts his head. \"Tanner's contact. Good. Lieutenant Vane has you on the manifest. Bador is a Class-C restricted moon, population zero, officially. The base is on Yellow Alert. Sector 4 is running unauthorized assembly, the Engine Wastes hold structures that predate our survey by three decades, our last deep scan team stopped transmitting forty hours ago, and a supply skiff bound for this hall is overdue.\"",
+            choices: [
+              { text: 'What happened to the scan team?', morality: 0, loyalty: {},
+                result: "\"Unknown. Comms cut at grid reference seven seven nine. I have two squads at the perimeter and orders not to advance without clearance from KDY.\" He turns. \"That clearance is you.\"",
+                grants: { flags: ['vael_briefed', 'ghost_keel_active'] } },
+              { text: 'I want full access to your intel before I move.', morality: 5, loyalty: { republic: 5 },
+                result: "\"Reasonable.\" He uploads the tactical packet to your comlink with a tap of silver glove tips. \"Sector 4 manufacturing, Engine Wastes survey, and partial readings from a structure at grid nine one. Do not trust the south readings. Something is jamming them.\"",
+                grants: { flags: ['vael_briefed', 'vael_intel_shared', 'ghost_keel_active'] } },
+              { text: 'Forty hours. Your team is likely dead.', morality: -10, loyalty: { underworld: 5 },
+                result: "Vael holds eye contact two seconds longer than expected, the cyan lens focusing. \"Yes. Probably. Which is why I need someone with a different risk calculation than a uniformed officer.\" He loads the grid data. \"Move carefully.\"",
+                grants: { flags: ['vael_briefed', 'ghost_keel_active'] } },
+              { text: 'Ask about the overdue supply skiff.', morality: 0, loyalty: {},
+                result: "\"KDY-9. Alloys, coolant, and a sealed crate the Guild will not itemize for me.\" His jaw sets. \"It never reached the last relay. I want it found before anyone asks me why a crate with no manifest is out there in the dark.\"",
+                grants: { flags: ['vael_briefed', 'vael_skiff_discussed', 'bador_skiff_overdue', 'ghost_keel_active'] } },
+            ],
+          },
+          { id: 'hq_duty_officer_teln', x: 14, y: 14, wander: 4, kind: 'kuati_officer', label: 'Duty Officer Teln',
+            repeatPrompt: 'Teln walks on without turning his head. "The Commander is in the Sanctum."',
+            prompt: 'A Kuati duty officer in fitted slate blue with a peaked cap and bronze KDY medallion crosses the marble with a datapad under one arm, footfalls echoing in the vault.',
+            choices: [{ text: 'Ask where the Commander is.', morality: 0, loyalty: {}, result: '"East end, on the dais. Three steps up. Do not cross the gold line until he looks at you."' }] },
+          { id: 'hq_clerk_ysmin', x: 12, y: 17, wander: 3, kind: 'kuati_officer', label: 'Records Officer Ysmin',
+            repeatPrompt: 'Ysmin does not look up from her cataloguing.',
+            prompt: 'A Kuati records officer with twin silver and sapphire rank cylinders, filing holo slates into a sunken archive drawer one at a time.',
+            choices: [{ text: 'Ask what she is filing.', morality: 0, loyalty: {}, result: '"Alert logs. They are all the same entry. I have started numbering them out of grim curiosity."' }] },
+          { id: 'hq_ge3_protocol', x: 18, y: 8, wander: 5, kind: 'ge3_protocol', label: 'GE3 Protocol Droid Gee-Seven',
+            repeatPrompt: 'Gee-Seven inclines its head. "How may I assist the Directorate?"',
+            prompt: 'A gleaming silver GE3 with gold rimmed joints and soft gold photoreceptors, walking the Vault Hall with its hands folded, translating for visiting contractors in four languages.',
+            choices: [{ text: 'Ask it how many languages it speaks.', morality: 0, loyalty: {}, result: '"Over six million, sir, though in this hall I speak chiefly Kuati, Basic and diplomatic silence."' }] },
+          { id: 'hq_astromech_r7', x: 20, y: 15, wander: 4, kind: 'kuati_astromech', label: 'Kuati Astromech R7-K4',
+            repeatPrompt: 'R7-K4 trills at you and rolls on.',
+            prompt: 'An R series in Kuati livery, pearlescent dome and sapphire panels, rolling soft circuits of the hall with a data cable trailing from its arm.',
+            choices: [{ text: 'Say hello.', morality: 0, loyalty: {}, result: 'It beeps a warm triplet and projects a tiny gold Kuat wheel in the air before rolling away.' }] },
+        ],
+        collectibles: [{ id: 'bador_base_intel', x: 29, y: 15, label: 'KDY Survey Report', reward: 200 }],
+        buildMap() {
+          const g = emptyGrid(this.width, this.height);
+          carveRect(g, 1, 2, 30, 19, 'floor');
+          // inner airlock partition: the Primary Airlock chamber, with the inner threshold gap
+          carveRect(g, 5, 2, 5, 19, 'wall');
+          carveRect(g, 5, 9, 5, 12, 'floor');
+          [7, 12, 16, 20, 24].forEach((x) => { pt(g, x, 5, 'wall'); pt(g, x, 16, 'wall'); });   // nave arcade pillars
+          pt(g, 0, 10, 'door'); pt(g, 0, 11, 'door');
           return g;
         },
       },
@@ -3612,8 +3912,8 @@ const PLANETS = {
         bg: 'radial-gradient(circle at 50% 70%, #1A1008 0%, #0A0804 70%)', ambient: 'embers',
         decor: ['pipe', 'girder', 'slag'],
         doors: [
-          { x: 0, y: 8, targetZone: 'bador_main_base', targetPos: { x: 28, y: 8 }, label: 'Main Base' },
-          { x: 0, y: 9, targetZone: 'bador_main_base', targetPos: { x: 28, y: 9 }, label: 'Main Base' },
+          { x: 0, y: 8, targetZone: 'bador_main_base', targetPos: { x: 42, y: 13 }, label: 'Main Base' },
+          { x: 0, y: 9, targetZone: 'bador_main_base', targetPos: { x: 42, y: 14 }, label: 'Main Base' },
           { x: 35, y: 10, targetZone: 'engine_wastes', targetPos: { x: 1, y: 10 }, label: 'Engine Wastes' },
           { x: 35, y: 11, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Engine Wastes' },
         ],
@@ -3684,8 +3984,8 @@ const PLANETS = {
         bg: 'radial-gradient(circle at 30% 80%, #181008 0%, #0C0806 70%)', ambient: 'embers',
         decor: ['pipe', 'rubble'],
         doors: [
-          { x: 14, y: 0,  targetZone: 'bador_main_base', targetPos: { x: 14, y: 18 }, label: 'KDY Main Base' },
-          { x: 15, y: 0,  targetZone: 'bador_main_base', targetPos: { x: 15, y: 18 }, label: 'KDY Main Base' },
+          { x: 14, y: 0,  targetZone: 'bador_main_base', targetPos: { x: 16, y: 26 }, label: 'KDY Main Base' },
+          { x: 15, y: 0,  targetZone: 'bador_main_base', targetPos: { x: 17, y: 26 }, label: 'KDY Main Base' },
           { x: 33, y: 10, targetZone: 'outpost_7', targetPos: { x: 1, y: 10 }, label: 'Outpost 7' },
           { x: 33, y: 11, targetZone: 'outpost_7', targetPos: { x: 1, y: 11 }, label: 'Outpost 7' },
         ],
@@ -3989,6 +4289,11 @@ function floorBackground(zone, x, y) {
     if (h < 26) return `linear-gradient(45deg, ${zone.floorColor} 46%, #E8C97A55 48%, #E8C97A55 50%, ${zone.floorColor} 52%)`;
     return zone.floorColor;
   }
+  if (zone.textureId === 'kuati') {
+    if (h < 14) return `linear-gradient(135deg, ${zone.floorAlt}, ${zone.floorColor})`;
+    if (h < 22) return `linear-gradient(45deg, ${zone.floorColor} 47%, #D4AF3730 49%, #D4AF3730 51%, ${zone.floorColor} 53%)`;
+    return zone.floorColor;
+  }
   if (zone.textureId === 'ferrowake') {
     if (h < 12) return `linear-gradient(135deg, #FF9A5A33, ${zone.floorColor})`;
     if (h < 26) return `linear-gradient(45deg, ${zone.floorAlt}, ${zone.floorColor})`;
@@ -4003,6 +4308,7 @@ function wallBackground(zone, x, y) {
   const h = hash(x + 5, y + 5);
   const a = h % 2 === 0 ? zone.wallDark : zone.wallLight;
   if (zone.textureId === 'coruscant') return `repeating-linear-gradient(180deg, ${a}, ${a} 5px, ${zone.wallDark} 5px, ${zone.wallDark} 10px)`;
+  if (zone.textureId === 'kuati') return `repeating-linear-gradient(90deg, ${a}, ${a} 6px, ${zone.wallDark} 6px, ${zone.wallDark} 8px)`;
   if (zone.textureId === 'ferrowake') return `repeating-linear-gradient(135deg, ${a}, ${a} 4px, ${zone.wallDark} 4px, ${zone.wallDark} 8px)`;
   return `repeating-linear-gradient(100deg, ${a}, ${a} 4px, ${zone.wallDark} 4px, ${zone.wallDark} 9px)`;
 }
@@ -4413,20 +4719,22 @@ function NpcPortrait({ kind, accent }) {
   }
 
   if (kind === 'kdy_commander') {
-    const visor = accent, armor = '#C8CDD8', armDark = '#9AA0B0', trim = '#1A8FD0';
+    const coat = '#1C2A39', ala = '#E8ECEF', gold = '#D4AF37', skin = '#C8956A', hair = '#3A3F45';
     return (
       <svg viewBox="0 0 30 42" width="26" height="36">
-        <path d="M6 42 L8 22 L22 22 L24 42 Z" fill={armor} />
-        <path d="M8 22 L22 22 L20 11 L10 11 Z" fill={armDark} />
-        <path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z" fill={armor} />
-        <path d="M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={armor} />
-        <rect x="10" y="1" width="10" height="10" rx="2" fill={armDark} />
-        <rect x="11" y="4" width="8" height="3.5" rx="0.5" fill={visor} opacity="0.92" />
-        <rect x="12" y="4.5" width="6" height="2" fill="#AAEEFF" opacity="0.45" />
-        <rect x="11" y="9" width="8" height="2" rx="0.5" fill="#8A9AB0" opacity="0.6" />
-        <rect x="12" y="15" width="6" height="1" fill={trim} opacity="0.8" />
-        <rect x="12" y="16.8" width="4" height="0.8" fill={trim} opacity="0.55" />
-        <rect x="8" y="21.5" width="14" height="1.5" fill={trim} opacity="0.5" />
+        <path d="M6 42 L8 22 L22 22 L24 42 Z" fill={coat} />
+        <rect x="8" y="36" width="5" height="6" fill="#16191E" /><rect x="17" y="36" width="5" height="6" fill="#16191E" /><rect x="8" y="36" width="5" height="1.2" fill={gold} /><rect x="17" y="36" width="5" height="1.2" fill={gold} />
+        <path d="M8 22 L22 22 L20 11 L10 11 Z" fill={coat} />
+        <path d="M11 11 L15 17 L19 11 L19 9 L11 9 Z" fill={coat} /><rect x="10.4" y="9.4" width="9.2" height="2" fill={ala} />
+        <path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={coat} />
+        <path d="M4 12 L10 11 L10 14 L5 15 Z M26 12 L20 11 L20 14 L25 15 Z" fill={ala} /><rect x="4.4" y="13" width="5" height="0.8" fill={gold} /><rect x="20.6" y="13" width="5" height="0.8" fill={gold} />
+        {[15, 18.4, 21.8].map((y, i) => <circle key={i} cx="15" cy={y} r="1" fill={gold} />)}
+        <rect x="4" y="22" width="3" height="2.4" fill="#16191E" /><rect x="23" y="22" width="3" height="2.4" fill="#16191E" /><rect x="8" y="21.4" width="14" height="1.2" fill={gold} opacity="0.7" />
+        <rect x="11" y="2" width="8" height="9" rx="2" fill={skin} />
+        <path d="M10.6 5 C10.6 0 19.4 0 19.4 5 L19.4 3 L10.6 3 Z" fill={hair} /><path d="M12.6 10.4 L17.4 10.4 L16.4 12 L13.6 12 Z" fill={hair} />
+        <rect x="12" y="5.8" width="2" height="1.2" fill="#1A1410" />
+        <circle cx="17" cy="6.2" r="2.1" fill="#9C7F3C" /><circle cx="17" cy="6.2" r="1.3" fill="#00E5FF" /><circle cx="17" cy="6.2" r="0.5" fill="#FFFFFF" />
+        <path d="M18.4 8 L19 11" stroke="#9C7F3C" strokeWidth="0.6" />
       </svg>
     );
   }
@@ -4495,6 +4803,186 @@ function NpcPortrait({ kind, accent }) {
       </svg>
     );
   }
+  // BADOR PORTRAITS BEGIN
+  if (kind === 'kuati_officer') {
+    const tunic = '#243348', swath = '#F0F4F8', gold = '#C5A059', skin = '#C8956A', sapph = '#0F52BA';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M6 42 L8 22 L22 22 L24 42 Z" fill={tunic} />
+        <rect x="14" y="30" width="2" height="12" fill={gold} opacity="0.8" />
+        <path d="M8 22 L22 22 L20 11 L10 11 Z" fill={tunic} />
+        <path d="M9 12 L14 12 L21 22 L16 22 Z" fill={swath} />
+        <path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z" fill={tunic} /><path d="M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={tunic} />
+        <rect x="11" y="3" width="8" height="9" rx="2" fill={skin} />
+        <path d="M9 5 L11 1 L19 1 L21 5 L19 4 L11 4 Z" fill={tunic} /><rect x="9" y="4" width="12" height="1.4" fill={gold} />
+        <circle cx="15" cy="2.6" r="1.2" fill="#9C7F3C" />
+        <rect x="12.4" y="6.4" width="1.8" height="1.4" fill="#1A1410" /><rect x="16" y="6.4" width="1.8" height="1.4" fill="#1A1410" />
+        <rect x="17" y="17" width="2" height="3" fill="#CBD3DC" /><rect x="19.4" y="17" width="2" height="3" fill={sapph} />
+        <rect x="8" y="21" width="14" height="1.6" fill="#16191E" /><rect x="14" y="20.8" width="2.6" height="2.2" fill={gold} />
+        <rect x="7" y="23" width="1" height="19" fill={gold} opacity="0.6" />
+      </svg>
+    );
+  }
+  if (kind === 'k_series_droid') {
+    const plate = '#F5F5F5', frame = '#1A1C1E', lens = '#FF0022', gold = '#D4AF37', shield = '#4A8CFF';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <rect x="10" y="30" width="4" height="12" fill={frame} /><rect x="16" y="30" width="4" height="12" fill={frame} />
+        <path d="M9 40 L14 40 L14 42 L8 42 Z M16 40 L21 40 L22 42 L16 42 Z" fill={plate} />
+        <path d="M9 22 L21 22 L20 32 L10 32 Z" fill={frame} />
+        <path d="M3 12 L27 12 L25 24 L22 24 L20 32 L10 32 L8 24 L5 24 Z" fill={plate} />
+        <path d="M3 12 L9 12 L8 20 L4 20 Z M27 12 L21 12 L22 20 L26 20 Z" fill="#CBD3DC" />
+        <rect x="11" y="1" width="8" height="10" fill={plate} /><rect x="12" y="2" width="6" height="8" fill={frame} />
+        <rect x="11.6" y="5" width="6.8" height="1.8" fill={lens} /><rect x="12" y="5.4" width="6" height="0.8" fill="#FF8090" opacity="0.7" />
+        <circle cx="15" cy="17" r="2.6" fill="none" stroke={gold} strokeWidth="1" /><circle cx="15" cy="17" r="0.8" fill={gold} />
+        <rect x="0" y="12" width="4" height="12" fill={frame} /><rect x="0" y="12" width="1.2" height="12" fill={shield} />
+        <rect x="26" y="14" width="4" height="9" fill={frame} /><rect x="27.2" y="22" width="1.6" height="5" fill="#8E9AA8" />
+      </svg>
+    );
+  }
+  if (kind === 'ge3_protocol') {
+    const silver = '#E0E0E0', gold = '#FFD700', shade = '#8E9AA8';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <rect x="10" y="30" width="3.4" height="12" fill={silver} /><rect x="16.6" y="30" width="3.4" height="12" fill={silver} />
+        <rect x="9.6" y="33" width="4.2" height="1.4" fill={gold} /><rect x="16.2" y="33" width="4.2" height="1.4" fill={gold} />
+        <path d="M9 12 L21 12 L19 30 L11 30 Z" fill={silver} /><path d="M9 12 L13 12 L12 30 L11 30 Z" fill={shade} opacity="0.6" />
+        <rect x="10" y="20" width="10" height="1.6" fill={gold} /><rect x="10.6" y="29" width="8.8" height="1.4" fill={gold} />
+        <path d="M5 13 L9 12 L9 26 L6.4 26 Z" fill={silver} /><path d="M25 13 L21 12 L21 26 L23.6 26 Z" fill={silver} />
+        <rect x="5" y="19" width="3.6" height="1.4" fill={gold} /><rect x="21.4" y="19" width="3.6" height="1.4" fill={gold} />
+        <rect x="11" y="2" width="8" height="10" fill={silver} /><rect x="10" y="3" width="1.4" height="7" fill={shade} />
+        <circle cx="13" cy="6" r="1.7" fill={gold} /><circle cx="17" cy="6" r="1.7" fill={gold} /><circle cx="13" cy="6" r="0.6" fill="#FFF8DC" /><circle cx="17" cy="6" r="0.6" fill="#FFF8DC" />
+        <rect x="13" y="9" width="4" height="1.2" fill={shade} />
+        <rect x="12.6" y="11.4" width="4.8" height="1.4" fill={gold} />
+      </svg>
+    );
+  }
+  if (kind === 'binary_loader') {
+    const body = '#E5A900', dark = '#1A1A1A', orange = '#FF6600';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <rect x="3" y="36" width="24" height="6" fill={dark} /><rect x="5" y="37" width="20" height="2" fill="#4A5562" />
+        <path d="M6 14 L24 14 L26 36 L4 36 Z" fill={body} />
+        <path d="M6 14 L10 14 L8 36 L4 36 Z" fill="#B88400" />
+        <rect x="8" y="18" width="14" height="6" fill={dark} /><rect x="9" y="19" width="12" height="1.4" fill="#4A5562" /><rect x="9" y="21.6" width="12" height="1.4" fill="#4A5562" />
+        <path d="M0 14 L6 14 L6 30 L3 30 L3 20 L0 20 Z M30 14 L24 14 L24 30 L27 30 L27 20 L30 20 Z" fill={body} />
+        <path d="M0 18 L3 18 L3 20 L0 20 Z M27 18 L30 18 L30 20 L27 20 Z M2.6 28 L6 28 L6 30 L2.6 30 Z M24 28 L27.4 28 L27.4 30 L24 30 Z" fill={dark} />
+        <rect x="12" y="9" width="6" height="5" fill={body} /><rect x="13" y="10" width="4" height="2" fill={dark} /><circle cx="15" cy="11" r="0.9" fill="#FF4040" />
+        <rect x="13.4" y="5" width="3.2" height="4" fill={dark} /><circle cx="15" cy="3.6" r="2.6" fill={orange} /><circle cx="15" cy="3.6" r="1.2" fill="#FFE9B0" />
+        <rect x="6" y="30" width="18" height="1.6" fill={dark} />
+      </svg>
+    );
+  }
+  if (kind === 'gnk_power') {
+    const body = '#6A6E74', dark = '#2A2E34', cable = '#E5C100';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <rect x="9" y="34" width="4" height="8" fill={dark} /><rect x="17" y="34" width="4" height="8" fill={dark} /><rect x="7" y="40" width="7" height="2" fill="#4A5562" /><rect x="16" y="40" width="7" height="2" fill="#4A5562" />
+        <path d="M5 10 L25 10 L25 34 L5 34 Z" fill={body} /><path d="M5 10 L9 10 L9 34 L5 34 Z" fill="#8E9AA8" opacity="0.5" />
+        <rect x="8" y="14" width="14" height="9" fill={dark} /><rect x="9" y="15" width="12" height="2" fill="#4A5562" /><rect x="9" y="18" width="12" height="2" fill="#4A5562" />
+        <circle cx="12" cy="28" r="1.4" fill="#3AFF8A" /><circle cx="16" cy="28" r="1.4" fill="#FFB844" /><circle cx="20" cy="28" r="1.4" fill="#FF4040" />
+        <rect x="11" y="5" width="8" height="5" fill={dark} /><rect x="13.4" y="6" width="3.2" height="2" fill="#FFB844" />
+        <path d="M25 18 C30 18 30 30 24 30" fill="none" stroke={cable} strokeWidth="1.6" /><rect x="24" y="16" width="3" height="4" fill={dark} />
+      </svg>
+    );
+  }
+  if (kind === 'kuati_astromech') {
+    const dome = '#F5F5F5', body = '#0F52BA', lens = '#7FD0FF', dark = '#1A2A44';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <rect x="5" y="36" width="6" height="6" fill="#CBD3DC" /><rect x="19" y="36" width="6" height="6" fill="#CBD3DC" /><rect x="12" y="38" width="6" height="4" fill="#8E9AA8" />
+        <rect x="8" y="16" width="14" height="22" fill={body} /><rect x="5" y="20" width="3" height="16" fill="#CBD3DC" /><rect x="22" y="20" width="3" height="16" fill="#CBD3DC" />
+        <rect x="10" y="20" width="10" height="4" fill={dark} /><rect x="11" y="21" width="3" height="2" fill="#3AFF8A" /><rect x="16" y="21" width="3" height="2" fill="#FFB844" />
+        <rect x="10" y="27" width="10" height="2" fill="#D4AF37" /><rect x="10" y="31" width="10" height="5" fill="#243348" />
+        <path d="M7 16 C7 5 23 5 23 16 Z" fill={dome} /><path d="M7 16 C7 9 12 6 14 6 L14 16 Z" fill="#CBD3DC" />
+        <circle cx="15" cy="11" r="3.4" fill={dark} /><circle cx="15" cy="11" r="2" fill={lens} /><circle cx="15" cy="11" r="0.8" fill="#FFFFFF" />
+        <rect x="8.4" y="12.6" width="13.2" height="1.4" fill={body} /><rect x="19" y="7" width="2.4" height="2" fill={body} />
+      </svg>
+    );
+  }
+  if (kind === 'zabrak_techwright') {
+    const skin = '#C8956A', horn = '#2A2320', shirt = '#6A7078', apron = '#5A3A22';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill="#3A3F45" />
+        <path d="M8 22 L22 22 L21 11 L9 11 Z" fill={shirt} />
+        <path d="M10 14 L20 14 L21 34 L9 34 Z" fill={apron} /><rect x="10" y="22" width="10" height="1.4" fill="#2A1A0A" />
+        <path d="M8 22 L4 26 L6 30 L9 24 Z M22 22 L26 26 L24 30 L21 24 Z" fill={skin} /><rect x="4" y="27" width="3.4" height="2.2" fill={apron} /><rect x="22.6" y="27" width="3.4" height="2.2" fill={apron} />
+        <rect x="11" y="3" width="8" height="9" rx="2" fill={skin} />
+        {[[12, 3, 11, 0], [14, 2.4, 14, -0.6], [16, 2.4, 16, -0.6], [18, 3, 19, 0], [11, 4, 9.6, 1.4], [19, 4, 20.4, 1.4]].map(([x, y, x2, y2], i) => <polygon key={i} points={`${x - 0.8},${y + 1} ${x + 0.8},${y + 1} ${x2},${y2}`} fill={horn} />)}
+        <rect x="12.2" y="6.4" width="1.8" height="1.2" fill="#1A1410" /><rect x="16" y="6.4" width="1.8" height="1.2" fill="#1A1410" />
+        <path d="M13 5 L17 5 M13.6 9.6 L16.4 9.6 M15 5 L15 9" stroke="#3A1A0A" strokeWidth="0.7" />
+        <rect x="21" y="20" width="6" height="4" fill="#0A1A24" /><rect x="21.6" y="20.6" width="4.8" height="2.8" fill="#7FD0FF" opacity="0.85" />
+      </svg>
+    );
+  }
+  if (kind === 'devaronian_inspector') {
+    const skin = '#B8302A', horn = '#15110F', vest = '#6A1A22', shirt = '#F0E6C8';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill="#22252A" />
+        <path d="M8 22 L22 22 L21 11 L9 11 Z" fill={shirt} />
+        <path d="M9 12 L14 12 L14 30 L9 32 Z M21 12 L16 12 L16 30 L21 32 Z" fill={vest} />
+        <path d="M12 14 C13 20 17 20 18 14" fill="none" stroke="#D4AF37" strokeWidth="1" /><circle cx="15" cy="19" r="1" fill="#D4AF37" />
+        <path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={vest} />
+        <rect x="11" y="3" width="8" height="9" rx="2" fill={skin} />
+        <path d="M11 3 C9 1 8 -1 9 -2 C10 0 12 1 13 2 Z M19 3 C21 1 22 -1 21 -2 C20 0 18 1 17 2 Z" fill={horn} transform="translate(0 3)" />
+        <path d="M10.4 6 L8.6 4.6 L10.4 4.8 Z M19.6 6 L21.4 4.6 L19.6 4.8 Z" fill={skin} />
+        <rect x="12.2" y="6.2" width="1.8" height="1.2" fill="#FFE9B0" /><rect x="16" y="6.2" width="1.8" height="1.2" fill="#FFE9B0" />
+        <path d="M13 9.6 L14 10.6 L15 9.6 L16 10.6 L17 9.6" fill="none" stroke="#FFFFFF" strokeWidth="0.6" />
+        <rect x="19.6" y="4.4" width="3" height="0.8" fill="#C8A830" />
+      </svg>
+    );
+  }
+  if (kind === 'nautolan_engineer') {
+    const skin = '#6A7A52', tress = '#4E5A3A', suit = '#2A4A6A', copper = '#C98655';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill={suit} />
+        <path d="M8 22 L22 22 L21 11 L9 11 Z" fill={suit} /><path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill="#1F3A55" />
+        <path d="M11 12 C10 16 11 20 12 24 M19 12 C20 16 19 20 18 24 M15 12 L15 28" fill="none" stroke="#4A8CFF" strokeWidth="1.1" />
+        <rect x="13.4" y="26" width="3.2" height="4" fill="#12202E" /><circle cx="15" cy="28" r="1" fill="#7FD0FF" />
+        <rect x="11" y="3" width="8" height="9" rx="2" fill={skin} />
+        <path d="M10 5 C6 6 5 16 7 22 L9 21 C8 15 9 9 11 8 Z M20 5 C24 6 25 16 23 22 L21 21 C22 15 21 9 19 8 Z" fill={tress} />
+        <rect x="6.4" y="14" width="3" height="1.2" fill={copper} /><rect x="20.6" y="14" width="3" height="1.2" fill={copper} />
+        <ellipse cx="12.6" cy="6.8" rx="2" ry="2.6" fill="#0A0A0F" /><ellipse cx="17.4" cy="6.8" rx="2" ry="2.6" fill="#0A0A0F" />
+        <circle cx="12" cy="6" r="0.7" fill="#FFFFFF" opacity="0.8" /><circle cx="16.8" cy="6" r="0.7" fill="#FFFFFF" opacity="0.8" />
+      </svg>
+    );
+  }
+  if (kind === 'kdy_contractor') {
+    const suit = '#FF6600', pad = '#22252A', visor = '#D4AF37', skin = '#C8956A';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M5 42 L7 22 L23 22 L25 42 Z" fill={suit} /><rect x="7" y="34" width="6" height="5" fill={pad} /><rect x="17" y="34" width="6" height="5" fill={pad} />
+        <path d="M6 22 L24 22 L23 10 L7 10 Z" fill={suit} /><path d="M6 22 L10 22 L9 10 L7 10 Z" fill="#CC5200" />
+        <rect x="12" y="12" width="6" height="12" fill="#CC5200" /><rect x="7" y="9" width="3" height="4" fill={pad} /><rect x="20" y="9" width="3" height="4" fill={pad} />
+        <path d="M6 22 C3 22 1 17 3 11 L7 12 L6 22 Z M24 22 C27 22 29 17 27 11 L23 12 L24 22 Z" fill={suit} /><rect x="2" y="16" width="4" height="3" fill={pad} /><rect x="24" y="16" width="4" height="3" fill={pad} />
+        <rect x="11" y="4" width="8" height="8" rx="2" fill={skin} /><rect x="12" y="8" width="6" height="2" fill="#7A5A3A" opacity="0.5" />
+        <rect x="12.2" y="6.6" width="1.6" height="1.2" fill="#1A1410" /><rect x="16.2" y="6.6" width="1.6" height="1.2" fill="#1A1410" />
+        <path d="M9 5 C9 -1 21 -1 21 5 L21 2 L9 2 Z" fill="#3A3F45" /><path d="M9 2 L21 2 L22 -1 L8 -1 Z" fill={visor} transform="translate(0 3)" />
+        <rect x="19" y="24" width="8" height="2" fill="#1A1C1E" /><rect x="22" y="23" width="3" height="4" fill="#7FD0FF" />
+      </svg>
+    );
+  }
+  if (kind === 'cyborg_mechanic') {
+    const skin = '#C8956A', metal = '#8E9AA8', apron = '#4A3A22', shirt = '#5A5F66';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill="#2A2E34" />
+        <path d="M8 22 L22 22 L21 11 L9 11 Z" fill={shirt} />
+        <path d="M10 13 L20 13 L21 36 L9 36 Z" fill={apron} /><rect x="9" y="30" width="12" height="2.4" fill="#2A1A0A" opacity="0.6" /><rect x="12" y="16" width="6" height="4" fill="#2A1A0A" opacity="0.5" />
+        <path d="M8 22 L3 28 L5 33 L9 26 Z" fill={skin} /><rect x="3" y="30" width="3.4" height="3" fill="#7A5A3A" />
+        <path d="M22 22 L27 25 L28 32 L24 32 L22 26 Z" fill={metal} /><rect x="22.4" y="30" width="5.4" height="2.4" fill="#5F6E80" /><rect x="23" y="26" width="1.2" height="3" fill="#FFB844" />
+        <rect x="11" y="3" width="8" height="9" rx="2" fill={skin} />
+        <path d="M17 3 L19 3 L19 12 L15 12 L15 9 L17 8 Z" fill={metal} /><rect x="16" y="9.4" width="3" height="1.4" fill="#5F6E80" />
+        <circle cx="17.6" cy="6" r="2.6" fill="#1A1410" /><circle cx="17.6" cy="6" r="1.7" fill="#FF6600" /><circle cx="17.6" cy="6" r="0.7" fill="#FFE9B0" />
+        <rect x="12" y="6.2" width="1.8" height="1.2" fill="#1A1410" />
+        <path d="M10 3 C10 0 20 0 20 3 L20 4 L10 4 Z" fill="#3A3F45" /><rect x="10" y="4.4" width="10" height="1" fill="#7A5A3A" />
+      </svg>
+    );
+  }
+  // BADOR PORTRAITS END
   if (kind === 'kdy_pilot') {
     const coat = '#1F4A78', trim = '#1A8FD0', collar = '#E8E4D8', gold = '#C8A830', skin = '#C8956A', cap = '#16345A';
     return (
@@ -5027,6 +5515,16 @@ function AmbientLayer({ kind, accent }) {
       </div>
     );
   }
+  if (kind === 'dust') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',opacity:0.6 }}>
+        {Array.from({ length: 24 }, (_, i) => (
+          <div key={i} style={{ position:'absolute',left:`${(i*29)%100}%`,top:`${(i*17)%96}%`,width:`${2+(i%3)}px`,height:`${2+(i%3)}px`,borderRadius:'50%',background:i%3===0?'rgba(255,150,70,0.5)':'rgba(220,190,150,0.35)',animation:`traffic-drift ${6+(i%7)}s linear ${(i%9)*0.5}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',top:'30%',left:'-10%',width:'140%',height:'8px',background:'linear-gradient(90deg,transparent,rgba(255,150,70,0.05),transparent)',animation:'drift 12s ease-in-out infinite alternate' }} />
+      </div>
+    );
+  }
   if (kind === 'sky_high') {
     return (
       <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:1 }}>
@@ -5186,6 +5684,15 @@ const ITEMS = {
   csf_aux_badge:              { id:'csf_aux_badge',              name:'CSF Auxiliary Badge',                  type:'gear',       iconKind:'keycard',  value:0,   description:'Your official commission as a Coruscant Security Force Auxiliary. Designation AX-7. Signed by Officer Vane.' },
   forensic_slicing_suite:     { id:'forensic_slicing_suite',     name:'Forensic Slicing Suite',               type:'tool',       iconKind:'tool',     value:120, description:'A CSF-issue datapad rig for isolating corrupted code trails, altering customs manifests, and bypassing lower-tier security seals.' },
   emp_grenade:                { id:'emp_grenade',                name:'EMP Grenade',                          type:'consumable', iconKind:'supply',   value:90,  description:'Republic-issue electromagnetic pulse charge. Disables droid systems and powered locks in a short radius. Non-lethal. Mostly.' },
+  bador_access_pass:          { id:'bador_access_pass',          name:'Base Access Pass',                     type:'quest',      iconKind:'keycard',  value:0,   description:'A brass edged card stamped with the Kuat wheel. The Main HQ blast doors read it and nothing else.' },
+  kdy_circuit_boards:         { id:'kdy_circuit_boards',         name:'Salvaged Circuit Boards',              type:'tool',       iconKind:'gear',     value:70,  description:'Burnt but serviceable boards with KDY serials filed off. Trike swears they are better than new.' },
+  kdy_scrap_bundle:           { id:'kdy_scrap_bundle',           name:'Scrap Metal Bundle',                   type:'tool',       iconKind:'supply',   value:40,  description:'Bundled duranium offcuts and wiring from the robotics workshop salvage bin.' },
+  kdy_alloy_ingot:            { id:'kdy_alloy_ingot',            name:'Lunar Alloy Ingot',                    type:'tool',       iconKind:'supply',   value:220, description:'A dense blue gray ingot refined from Bador mineral veins. Starship plating stock, high tier.' },
+  kdy_hull_plate:             { id:'kdy_hull_plate',             name:'KDY Hull Plating Sheet',               type:'tool',       iconKind:'supply',   value:180, description:'Ceramic composite hull plating, stamped with the gold gear and anvil crest.' },
+  kdy_coaxium_vial:           { id:'kdy_coaxium_vial',           name:'Sealed Coaxium Vial',                  type:'tool',       iconKind:'supply',   value:400, description:'A shielded vial of refined coaxium. The Guild would prefer you did not wonder where it came from.' },
+  kdy_stimpack:               { id:'kdy_stimpack',               name:'KDY Field Stimpack',                   type:'consumable', iconKind:'supply',   value:80,  description:'Guild medical corps stimulant. Clears the shakes and the fatigue, not the cause.' },
+  kdy_antidote:               { id:'kdy_antidote',               name:'Broad Spectrum Antidote',              type:'consumable', iconKind:'supply',   value:60,  description:'Neutralizes most toxins and spice overdoses. Dr. Tessa keeps a tray of them.' },
+  kdy_triage_kit:             { id:'kdy_triage_kit',             name:'Field Triage Kit',                     type:'consumable', iconKind:'supply',   value:120, description:'Burn gel, sealant foam, bacta patches and a hemostat. Everything the medic tent does, in a pouch.' },
   level_088_transit_pass:     { id:'level_088_transit_pass',     name:'Level 088 Priority Transit Pass',      type:'quest',      iconKind:'keycard',  value:0,   description:'CSF-authorized speeder clearance to Level 088 Police Outpost 88. Bypass all mid-level checkpoints.' },
   encrypted_gang_holo_log:    { id:'encrypted_gang_holo_log',    name:'Encrypted Gang Holo-Log',              type:'quest',      iconKind:'datapad',  value:0,   description:'Black-market credit transactions routed to Level 005. Names, amounts, and Senate authorization stamps that should not exist.' },
   senate_conspiracy_file:     { id:'senate_conspiracy_file',     name:'Verified Senate Conspiracy File',      type:'quest',      iconKind:'datapad',  value:0,   description:"Authenticated records linking a sitting Senator to the Docking Bay 14 raid and the Iron Syndicate's Phrik operation." },
@@ -5510,6 +6017,49 @@ const CODEX_ENTRIES = {
       'KDY executive Tanner holds Level Eight authorization for the project. His stated objective is retrieval of the hypercore before a Senate Oversight Committee arrives on the surface. What the Senate would find, if it arrived first, is unclear. What is clear is that someone built something that should not exist, and the window to decide what happens to it is very short.',
     ],
   },
+  'codex-bador-hub': {
+    id:'codex-bador-hub', title:'The Kuati Forward Directorate Hub', category:'lore',
+    summary:'The secret KDY base on Bador Moon, built to test prototype ship components away from Core World regulation.',
+    body:[
+      'The Forward Directorate Hub was established by Kuat Drive Yards on the cratered moon of Bador to test prototype ship components and refine rare lunar minerals away from Core World oversight. Officially the moon is a Class C restricted survey site with a population of zero.',
+      'Modules were cast in orbit above Kuat, hauled down by heavy shuttle and anchored into the bedrock with deep thermal bores. The result is a cluster of alabaster and slate blue halls that look like a palace dropped onto a battlefield, ringed by perimeter floodlights, scrubbers and sentry posts.',
+      'The base is currently on Yellow Alert. Energy spikes beyond the perimeter have disrupted the automated mining droids, and a supply skiff bound for the Main HQ is overdue.',
+    ],
+  },
+  'codex-bador-nav-logs': {
+    id:'codex-bador-nav-logs', title:'Pad Alpha Navigation Log', category:'story',
+    summary:'Every sortie flown from Pad Alpha, including three that never logged a return.',
+    body:[
+      'The planetary navigation log at the Pad Alpha fueling terminal lists every sortie flown from the Hub. Most are routine: ore haulers, survey skiffs, inspection flights.',
+      'Three entries stand apart. Each departed under Directorate clearance, each logged a single outbound heading to the far south of the Engine Wastes, and none logged a return. The headings converge on grid reference nine one.',
+    ],
+  },
+  'codex-bador-miner-sickness': {
+    id:'codex-bador-miner-sickness', title:'Miner Symptoms on Bador', category:'story',
+    summary:'Surface workers report tremors, fever and a sound no one else can hear.',
+    body:[
+      'Dr. Tessa has logged seven cases: surface miners with elevated temperature, tremor and fixation on a low resonance they describe as coming from the south. The tests are inconclusive. Exposure is the official finding.',
+      'Every patient was on the lunar shelf the night the sky lights failed. Each one points the same direction when asked where the sound comes from.',
+    ],
+  },
+  'codex-kuati-architecture': {
+    id:'codex-kuati-architecture', title:'Kuati Outpost Architecture', category:'lore',
+    summary:'How KDY casts a palace for a battlefield.',
+    body:[
+      'Kuati outpost modules are cast in orbital shipyards using zero gravity durasteel forging, then carried to planetary surfaces by heavy hauler. Deep thermal bore anchors lock each prefabricated module onto micro hydraulic shock absorbers against seismic shock and orbital bombardment.',
+      'Seams are fused by atomic molecular welders, leaving smooth curved joints with no bolts or rivets. The outer shell is alabaster ceramic composite, which deflects both solar radiation and abrasive lunar dust, trimmed in slate blue and burnished gold.',
+      'The silhouette mirrors the prow of a KDY battlecruiser: a sharp forward point tapering into long sweeping parabolic curves. Inside, parabolic arches rise on ribbing that echoes a Star Dreadnought hull frame.',
+    ],
+  },
+  'codex-k-series': {
+    id:'codex-k-series', title:'K-Series Heavy Security Automaton', category:'lore',
+    summary:'The alabaster sentinels that walk the Hub perimeter.',
+    body:[
+      'The K series Kuat Heavy Security Automaton is a precursor to later KDY combat droids: two point two meters of hand finished duranium plating over micro servomotors, finished in an electrostatic white ceramic coat edged in metal trim to reflect the wealth of the funding House.',
+      'A single horizontal red ocular scanner sits in the angular helm. The left forearm carries a riot shield with blue energy edge emitters, the right a repeating heavy blaster. Pairs walk synchronized perimeter loops, one always opposite the other.',
+      'K series automata do not engage cleared personnel. Visitors carrying a Base Access Pass are logged and ignored.',
+    ],
+  },
   'codex-bador-history': {
     id:'codex-bador-history', title:'Bador Moon: Survey Classification', category:'lore',
     summary:'A moon with a classified past and an inconvenient present.',
@@ -5620,12 +6170,12 @@ function SpeederOverlay({ credits, questFlags, currentZoneId, onTravel, onClose 
 
 // ===== KDY SHUTTLE NETWORK BEGIN
 const KDY_RING_ZONES = ['kdy_landing_bay', 'kuat_private_suites', 'kdy_briefing_area', 'kdy_lounge_market'];
-const BADOR_SURFACE_ZONES = ['bador_main_base', 'bador_manufacturing', 'city_outskirts_bador', 'engine_wastes', 'outpost_7', 'deep_caverns', 'zora_iv_wreckage'];
+const BADOR_SURFACE_ZONES = ['bador_main_base', 'bador_hq_interior', 'bador_manufacturing', 'city_outskirts_bador', 'engine_wastes', 'outpost_7', 'deep_caverns', 'zora_iv_wreckage'];
 
 const KDY_SHUTTLE_DESTINATIONS = [
   { id: 'ring_landing', name: 'Orbital Ring Landing Bay', level: 'Kuat Orbital Array', cost: 0, requiredFlag: null,          targetZone: 'kdy_landing_bay',     targetPos: { x: 26, y: 11 } },
   { id: 'ring_suites',  name: 'Executive Private Suites', level: 'Kuat Orbital Array', cost: 0, requiredFlag: 'vaelen_cleared', targetZone: 'kuat_private_suites', targetPos: { x: 25, y: 10 } },
-  { id: 'bador_base',   name: 'KDY Main Base',            level: 'Bador Moon, Sector Control', cost: 0, requiredFlag: 'tanner_briefed', targetZone: 'bador_main_base', targetPos: { x: 5, y: 10 } },
+  { id: 'bador_base',   name: 'KDY Main Base',            level: 'Bador Moon, Sector Control', cost: 0, requiredFlag: 'tanner_briefed', targetZone: 'bador_main_base', targetPos: { x: 10, y: 14 } },
   { id: 'bador_fwd',    name: 'Outpost 7 Forward Pad',    level: 'Bador Moon, Eastern Reach',  cost: 0, requiredFlag: 'bador_landed',   targetZone: 'outpost_7',       targetPos: { x: 23, y: 12 } },
 ];
 
@@ -5646,6 +6196,21 @@ const SHUTTLE_SCRIPT = {
     beats: [
       [0.04, 0.42, 'Seals confirmed. The shuttle lifts off the glassed bedrock in a spray of slag dust.'],
       [0.48, 0.94, 'Bador shrinks behind you. The Orbital Array waits in perfect silence.'],
+    ],
+  },
+  airlock: {
+    dur: 3.4, swapAt: 0.6, from: 'LANDING DECK PERIMETER', to: 'KUATI HQ GRAND VAULT HALL',
+    beats: [
+      [0.04, 0.3, 'Two parabolic airlock doors slide shut with a deep pneumatic thud. The golden wheel of Kuat is embossed across the seam.'],
+      [0.32, 0.6, 'Crimson warning lights shift to sapphire as high pressure nozzles blow the lunar dust away.'],
+      [0.64, 0.96, 'The inner doors glide open, silent, into the Grand Vault Hall.'],
+    ],
+  },
+  airlock_out: {
+    dur: 2.6, swapAt: 0.6, from: 'KUATI HQ GRAND VAULT HALL', to: 'LANDING DECK PERIMETER',
+    beats: [
+      [0.05, 0.5, 'Pressure equalizes. Sapphire lights fade to amber.'],
+      [0.55, 0.96, 'The outer doors part on floodlights, dust and the low hum of the pads.'],
     ],
   },
   hop: {
@@ -5800,6 +6365,58 @@ function ShuttleScene({ mode, p, t }) {
   );
 }
 
+function AirlockScene({ p, t, out }) {
+  const close = out ? 1 - shRange(p, 0.5, 0.9) : shRange(p, 0.04, 0.3);
+  const deco = shRange(p, 0.3, 0.6) * (1 - shRange(p, 0.62, 0.7));
+  const open = out ? shRange(p, 0.05, 0.4) : shRange(p, 0.62, 0.9);
+  const sapphire = out ? 1 - shRange(p, 0.1, 0.5) : shRange(p, 0.32, 0.5);
+  const w = 130 + close * 270;
+  const iw = (1 - open) * 400;
+  const leaf = (side) => (
+    <path d={side ? `M0 0 L${w} 0 Q${w + 46} 225 ${w} 450 L0 450 Z` : `M800 0 L${800 - w} 0 Q${800 - w - 46} 225 ${800 - w} 450 L800 450 Z`} fill="#E8ECEF" stroke="#D4AF37" strokeWidth="3" />
+  );
+  return (
+    <g>
+      <rect width="800" height="450" fill={out ? '#07080d' : '#0b1c30'} />
+      {out && (
+        <g>
+          <polygon points="300,0 500,0 640,450 160,450" fill="#FFE9B0" opacity="0.14" />
+          {Array.from({ length: 22 }, (_, i) => <circle key={i} cx={(i * 97 + t * 40) % 800} cy={(i * 53) % 450} r={1.4 + (i % 3)} fill="#FF9646" opacity="0.5" />)}
+        </g>
+      )}
+      {!out && (
+        <g>
+          <rect y="300" width="800" height="150" fill="#E8ECEF" opacity="0.9" />
+          {[160, 400, 640].map((x) => <rect key={x} x={x - 3} y="300" width="6" height="150" fill="#D4AF37" opacity="0.7" />)}
+          {[100, 300, 500, 700].map((x) => <rect key={x} x={x - 22} y="40" width="44" height="240" fill="#1C2A39" stroke="#D4AF37" strokeWidth="2" />)}
+          <rect y="0" width="800" height="14" fill="#2A6CFF" opacity="0.8" />
+        </g>
+      )}
+      <rect width="800" height="450" fill="#FF2A3A" opacity={(1 - sapphire) * 0.18 * (0.6 + 0.4 * Math.sin(t * 9))} />
+      <rect width="800" height="450" fill="#2A6CFF" opacity={sapphire * 0.2} />
+      {/* inner doors */}
+      <g opacity={out ? 1 : shRange(p, 0.3, 0.4)}>
+        <rect x="0" y="0" width={iw} height="450" fill="#4E5A6A" stroke="#9FAEBF" strokeWidth="3" />
+        <rect x={800 - iw} y="0" width={iw} height="450" fill="#4E5A6A" stroke="#9FAEBF" strokeWidth="3" />
+        {[0, 1, 2, 3].map((i) => <rect key={i} x="0" y={60 + i * 90} width="800" height="6" fill="#E8A030" opacity="0.5" />)}
+      </g>
+      {/* decontamination nozzles */}
+      <g opacity={deco}>
+        {Array.from({ length: 8 }, (_, i) => <g key={i}><rect x={70 + i * 90} y="0" width="16" height="18" fill="#9FAEBF" /><polygon points={`${78 + i * 90},18 ${58 + i * 90},${120 + (i % 2) * 60} ${98 + i * 90},${120 + (i % 2) * 60}`} fill="#EAF6FF" opacity={0.2 + 0.2 * Math.abs(Math.sin(t * 10 + i))} /></g>)}
+      </g>
+      {/* outer doors, parabolic with the wheel of Kuat on the seam */}
+      <g opacity={out ? 0 : 1 - shRange(p, 0.3, 0.38)}>
+        {leaf(true)}{leaf(false)}
+        <g opacity={shRange(close, 0.7, 1)}>
+          <circle cx="400" cy="225" r="46" fill="none" stroke="#D4AF37" strokeWidth="6" />
+          <circle cx="400" cy="225" r="9" fill="#D4AF37" />
+          {Array.from({ length: 8 }, (_, i) => <line key={i} x1="400" y1="225" x2={400 + Math.cos(i * Math.PI / 4) * 46} y2={225 + Math.sin(i * Math.PI / 4) * 46} stroke="#D4AF37" strokeWidth="3" />)}
+        </g>
+      </g>
+    </g>
+  );
+}
+
 function ShuttleInterior({ p, t }) {
   const stageB = shRange(p, 0.86, 0.91);
   const gates = [0.775, 0.81, 0.845];
@@ -5884,16 +6501,16 @@ function ShuttleCinematic({ mode, destName, onSwap, onDone }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: '#000', opacity: fade, overflow: 'hidden' }} onClick={finish}>
       <svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-        <ShuttleScene mode={mode} p={p} t={t} />
+        {mode === 'airlock' || mode === 'airlock_out' ? <AirlockScene p={p} t={t} out={mode === 'airlock_out'} /> : <ShuttleScene mode={mode} p={p} t={t} />}
         {interior > 0 && <g opacity={interior}><ShuttleInterior p={p} t={t} /></g>}
         <rect width="800" height="450" fill="#000" opacity="0.18" />
         {Array.from({ length: 45 }, (_, i) => <rect key={i} x="0" y={i * 10} width="800" height="1" fill="#000" opacity="0.18" />)}
       </svg>
       <div style={{ position: 'absolute', left: 24, top: 18, color: '#7FD0FF', fontSize: 12, letterSpacing: '0.18em', ...mono }}>
-        <div style={{ color: '#1A8FD0', fontWeight: 700 }}>KDY SHUTTLE K-14</div>
+        <div style={{ color: '#1A8FD0', fontWeight: 700 }}>{mode.startsWith('airlock') ? 'KUATI HQ PRIMARY AIRLOCK' : 'KDY SHUTTLE K-14'}</div>
         <div>{script.from} TO {to}</div>
       </div>
-      {mode !== 'hop' && interior < 0.5 && (
+      {mode !== 'hop' && !mode.startsWith('airlock') && interior < 0.5 && (
         <div style={{ position: 'absolute', right: 24, top: 18, textAlign: 'right', color: '#7FD0FF', fontSize: 11, letterSpacing: '0.14em', lineHeight: 1.7, ...mono }}>
           <div>ALT {String(alt).padStart(3, '0')} KM</div>
           <div>VEL {String(spd).padStart(4, '0')} M/S</div>
@@ -11850,6 +12467,405 @@ function PropBridgeConsole() {
 }
 
 // ===== CORUSCANT PROPS END =====
+// ===== BADOR BASE PROPS BEGIN =====
+// Kuati Forward Directorate Hub: alabaster ceramic, slate blue trim, burnished gold, cyan holo light.
+const bez = (p0, p1, p2, p3, k) => { const u = 1 - k; return [u * u * u * p0[0] + 3 * u * u * k * p1[0] + 3 * u * k * k * p2[0] + k * k * k * p3[0], u * u * u * p0[1] + 3 * u * u * k * p1[1] + 3 * u * k * k * p2[1] + k * k * k * p3[1]]; };
+
+function PropLandingPad() {
+  const S = ART.signal;
+  const ring = Array.from({ length: 8 }, (_, i) => [192 + Math.cos((i / 8) * Math.PI * 2 + 0.39) * 150, 128 + Math.sin((i / 8) * Math.PI * 2 + 0.39) * 92]);
+  const diodes = Array.from({ length: 28 }, (_, i) => [192 + Math.cos((i / 28) * Math.PI * 2) * 176, 128 + Math.sin((i / 28) * Math.PI * 2) * 114]);
+  return (
+    <svg viewBox="0 0 384 256" width="384" height="256" style={PROP_STYLE}>
+      <ellipse cx="192" cy="130" rx="188" ry="122" fill={ART.ink} opacity="0.55" />
+      <ellipse cx="192" cy="128" rx="186" ry="120" fill={ART.dark.shade} />
+      <ellipse cx="192" cy="128" rx="178" ry="113" fill={ART.dark.base} />
+      <ellipse cx="192" cy="128" rx="162" ry="100" fill={ART.steel.shade} opacity="0.8" />
+      <ellipse cx="192" cy="128" rx="160" ry="98" fill="none" stroke={ART.amber.base} strokeWidth="5" strokeDasharray="14 10" />
+      <ellipse cx="192" cy="128" rx="160" ry="98" fill="none" stroke={ART.ink} strokeWidth="5" strokeDasharray="10 14" strokeDashoffset="12" opacity="0.85" />
+      <ellipse cx="192" cy="128" rx="120" ry="72" fill="none" stroke={ART.steel.base} strokeWidth="1.4" opacity="0.7" />
+      <ellipse cx="192" cy="128" rx="60" ry="34" fill="none" stroke={ART.steel.base} strokeWidth="1.2" opacity="0.6" />
+      <line x1="30" y1="128" x2="354" y2="128" stroke={ART.steel.base} strokeWidth="1" opacity="0.5" /><line x1="192" y1="16" x2="192" y2="240" stroke={ART.steel.base} strokeWidth="1" opacity="0.5" />
+      {/* thruster scorch */}
+      {[[130, 104, 46, 22], [214, 150, 52, 24], [172, 130, 36, 16], [250, 100, 34, 14], [110, 150, 30, 14]].map(([x, y, rx, ry], i) => <ellipse key={i} cx={x} cy={y} rx={rx} ry={ry} fill={ART.ink} opacity={0.34} />)}
+      {/* magnetic tie down clamps */}
+      {ring.map(([x, y], i) => (
+        <g key={i}>
+          <Bev t="polygon" points={pts(ngon(x, y, 9, 6.4, 6))} c="brass" o={0.9} />
+          <polygon points={pts(ngon(x, y, 4, 2.8, 6))} fill={ART.ink} />
+          <circle cx={x} cy={y} r="1.2" fill={i % 2 ? S.green : S.amber} style={{ animation:`ship-blink ${1.6 + (i % 3) * 0.4}s steps(2) infinite` }} />
+        </g>
+      ))}
+      {/* fuel supply conduits */}
+      <Cable d="M354 30 C300 36, 280 60, 250 92" w={5} />
+      <Cable d="M30 226 C80 214, 110 190, 140 168" w={5} />
+      <Slab x={244} y={86} w={18} h={12} k={2} c="steel" /><Lights x={247} y={92} n={3} gap={4} seed={5} />
+      <Slab x={130} y={162} w={18} h={12} k={2} c="steel" /><Lights x={133} y={168} n={3} gap={4} seed={8} />
+      {diodes.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2.2" fill={S.red} opacity={0.5} style={i % 4 === 0 ? { animation:`ship-blink ${1.8 + (i % 5) * 0.3}s steps(2) infinite` } : undefined} />)}
+      <text x="56" y="214" fontSize="16" fill={ART.amber.hi} fontWeight="700" letterSpacing="2" opacity="0.5" {...PT}>PAD ALPHA</text>
+      <text x="290" y="48" fontSize="9" fill={ART.beige.hi} opacity="0.55" {...PT}>KDY BADOR</text>
+      <Seams x={30} y={30} w={324} h={196} cols={6} rows={3} op={0.18} />
+      <Grime x={20} y={24} w={344} h={210} seed={601} n={14} op={0.2} /><Scuff x={26} y={30} w={332} h={196} seed={602} n={16} c="steel" />
+    </svg>
+  );
+}
+
+function PropThoroughfare() {
+  const S = ART.signal;
+  const A = [[0, 62], [140, 0], [300, 14], [440, 100]], B = [[0, 130], [140, 76], [290, 90], [430, 152]];
+  const path = (P) => `M${P[0][0]} ${P[0][1]} C${P[1][0]} ${P[1][1]} ${P[2][0]} ${P[2][1]} ${P[3][0]} ${P[3][1]}`;
+  const mids = [0.08, 0.2, 0.32, 0.44, 0.56, 0.68, 0.8, 0.92].map((k) => { const a = bez(...A, k), b = bez(...B, k), m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], n = bez(...A, k + 0.03), n2 = bez(...B, k + 0.03); return { m, d: [(n[0] + n2[0]) / 2 - m[0], (n[1] + n2[1]) / 2 - m[1]], a, b }; });
+  return (
+    <svg viewBox="0 0 448 192" width="448" height="192" style={PROP_STYLE}>
+      <path d={`${path(A)} L${B[3][0]} ${B[3][1]} C${B[2][0]} ${B[2][1]} ${B[1][0]} ${B[1][1]} ${B[0][0]} ${B[0][1]} Z`} fill={ART.steel.shade} opacity="0.55" />
+      <path d={path(A)} fill="none" stroke={ART.amber.hi} strokeWidth="3.4" /><path d={path(B)} fill="none" stroke={ART.amber.hi} strokeWidth="3.4" />
+      <path d={path(A)} fill="none" stroke={S.orange} strokeWidth="1.2" strokeDasharray="4 8" /><path d={path(B)} fill="none" stroke={S.orange} strokeWidth="1.2" strokeDasharray="4 8" />
+      {mids.map(({ m, d, a, b }, i) => {
+        const L = Math.hypot(d[0], d[1]) || 1, ux = d[0] / L, uy = d[1] / L;
+        return (
+          <g key={i}>
+            <polyline points={pts([[m[0] - ux * 6 - uy * 7, m[1] - uy * 6 + ux * 7], [m[0] + ux * 4, m[1] + uy * 4], [m[0] - ux * 6 + uy * 7, m[1] - uy * 6 - ux * 7]])} fill="none" stroke={ART.amber.hi} strokeWidth="1.8" opacity="0.8" />
+            <Bev t="polygon" points={pts(ngon(a[0], a[1], 4, 3, 6))} c="steel" o={0.5} /><circle cx={a[0]} cy={a[1]} r="1.4" fill={i % 2 ? S.amberHi : S.orange} style={{ animation:`ship-blink ${1.6 + (i % 4) * 0.3}s ease-in-out infinite` }} />
+            <Bev t="polygon" points={pts(ngon(b[0], b[1], 4, 3, 6))} c="steel" o={0.5} /><circle cx={b[0]} cy={b[1]} r="1.4" fill={i % 2 ? S.orange : S.amberHi} />
+          </g>
+        );
+      })}
+      <Slab x={16} y={40} w={34} h={9} k={1} c="dark" o={0.8} /><text x="33" y="46.6" textAnchor="middle" fontSize="4.2" fill={S.amberHi} fontWeight="700" {...PT}>PAD A</text>
+      <Slab x={372} y={106} w={50} h={9} k={1} c="dark" o={0.8} /><text x="397" y="112.6" textAnchor="middle" fontSize="4.2" fill={S.amberHi} fontWeight="700" {...PT}>HQ 400M</text>
+      <Rivets x={140} y={96} w={140} n={8} /><Grime x={10} y={20} w={420} h={150} seed={611} n={10} op={0.18} /><Scuff x={14} y={24} w={410} h={140} seed={612} n={12} c="steel" />
+    </svg>
+  );
+}
+
+function PropHqDome() {
+  const S = ART.signal;
+  const ribs = Array.from({ length: 11 }, (_, i) => { const a = -Math.PI / 2 + (i / 10) * Math.PI; return [262 + Math.cos(a) * 128, 176 + Math.sin(a) * 144]; });
+  return (
+    <svg viewBox="0 0 448 352" width="448" height="352" style={PROP_STYLE}>
+      <PropShadow cx={240} cy={340} rx={200} ry={8} />
+      {/* wing blocks */}
+      <Bev t="polygon" points={pts([[104, 8], [440, 8], [440, 70], [350, 76], [104, 76]])} c="pearl" o={1.2} />
+      <Bev t="polygon" points={pts([[104, 346], [440, 346], [440, 282], [350, 276], [104, 276]])} c="pearl" o={1.2} />
+      <Slab x={116} y={14} w={150} h={14} k={1.4} c="deepglass" o={0.9} /><text x="191" y="24.4" textAnchor="middle" fontSize="8" fill={ART.brass.hi} fontWeight="700" letterSpacing="1.4" {...PT}>KDY MAIN HQ BADOR</text>
+      {Array.from({ length: 12 }, (_, i) => <polygon key={i} points={pts([[124 + i * 25, 44], [140 + i * 25, 44], [136 + i * 25, 66], [120 + i * 25, 66]])} fill={ART.screen.cyan} />)}
+      {Array.from({ length: 12 }, (_, i) => <polygon key={i} points={pts([[124 + i * 25, 290], [140 + i * 25, 290], [136 + i * 25, 312], [120 + i * 25, 312]])} fill={ART.screen.cyan} />)}
+      {Array.from({ length: 12 }, (_, i) => <line key={i} x1={128 + i * 25} y1="44" x2={124 + i * 25} y2="66" stroke={S.cyan} strokeWidth="0.8" opacity="0.7" />)}
+      <rect x="104" y="72" width="336" height="3" fill={ART.brass.base} /><rect x="104" y="276" width="336" height="3" fill={ART.brass.base} />
+      {/* central semi dome */}
+      <Bev t="polygon" points={pts([[96, 96], [200, 52], [330, 44], [440, 80], [440, 272], [330, 308], [200, 300], [96, 256]])} c="pearl" o={1.6} />
+      <Bev t="polygon" points={pts(ngon(262, 176, 150, 128, 28))} c="pearl" o={1.2} />
+      {[128, 100, 72, 44].map((r, i) => <ellipse key={r} cx="262" cy="176" rx={r * 1.12} ry={r} fill="none" stroke={i % 2 ? ART.deepglass.base : ART.brass.base} strokeWidth={i % 2 ? 4 : 2.4} opacity="0.9" />)}
+      {ribs.map(([x, y], i) => <line key={i} x1="262" y1="176" x2={x} y2={y} stroke={ART.deepglass.base} strokeWidth="1.6" opacity="0.7" />)}
+      <polygon points={pts(ngon(262, 176, 34, 30, 14))} fill={ART.deepglass.shade} /><polygon points={pts(ngon(262, 176, 26, 22, 14))} fill={ART.glass.base} opacity="0.85" />
+      <Glow cx={262} cy={176} r={24} c={S.cyan} opacity={0.5} style={{ animation:'ship-engine 3.4s ease-in-out infinite' }} />
+      {/* solar slates and masts */}
+      {[0, 1, 2].map((i) => <g key={i}><Slab x={376} y={96 + i * 54} w={50} h={44} k={2} c="deepglass" o={0.9} /><Seams x={376} y={96 + i * 54} w={50} h={44} cols={3} rows={2} op={0.4} /></g>)}
+      {[[420, 20], [420, 330], [330, 36]].map(([x, y], i) => <g key={i}><line x1={x} y1={y} x2={x} y2={y - 18} stroke={ART.steel.hi} strokeWidth="1.6" /><circle cx={x} cy={y - 19} r="2" fill={S.red} style={{ animation:`ship-blink ${1.5 + i * 0.4}s steps(2) infinite` }} /></g>)}
+      {/* recess apron and the blast doors */}
+      <polygon points={pts([[32, 96], [96, 96], [96, 224], [32, 224]])} fill={ART.steel.shade} opacity="0.6" />
+      <Hazard x={32} y={96} w={64} h={5} /><Hazard x={32} y={219} w={64} h={5} />
+      <Bev t="polygon" points={pts([[96, 112], [124, 112], [128, 128], [128, 192], [124, 208], [96, 208]])} c="deepglass" o={1} />
+      <Bev t="polygon" points={pts([[100, 128], [126, 128], [126, 158], [100, 158]])} c="pearl" o={0.9} /><Bev t="polygon" points={pts([[100, 162], [126, 162], [126, 192], [100, 192]])} c="pearl" o={0.9} />
+      <rect x="100" y="158.6" width="26" height="2.6" fill={ART.brass.base} />
+      <circle cx="113" cy="160" r="8" fill="none" stroke={ART.brass.hi} strokeWidth="1.8" /><circle cx="113" cy="160" r="2" fill={ART.brass.hi} />
+      {[0, 1, 2, 3, 4, 5].map((i) => <line key={i} x1="113" y1="160" x2={113 + Math.cos(i * 1.047) * 8} y2={160 + Math.sin(i * 1.047) * 8} stroke={ART.brass.hi} strokeWidth="1" />)}
+      {[[100, 114], [100, 204]].map(([x, y], i) => <g key={i}><Bev t="polygon" points={pts(ngon(x + 8, y, 6, 6, 6))} c="brass" o={0.8} /><Glow cx={x + 8} cy={y} r={7} c={S.cyan} opacity={0.6} /></g>)}
+      <Slab x={36} y={140} w={52} h={9} k={1} c="dark" o={0.85} /><text x="62" y="146.6" textAnchor="middle" fontSize="4.6" fill={S.cyanHi} fontWeight="700" {...PT}>PASS REQUIRED</text>
+      <Rivets x={110} y={86} w={320} n={20} c="brass" /><Rivets x={110} y={266} w={320} n={20} c="brass" />
+      <Vent x={300} y={56} w={30} h={12} n={3} /><Vent x={300} y={284} w={30} h={12} n={3} />
+      <Greeble x={140} y={80} w={200} h={14} seed={621} n={9} c="hull" /><Greeble x={140} y={262} w={200} h={14} seed={622} n={9} c="hull" />
+      <Grime x={32} y={8} w={410} h={340} seed={623} n={16} op={0.16} /><Scuff x={36} y={12} w={400} h={330} seed={624} n={18} c="pearl" />
+    </svg>
+  );
+}
+
+function PropBactaPod() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={92} rx={26} ry={3} />
+      <Bev t="polygon" points={pts(ngon(32, 84, 26, 8, 8, Math.PI / 8))} c="brass" o={1.2} />
+      <Slab x={14} y={74} w={36} h={12} k={2} c="dark" /><Vent x={18} y={77} w={28} h={6} n={3} /><Lights x={20} y={72} n={4} gap={7} seed={13} />
+      <Bev t="polygon" points={pts([[16, 74], [16, 14], [48, 14], [48, 74]])} c="glass" o={0.7} />
+      <rect x="19" y="34" width="26" height="38" fill={S.green} opacity="0.5" /><rect x="19" y="34" width="26" height="4" fill={S.greenHi} opacity="0.55" />
+      {[[26, 62], [34, 54], [40, 66], [30, 46], [38, 42]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={1 + (i % 2) * 0.6} fill={S.greenHi} style={{ animation:`ship-blink ${1.2 + i * 0.3}s ease-in-out infinite` }} />)}
+      <polygon points={pts([[22, 20], [26, 20], [26, 72], [22, 72]])} fill={S.white} opacity="0.3" />
+      <ellipse cx="32" cy="48" rx="15" ry="3.4" fill="none" stroke={S.cyan} strokeWidth="1.2" opacity="0.8" />
+      <Slab x={12} y={6} w={40} h={10} k={2} c="steel" /><Seams x={12} y={6} w={40} h={10} cols={3} op={0.4} />
+      <Cable d="M24 8 C14 2, 8 10, 8 24" w={2} /><Cable d="M40 8 C50 2, 56 10, 56 22" w={2} />
+      <Slab x={44} y={28} w={14} h={9} k={1} c="dark" o={0.9} /><text x="51" y="34" textAnchor="middle" fontSize="3" fill={S.greenHi} fontWeight="700" {...PT}>BACTA</text>
+      <Rivets x={16} y={14} w={32} n={5} /><Grime x={10} y={10} w={44} h={80} seed={631} n={4} op={0.18} /><Scuff x={14} y={78} w={36} h={10} seed={632} n={4} c="brass" />
+    </svg>
+  );
+}
+
+function PropRepulsorCrane() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 160 96" width="160" height="96" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={92} rx={74} ry={3} />
+      <Bev t="rect" x="4" y="84" width="152" height="4" c="steel" o={0.8} /><Hazard x={4} y={87} w={152} h={2.4} />
+      {[6, 140].map((x) => <g key={x}><Bev t="polygon" points={pts([[x, 86], [x, 14], [x + 12, 14], [x + 12, 86]])} c="amber" o={1.1} /><Seams x={x} y={14} w={12} h={72} rows={5} op={0.4} />{[26, 44, 62].map((y) => <line key={y} x1={x + 1} y1={y} x2={x + 11} y2={y + 8} stroke={ART.dark.shade} strokeWidth="1.2" />)}</g>)}
+      <Bev t="polygon" points={pts([[2, 24], [2, 6], [158, 6], [158, 24]])} c="amber" o={1.2} />
+      {Array.from({ length: 16 }, (_, i) => <line key={i} x1={6 + i * 9.6} y1="22" x2={14 + i * 9.6} y2="8" stroke={ART.dark.shade} strokeWidth="1.2" />)}
+      <Hazard x={2} y={21} w={156} h={3} />
+      <Slab x={58} y={22} w={44} h={22} k={2} c="amber" o={1} /><Hazard x={58} y={40} w={44} h={4} /><Vent x={64} y={26} w={14} h={8} n={3} /><Lights x={84} y={29} n={3} gap={4} seed={7} />
+      <polygon points={pts([[66, 44], [94, 44], [100, 54], [60, 54]])} fill={ART.dark.base} />
+      <polygon points={pts([[60, 54], [100, 54], [118, 82], [42, 82]])} fill={S.violet} opacity="0.2" style={{ animation:'ship-blink 2.6s ease-in-out infinite' }} />
+      <Glow cx={80} cy={56} rx={22} ry={5} c={S.violet} opacity={0.8} style={{ animation:'ship-engine 2.6s ease-in-out infinite' }} />
+      <CrateBox x={56} y={62} w={48} h={20} c="hull" hz={false} cols={3} rows={0} />
+      {[58, 100].map((x) => <polygon key={x} points={pts([[x, 56], [x + 4, 56], [x + 4, 66], [x, 66]])} fill={ART.steel.hi} />)}
+      <Slab x={122} y={58} w={32} h={28} k={2} c="dark" /><Slab x={126} y={62} w={24} h={9} k={1} c="steel" o={0.8} />
+      <circle cx="132" cy="78" r="2.4" fill={ART.steel.hi} /><circle cx="144" cy="78" r="2.4" fill={ART.steel.hi} /><line x1="132" y1="78" x2="131" y2="72" stroke={ART.steel.hi} strokeWidth="1.2" /><line x1="144" y1="78" x2="145" y2="72" stroke={ART.steel.hi} strokeWidth="1.2" />
+      <circle cx="138" cy="66" r="2.6" fill={S.red} /><text x="138" y="84" textAnchor="middle" fontSize="2.6" fill={S.amberHi} {...PT}>CRANE 2</text>
+      <Rivets x={8} y={7} w={146} n={16} /><Grime x={4} y={8} w={152} h={80} seed={641} n={7} op={0.22} /><Scuff x={6} y={10} w={148} h={74} seed={642} n={9} c="amber" />
+    </svg>
+  );
+}
+
+function PropRoboticsBench() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      {[8, 82].map((x) => <Bev key={x} t="polygon" points={pts([[x, 60], [x, 40], [x + 6, 40], [x + 6, 60]])} c="pearl" o={0.6} />)}
+      <Bev t="polygon" points={pts([[2, 44], [94, 44], [90, 34], [6, 34]])} c="dark" o={1.2} /><Slab x={2} y={44} w={92} h={7} k={1} c="steel" o={0.8} /><Seams x={2} y={44} w={92} h={7} cols={7} op={0.4} />
+      {/* overhead articulated arm */}
+      <Bev t="polygon" points={pts([[44, 34], [44, 8], [50, 8], [50, 34]])} c="steel" o={0.9} />
+      <polyline points={pts([[47, 10], [66, 6], [74, 18], [70, 30]])} fill="none" stroke={ART.steel.hi} strokeWidth="3" /><polyline points={pts([[47, 10], [66, 6], [74, 18], [70, 30]])} fill="none" stroke={ART.dark.base} strokeWidth="1" />
+      {[[47, 10], [66, 6], [74, 18]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2.4" fill={ART.brass.base} />)}
+      <polygon points={pts([[68, 30], [72, 30], [70, 36]])} fill={ART.steel.hi} /><Glow cx={70} cy={36} r={5} c={S.cyanHi} opacity={0.9} style={{ animation:'ship-blink 1.4s steps(2) infinite' }} />
+      {/* diagnostic screens */}
+      {[0, 1].map((i) => <g key={i}><Slab x={6 + i * 17} y={14 + i * 3} w={15} h={13} k={1.2} c="dark" /><rect x={7.6 + i * 17} y={15.6 + i * 3} width="11.8" height="9.8" fill={ART.screen.amber} /><polyline points={pts([[9, 22 + i * 3], [12, 18 + i * 3], [14, 22 + i * 3], [17, 17 + i * 3]])} fill="none" stroke={S.amber} strokeWidth="0.8" /></g>)}
+      {/* pit droid on the bench */}
+      <Bev t="polygon" points={pts([[28, 34], [28, 26], [40, 26], [40, 34]])} c="tan" o={0.7} /><Bev t="polygon" points={pts(ngon(34, 22, 6, 5, 8))} c="tan" o={0.6} /><circle cx="32" cy="22" r="1.6" fill={S.amber} /><circle cx="36" cy="22" r="1.6" fill={S.amber} />
+      <line x1="30" y1="34" x2="26" y2="40" stroke={ART.steel.base} strokeWidth="1.4" /><line x1="38" y1="34" x2="42" y2="40" stroke={ART.steel.base} strokeWidth="1.4" />
+      {/* solder pot and parts */}
+      <Slab x={78} y={28} w={10} h={8} k={1.2} c="copper" o={0.8} /><circle cx="83" cy="27" r="1.6" fill={S.orange} opacity="0.9" /><Cable d="M83 24 C80 18, 86 14, 82 8" w={1} />
+      {[[10, 42], [18, 43], [60, 42]].map(([x, y], i) => <Slab key={i} x={x} y={y - 4} w={6} h={4} k={0.8} c={i % 2 ? 'brass' : 'steel'} o={0.7} />)}
+      <Rivets x={6} y={46} w={84} n={9} /><Grime x={2} y={30} w={92} h={30} seed={651} n={5} op={0.25} /><Scuff x={4} y={32} w={88} h={26} seed={652} n={7} c="steel" />
+    </svg>
+  );
+}
+
+function PropWeaponBench() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Slab x={3} y={3} w={90} h={34} k={3} c="dark" o={1} /><Seams x={3} y={3} w={90} h={34} cols={5} op={0.3} />
+      {Array.from({ length: 6 }, (_, i) => <g key={i}><Slab x={8 + i * 14.4} y={7} w={11} h={5} k={1} c="steel" o={0.9} /><polygon points={pts([[10 + i * 14.4, 12], [17 + i * 14.4, 12], [15 + i * 14.4, 30], [12 + i * 14.4, 30]])} fill={ART.steel.shade} /><rect x={11 + i * 14.4} y="14" width="4.6" height="3" fill={ART.brass.base} /></g>)}
+      <Bev t="polygon" points={pts([[2, 50], [94, 50], [90, 40], [6, 40]])} c="steel" o={1.1} /><Slab x={2} y={50} w={92} h={8} k={1} c="dark" o={0.8} />
+      <Slab x={36} y={36} w={22} h={8} k={1.4} c="dark" /><rect x="40" y="38" width="14" height="2.4" fill={S.orange} /><Glow cx={47} cy={39} rx={10} ry={4} c={S.orange} opacity={0.5} style={{ animation:'ship-blink 2.2s ease-in-out infinite' }} />
+      <polygon points={pts([[40, 44], [54, 44], [58, 36], [36, 36]])} fill={S.orange} opacity="0.16" />
+      <Slab x={72} y={34} w={16} h={14} k={1.4} c="amber" o={0.9} /><Hazard x={72} y={45} w={16} h={3} /><circle cx="80" cy="40" r="2.6" fill={ART.ink} /><circle cx="80" cy="40" r="1.2" fill={S.red} />
+      {[[10, 44], [18, 45], [26, 44]].map(([x, y], i) => <Slab key={i} x={x} y={y - 3} w={6} h={5} k={0.8} c="brass" o={0.8} />)}
+      <Lights x={64} y={46} n={3} gap={3} seed={4} /><Rivets x={6} y={52} w={84} n={9} />
+      <Grime x={2} y={34} w={92} h={26} seed={661} n={5} op={0.25} /><Scuff x={4} y={6} w={88} h={50} seed={662} n={8} c="steel" />
+    </svg>
+  );
+}
+
+function PropTargetRange() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={44} ry={2.8} />
+      <Slab x={2} y={50} w={92} h={9} k={1.2} c="dark" /><Hazard x={2} y={56} w={92} h={3} />
+      <line x1="8" y1="46" x2="88" y2="46" stroke={ART.steel.base} strokeWidth="0.8" strokeDasharray="3 3" />
+      {[18, 48, 78].map((x, i) => (
+        <g key={x}>
+          <Bev t="polygon" points={pts([[x - 3, 46], [x - 3, 20], [x + 3, 20], [x + 3, 46]])} c="steel" o={0.5} />
+          <Bev t="polygon" points={pts(ngon(x, 12, 7, 7, 10))} c="pearl" o={0.6} />
+          <polygon points={pts(ngon(x, 12, 4.6, 4.6, 10))} fill={ART.red.base} /><polygon points={pts(ngon(x, 12, 2.4, 2.4, 10))} fill={ART.pearl.hi} />
+          <Bev t="polygon" points={pts([[x - 8, 40], [x - 6, 22], [x + 6, 22], [x + 8, 40]])} c="dark" o={0.7} />
+          <circle cx={x + (i - 1) * 2} cy={30 + i * 2} r="1.2" fill={S.amberHi} />
+        </g>
+      ))}
+      <Slab x={36} y={52} w={24} h={9} k={1.2} c="steel" /><Slab x={38} y={53.6} w={20} h={5} k={0.6} c="dark" /><rect x="39.4" y="54.6" width="17" height="3" fill={ART.screen.green} /><text x="48" y="57" textAnchor="middle" fontSize="2.6" fill={S.greenHi} fontWeight="700" {...PT}>SIM 03</text>
+      <Lights x={6} y={5} n={3} gap={4} seed={2} /><Rivets x={4} y={48} w={88} n={10} />
+      <Grime x={2} y={8} w={92} h={52} seed={671} n={5} op={0.2} /><Scuff x={4} y={10} w={88} h={46} seed={672} n={7} c="steel" />
+    </svg>
+  );
+}
+
+function PropFuelDiagTerminal() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={26} ry={3.4} />
+      <Cable d="M52 50 C60 56, 56 62, 44 62" w={3} /><Cable d="M52 44 C62 50, 60 60, 46 60" w={3} />
+      <Slab x={10} y={46} w={38} h={11} k={1.4} c="pearl" o={1} /><Slab x={10} y={46} w={7} h={11} k={1} c="deepglass" o={0.9} /><Slab x={41} y={46} w={7} h={11} k={1} c="deepglass" o={0.9} />
+      <Bev t="polygon" points={pts([[8, 10], [50, 10], [54, 14], [54, 44], [8, 44]])} c="pearl" o={1.2} />
+      <Bev t="polygon" points={pts([[8, 10], [14, 10], [14, 44], [8, 44]])} c="deepglass" o={1} />
+      <polygon points={pts([[16, 14], [48, 14], [50, 40], [18, 40]])} fill={ART.screen.amber} />
+      <text x="33" y="19.6" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>SHUTTLE K-14</text>
+      {[0, 1, 2].map((i) => <g key={i}><rect x="20" y={23 + i * 5.4} width="26" height="2.6" fill={ART.dark.base} /><rect x="20" y={23 + i * 5.4} width={[22, 17, 24][i]} height="2.6" fill={[S.amber, S.green, S.cyan][i]} /></g>)}
+      <text x="33" y="39" textAnchor="middle" fontSize="2.6" fill={S.amberHi} {...PT}>FUEL 92 HULL 100</text>
+      <Rivets x={10} y={12} w={42} n={6} c="brass" /><Lights x={44} y={44} n={3} gap={3} seed={6} />
+      <Seams x={8} y={10} w={46} h={34} cols={2} op={0.3} /><Grime x={6} y={10} w={50} h={50} seed={681} n={4} op={0.18} /><Scuff x={10} y={14} w={42} h={40} seed={682} n={5} c="pearl" />
+    </svg>
+  );
+}
+
+function PropSanctumHolo() {
+  const S = ART.signal;
+  const top = ngon(48, 74, 44, 14, 28);
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={90} rx={44} ry={4.4} />
+      <Bev t="polygon" points={pts(ngon(48, 82, 40, 10, 28))} c="pearl" o={1.4} /><polygon points={pts(ngon(48, 82, 34, 7.4, 28))} fill="none" />
+      <ellipse cx="48" cy="81" rx="34" ry="7" fill="none" stroke={ART.brass.hi} strokeWidth="1.6" />
+      <Bev t="polygon" points={pts(top)} c="deepglass" o={1.4} />
+      <ellipse cx="48" cy="73" rx="44" ry="14" fill="none" stroke={ART.brass.base} strokeWidth="2.4" />
+      {top.filter((_, i) => i % 4 === 0).map(([x, y], i) => <circle key={i} cx={x} cy={y - 1} r="1.2" fill={ART.brass.hi} />)}
+      <polygon points={pts(ngon(48, 72, 36, 11, 28))} fill={ART.screen.cyan} />
+      {Array.from({ length: 6 }, (_, i) => <polygon key={i} points={pts([[48, 72], [48 + Math.cos(i * 1.047) * 9, 72 + Math.sin(i * 1.047) * 3], [48 + Math.cos((i + 1) * 1.047) * 9, 72 + Math.sin((i + 1) * 1.047) * 3]])} fill={ART.brass.base} />)}
+      <polygon points={pts([[16, 72], [80, 72], [66, 16], [30, 16]])} fill={S.cyan} opacity="0.1" />
+      <g style={{ animation:'holo-flicker 3s ease-in-out infinite' }}>
+        {[0, 1, 2, 3].map((i) => <polygon key={i} points={pts(ngon(48, 66 - i * 9, 28 - i * 5, 7 - i, 24))} fill="none" stroke={S.cyanHi} strokeWidth="0.6" opacity={0.7 - i * 0.12} />)}
+        {Array.from({ length: 6 }, (_, i) => <line key={i} x1={24 + i * 9.6} y1="68" x2={34 + i * 5.6} y2="36" stroke={S.cyan} strokeWidth="0.4" opacity="0.5" />)}
+        <polyline points={pts([[28, 62], [38, 52], [48, 56], [60, 44], [68, 50]])} fill="none" stroke={S.cyanHi} strokeWidth="0.9" />
+        {[[40, 54], [56, 48], [62, 60], [34, 46]].map(([x, y], i) => <polygon key={i} points={pts([[x - 3, y + 3], [x, y - 3], [x + 3, y + 3]])} fill={S.orange} style={{ animation:`ship-blink ${1.4 + i * 0.4}s ease-in-out infinite` }} />)}
+        <text x="48" y="14" textAnchor="middle" fontSize="3" fill={S.cyanHi} fontWeight="700" {...PT}>BADOR 2 RPM</text>
+      </g>
+      <Glow cx={48} cy={72} rx={30} ry={7} c={S.cyan} opacity={0.5} />
+      <Rivets x={14} y={86} w={68} n={10} c="brass" /><Seams x={10} y={78} w={76} h={10} cols={7} op={0.3} />
+      <Grime x={8} y={64} w={80} h={26} seed={691} n={4} op={0.16} /><Scuff x={10} y={66} w={76} h={22} seed={692} n={5} c="pearl" />
+    </svg>
+  );
+}
+
+function PropCommandBoard() {
+  const S = ART.signal;
+  const slips = [[10, 12, 'note', 'yellow'], [28, 11, 'note', 'pink'], [46, 12, 'note', 'yellow'], [66, 11, 'note', 'yellow'], [10, 30, 'note', 'pink'], [28, 31, 'note', 'yellow'], [46, 30, 'note', 'yellow']];
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={42} ry={3} />
+      <Slab x={2} y={2} w={92} h={56} k={3} c="deepglass" o={1.1} />
+      <rect x="6" y="6" width="84" height="48" fill={ART.pearl.shade} />
+      <rect x="6" y="6" width="84" height="48" fill={ART.dark.base} opacity="0.35" />
+      <rect x="4" y="4" width="88" height="2" fill={ART.brass.base} /><rect x="4" y="54" width="88" height="2" fill={ART.brass.base} />
+      <text x="48" y="12" textAnchor="middle" fontSize="4.4" fill={ART.brass.hi} fontWeight="700" letterSpacing="1" {...PT}>COMMAND NOTICES</text>
+      {slips.map(([x, y, , c], i) => <g key={i} transform={`rotate(${(i % 3) - 1} ${x + 8} ${y + 7})`}><rect x={x + 4} y={y + 6} width="15" height="12" fill={ART.note[c]} /><rect x={x + 6} y={y + 9} width="11" height="1" fill={ART.note.ink} opacity="0.7" /><rect x={x + 6} y={y + 12} width="8" height="1" fill={ART.note.ink} opacity="0.6" /><circle cx={x + 11.5} cy={y + 7.2} r="1" fill={S.red} /></g>)}
+      <Slab x={62} y={28} w={26} h={20} k={1.4} c="dark" o={0.9} /><rect x="64" y="30" width="22" height="16" fill={ART.screen.red} />
+      <text x="75" y="35.6" textAnchor="middle" fontSize="3.4" fill={S.redHi} fontWeight="700" {...PT}>BOUNTIES</text><text x="75" y="41" textAnchor="middle" fontSize="2.6" fill={S.amberHi} {...PT}>3 OPEN</text><text x="75" y="45" textAnchor="middle" fontSize="2.2" fill={S.amberHi} {...PT}>ENGINE WASTES</text>
+      <Slab x={36} y={56} w={24} h={4} k={0.8} c="brass" o={0.6} />
+      <Rivets x={8} y={8} w={80} n={9} c="brass" /><Rivets x={8} y={52} w={80} n={9} c="brass" />
+      <Grime x={2} y={2} w={92} h={58} seed={701} n={4} op={0.16} /><Scuff x={4} y={4} w={88} h={52} seed={702} n={5} c="steel" />
+    </svg>
+  );
+}
+
+function PropKuatiTerminal({ variant }) {
+  const S = ART.signal;
+  const cfg = {
+    security: { title: 'HQ SECURITY', rows: ['CLEARANCE: PASS', 'BASE LOGS LOCKED', 'YELLOW ALERT'], scr: ART.screen.cyan, ink: S.cyanHi, trim: S.cyan },
+    manifest: { title: 'SUPPLY MANIFEST', rows: ['SKIFF KDY-9: OVERDUE', 'ALLOYS 412 T', 'BUY / SELL OPEN'], scr: ART.screen.amber, ink: S.amberHi, trim: S.amber },
+    ledger: { title: 'QUARTERMASTER', rows: ['ISSUE LEDGER', 'ARMORY SEALED', 'AUDIT: PENDING'], scr: ART.screen.green, ink: S.greenHi, trim: S.green },
+  }[variant] || { title: 'KUATI NODE', rows: ['STANDBY'], scr: ART.screen.cyan, ink: S.cyanHi, trim: S.cyan };
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={24} ry={3.4} />
+      <Slab x={20} y={44} w={24} h={13} k={1.4} c="deepglass" /><Slab x={12} y={54} w={40} h={5} k={1.2} c="pearl" o={0.9} />
+      <Bev t="polygon" points={pts([[8, 5], [56, 5], [60, 10], [60, 42], [56, 46], [8, 46], [4, 42], [4, 10]])} c="pearl" o={1.2} />
+      <rect x="4" y="22" width="56" height="2" fill={ART.brass.base} />
+      <rect x="9" y="9" width="46" height="26" fill={cfg.scr} /><rect x="9" y="9" width="46" height="4.6" fill={cfg.trim} opacity="0.3" />
+      <text x="32" y="12.8" textAnchor="middle" fontSize="3.2" fill={cfg.ink} fontWeight="700" {...PT}>{cfg.title}</text>
+      {cfg.rows.map((r, i) => <text key={i} x="12" y={19.6 + i * 4.4} fontSize="2.8" fill={cfg.ink} opacity="0.9" {...PT}>{r}</text>)}
+      <Slab x={9} y={37} w={46} h={7} k={1} c="deepglass" o={0.9} />
+      <Toggles x={12} y={39} cols={8} rows={1} gap={4.6} seed={9} /><Lights x={44} y={41} n={3} gap={3.4} seed={11} />
+      <Rivets x={8} y={7} w={48} n={7} c="brass" /><Seams x={4} y={5} w={56} h={41} cols={1} op={0.2} />
+      <Grime x={4} y={5} w={56} h={52} seed={711} n={4} op={0.18} /><Scuff x={8} y={9} w={48} h={34} seed={712} n={5} c="pearl" />
+    </svg>
+  );
+}
+
+function PropFacilitySign({ variant }) {
+  const S = ART.signal;
+  const cfg = {
+    medic: { t: 'MEDIC TENT', s: 'TRIAGE · BACTA', c: 'teal', f: 11 },
+    goods: { t: 'GOODS & MATERIALS', s: 'DEPOT · SUPPLY SKIFFS', c: 'amber', f: 8.6 },
+    trike: { t: "TRIKE'S ROBOTICS", s: 'REPAIR · UPGRADES', c: 'copper', f: 9.4 },
+    barracks: { t: 'WEAPONS BARRACKS', s: 'ARMORY · RANGE', c: 'red', f: 9 },
+    hq: { t: 'KDY MAIN HQ', s: 'PASS REQUIRED', c: 'deepglass', f: 11 },
+  }[variant] || { t: 'KDY BADOR', s: 'FORWARD HUB', c: 'steel' };
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={54} ry={2.6} />
+      {[14, 108].map((x) => <Bev key={x} t="polygon" points={pts([[x, 60], [x, 30], [x + 5, 30], [x + 5, 60]])} c="steel" o={0.7} />)}
+      <Bev t="polygon" points={pts([[6, 8], [122, 8], [124, 10], [124, 44], [122, 46], [6, 46], [4, 44], [4, 10]])} c={cfg.c} o={1.2} />
+      <Seams x={4} y={8} w={120} h={38} cols={3} op={0.25} />
+      <rect x="8" y="12" width="112" height="30" fill={ART.screen.off} opacity="0.55" />
+      <text x="64" y="27" textAnchor="middle" fontSize={cfg.f || 11} fill={ART.pearl.hi} fontWeight="700" letterSpacing="0.6" {...PT}>{cfg.t}</text>
+      <text x="64" y="37" textAnchor="middle" fontSize="4" fill={S.amberHi} {...PT}>{cfg.s}</text>
+      <Hazard x={8} y={40} w={112} h={2.4} />
+      {[10, 118].map((x) => <circle key={x} cx={x} cy="14" r="1.6" fill={S.amber} style={{ animation:'ship-blink 2s steps(2) infinite' }} />)}
+      <Rivets x={10} y={10} w={108} n={13} /><Grime x={4} y={8} w={120} h={52} seed={721} n={5} op={0.2} /><Scuff x={6} y={10} w={116} h={34} seed={722} n={6} c="steel" />
+    </svg>
+  );
+}
+
+function PropKuatiBanner() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={92} rx={22} ry={2.6} />
+      <Bev t="polygon" points={pts([[8, 10], [56, 10], [56, 14], [8, 14]])} c="brass" o={1} />
+      <circle cx="8" cy="12" r="2.2" fill={ART.brass.hi} /><circle cx="56" cy="12" r="2.2" fill={ART.brass.hi} />
+      <Bev t="polygon" points={pts([[12, 14], [52, 14], [52, 78], [32, 90], [12, 78]])} c="deepglass" o={1.2} />
+      <polygon points={pts([[12, 14], [16, 14], [16, 76], [12, 78]])} fill={ART.pearl.base} /><polygon points={pts([[48, 14], [52, 14], [52, 78], [48, 76]])} fill={ART.pearl.base} />
+      <polygon points={pts([[16, 74], [48, 74], [32, 85]])} fill={ART.brass.base} opacity="0.8" />
+      <circle cx="32" cy="42" r="14" fill="none" stroke={ART.brass.hi} strokeWidth="2.4" /><circle cx="32" cy="42" r="3.4" fill={ART.brass.hi} />
+      {Array.from({ length: 8 }, (_, i) => <line key={i} x1="32" y1="42" x2={32 + Math.cos(i * Math.PI / 4) * 14} y2={42 + Math.sin(i * Math.PI / 4) * 14} stroke={ART.brass.hi} strokeWidth="1.4" />)}
+      <text x="32" y="68" textAnchor="middle" fontSize="4" fill={ART.brass.hi} fontWeight="700" letterSpacing="1" {...PT}>KUAT</text>
+      <Seams x={12} y={14} w={40} h={62} rows={3} op={0.2} /><Rivets x={14} y={20} w={36} n={5} c="brass" />
+      <Grime x={10} y={12} w={44} h={78} seed={731} n={3} op={0.14} /><Scuff x={12} y={16} w={40} h={70} seed={732} n={4} c="pearl" />
+    </svg>
+  );
+}
+
+function PropTerminalBank() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={61} rx={58} ry={2.8} />
+      <Slab x={2} y={30} w={124} h={28} k={2} c="pearl" o={1.2} /><rect x="2" y="30" width="124" height="2" fill={ART.brass.base} />
+      <Slab x={6} y={34} w={116} h={20} k={1.6} c="deepglass" o={0.9} />
+      {[0, 1, 2, 3].map((i) => <g key={i}>
+        <Bev t="polygon" points={pts([[10 + i * 28, 36], [32 + i * 28, 36], [34 + i * 28, 14], [8 + i * 28, 14]])} c="dark" o={1} />
+        <polygon points={pts([[12 + i * 28, 34], [30 + i * 28, 34], [31 + i * 28, 17], [11 + i * 28, 17]])} fill={ART.screen.cyan} />
+        <polyline points={pts([[14 + i * 28, 30], [18 + i * 28, 24], [22 + i * 28, 28], [28 + i * 28, 20]])} fill="none" stroke={S.cyanHi} strokeWidth="0.9" />
+        <rect x={14 + i * 28} y="19" width={6 + i * 2} height="1.4" fill={S.cyan} opacity="0.7" />
+        <Toggles x={13 + i * 28} y={42} cols={5} rows={2} gap={3.8} seed={20 + i} />
+        <circle cx={31 + i * 28} cy="38" r="1" fill={i % 2 ? S.green : S.amber} />
+      </g>)}
+      <Rivets x={8} y={55} w={112} n={14} c="brass" /><Vent x={52} y={4} w={24} h={6} n={2} />
+      <Grime x={2} y={10} w={124} h={50} seed={741} n={4} op={0.16} /><Scuff x={4} y={32} w={120} h={24} seed={742} n={6} c="pearl" />
+    </svg>
+  );
+}
+
+function PropFloorInlay() {
+  return (
+    <svg viewBox="0 0 160 160" width="160" height="160" style={PROP_STYLE}>
+      <Bev t="polygon" points={pts(ngon(80, 80, 76, 76, 32))} c="pearl" o={0.9} />
+      {[70, 54, 40].map((r, i) => <circle key={r} cx="80" cy="80" r={r} fill="none" stroke={ART.brass.base} strokeWidth={i === 0 ? 3 : 1.6} opacity="0.9" />)}
+      <circle cx="80" cy="80" r="22" fill={ART.deepglass.base} opacity="0.7" />
+      <circle cx="80" cy="80" r="22" fill="none" stroke={ART.brass.hi} strokeWidth="2.6" /><circle cx="80" cy="80" r="5" fill={ART.brass.hi} />
+      {Array.from({ length: 12 }, (_, i) => <line key={i} x1="80" y1="80" x2={80 + Math.cos(i * Math.PI / 6) * 22} y2={80 + Math.sin(i * Math.PI / 6) * 22} stroke={ART.brass.hi} strokeWidth="1.6" />)}
+      {Array.from({ length: 8 }, (_, i) => <polygon key={i} points={pts([[80 + Math.cos(i * Math.PI / 4) * 70, 80 + Math.sin(i * Math.PI / 4) * 70], [80 + Math.cos(i * Math.PI / 4 + 0.12) * 56, 80 + Math.sin(i * Math.PI / 4 + 0.12) * 56], [80 + Math.cos(i * Math.PI / 4 - 0.12) * 56, 80 + Math.sin(i * Math.PI / 4 - 0.12) * 56]])} fill={ART.brass.base} />)}
+      <Seams x={6} y={6} w={148} h={148} cols={4} rows={4} op={0.12} /><Rivets x={20} y={20} w={120} n={6} c="brass" />
+      <Grime x={8} y={8} w={144} h={144} seed={751} n={6} op={0.1} /><Scuff x={10} y={10} w={140} h={140} seed={752} n={8} c="pearl" />
+    </svg>
+  );
+}
+// ===== BADOR BASE PROPS END =====
+
+
+
+
+
 
 const PROP_DEFS = {
   fuel_rig:           { w: 2, h: 2, ax: 1, ay: 1 },
@@ -11972,6 +12988,24 @@ const PROP_DEFS = {
   hypercore:            { w: 3, h: 3, ax: 1, ay: 2 },
   bridge_console:       { w: 4, h: 2, ax: 1, ay: 1 },
   // CORUSCANT DEFS END
+  // BADOR DEFS BEGIN
+  landing_pad:          { w: 12, h: 8, ax: 6, ay: 1, backdrop: true },
+  thoroughfare:         { w: 14, h: 6, ax: 5, ay: 2, backdrop: true },
+  hq_dome:              { w: 14, h: 11, ax: 1, ay: 4, backdrop: true },
+  bacta_pod:            { w: 2, h: 3, ax: 0, ay: 2 },
+  repulsor_crane:       { w: 5, h: 3, ax: 4, ay: 2 },
+  robotics_bench:       { w: 3, h: 2, ax: 1, ay: 1 },
+  weapon_bench:         { w: 3, h: 2, ax: 1, ay: 1 },
+  target_range:         { w: 3, h: 2, ax: 1, ay: 1 },
+  fuel_diag_terminal:   { w: 2, h: 2, ax: 0, ay: 1 },
+  sanctum_holo:         { w: 3, h: 3, ax: 1, ay: 2 },
+  command_board:        { w: 3, h: 2, ax: 1, ay: 1 },
+  kuati_terminal:       { w: 2, h: 2, ax: 0, ay: 1 },
+  facility_sign:        { w: 4, h: 2, ax: 1, ay: 1 },
+  kuati_banner:         { w: 2, h: 3, ax: 0, ay: 2 },
+  terminal_bank:        { w: 4, h: 2, ax: 1, ay: 1 },
+  floor_inlay:          { w: 5, h: 5, ax: 2, ay: 2, backdrop: true },
+  // BADOR DEFS END
 };
 
 const PropArt = React.memo(function PropArt({ kind, variant, active }) {
@@ -12096,6 +13130,24 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'hypercore': return <PropHypercore variant={variant} active={!!active} />;
     case 'bridge_console': return <PropBridgeConsole variant={variant} active={!!active} />;
     // CORUSCANT CASES END
+    // BADOR CASES BEGIN
+    case 'landing_pad': return <PropLandingPad />;
+    case 'thoroughfare': return <PropThoroughfare />;
+    case 'hq_dome': return <PropHqDome />;
+    case 'bacta_pod': return <PropBactaPod />;
+    case 'repulsor_crane': return <PropRepulsorCrane />;
+    case 'robotics_bench': return <PropRoboticsBench />;
+    case 'weapon_bench': return <PropWeaponBench />;
+    case 'target_range': return <PropTargetRange />;
+    case 'fuel_diag_terminal': return <PropFuelDiagTerminal />;
+    case 'sanctum_holo': return <PropSanctumHolo />;
+    case 'command_board': return <PropCommandBoard />;
+    case 'kuati_terminal': return <PropKuatiTerminal variant={variant} />;
+    case 'facility_sign': return <PropFacilitySign variant={variant} />;
+    case 'kuati_banner': return <PropKuatiBanner />;
+    case 'terminal_bank': return <PropTerminalBank />;
+    case 'floor_inlay': return <PropFloorInlay />;
+    // BADOR CASES END
     default: return null;
   }
 });
@@ -16858,6 +17910,7 @@ function StarWarsRPG() {
   const [shuttlePilot, setShuttlePilot] = useState(null);
   const [cinematic, setCinematic] = useState(null);
   const encStepsRef = React.useRef(0);
+  const patrolRef = React.useRef({});
   const [npcPositions, setNpcPositions] = useState({});
   const [suspicionMeter, setSuspicionMeter] = useState(0);
   const [choiceFeedback, setChoiceFeedback] = useState(null);
@@ -16889,6 +17942,11 @@ function StarWarsRPG() {
   }, [questFlags]);
 
   const currentObjective = React.useMemo(() => {
+    if (BADOR_SURFACE_ZONES.includes(zoneId)) {
+      if (!questFlags.bador_pass_issued) return '[BADOR] Check in with Lieutenant Vane on the landing deck and collect your Base Access Pass.';
+      if (!questFlags.vael_briefed) return '[BADOR] Yellow Alert. Report to Commander Vael in the Tactical Sanctum inside Main HQ.';
+      if (!questFlags.scan_team_fate_known) return '[BADOR] Find the lost scan team and the overdue supply skiff. Sweep Sector 4 and the Engine Wastes.';
+    }
     if (questFlags.syndicateManagement_active && !questFlags.syndicate_first_contract_run) return '[SYNDICATE] Open the War Table at the Penthouse and run your first contract.';
     if (questFlags.vault_heist_complete && !questFlags.jon_status_dead && !questFlags.jon_status_subjugated && !questFlags.jon_status_rival) return '[INHERITANCE] Go to the Penthouse. Your lieutenants are ready. Jon has nowhere to run.';
     if ((questFlags.malak_turned || questFlags.malak_dead) && (questFlags.reya_loyal || questFlags.reya_blackmailed) && !questFlags.vault_heist_complete) return '[INHERITANCE] Use Reya\'s keycard at the Penthouse vault terminal. Freeze the payroll.';
@@ -16923,7 +17981,7 @@ function StarWarsRPG() {
     if (questFlags.sublevel_coordinates && !questFlags.sublevels_entrance_found) return '[SIDE QUEST] Follow Garrus\'s coordinates to the sealed maintenance shaft in Sub-Level 1313.';
     if (questFlags.garrus_coordinates_sold && !questFlags.sublevels_entrance_found) return '[SIDE QUEST] Head to Sub-Level 1313 to investigate the pre-Republic vault Garrus described.';
     return 'Find your contact Jon at Coruscant Spaceport, Docking Bay 14.';
-  }, [questFlags]);
+  }, [questFlags, zoneId]);
 
   const pushActionLog = useCallback((msg, zoneLabel) => {
     setActionLog((prev) => [{ text: msg, zone: zoneLabel || '' }, ...prev.slice(0, 49)]);
@@ -16980,7 +18038,7 @@ function StarWarsRPG() {
     setZoneId(dest.targetZone);
     setMap(newZone.buildMap());
     setPos(dest.targetPos);
-    pushActionLog(`Shuttle K-14 touches down. Entered ${newZone.name}.`, dest.targetZone);
+    pushActionLog(dest.quiet ? `Entered ${newZone.name}.` : `Shuttle K-14 touches down. Entered ${newZone.name}.`, dest.targetZone);
     if (dest.targetZone === 'bador_main_base' && !questFlagsRef.current.bador_landed) {
       setFlag('bador_landed');
       pushActionLog(SHUTTLE_ARRIVAL_TEXT, dest.targetZone);
@@ -16990,7 +18048,14 @@ function StarWarsRPG() {
 
   useEffect(() => { posRef.current = pos; }, [pos]);
   useEffect(() => { questFlagsRef.current = questFlags; }, [questFlags]);
-  useEffect(() => { setNpcPositions({}); encStepsRef.current = 0; }, [zoneId]);
+  useEffect(() => { setNpcPositions({}); encStepsRef.current = 0; patrolRef.current = {}; }, [zoneId]);
+  useEffect(() => {
+    const lines = zone.paAnnouncements;
+    if (!lines || !lines.length) return;
+    let i = Math.floor(Math.random() * lines.length);
+    const id = setInterval(() => { pushActionLog(`[BASE PA] ${lines[i % lines.length]}`, zoneId); i += 1; }, 34000);
+    return () => clearInterval(id);
+  }, [zoneId]);
   useEffect(() => {
     const bz = BADOR_COMBAT_ZONES[zoneId];
     if (!bz) return;
@@ -17006,9 +18071,28 @@ function StarWarsRPG() {
         const next = { ...prev };
         const playerPos = posRef.current;
         zone.npcs?.filter(npc => isNpcVisible(npc, questFlagsRef.current || {})).forEach((npc) => {
-          if (!npc.mobile && !npc.wander) return;
+          if (!npc.mobile && !npc.wander && !npc.patrol) return;
           if (npc.wander && Math.random() < 0.4) return;
           const cur = prev[npc.id] || { x: npc.x, y: npc.y };
+          if (npc.patrol) {
+            const idx = patrolRef.current[npc.id] || 0;
+            const tgt = npc.patrol[idx % npc.patrol.length];
+            if (cur.x === tgt[0] && cur.y === tgt[1]) { patrolRef.current[npc.id] = (idx + 1) % npc.patrol.length; return; }
+            const dx = Math.sign(tgt[0] - cur.x), dy = Math.sign(tgt[1] - cur.y);
+            const horizFirst = Math.abs(tgt[0] - cur.x) >= Math.abs(tgt[1] - cur.y);
+            const tries = (horizFirst ? [[dx, 0], [0, dy]] : [[0, dy], [dx, 0]]).filter(([a, b]) => a || b);
+            for (const [mx, my] of tries) {
+              const nx = cur.x + mx, ny = cur.y + my;
+              const tile = map[ny]?.[nx];
+              if (!tile || tile.type !== 'floor') continue;
+              if (nx === playerPos.x && ny === playerPos.y) continue;
+              if (zone.npcs.some((n) => { if (n.id === npc.id) return false; const np = prev[n.id] || { x: n.x, y: n.y }; return np.x === nx && np.y === ny; })) continue;
+              if ((zone.worldObjects || []).some(o => o.x === nx && o.y === ny)) continue;
+              next[npc.id] = { x: nx, y: ny };
+              break;
+            }
+            return;
+          }
           const dirs = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
           dirs.sort(() => Math.random() - 0.5);
           for (const { dx, dy } of dirs) {
@@ -17176,7 +18260,11 @@ function StarWarsRPG() {
       if (tile.type === 'ship_ramp') { setShowTravel(true); return; }
       if (tile.type === 'door') {
         const door = zone.doors.find(d => d.x === x && d.y === y);
-        if (door) { travelToZone(door.targetZone, door.targetPos); return; }
+        if (door) {
+          if (door.requiresFlag && !questFlags[door.requiresFlag]) { pushActionLog(door.lockedMessage || 'The door is sealed.', zoneId); return; }
+          if (door.cinematic) { setCinematic({ mode: door.cinematic, dest: { targetZone: door.targetZone, targetPos: door.targetPos, name: door.label, quiet: true } }); return; }
+          travelToZone(door.targetZone, door.targetPos); return;
+        }
       }
 
       const npcHere = zone.npcs?.filter(n => isNpcVisible(n, questFlags)).find((n) => {
@@ -17234,6 +18322,9 @@ function StarWarsRPG() {
             const woDesc = worldObjHere.worldStateVariant?.[worldState] ?? worldObjHere.description;
             pushActionLog(`[${worldObjHere.label}] ${woDesc}`, zoneId);
           }
+          if (worldObjHere.healsRoster) setSyndicateRoster(r => r.map(a => a.status === 'injured' ? { ...a, status: 'available' } : a));
+          if (worldObjHere.heatDelta) setSyndicateHeat(h => Math.max(0, Math.min(100, h + worldObjHere.heatDelta)));
+          if (worldObjHere.grantsCredits && !worldObjHere.triggersMinigame) setCredits(c => c + worldObjHere.grantsCredits);
           if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) {
             addItem(ITEMS[worldObjHere.grantsItem]);
             pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId);
@@ -17461,7 +18552,7 @@ function StarWarsRPG() {
           {visiblePropObjects(zone, questFlags, completedInteractions).map((wo) => {
             const d = PROP_DEFS[wo.propArt];
             return (
-              <div key={'prop_' + wo.id} style={{ position:'absolute',left:(wo.x - d.ax - camX) * TILE,top:(wo.y - d.ay - camY) * TILE,width:d.w * TILE,height:d.h * TILE,zIndex:2,pointerEvents:'none',filter:spriteFx(zone.accent,'prop') }}>
+              <div key={'prop_' + wo.id} style={{ position:'absolute',left:(wo.x - d.ax - camX) * TILE,top:(wo.y - d.ay - camY) * TILE,width:d.w * TILE,height:d.h * TILE,zIndex:d.backdrop ? 1 : 2,pointerEvents:'none',filter:spriteFx(zone.accent,'prop') }}>
                 <PropArt kind={wo.propArt} variant={wo.propVariant} active={wo.id.endsWith('_active')} />
               </div>
             );

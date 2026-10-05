@@ -130,7 +130,7 @@ for (const [zid, { pid, z }] of Object.entries(allZones)) {
       const d = X.PROP_DEFS[o.propArt];
       if (!d) { E(tag, `object "${o.id}" propArt "${o.propArt}" has no PROP_DEFS footprint`); continue; }
       if (!propCases.has(o.propArt)) E(tag, `object "${o.id}" propArt "${o.propArt}" has no case in PropArt(); renders nothing`);
-      rects.push({ id: o.id, kind: 'prop', x0: o.x - d.ax, y0: o.y - d.ay, x1: o.x - d.ax + d.w - 1, y1: o.y - d.ay + d.h - 1, ox: o.x, oy: o.y });
+      rects.push({ id: o.id, kind: 'prop', x0: o.x - d.ax, y0: o.y - d.ay, x1: o.x - d.ax + d.w - 1, y1: o.y - d.ay + d.h - 1, ox: o.x, oy: o.y, backdrop: !!d.backdrop });
     } else if (hasUnique || hasIcon) {
       legacyCount++;
       W(tag, `object "${o.id}" uses only the legacy 26px icon ("${hasUnique ? 'unique sprite' : kind}"). Upgrade to propArt so it is readable at gameplay scale.`);
@@ -154,12 +154,12 @@ for (const [zid, { pid, z }] of Object.entries(allZones)) {
     if (r.x0 < 0 || r.y0 < 0 || r.x1 >= z.width || r.y1 >= z.height) E(tag, `${r.kind} "${r.id}" footprint leaves the map`);
     for (const t of rects) if (r.id < t.id) {
       const sameTile = r.kind === 'prop' && t.kind === 'prop' && r.ox === t.ox && r.oy === t.oy;
-      if (!sameTile && !(r.x1 < t.x0 || t.x1 < r.x0 || r.y1 < t.y0 || t.y1 < r.y0)) E(tag, `${r.kind} "${r.id}" footprint overlaps ${t.kind} "${t.id}"`);
+      if (!sameTile && !r.backdrop && !t.backdrop && !(r.x1 < t.x0 || t.x1 < r.x0 || r.y1 < t.y0 || t.y1 < r.y0)) E(tag, `${r.kind} "${r.id}" footprint overlaps ${t.kind} "${t.id}"`);
     }
-    for (const c of z.collectibles || []) if (inR(r, c.x, c.y)) E(tag, `${r.kind} "${r.id}" hides collectible "${c.id}"`);
-    for (const d of z.doors || []) if (inR(r, d.x, d.y)) E(tag, `${r.kind} "${r.id}" covers door (${d.x},${d.y})`);
-    for (const o of z.worldObjects || []) if (o.id !== r.id && inR(r, o.x, o.y) && !(r.kind === 'prop' && o.x === r.ox && o.y === r.oy)) E(tag, `${r.kind} "${r.id}" covers the tile of object "${o.id}"`);
-    for (const n of z.npcs || []) if (inR(r, n.x, n.y)) {
+    if (!r.backdrop) for (const c of z.collectibles || []) if (inR(r, c.x, c.y)) E(tag, `${r.kind} "${r.id}" hides collectible "${c.id}"`);
+    if (!r.backdrop) for (const d of z.doors || []) if (inR(r, d.x, d.y)) E(tag, `${r.kind} "${r.id}" covers door (${d.x},${d.y})`);
+    if (!r.backdrop) for (const o of z.worldObjects || []) if (o.id !== r.id && inR(r, o.x, o.y) && !(r.kind === 'prop' && o.x === r.ox && o.y === r.oy)) E(tag, `${r.kind} "${r.id}" covers the tile of object "${o.id}"`);
+    if (!r.backdrop) for (const n of z.npcs || []) if (inR(r, n.x, n.y)) {
       if (r.kind === 'ship') E(tag, `ship "${r.id}" covers npc "${n.id}"`); else I(tag, `prop "${r.id}" sits behind npc "${n.id}" (fine if intentional)`);
     }
   }
