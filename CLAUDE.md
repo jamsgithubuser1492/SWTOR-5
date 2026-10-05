@@ -151,9 +151,15 @@ The player is a rising crime lord on Coruscant in the Old Republic era. The main
 
 ### NPC Portrait Kinds (registered in `NpcPortrait()`)
 
-`archivist`, `assassin`, `besalisk_boss`, `bith`, `broker`, `cantina_owner`, `crime_boss`, `czerka_liaison`, `deuterium_specialist`, `droid`, `generic`, `imperial_naval_liaison`, `jedi`, `kdy_commander`, `kdy_executive_sentinel`, `kdy_guild_overseer`, `kdy_logistics_officer`, `kdy_ring_sec`, `kdy_security_marine`, `kdy_shipwright`, `kuati_sub_director`, `mechanic`, `medic`, `pit_fighter`, `republic_guard`, `republic_navy_inspector`, `republic_pilot`, `senator`, `slicer`, `smuggler`, `sub_deck_slicer`, `swoop_gang`, `the_architect`, `trandoshan_sniper`, `vectis_droid`, `warden`, `zero_g_welder`
+`archivist`, `assassin`, `besalisk_boss`, `bith`, `broker`, `cantina_owner`, `crime_boss`, `czerka_liaison`, `deuterium_specialist`, `droid`, `generic`, `imperial_naval_liaison`, `jedi`, `kdy_commander`, `kdy_executive_sentinel`, `kdy_guild_overseer`, `kdy_logistics_officer`, `kdy_pilot`, `kdy_ring_sec`, `kdy_security_marine`, `kdy_shipwright`, `kuati_sub_director`, `mechanic`, `medic`, `pit_fighter`, `republic_guard`, `republic_navy_inspector`, `republic_pilot`, `senator`, `slicer`, `smuggler`, `sub_deck_slicer`, `swoop_gang`, `the_architect`, `trandoshan_sniper`, `vectis_droid`, `warden`, `zero_g_welder`
 
 This list is generated from the code. `validate-world.js` is the source of truth.
+
+### Kuat and Bador Travel and Dynamic World
+
+- **KDY Shuttle Network**: NPCs with `triggersOverlay: 'shuttle'` (kind `kdy_pilot`, Kuati uniform) open `ShuttleOverlay`. Destinations live in `KDY_SHUTTLE_DESTINATIONS` (flag gated: `vaelen_cleared`, `tanner_briefed`, `bador_landed`). Pilots stand in `kdy_landing_bay`, `kuat_private_suites`, `bador_main_base` and `outpost_7`. Ring to Bador, Bador to ring and Bador surface hops each play `ShuttleCinematic` (5 seconds max, skippable with Space) and swap the zone mid animation. The full arrival text is logged and unlocked as codex `codex-bador-arrival`.
+- **Walking NPCs**: add `wander: N` to an NPC to patrol within N tiles of its home tile (avoids objects, collectibles and the player). `mobile: true` still roams the whole zone. Never give quest blockers or vendors a `wander`.
+- **Bador active combat zones**: `BADOR_COMBAT_ZONES` lists the only zones with random encounters on Bador. Each needs `need` victories (flags `bador_won_<zone>_<n>`), then sets `bador_cleared_<zone>` and never triggers again. Hostiles are raiders, scavengers and rogue machines only: KDY troops and personnel never attack the player.
 
 ### Canvas Object Types (rendered in zone canvas, beyond tiles)
 

@@ -49,6 +49,7 @@ const SHIP_DEFS = {
   valor_frame:      { w: 14, h: 4 },
   czerka_hauler:    { w: 7,  h: 5 },
   kuat_yacht:       { w: 5,  h: 4 },
+  kdy_shuttle:      { w: 6,  h: 4 },
 };
 function carveShips(g, ships) {
   (ships || []).forEach((s) => { const d = SHIP_DEFS[s.kind]; if (d) carveRect(g, s.x, s.y, s.x + d.w - 1, s.y + d.h - 1, 'ship_hull'); });
@@ -2955,8 +2956,6 @@ const PLANETS = {
         doors: [
           { x: 0, y: 8, targetZone: 'kdy_landing_bay', targetPos: { x: 30, y: 11 }, label: 'Ring Transit' },
           { x: 0, y: 9, targetZone: 'kdy_landing_bay', targetPos: { x: 30, y: 12 }, label: 'Ring Transit' },
-          { x: 27, y: 8, targetZone: 'bador_main_base', targetPos: { x: 1, y: 9 }, label: 'Shuttle to Bador' },
-          { x: 27, y: 9, targetZone: 'bador_main_base', targetPos: { x: 1, y: 10 }, label: 'Shuttle to Bador' },
         ],
         worldObjects: [
           { id: 'kuat_viewing_port', iconKind: 'orbital_viewport', propArt: 'shipyard_viewport', x: 8, y: 3, label: 'Structural Viewing Port',
@@ -2988,7 +2987,12 @@ const PLANETS = {
             description: 'A KDY-commissioned protocol variant: slender brass-and-copper chassis, formal service configuration, copper wiring visible at the joint couplings in the style of Old Republic luxury manufacture. Its photoreceptors are dim — standby mode. The KDY crest is etched into its chest plating. A service card reads: UNIT DESIGNATION — RUEN-7, EXECUTIVE SUITE DETAIL, AUTHORIZED USE: HOUSE KUAT STAFF ONLY. The service log shows the last activated user was Lady Kuat, two days prior.' },
         ],
         npcs: [
+          { id: 'pilot_suites_veyr', x: 26, y: 10, kind: 'kdy_pilot', label: 'Pilot Dax Veyr (KDY Shuttle)', triggersOverlay: 'shuttle',
+            greeting: '\"Executive pad is clear. Shuttle K-14 can have you on Bador in minutes.\"',
+            repeatPrompt: 'The pilot taps the shuttle manifest and waits for a destination.',
+            prompt: 'A KDY shuttle pilot in the blue Kuati flight uniform.', choices: [] },
           { id: 'captain_vaelen', x: 4, y: 8, kind: 'kdy_executive_sentinel', label: 'Captain Vaelen',
+            hideAfterFlags: ['vaelen_cleared'],
             repeatPrompt: 'Vaelen\'s obsidian visor does not turn toward you. "Your access status has not changed."',
             prompt: 'He is positioned at the transit threshold and gives no indication of having moved since you arrived. The ivory-and-gold armor is not issued equipment — it is older than any current KDY contract, older than the Imperial occupation, older than the man wearing it. He speaks without turning his head. "You came through the ring transit." A statement not requiring a response. "Ring-Sec clears the transit gate. The Sentinel roster clears the suites. Those are different clearances." He lets this sit.',
             choices: [
@@ -2997,12 +3001,16 @@ const PLANETS = {
                 grants: { flags: ['vaelen_cleared'] } },
               { text: 'Tell him Tanner sent you.', morality: 0, loyalty: {},
                 result: '"Tanner has KDY operational clearance. Not residential clearance." He still does not look at you. "Those are not the same authorization tier. I recognize that you are here. I also recognize that you are not cleared past this threshold." A pause. "If someone in the suites wishes to clear you personally, I will be informed."',
-                grants: { flags: ['vaelen_tanner_refused'] } },
+                defer: true, grants: { flags: ['vaelen_tanner_refused'] } },
               { text: 'Ask him about House Kuat\'s history on the ring.', morality: 5, loyalty: { republic: 5 },
                 result: 'For the first time, he turns his head. A fraction. "House Kuat has maintained this ring since before the Republic codified its current article of statehood." He says this the way a fact is stated when the speaker believes ignoring it is a form of stupidity. "The Empire placed an emblem over a KDY dock seal in Year Three of the occupation. That emblem is a decal. The dock seal is twenty-two years older." He turns back. "Lady Kuat is not available without authorization."',
-                grants: { flags: ['vaelen_history_shared'] } },
+                defer: true, grants: { flags: ['vaelen_history_shared'] } },
             ],
           },
+          { id: 'suite_steward_ilan', x: 15, y: 10, wander: 2, kind: 'kdy_logistics_officer', label: 'Suite Steward Ilan',
+            repeatPrompt: 'Ilan straightens a cuff and keeps walking. \"The suites are quiet today.\"',
+            prompt: 'A Kuati steward in a pressed blue tunic makes his rounds with a datapad. He nods at you the way staff nod at guests they were not told to expect.',
+            choices: [ { text: 'Ask whether the Lady receives visitors.', morality: 0, loyalty: {}, result: '\"By appointment only, and only with the Captain at the corridor. Present your clearance there.\"' } ] },
           { id: 'lady_kuat', x: 22, y: 10, kind: 'kdy_executive_sentinel', label: 'Lady Kuat',
             requiresFlag: 'vaelen_cleared',
             hideAfterFlags: ['lady_kuat_mission_complete'],
@@ -3020,7 +3028,7 @@ const PLANETS = {
                 grants: { flags: ['lady_kuat_trust', 'lady_kuat_mission_complete'], items: ['executive_blackmail_slate'] } },
             ],
           },
-          { id: 'kdy_overseer_dalin', x: 4, y: 12, kind: 'kdy_guild_overseer', label: 'Guild Overseer Dalin Orveth',
+          { id: 'kdy_overseer_dalin', x: 4, y: 12, wander: 2, kind: 'kdy_guild_overseer', label: 'Guild Overseer Dalin Orveth',
             repeatPrompt: 'He turns a stylus in his fingers. "The authorization audit timeline has not changed."',
             prompt: 'He is reading from a datapad he holds with both hands, the cybernetic monocle over his right eye scrolling through text at a rate that suggests it is doing most of the reading for him. Navy robes, gold epaulettes: the standard formal dress of a KDY Guild Overseer, which in Kuati terms means someone who manages billions of credits in construction contracts and does not need to speak loudly to be heard. He finishes the paragraph he is on before acknowledging you. "You have been cleared to the executive tier. That is unusual. Tell me who authorized it."',
             choices: [
@@ -3062,7 +3070,6 @@ const PLANETS = {
           pt(g, 8, 12, 'floor'); pt(g, 8, 13, 'floor'); pt(g, 8, 14, 'floor');
           pt(g, 13, 12, 'floor'); pt(g, 13, 13, 'floor'); pt(g, 13, 14, 'floor');
           pt(g, 0, 8, 'door'); pt(g, 0, 9, 'door');
-          pt(g, 27, 8, 'door'); pt(g, 27, 9, 'door');
           carveShips(g, this.ships);
           return g;
         },
@@ -3124,7 +3131,19 @@ const PLANETS = {
             description: 'A manual hydraulic override wheel behind a break-glass panel, painted in the bright amber and black hazard stripes of every KDY station built in the last two centuries. The placard reads: FOR HULL BREACH OR FIRE — TURN THREE FULL ROTATIONS COUNTERCLOCKWISE. A secondary notice below it reads: YES THIS MEANS YOU, BAY CREW. SIGNED, RING SAFETY OFFICER PRENN.' },
         ],
         npcs: [
-          { id: 'corporal_dren', x: 18, y: 10, kind: 'kdy_ring_sec', label: 'Guard Corporal Dren',
+          { id: 'pilot_landing_orn', x: 27, y: 11, kind: 'kdy_pilot', label: 'Pilot Tessa Orn (KDY Shuttle)', triggersOverlay: 'shuttle',
+            greeting: '\"Shuttle K-14, Bay 1. Guild passage is free if your name is on the manifest.\"',
+            repeatPrompt: 'The pilot taps the shuttle manifest and waits for a destination.',
+            prompt: 'A KDY shuttle pilot in the blue Kuati flight uniform.', choices: [] },
+          { id: 'ring_patrol_halv', x: 10, y: 12, wander: 5, kind: 'kdy_ring_sec', label: 'Ring Sec Patrol Halv',
+            repeatPrompt: 'Halv nods without breaking stride. \"Keep your badge visible.\"',
+            prompt: 'A Ring Sec patrolman walks the bay perimeter, rifle slung, scanning crates and faces alike. He gives you a professional once over and decides you are not his problem.',
+            choices: [ { text: 'Nod and let the patrol pass.', morality: 0, loyalty: {}, result: '\"Move along, citizen. KDY thanks you for your patience.\"' } ] },
+          { id: 'deckhand_pell', x: 22, y: 13, wander: 4, kind: 'mechanic', label: 'Deck Hand Pell',
+            repeatPrompt: 'Pell hauls a coolant canister past you. \"Mind the cables.\"',
+            prompt: 'A deck hand in grease stained KDY blues drags a coolant canister across the bay floor, humming something tuneless.',
+            choices: [ { text: 'Ask which berth the shuttles use.', morality: 0, loyalty: {}, result: '\"Bay 1, east end. The blue Kuati uniform in the pilot seat. Cannot miss them.\"' } ] },
+          { id: 'corporal_dren', x: 18, y: 10, wander: 3, kind: 'kdy_ring_sec', label: 'Guard Corporal Dren',
             repeatPrompt: 'Dren glances at you, chewing his stim strip. "Shift doesn\'t end for four hours. Don\'t give me something to file a report on."',
             prompt: 'The scorch mark on his left chest plate is deep enough that no amount of polish will touch it. He looks you over with the eyes of a man who has categorized ten thousand people walking through this bay and found exactly none of them surprising. He chews slowly. "New arrival. Berth Seven passage. You\'ve got that look — someone sent you, you don\'t know exactly why, and you\'re trying to figure out if I\'m a problem."',
             choices: [
@@ -3139,7 +3158,7 @@ const PLANETS = {
                 grants: { flags: ['dren_jaxen_discussed'] } },
             ],
           },
-          { id: 'jaxen_smuggler', x: 5, y: 17, kind: 'smuggler', label: 'Jaxen',
+          { id: 'jaxen_smuggler', x: 5, y: 17, wander: 2, kind: 'smuggler', label: 'Jaxen',
             repeatPrompt: 'Jaxen is sitting against the scrap bins with his arms on his knees. "You find anything?"',
             prompt: 'He stands up too fast. Three days in a landing bay will do that to a man — every approaching footstep sounds like either rescue or arrest. "You\'re not Ring-Sec." He exhales. "My ship is in Bay 7. My manifest had twelve military-grade hyperdrive motivators listed that were never in the crate when I accepted the cargo on Corellia. I know who set me up. A broker out of the Market ring — operation called Sector House. They used my transit route to move restricted hardware and filed the manifest under my registry before I even lifted off." He looks exhausted. "I just need someone to pull the original cargo receipt from the Corellian dock authority. That\'s all. It proves the manifest was altered post-filing."',
             choices: [
@@ -3154,7 +3173,7 @@ const PLANETS = {
                 grants: { flags: ['sector_house_identified'] } },
             ],
           },
-          { id: 'kdy_marine_rix', x: 20, y: 6, kind: 'kdy_security_marine', label: 'Security Marine Rix',
+          { id: 'kdy_marine_rix', x: 20, y: 6, wander: 2, kind: 'kdy_security_marine', label: 'Security Marine Rix',
             repeatPrompt: 'Rix watches the bay entrance. "No incidents yet. Keep it that way."',
             prompt: 'He stands at the transit lane junction with the relaxed vigilance of a man who has done this shift so many times the alertness is biological. The KDY crest on his pauldron is white-and-blue Ring Security, not the grey of the orbital platform crews. He notices you noticing. "New arrival. Transit cleared — Corporal Dren\'s stamp is on the board." He does not move to stop you. "If you\'re here on private ring business, make sure your code is current before you reach the Sentinel at the threshold. She doesn\'t accept partial credentials."',
             choices: [
@@ -3169,7 +3188,7 @@ const PLANETS = {
                 grants: {} },
             ],
           },
-          { id: 'republic_pilot_davan', x: 12, y: 14, kind: 'republic_pilot', label: 'Pilot Davan Sael (Republic)',
+          { id: 'republic_pilot_davan', x: 12, y: 14, wander: 2, kind: 'republic_pilot', label: 'Pilot Davan Sael (Republic)',
             repeatPrompt: 'Davan is still watching the construction frames. "Fourteen months and that cruiser still isn\'t done."',
             prompt: 'He is off-duty in the way Republic pilots are off-duty: flight suit on, helmet tucked under one arm, watching the construction frames through the bay viewport with professional attention. Valor-class designation — you can tell from the hull segmentation. He glances over. "You\'re not engineering staff. That means you came through on a transit authorization, or you\'re very good at looking like you belong." He doesn\'t seem troubled by either option.',
             choices: [
@@ -3249,6 +3268,10 @@ const PLANETS = {
             grantsFlag: 'coolant_pressure_vented' },
         ],
         npcs: [
+          { id: 'briefing_aide_tev', x: 16, y: 10, wander: 4, kind: 'kdy_logistics_officer', label: 'Briefing Aide Tev',
+            repeatPrompt: 'Tev hurries past with a stack of datachips.',
+            prompt: 'A junior Guild aide carries a stack of datachips between the holo tables, reciting a delivery schedule under his breath.',
+            choices: [ { text: 'Ask where the Bador shuttles dock.', morality: 0, loyalty: {}, result: '\"Landing Bay 1, through the Executive Transit. Look for the pilot in the Kuati blues.\"' } ] },
           { id: 'commander_krennis', x: 22, y: 5, kind: 'imperial_naval_liaison', label: 'Commander Krennis',
             repeatPrompt: 'Krennis makes a slow pass of the room with his eyes before settling on you again. "I already told you everything I am cleared to share with a non-commissioned party."',
             prompt: 'He turns the moment you enter the briefing ring — not because he heard you but because he was already watching the door. Imperial olive-grey pressed to geometric precision, code cylinders aligned by rank, leather gloves on at this hour. He evaluates you the way someone evaluates an unexpected line item in a ledger: not with suspicion exactly, but with the certainty that you represent a cost he hasn\'t accounted for yet.',
@@ -3281,7 +3304,7 @@ const PLANETS = {
                 grants: { flags: ['rael_blackmail_refused'] } },
             ],
           },
-          { id: 'republic_inspector_thane', x: 14, y: 5, kind: 'republic_navy_inspector', label: 'Inspector Thane (Republic Navy)',
+          { id: 'republic_inspector_thane', x: 14, y: 5, wander: 2, kind: 'republic_navy_inspector', label: 'Inspector Thane (Republic Navy)',
             repeatPrompt: 'Thane keeps his voice low. "The committee arrives in four cycles. I need those construction logs before then."',
             prompt: 'He wears his rank cylinders the way men who earned them do: without thinking about them. Republic Navy grey, pressed with the faint crease of someone on-station long enough for it to count. He looks at you the way investigators look at everything — like you might be useful or trouble and he has not yet determined which. "I\'ve been on this ring for twelve days. In twelve days I have found three discrepancies in the published construction logs that do not appear in the KDY internal records." A pause. "Someone is carefully editing one set of records and not the other."',
             choices: [
@@ -3378,6 +3401,14 @@ const PLANETS = {
             description: 'A Republic Navy diagnostic terminal — older hardware, late Mandalorian Wars manufacture, cutting edge thirty years ago and now kept running by institutional stubbornness and spare parts. The display cycles through engineering schematics for Valor-class structural tolerances. A sticky note on the housing reads: IF THIS TERMINAL GOES DOWN AGAIN CONTACT VAEL IN SECTION FOUR. NOT ENGINEERING. VAEL. Someone has written below it: WHO IS VAEL and someone else has written: EXACTLY.' },
         ],
         npcs: [
+          { id: 'market_patrol_orsk', x: 20, y: 9, wander: 5, kind: 'kdy_ring_sec', label: 'Market Patrol Orsk',
+            repeatPrompt: 'Orsk tips two fingers to his brow and keeps walking.',
+            prompt: 'A Ring Sec patrolman wades through the Forge and Anvil crowd with the patience of someone who has broken up a thousand bar fights.',
+            choices: [ { text: 'Ask how the market has been.', morality: 0, loyalty: {}, result: '\"Loud. Union talk is up, tempers are up. Keep your hands where I can see them and you will be fine.\"' } ] },
+          { id: 'kuati_clerk_ysa', x: 14, y: 12, wander: 3, kind: 'kdy_logistics_officer', label: 'Kuati Clerk Ysa',
+            repeatPrompt: 'Ysa checks her datapad and walks on.',
+            prompt: 'A Kuati logistics clerk crosses the concourse with a stack of manifests under her arm.',
+            choices: [ { text: 'Ask about the shift schedule.', morality: 0, loyalty: {}, result: '\"Third shift starts on the hour. The union will tell you it starts earlier. The Guild will tell you it starts later.\"' } ] },
           { id: 'garrok_ithorian', x: 10, y: 8, kind: 'broker', label: 'Garrok',
             requiresFlag: 'garrok_approached',
             repeatPrompt: 'Garrok tilts his broad head slightly. His four-throated voice carries the register of someone choosing every word. "You need something else?"',
@@ -3435,7 +3466,7 @@ const PLANETS = {
                 grants: { flags: ['hax_intel_offered'] } },
             ],
           },
-          { id: 'deuterium_specialist_kelso', x: 20, y: 12, kind: 'deuterium_specialist', label: 'Fuel Technician Kelso',
+          { id: 'deuterium_specialist_kelso', x: 20, y: 12, wander: 2, kind: 'deuterium_specialist', label: 'Fuel Technician Kelso',
             repeatPrompt: 'Kelso checks his wrist pressure monitor. "That micro-fracture isn\'t going to self-report."',
             prompt: 'He has the slightly vacant expression of someone who has been inhaling trace deuterium compound off-gas for too many years, but his hands are precise and his tool belt is organized with the obsessive clarity of a man who works near things that can kill him. He does not look up when you approach. He is running a calibration pass on a canister from the fuel rack, and this takes priority. After a full minute he closes the case. "You\'re not engineering crew."',
             choices: [
@@ -3462,7 +3493,7 @@ const PLANETS = {
                 grants: { flags: ['ossek_access_explained'] } },
             ],
           },
-          { id: 'sub_deck_slicer_myra', x: 12, y: 4, kind: 'sub_deck_slicer', label: 'Myra Veth (Sub-Deck Tech)',
+          { id: 'sub_deck_slicer_myra', x: 12, y: 4, wander: 2, kind: 'sub_deck_slicer', label: 'Myra Veth (Sub-Deck Tech)',
             repeatPrompt: 'Myra is still pulling cable from the conduit access port. "Four hours of work left in this wall."',
             prompt: 'She has her arm elbow-deep in a conduit access panel when you find her, a splice diagnostic running on the wrist-mounted datapad glowing through the grease on her forearm. Her utility belt is packed to capacity. She does not acknowledge you until she has finished the sequence she is running. Then she pulls her arm out and looks at you with the sharp assessment of someone who has learned to read strangers in two seconds. "You\'re in my light."',
             choices: [
@@ -3494,6 +3525,11 @@ const PLANETS = {
 
       bador_main_base: {
         id: 'bador_main_base', name: 'KDY Main Base — Bador',
+        ships: [
+          { id: 'ship_kdy_shuttle', kind: 'kdy_shuttle', x: 1, y: 12, label: 'KDY Shuttle K-14',
+            description: 'The Guild shuttle that carried you down, still ticking as the hull sheds heat. The pearl plating is scored by slag dust from the landing and the blue KDY stripe runs the length of the fuselage. A flight plan placard is clipped to the ramp: KUAT ORBITAL ARRAY, ROUND TRIP, CLEARED GUEST. The pilot waits at the nose.',
+            grantsFlag: 'kdy_shuttle_examined' },
+        ],
         subtitle: 'Bador Moon · Sector Control',
         width: 30, height: 20, spawnPos: { x: 2, y: 9 }, textureId: 'ferrowake',
         accent: '#4A7A9B', accentGlow: 'rgba(74,122,155,0.28)', accentDim: '#1C3848',
@@ -3501,8 +3537,6 @@ const PLANETS = {
         bg: 'radial-gradient(circle at 40% 20%, #12181E 0%, #080C10 70%)', ambient: 'traffic',
         decor: ['pipe', 'girder'],
         doors: [
-          { x: 0, y: 9,  targetZone: 'kuat_private_suites', targetPos: { x: 26, y: 8 }, label: 'Orbital Shuttle' },
-          { x: 0, y: 10, targetZone: 'kuat_private_suites', targetPos: { x: 26, y: 9 }, label: 'Orbital Shuttle' },
           { x: 29, y: 8, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 8 }, label: 'Sector 4 Facilities' },
           { x: 29, y: 9, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 9 }, label: 'Sector 4 Facilities' },
           { x: 14, y: 19, targetZone: 'city_outskirts_bador', targetPos: { x: 14, y: 1 }, label: 'City Outskirts' },
@@ -3517,6 +3551,18 @@ const PLANETS = {
             grantsFlag: 'partial_schematics_found', grantsItem: 'encrypted_kdy_schematics' },
         ],
         npcs: [
+          { id: 'pilot_bador_ketz', x: 4, y: 11, kind: 'kdy_pilot', label: 'Pilot Maren Ketz (KDY Shuttle)', triggersOverlay: 'shuttle',
+            greeting: '\"Shuttle K-14 is fueled and ready. Back to the Array whenever you are.\"',
+            repeatPrompt: 'The pilot taps the shuttle manifest and waits for a destination.',
+            prompt: 'A KDY shuttle pilot in the blue Kuati flight uniform.', choices: [] },
+          { id: 'base_trooper_sorn', x: 12, y: 12, wander: 5, kind: 'kdy_security_marine', label: 'Trooper Sorn',
+            repeatPrompt: 'Sorn gives you a short nod. \"Perimeter is holding. Stay inside the lights.\"',
+            prompt: 'A KDY trooper in sealed grey armor walks the perimeter lights, helmet rebreather hissing. He is on your side, and he makes sure you know it.',
+            choices: [ { text: 'Ask what is out on the plains.', morality: 0, loyalty: {}, result: '\"Raiders and scavengers, mostly. Something worse in the caverns. We hold the base, you clear the sectors, and nobody shoots the wrong people.\"' } ] },
+          { id: 'base_technician_lio', x: 16, y: 15, wander: 4, kind: 'mechanic', label: 'Technician Lio',
+            repeatPrompt: 'Lio waves a spanner in greeting and keeps walking.',
+            prompt: 'A base technician trudges between the maintenance panels with a diagnostic slate, muttering about glass dust in the filters.',
+            choices: [ { text: 'Ask about the glassed bedrock.', morality: 0, loyalty: {}, result: '\"Whatever scorched this moon did it fast. Everything here is fused to glass. The filters hate it, and so do I.\"' } ] },
           { id: 'commander_vael', x: 20, y: 8, kind: 'kdy_commander', label: 'Commander Vael',
             questNpc: true,
             requiresFlag: 'tanner_briefed',
@@ -3528,7 +3574,7 @@ const PLANETS = {
               { text: 'Forty hours. Your team is likely dead.', morality: -10, loyalty: { underworld: 5 }, result: 'Vael holds eye contact two seconds longer than expected. "Yes. Probably. Which is why I need someone with a different risk calculation than a uniformed officer." She loads the grid data. "Move carefully."', grants: { flags: ['vael_briefed'] } },
             ],
           },
-          { id: 'bador_squad_kaelin', x: 6, y: 14, kind: 'republic_guard', label: 'Squad Leader Kaelin',
+          { id: 'bador_squad_kaelin', x: 9, y: 15, wander: 4, kind: 'republic_guard', label: 'Squad Leader Kaelin',
             repeatPrompt: 'Kaelin keeps his hand near his carbine. "Stay behind the perimeter and we stay in good standing."',
             prompt: '"You are the freelancer Vael authorized." A statement, not a question. "I have twelve troopers on this base and six more at forward position seven. What I do not have is answers about what is in the wastes." He glances toward the southern exits. "Something knocked out our sensor drones. Not equipment failure."',
             choices: [
@@ -3549,10 +3595,10 @@ const PLANETS = {
           pt(g, 20, 6, 'floor'); pt(g, 21, 6, 'floor');
           carveRect(g, 20, 12, 28, 18, 'wall');
           pt(g, 22, 12, 'floor'); pt(g, 23, 12, 'floor');
-          pt(g, 0, 9, 'door'); pt(g, 0, 10, 'door');
           pt(g, 29, 8, 'door'); pt(g, 29, 9, 'door');
           pt(g, 14, 19, 'door'); pt(g, 15, 19, 'door');
           pt(g, 20, 7, 'floor'); pt(g, 21, 7, 'floor'); // open the command alcove
+          carveShips(g, this.ships);
           return g;
         },
       },
@@ -3584,6 +3630,10 @@ const PLANETS = {
             grantsFlag: 'overseer_safe_opened', grantsItem: 'ion_charged_coils' },
         ],
         npcs: [
+          { id: 'assembly_tech_rhea', x: 12, y: 10, wander: 4, kind: 'mechanic', label: 'Assembly Tech Rhea',
+            repeatPrompt: 'Rhea ducks under the gantry and keeps working.',
+            prompt: 'A line technician in a sealed jumpsuit checks gantry couplings with a handheld scanner.',
+            choices: [ { text: 'Ask about the assembly line.', morality: 0, loyalty: {}, result: '\"Half the line is dark. Parts go missing, raiders cut the fences. Keep your eyes up.\"' } ] },
           { id: 'overseer_krax', x: 22, y: 9, kind: 'besalisk_boss', label: 'Overseer Krax',
             questNpc: true,
             requiresFlag: 'vael_briefed',
@@ -3596,7 +3646,7 @@ const PLANETS = {
               { text: 'Tell him the scan team never came back.', morality: 5, loyalty: { republic: 5 }, result: '"I know." The most honest thing he has said. He picks up a manifest tablet, not looking at it. "That was not my order. I want you to know that." He sets it down. "Come back without an audience."', grants: { flags: ['krax_revealed'] } },
             ],
           },
-          { id: 'lead_engineer_vorn', x: 8, y: 16, kind: 'mechanic', label: 'Lead Engineer Vorn',
+          { id: 'lead_engineer_vorn', x: 8, y: 16, wander: 2, kind: 'mechanic', label: 'Lead Engineer Vorn',
             repeatPrompt: 'Vorn has his hands inside a conduit housing. "These assemblies are above civilian spec. Someone had authorization."',
             prompt: '"You are not KDY clearance." He wipes his hands on a rag that does not help. "But you are not CSF either." He looks at the assembly line. "I have been building components for a frame that does not appear in the current-cycle shiplist. No registry, no commission number. I am told it is a classified project. I am starting to wonder who classified it."',
             choices: [
@@ -3648,7 +3698,7 @@ const PLANETS = {
             once: true, requiresFlag: 'ghost_keel_active', grantsItem: 'cherit_logbook' },
         ],
         npcs: [
-          { id: 'bador_survivor', x: 16, y: 10, kind: 'generic', label: 'Bador Resident',
+          { id: 'bador_survivor', x: 16, y: 10, wander: 3, kind: 'generic', label: 'Bador Resident',
             repeatPrompt: 'They keep their distance. "I have told you what I know."',
             prompt: '"You are not KDY." They keep the wall behind them. "The new ones come in white armor. Three people from the south district left two weeks ago to investigate the engine sounds. We have not seen them."',
             choices: [
@@ -3754,7 +3804,15 @@ const PLANETS = {
             once: true, grantsFlag: 'rebreather_equipped' },
         ],
         npcs: [
-          { id: 'slicer_nix', x: 20, y: 10, kind: 'slicer', label: 'Slicer Nix',
+          { id: 'pilot_outpost_salk', x: 24, y: 12, kind: 'kdy_pilot', label: 'Pilot Iro Salk (KDY Shuttle)', triggersOverlay: 'shuttle',
+            greeting: '\"Forward pad, Outpost 7. I can lift you to the Main Base or the Array on your word.\"',
+            repeatPrompt: 'The pilot taps the shuttle manifest and waits for a destination.',
+            prompt: 'A KDY shuttle pilot in the blue Kuati flight uniform.', choices: [] },
+          { id: 'outpost_guard_brae', x: 14, y: 12, wander: 4, kind: 'kdy_security_marine', label: 'Outpost Guard Brae',
+            repeatPrompt: 'Brae nods and keeps scanning the horizon.',
+            prompt: 'A KDY guard with a rebreather strapped to his collar patrols the Outpost 7 lights, watching the dark beyond them.',
+            choices: [ { text: 'Ask if the road east is safe.', morality: 0, loyalty: {}, result: '\"Nothing here is safe. But clear a sector and it stays clear. That is the arrangement.\"' } ] },
+          { id: 'slicer_nix', x: 20, y: 10, wander: 2, kind: 'slicer', label: 'Slicer Nix',
             questNpc: true,
             requiresFlag: 'ghost_keel_active',
             hideAfterFlags: ['nix_dead'],
@@ -3765,7 +3823,7 @@ const PLANETS = {
               { text: 'Tell Nix about Gharza in the Engine Wastes.', morality: 5, loyalty: { republic: 5 }, result: '"I know her clearance code. She was on Tanner\'s initial contractor list, then removed." A pause. "She was removed because someone at Level Eight overrode the contract. She is not working for Tanner. She is working for the Architect."', grants: { flags: ['nix_consulted', 'gharza_architect_connection'] } },
             ],
           },
-          { id: 'outpost7_contact', x: 9, y: 14, kind: 'generic', label: 'Resistance Contact',
+          { id: 'outpost7_contact', x: 9, y: 14, wander: 2, kind: 'generic', label: 'Resistance Contact',
             repeatPrompt: '"The caverns run deep. Trust the maps."',
             prompt: '"We have been watching Sector 4 for two cycles. KDY is building something that does not appear in any public commission. The shell of a capital ship, assembling in pieces." He spreads the hand-drawn maps. "The final components are in the deep caverns, stored in a decommissioned Republic survey station. Something is already there — and it has been there longer than KDY knows."',
             choices: [
@@ -4437,6 +4495,28 @@ function NpcPortrait({ kind, accent }) {
       </svg>
     );
   }
+  if (kind === 'kdy_pilot') {
+    const coat = '#1F4A78', trim = '#1A8FD0', collar = '#E8E4D8', gold = '#C8A830', skin = '#C8956A', cap = '#16345A';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M5 42 L7 22 L23 22 L25 42 Z" fill={coat} />
+        <path d="M13 22 L15 42 L17 42 L17 22 Z" fill={trim} />
+        <path d="M7 22 L23 22 L21 12 L9 12 Z" fill={coat} />
+        <path d="M7 22 C4 22 2 17 4 12 L8 13 L7 22 Z" fill={trim} />
+        <path d="M23 22 C26 22 28 17 26 12 L22 13 L23 22 Z" fill={trim} />
+        <path d="M10 12 L15 18 L20 12 L18 11 L15 14 L12 11 Z" fill={collar} />
+        <rect x="11" y="3" width="8" height="9" rx="2.2" fill={skin} />
+        <path d="M9.5 6 C9.5 0.5 20.5 0.5 20.5 6 L20.5 4.6 L9.5 4.6 Z" fill={cap} />
+        <rect x="9" y="4" width="12" height="2" rx="0.6" fill={trim} />
+        <rect x="11" y="6.2" width="3" height="2" rx="0.6" fill="#BFF4FF" opacity="0.85" />
+        <rect x="16" y="6.2" width="3" height="2" rx="0.6" fill="#BFF4FF" opacity="0.85" />
+        <path d="M10 17 L13 15.4 L13 18 Z M20 17 L17 15.4 L17 18 Z" fill={gold} />
+        <rect x="9" y="21" width="12" height="1.4" fill={gold} opacity="0.85" />
+        <rect x="6" y="12" width="3" height="1" rx="0.3" fill={gold} />
+        <rect x="21" y="12" width="3" height="1" rx="0.3" fill={gold} />
+      </svg>
+    );
+  }
   if (kind === 'kdy_ring_sec') {
     const armor = '#2A3A5A', pauldron = '#4A5A7A', visor = '#D4901A', crest = '#8A9AB0';
     return (
@@ -4998,9 +5078,11 @@ function Minimap({ zone, map, pos, camX, camY, npcPositions, completedInteractio
   );
 }
 
-function DialogueOverlay({ npc, onChoose, inventory = [], questFlags = {} }) {
+function DialogueOverlay({ npc, onChoose, inventory = [], questFlags = {}, credits = 0 }) {
   const meetsRequires = (choice) => {
+    if (choice.requiresFlag && !questFlags[choice.requiresFlag]) return false;
     if (!choice.requires) return true;
+    if (choice.requires.credits && credits < choice.requires.credits) return false;
     if (choice.requires.item && !inventory.some(i => i.id === choice.requires.item)) return false;
     if (choice.requires.flag && !questFlags[choice.requires.flag]) return false;
     return true;
@@ -5012,7 +5094,7 @@ function DialogueOverlay({ npc, onChoose, inventory = [], questFlags = {} }) {
         <div style={{ padding:'16px 18px',color:'#C9C5BE',fontSize:13,lineHeight:1.6,borderBottom:'1px solid #1C1C26' }}>{npc.prompt}</div>
         {npc.choices.map((choice, i) => {
           const meets = meetsRequires(choice);
-          const reqLabel = !meets && choice.requires?.item ? ` (requires ${ITEMS[choice.requires.item]?.name || choice.requires.item})` : (!meets && choice.requires?.flag ? ` (requires: ${choice.requires.flag})` : '');
+          const reqLabel = !meets && choice.requires?.item ? ` (requires ${ITEMS[choice.requires.item]?.name || choice.requires.item})` : (!meets && choice.requires?.credits ? ` (costs ${choice.requires.credits} cr)` : (!meets && (choice.requires?.flag || choice.requiresFlag) ? ' (not yet available)' : ''));
           return (
             <div key={i} onClick={() => meets && onChoose(choice, npc.id)}
               style={{ padding:'14px 18px',borderBottom:i<npc.choices.length-1?'1px solid #1C1C26':'none',cursor:meets?'pointer':'not-allowed',fontSize:12.5,color:meets?'#A8ADC0':'#4A4F64',opacity:meets?1:0.5 }}>
@@ -5409,6 +5491,16 @@ const CODEX_ENTRIES = {
       'The reactor shield tolerance figures displayed openly on the projector are wrong. Not miscalculated — deliberately wrong. Someone inserted systematic errors into the commissioned design. Whether this represents sabotage, corporate fraud, or something more deliberate is a question whose answer requires leaving Kuat with the right files.',
     ],
   },
+  'codex-bador-arrival': {
+    id:'codex-bador-arrival', title:'Arrival at Bador', category:'story',
+    summary:'The shuttle descent from the Orbital Array to the KDY Main Base on Bador.',
+    body:[
+      'The transition from the pristine, silent luxury of the Kuat Orbital Array to the surface of Bador is a jarring shock to the senses. As your shuttle breaches the thin, violet tinged atmosphere, the sheer scale of the industrial devastation becomes apparent.',
+      'The KDY Main Base is a fortress carved directly into the glassed bedrock. The air outside the shuttle tastes of ozone and copper, forcing you to rely on the rebreather integrated into your collar.',
+      'You are escorted through a series of heavy durasteel airlocks, moving from the blasted exterior into the sterile, blue lit tactical operations center. Holographic tactical maps flicker with red conflict zones.',
+      'Field note: raiders, scavengers and rogue machines hold the outer sectors. KDY troops and personnel will never fire on a cleared guest. Once a sector is cleared it stays quiet.',
+    ],
+  },
   'codex-kuat-operation': {
     id:'codex-kuat-operation', title:'OPERATION GHOST KEEL', category:'story',
     summary:'A classified KDY project on Bador Moon. Unauthorized construction. Senate oversight incoming in six cycles.',
@@ -5525,6 +5617,296 @@ function SpeederOverlay({ credits, questFlags, currentZoneId, onTravel, onClose 
     </div>
   );
 }
+
+// ===== KDY SHUTTLE NETWORK BEGIN
+const KDY_RING_ZONES = ['kdy_landing_bay', 'kuat_private_suites', 'kdy_briefing_area', 'kdy_lounge_market'];
+const BADOR_SURFACE_ZONES = ['bador_main_base', 'bador_manufacturing', 'city_outskirts_bador', 'engine_wastes', 'outpost_7', 'deep_caverns', 'zora_iv_wreckage'];
+
+const KDY_SHUTTLE_DESTINATIONS = [
+  { id: 'ring_landing', name: 'Orbital Ring Landing Bay', level: 'Kuat Orbital Array', cost: 0, requiredFlag: null,          targetZone: 'kdy_landing_bay',     targetPos: { x: 26, y: 11 } },
+  { id: 'ring_suites',  name: 'Executive Private Suites', level: 'Kuat Orbital Array', cost: 0, requiredFlag: 'vaelen_cleared', targetZone: 'kuat_private_suites', targetPos: { x: 25, y: 10 } },
+  { id: 'bador_base',   name: 'KDY Main Base',            level: 'Bador Moon, Sector Control', cost: 0, requiredFlag: 'tanner_briefed', targetZone: 'bador_main_base', targetPos: { x: 5, y: 10 } },
+  { id: 'bador_fwd',    name: 'Outpost 7 Forward Pad',    level: 'Bador Moon, Eastern Reach',  cost: 0, requiredFlag: 'bador_landed',   targetZone: 'outpost_7',       targetPos: { x: 23, y: 12 } },
+];
+
+const SHUTTLE_ARRIVAL_TEXT = 'The transition from the pristine, silent luxury of the Kuat Orbital Array to the surface of Bador is a jarring shock to the senses. As your shuttle breaches the thin, violet tinged atmosphere, the sheer scale of the industrial devastation becomes apparent. The KDY Main Base is a fortress carved directly into the glassed bedrock. The air outside the shuttle tastes of ozone and copper, forcing you to rely on the rebreather integrated into your collar. You are escorted through a series of heavy durasteel airlocks, moving from the blasted exterior into the sterile, blue lit tactical operations center. Holographic tactical maps flicker with red conflict zones.';
+
+const SHUTTLE_SCRIPT = {
+  descend: {
+    dur: 5.0, swapAt: 0.9, from: 'KUAT ORBITAL ARRAY', to: 'BADOR MAIN BASE',
+    beats: [
+      [0.04, 0.30, 'Thin, violet tinged atmosphere. The scale of the industrial devastation becomes clear.'],
+      [0.32, 0.58, 'The KDY Main Base: a fortress carved into glassed bedrock. Ozone and copper. Your collar rebreather seals.'],
+      [0.60, 0.78, 'Heavy durasteel airlocks cycle, one after another.'],
+      [0.80, 0.97, 'Blue lit operations center. Red conflict zones flicker across the holomaps.'],
+    ],
+  },
+  ascend: {
+    dur: 4.2, swapAt: 0.8, from: 'BADOR SURFACE', to: 'KUAT ORBITAL ARRAY',
+    beats: [
+      [0.04, 0.42, 'Seals confirmed. The shuttle lifts off the glassed bedrock in a spray of slag dust.'],
+      [0.48, 0.94, 'Bador shrinks behind you. The Orbital Array waits in perfect silence.'],
+    ],
+  },
+  hop: {
+    dur: 3.0, swapAt: 0.78, from: 'BADOR SURFACE', to: 'FORWARD PAD',
+    beats: [[0.06, 0.92, 'Low pass over the scorched plains. Forward pad inbound.']],
+  },
+};
+
+const shClamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const shSmooth = (v) => { const c = shClamp(v); return c * c * (3 - 2 * c); };
+const shRange = (p, a, b) => shSmooth((p - a) / (b - a));
+const shLerp = (a, b, k) => a + (b - a) * k;
+const SH_STARS = (() => { let a = 7; const r = () => (a = (a * 9301 + 49297) % 233280) / 233280; return Array.from({ length: 80 }, () => ({ x: r() * 800, y: r() * 330, r: 0.4 + r() * 1.1, d: r() * 6 })); })();
+const SH_GLASS = (() => { let a = 19; const r = () => (a = (a * 9301 + 49297) % 233280) / 233280; return Array.from({ length: 22 }, () => ({ x: 60 + r() * 680, y: r() * 150, rx: 18 + r() * 46, ry: 4 + r() * 9, rot: -12 + r() * 24 })); })();
+
+function shuttleModeFor(fromZoneId, dest) {
+  const fromBador = BADOR_SURFACE_ZONES.includes(fromZoneId);
+  const toBador = BADOR_SURFACE_ZONES.includes(dest.targetZone);
+  if (!fromBador && toBador) return 'descend';
+  if (fromBador && !toBador) return 'ascend';
+  if (fromBador && toBador) return 'hop';
+  return null;
+}
+
+function ShuttleOverlay({ pilot, questFlags, currentZoneId, onTravel, onClose }) {
+  React.useEffect(() => {
+    const h = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [onClose]);
+  const A = '#1A8FD0';
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.82)', zIndex: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: '#08141F', border: `2px solid ${A}`, borderRadius: 8, padding: '28px 36px', minWidth: 420, maxWidth: 580, color: '#d0eaff', fontFamily: 'monospace' }}>
+        <div style={{ color: '#7FD0FF', fontWeight: 'bold', fontSize: 17, marginBottom: 6, letterSpacing: 2 }}>KDY GUILD SHUTTLE SERVICE</div>
+        <div style={{ color: '#6fa8c0', fontSize: 12, marginBottom: 6 }}>{pilot?.label || 'KDY Shuttle Pilot'}</div>
+        <div style={{ color: '#4a7a90', fontSize: 11, marginBottom: 18, fontStyle: 'italic' }}>{pilot?.greeting || '"Shuttle K-14 is fueled and cleared. Where to?"'}</div>
+        {KDY_SHUTTLE_DESTINATIONS.filter(d => d.targetZone !== currentZoneId).map(dest => {
+          const locked = dest.requiredFlag && !questFlags[dest.requiredFlag];
+          return (
+            <div key={dest.id} onClick={() => !locked && onTravel(dest)}
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', marginBottom: 8, borderRadius: 5, cursor: locked ? 'not-allowed' : 'pointer', background: locked ? '#0a1218' : '#0d2438', border: `1px solid ${locked ? '#1c2a36' : A}`, opacity: locked ? 0.55 : 1 }}>
+              <div>
+                <div style={{ color: locked ? '#556' : '#b8e0ff', fontWeight: 'bold', fontSize: 14 }}>{dest.name}</div>
+                <div style={{ color: '#4a7a90', fontSize: 11 }}>{dest.level}</div>
+              </div>
+              <div style={{ textAlign: 'right', fontSize: 13 }}>
+                {locked ? <span style={{ color: '#556' }}>NO FLIGHT PLAN FILED</span> : <span style={{ color: '#6fd9a0' }}>GUILD PASSAGE</span>}
+              </div>
+            </div>
+          );
+        })}
+        <div onClick={onClose} style={{ marginTop: 18, textAlign: 'center', color: '#6fa8c0', fontSize: 12, cursor: 'pointer', letterSpacing: 1 }}>[ STAND DOWN ]</div>
+      </div>
+    </div>
+  );
+}
+
+function ShuttleScene({ mode, p, t }) {
+  const descend = mode === 'descend', ascend = mode === 'ascend';
+  const s = descend ? shSmooth(p / 0.78) : ascend ? 1 - shSmooth((p - 0.08) / 0.72) : 0.93;
+  const topY = shLerp(190, 340, s);
+  const R = 150 * (1 + 39 * s * s * s);
+  const cx = shLerp(600, 400, s);
+  const cy = topY + R;
+  const k = shLerp(0.3, 1.05, shSmooth(s));
+  const sx = mode === 'hop' ? shLerp(180, 560, shSmooth(p)) : shLerp(120, 470, 1 - Math.pow(1 - s, 3));
+  const sy = mode === 'hop' ? 330 + Math.sin(t * 6) * 3 : shLerp(90, 366, Math.pow(s, 1.4));
+  const pitch = shLerp(-9, 0, s);
+  const gear = shRange(s, 0.82, 0.95) * 10;
+  const down = shRange(s, 0.86, 0.97);
+  const trailOp = descend ? Math.sin(shClamp((s - 0.12) / 0.4) * Math.PI) * 0.55 : ascend ? Math.sin(shClamp((s - 0.1) / 0.5) * Math.PI) * 0.4 : 0.15;
+  const fort = shRange(s, 0.55, 0.9);
+  const starOp = 1 - s * 0.85;
+  const ringOp = shClamp(1 - s * 1.5);
+  const dust = descend ? shRange(s, 0.94, 1) : ascend ? 1 - shRange(s, 0.0, 0.2) : 0;
+  const scroll = mode === 'hop' ? -p * 500 : 0;
+  return (
+    <g>
+      <defs>
+        <linearGradient id="shAtm" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#140a2c" /><stop offset="0.55" stopColor="#3c2060" /><stop offset="1" stopColor="#7a4688" />
+        </linearGradient>
+        <radialGradient id="shMoon" cx="0.5" cy="0" r="1">
+          <stop offset="0" stopColor="#4a4056" /><stop offset="1" stopColor="#1c1826" />
+        </radialGradient>
+        <linearGradient id="shTrail" x1="1" y1="0" x2="0" y2="0">
+          <stop offset="0" stopColor="#FFC27A" stopOpacity="0.9" /><stop offset="1" stopColor="#FF7A3A" stopOpacity="0" />
+        </linearGradient>
+        <clipPath id="shMoonClip"><circle cx={cx} cy={cy} r={R} /></clipPath>
+      </defs>
+      <rect width="800" height="450" fill="#04060f" />
+      <rect width="800" height="450" fill="url(#shAtm)" opacity={Math.pow(s, 1.1)} />
+      {SH_STARS.map((st, i) => <circle key={i} cx={st.x} cy={st.y} r={st.r} fill="#E8F6FF" opacity={starOp * (0.55 + 0.45 * Math.sin(t * 4 + st.d))} />)}
+      {/* Kuat Orbital Array receding */}
+      <g opacity={ringOp} transform={`translate(0 ${-s * 240})`}>
+        <ellipse cx="170" cy="70" rx="380" ry="54" fill="none" stroke="#5F6E80" strokeWidth="16" transform="rotate(-10 170 70)" />
+        <ellipse cx="170" cy="70" rx="380" ry="54" fill="none" stroke="#9FAEBF" strokeWidth="3" transform="rotate(-10 170 70)" />
+        <ellipse cx="170" cy="70" rx="380" ry="54" fill="none" stroke="#1A8FD0" strokeWidth="2" strokeDasharray="3 12" transform="rotate(-10 170 70)" />
+        {[0, 1, 2, 3, 4].map((i) => <rect key={i} x={60 + i * 74} y={20 + Math.abs(i - 2) * 6} width="8" height="22" fill="#CFD6DE" opacity="0.7" />)}
+      </g>
+      {/* Bador */}
+      <circle cx={cx} cy={cy} r={R} fill="url(#shMoon)" />
+      <circle cx={cx} cy={cy} r={R + 3} fill="none" stroke="#B07CFF" strokeWidth="6" opacity={0.45 * (1 - s * 0.7)} />
+      <g clipPath="url(#shMoonClip)">
+        <g transform={`translate(${cx} ${topY}) scale(${1 + s * 3.2}) translate(${-cx} ${-topY}) translate(${scroll * 0.4} 0)`}>
+          {SH_GLASS.map((g, i) => <ellipse key={i} cx={g.x} cy={topY + 8 + g.y} rx={g.rx} ry={g.ry} fill="#7C8AA8" opacity="0.32" transform={`rotate(${g.rot} ${g.x} ${topY + 8 + g.y})`} />)}
+          {[0, 1, 2, 3, 4, 5].map((i) => <circle key={i} cx={120 + i * 118} cy={topY + 30 + (i % 3) * 22} r={2.2 + (i % 2)} fill="#FF4040" opacity={0.35 + 0.5 * Math.abs(Math.sin(t * 3 + i))} />)}
+        </g>
+      </g>
+      {/* ridges and fortress */}
+      <g opacity={shRange(s, 0.5, 0.8)}>
+        <polygon points={`0,${topY + 8} 90,${topY - 22} 190,${topY - 6} 300,${topY - 34} 380,${topY - 10} 800,${topY - 4} 800,450 0,450`} fill="#221f2e" transform={`translate(${scroll * 0.6} 0)`} />
+        <polygon points={`0,${topY + 22} 120,${topY + 6} 260,${topY + 18} 420,${topY + 4} 800,${topY + 14} 800,450 0,450`} fill="#16141f" transform={`translate(${scroll} 0)`} />
+      </g>
+      <g opacity={fort} transform={`translate(${scroll * 0.8} 0)`}>
+        <polygon points="470,352 500,320 560,308 640,300 700,312 760,330 790,352" fill="#262836" stroke="#4A7A9B" strokeWidth="1.5" />
+        <polygon points="500,352 520,330 560,322 600,324 600,352" fill="#1b1d2a" />
+        {Array.from({ length: 9 }, (_, i) => <rect key={i} x={512 + i * 28} y={334} width="12" height="4" fill="#7FD0FF" opacity={0.55 + 0.35 * Math.sin(t * 3 + i)} />)}
+        <rect x="618" y="324" width="44" height="28" fill="#0c3a5e" /><rect x="620" y="326" width="40" height="24" fill="#2A8ACF" opacity="0.55" />
+        <rect x="636" y="284" width="3" height="18" fill="#9FAEBF" /><circle cx="637.5" cy="283" r="2.4" fill="#FF4040" opacity={Math.sin(t * 7) > 0 ? 1 : 0.2} />
+      </g>
+      {/* landing pad */}
+      <g opacity={shRange(s, 0.7, 0.92) * (mode === 'hop' ? 0 : 1)}>
+        <ellipse cx="470" cy="388" rx="92" ry="9" fill="#0c0d14" /><ellipse cx="470" cy="388" rx="92" ry="9" fill="none" stroke="#E8A030" strokeWidth="1.5" strokeDasharray="8 6" />
+        {[-80, -40, 0, 40, 80].map((dx) => <circle key={dx} cx={470 + dx} cy={388} r="2" fill="#FFB844" opacity={0.5 + 0.5 * Math.abs(Math.sin(t * 5 + dx))} />)}
+      </g>
+      {/* re-entry trail */}
+      <polygon points={`${sx - 70 * k},${sy - 6 * k} ${sx - 330 * k - 30},${sy + 1} ${sx - 70 * k},${sy + 10 * k}`} fill="url(#shTrail)" opacity={trailOp} />
+      {/* shuttle */}
+      <g transform={`translate(${sx} ${sy}) rotate(${pitch}) scale(${k})`}>
+        <polygon points={`-64,0 ${-64 - (10 + 46 * (1 - s))},3 -64,6`} fill="#7FD0FF" opacity={0.85} />
+        <polygon points={`-64,-2 ${-64 - (22 + 80 * (1 - s))},3 -64,8`} fill="#BFF4FF" opacity={0.4} />
+        <polygon points="-42,-8 -54,-30 -34,-30 -16,-11" fill="#8E9AA8" />
+        <polygon points="-54,-30 -34,-30 -35,-26 -52,-26" fill="#1A8FD0" />
+        <polygon points="-58,2 -44,-6 -12,-13 30,-13 50,-6 62,2 52,11 10,14 -30,13" fill="#CBD3DC" />
+        <polygon points="-58,2 -44,-6 -12,-13 30,-13 50,-6 62,2 -58,2" fill="#F4F6F9" opacity="0.5" />
+        <rect x="-52" y="1" width="106" height="3.4" fill="#1A8FD0" /><rect x="-52" y="1" width="106" height="0.9" fill="#BFF4FF" opacity="0.7" />
+        <polygon points="28,-13 46,-6 56,1 30,0" fill="#1D4F82" /><polygon points="32,-11 44,-6 50,-2 33,-3" fill="#C8E6F4" opacity="0.6" />
+        <rect x="-68" y="-5" width="14" height="14" fill="#27313C" /><rect x="-68" y="-5" width="14" height="3" fill="#4A5562" />
+        <circle cx="-68" cy="2" r="5" fill="#7FD0FF" opacity="0.85" />
+        <polygon points="-26,-13 -8,-13 -8,-18 -26,-18" fill="#8E9AA8" />
+        <circle cx="52" cy="3" r="1.6" fill="#FFFFFF" /><circle cx="-30" cy="-30" r="1.4" fill="#FF4040" opacity={Math.sin(t * 8) > 0 ? 1 : 0.2} />
+        {gear > 0 && <g stroke="#5F6E80" strokeWidth="2.4"><line x1="-24" y1="12" x2="-24" y2={12 + gear} /><line x1="32" y1="12" x2="32" y2={12 + gear} /><line x1="-30" y1={12 + gear} x2="-18" y2={12 + gear} /><line x1="26" y1={12 + gear} x2="38" y2={12 + gear} /></g>}
+        {down > 0 && <g opacity={down}><polygon points="-30,14 -22,14 -26,38" fill="#BFF4FF" /><polygon points="26,14 34,14 30,38" fill="#BFF4FF" /></g>}
+      </g>
+      {/* landing dust */}
+      <g opacity={dust * 0.8}>
+        {[0, 1, 2, 3, 4].map((i) => <ellipse key={i} cx={470 + (i - 2) * 46 * (0.6 + dust)} cy={396 - i % 2 * 5} rx={24 + dust * 34} ry={5 + dust * 7} fill="#8A7E92" opacity={0.5 - i * 0.05} />)}
+      </g>
+    </g>
+  );
+}
+
+function ShuttleInterior({ p, t }) {
+  const stageB = shRange(p, 0.86, 0.91);
+  const gates = [0.775, 0.81, 0.845];
+  return (
+    <g>
+      <rect width="800" height="450" fill="#07090e" />
+      {gates.map((g, i) => {
+        const w = [620, 430, 280][i], h = [380, 262, 170][i];
+        const open = shRange(p, g, g + 0.05);
+        const x = 400 - w / 2, y = 225 - h / 2;
+        return (
+          <g key={i}>
+            <rect x={x} y={y} width={w} height={h} fill="#10253a" opacity={0.4 + i * 0.2} />
+            <rect x={x} y={y} width={w / 2 - open * (w / 2 - 8)} height={h} fill="#4E5A6A" stroke="#9FAEBF" strokeWidth="2" />
+            <rect x={400 + open * (w / 2 - 8)} y={y} width={w / 2 - open * (w / 2 - 8)} height={h} fill="#4E5A6A" stroke="#9FAEBF" strokeWidth="2" />
+            <rect x={x} y={y} width={w} height="8" fill="#E8A030" opacity="0.8" /><rect x={x} y={y + h - 8} width={w} height="8" fill="#E8A030" opacity="0.8" />
+            <circle cx={x + 14} cy={y + 24} r="4" fill={open > 0.5 ? '#3AFF8A' : '#FF4040'} />
+          </g>
+        );
+      })}
+      <g opacity={stageB}>
+        <rect width="800" height="450" fill="#06121e" />
+        <polygon points="0,450 800,450 800,330 0,330" fill="#0b2236" />
+        {[100, 250, 400, 550, 700].map((x) => <rect key={x} x={x - 6} y="0" width="12" height="330" fill="#123653" opacity="0.7" />)}
+        <ellipse cx="400" cy="372" rx="190" ry="30" fill="#0c3a5e" /><ellipse cx="400" cy="366" rx="170" ry="24" fill="#2A8ACF" opacity="0.35" />
+        <polygon points="260,360 540,360 500,200 300,200" fill="#7FD0FF" opacity="0.1" />
+        <ellipse cx="400" cy="270" rx="120" ry="44" fill="none" stroke="#7FD0FF" strokeWidth="2" opacity="0.8" />
+        {[0, 1, 2, 3, 4, 5].map((i) => <line key={i} x1={300 + i * 40} y1="236" x2={300 + i * 40} y2="304" stroke="#7FD0FF" strokeWidth="0.8" opacity="0.5" />)}
+        {[0, 1, 2].map((i) => <line key={i} x1="285" y1={250 + i * 22} x2="515" y2={250 + i * 22} stroke="#7FD0FF" strokeWidth="0.8" opacity="0.5" />)}
+        {[[350, 262, 14], [440, 282, 18], [470, 246, 10]].map(([x, y, r], i) => <circle key={i} cx={x} cy={y} r={r + Math.sin(t * 6 + i) * 3} fill="#FF4040" opacity={0.3 + 0.3 * Math.abs(Math.sin(t * 4 + i))} stroke="#FF4040" strokeWidth="1.5" />)}
+        <polygon points="120,360 150,250 170,250 200,360" fill="#0a1a2a" /><circle cx="160" cy="236" r="12" fill="#0a1a2a" />
+        <polygon points="600,360 630,250 650,250 680,360" fill="#0a1a2a" /><circle cx="640" cy="236" r="12" fill="#0a1a2a" />
+      </g>
+    </g>
+  );
+}
+
+function ShuttleCinematic({ mode, destName, onSwap, onDone }) {
+  const script = SHUTTLE_SCRIPT[mode] || SHUTTLE_SCRIPT.hop;
+  const [t, setT] = React.useState(0);
+  const swapped = React.useRef(false);
+  const finished = React.useRef(false);
+  const cb = React.useRef({ onSwap, onDone });
+  cb.current = { onSwap, onDone };
+  const finish = React.useCallback(() => {
+    if (finished.current) return;
+    finished.current = true;
+    if (!swapped.current) { swapped.current = true; cb.current.onSwap(); }
+    cb.current.onDone();
+  }, []);
+  React.useEffect(() => {
+    let raf = 0, start = null;
+    const loop = (now) => {
+      if (start === null) start = now;
+      const el = (now - start) / 1000;
+      if (el / script.dur >= script.swapAt && !swapped.current) { swapped.current = true; cb.current.onSwap(); }
+      if (el >= script.dur) { setT(script.dur); finish(); return; }
+      setT(el);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    const onKey = (e) => { if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); finish(); } };
+    window.addEventListener('keydown', onKey);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('keydown', onKey); };
+  }, []);
+  const p = shClamp(t / script.dur);
+  const fade = Math.min(1, t / 0.2) * (p > 0.93 ? shClamp((1 - p) / 0.07) : 1);
+  const beat = script.beats.find(([a, b]) => p >= a && p <= b);
+  let caption = '';
+  let capOp = 0;
+  if (beat) {
+    const [a, b, text] = beat;
+    caption = text.slice(0, Math.ceil(text.length * shClamp((p - a) / ((b - a) * 0.65))));
+    capOp = Math.min(1, (p - a) / 0.03, (b - p) / 0.03);
+  }
+  const s = mode === 'descend' ? shSmooth(p / 0.78) : mode === 'ascend' ? 1 - shSmooth((p - 0.08) / 0.72) : 0.93;
+  const alt = Math.round(shLerp(412, 0, s));
+  const spd = Math.round(shLerp(7400, 0, Math.pow(s, 0.6)));
+  const interior = mode === 'descend' ? shRange(p, 0.76, 0.8) : 0;
+  const to = mode === 'hop' ? (destName || script.to).toUpperCase() : script.to;
+  const mono = { fontFamily: "'IBM Plex Mono',monospace" };
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: '#000', opacity: fade, overflow: 'hidden' }} onClick={finish}>
+      <svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        <ShuttleScene mode={mode} p={p} t={t} />
+        {interior > 0 && <g opacity={interior}><ShuttleInterior p={p} t={t} /></g>}
+        <rect width="800" height="450" fill="#000" opacity="0.18" />
+        {Array.from({ length: 45 }, (_, i) => <rect key={i} x="0" y={i * 10} width="800" height="1" fill="#000" opacity="0.18" />)}
+      </svg>
+      <div style={{ position: 'absolute', left: 24, top: 18, color: '#7FD0FF', fontSize: 12, letterSpacing: '0.18em', ...mono }}>
+        <div style={{ color: '#1A8FD0', fontWeight: 700 }}>KDY SHUTTLE K-14</div>
+        <div>{script.from} TO {to}</div>
+      </div>
+      {mode !== 'hop' && interior < 0.5 && (
+        <div style={{ position: 'absolute', right: 24, top: 18, textAlign: 'right', color: '#7FD0FF', fontSize: 11, letterSpacing: '0.14em', lineHeight: 1.7, ...mono }}>
+          <div>ALT {String(alt).padStart(3, '0')} KM</div>
+          <div>VEL {String(spd).padStart(4, '0')} M/S</div>
+          <div style={{ color: s > 0.3 && s < 0.8 ? '#FFB844' : '#7FD0FF' }}>HULL {s > 0.3 && s < 0.8 ? 'THERMAL LOAD' : 'NOMINAL'}</div>
+        </div>
+      )}
+      <div style={{ position: 'absolute', left: '50%', bottom: 56, transform: 'translateX(-50%)', width: 'min(760px, 88vw)', textAlign: 'center', opacity: capOp, color: '#EAF6FF', fontSize: 15, lineHeight: 1.55, letterSpacing: '0.02em', textShadow: '0 0 8px #000, 0 0 18px #000', minHeight: 48, ...mono }}>{caption}</div>
+      <div style={{ position: 'absolute', left: 0, bottom: 0, height: 3, width: `${p * 100}%`, background: '#1A8FD0' }} />
+      <div style={{ position: 'absolute', right: 18, bottom: 12, color: '#4a7a90', fontSize: 10, letterSpacing: '0.12em', ...mono }}>SPACE TO SKIP</div>
+    </div>
+  );
+}
+// ===== KDY SHUTTLE NETWORK END
 
 function InventoryOverlay({ inventory, onClose, onStorySlotChange }) {
   const [selectedItem, setSelectedItem] = React.useState(null);
@@ -11723,6 +12105,7 @@ function visiblePropObjects(zone, questFlags, completed) {
   (zone.worldObjects || []).forEach((wo) => {
     if (!wo.propArt || !PROP_DEFS[wo.propArt]) return;
     if (wo.once && completed.has(wo.id)) return;
+    if ((wo.requiresNoneFlags || []).some((f) => questFlags[f])) return;
     const k = wo.x + ',' + wo.y;
     const cur = byTile[k];
     const unlocked = !wo.requiresFlag || questFlags[wo.requiresFlag];
@@ -12113,12 +12496,70 @@ function ShipKuatYacht({ accent }) {
   );
 }
 
+function ShipKdyShuttle({ accent }) {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 192 128" width="192" height="128" style={SHIP_SVG_STYLE}>
+      <rect x="3" y="3" width="186" height="122" fill={ART.screen.off} opacity="0.55" />
+      <rect x="3" y="3" width="186" height="122" fill="none" stroke={accent} strokeWidth="0.8" strokeDasharray="6 4" opacity="0.5" />
+      <Hazard x={6} y={6} w={180} h={3} />
+      <Hazard x={6} y={119} w={180} h={3} />
+      <PropShadow cx={98} cy={67} rx={80} ry={40} />
+      {/* broad swept wings */}
+      {[0, 1].map((m) => {
+        const f = (y) => (m ? 128 - y : y);
+        return (
+          <g key={m}>
+            <Bev t="polygon" points={pts([[70, f(46)], [104, f(14)], [150, f(10)], [150, f(44)]])} c="hull" />
+            <polygon points={pts([[104, f(14)], [150, f(10)], [150, f(15)], [110, f(19)]])} fill={ART.brand.kdy} />
+            <Seams x={78} y={m ? 86 : 18} w={68} h={28} cols={3} rows={1} op={0.3} />
+            <Greeble x={112} y={m ? 90 : 22} w={34} h={12} seed={61 + m} n={5} c="hull" />
+            <circle cx="149" cy={f(12)} r="1.8" fill={m ? S.green : S.red} style={{ animation:`ship-blink 1.5s steps(2) ${m * 0.7}s infinite` }} />
+          </g>
+        );
+      })}
+      {/* fuselage */}
+      <Bev t="polygon" points={pts([[8, 64], [26, 56], [58, 48], [100, 44], [150, 44], [176, 52], [184, 64], [176, 76], [150, 84], [100, 84], [58, 80], [26, 72]])} c="pearl" o={1} />
+      <rect x="22" y="62" width="150" height="4" fill={ART.brand.kdy} /><rect x="22" y="62" width="150" height="1" fill={S.cyanHi} opacity="0.7" />
+      <Seams x={24} y={48} w={150} h={32} cols={8} op={0.2} />
+      <Grime x={24} y={48} w={150} h={32} seed={14} n={6} op={0.12} />
+      <Scuff x={28} y={50} w={140} h={28} seed={5} n={9} c="pearl" />
+      {/* dorsal cargo hatch and crest */}
+      <Bev t="polygon" points={pts([[100, 52], [150, 50], [158, 58], [158, 70], [150, 78], [100, 76]])} c="hull" o={0.7} />
+      <Seams x={102} y={52} w={54} h={24} cols={4} rows={2} op={0.35} />
+      <Vent x={132} y={54} w={14} h={4} n={3} /><Vent x={132} y={70} w={14} h={4} n={3} />
+      <Bev t="polygon" points={pts(ngon(84, 64, 8, 8, 12))} c="dark" o={0.5} />
+      <polygon points={pts([[79.6, 67], [84, 59.4], [88.4, 67], [84, 65]])} fill={ART.brass.hi} />
+      <text x="130" y="67" textAnchor="middle" fontSize="5" fill={ART.ink} fontWeight="700" letterSpacing="0.6" {...PT}>KDY K-14</text>
+      {/* canopy */}
+      <Bev t="polygon" points={pts([[12, 64], [28, 58], [52, 54], [66, 64], [52, 74], [28, 70]])} c="deepglass" o={0.75} />
+      <path d="M32 58 L32 70 M44 55 L44 73 M56 55 L56 73" stroke={ART.dark.base} strokeWidth="0.9" opacity="0.85" />
+      <polygon points={pts([[20, 60], [40, 56], [52, 57], [28, 62]])} fill={S.white} opacity="0.4" />
+      {/* twin engines */}
+      {[0, 1].map((m) => {
+        const f = (y) => (m ? 128 - y : y);
+        return (
+          <g key={m}>
+            <Bev t="polygon" points={pts([[140, f(44)], [176, f(42)], [184, f(48)], [184, f(54)], [140, f(56)]])} c="dark" />
+            <polygon points={pts([[178, f(43)], [184, f(46)], [184, f(52)], [178, f(54)]])} fill={ART.ink} />
+            <Glow cx={184} cy={m ? 79 : 49} r={7} c={S.cyan} opacity={0.8} style={{ animation:`ship-engine 3s ease-in-out ${m * 0.8}s infinite` }} />
+            <Seams x={142} y={m ? 74 : 44} w={32} h={10} cols={3} op={0.4} />
+          </g>
+        );
+      })}
+      <line x1="58" y1="48" x2="58" y2="38" stroke={ART.steel.hi} strokeWidth="0.9" /><circle cx="58" cy="37" r="1.1" fill={S.red} style={{ animation:'ship-blink 1.6s steps(2) infinite' }} />
+      {[[48, 44], [48, 84], [120, 40], [120, 88]].map(([x, y], i) => <Bev key={i} t="polygon" points={pts(ngon(x, y, 3.4, 3, 6))} c="dark" o={0.5} />)}
+    </svg>
+  );
+}
+
 const ShipSprite = React.memo(function ShipSprite({ kind, accent }) {
   if (kind === 'free_horizon') return <ShipFreeHorizon accent={accent} />;
   if (kind === 'republic_shuttle') return <ShipRepublicShuttle accent={accent} />;
   if (kind === 'valor_frame') return <ShipValorFrame accent={accent} />;
   if (kind === 'czerka_hauler') return <ShipCzerkaHauler accent={accent} />;
   if (kind === 'kuat_yacht') return <ShipKuatYacht accent={accent} />;
+  if (kind === 'kdy_shuttle') return <ShipKdyShuttle accent={accent} />;
   return null;
 });
 
@@ -13359,14 +13800,23 @@ const ENCOUNTER_TABLE = {
   spice_refining_vaults:['pyke_sentinel','pyke_sentinel','spice_brute','cyborg_splicer','rodian_saboteur'],
   senatorial_lounges:  ['vigo_vanguard','falleen_taskmaster','black_sun_striker','csf_swat'],
   csf_academy:         ['riot_controller','swat_marksman','csf_swat','csf_scout'],
-  bador_main_base:       ['kdy_security_guard','kdy_security_guard','syndicate_thug'],
-  bador_manufacturing:   ['kdy_security_guard','unit_8x','syndicate_thug','trandoshan_hunter'],
-  city_outskirts_bador:  ['syndicate_thug','trandoshan_hunter','desperate_scrapper'],
-  engine_wastes:         ['trandoshan_hunter','desperate_scrapper','syndicate_thug'],
-  outpost_7:             ['kdy_security_guard','syndicate_thug'],
-  deep_caverns:          ['unit_8x','trandoshan_hunter','desperate_scrapper'],
-  zora_iv_wreckage:      ['unit_8x','kdy_security_guard'],
 };
+
+// Bador Moon active combat zones. Hostiles here are raiders, scavengers and rogue machines only:
+// KDY troops and personnel never attack the player. Each zone needs `need` victories to be cleared for good.
+const BADOR_COMBAT_ZONES = {
+  bador_manufacturing: { need: 2, rate: 7, pool: ['syndicate_thug', 'trandoshan_hunter', 'desperate_scrapper'],
+    flavor: ['Raiders have slipped through a cut fence in the Sector 4 gantries. They are stripping the assembly line for parts, and you are in the way.', 'A looter crew drops from the catwalk above the fabrication floor, weapons already up.'] },
+  city_outskirts_bador: { need: 2, rate: 7, pool: ['syndicate_thug', 'desperate_scrapper', 'trandoshan_hunter'],
+    flavor: ['Survivors turned scavengers box you in between two collapsed shopfronts. They want your gear more than they want to talk.', 'A Trandoshan hunting party has been tracking the base patrols. You are the easier mark.'] },
+  engine_wastes: { need: 3, rate: 9, pool: ['trandoshan_hunter', 'desperate_scrapper', 'syndicate_thug'],
+    flavor: ['Engine slag crunches under boots that are not yours. Hunters rise from behind a dead thruster bell.', 'Something sparks in the wreckage ahead. Scrappers, and they have the high ground.'] },
+  deep_caverns: { need: 3, rate: 9, pool: ['unit_8x', 'trandoshan_hunter', 'desperate_scrapper'],
+    flavor: ['A red optic blinks awake in the cavern dark. The old defense droid has not stopped patrolling.', 'Echoes carry a clatter of armor from the tunnel mouth. You are not alone down here.'] },
+  zora_iv_wreckage: { need: 2, rate: 8, pool: ['unit_8x', 'trandoshan_hunter', 'desperate_scrapper'],
+    flavor: ['The wreck groans and a salvage crew steps out of the broken hull, rifles leveled.', 'A drone from the dead freighter wakes and locks onto you.'] },
+};
+const BADOR_ENCOUNTER_MIN_STEPS = 12;
 
 const ENCOUNTER_RATES = {
   undercity_outskirts: 22,
@@ -13377,13 +13827,6 @@ const ENCOUNTER_RATES = {
   spice_refining_vaults: 25,
   senatorial_lounges:    12,
   csf_academy:           30,
-  bador_main_base:       8,
-  bador_manufacturing:   20,
-  city_outskirts_bador:  15,
-  engine_wastes:         25,
-  outpost_7:             10,
-  deep_caverns:          22,
-  zora_iv_wreckage:      18,
 };
 
 const ENCOUNTER_FLAVOR = {
@@ -16412,6 +16855,9 @@ function StarWarsRPG() {
   const [transitioning, setTransitioning] = useState(false);
   const [questFlags, setQuestFlags] = useState({});
   const [showSpeeder, setShowSpeeder] = useState(false);
+  const [shuttlePilot, setShuttlePilot] = useState(null);
+  const [cinematic, setCinematic] = useState(null);
+  const encStepsRef = React.useRef(0);
   const [npcPositions, setNpcPositions] = useState({});
   const [suspicionMeter, setSuspicionMeter] = useState(0);
   const [choiceFeedback, setChoiceFeedback] = useState(null);
@@ -16529,16 +16975,39 @@ function StarWarsRPG() {
     }, 650);
   }, [zoneId, pushActionLog]);
 
+  const arriveShuttle = useCallback((dest) => {
+    const newZone = PLANETS[planetId].zones[dest.targetZone];
+    setZoneId(dest.targetZone);
+    setMap(newZone.buildMap());
+    setPos(dest.targetPos);
+    pushActionLog(`Shuttle K-14 touches down. Entered ${newZone.name}.`, dest.targetZone);
+    if (dest.targetZone === 'bador_main_base' && !questFlagsRef.current.bador_landed) {
+      setFlag('bador_landed');
+      pushActionLog(SHUTTLE_ARRIVAL_TEXT, dest.targetZone);
+      unlockCodex({ ...CODEX_ENTRIES['codex-bador-arrival'], unread: true });
+    }
+  }, [planetId, pushActionLog, unlockCodex, setFlag]);
+
   useEffect(() => { posRef.current = pos; }, [pos]);
   useEffect(() => { questFlagsRef.current = questFlags; }, [questFlags]);
-  useEffect(() => { setNpcPositions({}); }, [zoneId]);
+  useEffect(() => { setNpcPositions({}); encStepsRef.current = 0; }, [zoneId]);
+  useEffect(() => {
+    const bz = BADOR_COMBAT_ZONES[zoneId];
+    if (!bz) return;
+    const f = questFlagsRef.current || {};
+    if (f[`bador_cleared_${zoneId}`]) return;
+    let wins = 0;
+    for (let i = 1; i <= bz.need; i++) if (f[`bador_won_${zoneId}_${i}`]) wins = i;
+    pushActionLog(`ACTIVE COMBAT ZONE: hostile raiders and scavengers operate here. ${bz.need - wins} contact${bz.need - wins === 1 ? '' : 's'} left to clear. KDY personnel will not engage you.`, zoneId);
+  }, [zoneId]);
   useEffect(() => {
     const tickId = setInterval(() => {
       setNpcPositions((prev) => {
         const next = { ...prev };
         const playerPos = posRef.current;
         zone.npcs?.filter(npc => isNpcVisible(npc, questFlagsRef.current || {})).forEach((npc) => {
-          if (!npc.mobile) return;
+          if (!npc.mobile && !npc.wander) return;
+          if (npc.wander && Math.random() < 0.4) return;
           const cur = prev[npc.id] || { x: npc.x, y: npc.y };
           const dirs = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
           dirs.sort(() => Math.random() - 0.5);
@@ -16547,6 +17016,8 @@ function StarWarsRPG() {
             const tile = map[ny]?.[nx];
             if (!tile || tile.type !== 'floor') continue;
             if (nx === playerPos.x && ny === playerPos.y) continue;
+            if (npc.wander && (Math.abs(nx - npc.x) > npc.wander || Math.abs(ny - npc.y) > npc.wander)) continue;
+            if ((zone.worldObjects || []).some(o => o.x === nx && o.y === ny) || (zone.collectibles || []).some(c => c.x === nx && c.y === ny)) continue;
             const occupied = zone.npcs.some((n) => {
               if (n.id === npc.id) return false;
               const np = prev[n.id] || { x: n.x, y: n.y };
@@ -16636,7 +17107,15 @@ function StarWarsRPG() {
       setChoiceFeedback(feedbackParts.join('  '));
       setTimeout(() => setChoiceFeedback(null), 2800);
     }
+    if (choice.requires?.credits) setCredits((c) => c - choice.requires.credits);
     if (choice.grants?.credits) setCredits((c) => c + choice.grants.credits);
+    [].concat(choice.grants?.questFlags || []).forEach((f) => setFlag(f));
+    // A choice that grants nothing (a deferral, a "not yet") must not burn a phase that has a real progression choice.
+    const grantsAny = (c) => c.grants && ((c.grants.flags || []).length || (c.grants.items || []).length || (c.grants.codex || []).length || c.grants.credits || c.grants.questFlags);
+    if (activeDialogue && activeDialogue._activePhaseId && (choice.defer || (!grantsAny(choice) && (activeDialogue.choices || []).some(grantsAny)))) {
+      const phaseKey = activeDialogue.id + ':' + activeDialogue._activePhaseId;
+      setCompletedInteractions((prev) => { const s = new Set(prev); s.delete(phaseKey); return s; });
+    }
     if (choice.grants?.flags) {
       choice.grants.flags.forEach((f) => {
         setFlag(f);
@@ -16649,7 +17128,12 @@ function StarWarsRPG() {
     if (choice.grants?.codex) choice.grants.codex.forEach(id => { if (CODEX_ENTRIES[id]) unlockCodex(CODEX_ENTRIES[id]); });
     pushActionLog(choice.result, zoneId);
     setActiveDialogue(null);
-  }, [zoneId, pushActionLog, setFlag, addItem, unlockCodex]);
+    if (choice.triggersMinigame) {
+      setActiveMinigame({ type: choice.triggersMinigame, ...(choice.minigameConfig ?? {}), context: choice,
+        onSuccess: (loot) => { if (loot && loot.credits) { setCredits((c) => c + loot.credits); pushActionLog(`+${loot.credits} credits recovered from the engagement.`, zoneId); } if (loot && loot.item) addItem(loot.item); pushActionLog('Engagement concluded.', zoneId); setActiveMinigame(null); },
+        onFailure: () => { pushActionLog('You fell back. The attempt failed.', zoneId); setActiveMinigame(null); } });
+    }
+  }, [zoneId, pushActionLog, setFlag, addItem, unlockCodex, activeDialogue]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -16661,7 +17145,7 @@ function StarWarsRPG() {
         if (e.key === 'Z' && e.shiftKey) { setQuestFlags({}); setShowDebug(false); return; }
         setShowDebug(false); return;
       }
-      if (showTravel || activeDialogue || transitioning || showSpeeder || showInventory || showCodex || activeMinigame || showVendor) return;
+      if (showTravel || activeDialogue || transitioning || showSpeeder || shuttlePilot || cinematic || showInventory || showCodex || activeMinigame || showVendor) return;
       if (e.key === 'i' || e.key === 'I') { setShowInventory(v => !v); return; }
       if (e.key === 'c' || e.key === 'C') { setShowCodex(v => !v); return; }
       let { x, y } = pos;
@@ -16700,6 +17184,9 @@ function StarWarsRPG() {
         return p.x === x && p.y === y;
       });
       if (npcHere) {
+        if (npcHere.triggersOverlay === 'shuttle') {
+          setShuttlePilot(npcHere); setPos({ x, y }); return;
+        }
         if (npcHere.triggersOverlay === 'speeder') {
           if (!questFlags.speeder_transit_unlocked) { pushActionLog('RESTRICTED TRANSIT: Sector clearance pass required.', zoneId); setPos({ x, y }); return; }
           setShowSpeeder(true); setPos({ x, y }); return;
@@ -16723,14 +17210,14 @@ function StarWarsRPG() {
         return;
       }
 
-      const worldObjHere = zone.worldObjects?.find(wo => wo.x === x && wo.y === y);
+      const worldObjHere = zone.worldObjects?.find(wo => wo.x === x && wo.y === y && !(wo.requiresNoneFlags || []).some(f => questFlags[f]));
       if (worldObjHere) {
         if (worldObjHere.id.startsWith('airtaxi_')) {
           if (!questFlags.speeder_transit_unlocked) { pushActionLog('RESTRICTED TRANSIT: Sector clearance pass required.', zoneId); setPos({ x, y }); return; }
           setShowSpeeder(true); setPos({ x, y }); return;
         }
-        if (worldObjHere.requiresFlag && !questFlags[worldObjHere.requiresFlag]) {
-          pushActionLog(`[${worldObjHere.label}] Access restricted. Required condition not met.`, zoneId);
+        if ((worldObjHere.requiresFlag && !questFlags[worldObjHere.requiresFlag]) || (worldObjHere.requiresAllFlags || []).some(f => !questFlags[f])) {
+          pushActionLog(`[${worldObjHere.label}] ${worldObjHere.lockedMessage || 'Access restricted. Required condition not met.'}`, zoneId);
           setPos({ x, y }); return;
         }
         if (worldObjHere.requires?.item && !inventory.some(i => i.id === worldObjHere.requires.item)) {
@@ -16753,7 +17240,7 @@ function StarWarsRPG() {
           }
           if (worldObjHere.triggersMinigame && !completedInteractions.has(worldObjHere.id)) {
             const successCb = (loot) => {
-              if (worldObjHere.grantsFlag) setFlag(worldObjHere.grantsFlag);
+              [worldObjHere.grantsFlag, ...(worldObjHere.grantsFlags || [])].filter(Boolean).forEach(setFlag);
               if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) { addItem(ITEMS[worldObjHere.grantsItem]); pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId); }
               if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
               if (worldObjHere.once) setCompletedInteractions(prev => new Set([...prev, worldObjHere.id]));
@@ -16763,6 +17250,13 @@ function StarWarsRPG() {
               setActiveMinigame(null);
             };
             const failCb = () => {
+              if (worldObjHere.failGrantsFlags) {
+                worldObjHere.failGrantsFlags.forEach(setFlag);
+                if (worldObjHere.once) setCompletedInteractions(prev => new Set([...prev, worldObjHere.id]));
+                pushActionLog(`[${worldObjHere.label}] ${worldObjHere.failMessage || 'The attempt failed, and it cost you.'}`, zoneId);
+                setActiveMinigame(null);
+                return;
+              }
               pushActionLog(`[${worldObjHere.label}] Attempt failed. Security alert triggered.`, zoneId);
               setActiveMinigame(null);
             };
@@ -16771,7 +17265,7 @@ function StarWarsRPG() {
             return;
           }
           if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
-          if (worldObjHere.grantsFlag) setFlag(worldObjHere.grantsFlag);
+          [worldObjHere.grantsFlag, ...(worldObjHere.grantsFlags || [])].filter(Boolean).forEach(setFlag);
           if (worldObjHere.once) setCompletedInteractions((prev) => new Set([...prev, worldObjHere.id]));
         }
         setPos({ x, y });
@@ -16784,6 +17278,39 @@ function StarWarsRPG() {
         setCollectedItems((prev) => new Set([...prev, collectible.id]));
         if (collectible.grantsItem && ITEMS[collectible.grantsItem]) { addItem(ITEMS[collectible.grantsItem]); pushActionLog(`${collectible.label}. Acquired: ${ITEMS[collectible.grantsItem].name}`, zoneId); }
         else pushActionLog(`${collectible.label}.${collectible.reward > 0 ? ` (+${collectible.reward} credits)` : ''}`, zoneId);
+      }
+
+      const _bz = BADOR_COMBAT_ZONES[zoneId];
+      if (_bz && !questFlags[`bador_cleared_${zoneId}`] && !activeMinigame) {
+        encStepsRef.current += 1;
+        if (encStepsRef.current >= BADOR_ENCOUNTER_MIN_STEPS && Math.random() * 100 < _bz.rate) {
+          encStepsRef.current = 0;
+          const _bKey = _bz.pool[Math.floor(Math.random() * _bz.pool.length)];
+          setActiveMinigame({
+            type: 'tactical_combat',
+            opponentProfile: _bKey,
+            flavorText: _bz.flavor[Math.floor(Math.random() * _bz.flavor.length)],
+            onSuccess: (loot) => {
+              const _cr = loot ? loot.credits : 100;
+              setCredits(c => c + _cr);
+              if (loot && loot.item) addItem(loot.item);
+              let wins = 0;
+              for (let i = 1; i <= _bz.need; i++) if (questFlagsRef.current[`bador_won_${zoneId}_${i}`]) wins = i;
+              wins += 1;
+              setFlag(`bador_won_${zoneId}_${wins}`);
+              if (wins >= _bz.need) {
+                setFlag(`bador_cleared_${zoneId}`);
+                pushActionLog(`You held the field. +${_cr} credits. ZONE CLEARED: ${zone.name} is quiet again. No further contact expected here.`, zoneId);
+              } else {
+                pushActionLog(`You held the field. +${_cr} credits. Hostile contacts remaining in this zone: ${_bz.need - wins}.`, zoneId);
+              }
+              setActiveMinigame(null);
+            },
+            onFailure: () => { pushActionLog('You fell back under fire. The hostiles are still out there.', zoneId); setActiveMinigame(null); },
+          });
+          setPos({ x, y });
+          return;
+        }
       }
 
       const _ePool = ENCOUNTER_TABLE[zoneId];
@@ -16816,7 +17343,7 @@ function StarWarsRPG() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, showInventory, showCodex, activeMinigame, showVendor, questFlags, npcPositions, collectedItems, completedInteractions, pushActionLog, travelToZone, addItem, unlockCodex, setFlag]);
+  }, [pos, map, zone, zoneId, facing, showTravel, activeDialogue, transitioning, showSpeeder, shuttlePilot, cinematic, showInventory, showCodex, activeMinigame, showVendor, questFlags, npcPositions, collectedItems, completedInteractions, pushActionLog, travelToZone, addItem, unlockCodex, setFlag]);
 
   const camX = Math.max(0, Math.min(zone.width - VIEWPORT_COLS, pos.x - Math.floor(VIEWPORT_COLS / 2)));
   const camY = Math.max(0, Math.min(zone.height - VIEWPORT_ROWS, pos.y - Math.floor(VIEWPORT_ROWS / 2)));
@@ -16831,6 +17358,9 @@ function StarWarsRPG() {
         <div>
           <span style={{ fontSize:16,fontWeight:600,color:zone.accent,textShadow:`0 0 12px ${zone.accentGlow}` }}>{zone.name}</span>
           <span style={{ fontSize:11,color:'#7A7F94',marginLeft:10 }}>{zone.subtitle}</span>
+          {BADOR_COMBAT_ZONES[zoneId] && (questFlags[`bador_cleared_${zoneId}`]
+            ? <span style={{ fontSize:10,color:'#3AFF8A',marginLeft:10,letterSpacing:'0.12em' }}>ZONE CLEARED</span>
+            : <span style={{ fontSize:10,color:'#FF6A4A',marginLeft:10,letterSpacing:'0.12em' }}>ACTIVE COMBAT ZONE</span>)}
         </div>
         <div style={{ fontSize:12,color:'#E8C97A' }}>{credits} cr &nbsp;&middot;&nbsp; <span style={{color:'#6A7090'}}>{collectedItems.size} items</span></div>
       </div>
@@ -17016,7 +17546,9 @@ function StarWarsRPG() {
         </div>
       )}
       {showTravel && <TravelOverlay currentPlanetId={planetId} credits={credits} questFlags={questFlags} onTravel={travelToPlanet} onClose={() => setShowTravel(false)} />}
-      {activeDialogue && <DialogueOverlay npc={activeDialogue} onChoose={resolveChoice} inventory={inventory} questFlags={questFlags} />}
+      {activeDialogue && <DialogueOverlay npc={activeDialogue} onChoose={resolveChoice} inventory={inventory} questFlags={questFlags} credits={credits} />}
+      {shuttlePilot && <ShuttleOverlay pilot={shuttlePilot} questFlags={questFlags} currentZoneId={zoneId} onTravel={(dest) => { setCredits((c) => c - dest.cost); const mode = shuttleModeFor(zoneId, dest); setShuttlePilot(null); if (mode) setCinematic({ mode, dest }); else travelToZone(dest.targetZone, dest.targetPos); }} onClose={() => setShuttlePilot(null)} />}
+      {cinematic && <ShuttleCinematic mode={cinematic.mode} destName={cinematic.dest.name} onSwap={() => arriveShuttle(cinematic.dest)} onDone={() => setCinematic(null)} />}
       {showSpeeder && <SpeederOverlay credits={credits} questFlags={questFlags} currentZoneId={zoneId} onTravel={(dest) => { setCredits((c) => c - dest.cost); setShowSpeeder(false); travelToZone(dest.targetZone, dest.targetPos); }} onClose={() => setShowSpeeder(false)} />}
       {showInventory && <InventoryOverlay inventory={inventory} onClose={() => setShowInventory(false)} />}
       {showCodex && <CodexOverlay codex={codex} setCodex={setCodex} onClose={() => setShowCodex(false)} />}
