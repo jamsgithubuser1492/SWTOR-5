@@ -4055,8 +4055,8 @@ const PLANETS = {
         doors: [
           { x: 29, y: 13, targetZone: 'bador_hq_interior', targetPos: { x: 2, y: 10 }, label: 'Main HQ Airlock', requiresFlag: 'bador_pass_issued', lockedMessage: 'The blast doors stay sealed. A synthetic voice repeats: BASE ACCESS PASS REQUIRED. Check in with Lieutenant Vane on the landing deck.', cinematic: 'airlock' },
           { x: 29, y: 14, targetZone: 'bador_hq_interior', targetPos: { x: 2, y: 11 }, label: 'Main HQ Airlock', requiresFlag: 'bador_pass_issued', lockedMessage: 'The blast doors stay sealed. A synthetic voice repeats: BASE ACCESS PASS REQUIRED. Check in with Lieutenant Vane on the landing deck.', cinematic: 'airlock' },
-          { x: 43, y: 13, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 8 }, label: 'Sector 4 Facilities' },
-          { x: 43, y: 14, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 9 }, label: 'Sector 4 Facilities' },
+          { x: 43, y: 13, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 14 }, label: 'Sector 4 Facilities' },
+          { x: 43, y: 14, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 15 }, label: 'Sector 4 Facilities' },
           { x: 16, y: 27, targetZone: 'city_outskirts_bador', targetPos: { x: 14, y: 1 }, label: 'City Outskirts' },
           { x: 17, y: 27, targetZone: 'city_outskirts_bador', targetPos: { x: 15, y: 1 }, label: 'City Outskirts' },
         ],
@@ -4415,23 +4415,23 @@ const PLANETS = {
       bador_manufacturing: {
         id: 'bador_manufacturing', name: 'KDY Manufacturing Facilities — Sector 4',
         subtitle: 'Bador Moon · Restricted Zone',
-        width: 36, height: 22, spawnPos: { x: 2, y: 8 }, textureId: 'ferrowake',
+        width: 44, height: 30, spawnPos: { x: 2, y: 14 }, textureId: 'ferrowake',
         accent: '#D4762C', accentGlow: 'rgba(212,118,44,0.28)', accentDim: '#6A3010',
         floorColor: '#251A0E', floorAlt: '#2E2010', wallDark: '#0E0A06', wallLight: '#1A1208',
         bg: 'radial-gradient(circle at 50% 70%, #1A1008 0%, #0A0804 70%)', ambient: 'embers',
         decor: ['pipe', 'girder', 'slag'],
         doors: [
-          { x: 0, y: 8, targetZone: 'bador_main_base', targetPos: { x: 42, y: 13 }, label: 'Main Base' },
-          { x: 0, y: 9, targetZone: 'bador_main_base', targetPos: { x: 42, y: 14 }, label: 'Main Base' },
-          { x: 35, y: 10, targetZone: 'engine_wastes', targetPos: { x: 1, y: 10 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight lock is sealed. The tunnel beyond runs to the Engine Wastes and stays dead until the Titan Manifold is restarted.' },
-          { x: 35, y: 11, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight lock is sealed. The tunnel beyond runs to the Engine Wastes and stays dead until the Titan Manifold is restarted.' },
+          { x: 0, y: 14, targetZone: 'bador_main_base', targetPos: { x: 42, y: 13 }, label: 'Main Base' },
+          { x: 0, y: 15, targetZone: 'bador_main_base', targetPos: { x: 42, y: 14 }, label: 'Main Base' },
+          { x: 43, y: 16, targetZone: 'engine_wastes', targetPos: { x: 1, y: 10 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight lock is sealed. The tunnel beyond runs to the Engine Wastes and stays dead until the Titan Manifold is restarted.' },
+          { x: 43, y: 17, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight lock is sealed. The tunnel beyond runs to the Engine Wastes and stays dead until the Titan Manifold is restarted.' },
         ],
         worldObjects: [
           { id: 'assembly_line_terminal', propArt: 'console', propVariant: 'assembly', x: 20, y: 6, label: 'Assembly Line Override Terminal',
             description: 'An unauthorized modification routes assembly output to an off-manifest storage bay. The override code is not in the KDY standard library.',
             triggersMinigame: 'terminal_slicing', requiresFlag: 'ghost_keel_active',
             once: true, grantsFlag: 'assembly_override_accessed', grantsItem: 'corrupt_manifest' },
-          { id: 'mag_lev_crane', propArt: 'maglev_crane', x: 18, y: 3, label: 'Mag-Lev Cargo Crane',
+          { id: 'mag_lev_crane', propArt: 'maglev_crane', x: 18, y: 6, label: 'Mag-Lev Cargo Crane',
             description: 'A five-ton crane magnetized to the ceiling rail. The routing manifest reads: PERSONAL CONSIGNMENT.' },
           { id: 'krax_manifest_safe', propArt: 'crate_stack', propVariant: 'lockbox', x: 29, y: 16, label: 'Overseer\'s Manifest Safe',
             description: 'A heavy durasteel lockbox welded to the floor. The serial number has been removed.',
@@ -4465,21 +4465,14 @@ const PLANETS = {
           },
         ],
         collectibles: [
-          { id: 'sector4_hull_fragment', x: 32, y: 4, label: 'Forged Star Destroyer Hull Plating', reward: 800 },
-          { id: 'sector4_assembly_log', x: 10, y: 4, label: 'Assembly Sequence Log', reward: 300 },
+          { id: 'sector4_hull_fragment', x: 32, y: 8, label: 'Forged Star Destroyer Hull Plating', reward: 800 },
+          { id: 'sector4_assembly_log', x: 10, y: 8, label: 'Assembly Sequence Log', reward: 300 },
         ],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 34, 20, 'floor');
-          for (let ax = 4; ax <= 32; ax++) { pt(g, ax, 12, 'lava'); pt(g, ax, 13, 'lava'); }
-          for (let bx = 12; bx <= 22; bx++) { pt(g, bx, 12, 'floor'); pt(g, bx, 13, 'floor'); }
-          for (let cx = 14; cx <= 20; cx++) { pt(g, cx, 7, 'lava'); pt(g, cx, 8, 'lava'); }
-          pt(g, 16, 7, 'floor'); pt(g, 17, 7, 'floor');
-          carveRect(g, 26, 14, 34, 20, 'wall');
-          pt(g, 28, 14, 'floor'); pt(g, 29, 14, 'floor'); pt(g, 30, 14, 'floor');
-          pt(g, 0, 8, 'door'); pt(g, 0, 9, 'door');
-          pt(g, 35, 10, 'door'); pt(g, 35, 11, 'door');
-          pt(g, 26, 14, 'floor'); pt(g, 27, 14, 'floor'); carveRect(g, 28, 15, 30, 16, 'floor'); // overseer's safe alcove
+          carveRect(g, 1, 5, 42, 28, 'floor');
+          pt(g, 0, 14, 'door'); pt(g, 0, 15, 'door');
+          pt(g, 43, 16, 'door'); pt(g, 43, 17, 'door');
           return g;
         },
       },
@@ -4830,8 +4823,8 @@ const PLANETS = {
           'Coolant reserves at eleven percent. This is a recording.',
         ],
         doors: [
-          { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 10 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight tunnel is dead, its rails cold and its gate chained. It only runs when the Titan Manifold is alive.' },
-          { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 11 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight tunnel is dead, its rails cold and its gate chained. It only runs when the Titan Manifold is alive.' },
+          { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 42, y: 16 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight tunnel is dead, its rails cold and its gate chained. It only runs when the Titan Manifold is alive.' },
+          { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 42, y: 17 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight tunnel is dead, its rails cold and its gate chained. It only runs when the Titan Manifold is alive.' },
           { x: 24, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 24, y: 30 }, label: 'Depot Blast Doors' },
           { x: 25, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 25, y: 30 }, label: 'Depot Blast Doors' },
           { x: 40, y: 0, targetZone: 'outpost_7', targetPos: { x: 22, y: 30 }, label: 'Outpost 7 Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway tunnel to Outpost 7 is shut tight from this side. It opens once Operation Sundown breaks the line.' },
