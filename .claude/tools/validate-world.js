@@ -35,6 +35,8 @@ const exp = `;globalThis.__X = { PLANETS,
   PROP_DEFS: typeof PROP_DEFS !== 'undefined' ? PROP_DEFS : {},
   SHIP_DEFS: typeof SHIP_DEFS !== 'undefined' ? SHIP_DEFS : {},
   SPRITES: typeof WORLD_OBJECT_SPRITES !== 'undefined' ? WORLD_OBJECT_SPRITES : {},
+  ITEMS: typeof ITEMS !== 'undefined' ? ITEMS : {},
+  CODEX: typeof CODEX_ENTRIES !== 'undefined' ? CODEX_ENTRIES : {},
   iconFor: typeof getWorldObjIconKind !== 'undefined' ? getWorldObjIconKind : () => null };`;
 const stub = new Proxy(function () {}, { get: (t, k) => (k === 'memo' ? (f) => f : stub), apply: () => stub, construct: () => stub });
 const ctx = { React: stub, ReactDOM: stub, window: stub, document: stub,
@@ -114,6 +116,25 @@ for (const [zid, { pid, z }] of Object.entries(allZones)) {
     const tt = tg[d.targetPos?.y]?.[d.targetPos?.x]?.type;
     if (tt !== 'floor') E(tag, `door (${d.x},${d.y}) lands on "${tt}" at (${d.targetPos?.x},${d.targetPos?.y}) in ${d.targetZone}`);
     if (tz.pid === pid && !(tz.z.doors || []).some((b) => b.targetZone === zid)) E(tag, `door to ${d.targetZone} has no return door (links must be symmetric)`);
+  }
+
+  // ---- references: every codex id and item id granted or required must exist (a dangling id silently does nothing) ----
+  {
+    const refs = { codex: new Set(), item: new Set() };
+    const walkRefs = (o) => {
+      if (!o || typeof o !== 'object') return;
+      if (Array.isArray(o)) { o.forEach(walkRefs); return; }
+      for (const [k, v] of Object.entries(o)) {
+        if (k === 'grantsCodex' && typeof v === 'string') refs.codex.add(v);
+        else if (k === 'grantsItem' && typeof v === 'string') refs.item.add(v);
+        else if (k === 'grants' && v && typeof v === 'object') { (v.codex || []).forEach((c) => refs.codex.add(c)); (v.items || []).forEach((c) => refs.item.add(c)); walkRefs(v); }
+        else if (k === 'requires' && v && typeof v === 'object' && typeof v.item === 'string') refs.item.add(v.item);
+        else walkRefs(v);
+      }
+    };
+    walkRefs(z.npcs); walkRefs(z.worldObjects); walkRefs(z.collectibles);
+    for (const c of refs.codex) if (!X.CODEX[c]) E(tag, `codex id "${c}" is granted but not defined in CODEX_ENTRIES`);
+    for (const c of refs.item) if (!X.ITEMS[c]) E(tag, `item id "${c}" is granted or required but not defined in ITEMS`);
   }
 
   // ---- visual standards ----
