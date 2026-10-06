@@ -15215,6 +15215,77 @@ function PropBvistaG({ variant = 'hqwindow_a' }) {
 }
 // BADOR VISTA END
 
+// ZORA PROPS BEGIN
+// The Ghost Keel frame in its drydock cradle, the Warden Prime defence droid, and the Cherit memorial plinth.
+function PropKeelFrame() {
+  const S = ART.signal;
+  const ribs = Array.from({ length: 12 }, (_, i) => ({ x: 34 + i * 18, top: 84 + Math.abs(i - 4) * 1.8 }));
+  return (
+    <svg viewBox="0 0 288 160" width="288" height="160" style={PROP_STYLE}>
+      <PropShadow cx={144} cy={154} rx={134} ry={4} />
+      <Bev t="polygon" points={pts([[6, 154], [6, 140], [282, 140], [282, 154]])} c="steel" o={1.2} /><Hazard x={10} y={146} w={268} h={4} />
+      {[26, 98, 170, 242].map((x, i) => <g key={i}><Bev t="polygon" points={pts([[x, 140], [x + 2, 66], [x + 14, 66], [x + 16, 140]])} c="dark" o={1} /><Seams x={x} y={70} w={16} h={68} cols={1} rows={4} op={0.4} /><rect x={x + 3} y={60 - (i % 2) * 6} width="10" height="6" fill={ART.brass.base} /></g>)}
+      <Bev t="polygon" points={pts([[18, 124], [30, 100], [246, 86], [282, 102], [250, 126], [64, 134]])} c="dark" o={1.3} />
+      {ribs.map((rb, i) => <polygon key={'rb' + i} points={pts([[rb.x, 130], [rb.x + 3, rb.top], [rb.x + 11, rb.top - 2], [rb.x + 13, 128]])} fill={ART.steel.shade} />)}
+      {ribs.map((rb, i) => <polygon key={'rh' + i} points={pts([[rb.x + 3, rb.top], [rb.x + 6, rb.top - 1], [rb.x + 6, 128], [rb.x + 3, 130]])} fill={ART.steel.base} opacity="0.7" />)}
+      <Bev t="polygon" points={pts([[196, 90], [246, 86], [282, 102], [250, 126], [196, 126]])} c="hull" o={1.1} />
+      <Seams x={196} y={88} w={86} h={38} cols={4} rows={2} op={0.5} />
+      <polygon points={pts([[196, 90], [246, 86], [250, 92], [198, 96]])} fill={ART.pearl.hi} opacity="0.8" />
+      <Bev t="polygon" points={pts([[96, 86], [104, 40], [150, 30], [160, 84]])} c="steel" o={0.9} />
+      <g stroke={ART.hull.shade} strokeWidth="1.4" fill="none"><line x1="98" y1="84" x2="150" y2="34" /><line x1="104" y1="42" x2="158" y2="84" /><line x1="100" y1="62" x2="156" y2="58" /></g>
+      <polygon points={pts([[104, 40], [150, 30], [152, 36], [106, 46]])} fill={ART.steel.hi} opacity="0.7" />
+      <polygon points={pts(ngon(124, 110, 10, 10, 10))} fill={ART.ink} /><polygon points={pts(ngon(124, 110, 7, 7, 10))} fill={S.cyan} style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} /><polygon points={pts(ngon(124, 110, 3, 3, 6))} fill={S.cyanHi} />
+      <line x1="60" y1="0" x2="60" y2="70" stroke={ART.dark.hi} strokeWidth="1.4" /><line x1="200" y1="0" x2="206" y2="84" stroke={ART.dark.hi} strokeWidth="1.4" />
+      <Bev t="polygon" points={pts([[54, 70], [66, 70], [64, 80], [56, 80]])} c="amber" o={0.7} /><Bev t="polygon" points={pts([[198, 82], [212, 82], [210, 90], [200, 90]])} c="amber" o={0.7} />
+      {[[40, 112], [112, 94], [176, 92], [220, 108], [262, 112]].map(([x, y], i) => <circle key={'sp' + i} cx={x} cy={y} r="2.2" fill={S.amberHi} style={{ animation: `ship-spark ${1.3 + i * 0.4}s ease-in-out ${i * 0.3}s infinite` }} />)}
+      {[[44, 92, 'cyan'], [80, 100, 'amber'], [168, 88, 'cyan'], [228, 96, 'amber']].map(([x, y, k], i) => <rect key={'wl' + i} x={x} y={y} width="5" height="3" fill={S[k]} style={{ animation: `ship-blink ${1.8 + i * 0.5}s ease-in-out ${i * 0.3}s infinite` }} />)}
+      <Slab x={96} y={142} w={96} h={9} k={1} c="dark" o={0.8} /><text x="144" y="148.8" textAnchor="middle" fontSize="4" fill={S.amberHi} fontWeight="700" {...PT}>GHOST KEEL HULL 001</text>
+      <Rivets x={10} y={142} w={268} n={30} /><Lights x={14} y={150} n={6} gap={6} seed={11} />
+      <Grime x={8} y={60} w={272} h={92} seed={880} n={10} op={0.22} /><Scuff x={10} y={84} w={266} h={56} seed={881} n={12} c="steel" />
+    </svg>
+  );
+}
+
+function PropWardenPrime() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={91} rx={40} ry={3.4} />
+      <Slab x={10} y={80} w={76} h={9} k={2} c="dark" o={1} /><Hazard x={14} y={84} w={68} h={3} />
+      {[[16, 80, 4, 52], [26, 80, 14, 62], [70, 80, 82, 52], [60, 80, 72, 62]].map(([x1, y1, x2, y2], i) => <g key={i}><line x1={x1 + 6} y1={y1} x2={x2 + 6} y2={y2} stroke={ART.ink} strokeWidth="6" /><line x1={x1 + 6} y1={y1} x2={x2 + 6} y2={y2} stroke={ART.steel.base} strokeWidth="3.4" /><polygon points={pts(ngon(x2 + 6, y2, 4, 4, 6))} fill={ART.steel.hi} /></g>)}
+      <Bev t="polygon" points={pts([[24, 70], [20, 40], [34, 24], [62, 24], [76, 40], [72, 70]])} c="dark" o={1.2} />
+      <Bev t="polygon" points={pts([[30, 66], [28, 44], [38, 32], [58, 32], [68, 44], [66, 66]])} c="steel" o={0.9} />
+      <Seams x={28} y={34} w={40} h={32} cols={2} rows={2} op={0.45} /><Vent x={38} y={54} w={20} h={8} n={3} />
+      <Bev t="polygon" points={pts([[34, 24], [38, 10], [58, 10], [62, 24]])} c="dark" o={1} />
+      <rect x="40" y="14" width="16" height="6" fill={ART.ink} /><rect x="42" y="15" width="12" height="4" fill={S.red} style={{ animation: 'ship-engine 1.6s ease-in-out infinite' }} /><rect x="46" y="15" width="4" height="4" fill={S.redHi} />
+      <Bev t="polygon" points={pts([[6, 44], [6, 28], [20, 28], [22, 46]])} c="steel" o={0.9} /><Bev t="polygon" points={pts([[74, 46], [76, 28], [90, 28], [90, 44]])} c="steel" o={0.9} />
+      <rect x="2" y="30" width="6" height="14" fill={ART.dark.base} /><rect x="88" y="30" width="6" height="14" fill={ART.dark.base} />
+      <Glyph k="cog" x={48} y={46} s={4} c={S.amber} />
+      <Rivets x={26} y={28} w={44} n={7} /><Lights x={30} y={72} n={5} gap={8} seed={3} />
+      <Grime x={8} y={8} w={80} h={82} seed={890} n={7} op={0.22} /><Scuff x={10} y={12} w={76} h={72} seed={891} n={9} c="steel" />
+    </svg>
+  );
+}
+
+function PropMemorialPlinth() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={26} ry={2.6} />
+      <Slab x={8} y={42} w={48} h={16} k={2} c="dark" o={1} /><Slab x={14} y={30} w={36} h={14} k={2} c="steel" o={0.9} />
+      <Hazard x={10} y={54} w={44} h={2.4} />
+      <polygon points={pts([[18, 32], [30, 28], [46, 30], [44, 38], [20, 38]])} fill={ART.fabric.base} /><polygon points={pts([[18, 32], [30, 28], [34, 32], [22, 36]])} fill={ART.fabric.hi} opacity="0.8" />
+      <rect x="38" y="31" width="9" height="6" fill={ART.paper.base} /><rect x="39.4" y="32.4" width="6.2" height="1.2" fill={S.green} />
+      <polygon points={pts([[28, 28], [30, 18], [34, 18], [36, 28]])} fill={ART.brass.base} /><polygon points={pts([[29, 18], [32, 8], [35, 18]])} fill={S.cyanHi} style={{ animation: 'holo-flicker 1.8s ease-in-out infinite' }} /><polygon points={pts([[31, 16], [32, 11], [33, 16]])} fill={S.white} />
+      <Glow cx={32} cy={14} r={9} c={S.cyan} opacity={0.35} style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} />
+      <Slab x={20} y={46} w={24} h={7} k={1} c="brass" o={0.8} /><text x="32" y="51.2" textAnchor="middle" fontSize="3" fill={ART.ink} fontWeight="700" {...PT}>CHERIT</text>
+      <Rivets x={11} y={44} w={42} n={6} /><Lights x={16} y={57} n={3} gap={4} seed={4} />
+      <Grime x={8} y={28} w={48} h={30} seed={895} n={4} op={0.22} /><Scuff x={10} y={30} w={44} h={26} seed={896} n={5} c="steel" />
+    </svg>
+  );
+}
+// ZORA PROPS END
+
 function PropKdyBarricade({ variant }) {
   const S = ART.signal, scrap = variant === 'scrap';
   const body = scrap ? 'rust' : 'hull';
@@ -15877,6 +15948,9 @@ const PROP_DEFS = {
   bvista_44x5:           { w: 44, h: 5, ax: 22, ay: 4, backdrop: true },
   bvista_48x5:           { w: 48, h: 5, ax: 24, ay: 4, backdrop: true },
   bvista_30x3:           { w: 30, h: 3, ax: 15, ay: 2, backdrop: true },
+  keel_frame:            { w: 9, h: 5, ax: 4, ay: 4 },
+  warden_prime:          { w: 3, h: 3, ax: 1, ay: 2 },
+  memorial_plinth:       { w: 2, h: 2, ax: 0, ay: 1 },
   // BADOR VISTA DEFS END
   kdy_barricade:         { w: 3, h: 2, ax: 1, ay: 1 },
   auto_turret:           { w: 2, h: 2, ax: 0, ay: 1 },
@@ -16082,6 +16156,9 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'bvista_44x5': return <PropBvistaE variant={variant} />;
     case 'bvista_48x5': return <PropBvistaF variant={variant} />;
     case 'bvista_30x3': return <PropBvistaG variant={variant} />;
+    case 'keel_frame': return <PropKeelFrame />;
+    case 'warden_prime': return <PropWardenPrime />;
+    case 'memorial_plinth': return <PropMemorialPlinth />;
     // BADOR VISTA CASES END
     case 'kdy_barricade': return <PropKdyBarricade variant={variant} />;
     case 'auto_turret': return <PropAutoTurret variant={variant} />;
