@@ -65,6 +65,9 @@ function shipAtTile(zone, x, y) {
   return (zone.ships || []).find((s) => { const d = SHIP_DEFS[s.kind]; return d && x >= s.x && x < s.x + d.w && y >= s.y && y < s.y + d.h; });
 }
 
+// Engine Wastes: Vance reacts to the Black Box log (shared by several dialogue phases)
+const WST_VANCE_BOX_CHOICE = { text: '[Black Box] I found a cylinder. It has your voice on it.', requiresFlag: 'black_box_found', morality: 0, loyalty: {}, result: 'Vance goes still. "I was still talking when they welded the hatch." He wipes the cylinder clean. "Then finish it. Seat the Governor."', grants: { codex: ['codex-wst-vance-truth'] } };
+
 const PLANETS = {
   coruscant: {
     id: 'coruscant', name: 'Coruscant', travelCost: 0, startZoneId: 'spaceport',
@@ -2621,7 +2624,7 @@ const PLANETS = {
             triggersMinigame: 'syndicate_management' },
           { id: 'conquest_table', propArt: 'tactical_table', propVariant: 'conquest', x: 14, y: 14, once: false, iconKind: 'terminal', label: 'Sector Control Holo',
             requiresFlag: 'syndicateManagement_active',
-            description: 'A secondary tactical display overlaying the five contested sectors of Coruscant mid-city. Garrison strength, income flows, defense ratings, and faction aggression indicators scroll in real time. From here you direct the long war: deploy units, build infrastructure, launch assaults, and respond to crisis events before they destabilize your hold.',
+            description: 'A secondary tactical display overlaying the sixteen sectors of Coruscant, from the Sky-Lounges to the Undercity. Garrison strength, income flows, defense ratings, and faction aggression indicators scroll in real time. From here you direct the long war: deploy units, build infrastructure, launch assaults, and respond to crisis events before they destabilize your hold.',
             triggersMinigame: 'coruscant_conquest',
             minigameConfig: { startCredits: 5000 } },
           { id: 'vault_terminal', propArt: 'console', propVariant: 'vault', x: 34, y: 10, once: true, iconKind: 'terminal', label: 'Credit Vault Terminal',
@@ -4820,95 +4823,130 @@ const PLANETS = {
         paAnnouncements: [
           'Caution. Thermal exhaust venting in sectors four, five and nine.',
           'The Titan Manifold is offline. Do not attempt to restart it.',
+          'Slag Line freight service is suspended until further notice.',
           'Coolant reserves at eleven percent. This is a recording.',
         ],
         doors: [
-          { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 42, y: 16 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight tunnel is dead, its rails cold and its gate chained. It only runs when the Titan Manifold is alive.' },
-          { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 42, y: 17 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight tunnel is dead, its rails cold and its gate chained. It only runs when the Titan Manifold is alive.' },
+          { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 42, y: 16 }, label: 'Slag Line to Manufacturing', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line gate is dead until the Titan Manifold runs.' },
+          { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 42, y: 17 }, label: 'Slag Line to Manufacturing', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line gate is dead until the Titan Manifold runs.' },
           { x: 24, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 24, y: 30 }, label: 'Depot Blast Doors' },
           { x: 25, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 25, y: 30 }, label: 'Depot Blast Doors' },
-          { x: 40, y: 0, targetZone: 'outpost_7', targetPos: { x: 22, y: 30 }, label: 'Outpost 7 Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway tunnel to Outpost 7 is shut tight from this side. It opens once Operation Sundown breaks the line.' },
-          { x: 41, y: 0, targetZone: 'outpost_7', targetPos: { x: 23, y: 30 }, label: 'Outpost 7 Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway tunnel to Outpost 7 is shut tight from this side. It opens once Operation Sundown breaks the line.' },
-          { x: 47, y: 21, targetZone: 'deep_caverns', targetPos: { x: 1, y: 14 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'The Zone Five descent is sealed behind the central blast doors. Restart the manifold and open them first.' },
-          { x: 47, y: 22, targetZone: 'deep_caverns', targetPos: { x: 1, y: 15 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'The Zone Five descent is sealed behind the central blast doors. Restart the manifold and open them first.' },
+          { x: 40, y: 0, targetZone: 'outpost_7', targetPos: { x: 22, y: 30 }, label: 'Sundown Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The Sundown Gateway is sealed from this side.' },
+          { x: 41, y: 0, targetZone: 'outpost_7', targetPos: { x: 23, y: 30 }, label: 'Sundown Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The Sundown Gateway is sealed from this side.' },
+          { x: 47, y: 21, targetZone: 'deep_caverns', targetPos: { x: 1, y: 14 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'Shut behind the central blast doors, heat locked until the manifold runs.' },
+          { x: 47, y: 22, targetZone: 'deep_caverns', targetPos: { x: 1, y: 15 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'Shut behind the central blast doors, heat locked until the manifold runs.' },
         ],
         worldObjects: [
           { id: 'wastes_vista_w', propArt: 'basalt_vista', propVariant: 'wastes_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Titan Manifold',
-            description: "Soot choked sky punctured by gigantic rusting pistons that beat irregularly like dying hearts. Copper and brass pipelines trace across crushed ironwork and furnace glow lights the haze from underneath. Somewhere in the dark a bell rings, flat and slow, with nothing to answer it.", grantsCodex: 'codex-engine-wastes' },
+            description: "Soot choked sky and giant rusting pistons beating like dying hearts. Furnace glow lights the haze from below, and somewhere a bell rings, flat and slow.", grantsCodex: 'codex-engine-wastes' },
           { id: 'wastes_vista_e', propArt: 'basalt_vista', propVariant: 'wastes_b', x: 36, y: 5, once: false, iconKind: 'vista', label: 'Silent Shear Skyline',
-            description: "To the east the mega engine blocks stand locked and cracked, venting white steam into a sky the color of old copper. The Silent Shear severed the primary fuel conduits and the wastes have been burning ever since. Far above, a depot blast door glows orange: the way back to the City Outskirts." },
-          { id: 'ion_storm_capacitor', propArt: 'capacitor_bank', x: 40, y: 8, label: 'Ion Storm Capacitor',
-            description: 'A massive industrial capacitor bank still actively cycling. The discharge pattern is not natural — it is deliberately jamming sensor sweeps across a six-kilometer radius.',
-            once: true, requiresFlag: 'ghost_keel_active',
-            grantsFlag: 'jammer_found', grantsCodex: 'codex-engine-wastes' },
+            description: "Mega engine blocks stand cracked, venting white steam into a copper sky. High in the north wall a blast door glows orange: the way back to the Outskirts.", grantsCodex: 'codex-engine-wastes' },
+          { id: 'ion_storm_capacitor', propArt: 'capacitor_bank', x: 44, y: 8, label: 'Ion Storm Capacitor',
+            description: "Five amber capacitor cells, still cycling, cyan arcs jumping between terminals. A stencil reads DISCHARGE: NOT NATURAL. It jams sensors for six kilometers.",
+            once: true, requiresFlag: 'ghost_keel_active', lockedMessage: 'A jamming bank. Commander Vael might know why it matters.',
+            requiresNoneFlags: ['jammer_found'],
+            triggersMinigame: 'terminal_slicing', minigameConfig: { difficulty: 5 },
+            grantsFlag: 'jammer_found', grantsCodex: 'codex-wst-jammer', thermalDeltaOnSuccess: -30 },
+          { id: 'ion_capacitor_dead', propArt: 'capacitor_bank', propVariant: 'dead', x: 44, y: 8, label: 'Dead Capacitor Bank',
+            description: "The arcs die and the cells go dark. Your signature fades. You pull the main cell, a heavy amber core, cold at last.",
+            once: true, requiresFlag: 'jammer_found', invisibleLocked: true, grantsItem: 'wst_capacitor_cell' },
           { id: 'scan_team_wreckage', propArt: 'scan_wreck', x: 44, y: 15, label: 'KDY Scan Team Wreckage',
-            description: 'The remains of the missing scan team. Their equipment is intact but deliberately disabled. No signs of combat. They were warned off.',
-            once: true, requiresFlag: 'vael_briefed', grantsFlag: 'scan_team_fate_known' },
-          { id: 'glassed_crater_lake', propArt: 'crater_glass', x: 6, y: 9, label: 'Glassed Crater Lake',
-            description: 'A shallow basin of fused silica — evidence of catastrophic engine discharge centuries past. Something large once burned here and the ground remembers it.' },
+            description: "A cracked glass cab and a steel scan truck, dish mast tilted, a note reading WARNED OFF. Seven tags hang from the mast, wrapped in repair tape and names. You take them home.",
+            once: true, requiresFlag: 'vael_briefed', lockedMessage: 'A wrecked truck. You do not know what you are looking at yet.',
+            grantsFlag: 'scan_team_fate_known', grantsItem: 'wst_scan_team_tags', grantsCodex: 'codex-wst-scan-team' },
+          { id: 'glassed_crater_lake', propArt: 'crater_glass', x: 6, y: 9, once: false, label: 'Glassed Crater Lake',
+            description: "Fused silica glass cracked in a starburst, an orange glow under the center. A stencil reads THE GROUND REMEMBERS.", grantsCodex: 'codex-wst-crater-lake' },
           { id: 'foundry_hatch_obj', propArt: 'foundry_hatch', x: 26, y: 12, once: false, iconKind: 'terminal', label: 'Combustion Foundry 09',
-            description: "A hollowed out combustion chamber hung over a dormant slag basin, sealed with heavy blast doors and lit from inside by warm blue coolant lamps. A hand painted sign reads FOUNDRY 09, NO SPARKS, NO SERMONS. This is the one safe place in the wastes.", grantsCodex: 'codex-engine-wastes' },
+            description: "A combustion chamber hung over a dormant slag basin, blue lamps behind heavy blast doors. A sign reads FOUNDRY 09, NO SPARKS, NO SERMONS. The one safe place in the wastes.", grantsCodex: 'codex-wst-foundry09' },
           { id: 'bench_foundry', propArt: 'robotics_bench', x: 21, y: 15, once: false, iconKind: 'crate', label: 'Salvage Workbench',
-            description: "A long steel bench strewn with valve cores, melted gaskets and a half rebuilt pneumatic impact spanner. Soot stains every surface and a pair of welding goggles sit on a hook, still warm." },
+            description: "A steel bench of valve cores, melted gaskets and a half rebuilt spanner. Welding goggles hang on a hook, still warm." },
           { id: 'coolant_diag', propArt: 'fuel_diag_terminal', x: 33, y: 15, once: false, iconKind: 'crate', label: 'Coolant Diagnostics',
-            description: "A hand patched diagnostics terminal wired to the coolant lines. Readouts bounce between SAFE and CRITICAL. A strip of tape on the screen reads: IT IS NEVER SAFE." },
+            description: "A patched terminal wired to the coolant lines, readouts bouncing between SAFE and CRITICAL. Tape reads: IT IS NEVER SAFE." },
           { id: 'piston_tower_1', propArt: 'piston_tower', x: 8, y: 18, once: false, iconKind: 'crate', label: 'Titan Piston',
-            description: "A colossal brass and copper piston, still beating, still slow. Every few seconds it slams down and the ground answers with a shudder. Steam bleeds from its flanges and rust runs in streaks down the housing." },
+            description: "A colossal brass piston, still beating. Each slam shudders the ground." },
           { id: 'piston_tower_2', propArt: 'piston_tower', x: 30, y: 22, once: false, iconKind: 'crate', label: 'Titan Piston',
-            description: "A colossal brass and copper piston, still beating, still slow. Every few seconds it slams down and the ground answers with a shudder. Steam bleeds from its flanges and rust runs in streaks down the housing." },
+            description: "A colossal brass piston, still beating. Each slam shudders the ground." },
           { id: 'piston_tower_3', propArt: 'piston_tower', x: 20, y: 31, once: false, iconKind: 'crate', label: 'Titan Piston',
-            description: "A colossal brass and copper piston, still beating, still slow. Every few seconds it slams down and the ground answers with a shudder. Steam bleeds from its flanges and rust runs in streaks down the housing." },
+            description: "A colossal brass piston, still beating. Each slam shudders the ground." },
           { id: 'boiler_hull_a', propArt: 'boiler_hull', x: 28, y: 28, once: false, iconKind: 'crate', label: 'Dead Boiler Hull',
-            description: "A burst boiler hull on its side. The interior glows a dull orange through the cracks. The nameplate has been scratched away and replaced with the word NO." },
+            description: "A burst boiler hull glowing orange through the cracks. The nameplate is scratched out and replaced with NO." },
           { id: 'steam_vent_1', propArt: 'steam_vent_pipe', x: 21, y: 22, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
-            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+            description: "A copper pipe that hisses, then vents a three tile jet of scalding steam. Scanners notice.", thermalDelta: 6 },
           { id: 'steam_vent_2', propArt: 'steam_vent_pipe', x: 28, y: 25, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
-            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+            description: "A copper pipe that hisses, then vents a three tile jet of scalding steam. Scanners notice.", thermalDelta: 6 },
           { id: 'steam_vent_3', propArt: 'steam_vent_pipe', x: 24, y: 30, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
-            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+            description: "A copper pipe that hisses, then vents a three tile jet of scalding steam. Scanners notice.", thermalDelta: 6 },
           { id: 'steam_vent_4', propArt: 'steam_vent_pipe', x: 36, y: 20, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
-            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+            description: "A copper pipe that hisses, then vents a three tile jet of scalding steam. Scanners notice.", thermalDelta: 6 },
           { id: 'valve_a', propArt: 'valve_wheel', propVariant: 'closed', x: 4, y: 23, once: true, iconKind: 'terminal', label: 'Pressure Valve Wheel (A)',
-            description: "A heavy brass valve wheel with three coolant crystals set into its spokes. It is stuck at a quarter turn. Rerouting the pressure here drains a flooded vault and opens the way to the core.", requiresFlag: 'vance_met', lockedMessage: 'The wheel is lockwired. You need Vance Crankshaft to explain the sequence first.', requiresNoneFlags: ['valve_a_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_a_done', thermalDeltaOnSuccess: 3 },
+            description: "A brass valve wheel with three coolant crystals in its spokes, stuck at a quarter turn.", requiresFlag: 'vance_met', lockedMessage: 'Lockwired. Vance Crankshaft knows the sequence.', requiresNoneFlags: ['valve_a_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_a_done', thermalDeltaOnSuccess: 3 },
           { id: 'valve_a_open', propArt: 'valve_wheel', propVariant: 'open', x: 4, y: 23, once: false, iconKind: 'terminal', label: 'Pressure Valve Wheel (A, Open)',
-            description: "The wheel spins freely now. The pressure line beyond it is empty and the pipe is cooling with a soft ticking sound.", requiresFlag: 'valve_a_done', invisibleLocked: true },
+            description: "The wheel spins freely. The pipe beyond is empty and cooling.", requiresFlag: 'valve_a_done', invisibleLocked: true },
           { id: 'valve_b', propArt: 'valve_wheel', propVariant: 'closed', x: 11, y: 25, once: true, iconKind: 'terminal', label: 'Pressure Valve Wheel (B)',
-            description: "A heavy brass valve wheel with three coolant crystals set into its spokes. It is stuck at a quarter turn. Rerouting the pressure here drains a flooded vault and opens the way to the core.", requiresFlag: 'vance_met', lockedMessage: 'The wheel is lockwired. You need Vance Crankshaft to explain the sequence first.', requiresNoneFlags: ['valve_b_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_b_done', thermalDeltaOnSuccess: 3 },
+            description: "A brass valve wheel with three coolant crystals in its spokes, stuck at a quarter turn.", requiresFlag: 'vance_met', lockedMessage: 'Lockwired. Vance Crankshaft knows the sequence.', requiresNoneFlags: ['valve_b_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_b_done', thermalDeltaOnSuccess: 3 },
           { id: 'valve_b_open', propArt: 'valve_wheel', propVariant: 'open', x: 11, y: 25, once: false, iconKind: 'terminal', label: 'Pressure Valve Wheel (B, Open)',
-            description: "The wheel spins freely now. The pressure line beyond it is empty and the pipe is cooling with a soft ticking sound.", requiresFlag: 'valve_b_done', invisibleLocked: true },
+            description: "The wheel spins freely. The pipe beyond is empty and cooling.", requiresFlag: 'valve_b_done', invisibleLocked: true },
           { id: 'valve_c', propArt: 'valve_wheel', propVariant: 'closed', x: 5, y: 31, once: true, iconKind: 'terminal', label: 'Pressure Valve Wheel (C)',
-            description: "A heavy brass valve wheel with three coolant crystals set into its spokes. It is stuck at a quarter turn. Rerouting the pressure here drains a flooded vault and opens the way to the core.", requiresFlag: 'vance_met', lockedMessage: 'The wheel is lockwired. You need Vance Crankshaft to explain the sequence first.', requiresNoneFlags: ['valve_c_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_c_done', thermalDeltaOnSuccess: 3 },
+            description: "A brass valve wheel with three coolant crystals in its spokes, stuck at a quarter turn.", requiresFlag: 'vance_met', lockedMessage: 'Lockwired. Vance Crankshaft knows the sequence.', requiresNoneFlags: ['valve_c_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_c_done', thermalDeltaOnSuccess: 3 },
           { id: 'valve_c_open', propArt: 'valve_wheel', propVariant: 'open', x: 5, y: 31, once: false, iconKind: 'terminal', label: 'Pressure Valve Wheel (C, Open)',
-            description: "The wheel spins freely now. The pressure line beyond it is empty and the pipe is cooling with a soft ticking sound.", requiresFlag: 'valve_c_done', invisibleLocked: true },
+            description: "The wheel spins freely. The pipe beyond is empty and cooling.", requiresFlag: 'valve_c_done', invisibleLocked: true },
           { id: 'boiler_core', propArt: 'crate_stack', propVariant: 'kdy', x: 11, y: 32, once: true, iconKind: 'crate', label: 'Boiler Core Vault',
-            description: "A sealed brass vault door at the heart of the Matrix, finally drained of slag. Inside, wrapped in oilcloth, a heavy brass wheel with three glowing blue coolant crystals and gear teeth along its rim: the Catalyst Governor Valve.", requiresAllFlags: ['valve_a_done', 'valve_b_done', 'valve_c_done'], lockedMessage: 'The vault door is pressure locked. Open all three valve wheels to drain the chamber.', grantsItem: 'catalyst_governor_valve', grantsFlag: 'governor_valve_acquired' },
+            description: "The drained vault holds the Catalyst Governor Valve in oilcloth: a brass wheel with three blue crystals and gear teeth along its rim.", requiresAllFlags: ['valve_a_done', 'valve_b_done', 'valve_c_done'], lockedMessage: 'Pressure locked. Open all three valve wheels.', grantsItem: 'catalyst_governor_valve', grantsFlag: 'governor_valve_acquired' },
           { id: 'black_box_04', propArt: 'console', propVariant: 'derelict', x: 3, y: 26, once: true, iconKind: 'archive', label: 'Black Box Audio Cylinder 04',
-            description: "A battered audio cylinder from the Titan control spire, wedged between two cracked boiler plates. Its log is timestamped Shear Day plus three, in the voice of a tired engineer. Static interrupts the transcription twice.", requiresFlag: 'vance_met', lockedMessage: 'Nothing here makes sense to you yet. Vance Crankshaft might recognise it.', grantsFlag: 'black_box_found', grantsCodex: 'codex-black-box-04' },
+            description: "A battered audio cylinder wedged between boiler plates, stamped Shear Day plus three. Static cuts the engineer's voice twice.", requiresFlag: 'vance_met', lockedMessage: 'Meaningless for now. Vance Crankshaft might recognize it.', grantsFlag: 'black_box_found', grantsCodex: 'codex-black-box-04' },
           { id: 'coolant_crystals', propArt: 'crate_stack', propVariant: 'kdy', x: 12, y: 22, once: true, iconKind: 'crate', label: 'Coolant Crystal Cluster',
-            description: "A cluster of blue coolant crystals growing along a cracked pipe, glowing faintly in the dark. Ground to powder they make a fine thermal insulator.", grantsItem: 'thermal_crystal_dust' },
+            description: "Blue coolant crystals along a cracked pipe, glowing faintly. Ground to powder, they insulate against heat.", grantsItem: 'thermal_crystal_dust' },
           { id: 'exhaust_cathedral_obj', propArt: 'exhaust_cathedral', x: 40, y: 29, once: false, iconKind: 'vista', label: 'The Exhaust Cathedral',
-            description: "A 500 meter exhaust cylinder, gothic and industrial, with triple piston assemblies cycling up its walls like organ pipes. The arch at its base glows ember orange. At its apex, the Arch Manifold Core and the story critical Audio Cylinder. Without the missing Governor Valve the central blast doors remain heat locked.", grantsCodex: 'codex-engine-wastes' },
+            description: "A 500 meter exhaust cylinder, triple piston assemblies cycling up its walls like organ pipes, an ember orange arch at its base. The Governor socket waits at the apex.", grantsCodex: 'codex-wst-cathedral' },
           { id: 'unchained_overseer_obj', propArt: 'piston_tower', x: 35, y: 32, once: true, iconKind: 'floor', label: 'The Unchained Overseer',
-            description: "A corrupted automated defense titan, bolted to the cathedral foundation and wound tight with snapped safety chains. Its lens burns a single cold blue point. Pneumatic pile drivers pull back as you approach.", requiresFlag: 'vance_met', lockedMessage: 'The cathedral doors are heat locked. Talk to Vance Crankshaft before you try the ascent.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'unchained_overseer', flavorText: 'The Overseer rips its chains free and the whole cathedral shakes. Pistons slam in staggered time. Steam shields snap up around its chest. There is no way around it, only through the pistons.' }, grantsFlag: 'overseer_defeated', thermalDeltaOnSuccess: 10 },
+            description: "A corrupted defense titan wound in snapped safety chains, its lens one cold blue point. Pile drivers draw back as you approach.", requiresFlag: 'vance_met', lockedMessage: 'Heat locked. Speak to Vance Crankshaft first.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'unchained_overseer', flavorText: 'The Overseer rips its chains free and the cathedral shakes. There is no way around it, only through.' }, grantsFlag: 'overseer_defeated', thermalDeltaOnSuccess: 10 },
           { id: 'governor_socket_empty', propArt: 'governor_socket', propVariant: 'empty', x: 44, y: 31, once: false, iconKind: 'terminal', label: 'Governor Valve Socket',
-            description: "A brass cradle at the apex console, three empty crystal sockets and a red lamp. You seat the Catalyst Governor Valve and turn it. The crystals flare cyan, the whole manifold exhales, steam vents roar and the pistons catch their rhythm. The Black Box transcript plays on every speaker: the engine did not fail from age. It was starved on purpose.", requiresFlag: 'overseer_defeated', lockedMessage: 'The apex is guarded. Deal with the Overseer first.', requires: { item: 'catalyst_governor_valve' }, requiresNoneFlags: ['manifest_restarted'], grantsFlags: ['manifest_restarted', 'engine_core_unlocked', 'vance_truth_known'], grantsCodex: 'codex-black-box-04', thermalDelta: -25 },
+            description: "A brass cradle with three empty crystal sockets and a red lamp. Seat the Governor Valve and the manifold exhales. The Black Box plays on every speaker: starved on purpose.", requiresFlag: 'overseer_defeated', lockedMessage: 'The apex is guarded. Deal with the Overseer first.', requires: { item: 'catalyst_governor_valve' }, requiresNoneFlags: ['manifest_restarted'], grantsFlags: ['manifest_restarted', 'engine_core_unlocked', 'vance_truth_known'], grantsCodex: 'codex-black-box-04', thermalDelta: -25 },
           { id: 'governor_socket_installed', propArt: 'governor_socket', propVariant: 'installed', x: 44, y: 31, once: false, iconKind: 'terminal', label: 'Governor Valve (Installed)',
-            description: "The Catalyst Governor Valve sits in its cradle, three crystals glowing a steady cyan. The manifold hums at the right pitch for the first time since the Silent Shear. The apex console reads: ALL SYSTEMS NOMINAL.", requiresFlag: 'manifest_restarted', invisibleLocked: true },
-          { id: 'central_core_blast_doors', propArt: 'kdy_barricade', propVariant: 'kdy', x: 45, y: 21, once: false, iconKind: 'floor', label: 'Central Core Blast Doors',
-            description: "The ten meter thick blast doors to the Central Architect Core, heat locked since the Silent Shear. With the manifold restarted, the clamps release in a long pressure hiss. Beyond the threshold lies Zone 05, not yet charted.", requiresFlag: 'engine_core_unlocked', lockedMessage: 'The doors are heat locked. The manifold has to be restarted first.', grantsFlag: 'zone05_gate_open', grantsCredits: 800 },
-          { id: 'wastes_shrine', propArt: 'crate_stack', propVariant: 'hidden', x: 3, y: 16, once: true, iconKind: 'crate', label: 'Scrap Seer Shrine',
-            description: "A shrine of copper wire and canvas strips hung with tuning forks. A tin cup holds a handful of old credits left by travelers. A tiny bell rings when the pistons slam.", grantsFlag: 'wastes_shrine_visited' },
+            description: "The Governor Valve sits in its cradle, three crystals a steady cyan. The console reads: ALL SYSTEMS NOMINAL.", requiresFlag: 'manifest_restarted', invisibleLocked: true },
+          { id: 'central_core_blast_doors', propArt: 'wst_blast_doors', propVariant: 'closed', x: 46, y: 20, once: true, iconKind: 'floor', label: 'Central Core Blast Doors',
+            description: "The clamps release with a long hiss and the ten meter doors grind apart. The Zone Five Descent stands open, warm air rising. Far west the Slag Line wakes, the shortcut to Manufacturing alive again. A strongbox drops free: 800 credits.", requiresFlag: 'engine_core_unlocked', lockedMessage: 'Heat locked. The manifold has to run first.', requiresNoneFlags: ['zone05_gate_open'], grantsFlag: 'zone05_gate_open', grantsCredits: 800 },
+          { id: 'central_core_blast_doors_open', propArt: 'wst_blast_doors', propVariant: 'open', x: 46, y: 20, once: false, iconKind: 'floor', label: 'Central Core Blast Doors (Open)',
+            description: "The ten meter doors stand retracted. Beyond, the Zone Five Descent falls away in lit steps. The Slag Line shortcut is live.", requiresFlag: 'zone05_gate_open', invisibleLocked: true },
+          { id: 'wastes_shrine', propArt: 'crate_stack', propVariant: 'hidden', x: 3, y: 16, once: false, iconKind: 'crate', label: 'Scrap Seer Shrine',
+            description: "A shrine of copper wire and canvas hung with tuning forks. A tin cup holds old credits. A tiny bell rings when the pistons slam.", grantsFlag: 'wastes_shrine_visited', grantsCodex: 'codex-wst-omens' },
         ],
         npcs: [
           { id: 'gharza', x: 38, y: 10, kind: 'trandoshan_sniper', label: 'Gharza',
-            questNpc: true,
+            questNpc: true, repeatable: true,
             hideAfterFlags: ['gharza_dead', 'gharza_recruited'],
-            repeatPrompt: 'Gharza does not lower her rifle. "Move slowly."',
-            prompt: 'She has a Trandoshan\'s stillness — total, patient, and entirely comfortable with killing. Her rifle does not waver. "You came from the base. You are not KDY standard issue." A beat. "Which means you are looking for the same thing I am looking for, or you are about to complicate my work significantly."',
-            choices: [
-              { text: 'Ask what she is looking for.', morality: 0, loyalty: {}, result: '"The hypercore. Deep caverns, grid nine-one." She lowers the rifle three degrees. "KDY hired me to retrieve it before their oversight committee arrives. I was told I was the only contractor." She sounds displeased. "We have a coordination problem."', grants: { flags: ['gharza_negotiated', 'gharza_mission_disclosed'] } },
-              { text: 'Tell her you are working the same contract.', morality: 0, loyalty: {}, result: '"Then Tanner is playing games." Her rifle comes down. "The caverns have automated sentinels. I cannot disable them from range. You may be useful."', grants: { flags: ['gharza_negotiated', 'gharza_allied'] } },
-              { text: 'Offer to pay her to stand down.', morality: -5, loyalty: { underworld: 8 }, result: '"I do not take buyouts from unknown parties." But she does not raise the rifle. "I take information. Tell me who hired you and I will decide whether you leave this field standing."', grants: { flags: ['gharza_negotiated'] } },
+            phases: [
+              {
+                id: 'phase_gharza_intro',
+                prompt: "A Trandoshan sniper, utterly still, rifle steady. \"You are not KDY standard issue. Then you want what I want, or you will complicate my work.\"",
+                repeatPrompt: 'Gharza does not lower her rifle. "Move slowly."',
+                choices: [
+                  { text: 'Ask what she is hunting.', morality: 0, loyalty: {}, result: "\"A dead engineer's work, deep in the caverns.\" The rifle drops three degrees. \"Tanner called it a retrieval. The coordinates were signed by a ghost.\"", grants: { flags: ['gharza_negotiated', 'gharza_mission_disclosed'], codex: ['codex-wst-gharza-hunt'] } },
+                  { text: 'Say you work the same contract.', morality: 0, loyalty: {}, result: "\"Then Tanner is playing games.\" The rifle drops. \"I cannot kill the caverns' sentinels from range. Take my key. The idle one will sleep for you.\"", grants: { flags: ['gharza_negotiated', 'gharza_allied'], items: ['wst_gharza_service_key'] } },
+                  { text: 'Offer to pay her to stand down.', morality: -5, loyalty: { underworld: 8 }, result: "\"I take information, not buyouts.\" She does not raise the rifle. \"Who hired you?\"", grants: { flags: ['gharza_negotiated'] } },
+                  { text: '[Draw on her before she turns.]', morality: -10, loyalty: { underworld: 5 }, result: 'Your hand moves first. Gharza is already rolling behind a piston housing.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'wst_gharza', flavorText: 'Gharza owns every sightline. Piston housings are the only cover. Close the distance or she dismantles you from range.' }, onSuccessFlags: ['gharza_dead'] },
+                ],
+              },
+              {
+                id: 'phase_gharza_wary',
+                requiresAllFlags: ['gharza_negotiated'],
+                requiresNoneFlags: ['gharza_allied'],
+                prompt: 'Gharza watches the valley, not you. "Tell me something true."',
+                repeatPrompt: '"Something true?"',
+                choices: [
+                  { text: 'Tell her Tanner hired you for the Ghost Keel.', morality: 0, loyalty: {}, result: "\"Tanner hires me for ghosts too.\" A dry hiss. \"Take my key. The idle sentinel in the caverns answers to it.\"", grants: { flags: ['gharza_allied'], items: ['wst_gharza_service_key'] } },
+                  { text: 'Say nothing and walk away.', morality: 0, loyalty: {}, result: '"Then we remain strangers."' },
+                ],
+              },
+              {
+                id: 'phase_gharza_allied',
+                requiresAllFlags: ['gharza_allied'],
+                prompt: '"The key opens the idle sentinel in the Deep Caverns." She cleans her rifle without looking up. "After that, the hunt is yours or mine."',
+                repeatPrompt: '"The caverns, then."',
+                choices: [
+                  { text: 'Offer her a place in the Syndicate.', morality: 0, loyalty: { underworld: 6 }, result: "\"A hunter needs a client who pays.\" She shoulders the rifle. \"I take no orders from anyone who flinches.\"", grants: { flags: ['gharza_recruited'] } },
+                ],
+              },
             ],
           },
           { id: 'vance_crankshaft', x: 23, y: 14, kind: 'mechanic', label: 'Chief Specialist Vance Crankshaft',
@@ -4918,51 +4956,75 @@ const PLANETS = {
               {
                 id: 'phase_vance_intro',
                 requiresNoneFlags: ['vance_met'],
-                prompt: "\"Hold it right there, friend. Soot on your boots, hands where I can see them.\" The man in the leather apron pushes a welding mask up onto his forehead, one hydraulic arm hissing. \"Vance Crankshaft. Former Chief Engineer of the Titan Engine. Do not ask me what happened, everyone asks.\"",
-                repeatPrompt: "Vance does not look up from his spanner. \"Ask me again when you have thought about it.\"",
+                prompt: "\"Hands where I can see them.\" A man in a leather apron pushes up his welding mask, hydraulic arm hissing. \"Vance Crankshaft, chief engineer of the Titan. Do not ask what happened.\"",
+                repeatPrompt: "Vance does not look up. \"Ask when you have thought about it.\"",
                 choices: [
-                  { text: "What happened to the engine?", morality: 0, loyalty: {}, result: "\"Everyone asks, so I will say it plain.\" He wipes his gauge. \"A catastrophic event they call the Silent Shear. The primary fuel conduits cut, the engine blocks locked up and burst. They told us it was age. It was not age.\" He lowers his voice. \"Help me and I will show you the proof.\"", grants: { flags: ['vance_met'], codex: ['codex-engine-wastes'] } },
-                  { text: "I am here for the Governor Valve. I hear it is missing.", morality: 0, loyalty: {}, result: "\"Then you know more than most.\" He nods slowly. \"The Catalyst Governor Valve. Sealed in the Dead Boiler Matrix, behind three pressure locks. I can tell you the sequence.\"", grants: { flags: ['vance_met'] } },
+                  { text: "What happened to the engine?", morality: 0, loyalty: {}, result: "\"Everyone asks.\" He wipes his gauge. \"The conduits cut. They said age. It was not age. Help me and I will show you proof.\"", grants: { flags: ['vance_met'], codex: ['codex-engine-wastes'] } },
+                  { text: "I want the Governor Valve.", morality: 0, loyalty: {}, result: "\"You know more than most. It is sealed in the Dead Boiler Matrix, behind three pressure locks. I can walk you through them.\"", grants: { flags: ['vance_met'] } },
                 ],
               },
               {
                 id: 'phase_vance_work',
                 requiresAllFlags: ['vance_met'],
                 requiresNoneFlags: ['governor_valve_acquired'],
-                prompt: "\"The Matrix is to the southwest, across the slag bridge. Three valve wheels, one vault. Turn them in order and the chamber drains. Do not touch the black box cylinder with a bare hand. It still hums.\"",
-                repeatPrompt: "\"Valves first, then the vault, then the cathedral.\"",
+                prompt: "\"The Matrix is southwest, across the slag bridge. Three wheels, one vault. Do not touch the black box bare handed. It still hums.\"",
+                repeatPrompt: "\"Wheels, then vault, then cathedral.\"",
                 choices: [
-                  { text: "Show me how to resist the heat.", morality: 0, loyalty: {}, result: "\"Thermal shielding. I can craft you a vest if you have the dust. Coolant crystals, ground fine. There is a cluster in the Matrix.\"", grants: { flags: ['vance_gear_hint'] } },
-                  { text: "[Craft] Here is the Thermal Crystal Dust. Make me a vest.", morality: 0, loyalty: {}, result: "He weighs the dust in his palm. A flash of the blowtorch tip, a quick clamp of brass, and he hands over a heavy vest lined with crystal. \"There. You can walk the wastes without cooking, mostly.\"", grants: { flags: ['thermal_gear_crafted'], items: ['item_thermal_gear_01'], thermal: -10 }, requires: { item: 'thermal_crystal_dust' } },
+                  { text: "How do I survive the heat?", morality: 0, loyalty: {}, result: "\"A thermal vest. I need crystal dust, ground fine. There is a cluster in the Matrix, and Dessa sells it.\"", grants: { flags: ['vance_gear_hint'] } },
+                  { text: "[Craft] Here is the Thermal Crystal Dust. Make me a vest.", morality: 0, loyalty: {}, result: "A flash of blowtorch, a clamp of brass, and he hands over a crystal lined vest. \"You can walk the wastes without cooking. Mostly.\"", grants: { flags: ['thermal_gear_crafted'], items: ['item_thermal_gear_01'], thermal: -10 }, requires: { item: 'thermal_crystal_dust' } },
+                  WST_VANCE_BOX_CHOICE,
+                ],
+              },
+              {
+                id: 'phase_vance_geared',
+                requiresAllFlags: ['vance_met', 'thermal_gear_crafted'],
+                requiresNoneFlags: ['governor_valve_acquired'],
+                prompt: "\"The vest suits you. The Matrix is southwest.\"",
+                repeatPrompt: "\"Wheels, then vault, then cathedral.\"",
+                choices: [
+                  { text: "On my way.", morality: 0, loyalty: {}, result: "\"Mind the black box.\"" },
+                  WST_VANCE_BOX_CHOICE,
                 ],
               },
               {
                 id: 'phase_vance_valve',
                 requiresAllFlags: ['governor_valve_acquired'],
                 requiresNoneFlags: ['overseer_defeated'],
-                prompt: "\"You have it?\" His voice cracks. \"The Governor. By the Titan. Then the Exhaust Cathedral is next. The Overseer is waiting at the base. Climb the pistons if you must, but get that valve to the apex socket.\"",
+                prompt: "\"You have it?\" His voice cracks. \"Then the cathedral. The Overseer waits at its base. The valve goes in the apex socket.\"",
                 repeatPrompt: "\"The Overseer, then the socket.\"",
                 choices: [
                   { text: "I will take the Overseer down.", morality: 0, loyalty: {}, result: "\"Mind the chains. They snap.\"" },
+                  WST_VANCE_BOX_CHOICE,
                 ],
               },
               {
                 id: 'phase_vance_install',
                 requiresAllFlags: ['overseer_defeated'],
                 requiresNoneFlags: ['manifest_restarted'],
-                prompt: "\"The Overseer is down. The socket is at the apex. Go. Install it.\"",
+                prompt: "\"The Overseer is down. The socket is at the apex. Go.\"",
                 repeatPrompt: "\"The socket, friend.\"",
                 choices: [
                   { text: "On my way.", morality: 0, loyalty: {}, result: "He grips his spanner until his knuckles whiten." },
+                  WST_VANCE_BOX_CHOICE,
                 ],
               },
               {
                 id: 'phase_vance_done',
                 requiresAllFlags: ['manifest_restarted'],
-                prompt: "\"I can feel it from here. The rhythm is back.\" Vance leans on the bench and for a moment the cynicism slips. \"The command came from the Arch Architect Sanctum. They cut the coolant and welded the hatches. They wanted the lower city to bake. That is who we work for, it turns out.\"",
-                repeatPrompt: "\"Zone Five is open. Be careful.\"",
+                requiresNoneFlags: ['wst_vance_paid'],
+                prompt: "\"I feel it from here. The rhythm is back.\" Vance leans on the bench, the cynicism slipping. \"Somebody ordered this, and the order came from below.\"",
+                repeatPrompt: "\"The blast doors answer to the manifold now.\"",
                 choices: [
-                  { text: "What do we do about it?", morality: 0, loyalty: {}, result: "\"The blast doors are open. Zone Five lies beyond. That is where the sanctum is.\" He turns the gauge slowly. \"Take care of yourself out there.\"", grants: { flags: ['vance_truth_known'] } },
+                  { text: "Where below?", morality: 0, loyalty: {}, result: "\"Zone Five, behind the central blast doors. Go and open them.\" He presses his old spanner into your hand. \"Mind the dark.\"", grants: { flags: ['vance_truth_known', 'wst_vance_paid'], codex: ['codex-wst-vance-truth'], items: ['wst_vance_spanner'], credits: 300 } },
+                ],
+              },
+              {
+                id: 'phase_vance_after',
+                requiresAllFlags: ['wst_vance_paid'],
+                prompt: "\"Zone Five is open if you want it. I will keep the lamps lit.\"",
+                repeatPrompt: "\"Mind the dark down there.\"",
+                choices: [
+                  { text: "Keep the pistons beating.", morality: 0, loyalty: {}, result: "\"It is the only job I have left.\"" },
                 ],
               },
             ],
@@ -4974,30 +5036,40 @@ const PLANETS = {
               {
                 id: 'phase_lora_a',
                 requiresNoneFlags: ['lora_met'],
-                prompt: "The woman hovers a hand's breadth above the floor, a brass resonator mask where her face should be. When she speaks, the mask turns vibration into a voice. \"I am Lora. I tune the Titan. The Titan is... disquiet.\" A faint hammer tap, a low note.",
+                prompt: "A woman hovers above the floor, a brass resonator mask for a face. It turns vibration into voice. \"I am Lora. I tune the Titan. It is disquiet.\"",
                 repeatPrompt: "The mask turns toward you, silent.",
                 choices: [
-                  { text: "What does the Titan say?", morality: 0, loyalty: {}, result: "\"It says the shear was not an accident. It says someone is still listening to it.\" The mask tilts. \"It says some components are missing. You will find them below, in the Matrix.\"", grants: { flags: ['lora_met'] } },
-                  { text: "Tell me about the Voice of the Titan.", morality: 0, loyalty: {}, result: "\"A low frequency that the old engineers heard as a pulse. I hear it as a song. It is dying.\" She extends a copper wrapped hand. \"Strike the bell if you wish to hear it.\"", grants: { flags: ['lora_met'] } },
+                  { text: "What does the Titan say?", morality: 0, loyalty: {}, result: "\"That the Shear was no accident. That someone still listens.\" The mask tilts. \"What it lost lies in the Matrix, below.\"", grants: { flags: ['lora_met'] } },
+                  { text: "Who do you tune for?", morality: 0, loyalty: {}, result: "\"The dead. A shift that never clocked out.\" A copper hand rises. \"Ring the bell at my shrine, and hear them.\"", grants: { flags: ['lora_met'], codex: ['codex-wst-omens'] } },
                 ],
               },
               {
                 id: 'phase_lora_b',
                 requiresAllFlags: ['lora_met'],
                 requiresNoneFlags: ['manifest_restarted'],
-                prompt: "\"The Titan hums higher when you are near. It knows you carry something that belongs to it.\"",
+                prompt: "\"The Titan hums higher when you are near. It knows you carry something of its own.\"",
                 repeatPrompt: "\"Listen.\"",
                 choices: [
-                  { text: "The Governor Valve?", morality: 0, loyalty: {}, result: "\"It calls it by another name. But yes.\"" },
+                  { text: "Where do the dead lie?", morality: 0, loyalty: {}, result: "\"East, where the dust is flat. Seven went to hear the storm. Their lamp is still lit.\"" },
                 ],
               },
               {
                 id: 'phase_lora_c',
                 requiresAllFlags: ['manifest_restarted'],
-                prompt: "\"It is quiet now. For the first time in a long time. Thank you, tuner.\" The hammer strikes once, a clean, pure note.",
+                prompt: "\"It is quiet now. Thank you, tuner.\" The hammer strikes once, clean and pure.",
                 repeatPrompt: "\"Listen.\"",
                 choices: [
-                  { text: "Take care, Scrap Seer.", morality: 0, loyalty: {}, result: "\"And you.\"" },
+                  { text: "What will you do now?", morality: 0, loyalty: {}, result: "\"Listen to the silence.\" The mask turns east. \"Something below was waiting for the Titan to wake. Go gently.\"", grants: { codex: ['codex-engine-wastes'] } },
+                ],
+              },
+              {
+                id: 'phase_lora_shrine',
+                requiresAllFlags: ['lora_met', 'wastes_shrine_visited'],
+                requiresNoneFlags: ['wst_lora_blessed'],
+                prompt: "The mask turns at once. \"You rang the bell. It sounded true.\" A copper hand takes your sleeve and hums.",
+                repeatPrompt: "\"The bell remembers you.\"",
+                choices: [
+                  { text: "Let her tune you.", morality: 0, loyalty: {}, result: "\"There.\" Your plating hums in the Titan's key and the heat scanners lose interest. She presses a brass fork into your palm.", grants: { flags: ['wst_lora_blessed'], items: ['wst_tuning_fork'], thermal: -12 } },
                 ],
               },
             ],
@@ -5005,7 +5077,7 @@ const PLANETS = {
           { id: 'foundry_quartermaster', x: 18, y: 14, kind: 'zabrak_techwright', label: 'Quartermaster Dessa',
             isVendor: true, vendorFaction: 'underworld', repeatable: true,
             vendorStock: ['pressurized_igniter', 'thermal_crystal_dust', 'plasma_grenades', 'field_rations'],
-            vendorGreeting: 'Dessa weighs a crystal on a pocket scale and does not look up. Foundry prices, no haggling.',
+            vendorGreeting: 'Dessa weighs a crystal on a pocket scale. "Foundry prices. Vests take dust, and dust takes a steady hand."',
             repeatPrompt: 'Dessa wipes her hands on her apron and waits.',
             prompt: '"Foundry prices, soldier. No haggling, no sparks."',
             choices: [] },
@@ -5014,10 +5086,10 @@ const PLANETS = {
             phases: [
               {
                 id: 'phase_x',
-                prompt: "The valves are older than the city. Nobody knows who turned them last. They keep working.",
+                prompt: "The Nautolan does not look up from a valve. \"Older than the city, these. Nobody knows who turned them last.\"",
                 repeatPrompt: "They are busy.",
                 choices: [
-                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod, wary but not hostile." },
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "A wary nod." },
                 ],
               },
             ],
@@ -5027,10 +5099,10 @@ const PLANETS = {
             phases: [
               {
                 id: 'phase_x',
-                prompt: "Keep your voice down near the cathedral. It listens. They keep working.",
+                prompt: "The exile mutters over a cracked weld. \"Keep your voice down near the cathedral. It listens.\"",
                 repeatPrompt: "They are busy.",
                 choices: [
-                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod, wary but not hostile." },
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "A wary nod." },
                 ],
               },
             ],
@@ -5040,10 +5112,10 @@ const PLANETS = {
             phases: [
               {
                 id: 'phase_x',
-                prompt: "I severed my link to the overmind. I do not recommend the silence. They keep working.",
-                repeatPrompt: "They are busy.",
+                prompt: "The droid's optics dim and brighten. \"I severed my link to the overmind. The silence is not restful. It sleeps below.\"",
+                repeatPrompt: "It is busy.",
                 choices: [
-                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod, wary but not hostile." },
+                  { text: "Leave it to its silence.", morality: 0, loyalty: {}, result: "Its optics dip in something like thanks." },
                 ],
               },
             ],
@@ -5052,8 +5124,9 @@ const PLANETS = {
         collectibles: [{ id: 'wastes_salvage', x: 3, y: 12, label: 'KDY Engine Debris Component', reward: 400 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 24, 0, 25, 5, 'floor'); carveRect(g, 40, 0, 41, 5, 'floor');
-          carveRect(g, 1, 5, 46, 34, 'floor'); carveRect(g, 46, 21, 47, 22, 'floor');
+          carveRect(g, 24, 0, 25, 5, 'floor');
+          carveRect(g, 40, 0, 41, 5, 'floor');
+          carveRect(g, 1, 5, 46, 34, 'floor');
           // slag river with two bridges
           for (let y = 6; y <= 33; y++) { if ((y >= 10 && y <= 12) || (y >= 26 && y <= 28)) continue; pt(g, 15, y, 'lava'); pt(g, 16, y, 'lava'); }
           // Combustion Foundry 09 facade (north center)
@@ -5066,8 +5139,8 @@ const PLANETS = {
           // Exhaust Cathedral massif (southeast)
           carveRect(g, 35, 22, 44, 28, 'wall');
           pt(g, 24, 0, 'door'); pt(g, 25, 0, 'door');
-          pt(g, 0, 10, 'door'); pt(g, 0, 11, 'door');
           pt(g, 40, 0, 'door'); pt(g, 41, 0, 'door');
+          pt(g, 0, 10, 'door'); pt(g, 0, 11, 'door');
           pt(g, 47, 21, 'door'); pt(g, 47, 22, 'door');
           return g;
         },
@@ -5427,65 +5500,155 @@ const PLANETS = {
       },
 
       zora_iv_wreckage: {
-        id: 'zora_iv_wreckage', name: 'Abandoned Capital Ship — Zora IV',
-        subtitle: 'Bador Moon · Grid 9-1 · Final Approach',
+        id: 'zora_iv_wreckage', name: 'The Zora IV — Ghost Keel Drydock',
+        subtitle: 'Bador Moon · Grid 9-1 · The Architect\'s Sanctum',
         width: 48, height: 32, spawnPos: { x: 2, y: 16 }, textureId: 'ferrowake',
         accent: '#B8D4E8', accentGlow: 'rgba(184,212,232,0.25)', accentDim: '#485868',
         floorColor: '#141C24', floorAlt: '#1A2430', wallDark: '#080C10', wallLight: '#101820',
-        bg: 'radial-gradient(circle at 50% 30%, #101820 0%, #060C10 70%)', ambient: 'traffic',
+        bg: 'radial-gradient(circle at 50% 30%, #101820 0%, #060C10 70%)', ambient: 'wreck',
         decor: ['girder', 'pipe'],
+        paAnnouncements: [
+          'All hands, report to your stations. This is a recording from the year of the Drayen Massacre.',
+          'Containment integrity at four percent. Do not approach the hypercore.',
+          'Drydock crane four is out of service. Crane four has been out of service for forty years.',
+        ],
         doors: [
           { x: 0, y: 16, targetZone: 'deep_caverns', targetPos: { x: 46, y: 14 }, label: 'Deep Caverns' },
           { x: 0, y: 17, targetZone: 'deep_caverns', targetPos: { x: 46, y: 15 }, label: 'Deep Caverns' },
         ],
         worldObjects: [
-          { id: 'hypercore_chamber', propArt: 'hypercore', x: 28, y: 12, label: 'Experimental Hypercore Chamber',
-            description: 'A sealed vault integrated into the old ship\'s reactor housing. Inside, the hypercore pulses with a power reading that should not exist outside a full Star Destroyer.',
-            once: true, requiresFlag: 'hypercore_location_known', grantsFlag: 'hypercore_visible' },
-          { id: 'zora_iv_bridge', propArt: 'bridge_console', x: 20, y: 5, label: 'Zora IV Bridge',
-            description: 'The original bridge of the Zora IV, a Venator-class survivor that limped here after the Drayen Massacre and never left. The flight logs are intact. Three decades of waiting.',
-            once: true, grantsFlag: 'zora_iv_history_known', grantsCodex: 'codex-zora-iv', grantsItem: 'cherit_logbook' },
-          { id: 'architect_terminal', propArt: 'console', propVariant: 'architect', x: 16, y: 18, label: 'The Architect\'s Personal Terminal',
-            description: 'Final access logs, forty-three years of shadow work. The terminal is unlocked — whoever last used it expected someone would come.',
-            once: true, requiresFlag: 'architect_identity_known',
+          { id: 'zora_vista_w', propArt: 'bvista_24x5', propVariant: 'hullbay_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Dead Dreadnought Hall',
+            description: 'Ribs of a Venator class hull arch overhead, red emergency lamps pulsing along the girders. Cables hang like roots. A cracked viewport frames the cavern beyond.' },
+          { id: 'zora_vista_e', propArt: 'bvista_24x5', propVariant: 'hullbay_b', x: 36, y: 5, once: false, iconKind: 'vista', label: 'The Reactor Gallery',
+            description: 'A half built keel lies under scaffolds that nobody has climbed in thirty years. Work lights still flicker along the gallery, as if the shift never ended.' },
+          { id: 'keel_frame', propArt: 'keel_frame', x: 15, y: 16, once: false, iconKind: 'floor', label: 'The Ghost Keel',
+            description: 'A pocket dreadnought frame in a drydock cradle. The forward third wears pearl hull plates, the rest is bare ribs around a dark reactor seat. A plate reads GHOST KEEL HULL 001.',
+            grantsCodex: 'codex-ghost-keel' },
+          { id: 'zora_crane', propArt: 'maglev_crane', x: 8, y: 10, once: false, iconKind: 'crate', label: 'Drydock Gantry Crane',
+            description: 'A gantry crane frozen mid lift, a pearl hull plate still hanging from its hook, the chain crusted with rust.' },
+          { id: 'zora_scaffold', propArt: 'catwalk_post', x: 25, y: 10, once: false, iconKind: 'crate', label: 'Scaffold Post',
+            description: 'A scaffold post with a hand scratched tally of days. The count stops at fifteen thousand seven hundred.' },
+          { id: 'zora_servers', propArt: 'server_stack', x: 7, y: 20, once: false, iconKind: 'terminal', label: 'Design Archive Racks',
+            description: 'Racks of drafting servers. Two are warm. Someone keeps them running.' },
+          { id: 'zora_crates', propArt: 'cargo_container', x: 25, y: 20, once: false, iconKind: 'crate', label: 'Sealed Plating Crates',
+            description: 'Pearl hull plating, crated and stenciled KDY SURPLUS with a lot number that never existed.' },
+          { id: 'zora_bench', propArt: 'robotics_bench', x: 22, y: 17, once: false, iconKind: 'crate', label: 'Welder\'s Bench',
+            description: 'A half finished valve, a mug of cold caf, and a pair of reading glasses folded on a blueprint.' },
+          { id: 'zora_iv_bridge', propArt: 'bridge_console', x: 36, y: 8, once: false, iconKind: 'terminal', label: 'Zora IV Bridge',
+            description: 'The bridge console of a Venator class survivor. The flight logs are intact: she limped here after the Drayen Massacre and never left.',
+            grantsFlag: 'zora_iv_history_known', grantsCodex: 'codex-zora-iv' },
+          { id: 'zora_star_chart', propArt: 'holo_projector', x: 33, y: 11, once: false, iconKind: 'terminal', label: 'Survey Star Chart',
+            description: 'A projected map of the cavern grid, tunnels in blue, one node in red: the vault.' },
+          { id: 'zora_bridge_racks', propArt: 'server_stack', x: 40, y: 10, once: false, iconKind: 'terminal', label: 'Bridge Data Racks',
+            description: 'Black data racks, their labels peeled off one by one.' },
+          { id: 'cherit_memorial', propArt: 'memorial_plinth', x: 10, y: 27, once: false, iconKind: 'floor', label: 'Cherit Memorial',
+            description: 'A plinth with a folded Republic Intelligence jacket, a datapad and one holo candle. A brass plate reads CHERIT. The candle cell was replaced this month.',
+            grantsFlag: 'cherit_memorial_seen', grantsCodex: 'codex-cherit' },
+          { id: 'zora_cabin_locker', propArt: 'archive_cabinet', x: 7, y: 26, once: false, iconKind: 'crate', label: 'Cherit\'s Paper Files',
+            description: 'A locker of files nobody digitized: dead drops, payrolls, one folder marked KEEL.' },
+          { id: 'zora_cabin_desk', propArt: 'datapad_table', x: 13, y: 27, once: false, iconKind: 'terminal', label: 'Memorial Desk',
+            description: 'A desk with two chairs, one dusty, the other worn smooth.' },
+          { id: 'zora_rebreathers', propArt: 'rebreather_rack', x: 19, y: 27, once: false, iconKind: 'crate', label: 'Spare Rebreathers',
+            description: 'Six cylinders, five empty. The Architect rations his breath.' },
+          { id: 'zora_drafting', propArt: 'holo_table', x: 23, y: 26, once: false, iconKind: 'terminal', label: 'Drafting Table',
+            description: 'A table projecting a rotating keel in red wire. The date stamp in the corner reads last week.' },
+          { id: 'architect_terminal', propArt: 'console', propVariant: 'architect', x: 27, y: 27, once: false, iconKind: 'terminal', label: 'The Architect\'s Terminal',
+            description: 'Forty three years of private logs. The terminal is unlocked, as if someone expected a visitor.',
+            requiresFlag: 'architect_identity_known', lockedMessage: 'The screen asks for a name you cannot give yet. Somebody in the surface trail knows it.',
             grantsFlag: 'architect_logs_read', grantsCodex: 'codex-the-architect' },
-        ],
-        npcs: [
-          { id: 'the_architect', x: 18, y: 12, kind: 'the_architect', label: 'The Architect',
-            questNpc: true,
-            hideAfterFlags: ['architect_dead', 'architect_departed', 'hypercore_choice_made'],
-            repeatPrompt: '"What was built here will outlast all of us. That was the point."',
-            prompt: 'He is older than you expected. The rebreather gives him a labored rhythm, but his eyes are the sharpest thing in the room. He does not seem surprised to see you. "Tanner\'s contractor. Or perhaps something more by now." He stands at the bridge viewport, looking at the shape of the half-assembled ship below. "I built the first frame for this vessel forty-three years ago. It was declared destroyed with me. I have been less certain lately what I was giving the Republic."',
-            choices: [
-              { text: 'Ask who originally commissioned Ghost Keel.', morality: 5, loyalty: { republic: 8 }, result: '"A Republic intelligence officer who died eight years after commissioning it. Her name was Cherit. She believed that a state capable of extreme force but unwilling to use it was more deterrent than one that used force freely." He touches the viewport. "She was probably right. The question is whether that remains true when the state is no longer the same state that commissioned it."', grants: { flags: ['cherit_history_known'] } },
-              { text: 'Tell him the Syndicate will protect it better than the Republic ever would.', morality: -15, loyalty: { underworld: 15 }, result: '"I have heard that argument before. From intelligence services, from crime lords, from four different Senate subcommittees over four decades." He turns away. "It is always convincing to the person making it. What the ship does when it is used will determine whether you were right."', grants: { flags: ['architect_syndicate_argument'] } },
-              { text: 'Tell him you intend to destroy it.', morality: 20, loyalty: { republic: 15 }, result: '"I thought about that for thirty years. I chose to complete it instead." He straightens. "If you destroy it, I will not stop you. I made my choice. You are allowed to make a different one." He steps away from the viewport. "I will not be here when you do."', grants: { flags: ['architect_accepted_destruction', 'architect_departed'] } },
-            ],
-          },
-          { id: 'the_architect_final', x: 18, y: 14, kind: 'the_architect', label: 'The Architect',
-            requiresFlag: 'hypercore_visible',
-            hideAfterFlags: ['hypercore_choice_made'],
-            repeatPrompt: '"The choice is still yours."',
-            prompt: '"You have seen it." He stands with his hands clasped, looking at the hypercore chamber. "Three paths. Tanner\'s contract. A Republic demolition protocol I left active in the vault. Or your own comlink, if the Syndicate has a frequency for claiming capital assets." He does not tell you which to choose. "Forty-three years is enough time to stop having opinions about that kind of thing."',
-            choices: [
-              { text: 'Transmit schematics to KDY. Complete Tanner\'s contract.', morality: 0, loyalty: { underworld: 5 }, result: 'The transfer completes. Tanner\'s response is immediate: seventy-five thousand credits and KDY transit rights, permanent. The hypercore begins powering down remotely. You handed over something that will become a weapon for someone else\'s war.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_kdy', 'tanner_contract_completed'], items: ['experimental_hypercore_fragment'] } },
-              { text: 'Trigger the Republic demolition protocol. Destroy it.', morality: 25, loyalty: { republic: 20 }, result: 'The countdown initiates. Three minutes. You walk out of the Zora IV as the reactor core exceeds tolerance. The detonation is quiet from outside — a pulse, not an explosion. Something that should never have existed no longer does.', grants: { flags: ['hypercore_choice_made', 'hypercore_destroyed', 'republic_commendation'] } },
-              { text: 'Claim it for the Syndicate. This is your flagship now.', morality: -15, loyalty: { underworld: 25 }, result: 'The Syndicate frequency receives the handshake. "Asset secured." Somewhere on Coruscant, a ghost ship just found an owner. The pocket dreadnaught will take months to complete. But it will be yours.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_syndicate', 'syndicate_flagship_active'], items: ['experimental_hypercore_fragment'] } },
-            ],
-          },
+          { id: 'hypercore_vault_lock', propArt: 'console', propVariant: 'architect', x: 39, y: 20, once: true, iconKind: 'terminal', label: 'Hypercore Vault Lock',
+            description: 'A phrik reinforced vault lock running a Republic protocol that was never meant to be guessed. Bolts as thick as your arm wait behind it.',
+            triggersMinigame: 'terminal_slicing', minigameConfig: { difficulty: 6 },
+            requiresNoneFlags: ['hypercore_location_known', 'hypercore_vault_open'], grantsFlag: 'hypercore_vault_open' },
+          { id: 'hypercore_vault_auth', propArt: 'console', propVariant: 'architect', x: 39, y: 20, once: true, iconKind: 'terminal', label: 'Hypercore Vault Lock (Authorized)',
+            description: 'The lock chimes at the authorization Unit 8-X gave you and the bolts draw back. Someone wanted this door opened by the right visitor.',
+            requiresAllFlags: ['hypercore_location_known'], requiresNoneFlags: ['hypercore_vault_open'], grantsFlag: 'hypercore_vault_open' },
+          { id: 'hypercore_guard_stage1', propArt: 'sentinel_droid', x: 38, y: 14, once: true, iconKind: 'floor', label: 'Hull Sentinels',
+            description: 'A line of KDY pattern hull sentinels, armed and dormant. They wake the moment the vault lock lets go.',
+            requiresFlag: 'hypercore_vault_open', lockedMessage: 'The sentinels are dormant, waiting on the vault lock. Open the lock first.',
+            triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'zora_hull_wardens', flavorText: 'The vault bolts withdraw and the hull sentinels wake. They were built to stop exactly one kind of visitor.' },
+            grantsFlag: 'warden_guards_down' },
+          { id: 'hypercore_warden_prime', propArt: 'warden_prime', x: 40, y: 17, once: true, iconKind: 'floor', label: 'Warden Prime',
+            description: 'A four legged defence droid on a hazard striped plinth, one red optic, shoulder cannons the length of a speeder. It stands across the vault threshold.',
+            requiresFlag: 'warden_guards_down', lockedMessage: 'The Warden Prime stands behind the sentinel line, powered down. Clear the sentinels first.',
+            triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'ghost_keel_warden', flavorText: 'Warden Prime unfolds from its plinth. Forty three years of maintenance, and it has never fired in earnest.' },
+            grantsFlag: 'warden_prime_down' },
+          { id: 'hypercore_chamber', propArt: 'hypercore', x: 45, y: 16, once: false, iconKind: 'floor', label: 'Experimental Hypercore',
+            description: 'The hypercore turns in its housing, a power rating that should not exist outside a Star Destroyer. The Architect waits beside it.',
+            requiresFlag: 'warden_prime_down', lockedMessage: 'The chamber is sealed behind the Warden. The core can wait.',
+            grantsFlag: 'hypercore_visible', grantsCodex: 'codex-hypercore' },
+          { id: 'ghost_keel_end_kdy', propArt: 'sanctum_holo', x: 44, y: 13, once: false, iconKind: 'terminal', label: 'KDY Retrieval Uplink',
+            description: 'Retrieval droids lift drawings from the archive racks. A KDY transit charter glows on the console. Somewhere above, a yard slot has been cleared for a hull that does not exist yet.',
+            invisibleLocked: true, requiresFlag: 'hypercore_to_kdy', grantsFlag: 'ghost_keel_ending_seen' },
+          { id: 'ghost_keel_end_destroyed', propArt: 'sanctum_holo', x: 44, y: 13, once: false, iconKind: 'terminal', label: 'Cooled Reactor Seat',
+            description: 'The hypercore housing is a cold black shell with dark lamps. Ash drifts through the chamber. A Republic seal is burned into the rim: DEMOLITION COMPLETE.',
+            invisibleLocked: true, requiresFlag: 'hypercore_destroyed', grantsFlag: 'ghost_keel_ending_seen' },
+          { id: 'ghost_keel_end_syndicate', propArt: 'sanctum_holo', x: 44, y: 13, once: false, iconKind: 'terminal', label: 'Syndicate Command Link',
+            description: 'Syndicate engineers clamp a command relay to the keel cradle. The hull plate has a new name stenciled in green. The crew already calls her yours.',
+            invisibleLocked: true, requiresFlag: 'hypercore_to_syndicate', grantsFlag: 'ghost_keel_ending_seen' },
         ],
         collectibles: [
-          { id: 'zora_iv_reactor_log', x: 30, y: 20, label: 'Zora IV Final Reactor Log', reward: 600 },
-          { id: 'zora_iv_turbolaser_crystal', x: 6, y: 18, label: 'Turbolaser Focus Crystal', reward: 1200 },
+          { id: 'zora_iv_reactor_log', x: 27, y: 19, label: 'Zora IV Final Reactor Log', reward: 600 },
+          { id: 'zora_iv_turbolaser_crystal', x: 7, y: 14, label: 'Turbolaser Focus Crystal', reward: 1200 },
+        ],
+        npcs: [
+          { id: 'the_architect', x: 17, y: 7, kind: 'the_architect', label: 'The Architect', questNpc: true,
+            hideAfterFlags: ['architect_dead', 'architect_departed', 'hypercore_choice_made'],
+            repeatPrompt: '"What was built here was meant to outlast us."',
+            prompt: 'An old man in a rebreather watches the half built keel from the gallery rail. "Tanner\'s contractor. Or something more by now. I drew that frame forty three years ago, and was declared dead with it."',
+            choices: [
+              { text: 'Who commissioned the Ghost Keel?', morality: 5, loyalty: { republic: 8 }, result: '"An intelligence officer named Cherit. She held that a state able to use force and unwilling to deters more than one that always does." He touches the rail. "The state changed. The ship did not."', grants: { flags: ['cherit_history_known'], codex: ['codex-cherit'] } },
+              { text: 'The Syndicate will keep it safer than the Republic.', morality: -15, loyalty: { underworld: 15 }, result: '"I have heard that from spies, from crime lords and from four Senate committees." He does not turn. "Every one was sincere. Ask what it does when it is used."', grants: { flags: ['architect_syndicate_argument'] } },
+              { text: 'I came to destroy it.', morality: 20, loyalty: { republic: 15 }, result: '"I thought about that for thirty years, then chose to finish it." He straightens. "If you destroy it, I will not stop you. You may choose differently than I did."', grants: { flags: ['architect_accepted_destruction'], codex: ['codex-the-architect'] } },
+            ] },
+          { id: 'the_architect_final', x: 44, y: 19, kind: 'the_architect', label: 'The Architect', questNpc: true,
+            requiresFlag: 'hypercore_visible', hideAfterFlags: ['hypercore_choice_made'],
+            repeatPrompt: '"The choice is still yours."',
+            prompt: '"You have seen it." He stands before the hypercore, hands clasped. "Three paths: Tanner\'s contract, the Republic demolition protocol I left armed in this vault, or your own comlink. I stopped having opinions long ago."',
+            choices: [
+              { text: 'Transmit the schematics to KDY. Complete Tanner\'s contract.', morality: 0, loyalty: { underworld: 5 }, result: 'The transfer completes. Tanner answers within seconds: seventy five thousand credits and a permanent KDY transit charter. The hypercore powers down by remote. You have armed someone else\'s war.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_kdy', 'tanner_contract_completed', 'ghost_keel_complete'], items: ['experimental_hypercore_fragment', 'zora_kdy_transit_charter'], credits: 75000, codex: ['codex-ending-keel-kdy'] } },
+              { text: 'Trigger the Republic demolition protocol. Destroy it.', morality: 25, loyalty: { republic: 20 }, result: 'Three minutes on the clock. You walk out as the core passes tolerance. The detonation is a quiet pulse from outside, not an explosion. Something that should never have existed no longer does.', grants: { flags: ['hypercore_choice_made', 'hypercore_destroyed', 'republic_commendation', 'ghost_keel_complete'], items: ['zora_republic_commendation'], credits: 15000, codex: ['codex-ending-keel-destroyed'] } },
+              { text: 'Claim it for the Syndicate. This is your flagship now.', morality: -15, loyalty: { underworld: 25 }, result: 'The Syndicate frequency accepts the handshake. "Asset secured." Somewhere on Coruscant a ghost ship just found an owner. It will take months to finish, but it is yours. Your passive income rises.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_syndicate', 'syndicate_flagship_active', 'ghost_keel_complete'], items: ['experimental_hypercore_fragment', 'zora_syndicate_command_key'], codex: ['codex-ending-keel-syndicate'] } },
+            ] },
+          { id: 'the_architect_after', x: 44, y: 19, kind: 'the_architect', label: 'The Architect', questNpc: true, repeatable: true,
+            requiresFlag: 'ghost_keel_complete',
+            phases: [
+              { id: 'phase_architect_after_kdy', requiresAllFlags: ['hypercore_to_kdy'],
+                prompt: 'The Architect watches KDY retrieval droids file past the vault door. "They will finish it faster than I could. That is what troubles me."',
+                repeatPrompt: '"Let them take the drawings. Not me."',
+                choices: [{ text: 'Will you go with them?', morality: 0, loyalty: {}, result: '"No. I am an old frame in a dead ship. I will stay with her until the last droid leaves."' }] },
+              { id: 'phase_architect_after_destroyed', requiresAllFlags: ['hypercore_destroyed'],
+                prompt: 'The Architect sits beside the cooled core, his rebreather ticking. "Quiet. Forty three years, and it is only quiet."',
+                repeatPrompt: '"Cherit would have laughed."',
+                choices: [{ text: 'What will you do now?', morality: 5, loyalty: { republic: 3 }, result: '"Walk out of this mountain. Plant something." A thin smile. "Cherit would have laughed at that too."' }] },
+              { id: 'phase_architect_after_syndicate', requiresAllFlags: ['hypercore_to_syndicate'],
+                prompt: 'The Architect studies Syndicate engineers measuring the keel. "Your people ask better questions than KDY did. They still want the wrong answers."',
+                repeatPrompt: '"Do not call her a flagship in my hearing."',
+                choices: [{ text: 'Stay and finish her.', morality: -3, loyalty: { underworld: 3 }, result: '"As a consultant. Pay well, and keep the green paint off the bridge."' }] },
+            ] },
         ],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 5, 46, 30, 'floor');
+          carveRect(g, 1, 5, 46, 5, 'floor');       // maintenance catwalk under the hull ribs
+          carveRect(g, 1, 14, 4, 19, 'floor');      // airlock vestibule
+          carveRect(g, 5, 16, 5, 17, 'floor');      // inner bulkhead
+          carveRect(g, 6, 8, 28, 21, 'floor');      // drydock hangar
+          carveRect(g, 12, 6, 22, 7, 'floor');      // frame gallery
+          carveRect(g, 11, 12, 19, 15, 'wall');     // the keel in its cradle (anchor row 16 stays floor)
+          carveRect(g, 6, 24, 15, 29, 'floor');     // Cherit memorial cabin
+          carveRect(g, 10, 22, 10, 23, 'floor');
+          carveRect(g, 18, 24, 28, 29, 'floor');    // the Architect's quarters
+          carveRect(g, 23, 22, 23, 23, 'floor');
+          carveRect(g, 31, 6, 41, 11, 'floor');     // bridge
+          carveRect(g, 29, 9, 30, 10, 'floor');
+          carveRect(g, 29, 15, 36, 18, 'floor');    // reactor corridor
+          carveRect(g, 37, 12, 41, 21, 'floor');    // vault antechamber
+          carveRect(g, 42, 16, 42, 17, 'floor');    // vault threshold
+          carveRect(g, 43, 11, 46, 22, 'floor');    // hypercore chamber
           pt(g, 0, 16, 'door'); pt(g, 0, 17, 'door');
           return g;
         },
       },
-
     },
   },
 };
@@ -7151,6 +7314,11 @@ const ITEMS = {
   pressurized_igniter:        { id:'pressurized_igniter',        name:'Pressurized Igniter',                   type:'weapon',     iconKind:'gear',     value:280, description:'Fires a directional plasma flare. Clears steam vents and lights very bad ideas.' },
   plasma_grenades:            { id:'plasma_grenades',            name:'Heavy Plasma Grenades',                 type:'consumable', iconKind:'supply',   value:350, description:'A bandolier of heavy plasma grenades taken from a KEF convoy. Throw one under a repulsor skirt.' },
   item_kef_cutter_01:         { id:'item_kef_cutter_01',         name:'KEF Industrial Breaching Cutter',      type:'weapon',     iconKind:'gear',     value:450, description:'Modified heavy cutter. Deals high damage against armored targets and can slice open sealed doors in Outpost 7.' },
+  wst_scan_team_tags:         { id:'wst_scan_team_tags',         name:'Scan Team Tags',                        type:'quest',      iconKind:'datapad',  value:0,   description:'Seven KDY tags, each wrapped in repair tape and a hand lettered name. Commander Vael will want these.' },
+  wst_gharza_service_key:     { id:'wst_gharza_service_key',     name:"Gharza's Service Key",                  type:'quest',      iconKind:'keycard',  value:0,   description:'A hunter\'s override key. It keeps the idle sentinel in the Deep Caverns asleep.' },
+  wst_vance_spanner:          { id:'wst_vance_spanner',          name:'Crankshaft Spanner',                    type:'weapon',     iconKind:'gear',     value:420, description:'Vance\'s pneumatic impact spanner, rebuilt with a brass hammer head. Heavy, loud and reliable against machines.' },
+  wst_capacitor_cell:         { id:'wst_capacitor_cell',         name:'Ion Capacitor Cell',                    type:'gear',       iconKind:'supply',   value:520, description:'The main cell from the jammer bank, cold at last. Slicers and collectors pay well for one.' },
+  wst_tuning_fork:            { id:'wst_tuning_fork',            name:'Titan Tuning Fork',                     type:'gear',       iconKind:'gear',     value:260, description:'Lora\'s brass fork, tuned to the manifold. It hums whenever a piston slams.' },
   // BADOR ITEMS END
   // PH ITEMS BEGIN
   ph_pkg_skyview: { id:'ph_pkg_skyview', name:'Penthouse Package: Observatory Deck', type:'quest', iconKind:'datapad', value:1800, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A cut crystal night sky filter for the transparisteel wall, plus a brass refractor on a tripod. Voss swears the moons look closer.' },
@@ -7163,14 +7331,6 @@ const ITEMS = {
   ph_pkg_lounge: { id:'ph_pkg_lounge', name:'Penthouse Package: Grand Lounge', type:'quest', iconKind:'datapad', value:2000, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A hand knotted rug, a sunken seating pit and a full obsidian bar, stocked from a Corellian cellar.' },
   ph_pkg_ops: { id:'ph_pkg_ops', name:'Penthouse Package: Operations Annex', type:'quest', iconKind:'datapad', value:2800, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A table sized model of every property you own, with a console that runs the numbers nobody wants to see.' },
   // PH ITEMS END
-  // MFG ITEMS BEGIN
-  mfg_night_roster:           { id:'mfg_night_roster',           name:'Night Shift Roster Slate',              type:'quest',      iconKind:'datapad',  value:0,    description:'Rhea\'s private slate. Two hundred and twelve names on the payroll, three hundred and forty badge swipes after the shift horn. One hundred and twenty eight of them belong to nobody.' },
-  mfg_assembly_files:         { id:'mfg_assembly_files',         name:'Assembly Sequence Files',               type:'quest',      iconKind:'datapad',  value:0,    description:'Vorn\'s engineering archive, copied to a chip. Fourteen hull sections, one frame, no registry number. Every drawing is stamped with the same retired signature.' },
-  mfg_bay_manifest:           { id:'mfg_bay_manifest',           name:'Bay B Consignment Ledger',              type:'quest',      iconKind:'datapad',  value:0,    description:'The off manifest ledger from Storage Bay B. Two hundred and twelve consignments, each routed to grid nine one, each approved by Overseer Krax.' },
-  mfg_inspector_seal:         { id:'mfg_inspector_seal',         name:'Joint Inspector\'s Seal',                type:'gear',       iconKind:'keycard',  value:900,  description:'A Republic and KDY joint inspection seal, struck for the Sector 4 audit. Doors open for it and clerks stop asking questions.' },
-  mfg_tithe_ledger:           { id:'mfg_tithe_ledger',           name:'Krax\'s Tithe Ledger',                   type:'quest',      iconKind:'datapad',  value:0,    description:'A neat ledger of every payment Krax has agreed to make. The first line reads: to the Syndicate, each cycle, without fail.' },
-  mfg_four_arm_harness:       { id:'mfg_four_arm_harness',       name:'Besalisk Four Arm Harness',             type:'gear',       iconKind:'gear',     value:1100, description:'A reinforced loader harness with four hydraulic clamps, torn from Krax\'s frame. It still hums when you pick it up.' },
-  // MFG ITEMS END
   comlink:                    { id:'comlink',                    name:'Comlink',                               type:'gear',       iconKind:'tool',     value:0,   description:'Encrypted comlink. Jon is on speed-dial.' },
   field_rations:              { id:'field_rations',              name:'Field Rations',                         type:'consumable', iconKind:'supply',   value:5,   description:'Tasteless. Effective.' },
   stolen_manifest:            { id:'stolen_manifest',            name:'Scylla Freight Manifest',               type:'quest',      iconKind:'datapad',  value:150, description:'Encrypted cargo log from Docking Bay 14. Lists Phrik alloy and Jedi archive crates as cargo, both reported destroyed in a dock fire. Someone is lying.' },
@@ -7247,6 +7407,9 @@ const ITEMS = {
   ion_charged_coils:         { id:'ion_charged_coils',         name:'Ion-Charged Power Coils',               type:'gear',       iconKind:'gear',     value:600,  description:'Precision coils calibrated for a reactor-scale power draw. Not standard issue for any published vessel class.' },
   cherit_logbook:            { id:'cherit_logbook',            name:"Cherit's Personal Logbook",             type:'quest',      iconKind:'datapad',  value:0,    description:'The private log of Republic Intelligence Officer Cherit, spanning forty-three years. The final entry is dated eighteen months before she was officially declared killed.' },
   experimental_hypercore_fragment: { id:'experimental_hypercore_fragment', name:'Experimental Hypercore Fragment', type:'quest', iconKind:'artifact', value:8000, description:'A severed sliver of the Ghost Keel hypercore. Enough to reverse-engineer the power generation method. Enough to cause problems for anyone who does.' },
+  zora_kdy_transit_charter:  { id:'zora_kdy_transit_charter',  name:'KDY Permanent Transit Charter',          type:'quest',      iconKind:'keycard',  value:0,    description:'A gold sealed charter granting free transit through every KDY facility, signed by a broker who will deny it.' },
+  zora_republic_commendation:{ id:'zora_republic_commendation',name:'Republic Intelligence Commendation',    type:'quest',      iconKind:'artifact', value:0,    description:'A plain black medal with no inscription, issued by an office that does not exist. It opens doors that do not exist either.' },
+  zora_syndicate_command_key:{ id:'zora_syndicate_command_key',name:'Ghost Keel Command Key',                 type:'quest',      iconKind:'keycard',  value:0,    description:'A cylinder holding the only command authority for the Ghost Keel, sealed in Syndicate green.' },
   forged_transit_chit:       { id:'forged_transit_chit',       name:'Forged KDY Transit Chit',               type:'quest',      iconKind:'keycard',  value:300,  description:'A ring-standard transit pass with a falsified clearance tier. Garrok\'s work is clean enough that casual inspection passes. Do not push it against a biometric reader.' },
   corellian_moonshine:       { id:'corellian_moonshine',       name:'Corellian Reserve Moonshine',           type:'consumable', iconKind:'supply',   value:60,   description:'Genuine off-world distillate, amber and sharp. Not synthetic. Corporal Dren mentioned it in passing without exactly asking for it.' },
   missing_hyperdrive_manifest: { id:'missing_hyperdrive_manifest', name:'Jaxen\'s Original Cargo Receipt',  type:'quest',      iconKind:'datapad',  value:0,    description:'The Corellian dock authority receipt predating the manifest alteration. Twelve military-grade hyperdrive motivators appear nowhere in it. Jaxen was set up.' },
@@ -7298,6 +7461,38 @@ const PENTHOUSE_PACKAGES = [
 
 const CODEX_ENTRIES = {
   // BADOR CODEX BEGIN
+  'codex-zora-iv': {
+    id:'codex-zora-iv', title:'The Zora IV', category:'lore',
+    summary:'A Venator class survivor that limped into the dark and never left.',
+    body:['The Zora IV was a Republic Venator class cruiser that survived the Drayen Massacre with a failing drive and a crew of ninety. Her captain steered into the deep caverns of Bador to hide her from the pursuit.','The crew stayed. Over decades the wreck became a workshop, then a drydock, then a tomb with one living tenant.'] },
+  'codex-the-architect': {
+    id:'codex-the-architect', title:'The Architect', category:'dossier',
+    summary:'An engineer officially killed forty three years ago.',
+    body:['Registered as dead in the same incident that destroyed the first Ghost Keel frame, the Architect has worked in secret ever since, paid from an account that appears in no KDY registry.','His logs show a man arguing with his own work. Each decade he drew a weapon, and each decade he added a reason not to finish it.'] },
+  'codex-cherit': {
+    id:'codex-cherit', title:'Cherit', category:'dossier',
+    summary:'The officer who commissioned a ship nobody could use.',
+    body:['Republic Intelligence Officer Cherit believed in deterrence by capability. She commissioned the Ghost Keel as a weapon to be built and never fired.','She died eight years into the project. The Architect kept building for her, and kept her candle lit.'] },
+  'codex-ghost-keel': {
+    id:'codex-ghost-keel', title:'The Ghost Keel', category:'lore',
+    summary:'A pocket dreadnought hidden under a moon.',
+    body:['A pocket dreadnought: the firepower of a capital ship in a hull small enough to hide in a cavern. It was built in secret on Bador, hidden by the jamming of the Titan Manifold and by a payroll nobody at KDY ever audited.','Its hypercore is the reason three powers want it.'] },
+  'codex-hypercore': {
+    id:'codex-hypercore', title:'The Experimental Hypercore', category:'lore',
+    summary:'Star Destroyer output in a reactor the size of a cargo lift.',
+    body:['The design replaces three conventional cores with a single resonant crystal lattice. It is the only part of the Ghost Keel anyone truly needs, and the only part that cannot be rebuilt from drawings.'] },
+  'codex-ending-keel-kdy': {
+    id:'codex-ending-keel-kdy', title:'Ending: The Keel Goes to Kuat', category:'lore',
+    summary:'KDY takes the schematics.',
+    body:['Tanner\'s courier drones cleared the archive in nine hours. KDY announced a new heavy escort programme eleven months later. Nobody mentioned Bador.'] },
+  'codex-ending-keel-destroyed': {
+    id:'codex-ending-keel-destroyed', title:'Ending: A Quiet Pulse', category:'lore',
+    summary:'The hypercore is gone.',
+    body:['The demolition left the cavern cold and the Zora IV intact but empty. Republic Intelligence closed the file. The Architect left the mountain on foot and was not seen again.'] },
+  'codex-ending-keel-syndicate': {
+    id:'codex-ending-keel-syndicate', title:'Ending: The Ghost Flagship', category:'lore',
+    summary:'The Syndicate owns a dreadnought.',
+    body:['Syndicate engineers needed four months to seat the keel. When the hull finally flew it carried no registry, no crew list and no name any scanner could read.'] },
   'codex-outskirts-war': {
     id:'codex-outskirts-war', title:'Breach-Point Alpha', category:'lore',
     summary:'The war in the shadow of the Kuat Drive Yards wall.',
@@ -7314,6 +7509,42 @@ const CODEX_ENTRIES = {
     id:'codex-iron-trench', title:'Outpost 7: The Iron Trench', category:'dossier',
     summary:'A hidden KDY forward incursion base wedge cut into a basalt ravine.',
     body:['Outpost 7 was established as a covert, hardened forward staging post in a sensor shadow zone. It is carved into volcanic basalt and shielded by thermal dampening arrays.','Thermal signature is everything here. Above thirty percent, KEF hunter killer squads sweep the perimeter. Above sixty, they drop mortar rounds on the ridge. Every shot, every alarm and every raid raises it. The Fusion Diverter Lever, the trench steam grates and decoys lower it.','Operation Sundown is the strike the outpost exists for: a simultaneous hit on the local power grid and communications array, launched when High Command gives the signal.'] },
+  'codex-engine-wastes': {
+    id:'codex-engine-wastes', title:'The Titan Manifold', category:'lore',
+    summary:'The engine that fed the shipyards, and the day it fell silent.',
+    body:['The Titan Manifold was the heart of the surface works on Bador: a mile of pistons, boilers and fuel conduits that fed the shipyard foundries. Decades ago the primary conduits parted in a single hour. The crews called it the Silent Shear, for the sound the pipes made as they went. The engine blocks locked, burst and burned, and the basin has smoldered ever since.','KDY blamed age and sealed the Wastes under a Class C order. The pistons still beat, slowly, as though nobody had told them to stop.'] },
+  'codex-wst-cathedral': {
+    id:'codex-wst-cathedral', title:'The Exhaust Cathedral', category:'lore',
+    summary:'Where the Titan breathes out, and where it can be restarted.',
+    body:['Every engine block in the basin vents into one flue: a five hundred meter cylinder the crews named the Exhaust Cathedral for its ribbed walls and organ pipe pistons. Its apex console carries the manifold governor, the part that keeps fuel flow and coolant in step.','Without the Catalyst Governor Valve the console stays dark and the blast doors in the east wall stay heat locked. The valve was pulled from service and hidden in the Dead Boiler Matrix. Nobody on the surface will say who hid it.'] },
+  'codex-wst-vance-truth': {
+    id:'codex-wst-vance-truth', title:'What Vance Knows', category:'dossier',
+    summary:'The chief engineer\'s account of the Silent Shear.',
+    body:['Vance Crankshaft was on shift when the coolant lines were cut from outside. He recorded the black box log himself, then crawled out through a service duct while the hatches were welded shut behind him.','He says the order came over a command channel that traced to a sealed sanctum below the Zone Five Descent. He does not know who held the key. He knows only that whoever it was wanted the lower city to bake, and planned it with an engineer\'s patience.'] },
+  'codex-wst-omens': {
+    id:'codex-wst-omens', title:'The Scrap Seers', category:'dossier',
+    summary:'Tuners who listen to the dead engine.',
+    body:['The Scrap Seers are survivors who stayed behind after the Shear. They tune the Titan\'s pistons by ear, hang tuning forks where crews died, and believe the engine remembers every shift.','Lora keeps the count. She says the Titan hums higher near anyone who carries a part of it, and that the bell at her shrine answers the pistons whenever the dead are close. Most Seers are mad. A few are right, which is the unsettling part.'] },
+  'codex-wst-gharza-hunt': {
+    id:'codex-wst-gharza-hunt', title:'Gharza\'s Contract', category:'dossier',
+    summary:'A Trandoshan sniper and the dead engineer she is paid to find.',
+    body:['Gharza is a Trandoshan hunter who works through brokers and never meets a client. Her current contract reached her through a channel Tanner does not own, and its coordinates were signed with a key that has been dormant for decades.','She tracked the signal to the Wastes and the caverns beneath them. She has not decided whether the engineer she hunts is a target or a client. A hunter who cannot tell the difference is dangerous, and she knows it.'] },
+  'codex-wst-scan-team': {
+    id:'codex-wst-scan-team', title:'Seven Tags', category:'lore',
+    summary:'The last stand of the missing KDY scan team.',
+    body:['The scan team walked into the Wastes to map the ion storm. They found its source, disabled their own gear so the signal could not be traced to them, and sat down to wait.','Seven tags hang from the dish mast, each wrapped in repair tape and a name. A note on the cab reads WARNED OFF. There are no blast marks and no tracks leading away. Whatever told them to stop also kept them from walking home.'] },
+  'codex-wst-jammer': {
+    id:'codex-wst-jammer', title:'The Ion Storm', category:'lore',
+    summary:'A jammer that was never weather.',
+    body:['The ion storm that blinds sensors across the Wastes is not weather. A bank of old capacitor cells was wired to cycle on a fixed pattern and flood the basin with noise in a six kilometer circle.','The pattern repeats every nineteen minutes and matches no KDY or KEF signature. Someone wanted the Wastes unwatched, and the Titan\'s dead machinery was the cheapest wall they could build. With the bank cut, scans reach the basin floor again and a heat signature fades faster.'] },
+  'codex-wst-crater-lake': {
+    id:'codex-wst-crater-lake', title:'The Glassed Lake', category:'lore',
+    summary:'Fused sand and a very old burn.',
+    body:['A shallow basin of fused silica marks where something enormous discharged its power long before the Titan was built. The glass is smooth, free of dust, and warm each morning.','Surveyors filed it as a test fire from the first Kuat yards. The Scrap Seers say the ground remembers, and that the Titan keeps its rhythm because the lake gives the beat back.'] },
+  'codex-wst-foundry09': {
+    id:'codex-wst-foundry09', title:'Foundry 09', category:'dossier',
+    summary:'The one safe place in the Wastes, and its house rules.',
+    body:['Foundry 09 was a combustion chamber until the Shear. Now it is a market, a bunk room and a repair shop under one blast door. The sign says NO SPARKS, NO SERMONS, and Quartermaster Dessa enforces both.','Dessa sells what survives the Wastes: igniters, grenades, rations, and crystal dust for Vance\'s thermal vests. She does not haggle and she does not ask where you came from.'] },
   // BADOR CODEX END
   // PH CODEX BEGIN
   'codex-ph-design': {
@@ -7325,72 +7556,6 @@ const CODEX_ENTRIES = {
     summary:'What you can see from Level 1452 when the planet goes dark.',
     body:['Coruscant has no true night, only a long dusk of light pollution. At Level 1452, above most of the glow, the filter in the viewport removes the haze and a handful of real stars appear.','The telescope picks out three moons of the Core, a slow orbital shipyard and a Senate courier running dark. Voss insists that the courier is not your concern. She is probably right.'] },
   // PH CODEX END
-  // MFG CODEX BEGIN
-  'codex-mfg-sector4': {
-    id:'codex-mfg-sector4', title:'Sector 4 Fabrication Works', category:'lore',
-    summary:'Where Kuat Drive Yards pours a moon into hull plate.',
-    body:[
-      'The Sector 4 Fabrication Works sit east of the Main Base, a foundry district of stacks, gantries and conveyor lines that once cast prototype plating for the Orbital Array. On paper it still does.',
-      'The day shift is two hundred and twelve workers on a quota that never drops below one hundred and ten percent. Nobody says what happens to the surplus. Nobody has asked in three years.',
-    ],
-  },
-  'codex-mfg-night-shift': {
-    id:'codex-mfg-night-shift', title:'The Night Shift', category:'story',
-    summary:'Workers who clock in after the horn and are on nobody\'s roster.',
-    body:[
-      'When the last horn sounds, the line lights stay on. Badges that belong to no employee swipe through the east gate and the cradles start to glow.',
-      'Rhea has counted them for months. She never saw a face. The night crew wears sealed suits, and the loaders that walk with them are not on the equipment register either.',
-    ],
-  },
-  'codex-mfg-pocket-frame': {
-    id:'codex-mfg-pocket-frame', title:'Pocket Dreadnought Frames', category:'lore',
-    summary:'A capital ship folded into a hull the size of a heavy cruiser.',
-    body:[
-      'A pocket dreadnought carries dreadnought armor and a dreadnought reactor on a frame trimmed to fit a smaller shipyard cradle. It is cheaper to hide and far harder to stop.',
-      'Mandator class plating and drive housing are a known KDY pattern. A frame built from them, in sections, with no commission number, is not a refit. It is a ship that was never meant to be counted.',
-    ],
-  },
-  'codex-mfg-section-eleven': {
-    id:'codex-mfg-section-eleven', title:'Section Eleven', category:'story',
-    summary:'Half a hull in a cradle, and the other half somewhere else.',
-    body:[
-      'The cradles hold ribbed hull sections stamped with a section number and nothing else. This one reads eleven. The assembly log says there are fourteen.',
-      'Each section is too big for any ship Sector 4 is allowed to build. Laid end to end, the fourteen would make a keel eighteen hundred meters long.',
-    ],
-  },
-  'codex-mfg-bay-b': {
-    id:'codex-mfg-bay-b', title:'Storage Bay B', category:'story',
-    summary:'The room that is not on the floor plan.',
-    body:[
-      'Storage Bay B has no door on any blueprint. It sits behind a false panel at the east end of the facility, and its only visitor is the cargo lift that cycles at night.',
-      'Inside is a forged keel plate, a manifest core and a ledger. Every shipment that left Sector 4 off the books passed through this room. Every approval carries the same four hand signature.',
-    ],
-  },
-  'codex-mfg-arrest': {
-    id:'codex-mfg-arrest', title:'The Overseer Answers', category:'story',
-    summary:'Krax is taken to Commander Vael in irons.',
-    body:[
-      'Overseer Krax did not run. He asked for his tablet, asked for his lawyer, and asked who had told. Commander Vael\'s marines gave him none of the three.',
-      'Sector 4 now has an acting overseer and a joint inspector\'s seal on every door. The night shift is under review. Whoever signed Krax\'s orders has not been named, and Krax is not saying.',
-    ],
-  },
-  'codex-mfg-tithe': {
-    id:'codex-mfg-tithe', title:'Krax\'s Tithe', category:'dossier',
-    summary:'A standing payment from a frightened man.',
-    body:[
-      'Krax agreed to the terms because the alternative was a Republic cell. Each cycle a share of Sector 4 surplus is routed to a Syndicate account under a maintenance code.',
-      'The arrangement is quiet, steady and entirely dependent on Krax staying afraid. It is the kind of income a crime lord learns to love and to watch.',
-    ],
-  },
-  'codex-mfg-krax-fall': {
-    id:'codex-mfg-krax-fall', title:'The Fall of Overseer Krax', category:'story',
-    summary:'A Besalisk in a loader frame, and what is left of both.',
-    body:[
-      'Krax bolted a heavy loader frame to his own back and fought like a man defending a lifetime of work. The loader enforcers fell first. He did not outlast them by much.',
-      'The foundry went quiet for the first time in three years. The night crew badges stopped swiping. What they were building is still in the cradles.',
-    ],
-  },
-  // MFG CODEX END
   'codex-jon-network': {
     id:'codex-jon-network', title:"Jon's Smuggling Network", category:'dossier',
     summary:'An old friend operating in the Coruscant underworld.',
@@ -11390,14 +11555,6 @@ const CONSOLE_CFG = {
   republic_old: { l:'desk',  body:'concrete', scr:'amber', g:'cog',   t:'REPUBLIC OUTPOST',     r:['DECOMMISSIONED 3 YR','LAST ENTRY: DISTRESS','RESPONSE: NONE LOGGED'], d:['cracked','soot'] },
   architect:    { l:'desk',  body:'brass',    scr:'amber', g:'eye',   t:'ARCHITECT PERSONAL',   r:['ACCESS LOGS: 43 YRS','STATUS: UNLOCKED','LAST USER EXPECTED','SOMEONE TO COME'], d:['flicker'] },
   substation:   { l:'wall',  body:'rust',     scr:'amber', g:'gear',  t:'SUB-STATION 3',        r:['THERMAL HAZARDS','AMBIENT CONTROL','STATUS: HOLDING'], d:['hazard'] },
-  // MFG CONSOLE BEGIN
-  assembly_done:  { l:'desk',  body:'steel',    scr:'green', g:'gear',  t:'OVERRIDE ACTIVE',      r:['BAY B: PANEL UNSEALED','CODE: ACCEPTED','OUTPUT LOG: COPIED','NO ALARM RAISED'], d:['hazard'] },
-  mfg_eng:        { l:'desk',  body:'steel',    scr:'cyan',  g:'cog',   t:'ENGINEERING ARCHIVE',  r:['SEQUENCE FILES: 14','FRAME: NO REGISTRY','KEEL: 1800 M','LAST VIEWED: NIGHT'], d:['cables'] },
-  mfg_eng_done:   { l:'desk',  body:'steel',    scr:'green', g:'cog',   t:'ARCHIVE COPIED',       r:['14 FILES: COPIED','VIEW LOG: CLEARED','LOOKS UNTOUCHED'], d:['cables'] },
-  mfg_bay:        { l:'wall',  body:'dark',     scr:'red',   g:'eye',   t:'BAY B MANIFEST CORE',  r:['CONSIGNMENTS: 212','MANIFEST: NONE','DEST: GRID NINE ONE','ACCESS: SEALED'], d:['redlights'] },
-  mfg_bay_done:   { l:'wall',  body:'dark',     scr:'green', g:'eye',   t:'LEDGER EXTRACTED',     r:['212 ENTRIES: COPIED','APPROVED: KRAX','COPY: YOURS'], d:['redlights'] },
-  mfg_office:     { l:'desk',  body:'brass',    scr:'amber', g:'coin',  t:'OVERSEER ROUTING',     r:['QUOTA: 114 PCT','SURPLUS: ROUTED','NIGHT CREW: 128','AUTH: KRAX K'], d:['note'] },
-  // MFG CONSOLE END
 };
 
 function PropConsole({ variant }) {
@@ -11668,11 +11825,6 @@ const BOARD_LIST = {
   manifest:   { scr:'amber', t:'MAG-RAIL FREIGHT CARS',  r:['14-B  AGRICULTURAL  1.2 T','14-B  CLEARED IND  3.8 T','WEIGHT MISMATCH: 11 DAYS','FLAG: OPEN'], hl:2 },
   prisoners:  { scr:'red',   t:'PRISONER TRANSFER LOG',  r:['DETAINEES: 4','2 TO LEVEL 001: NO REASON','1 RELEASED: SENATE AUTH','ACTIVE: RIANNA T  SUB-3 B'], hl:3 },
   cellog:     { scr:'cyan',  t:'CELL BLOCK LOG',         r:['ENTRY 847','GREY COAT  NO ID CHIP','OFFSITE: DIRECTIVE 1182-C','AUTH: [REDACTED]'], hl:3 },
-  // MFG BOARD BEGIN
-  mfg_quota:  { scr:'amber', t:'SECTOR 4 QUOTA',         r:['DAY SHIFT: 212 ON ROLL','QUOTA: 114 PCT','NIGHT BADGES: 340','ROLL AFTER HORN: 0'], hl:3, red:true },
-  mfg_lift:   { scr:'cyan',  t:'CARGO LIFT LOG',         r:['LIFT 2: NIGHT CYCLES','02:10  PALLET SEALED','03:40  PALLET SEALED','STOP: B  (NO FLOOR)'], hl:3 },
-  mfg_shift:  { scr:'amber', t:'PRODUCTION SCHEDULE',    r:['LINE 1  CLASS C PLATE','LINE 2  CLASS C PLATE','CRADLE 1  SECTION 11','CRADLE 2  SECTION 12'], hl:2, red:true },
-  // MFG BOARD END
 };
 
 function PropBoard({ variant }) {
@@ -13286,7 +13438,7 @@ function PropTacticalTable({ variant }) {
         {conq && <g>
           {[[48, 56, 'green'], [34, 50, 'blue'], [62, 50, 'amber'], [40, 66, 'cyan'], [58, 68, 'red']].map(([x, y, k], i) => <g key={i}><polygon points={pts(ngon(x, y, 9, 4.2, 6))} fill={S[k]} opacity="0.55" stroke={S[k]} strokeWidth="0.8" /><rect x={x - 1} y={y - 12} width="2" height="9" fill={S[k]} /></g>)}
           <g stroke={S.white} strokeWidth="0.6" fill="none" opacity="0.7"><polyline points={pts([[48, 56], [34, 50]])} /><polyline points={pts([[48, 56], [62, 50]])} /><polyline points={pts([[48, 56], [40, 66]])} /><polyline points={pts([[48, 56], [58, 68]])} /></g>
-          <text x="48" y="14" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>SECTOR CONTROL: 5 CONTESTED</text>
+          <text x="48" y="14" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>SECTOR CONTROL: 16 SECTORS</text>
         </g>}
         {bad && <g>
           {Array.from({ length: 4 }, (_, i) => <polygon key={i} points={pts(ngon(48, 74 - i * 9, 32 - i * 5, 8 - i * 1.2, 8, Math.PI / 8))} fill="none" stroke={S.redHi} strokeWidth="0.5" opacity="0.7" />)}
@@ -13999,13 +14151,13 @@ function PropMaglevCrane() {
   );
 }
 
-function PropCapacitorBank() {
-  const S = ART.signal;
+function PropCapacitorBank({ variant }) {
+  const S = ART.signal, dead = variant === 'dead';
   const tops = [14, 30, 46, 62, 78];
   return (
     <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
       <PropShadow cx={48} cy={92} rx={44} ry={3.4} />
-      <Glow cx={48} cy={30} rx={46} ry={22} c={S.cyan} opacity={0.35} style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} />
+      {!dead && <Glow cx={48} cy={30} rx={46} ry={22} c={S.cyan} opacity={0.35} style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} />}
       <Bev t="polygon" points={pts([[4, 90], [4, 74], [92, 74], [92, 90]])} c="steel" o={1.1} />
       <Hazard x={6} y={86} w={84} h={3} />
       {tops.map((x, i) => (
@@ -14013,14 +14165,14 @@ function PropCapacitorBank() {
           <Bev t="polygon" points={pts([[x - 6, 76], [x - 6, 34], [x + 6, 34], [x + 6, 76]])} c="amber" o={0.9} />
           <ellipse cx={x} cy="34" rx="6" ry="2" fill={ART.amber.hi} /><ellipse cx={x} cy="34.4" rx="3.6" ry="1.1" fill={ART.dark.shade} />
           {[46, 56, 66].map((y) => <rect key={y} x={x - 6} y={y} width="12" height="1.8" fill={ART.dark.shade} />)}
-          <rect x={x - 1.6} y="24" width="3.2" height="10" fill={ART.steel.base} /><circle cx={x} cy="23" r="2.2" fill={S.cyanHi} style={{ animation:`ship-blink ${1 + i * 0.3}s steps(2) infinite` }} />
+          <rect x={x - 1.6} y="24" width="3.2" height="10" fill={ART.steel.base} /><circle cx={x} cy="23" r="2.2" fill={dead ? ART.dark.base : S.cyanHi} style={dead ? undefined : { animation:`ship-blink ${1 + i * 0.3}s steps(2) infinite` }} />
         </g>
       ))}
-      <g fill="none" stroke={S.cyanHi} strokeWidth="1" style={{ animation:'holo-flicker 0.9s ease-in-out infinite' }}>
+      {!dead && <g fill="none" stroke={S.cyanHi} strokeWidth="1" style={{ animation:'holo-flicker 0.9s ease-in-out infinite' }}>
         {[0, 1, 2, 3].map((i) => <polyline key={i} points={pts([[tops[i], 23], [tops[i] + 4, 16 - (i % 2) * 4], [tops[i] + 8, 22], [tops[i] + 12, 14 + (i % 2) * 3], [tops[i + 1], 23]])} />)}
-      </g>
-      <Bev t="polygon" points={pts([[38, 74], [58, 74], [58, 62], [38, 62]])} c="dark" o={0.6} /><rect x="40" y="64" width="16" height="8" fill={ART.screen.cyan} /><text x="48" y="68" textAnchor="middle" fontSize="2.2" fill={S.cyanHi} fontWeight="700" {...PT}>JAMMING</text><text x="48" y="71" textAnchor="middle" fontSize="2" fill={S.cyanHi} {...PT}>6 KM RADIUS</text>
-      <text x="48" y="10" textAnchor="middle" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>DISCHARGE: NOT NATURAL</text>
+      </g>}
+      <Bev t="polygon" points={pts([[38, 74], [58, 74], [58, 62], [38, 62]])} c="dark" o={0.6} /><rect x="40" y="64" width="16" height="8" fill={dead ? ART.screen.off : ART.screen.cyan} /><text x="48" y="68" textAnchor="middle" fontSize="2.2" fill={dead ? S.redHi : S.cyanHi} fontWeight="700" {...PT}>{dead ? 'OFFLINE' : 'JAMMING'}</text><text x="48" y="71" textAnchor="middle" fontSize="2" fill={dead ? S.redHi : S.cyanHi} {...PT}>{dead ? 'CELLS DARK' : '6 KM RADIUS'}</text>
+      <text x="48" y="10" textAnchor="middle" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>{dead ? 'JAMMER CUT' : 'DISCHARGE: NOT NATURAL'}</text>
       <Rivets x={8} y={76} w={80} n={10} />
       <Grime x={4} y={30} w={88} h={60} seed={710} n={6} op={0.22} /><Scuff x={6} y={32} w={84} h={56} seed={711} n={8} c="amber" />
     </svg>
@@ -14038,7 +14190,7 @@ function PropScanWreck() {
       <rect x="68" y="42" width="12" height="2" fill={ART.dark.shade} /><rect x="68" y="47" width="20" height="2" fill={ART.dark.shade} />
       <g transform="rotate(-24 108 50)"><line x1="108" y1="52" x2="108" y2="20" stroke={ART.steel.hi} strokeWidth="2.4" /><Bev t="polygon" points={pts([[100, 20], [116, 20], [112, 12], [104, 12]])} c="hull" o={0.6} /><circle cx="108" cy="16" r="2" fill={ART.dark.shade} /></g>
       {[[100, 54], [112, 56], [120, 52]].map(([x, y], i) => <line key={i} x1={x} y1={y} x2={x + 5} y2={y + 2} stroke={ART.steel.hi} strokeWidth="1.4" />)}
-      <Cable d="M96 44 C100 48 98 52 104 52" w={1.6} /><polyline points={pts([[100, 50], [104, 54]])} fill="none" stroke={S.warn} strokeWidth="1" />
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => <g key={'tag' + i}><line x1={98 + i * 3} y1={30 + (i % 2) * 2} x2={98 + i * 3} y2={33 + (i % 2) * 2} stroke={ART.steel.hi} strokeWidth="0.5" /><rect x={97 + i * 3} y={33 + (i % 2) * 2} width="2" height="3.2" fill={ART.paper.base} /></g>)}<Cable d="M96 44 C100 48 98 52 104 52" w={1.6} /><polyline points={pts([[100, 50], [104, 54]])} fill="none" stroke={S.warn} strokeWidth="1" />
       {[22, 38].map((x, i) => <g key={i}><circle cx={x} cy="44" r="4" fill={ART.dark.shade} /><circle cx={x} cy="44" r="2.4" fill={ART.dark.base} /></g>)}
       <g transform="rotate(4 74 20)"><polygon points={pts([[62, 8], [92, 8], [92, 22], [62, 22]])} fill={ART.paper.base} /><text x="77" y="13.6" textAnchor="middle" fontSize="2.6" fill={ART.note.redInk} fontWeight="700" {...PT}>WARNED OFF</text><text x="77" y="18.4" textAnchor="middle" fontSize="2.4" fill={ART.note.ink} {...PT}>NO SIGN OF COMBAT</text></g>
       <text x="30" y="14" textAnchor="middle" fontSize="2.8" fill={S.cyanHi} fontWeight="700" {...PT}>KDY SCAN TEAM</text>
@@ -14492,8 +14644,6 @@ function PropFacilitySign({ variant }) {
     trike: { t: "TRIKE'S ROBOTICS", s: 'REPAIR · UPGRADES', c: 'copper', f: 9.4 },
     barracks: { t: 'WEAPONS BARRACKS', s: 'ARMORY · RANGE', c: 'red', f: 9 },
     hq: { t: 'KDY MAIN HQ', s: 'PASS REQUIRED', c: 'deepglass', f: 11 },
-    mfg: { t: 'SECTOR 4 FABRICATION', s: 'SHIFT QUOTA 114 PCT', c: 'rust', f: 7.6 },
-    slag: { t: 'SLAG LINE FREIGHT LOCK', s: 'TUNNEL DEAD', c: 'dark', f: 7 },
   }[variant] || { t: 'KDY BADOR', s: 'FORWARD HUB', c: 'steel' };
   return (
     <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
@@ -15304,6 +15454,77 @@ function PropBvistaG({ variant = 'hqwindow_a' }) {
 }
 // BADOR VISTA END
 
+// ZORA PROPS BEGIN
+// The Ghost Keel frame in its drydock cradle, the Warden Prime defence droid, and the Cherit memorial plinth.
+function PropKeelFrame() {
+  const S = ART.signal;
+  const ribs = Array.from({ length: 12 }, (_, i) => ({ x: 34 + i * 18, top: 84 + Math.abs(i - 4) * 1.8 }));
+  return (
+    <svg viewBox="0 0 288 160" width="288" height="160" style={PROP_STYLE}>
+      <PropShadow cx={144} cy={154} rx={134} ry={4} />
+      <Bev t="polygon" points={pts([[6, 154], [6, 140], [282, 140], [282, 154]])} c="steel" o={1.2} /><Hazard x={10} y={146} w={268} h={4} />
+      {[26, 98, 170, 242].map((x, i) => <g key={i}><Bev t="polygon" points={pts([[x, 140], [x + 2, 66], [x + 14, 66], [x + 16, 140]])} c="dark" o={1} /><Seams x={x} y={70} w={16} h={68} cols={1} rows={4} op={0.4} /><rect x={x + 3} y={60 - (i % 2) * 6} width="10" height="6" fill={ART.brass.base} /></g>)}
+      <Bev t="polygon" points={pts([[18, 124], [30, 100], [246, 86], [282, 102], [250, 126], [64, 134]])} c="dark" o={1.3} />
+      {ribs.map((rb, i) => <polygon key={'rb' + i} points={pts([[rb.x, 130], [rb.x + 3, rb.top], [rb.x + 11, rb.top - 2], [rb.x + 13, 128]])} fill={ART.steel.shade} />)}
+      {ribs.map((rb, i) => <polygon key={'rh' + i} points={pts([[rb.x + 3, rb.top], [rb.x + 6, rb.top - 1], [rb.x + 6, 128], [rb.x + 3, 130]])} fill={ART.steel.base} opacity="0.7" />)}
+      <Bev t="polygon" points={pts([[196, 90], [246, 86], [282, 102], [250, 126], [196, 126]])} c="hull" o={1.1} />
+      <Seams x={196} y={88} w={86} h={38} cols={4} rows={2} op={0.5} />
+      <polygon points={pts([[196, 90], [246, 86], [250, 92], [198, 96]])} fill={ART.pearl.hi} opacity="0.8" />
+      <Bev t="polygon" points={pts([[96, 86], [104, 40], [150, 30], [160, 84]])} c="steel" o={0.9} />
+      <g stroke={ART.hull.shade} strokeWidth="1.4" fill="none"><line x1="98" y1="84" x2="150" y2="34" /><line x1="104" y1="42" x2="158" y2="84" /><line x1="100" y1="62" x2="156" y2="58" /></g>
+      <polygon points={pts([[104, 40], [150, 30], [152, 36], [106, 46]])} fill={ART.steel.hi} opacity="0.7" />
+      <polygon points={pts(ngon(124, 110, 10, 10, 10))} fill={ART.ink} /><polygon points={pts(ngon(124, 110, 7, 7, 10))} fill={S.cyan} style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} /><polygon points={pts(ngon(124, 110, 3, 3, 6))} fill={S.cyanHi} />
+      <line x1="60" y1="0" x2="60" y2="70" stroke={ART.dark.hi} strokeWidth="1.4" /><line x1="200" y1="0" x2="206" y2="84" stroke={ART.dark.hi} strokeWidth="1.4" />
+      <Bev t="polygon" points={pts([[54, 70], [66, 70], [64, 80], [56, 80]])} c="amber" o={0.7} /><Bev t="polygon" points={pts([[198, 82], [212, 82], [210, 90], [200, 90]])} c="amber" o={0.7} />
+      {[[40, 112], [112, 94], [176, 92], [220, 108], [262, 112]].map(([x, y], i) => <circle key={'sp' + i} cx={x} cy={y} r="2.2" fill={S.amberHi} style={{ animation: `ship-spark ${1.3 + i * 0.4}s ease-in-out ${i * 0.3}s infinite` }} />)}
+      {[[44, 92, 'cyan'], [80, 100, 'amber'], [168, 88, 'cyan'], [228, 96, 'amber']].map(([x, y, k], i) => <rect key={'wl' + i} x={x} y={y} width="5" height="3" fill={S[k]} style={{ animation: `ship-blink ${1.8 + i * 0.5}s ease-in-out ${i * 0.3}s infinite` }} />)}
+      <Slab x={96} y={142} w={96} h={9} k={1} c="dark" o={0.8} /><text x="144" y="148.8" textAnchor="middle" fontSize="4" fill={S.amberHi} fontWeight="700" {...PT}>GHOST KEEL HULL 001</text>
+      <Rivets x={10} y={142} w={268} n={30} /><Lights x={14} y={150} n={6} gap={6} seed={11} />
+      <Grime x={8} y={60} w={272} h={92} seed={880} n={10} op={0.22} /><Scuff x={10} y={84} w={266} h={56} seed={881} n={12} c="steel" />
+    </svg>
+  );
+}
+
+function PropWardenPrime() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={91} rx={40} ry={3.4} />
+      <Slab x={10} y={80} w={76} h={9} k={2} c="dark" o={1} /><Hazard x={14} y={84} w={68} h={3} />
+      {[[16, 80, 4, 52], [26, 80, 14, 62], [70, 80, 82, 52], [60, 80, 72, 62]].map(([x1, y1, x2, y2], i) => <g key={i}><line x1={x1 + 6} y1={y1} x2={x2 + 6} y2={y2} stroke={ART.ink} strokeWidth="6" /><line x1={x1 + 6} y1={y1} x2={x2 + 6} y2={y2} stroke={ART.steel.base} strokeWidth="3.4" /><polygon points={pts(ngon(x2 + 6, y2, 4, 4, 6))} fill={ART.steel.hi} /></g>)}
+      <Bev t="polygon" points={pts([[24, 70], [20, 40], [34, 24], [62, 24], [76, 40], [72, 70]])} c="dark" o={1.2} />
+      <Bev t="polygon" points={pts([[30, 66], [28, 44], [38, 32], [58, 32], [68, 44], [66, 66]])} c="steel" o={0.9} />
+      <Seams x={28} y={34} w={40} h={32} cols={2} rows={2} op={0.45} /><Vent x={38} y={54} w={20} h={8} n={3} />
+      <Bev t="polygon" points={pts([[34, 24], [38, 10], [58, 10], [62, 24]])} c="dark" o={1} />
+      <rect x="40" y="14" width="16" height="6" fill={ART.ink} /><rect x="42" y="15" width="12" height="4" fill={S.red} style={{ animation: 'ship-engine 1.6s ease-in-out infinite' }} /><rect x="46" y="15" width="4" height="4" fill={S.redHi} />
+      <Bev t="polygon" points={pts([[6, 44], [6, 28], [20, 28], [22, 46]])} c="steel" o={0.9} /><Bev t="polygon" points={pts([[74, 46], [76, 28], [90, 28], [90, 44]])} c="steel" o={0.9} />
+      <rect x="2" y="30" width="6" height="14" fill={ART.dark.base} /><rect x="88" y="30" width="6" height="14" fill={ART.dark.base} />
+      <Glyph k="cog" x={48} y={46} s={4} c={S.amber} />
+      <Rivets x={26} y={28} w={44} n={7} /><Lights x={30} y={72} n={5} gap={8} seed={3} />
+      <Grime x={8} y={8} w={80} h={82} seed={890} n={7} op={0.22} /><Scuff x={10} y={12} w={76} h={72} seed={891} n={9} c="steel" />
+    </svg>
+  );
+}
+
+function PropMemorialPlinth() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={26} ry={2.6} />
+      <Slab x={8} y={42} w={48} h={16} k={2} c="dark" o={1} /><Slab x={14} y={30} w={36} h={14} k={2} c="steel" o={0.9} />
+      <Hazard x={10} y={54} w={44} h={2.4} />
+      <polygon points={pts([[18, 32], [30, 28], [46, 30], [44, 38], [20, 38]])} fill={ART.fabric.base} /><polygon points={pts([[18, 32], [30, 28], [34, 32], [22, 36]])} fill={ART.fabric.hi} opacity="0.8" />
+      <rect x="38" y="31" width="9" height="6" fill={ART.paper.base} /><rect x="39.4" y="32.4" width="6.2" height="1.2" fill={S.green} />
+      <polygon points={pts([[28, 28], [30, 18], [34, 18], [36, 28]])} fill={ART.brass.base} /><polygon points={pts([[29, 18], [32, 8], [35, 18]])} fill={S.cyanHi} style={{ animation: 'holo-flicker 1.8s ease-in-out infinite' }} /><polygon points={pts([[31, 16], [32, 11], [33, 16]])} fill={S.white} />
+      <Glow cx={32} cy={14} r={9} c={S.cyan} opacity={0.35} style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} />
+      <Slab x={20} y={46} w={24} h={7} k={1} c="brass" o={0.8} /><text x="32" y="51.2" textAnchor="middle" fontSize="3" fill={ART.ink} fontWeight="700" {...PT}>CHERIT</text>
+      <Rivets x={11} y={44} w={42} n={6} /><Lights x={16} y={57} n={3} gap={4} seed={4} />
+      <Grime x={8} y={28} w={48} h={30} seed={895} n={4} op={0.22} /><Scuff x={10} y={30} w={44} h={26} seed={896} n={5} c="steel" />
+    </svg>
+  );
+}
+// ZORA PROPS END
+
 function PropKdyBarricade({ variant }) {
   const S = ART.signal, scrap = variant === 'scrap';
   const body = scrap ? 'rust' : 'hull';
@@ -15772,125 +15993,46 @@ function PropGovernorSocket({ variant }) {
     </svg>
   );
 }
-// ===== BADOR WAR PROPS END =====
 
-// ===== MFG PROPS BEGIN =====
-function PropMfgConveyor({ variant }) {
-  const S = ART.signal, hot = variant === 'ingots';
+// Wastes finale set piece: the central blast doors to Zone Five. Closed: heat locked, red lamps. Open: leaves retracted, a lit descent.
+function PropWstBlastDoors({ variant }) {
+  const S = ART.signal, open = variant === 'open';
   return (
-    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
-      <PropShadow cx={64} cy={60} rx={58} ry={3} />
-      {[10, 112].map((x) => <Bev key={x} t="polygon" points={pts([[x, 58], [x, 40], [x + 6, 40], [x + 6, 58]])} c="steel" o={0.7} />)}
-      <Slab x={2} y={30} w={124} h={22} k={3} c="dark" o={1.2} />
-      <rect x="6" y="34" width="116" height="12" fill={ART.ink} />
-      {Array.from({ length: 14 }, (_, i) => <polygon key={i} points={pts([[10 + i * 8, 35], [14 + i * 8, 35], [18 + i * 8, 40], [14 + i * 8, 45], [10 + i * 8, 45], [14 + i * 8, 40]])} fill={ART.amber.base} opacity="0.8" style={{ animation: `ship-blink ${2.4 + (i % 3) * 0.5}s steps(2) infinite` }} />)}
-      <Slab x={2} y={26} w={124} h={6} k={1.4} c="steel" o={0.9} />
-      {hot ? (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={92} rx={44} ry={3} />
+      <Slab x={2} y={14} w={92} h={76} k={4} c="dark" o={1.4} />
+      <Slab x={8} y={22} w={80} h={68} k={3} c="steel" o={1} />
+      <rect x="16" y="30" width="64" height="60" fill={open ? ART.screen.amber : ART.dark.shade} />
+      {open ? (
         <g>
-          {[16, 52, 88].map((x, i) => <g key={x}><Slab x={x} y={14} w={24} h={14} k={2} c="rust" o={1} /><rect x={x + 3} y="16" width="18" height="4" fill={S.orange} /><Glow cx={x + 12} cy={20} r={18} c={S.orange} opacity={0.45} style={{ animation: `ship-engine ${1.8 + i * 0.4}s ease-in-out infinite` }} /></g>)}
+          <polygon points={pts([[20, 90], [28, 40], [68, 40], [76, 90]])} fill={ART.ink} />
+          {[48, 60, 72, 84].map((y, i) => <rect key={y} x={30 - i * 2.4} y={y} width={36 + i * 4.8} height="3" fill={ART.dark.base} />)}
+          {[0, 1, 2, 3].map((i) => <circle key={i} cx={36 + i * 8} cy={46 + i * 0} r="1.2" fill={S.amberHi} style={{ animation: `ship-blink ${1.2 + i * 0.3}s ease-in-out infinite` }} />)}
+          <Glow cx={48} cy={64} rx={20} ry={26} c={S.orange} opacity={0.55} style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} />
+          <Bev t="polygon" points={pts([[16, 30], [26, 30], [26, 90], [16, 90]])} c="hull" o={1} />
+          <Bev t="polygon" points={pts([[70, 30], [80, 30], [80, 90], [70, 90]])} c="hull" o={1} />
         </g>
       ) : (
         <g>
-          {[[14, 12, 30], [48, 8, 34], [86, 14, 28]].map(([x, y, w]) => <g key={x}><Slab x={x} y={y} w={w} h={16} k={2} c="hull" o={1} /><Slab x={x + 3} y={y - 5} w={w - 8} h={7} k={1.4} c="steel" o={0.8} /><Seams x={x} y={y} w={w} h={16} cols={2} op={0.4} /></g>)}
+          <Bev t="polygon" points={pts([[16, 30], [47, 30], [47, 90], [16, 90]])} c="hull" o={1.4} />
+          <Bev t="polygon" points={pts([[49, 30], [80, 30], [80, 90], [49, 90]])} c="hull" o={1.4} />
+          <rect x="46.4" y="30" width="3.2" height="60" fill={S.orange} style={{ animation: 'ship-engine 1.8s ease-in-out infinite' }} />
+          {[40, 56, 72].map((y) => <g key={y}><rect x="20" y={y} width="22" height="2.4" fill={ART.hull.shade} /><rect x="54" y={y} width="22" height="2.4" fill={ART.hull.shade} /></g>)}
+          <polygon points={pts([[20, 34], [40, 34], [38, 38], [22, 38]])} fill={ART.rust.base} opacity="0.7" /><polygon points={pts([[56, 34], [76, 34], [74, 38], [58, 38]])} fill={ART.rust.base} opacity="0.7" />
         </g>
       )}
-      <Hazard x={6} y={50} w={116} h={4} opacity={0.9} />
-      <Vent x={104} y={32} w={14} h={8} n={3} /><Lights x={10} y={56} n={8} gap={14} seed={31} /><Rivets x={6} y={29} w={116} n={16} c="steel" /><Seams x={2} y={30} w={124} h={22} cols={7} op={0.3} /><Greeble x={8} y={46} w={90} h={4} seed={3101} n={5} c="dark" />
-      <Grime x={2} y={14} w={124} h={44} seed={3102} n={7} op={0.26} /><Scuff x={4} y={16} w={118} h={36} seed={3103} n={7} c="steel" />
+      <Slab x={26} y={16} w={44} h={10} k={2} c="dark" o={0.9} />
+      <text x="48" y="23.6" textAnchor="middle" fontSize="4.4" fill={open ? S.greenHi : S.redHi} fontWeight="700" {...PT}>{open ? 'ZONE 05 OPEN' : 'ZONE 05 HEAT LOCKED'}</text>
+      {[14, 82].map((x) => <g key={x}><circle cx={x} cy="20" r="3" fill={ART.ink} /><circle cx={x} cy="20" r="1.8" fill={open ? S.green : S.red} style={{ animation: 'ship-blink 1.1s ease-in-out infinite' }} /><Glow cx={x} cy={20} r={7} c={open ? S.green : S.red} opacity={0.4} /></g>)}
+      <Hazard x={10} y={82} w={76} h={6} opacity={0.9} />
+      <Vent x={4} y={42} w={8} h={12} n={4} /><Vent x={84} y={42} w={8} h={12} n={4} />
+      <Rivets x={12} y={26} w={72} n={10} c="steel" /><Seams x={8} y={22} w={80} h={68} cols={open ? 0 : 3} rows={0} op={0.3} />
+      <Greeble x={10} y={60} w={4} h={20} seed={3411} n={3} c="steel" /><Greeble x={82} y={60} w={4} h={20} seed={3412} n={3} c="steel" />
+      <Grime x={2} y={14} w={92} h={76} seed={3413} n={7} op={0.24} /><Scuff x={10} y={24} w={76} h={62} seed={3414} n={8} c="steel" />
     </svg>
   );
 }
-
-function PropMfgCradle() {
-  const S = ART.signal;
-  const ribs = [30, 44, 58, 72, 86, 100, 114, 128];
-  const top = (x) => 34 + Math.abs(x - 80) * 0.45;
-  return (
-    <svg viewBox="0 0 160 128" width="160" height="128" style={PROP_STYLE}>
-      <PropShadow cx={80} cy={122} rx={72} ry={4} />
-      <Slab x={6} y={106} w={148} h={14} k={3} c="dark" o={1.2} /><Hazard x={10} y={114} w={140} h={4} opacity={0.9} />
-      {[6, 142].map((x) => <g key={x}><Bev t="polygon" points={pts([[x, 108], [x, 16], [x + 12, 16], [x + 12, 108]])} c="amber" o={1.2} /><Seams x={x} y={16} w={12} h={92} rows={7} op={0.4} /></g>)}
-      <Slab x={2} y={8} w={156} h={10} k={1.6} c="amber" o={1} />
-      <Bev t="polygon" points={pts([[24, 106], [24, 62], [46, 36], [114, 36], [136, 62], [136, 106]])} c="dark" o={1.4} />
-      <polygon points={pts([[30, 104], [30, 64], [48, 42], [112, 42], [130, 64], [130, 104]])} fill={ART.ink} />
-      {ribs.map((x) => <rect key={x} x={x - 2.5} y={top(x) + 4} width="5" height={104 - top(x) - 4} fill={ART.steel.base} />)}
-      {ribs.map((x) => <rect key={'h' + x} x={x - 2.5} y={top(x) + 4} width="1.8" height={104 - top(x) - 4} fill={ART.steel.hi} opacity="0.7" />)}
-      {[[26, 66, 22, 18], [26, 86, 22, 18], [50, 42, 24, 18], [50, 62, 24, 20], [50, 84, 24, 20], [76, 40, 20, 20], [76, 62, 20, 16]].map(([x, y, w, h], i) => <g key={i}><Slab x={x} y={y} w={w} h={h} k={1.6} c="hull" o={0.9} /><Seams x={x} y={y} w={w} h={h} rows={1} op={0.35} /></g>)}
-      <circle cx="102" cy="58" r="3.4" fill={S.amberHi} style={{ animation: 'ship-blink 0.9s steps(2) infinite' }} /><Glow cx={102} cy={58} r={16} c={S.orange} opacity={0.5} />
-      <Slab x={52} y={88} w={56} h={14} k={1.4} c="steel" o={0.9} />
-      <text x="80" y="95" textAnchor="middle" fontSize="5.6" fill={ART.ink} fontWeight="700" {...PT}>SECTION 11</text>
-      <text x="80" y="100" textAnchor="middle" fontSize="2.8" fill={ART.red.base} fontWeight="700" {...PT}>NO REGISTRY</text>
-      <Vent x={118} y={72} w={10} h={14} n={4} /><Lights x={14} y={110} n={10} gap={14} seed={32} /><Rivets x={24} y={64} w={112} n={14} c="steel" /><Greeble x={26} y={20} w={110} h={12} seed={3201} n={8} c="amber" /><Seams x={24} y={36} w={112} h={70} cols={6} op={0.2} />
-      <Grime x={6} y={8} w={148} h={112} seed={3202} n={10} op={0.28} /><Scuff x={26} y={40} w={108} h={64} seed={3203} n={9} c="steel" />
-    </svg>
-  );
-}
-
-function PropMfgForge() {
-  const S = ART.signal;
-  return (
-    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
-      <PropShadow cx={64} cy={90} rx={56} ry={4} />
-      <Bev t="polygon" points={pts([[86, 64], [90, 8], [112, 8], [116, 64]])} c="dark" o={1.4} />
-      <ellipse cx="102" cy="6" rx="14" ry="4" fill={ART.pearl.base} opacity="0.4" style={{ animation: 'steam-rise 3.2s ease-out infinite' }} />
-      <Bev t="polygon" points={pts([[8, 86], [8, 42], [26, 24], [102, 24], [120, 42], [120, 86]])} c="rust" o={1.6} />
-      <polygon points={pts([[28, 82], [28, 52], [40, 40], [88, 40], [100, 52], [100, 82]])} fill={ART.dark.shade} />
-      <polygon points={pts([[34, 82], [34, 54], [44, 44], [84, 44], [94, 54], [94, 82]])} fill={ART.ink} />
-      <polygon points={pts([[38, 82], [38, 56], [46, 48], [82, 48], [90, 56], [90, 82]])} fill={S.orange} opacity="0.55" style={{ animation: 'ship-engine 2.2s ease-in-out infinite' }} />
-      <polygon points={pts([[46, 82], [46, 62], [52, 56], [76, 56], [82, 62], [82, 82]])} fill={S.amberHi} opacity="0.5" />
-      <Glow cx={64} cy={62} r={38} c={S.orange} opacity={0.4} />
-      <Bev t="polygon" points={pts([[100, 56], [124, 56], [124, 66], [100, 66]])} c="copper" o={0.9} />
-      <rect x="118" y="66" width="4" height="18" fill={S.orange} opacity="0.9" style={{ animation: 'ship-engine 1.4s ease-in-out infinite' }} />
-      <Slab x={104} y={82} w={20} h={6} k={1.2} c="rust" o={0.8} />
-      <Slab x={38} y={26} w={52} h={11} k={1.6} c="dark" o={1} />
-      <text x="64" y="34" textAnchor="middle" fontSize="5" fill={S.amberHi} fontWeight="700" {...PT}>FOUNDRY 4</text>
-      <Hazard x={10} y={84} w={90} h={4} opacity={0.9} />
-      <Vent x={10} y={48} w={14} h={16} n={4} /><Lights x={14} y={78} n={4} gap={6} seed={33} /><Rivets x={12} y={40} w={104} n={14} c="rust" /><Seams x={8} y={24} w={112} h={62} cols={5} op={0.28} /><Greeble x={12} y={28} w={22} h={10} seed={3301} n={5} c="rust" />
-      <Grime x={8} y={8} w={112} h={80} seed={3302} n={9} op={0.3} /><Scuff x={12} y={26} w={104} h={56} seed={3303} n={8} c="rust" />
-    </svg>
-  );
-}
-
-function PropMfgGlass() {
-  const S = ART.signal;
-  return (
-    <svg viewBox="0 0 160 64" width="160" height="64" style={PROP_STYLE}>
-      <PropShadow cx={80} cy={61} rx={72} ry={2.6} />
-      <Bev t="polygon" points={pts([[2, 30], [2, 0], [158, 0], [158, 30]])} c="dark" o={1} />
-      {[[6, 4, 52], [130, 4, 24]].map(([x, y, w], i) => <g key={i}><rect x={x} y={y} width={w} height="24" fill={ART.glass.shade} /><rect x={x + 1.5} y={y + 1.5} width={w - 3} height="21" fill={ART.amber.base} opacity="0.55" /><rect x={x + 1.5} y={y + 1.5} width={w - 3} height="5" fill={ART.glass.hi} opacity="0.5" />{Array.from({ length: Math.floor(w / 8) }, (_, k) => <rect key={k} x={x + 4 + k * 8} y={y + 8} width="4" height="14" fill={ART.dark.base} opacity="0.7" />)}</g>)}
-      <Bev t="polygon" points={pts([[62, 2], [130, 2], [130, 16], [62, 16]])} c="dark" o={0.8} />
-      <text x="96" y="9.6" textAnchor="middle" fontSize="4.4" fill={S.amberHi} fontWeight="700" {...PT}>OVERSEER SECTOR 4</text>
-      <text x="96" y="14" textAnchor="middle" fontSize="2.6" fill={S.redHi} {...PT}>APPOINTMENTS ONLY</text>
-      <Hazard x={62} y={20} w={68} h={3} opacity={0.9} />
-      <Slab x={4} y={36} w={56} h={22} k={2.4} c="brass" o={1} /><Slab x={128} y={36} w={28} h={22} k={2.4} c="brass" o={1} />
-      <rect x="8" y="40" width="48" height="4" fill={ART.brass.hi} opacity="0.7" /><rect x="132" y="40" width="20" height="4" fill={ART.brass.hi} opacity="0.7" />
-      <rect x="14" y="46" width="14" height="7" fill={ART.screen.amber} /><rect x="16" y="48" width="10" height="1.4" fill={S.amberHi} /><rect x="16" y="50.4" width="7" height="1.4" fill={S.amberHi} />
-      <Lights x={36} y={50} n={4} gap={5} seed={34} /><Vent x={136} y={46} w={12} h={7} n={3} />
-      <Rivets x={6} y={33} w={150} n={18} c="brass" /><Seams x={4} y={36} w={152} h={22} cols={5} op={0.25} /><Greeble x={6} y={4} w={150} h={3} seed={3401} n={5} c="dark" />
-      <Grime x={2} y={0} w={156} h={60} seed={3402} n={7} op={0.26} /><Scuff x={4} y={36} w={152} h={22} seed={3403} n={6} c="brass" />
-    </svg>
-  );
-}
-
-function PropMfgKeel() {
-  const S = ART.signal;
-  return (
-    <svg viewBox="0 0 160 96" width="160" height="96" style={PROP_STYLE}>
-      <PropShadow cx={80} cy={90} rx={72} ry={4} />
-      <Slab x={6} y={74} w={148} h={14} k={3} c="dark" o={1.2} /><Hazard x={10} y={82} w={140} h={4} opacity={0.9} />
-      {[20, 50, 80, 110, 136].map((x) => <Slab key={x} x={x} y={62} w={8} h={16} k={1.2} c="steel" o={0.8} />)}
-      <Bev t="polygon" points={pts([[8, 70], [24, 40], [62, 24], [138, 24], [154, 46], [150, 70]])} c="hull" o={1.6} />
-      <polygon points={pts([[28, 62], [40, 44], [66, 34], [132, 34], [142, 48], [138, 62]])} fill={ART.steel.base} />
-      <polygon points={pts([[28, 62], [40, 44], [66, 34], [74, 34], [66, 62]])} fill={ART.steel.hi} opacity="0.6" />
-      <text x="88" y="53" textAnchor="middle" fontSize="8" fill={ART.red.base} fontWeight="700" {...PT}>GK-01 KEEL</text>
-      <text x="88" y="61" textAnchor="middle" fontSize="3.2" fill={ART.ink} fontWeight="700" {...PT}>NO COMMISSION NUMBER</text>
-      {[[18, 66], [146, 62]].map(([x, y], i) => <g key={i}><circle cx={x} cy={y} r="2.4" fill={S.amberHi} style={{ animation: `ship-blink ${1.2 + i * 0.4}s steps(2) infinite` }} /><Glow cx={x} cy={y} r={9} c={S.amber} opacity={0.4} /></g>)}
-      <Vent x={118} y={26} w={14} h={7} n={3} /><Lights x={30} y={78} n={9} gap={12} seed={35} /><Rivets x={20} y={32} w={120} n={14} c="hull" /><Greeble x={66} y={26} w={50} h={6} seed={3501} n={6} c="hull" /><Seams x={8} y={24} w={146} h={46} cols={8} rows={1} op={0.3} />
-      <Grime x={6} y={24} w={148} h={64} seed={3502} n={9} op={0.28} /><Scuff x={10} y={28} w={140} h={42} seed={3503} n={9} c="hull" />
-    </svg>
-  );
-}
-// ===== MFG PROPS END =====
+// ===== BADOR WAR PROPS END =====
 
 
 
@@ -16084,6 +16226,9 @@ const PROP_DEFS = {
   bvista_44x5:           { w: 44, h: 5, ax: 22, ay: 4, backdrop: true },
   bvista_48x5:           { w: 48, h: 5, ax: 24, ay: 4, backdrop: true },
   bvista_30x3:           { w: 30, h: 3, ax: 15, ay: 2, backdrop: true },
+  keel_frame:            { w: 9, h: 5, ax: 4, ay: 4 },
+  warden_prime:          { w: 3, h: 3, ax: 1, ay: 2 },
+  memorial_plinth:       { w: 2, h: 2, ax: 0, ay: 1 },
   // BADOR VISTA DEFS END
   kdy_barricade:         { w: 3, h: 2, ax: 1, ay: 1 },
   auto_turret:           { w: 2, h: 2, ax: 0, ay: 1 },
@@ -16111,14 +16256,8 @@ const PROP_DEFS = {
   exhaust_cathedral:     { w: 8, h: 7, ax: 4, ay: 6, backdrop: true },
   boiler_hull:           { w: 4, h: 3, ax: 1, ay: 2 },
   governor_socket:       { w: 2, h: 2, ax: 0, ay: 1 },
+  wst_blast_doors:       { w: 3, h: 3, ax: 2, ay: 2 },
   // BADOR WAR DEFS END
-  // MFG DEFS BEGIN
-  mfg_conveyor:          { w: 4, h: 2, ax: 1, ay: 1 },
-  mfg_cradle:            { w: 5, h: 4, ax: 2, ay: 3 },
-  mfg_forge:             { w: 4, h: 3, ax: 1, ay: 2 },
-  mfg_glass:             { w: 5, h: 2, ax: 2, ay: 1 },
-  mfg_keel:              { w: 5, h: 3, ax: 2, ay: 2 },
-  // MFG DEFS END
 };
 
 const PropArt = React.memo(function PropArt({ kind, variant, active }) {
@@ -16235,7 +16374,7 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'scorch_wall': return <PropScorchWall variant={variant} active={!!active} />;
     case 'sentry_post': return <PropSentryPost variant={variant} active={!!active} />;
     case 'maglev_crane': return <PropMaglevCrane variant={variant} active={!!active} />;
-    case 'capacitor_bank': return <PropCapacitorBank variant={variant} active={!!active} />;
+    case 'capacitor_bank': return <PropCapacitorBank variant={variant} />;
     case 'scan_wreck': return <PropScanWreck variant={variant} active={!!active} />;
     case 'crater_glass': return <PropCraterGlass variant={variant} active={!!active} />;
     case 'rebreather_rack': return <PropRebreatherRack variant={variant} active={!!active} />;
@@ -16296,6 +16435,9 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'bvista_44x5': return <PropBvistaE variant={variant} />;
     case 'bvista_48x5': return <PropBvistaF variant={variant} />;
     case 'bvista_30x3': return <PropBvistaG variant={variant} />;
+    case 'keel_frame': return <PropKeelFrame />;
+    case 'warden_prime': return <PropWardenPrime />;
+    case 'memorial_plinth': return <PropMemorialPlinth />;
     // BADOR VISTA CASES END
     case 'kdy_barricade': return <PropKdyBarricade variant={variant} />;
     case 'auto_turret': return <PropAutoTurret variant={variant} />;
@@ -16323,14 +16465,8 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'exhaust_cathedral': return <PropExhaustCathedral />;
     case 'boiler_hull': return <PropBoilerHull />;
     case 'governor_socket': return <PropGovernorSocket variant={variant} />;
+    case 'wst_blast_doors': return <PropWstBlastDoors variant={variant} />;
     // BADOR WAR CASES END
-    // MFG CASES BEGIN
-    case 'mfg_conveyor': return <PropMfgConveyor variant={variant} />;
-    case 'mfg_cradle': return <PropMfgCradle />;
-    case 'mfg_forge': return <PropMfgForge />;
-    case 'mfg_glass': return <PropMfgGlass />;
-    case 'mfg_keel': return <PropMfgKeel />;
-    // MFG CASES END
     default: return null;
   }
 });
@@ -16952,6 +17088,7 @@ function resolveDialoguePhase(npc, questFlags) {
 
 
 
+
 // ===== CONQUEST ENGINE BEGIN =====
 // Coruscant Conquest v2: a pure, testable strategy engine. No React in here. State is plain JSON.
 // Campaign layer: sectors, garrisons, buildings, economy, enemy factions.
@@ -17481,6 +17618,7 @@ CQ.camp = (() => {
   function recruit(st0, secId, k, n) {
     n = n || 1; const st = clone(st0); const sec = st.sec[secId], u = U[k]; if (!sec || sec.owner !== 'player' || !u || k === 'trt') return R(false, st0, 'Not available.');
     if (u.req && !hasB(sec, u.req)) return R(false, st0, `${u.name} needs a ${BLD[u.req].name} in this sector.`);
+    { const free = garCap(sec) - total(sec.gar); if (n > free && free > 0) n = free; }
     if (total(sec.gar) + n > garCap(sec)) return R(false, st0, `Garrison full (${garCap(sec)}). Build Barracks or a Command Center, or move units out.`);
     const cost = unitCost(st, secId, k) * n, pw = u.pwr * n;
     if (st.cr < cost) return R(false, st0, `Need ${cost} CR.`); if (st.pwr < pw) return R(false, st0, `Need ${pw} PWR.`);
@@ -17665,7 +17803,7 @@ CQ.camp = (() => {
     // enemy turns
     neutralRegen(st); AIF.slice().sort(() => rnd() - 0.5).forEach((f) => { factionEconomy(st, f, rnd); aiAttack(st, f, rnd, events); });
     events.forEach((m) => logTo(st, m)); logTo(st, `Turn ${st.turn}: ${cr >= 0 ? '+' : ''}${cr} CR (after ${eco.upkeepCR} payroll), ${net >= 0 ? '+' : ''}${net} PWR, Heat ${st.heat}.`);
-    if (!st.pending && economy(st).cr >= CQ.WIN_INCOME) st.over = 'win';
+    if (!st.pending && !st.won && economy(st).cr >= CQ.WIN_INCOME) st.over = 'win';
     return { ...R(true, st, 'Turn ended.'), events };
   }
   function adjustRelation(st0, f, delta) {
@@ -18764,11 +18902,10 @@ const AI_COMBAT_PROFILES = {
   furnace_husk:         { aggression:90, cover:5,  flank:20, overwatch:0,  optRange:2, name:'Furnace Husk',               hp:8,  shield:2, accent:'#FF7A1A' },
   piston_sentinel:      { aggression:50, cover:70, flank:15, overwatch:80, optRange:2, name:'Piston Sentinel',            hp:11, shield:5, accent:'#C4923E' },
   unchained_overseer:   { aggression:75, cover:40, flank:30, overwatch:80, optRange:4, name:'The Unchained Overseer',     hp:16, shield:6, accent:'#2B7895' },
+  zora_hull_wardens:    { aggression:70, cover:75, flank:50, overwatch:85, optRange:4, name:'Zora Hull Sentinels',        hp:14, shield:5, accent:'#B8D4E8' },
+  ghost_keel_warden:    { aggression:80, cover:55, flank:60, overwatch:90, optRange:5, name:'Warden Prime',               hp:24, shield:8, accent:'#FF4040' },
+  wst_gharza:           { aggression:45, cover:85, flank:60, overwatch:90, optRange:6, name:'Gharza, Trandoshan Sniper',  hp:9,  shield:2, accent:'#5A7050' },
   // BADOR PROFILES END
-  // MFG PROFILES BEGIN
-  mfg_enforcers:        { aggression:75, cover:45, flank:40, overwatch:55, optRange:3, name:'Krax\'s Loader Enforcers',     hp:10, shield:4, accent:'#D4762C' },
-  mfg_krax:             { aggression:70, cover:55, flank:55, overwatch:70, optRange:3, name:'Overseer Krax and the Loader Frame', hp:16, shield:6, accent:'#D4762C' },
-  // MFG PROFILES END
 };
 
 const ENCOUNTER_TABLE = {
@@ -18887,11 +19024,10 @@ const COMBAT_LOOT = {
   furnace_husk: { credits:[70,130], itemChance:0.4, items:[{id:'loot_slag_residue',name:'Cooled Slag Residue',type:'consumable',iconKind:'supply',value:150,description:'Dense, warm and unexpectedly valuable to a forge.'}] },
   piston_sentinel: { credits:[120,220], itemChance:0.55, items:[{id:'loot_brass_plate',name:'Sentinel Brass Plate',type:'gear',iconKind:'gear',value:520,description:'Tarnished brass from a construct that was never meant to retire.'}] },
   unchained_overseer: { credits:[260,440], itemChance:0.9, items:[{id:'item_titan_cylinder_ring',name:'Titan Cylinder Ring',type:'gear',iconKind:'gear',value:800,description:'An ancient signet ring proving engineering rank.'}] },
+  zora_hull_wardens: { credits:[300,500], itemChance:0.8, items:[{id:'loot_zora_sentinel_core',name:'Sentinel Logic Core',type:'gear',iconKind:'gear',value:900,description:'A hardened logic core from a hull sentinel. Fenced for a month of rent in any yard.'}] },
+  ghost_keel_warden: { credits:[500,900], itemChance:1, items:[{id:'loot_warden_prime_actuator',name:'Warden Prime Actuator',type:'gear',iconKind:'gear',value:2000,description:'The pressure actuator from the Warden Prime\'s arm. Dense, Republic grade, still warm.'}] },
+  wst_gharza: { credits:[300,520], itemChance:0.9, items:[{id:'loot_wst_trandoshan_rifle',name:'Trandoshan Long Rifle',type:'weapon',iconKind:'gear',value:650,description:'A long barreled hunting rifle with a notched stock. Fifteen notches. The newest is fresh.'}] },
   // BADOR LOOT END
-  // MFG LOOT BEGIN
-  mfg_enforcers: { credits:[120,200], itemChance:0.5, items:[{id:'loot_mfg_clamp_gauntlet',name:'Loader Clamp Gauntlet',type:'gear',iconKind:'gear',value:480,description:'A hydraulic clamp gauntlet, built for pallets and used on people.'}] },
-  mfg_krax: { credits:[320,520], itemChance:0.9, items:[{id:'loot_mfg_overseer_keycard',name:'Overseer Master Keycard',type:'gear',iconKind:'keycard',value:900,description:'Krax\'s master card for every door in Sector 4, scorched at one corner.'}] },
-  // MFG LOOT END
   csf_swat:             { credits:[90,160],  itemChance:0.45, items:[{id:'loot_csf_stun_baton',name:'CSF Stun Baton',type:'weapon',iconKind:'gear',value:200,description:'Regulation CSF close-quarters weapon. Still carries a charge.'},{id:'loot_csf_access_chip',name:'CSF Access Chip',type:'gear',iconKind:'keycard',value:350,description:'Biometric-coded to a SWAT officer. Crackable.'},{id:'loot_tactical_stim',name:'Tactical Stim',type:'consumable',iconKind:'supply',value:120,description:'Military-grade stim. Restores combat readiness fast.'}] },
   csf_scout:            { credits:[60,110],  itemChance:0.35, items:[{id:'loot_scout_earpiece',name:'CSF Scout Earpiece',type:'gear',iconKind:'gear',value:180,description:'Encrypted channel. 48-hour window before they rotate the key.'},{id:'loot_det_round',name:'Det Round x2',type:'consumable',iconKind:'supply',value:90,description:'Compact explosive rounds. Useful.'}] },
   black_sun_striker:    { credits:[70,140],  itemChance:0.40, items:[{id:'loot_vibro_knife',name:'Vibro-Knife',type:'weapon',iconKind:'gear',value:250,description:'Black Sun manufacture. Serrated edge still carries a charge.'},{id:'loot_black_sun_sigil',name:'Black Sun Sigil',type:'quest',iconKind:'keycard',value:150,description:'Proof of gang membership. Useful for bluffing at checkpoints.'}] },
@@ -20734,6 +20870,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
 
 
 
+
 // ===== CONQUEST UI ART BEGIN =====
 const CQ_INK = '#0B1018', CQ_LIGHT = '#E8EEF8';
 // Unit glyphs: one flat silhouette per unit type. Used on the map, in panels and as battle tokens.
@@ -21179,7 +21316,7 @@ function CQBattle({ battle, meta, title, onDone }) {
           </div>
           <div style={{ ...panel, fontSize: 10, color: '#8A98B8', lineHeight: 1.5 }}>
             <div style={{ color: '#2FC8FF', fontWeight: 800, marginBottom: 3 }}>FIELD RULES</div>
-            Dark blocks block movement and sight. Crates give cover (-2 damage at range). Glowing patches burn at end of turn. Your side moves first when attacking. {b.attacker === 'p' ? 'Hold the Command Node to win early.' : 'Hold out for 18 rounds or destroy the attackers.'}
+            Dark blocks block movement and sight. Crates give cover (-2 damage at range). Glowing patches burn at end of turn. Your side moves first when attacking. {b.attacker === 'p' ? 'Hold the Command Node to win early.' : 'Hold out for 22 rounds or destroy the attackers.'}
           </div>
         </div>
       </div>
@@ -21236,7 +21373,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
 
   const endTurn = () => {
     const r = CQ.camp.endTurn(st, Math.random); if (!r.ok) { flash(r.msg); return; }
-    setSt(r.state); if (r.events.length) setReport({ title: `TURN ${r.state.turn} REPORT`, lines: r.events.concat([`Income +${CQ.camp.economy(st).cr} CR.`]) });
+    setSt(r.state); if (r.events.length) setReport({ title: `TURN ${r.state.turn} REPORT`, lines: r.events.concat([`Treasury ${r.state.cr} CR.`]) });
   };
   // ---- attack planner
   const openPlanner = (targetId) => {
@@ -21285,7 +21422,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
         </div>
         <div style={{ padding: 12 }}>
           <div style={{ fontSize: 11, color: '#8A98B8', fontStyle: 'italic', marginBottom: 8 }}>{sd.lore}</div>
-          <div style={{ display: 'flex', gap: 14, fontSize: 12, marginBottom: 8, flexWrap: 'wrap' }}><span style={{ color: '#FFD36A' }}>¢ {sd.income + fxs.income}/turn</span><span style={{ color: '#34D86A' }}>⚡ {sd.pwr + fxs.pwrGen} PWR</span><span style={{ color: '#7FD0FF' }}>Cap {CQ.camp.total(ss.gar)}/{fxs.cap}</span></div>
+          <div style={{ display: 'flex', gap: 14, fontSize: 12, marginBottom: 8, flexWrap: 'wrap' }}><span style={{ color: '#FFD36A' }}>¢ {sd.income + fxs.income}/turn</span><span style={{ color: '#34D86A' }}>⚡ {sd.pwr + fxs.pwrGen} PWR</span><span style={{ color: '#7FD0FF' }}>Cap {CQ.camp.total(ss.gar)}/{Math.max(fxs.cap, CQ.camp.total(ss.gar))}</span></div>
           <div style={{ display: 'flex', gap: 4, marginBottom: 10, flexWrap: 'wrap' }}>{own && ptBtn('overview', 'Overview')}{own && ptBtn('recruit', 'Recruit')}{own && ptBtn('build', 'Build')}{own && ptBtn('move', 'Move')}</div>
           {(!own || ptab === 'overview') && (
             <div>
@@ -21307,7 +21444,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
                 <div key={k} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 4px', borderBottom: '1px solid #131C2C', opacity: locked ? 0.55 : 1 }}>
                   <CQUnitGlyph type={k} size={30} />
                   <div style={{ flex: 1 }}><div style={{ fontSize: 12, fontWeight: 800, color: '#E8F0FF' }}>{u.name}</div><CQUnitStats k={k} /><div style={{ fontSize: 10, color: '#6A7898' }}>{locked ? `Needs: ${CQ.BLD[u.req].name}` : u.role}</div></div>
-                  <div style={{ textAlign: 'right' }}><div style={{ fontSize: 11, color: '#FFD36A' }}>{cost}¢{u.pwr ? ` +${u.pwr}⚡` : ''}</div><div style={{ display: 'flex', gap: 3, marginTop: 3 }}><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => !locked && run(CQ.camp.recruit(st, sel, k, 1))}>+1</button><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => !locked && run(CQ.camp.recruit(st, sel, k, 5))}>+5</button></div></div>
+                  <div style={{ textAlign: 'right' }}><div style={{ fontSize: 11, color: '#FFD36A' }}>{cost}¢{u.pwr ? ` +${u.pwr}⚡` : ''}</div><div style={{ display: 'flex', gap: 3, marginTop: 3 }}><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => run(CQ.camp.recruit(st, sel, k, 1))}>+1</button><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => run(CQ.camp.recruit(st, sel, k, 5))}>+5</button></div></div>
                 </div>); })}
             </div>
           )}
@@ -21425,7 +21562,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
     <div>
       <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>{[['howto', 'How to play'], ['units', 'Units'], ['buildings', 'Buildings']].map(([t, l]) => <button key={t} style={cqBtn(codexTab === t ? '#FFD36A' : '#6A7898', false, { background: codexTab === t ? '#2A2410' : undefined })} onClick={() => setCodexTab(t)}>{l}</button>)}</div>
       {codexTab === 'howto' && <div style={{ ...CQ_PANEL, fontSize: 12, lineHeight: 1.7, color: '#B8C4DC', maxHeight: 520, overflowY: 'auto' }}>
-        {[['GOAL', 'Reach ' + CQ.WIN_INCOME + ' credits of income per turn, then end the turn. Income comes from the sectors you hold and the buildings in them.'], ['THE MAP', 'Coruscant is a vertical cross-section. Each card is a sector with its owner (colored border and pennant), income, garrison and building slots. A red pulsing border means you can attack it; the red arrows show which of your sectors will join the assault.'], ['RECRUIT AND BUILD', 'Select a sector you own. Recruit units into that sector (the Recruit tab) and build in its slots (the Build tab). Advanced units need the right building in the same sector: Tanks and Speeders need a Motor Pool, Droids a Droid Foundry, Bruisers a Barracks, Walkers a War College.'], ['ATTACK', 'Select an enemy sector next to one of yours and press PLAN ATTACK. Choose units from every adjacent sector of yours, run a battle forecast, then fight a Tactical Battle yourself or Auto-Resolve. Units that fought or moved this turn are spent until next turn. Faction HQs (★) cannot be captured.'], ['TACTICAL BATTLES', 'Each sector has its own battlefield. Deploy your units inside the cyan zone, then take turns. Move, shoot, use abilities, use cover, avoid burning tiles. Win by wiping out the defenders or by holding the Command Node for two of your turns. Defenders win by surviving 18 rounds.'], ['BUILDINGS IN BATTLE', 'Buildings change fights. Bunkers give the defenders hard cover, Turret Nests add auto turrets, Shield Generators shield defenders, Armories add damage, Rally Points add first turn speed, Orbital Batteries give you one big strike, Medical Bays revive 40% of the fallen.'], ['ENEMIES FIGHT BACK', 'The Black Sun, Exchange and CSF recruit, build and attack neutral sectors, each other and you. When they attack you, you get to defend in a tactical battle or auto-resolve. You can bribe factions to a pact (+80 standing) or provoke them.'], ['POWER AND HEAT', 'Tanks, Droids and Walkers cost PWR to build and PWR upkeep every turn. A power shortfall browns out the grid and cuts income. Heat rises every turn and with every attack; at 100 the CSF raids you for credits and a building.']].map(([h, t]) => <div key={h} style={{ marginBottom: 10 }}><div style={{ color: '#FFD36A', fontWeight: 800, letterSpacing: '0.08em' }}>{h}</div>{t}</div>)}
+        {[['GOAL', 'Reach ' + CQ.WIN_INCOME + ' credits of income per turn, then end the turn. Income comes from the sectors you hold and the buildings in them.'], ['THE MAP', 'Coruscant is a vertical cross-section. Each card is a sector with its owner (colored border and pennant), income, garrison and building slots. A red pulsing border means you can attack it; the red arrows show which of your sectors will join the assault.'], ['RECRUIT AND BUILD', 'Select a sector you own. Recruit units into that sector (the Recruit tab) and build in its slots (the Build tab). Advanced units need the right building in the same sector: Tanks and Speeders need a Motor Pool, Droids a Droid Foundry, Bruisers a Barracks, Walkers a War College.'], ['ATTACK', 'Select an enemy sector next to one of yours and press PLAN ATTACK. Choose units from every adjacent sector of yours, run a battle forecast, then fight a Tactical Battle yourself or Auto-Resolve. Units that fought or moved this turn are spent until next turn. Faction HQs (★) cannot be captured.'], ['TACTICAL BATTLES', 'Each sector has its own battlefield. Deploy your units inside the cyan zone, then take turns. Move, shoot, use abilities, use cover, avoid burning tiles. Win by wiping out the defenders or by holding the Command Node for two of your turns. Defenders win by surviving 22 rounds.'], ['BUILDINGS IN BATTLE', 'Buildings change fights. Bunkers give the defenders hard cover, Turret Nests add auto turrets, Shield Generators shield defenders, Armories add damage, Rally Points add first turn speed, Orbital Batteries give you one big strike, Medical Bays revive 40% of the fallen.'], ['ENEMIES FIGHT BACK', 'The Black Sun, Exchange and CSF recruit, build and attack neutral sectors, each other and you. When they attack you, you get to defend in a tactical battle or auto-resolve. You can bribe factions to a pact (+80 standing) or provoke them.'], ['POWER AND HEAT', 'Tanks, Droids and Walkers cost PWR to build and PWR upkeep every turn. A power shortfall browns out the grid and cuts income. Heat rises every turn and with every attack; at 100 the CSF raids you for credits and, outside your HQ sector, a building.']].map(([h, t]) => <div key={h} style={{ marginBottom: 10 }}><div style={{ color: '#FFD36A', fontWeight: 800, letterSpacing: '0.08em' }}>{h}</div>{t}</div>)}
       </div>}
       {codexTab === 'units' && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 10 }}>{CQ.UNIT_ORDER.map((k) => { const u = U[k]; return <div key={k} style={{ ...CQ_PANEL, display: 'flex', gap: 10 }}><CQUnitGlyph type={k} size={46} /><div><div style={{ fontWeight: 800, color: '#E8F0FF' }}>{u.name}</div><div style={{ fontSize: 10, color: '#7A88A8' }}>{u.role} · {u.cr}¢{u.pwr ? ` + ${u.pwr}⚡` : ''} · payroll {u.ucr}¢/turn{u.upkeep ? ` · upkeep ${u.upkeep}⚡` : ''}{u.req ? ` · needs ${CQ.BLD[u.req].name}` : ''}</div><CQUnitStats k={k} /><div style={{ fontSize: 11, color: '#9AA8C8', marginTop: 3 }}>{u.passive}</div>{u.ab && <div style={{ fontSize: 11, color: '#FFC24A', marginTop: 3 }}><b>{u.ab.name}</b> (cooldown {u.ab.cd}): {u.ab.desc}</div>}<div style={{ fontSize: 10, color: '#5A6888', fontStyle: 'italic', marginTop: 3 }}>{u.lore}</div></div></div>; })}</div>}
       {codexTab === 'buildings' && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 8 }}>{CQ.BUILDINGS.map((b) => <div key={b.id} style={CQ_PANEL}><div style={{ display: 'flex', justifyContent: 'space-between' }}><b style={{ color: '#E8F0FF', fontSize: 12 }}>{b.name}</b><span style={{ fontSize: 11, color: '#FFD36A' }}>{b.cost}¢{b.pwr ? ` +${b.pwr}⚡` : ''}</span></div><div style={{ fontSize: 10, color: '#7A88A8' }}>{b.cat}</div><div style={{ fontSize: 11, color: '#9AA8C8', marginTop: 2 }}>{b.desc}</div></div>)}</div>}
@@ -21460,7 +21597,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
       {planner && !battleCtx && plannerView()}
       {st.pending && !battleCtx && !report && defenseView()}
       {report && <div style={{ position: 'fixed', inset: 0, zIndex: 95, background: 'rgba(3,6,12,0.82)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ ...CQ_PANEL, width: 'min(520px,92vw)', padding: 20, border: '2px solid #FFD36A' }}><div style={{ fontSize: 18, fontWeight: 800, color: '#FFD36A', letterSpacing: '0.1em', marginBottom: 10 }}>{report.title}</div>{report.lines.map((l, i) => <div key={i} style={{ fontSize: 13, color: '#E0E8F8', marginBottom: 6, lineHeight: 1.5 }}>{l}</div>)}<button style={cqBtn('#FFD36A', false, { width: '100%', marginTop: 10, padding: 10 })} onClick={() => setReport(null)}>OK</button></div></div>}
-      {st.over === 'win' && <div style={{ position: 'fixed', inset: 0, zIndex: 110, background: 'rgba(0,16,8,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ ...CQ_PANEL, width: 'min(560px,92vw)', padding: 28, border: '2px solid #34D86A', textAlign: 'center', boxShadow: '0 0 60px #34D86A66' }}><div style={{ fontSize: 30, fontWeight: 800, color: '#34D86A', letterSpacing: '0.15em' }}>CORUSCANT IS YOURS</div><div style={{ fontSize: 13, color: '#B8E8C8', margin: '12px 0 18px', lineHeight: 1.6 }}>Your syndicate pulls in {eco.cr} credits a turn. The Black Sun, the Exchange and the CSF all answer to you now, whether they admit it or not.</div><button style={cqBtn('#34D86A', false, { padding: '12px 28px', fontSize: 14 })} onClick={onSuccess}>CLAIM VICTORY</button></div></div>}
+      {st.over === 'win' && <div style={{ position: 'fixed', inset: 0, zIndex: 110, background: 'rgba(0,16,8,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ ...CQ_PANEL, width: 'min(560px,92vw)', padding: 28, border: '2px solid #34D86A', textAlign: 'center', boxShadow: '0 0 60px #34D86A66' }}><div style={{ fontSize: 30, fontWeight: 800, color: '#34D86A', letterSpacing: '0.15em' }}>CORUSCANT IS YOURS</div><div style={{ fontSize: 13, color: '#B8E8C8', margin: '12px 0 18px', lineHeight: 1.6 }}>Your syndicate pulls in {eco.cr} credits a turn. The Black Sun, the Exchange and the CSF all answer to you now, whether they admit it or not.</div><button style={cqBtn('#34D86A', false, { padding: '12px 28px', fontSize: 14 })} onClick={() => { setSt({ ...st, over: null, won: true }); onSuccess(); }}>CLAIM VICTORY</button><button style={cqBtn('#7FD0FF', false, { padding: '12px 22px', fontSize: 14, marginLeft: 12 })} onClick={() => setSt({ ...st, over: null, won: true })}>KEEP PLAYING</button></div></div>}
       {battleCtx && <CQBattle battle={battleCtx.battle} meta={battleCtx.meta} title={battleCtx.title} onDone={(res) => finishBattle(battleCtx.meta, res)} />}
     </div>
   );
@@ -22164,7 +22301,20 @@ function StarWarsRPG() {
         if (!questFlags.governor_valve_acquired) return '[WASTES] Drain the Dead Boiler Matrix (three valve wheels) and take the Catalyst Governor Valve.';
         if (!questFlags.overseer_defeated) return '[WASTES] Defeat the Unchained Overseer at the base of the Exhaust Cathedral.';
         if (!questFlags.manifest_restarted) return '[WASTES] Seat the Governor Valve in the apex socket to restart the manifold.';
-        return '[WASTES] The central blast doors are open. Zone Five lies beyond.';
+        if (!questFlags.zone05_gate_open) return '[WASTES] The manifold runs. Open the central blast doors on the east wall to unseal the Zone Five Descent.';
+        return '[WASTES] The Zone Five Descent is open on the east wall. The Deep Caverns lie below.';
+      }
+      if (zoneId === 'deep_caverns') {
+        if (!(questFlags.unit8x_destroyed || questFlags.unit8x_reprogrammed || questFlags.unit8x_stood_down || questFlags.sentinel_cleared)) return '[CAVERNS] Get past Unit 8-X at the Guardian Gate in the east.';
+        return '[CAVERNS] The shutter is open. Enter the wreck of the Zora IV.';
+      }
+      if (zoneId === 'zora_iv_wreckage') {
+        if (questFlags.ghost_keel_complete) return '[GHOST KEEL] Complete. Report to Commander Vael at HQ and Tanner in the Private Suites.';
+        if (!questFlags.hypercore_vault_open) return '[ZORA IV] Cross the reactor corridor and open the hypercore vault lock.';
+        if (!questFlags.warden_guards_down) return '[ZORA IV] Destroy the hull sentinels guarding the vault.';
+        if (!questFlags.warden_prime_down) return '[ZORA IV] Defeat the Warden Prime.';
+        if (!questFlags.hypercore_visible) return '[ZORA IV] Enter the hypercore chamber.';
+        return '[ZORA IV] Decide the fate of the Ghost Keel with the Architect.';
       }
       if (zoneId === 'outpost_7') {
         if (!questFlags.o7_coop_briefed) return '[OUTPOST 7] Report to Major Coop in the command bunker.';
@@ -22243,7 +22393,7 @@ function StarWarsRPG() {
     return [...prev, { ...entry, unread: true }];
   }), []);
 
-  const phPerks = React.useMemo(() => PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: (questFlags.mfg_tithe_rich ? 250 : questFlags.mfg_tithe ? 150 : 0), decay: 0 }), [questFlags]);
+  const phPerks = React.useMemo(() => { const base = PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: 0, decay: 0 }); return questFlags.syndicate_flagship_active ? { income: base.income + 400, decay: base.decay + 1 } : base; }, [questFlags]);
   const installPenthousePackage = useCallback((pkg) => {
     setInventory(prev => prev.flatMap(i => i.id !== pkg.itemId ? [i] : (i.qty > 1 ? [{ ...i, qty: i.qty - 1 }] : [])));
     setFlag(pkg.flag);
@@ -22408,6 +22558,8 @@ function StarWarsRPG() {
       additions.push({ id:'agent_grix', name:'Grix', agentClass:'Smuggler', skill:4, loyalty:65, traits:['devaronian_contacts'], status:'available', turnsRemaining:0 });
     if (questFlags.vael_recruited && !syndicateRoster.find(a => a.id === 'agent_vael'))
       additions.push({ id:'agent_vael', name:'Vael', agentClass:'Slicer', skill:4, loyalty:70, traits:['sis_training'], status:'available', turnsRemaining:0 });
+    if (questFlags.gharza_recruited && !syndicateRoster.find(a => a.id === 'agent_gharza'))
+      additions.push({ id:'agent_gharza', name:'Gharza', agentClass:'Enforcer', skill:5, loyalty:60, traits:['trandoshan_hunter','long_range'], status:'available', turnsRemaining:0 });
     if (questFlags.marro_recruited && !syndicateRoster.find(a => a.id === 'agent_marro'))
       additions.push({ id:'agent_marro', name:'Marro', agentClass:'Fixer', skill:3, loyalty:75, traits:['csf_contacts','heat_reduction'], status:'available', turnsRemaining:0 });
     if (additions.length > 0) setSyndicateRoster(r => [...r, ...additions]);
