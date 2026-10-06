@@ -7163,6 +7163,14 @@ const ITEMS = {
   ph_pkg_lounge: { id:'ph_pkg_lounge', name:'Penthouse Package: Grand Lounge', type:'quest', iconKind:'datapad', value:2000, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A hand knotted rug, a sunken seating pit and a full obsidian bar, stocked from a Corellian cellar.' },
   ph_pkg_ops: { id:'ph_pkg_ops', name:'Penthouse Package: Operations Annex', type:'quest', iconKind:'datapad', value:2800, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A table sized model of every property you own, with a console that runs the numbers nobody wants to see.' },
   // PH ITEMS END
+  // MFG ITEMS BEGIN
+  mfg_night_roster:           { id:'mfg_night_roster',           name:'Night Shift Roster Slate',              type:'quest',      iconKind:'datapad',  value:0,    description:'Rhea\'s private slate. Two hundred and twelve names on the payroll, three hundred and forty badge swipes after the shift horn. One hundred and twenty eight of them belong to nobody.' },
+  mfg_assembly_files:         { id:'mfg_assembly_files',         name:'Assembly Sequence Files',               type:'quest',      iconKind:'datapad',  value:0,    description:'Vorn\'s engineering archive, copied to a chip. Fourteen hull sections, one frame, no registry number. Every drawing is stamped with the same retired signature.' },
+  mfg_bay_manifest:           { id:'mfg_bay_manifest',           name:'Bay B Consignment Ledger',              type:'quest',      iconKind:'datapad',  value:0,    description:'The off manifest ledger from Storage Bay B. Two hundred and twelve consignments, each routed to grid nine one, each approved by Overseer Krax.' },
+  mfg_inspector_seal:         { id:'mfg_inspector_seal',         name:'Joint Inspector\'s Seal',                type:'gear',       iconKind:'keycard',  value:900,  description:'A Republic and KDY joint inspection seal, struck for the Sector 4 audit. Doors open for it and clerks stop asking questions.' },
+  mfg_tithe_ledger:           { id:'mfg_tithe_ledger',           name:'Krax\'s Tithe Ledger',                   type:'quest',      iconKind:'datapad',  value:0,    description:'A neat ledger of every payment Krax has agreed to make. The first line reads: to the Syndicate, each cycle, without fail.' },
+  mfg_four_arm_harness:       { id:'mfg_four_arm_harness',       name:'Besalisk Four Arm Harness',             type:'gear',       iconKind:'gear',     value:1100, description:'A reinforced loader harness with four hydraulic clamps, torn from Krax\'s frame. It still hums when you pick it up.' },
+  // MFG ITEMS END
   comlink:                    { id:'comlink',                    name:'Comlink',                               type:'gear',       iconKind:'tool',     value:0,   description:'Encrypted comlink. Jon is on speed-dial.' },
   field_rations:              { id:'field_rations',              name:'Field Rations',                         type:'consumable', iconKind:'supply',   value:5,   description:'Tasteless. Effective.' },
   stolen_manifest:            { id:'stolen_manifest',            name:'Scylla Freight Manifest',               type:'quest',      iconKind:'datapad',  value:150, description:'Encrypted cargo log from Docking Bay 14. Lists Phrik alloy and Jedi archive crates as cargo, both reported destroyed in a dock fire. Someone is lying.' },
@@ -7317,6 +7325,72 @@ const CODEX_ENTRIES = {
     summary:'What you can see from Level 1452 when the planet goes dark.',
     body:['Coruscant has no true night, only a long dusk of light pollution. At Level 1452, above most of the glow, the filter in the viewport removes the haze and a handful of real stars appear.','The telescope picks out three moons of the Core, a slow orbital shipyard and a Senate courier running dark. Voss insists that the courier is not your concern. She is probably right.'] },
   // PH CODEX END
+  // MFG CODEX BEGIN
+  'codex-mfg-sector4': {
+    id:'codex-mfg-sector4', title:'Sector 4 Fabrication Works', category:'lore',
+    summary:'Where Kuat Drive Yards pours a moon into hull plate.',
+    body:[
+      'The Sector 4 Fabrication Works sit east of the Main Base, a foundry district of stacks, gantries and conveyor lines that once cast prototype plating for the Orbital Array. On paper it still does.',
+      'The day shift is two hundred and twelve workers on a quota that never drops below one hundred and ten percent. Nobody says what happens to the surplus. Nobody has asked in three years.',
+    ],
+  },
+  'codex-mfg-night-shift': {
+    id:'codex-mfg-night-shift', title:'The Night Shift', category:'story',
+    summary:'Workers who clock in after the horn and are on nobody\'s roster.',
+    body:[
+      'When the last horn sounds, the line lights stay on. Badges that belong to no employee swipe through the east gate and the cradles start to glow.',
+      'Rhea has counted them for months. She never saw a face. The night crew wears sealed suits, and the loaders that walk with them are not on the equipment register either.',
+    ],
+  },
+  'codex-mfg-pocket-frame': {
+    id:'codex-mfg-pocket-frame', title:'Pocket Dreadnought Frames', category:'lore',
+    summary:'A capital ship folded into a hull the size of a heavy cruiser.',
+    body:[
+      'A pocket dreadnought carries dreadnought armor and a dreadnought reactor on a frame trimmed to fit a smaller shipyard cradle. It is cheaper to hide and far harder to stop.',
+      'Mandator class plating and drive housing are a known KDY pattern. A frame built from them, in sections, with no commission number, is not a refit. It is a ship that was never meant to be counted.',
+    ],
+  },
+  'codex-mfg-section-eleven': {
+    id:'codex-mfg-section-eleven', title:'Section Eleven', category:'story',
+    summary:'Half a hull in a cradle, and the other half somewhere else.',
+    body:[
+      'The cradles hold ribbed hull sections stamped with a section number and nothing else. This one reads eleven. The assembly log says there are fourteen.',
+      'Each section is too big for any ship Sector 4 is allowed to build. Laid end to end, the fourteen would make a keel eighteen hundred meters long.',
+    ],
+  },
+  'codex-mfg-bay-b': {
+    id:'codex-mfg-bay-b', title:'Storage Bay B', category:'story',
+    summary:'The room that is not on the floor plan.',
+    body:[
+      'Storage Bay B has no door on any blueprint. It sits behind a false panel at the east end of the facility, and its only visitor is the cargo lift that cycles at night.',
+      'Inside is a forged keel plate, a manifest core and a ledger. Every shipment that left Sector 4 off the books passed through this room. Every approval carries the same four hand signature.',
+    ],
+  },
+  'codex-mfg-arrest': {
+    id:'codex-mfg-arrest', title:'The Overseer Answers', category:'story',
+    summary:'Krax is taken to Commander Vael in irons.',
+    body:[
+      'Overseer Krax did not run. He asked for his tablet, asked for his lawyer, and asked who had told. Commander Vael\'s marines gave him none of the three.',
+      'Sector 4 now has an acting overseer and a joint inspector\'s seal on every door. The night shift is under review. Whoever signed Krax\'s orders has not been named, and Krax is not saying.',
+    ],
+  },
+  'codex-mfg-tithe': {
+    id:'codex-mfg-tithe', title:'Krax\'s Tithe', category:'dossier',
+    summary:'A standing payment from a frightened man.',
+    body:[
+      'Krax agreed to the terms because the alternative was a Republic cell. Each cycle a share of Sector 4 surplus is routed to a Syndicate account under a maintenance code.',
+      'The arrangement is quiet, steady and entirely dependent on Krax staying afraid. It is the kind of income a crime lord learns to love and to watch.',
+    ],
+  },
+  'codex-mfg-krax-fall': {
+    id:'codex-mfg-krax-fall', title:'The Fall of Overseer Krax', category:'story',
+    summary:'A Besalisk in a loader frame, and what is left of both.',
+    body:[
+      'Krax bolted a heavy loader frame to his own back and fought like a man defending a lifetime of work. The loader enforcers fell first. He did not outlast them by much.',
+      'The foundry went quiet for the first time in three years. The night crew badges stopped swiping. What they were building is still in the cradles.',
+    ],
+  },
+  // MFG CODEX END
   'codex-jon-network': {
     id:'codex-jon-network', title:"Jon's Smuggling Network", category:'dossier',
     summary:'An old friend operating in the Coruscant underworld.',
@@ -11316,6 +11390,14 @@ const CONSOLE_CFG = {
   republic_old: { l:'desk',  body:'concrete', scr:'amber', g:'cog',   t:'REPUBLIC OUTPOST',     r:['DECOMMISSIONED 3 YR','LAST ENTRY: DISTRESS','RESPONSE: NONE LOGGED'], d:['cracked','soot'] },
   architect:    { l:'desk',  body:'brass',    scr:'amber', g:'eye',   t:'ARCHITECT PERSONAL',   r:['ACCESS LOGS: 43 YRS','STATUS: UNLOCKED','LAST USER EXPECTED','SOMEONE TO COME'], d:['flicker'] },
   substation:   { l:'wall',  body:'rust',     scr:'amber', g:'gear',  t:'SUB-STATION 3',        r:['THERMAL HAZARDS','AMBIENT CONTROL','STATUS: HOLDING'], d:['hazard'] },
+  // MFG CONSOLE BEGIN
+  assembly_done:  { l:'desk',  body:'steel',    scr:'green', g:'gear',  t:'OVERRIDE ACTIVE',      r:['BAY B: PANEL UNSEALED','CODE: ACCEPTED','OUTPUT LOG: COPIED','NO ALARM RAISED'], d:['hazard'] },
+  mfg_eng:        { l:'desk',  body:'steel',    scr:'cyan',  g:'cog',   t:'ENGINEERING ARCHIVE',  r:['SEQUENCE FILES: 14','FRAME: NO REGISTRY','KEEL: 1800 M','LAST VIEWED: NIGHT'], d:['cables'] },
+  mfg_eng_done:   { l:'desk',  body:'steel',    scr:'green', g:'cog',   t:'ARCHIVE COPIED',       r:['14 FILES: COPIED','VIEW LOG: CLEARED','LOOKS UNTOUCHED'], d:['cables'] },
+  mfg_bay:        { l:'wall',  body:'dark',     scr:'red',   g:'eye',   t:'BAY B MANIFEST CORE',  r:['CONSIGNMENTS: 212','MANIFEST: NONE','DEST: GRID NINE ONE','ACCESS: SEALED'], d:['redlights'] },
+  mfg_bay_done:   { l:'wall',  body:'dark',     scr:'green', g:'eye',   t:'LEDGER EXTRACTED',     r:['212 ENTRIES: COPIED','APPROVED: KRAX','COPY: YOURS'], d:['redlights'] },
+  mfg_office:     { l:'desk',  body:'brass',    scr:'amber', g:'coin',  t:'OVERSEER ROUTING',     r:['QUOTA: 114 PCT','SURPLUS: ROUTED','NIGHT CREW: 128','AUTH: KRAX K'], d:['note'] },
+  // MFG CONSOLE END
 };
 
 function PropConsole({ variant }) {
@@ -11586,6 +11668,11 @@ const BOARD_LIST = {
   manifest:   { scr:'amber', t:'MAG-RAIL FREIGHT CARS',  r:['14-B  AGRICULTURAL  1.2 T','14-B  CLEARED IND  3.8 T','WEIGHT MISMATCH: 11 DAYS','FLAG: OPEN'], hl:2 },
   prisoners:  { scr:'red',   t:'PRISONER TRANSFER LOG',  r:['DETAINEES: 4','2 TO LEVEL 001: NO REASON','1 RELEASED: SENATE AUTH','ACTIVE: RIANNA T  SUB-3 B'], hl:3 },
   cellog:     { scr:'cyan',  t:'CELL BLOCK LOG',         r:['ENTRY 847','GREY COAT  NO ID CHIP','OFFSITE: DIRECTIVE 1182-C','AUTH: [REDACTED]'], hl:3 },
+  // MFG BOARD BEGIN
+  mfg_quota:  { scr:'amber', t:'SECTOR 4 QUOTA',         r:['DAY SHIFT: 212 ON ROLL','QUOTA: 114 PCT','NIGHT BADGES: 340','ROLL AFTER HORN: 0'], hl:3, red:true },
+  mfg_lift:   { scr:'cyan',  t:'CARGO LIFT LOG',         r:['LIFT 2: NIGHT CYCLES','02:10  PALLET SEALED','03:40  PALLET SEALED','STOP: B  (NO FLOOR)'], hl:3 },
+  mfg_shift:  { scr:'amber', t:'PRODUCTION SCHEDULE',    r:['LINE 1  CLASS C PLATE','LINE 2  CLASS C PLATE','CRADLE 1  SECTION 11','CRADLE 2  SECTION 12'], hl:2, red:true },
+  // MFG BOARD END
 };
 
 function PropBoard({ variant }) {
@@ -14405,6 +14492,8 @@ function PropFacilitySign({ variant }) {
     trike: { t: "TRIKE'S ROBOTICS", s: 'REPAIR · UPGRADES', c: 'copper', f: 9.4 },
     barracks: { t: 'WEAPONS BARRACKS', s: 'ARMORY · RANGE', c: 'red', f: 9 },
     hq: { t: 'KDY MAIN HQ', s: 'PASS REQUIRED', c: 'deepglass', f: 11 },
+    mfg: { t: 'SECTOR 4 FABRICATION', s: 'SHIFT QUOTA 114 PCT', c: 'rust', f: 7.6 },
+    slag: { t: 'SLAG LINE FREIGHT LOCK', s: 'TUNNEL DEAD', c: 'dark', f: 7 },
   }[variant] || { t: 'KDY BADOR', s: 'FORWARD HUB', c: 'steel' };
   return (
     <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
@@ -15685,6 +15774,124 @@ function PropGovernorSocket({ variant }) {
 }
 // ===== BADOR WAR PROPS END =====
 
+// ===== MFG PROPS BEGIN =====
+function PropMfgConveyor({ variant }) {
+  const S = ART.signal, hot = variant === 'ingots';
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={60} rx={58} ry={3} />
+      {[10, 112].map((x) => <Bev key={x} t="polygon" points={pts([[x, 58], [x, 40], [x + 6, 40], [x + 6, 58]])} c="steel" o={0.7} />)}
+      <Slab x={2} y={30} w={124} h={22} k={3} c="dark" o={1.2} />
+      <rect x="6" y="34" width="116" height="12" fill={ART.ink} />
+      {Array.from({ length: 14 }, (_, i) => <polygon key={i} points={pts([[10 + i * 8, 35], [14 + i * 8, 35], [18 + i * 8, 40], [14 + i * 8, 45], [10 + i * 8, 45], [14 + i * 8, 40]])} fill={ART.amber.base} opacity="0.8" style={{ animation: `ship-blink ${2.4 + (i % 3) * 0.5}s steps(2) infinite` }} />)}
+      <Slab x={2} y={26} w={124} h={6} k={1.4} c="steel" o={0.9} />
+      {hot ? (
+        <g>
+          {[16, 52, 88].map((x, i) => <g key={x}><Slab x={x} y={14} w={24} h={14} k={2} c="rust" o={1} /><rect x={x + 3} y="16" width="18" height="4" fill={S.orange} /><Glow cx={x + 12} cy={20} r={18} c={S.orange} opacity={0.45} style={{ animation: `ship-engine ${1.8 + i * 0.4}s ease-in-out infinite` }} /></g>)}
+        </g>
+      ) : (
+        <g>
+          {[[14, 12, 30], [48, 8, 34], [86, 14, 28]].map(([x, y, w]) => <g key={x}><Slab x={x} y={y} w={w} h={16} k={2} c="hull" o={1} /><Slab x={x + 3} y={y - 5} w={w - 8} h={7} k={1.4} c="steel" o={0.8} /><Seams x={x} y={y} w={w} h={16} cols={2} op={0.4} /></g>)}
+        </g>
+      )}
+      <Hazard x={6} y={50} w={116} h={4} opacity={0.9} />
+      <Vent x={104} y={32} w={14} h={8} n={3} /><Lights x={10} y={56} n={8} gap={14} seed={31} /><Rivets x={6} y={29} w={116} n={16} c="steel" /><Seams x={2} y={30} w={124} h={22} cols={7} op={0.3} /><Greeble x={8} y={46} w={90} h={4} seed={3101} n={5} c="dark" />
+      <Grime x={2} y={14} w={124} h={44} seed={3102} n={7} op={0.26} /><Scuff x={4} y={16} w={118} h={36} seed={3103} n={7} c="steel" />
+    </svg>
+  );
+}
+
+function PropMfgCradle() {
+  const S = ART.signal;
+  const ribs = [30, 44, 58, 72, 86, 100, 114, 128];
+  const top = (x) => 34 + Math.abs(x - 80) * 0.45;
+  return (
+    <svg viewBox="0 0 160 128" width="160" height="128" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={122} rx={72} ry={4} />
+      <Slab x={6} y={106} w={148} h={14} k={3} c="dark" o={1.2} /><Hazard x={10} y={114} w={140} h={4} opacity={0.9} />
+      {[6, 142].map((x) => <g key={x}><Bev t="polygon" points={pts([[x, 108], [x, 16], [x + 12, 16], [x + 12, 108]])} c="amber" o={1.2} /><Seams x={x} y={16} w={12} h={92} rows={7} op={0.4} /></g>)}
+      <Slab x={2} y={8} w={156} h={10} k={1.6} c="amber" o={1} />
+      <Bev t="polygon" points={pts([[24, 106], [24, 62], [46, 36], [114, 36], [136, 62], [136, 106]])} c="dark" o={1.4} />
+      <polygon points={pts([[30, 104], [30, 64], [48, 42], [112, 42], [130, 64], [130, 104]])} fill={ART.ink} />
+      {ribs.map((x) => <rect key={x} x={x - 2.5} y={top(x) + 4} width="5" height={104 - top(x) - 4} fill={ART.steel.base} />)}
+      {ribs.map((x) => <rect key={'h' + x} x={x - 2.5} y={top(x) + 4} width="1.8" height={104 - top(x) - 4} fill={ART.steel.hi} opacity="0.7" />)}
+      {[[26, 66, 22, 18], [26, 86, 22, 18], [50, 42, 24, 18], [50, 62, 24, 20], [50, 84, 24, 20], [76, 40, 20, 20], [76, 62, 20, 16]].map(([x, y, w, h], i) => <g key={i}><Slab x={x} y={y} w={w} h={h} k={1.6} c="hull" o={0.9} /><Seams x={x} y={y} w={w} h={h} rows={1} op={0.35} /></g>)}
+      <circle cx="102" cy="58" r="3.4" fill={S.amberHi} style={{ animation: 'ship-blink 0.9s steps(2) infinite' }} /><Glow cx={102} cy={58} r={16} c={S.orange} opacity={0.5} />
+      <Slab x={52} y={88} w={56} h={14} k={1.4} c="steel" o={0.9} />
+      <text x="80" y="95" textAnchor="middle" fontSize="5.6" fill={ART.ink} fontWeight="700" {...PT}>SECTION 11</text>
+      <text x="80" y="100" textAnchor="middle" fontSize="2.8" fill={ART.red.base} fontWeight="700" {...PT}>NO REGISTRY</text>
+      <Vent x={118} y={72} w={10} h={14} n={4} /><Lights x={14} y={110} n={10} gap={14} seed={32} /><Rivets x={24} y={64} w={112} n={14} c="steel" /><Greeble x={26} y={20} w={110} h={12} seed={3201} n={8} c="amber" /><Seams x={24} y={36} w={112} h={70} cols={6} op={0.2} />
+      <Grime x={6} y={8} w={148} h={112} seed={3202} n={10} op={0.28} /><Scuff x={26} y={40} w={108} h={64} seed={3203} n={9} c="steel" />
+    </svg>
+  );
+}
+
+function PropMfgForge() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={90} rx={56} ry={4} />
+      <Bev t="polygon" points={pts([[86, 64], [90, 8], [112, 8], [116, 64]])} c="dark" o={1.4} />
+      <ellipse cx="102" cy="6" rx="14" ry="4" fill={ART.pearl.base} opacity="0.4" style={{ animation: 'steam-rise 3.2s ease-out infinite' }} />
+      <Bev t="polygon" points={pts([[8, 86], [8, 42], [26, 24], [102, 24], [120, 42], [120, 86]])} c="rust" o={1.6} />
+      <polygon points={pts([[28, 82], [28, 52], [40, 40], [88, 40], [100, 52], [100, 82]])} fill={ART.dark.shade} />
+      <polygon points={pts([[34, 82], [34, 54], [44, 44], [84, 44], [94, 54], [94, 82]])} fill={ART.ink} />
+      <polygon points={pts([[38, 82], [38, 56], [46, 48], [82, 48], [90, 56], [90, 82]])} fill={S.orange} opacity="0.55" style={{ animation: 'ship-engine 2.2s ease-in-out infinite' }} />
+      <polygon points={pts([[46, 82], [46, 62], [52, 56], [76, 56], [82, 62], [82, 82]])} fill={S.amberHi} opacity="0.5" />
+      <Glow cx={64} cy={62} r={38} c={S.orange} opacity={0.4} />
+      <Bev t="polygon" points={pts([[100, 56], [124, 56], [124, 66], [100, 66]])} c="copper" o={0.9} />
+      <rect x="118" y="66" width="4" height="18" fill={S.orange} opacity="0.9" style={{ animation: 'ship-engine 1.4s ease-in-out infinite' }} />
+      <Slab x={104} y={82} w={20} h={6} k={1.2} c="rust" o={0.8} />
+      <Slab x={38} y={26} w={52} h={11} k={1.6} c="dark" o={1} />
+      <text x="64" y="34" textAnchor="middle" fontSize="5" fill={S.amberHi} fontWeight="700" {...PT}>FOUNDRY 4</text>
+      <Hazard x={10} y={84} w={90} h={4} opacity={0.9} />
+      <Vent x={10} y={48} w={14} h={16} n={4} /><Lights x={14} y={78} n={4} gap={6} seed={33} /><Rivets x={12} y={40} w={104} n={14} c="rust" /><Seams x={8} y={24} w={112} h={62} cols={5} op={0.28} /><Greeble x={12} y={28} w={22} h={10} seed={3301} n={5} c="rust" />
+      <Grime x={8} y={8} w={112} h={80} seed={3302} n={9} op={0.3} /><Scuff x={12} y={26} w={104} h={56} seed={3303} n={8} c="rust" />
+    </svg>
+  );
+}
+
+function PropMfgGlass() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 160 64" width="160" height="64" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={61} rx={72} ry={2.6} />
+      <Bev t="polygon" points={pts([[2, 30], [2, 0], [158, 0], [158, 30]])} c="dark" o={1} />
+      {[[6, 4, 52], [130, 4, 24]].map(([x, y, w], i) => <g key={i}><rect x={x} y={y} width={w} height="24" fill={ART.glass.shade} /><rect x={x + 1.5} y={y + 1.5} width={w - 3} height="21" fill={ART.amber.base} opacity="0.55" /><rect x={x + 1.5} y={y + 1.5} width={w - 3} height="5" fill={ART.glass.hi} opacity="0.5" />{Array.from({ length: Math.floor(w / 8) }, (_, k) => <rect key={k} x={x + 4 + k * 8} y={y + 8} width="4" height="14" fill={ART.dark.base} opacity="0.7" />)}</g>)}
+      <Bev t="polygon" points={pts([[62, 2], [130, 2], [130, 16], [62, 16]])} c="dark" o={0.8} />
+      <text x="96" y="9.6" textAnchor="middle" fontSize="4.4" fill={S.amberHi} fontWeight="700" {...PT}>OVERSEER SECTOR 4</text>
+      <text x="96" y="14" textAnchor="middle" fontSize="2.6" fill={S.redHi} {...PT}>APPOINTMENTS ONLY</text>
+      <Hazard x={62} y={20} w={68} h={3} opacity={0.9} />
+      <Slab x={4} y={36} w={56} h={22} k={2.4} c="brass" o={1} /><Slab x={128} y={36} w={28} h={22} k={2.4} c="brass" o={1} />
+      <rect x="8" y="40" width="48" height="4" fill={ART.brass.hi} opacity="0.7" /><rect x="132" y="40" width="20" height="4" fill={ART.brass.hi} opacity="0.7" />
+      <rect x="14" y="46" width="14" height="7" fill={ART.screen.amber} /><rect x="16" y="48" width="10" height="1.4" fill={S.amberHi} /><rect x="16" y="50.4" width="7" height="1.4" fill={S.amberHi} />
+      <Lights x={36} y={50} n={4} gap={5} seed={34} /><Vent x={136} y={46} w={12} h={7} n={3} />
+      <Rivets x={6} y={33} w={150} n={18} c="brass" /><Seams x={4} y={36} w={152} h={22} cols={5} op={0.25} /><Greeble x={6} y={4} w={150} h={3} seed={3401} n={5} c="dark" />
+      <Grime x={2} y={0} w={156} h={60} seed={3402} n={7} op={0.26} /><Scuff x={4} y={36} w={152} h={22} seed={3403} n={6} c="brass" />
+    </svg>
+  );
+}
+
+function PropMfgKeel() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 160 96" width="160" height="96" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={90} rx={72} ry={4} />
+      <Slab x={6} y={74} w={148} h={14} k={3} c="dark" o={1.2} /><Hazard x={10} y={82} w={140} h={4} opacity={0.9} />
+      {[20, 50, 80, 110, 136].map((x) => <Slab key={x} x={x} y={62} w={8} h={16} k={1.2} c="steel" o={0.8} />)}
+      <Bev t="polygon" points={pts([[8, 70], [24, 40], [62, 24], [138, 24], [154, 46], [150, 70]])} c="hull" o={1.6} />
+      <polygon points={pts([[28, 62], [40, 44], [66, 34], [132, 34], [142, 48], [138, 62]])} fill={ART.steel.base} />
+      <polygon points={pts([[28, 62], [40, 44], [66, 34], [74, 34], [66, 62]])} fill={ART.steel.hi} opacity="0.6" />
+      <text x="88" y="53" textAnchor="middle" fontSize="8" fill={ART.red.base} fontWeight="700" {...PT}>GK-01 KEEL</text>
+      <text x="88" y="61" textAnchor="middle" fontSize="3.2" fill={ART.ink} fontWeight="700" {...PT}>NO COMMISSION NUMBER</text>
+      {[[18, 66], [146, 62]].map(([x, y], i) => <g key={i}><circle cx={x} cy={y} r="2.4" fill={S.amberHi} style={{ animation: `ship-blink ${1.2 + i * 0.4}s steps(2) infinite` }} /><Glow cx={x} cy={y} r={9} c={S.amber} opacity={0.4} /></g>)}
+      <Vent x={118} y={26} w={14} h={7} n={3} /><Lights x={30} y={78} n={9} gap={12} seed={35} /><Rivets x={20} y={32} w={120} n={14} c="hull" /><Greeble x={66} y={26} w={50} h={6} seed={3501} n={6} c="hull" /><Seams x={8} y={24} w={146} h={46} cols={8} rows={1} op={0.3} />
+      <Grime x={6} y={24} w={148} h={64} seed={3502} n={9} op={0.28} /><Scuff x={10} y={28} w={140} h={42} seed={3503} n={9} c="hull" />
+    </svg>
+  );
+}
+// ===== MFG PROPS END =====
+
 
 
 
@@ -15905,6 +16112,13 @@ const PROP_DEFS = {
   boiler_hull:           { w: 4, h: 3, ax: 1, ay: 2 },
   governor_socket:       { w: 2, h: 2, ax: 0, ay: 1 },
   // BADOR WAR DEFS END
+  // MFG DEFS BEGIN
+  mfg_conveyor:          { w: 4, h: 2, ax: 1, ay: 1 },
+  mfg_cradle:            { w: 5, h: 4, ax: 2, ay: 3 },
+  mfg_forge:             { w: 4, h: 3, ax: 1, ay: 2 },
+  mfg_glass:             { w: 5, h: 2, ax: 2, ay: 1 },
+  mfg_keel:              { w: 5, h: 3, ax: 2, ay: 2 },
+  // MFG DEFS END
 };
 
 const PropArt = React.memo(function PropArt({ kind, variant, active }) {
@@ -16110,6 +16324,13 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'boiler_hull': return <PropBoilerHull />;
     case 'governor_socket': return <PropGovernorSocket variant={variant} />;
     // BADOR WAR CASES END
+    // MFG CASES BEGIN
+    case 'mfg_conveyor': return <PropMfgConveyor variant={variant} />;
+    case 'mfg_cradle': return <PropMfgCradle />;
+    case 'mfg_forge': return <PropMfgForge />;
+    case 'mfg_glass': return <PropMfgGlass />;
+    case 'mfg_keel': return <PropMfgKeel />;
+    // MFG CASES END
     default: return null;
   }
 });
@@ -18544,6 +18765,10 @@ const AI_COMBAT_PROFILES = {
   piston_sentinel:      { aggression:50, cover:70, flank:15, overwatch:80, optRange:2, name:'Piston Sentinel',            hp:11, shield:5, accent:'#C4923E' },
   unchained_overseer:   { aggression:75, cover:40, flank:30, overwatch:80, optRange:4, name:'The Unchained Overseer',     hp:16, shield:6, accent:'#2B7895' },
   // BADOR PROFILES END
+  // MFG PROFILES BEGIN
+  mfg_enforcers:        { aggression:75, cover:45, flank:40, overwatch:55, optRange:3, name:'Krax\'s Loader Enforcers',     hp:10, shield:4, accent:'#D4762C' },
+  mfg_krax:             { aggression:70, cover:55, flank:55, overwatch:70, optRange:3, name:'Overseer Krax and the Loader Frame', hp:16, shield:6, accent:'#D4762C' },
+  // MFG PROFILES END
 };
 
 const ENCOUNTER_TABLE = {
@@ -18663,6 +18888,10 @@ const COMBAT_LOOT = {
   piston_sentinel: { credits:[120,220], itemChance:0.55, items:[{id:'loot_brass_plate',name:'Sentinel Brass Plate',type:'gear',iconKind:'gear',value:520,description:'Tarnished brass from a construct that was never meant to retire.'}] },
   unchained_overseer: { credits:[260,440], itemChance:0.9, items:[{id:'item_titan_cylinder_ring',name:'Titan Cylinder Ring',type:'gear',iconKind:'gear',value:800,description:'An ancient signet ring proving engineering rank.'}] },
   // BADOR LOOT END
+  // MFG LOOT BEGIN
+  mfg_enforcers: { credits:[120,200], itemChance:0.5, items:[{id:'loot_mfg_clamp_gauntlet',name:'Loader Clamp Gauntlet',type:'gear',iconKind:'gear',value:480,description:'A hydraulic clamp gauntlet, built for pallets and used on people.'}] },
+  mfg_krax: { credits:[320,520], itemChance:0.9, items:[{id:'loot_mfg_overseer_keycard',name:'Overseer Master Keycard',type:'gear',iconKind:'keycard',value:900,description:'Krax\'s master card for every door in Sector 4, scorched at one corner.'}] },
+  // MFG LOOT END
   csf_swat:             { credits:[90,160],  itemChance:0.45, items:[{id:'loot_csf_stun_baton',name:'CSF Stun Baton',type:'weapon',iconKind:'gear',value:200,description:'Regulation CSF close-quarters weapon. Still carries a charge.'},{id:'loot_csf_access_chip',name:'CSF Access Chip',type:'gear',iconKind:'keycard',value:350,description:'Biometric-coded to a SWAT officer. Crackable.'},{id:'loot_tactical_stim',name:'Tactical Stim',type:'consumable',iconKind:'supply',value:120,description:'Military-grade stim. Restores combat readiness fast.'}] },
   csf_scout:            { credits:[60,110],  itemChance:0.35, items:[{id:'loot_scout_earpiece',name:'CSF Scout Earpiece',type:'gear',iconKind:'gear',value:180,description:'Encrypted channel. 48-hour window before they rotate the key.'},{id:'loot_det_round',name:'Det Round x2',type:'consumable',iconKind:'supply',value:90,description:'Compact explosive rounds. Useful.'}] },
   black_sun_striker:    { credits:[70,140],  itemChance:0.40, items:[{id:'loot_vibro_knife',name:'Vibro-Knife',type:'weapon',iconKind:'gear',value:250,description:'Black Sun manufacture. Serrated edge still carries a charge.'},{id:'loot_black_sun_sigil',name:'Black Sun Sigil',type:'quest',iconKind:'keycard',value:150,description:'Proof of gang membership. Useful for bluffing at checkpoints.'}] },
@@ -22014,7 +22243,7 @@ function StarWarsRPG() {
     return [...prev, { ...entry, unread: true }];
   }), []);
 
-  const phPerks = React.useMemo(() => PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: 0, decay: 0 }), [questFlags]);
+  const phPerks = React.useMemo(() => PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: (questFlags.mfg_tithe_rich ? 250 : questFlags.mfg_tithe ? 150 : 0), decay: 0 }), [questFlags]);
   const installPenthousePackage = useCallback((pkg) => {
     setInventory(prev => prev.flatMap(i => i.id !== pkg.itemId ? [i] : (i.qty > 1 ? [{ ...i, qty: i.qty - 1 }] : [])));
     setFlag(pkg.flag);
