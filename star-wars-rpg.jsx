@@ -538,6 +538,26 @@ const PLANETS = {
                 repeatPrompt: '"Both sides think you are theirs. That clock is ticking."',
               },
               {
+                id: 'phase_jon_sky_direction',
+                requiresAllFlags: ['jon_bay14_briefed'],
+                requiresNoneFlags: ['jon_sky_market_debriefed', 'marlo_sky_talked', 'vane_sky_cooperated'],
+                prompt: '"Sky-Market, Level 1450. Marlo at the Aurebesh Lounge, or Officer Vane at the precinct. Whichever of them talks first knows what is going through Bay 14. Come back and tell me which one you chose."',
+                choices: [
+                  { text: '"I will start at the Sky-Market."', morality: 0, loyalty: {}, result: '"Good. Keep the Scylla manifest close."' },
+                ],
+                repeatPrompt: '"Sky-Market, Level 1450. Marlo or Vane. Report back."',
+              },
+              {
+                id: 'phase_jon_awaiting',
+                requiresAllFlags: ['jon_sky_market_debriefed'],
+                requiresNoneFlags: ['csf_briefed', 'sector4_raid_complete'],
+                prompt: '"I have what I need from the Sky-Market. Now we wait for the next move." He taps the table. "If the Republic path is open to you, take it. If it is the Works, take that. Either way, the thread ends at the Senate."',
+                choices: [
+                  { text: '"Understood. I will follow it."', morality: 0, loyalty: {}, result: '"Do not take longer than you have to."' },
+                ],
+                repeatPrompt: '"Follow the thread. Either path ends at the Senate."',
+              },
+              {
                 id: 'phase_csf_confrontation',
                 requiresAllFlags: ['csf_briefed'],
                 requiresNoneFlags: ['jon_confrontation_done'],
@@ -693,7 +713,7 @@ const PLANETS = {
           { x: 0, y: 13, targetZone: 'sky_customs', targetPos: { x: 33, y: 11 }, label: 'Skyway Customs' },
           { x: 15, y: 25, targetZone: 'heat_sink_slums', targetPos: { x: 15, y: 1 }, label: 'Heat Sink Slums' },
           { x: 36, y: 0, targetZone: 'penthouse', targetPos: { x: 14, y: 17 }, label: 'Penthouse Elevator' },
-          { x: 5, y: 0, targetZone: 'senatorial_lounges', targetPos: { x: 16, y: 17 }, label: 'Senatorial Sky-Lounges' },
+          { x: 5, y: 0, targetZone: 'senatorial_lounges', targetPos: { x: 19, y: 26 }, label: 'Senatorial Sky-Lounges' },
         ],
         worldObjects: [
           { id: 'jon_arrival_comlink', propArt: 'comm_relay', propVariant: 'puck', x: 5, y: 13, once: true, iconKind: 'comlink', label: 'Incoming Comlink', description: "Jon's voice crackles over the encrypted channel. \"Watch your back up there. Level 1450 looks clean, but the vultures here wear tailored suits instead of gang colors. If someone's liquidating a shipment of stolen Phrik alloy, they'll need a broker registered with the Sky-Market Exchange to clear the credit transfers. Check out the Aurebesh Lounge and find Slick Marlo — or talk to Officer Vane at the precinct if you want to play this by the book. Either way: do not mention my name first.\" The channel closes." },
@@ -2679,64 +2699,262 @@ const PLANETS = {
       },
 
       senatorial_lounges: {
-        id: 'senatorial_lounges', name: 'Senatorial Sky-Lounges', subtitle: 'Coruscant · Senate District · L.5100',
-        width: 32, height: 20, spawnPos: { x: 16, y: 18 }, textureId: 'coruscant',
-        accent: '#4A7FBF', accentGlow: 'rgba(74,127,191,0.3)', accentDim: '#2A5080',
-        floorColor: '#181C28', floorAlt: '#202838', wallDark: '#0E1018', wallLight: '#282C40',
-        bg: 'radial-gradient(circle at 50% 0%, #101828 0%, #080C18 30%, #040810 100%)', ambient: 'neon_haze', floorPattern: 'marble',
-        decor: ['pillar', 'neon_sign', 'neon_sign', 'brazier', 'panel'],
+        id: 'senatorial_lounges', name: 'Senatorial Sky-Lounges', subtitle: 'Coruscant · Senate District · L.5100 · The Grand Promenade',
+        width: 40, height: 29, spawnPos: { x: 19, y: 26 }, textureId: 'coruscant',
+        accent: '#D4AF37', accentGlow: 'rgba(212,175,55,0.28)', accentDim: '#6A5A22',
+        floorColor: '#17141C', floorAlt: '#241A22', wallDark: '#0C0A12', wallLight: '#2A2236',
+        bg: 'radial-gradient(circle at 50% 0%, #3A1E3A 0%, #140C1C 35%, #07050C 100%)', ambient: 'lounge', floorPattern: 'marble',
+        decor: ['pillar', 'brazier', 'panel'],
+        paAnnouncements: [
+          'Senators and guests are reminded that the acoustic dampening fields are for diplomatic courtesy, not diplomatic immunity.',
+          'The Alderaanian vintage list has been updated. Please consult the sommelier.',
+          'Tonight in the Senate: the Rimward Trade Routes appropriation. Debate is expected to run late.',
+          'Lost property: one electrum tipped walking cane. It was not lost. Please return it.',
+        ],
         doors: [
-          { x: 16, y: 19, targetZone: 'sky_market', targetPos: { x: 5, y: 1 }, label: 'Return to Sky-Market' },
+          { x: 19, y: 28, targetZone: 'sky_market', targetPos: { x: 5, y: 1 }, label: 'Return to Sky-Market' },
+          { x: 20, y: 28, targetZone: 'sky_market', targetPos: { x: 5, y: 1 }, label: 'Return to Sky-Market' },
         ],
         worldObjects: [
-          { id: 'senator_conversation', propArt: 'booth', propVariant: 'senators', x: 10, y: 5, once: true, label: 'Overhear Senate Conversation', iconKind: 'booth',
+          // ---------- The Grand Promenade and the skyline
+          { id: 'skyline_vista_plain', propArt: 'skyline_vista', propVariant: 'plain', x: 20, y: 5, label: 'Panoramic Viewport Wall', requiresNoneFlags: ['viewport_hud_on'],
+            description: "Floor to ceiling transparisteel, triple paned and canted outward fifteen degrees, gives a 270 degree sweep of the Senate Plaza at dusk. In the foreground, skyway traffic runs like rivers of fire: orange northbound, blue white southbound. The bronze Rotunda rises like a mountain between art deco spires, its spotlights cutting the violet haze. Behind it, an endless sea of towers and step pyramids melts into the smog under the last amber of the sun. Far below the glass, neon ribbons mark the canyon floor five thousand meters down.",
+            grantsCodex: 'codex-sky-lounges' },
+          { id: 'skyline_vista_hud', propArt: 'skyline_vista', propVariant: 'hud', x: 20, y: 5, label: 'Panoramic Viewport Wall (Tactical Overlay)', requiresFlag: 'viewport_hud_on',
+            description: "The polarization console has switched on a tactical overlay. Cyan callouts label the Galactic Senate Rotunda, Executive Saucers four and seven, the Jedi Temple spires, both skyway lanes and the canyon floor. Every lane vector, every Senate pod, every speeder is tagged and moving." },
+          { id: 'viewport_tint_console', propArt: 'tint_console', x: 12, y: 6, label: 'Viewport Polarization Console',
+            description: "A brass and dark glass console on the viewport rail, with a slider that runs from CLEAR to OBSIDIAN. Senators dial the glass to black when the conversation turns private. A slicer can persuade it into a tactical overlay that tags every tower, pod and speeder lane in view.",
+            triggersMinigame: 'signal_siphon', once: true, grantsFlag: 'viewport_hud_on' },
+          { id: 'macro_binocular_west', propArt: 'macro_binocular', x: 6, y: 6, label: 'Tactical Macro-Binocular, West',
+            description: "A brass pedestal at the railing with twin lenses and a Republic HUD. The reticle sweeps west across the spires and settles on the Jedi Temple's five towers, the tallest catching the last sun. Range, bearing and traffic density scroll in cyan. The scanner chirps as it logs the structure.",
+            grantsCodex: 'codex-senate-rotunda' },
+          { id: 'macro_binocular_east', propArt: 'macro_binocular', x: 33, y: 6, label: 'Tactical Macro-Binocular, East',
+            description: "The east lens swings down past the skyway lanes and into the canyon. Between two cliff faces of durasteel, horizontal ribbons of neon mark the lower plazas, and a handful of towers wear no Republic registry at all. The scanner tags them in amber and logs them under a heading it does not translate.",
+            grantsCodex: 'codex-lower-canyon' },
+          { id: 'glass_overhang_pad', propArt: 'glass_overhang', x: 21, y: 8, label: 'Cantilevered Glass Observation Pad',
+            description: "A transparisteel balcony hanging ten meters over the edge. Step onto it and the floor disappears: five thousand meters of urban canyon open beneath your boots, haze thickening to indigo, the neon of the lower plazas glimmering like coals. The depth scanner on the rail reads DEPTH 5000 M. Wind shear tugs at your collar. Your stomach registers the drop a moment after your eyes." },
+          { id: 'chandelier_west', propArt: 'repulsor_chandelier', x: 10, y: 8, label: 'Kinetic Repulsor Chandelabra',
+            description: "Concentric rings of burnished bronze studded with amber crystal drift through the vault on silent micro repulsors, realigning themselves every few seconds. They cast slow geometric light patterns across the marble. Micro turbines in the rings give a faint, rhythmic crystal chime whenever fresh air circulates." },
+          { id: 'chandelier_center', propArt: 'repulsor_chandelier', x: 19, y: 13, label: 'Kinetic Repulsor Chandelabra',
+            description: "The central chandelabra turns at a stately pace, three rings counter rotating around a brass hub. As traffic outside crosses the glass, orange and white light bars slide over its crystals and wash the ceiling." },
+          { id: 'chandelier_east', propArt: 'repulsor_chandelier', x: 31, y: 9, label: 'Kinetic Repulsor Chandelabra',
+            description: "A smaller ring drifts over the east end of the promenade, drawing slow gold circles on the obsidian. A maintenance drone has marked its repulsor housing with a green tag: SERVICED, DO NOT TOUCH." },
+          // ---------- The Lounge Floor
+          { id: 'republic_crest_inlay', propArt: 'crest_inlay', x: 20, y: 18, label: 'Republic Crest Inlay',
+            description: "Polished brass Aurebesh runs round the rim of a vast inlay of the Republic cog in garnet and gold, set into obsidian marble. The lettering is a proverb about the consent of the governed. Hundreds of senatorial heels have worn the cog's teeth bright." },
+          { id: 'pit_northwest', propArt: 'conversation_pit', x: 12, y: 12, label: 'Encryption Dampened Conversation Pit',
+            description: "A sunken circular seating pit lined with hand stitched garnet velvet and black leather piping. A soft blue field glows along the rim, an acoustic distortion field that silences everything inside it to anyone standing outside the ring. Whoever sits here is talking about money, or about someone else's." },
+          { id: 'pit_northeast', propArt: 'conversation_pit', x: 28, y: 12, label: 'Encryption Dampened Conversation Pit',
+            description: "The east pit seats a delegation of Twi'lek silk merchants, whose laughter drops to a murmur as you step to the rim. The blue field hums. A silver tray droid hovers just outside it, waiting for permission to enter." },
+          { id: 'pit_southwest', propArt: 'conversation_pit', x: 12, y: 17, label: 'Encryption Dampened Conversation Pit',
+            description: "Steps lead down into a velvet horseshoe around a low wooden table, the field rim glowing azure. Wine rings mark the table. Someone has left a datapad face down among the glasses, and a sweep drone is taking a quiet interest in it." },
+          { id: 'pit_southeast', propArt: 'conversation_pit', x: 28, y: 17, label: 'Private Conversation Pit',
+            description: "A pit set slightly apart from the others, its field rim tuned to a deeper blue. The velvet here is a darker garnet, the table inlaid with Kuati silver. The cushion nearest the viewport is warm. Someone has been sitting here a long while, reading." },
+          { id: 'news_column_nw', propArt: 'news_column', x: 11, y: 10, label: 'Holo-Ticker News Column',
+            description: "A fluted sandstone pillar with a wrapped hologram ticker, amber Aurebesh scrolling round it: the Senate vote on the Rimward appropriation, 61 to 38, and Czerka, KDY and Rendili StarDrive share indices ticking up and down in lockstep with the rumors.",
+            grantsCodex: 'codex-senate-politics' },
+          { id: 'news_column_ne', propArt: 'news_column', x: 28, y: 10, label: 'Holo-Ticker News Column',
+            description: "The east column runs flash bulletins: RIMWARD TRADE ROUTES FACE INCREASED PIRATE ACTIVITY. A second line reads SPEEDER LANE 5120 NORTH RESTORED. A third is a notice from the Senate Office of Decorum asking senators not to bring pets into the committee rooms." },
+          { id: 'news_column_sw', propArt: 'news_column', x: 16, y: 19, label: 'Holo-Ticker News Column',
+            description: "Beside the crest, a third column cycles committee schedules and betting lines on the evening's votes. A small panel advertises a tailor on Level 5090 whose motto is 'Be seen to be listening.'" },
+          { id: 'news_column_se', propArt: 'news_column', x: 24, y: 19, label: 'Holo-Ticker News Column',
+            description: "The fourth column plays tonight's guest list in a polite amber crawl. Several names have been blurred. One is blurred and then partly unblurred, as if somebody reconsidered." },
+          { id: 'obsidian_bar', propArt: 'obsidian_bar', x: 18, y: 22, label: 'Obsidian and Electrum Bar',
+            description: "A ten meter curved bar slab cut from a single piece of black obsidian, inlaid with electrum river patterns that glow with an internal blue light. Behind it, rows of crystal bottles catch the amber from the chandelabra. The sommelier droid mixes beneath them with impeccable fluidity. Rare off world drinks can be ordered here." },
+          { id: 'fountain_west', propArt: 'holo_fountain', x: 12, y: 24, label: 'Aurebesh Water-Holo Fountain',
+            description: "Purified water cascades in glassy sheets down a vertical slate panel while micro projectors paint rising Aurebesh proverbs on the fall: PEACE, ORDER, PROSPERITY. A slicer's eye notices that the projector feed is not locked. It could be told to say something else.",
+            grantsCodex: 'codex-black-market-coords' },
+          { id: 'fountain_projector_panel', propArt: 'power_tap', x: 14, y: 25, label: 'Fountain Projector Feed Panel',
+            requiresNoneFlags: ['fountain_coords_found'],
+            description: "A service panel at the foot of the west fountain, its seal a courtesy tag. The projector feed is unlocked and the Aurebesh layer can be overridden by anyone with a slicer's patience. Behind the proverbs there is a second layer of numbers.",
+            triggersMinigame: 'terminal_slicing', once: true, grantsFlag: 'fountain_coords_found' },
+          { id: 'fountain_east', propArt: 'holo_fountain', x: 27, y: 24, label: 'Aurebesh Water-Holo Fountain',
+            description: "The twin of the west fountain, its proverbs scrolling a little slower. Coins have been tossed in the basin by guests who never mention it. Most are credit chips with the Senate seal. A few are older." },
+          { id: 'decanter_vintage', propArt: 'decanter_pedestal', x: 23, y: 22, label: 'Biometric Wine Decanter Pedestals',
+            requiresFlag: 'senate_aide_bribed',
+            lockedMessage: 'Two slender decanters of amber and garnet spirits, each locked behind a biometric palm scanner. The scanner flashes: REGISTERED SENATORS ONLY. A bribed aide could vouch for you at the scanner.',
+            description: "The scanner reads a forged high society pass, courtesy of a bribed aide, and releases the lock with a courteous chime. The Alderaanian vintage inside has been aging for forty years. You pocket the bottle with the ease of a guest who belongs.",
+            once: true, grantsItem: 'alderaanian_vintage' },
+          { id: 'decanter_reserve', propArt: 'decanter_pedestal', x: 14, y: 22, label: 'Biometric Spirit Decanters',
+            requiresFlag: 'luxury_landspeeder_permit_seen',
+            requires: { item: 'luxury_landspeeder_permit' },
+            lockedMessage: 'Two slender decanters of spirits, each locked behind a biometric hand scanner. The scanner is unimpressed by your hand.',
+            description: "The scanner reads the Ubrikkian Lux-Skiff permit and takes it for proof of high society standing. The lock opens with a chime and a Corellian Reserve ready for the pouring.",
+            once: true, grantsItem: 'corellian_vintage' },
+          { id: 'terrarium_blackmail', propArt: 'terrarium', x: 15, y: 10, label: 'Alderaanian Flora Terrarium',
+            requiresFlag: 'horace_job_accepted',
+            lockedMessage: 'A spherical transparisteel globe on a brass repulsor mount, glowing Alderaanian silk ferns climbing a lattice. It is beautiful. Nothing about it suggests it is hiding anything.',
+            description: "Inside the globe, among the glowing silk ferns, a second glow that is not a plant: a small data chip taped under the soil tray. Whoever was blackmailing the Senator picks up here. You peel the chip away and walk on.",
+            once: true, grantsFlag: 'blackmail_chip_found', grantsItem: 'senate_blackmail_chip' },
+          { id: 'terrarium_sis_drop', propArt: 'terrarium', x: 24, y: 10, label: 'Kashyyyk Orchid Terrarium',
+            requiresFlag: 'kaelen_sis_contract',
+            lockedMessage: 'A floating globe of Kashyyyk orchids, their violet bells nodding on the repulsor draft. It looks harmless. It is hard not to feel like it is looking back.',
+            description: "A hollow in the orchid planter holds a slim, flesh-toned slicer key: an SIS dead drop, exactly where Agent Kaelen said a junior staffer might 'accidentally' leave something. You pocket it.",
+            once: true, grantsFlag: 'sis_key_found', grantsItem: 'sis_surveillance_key' },
+          { id: 'terrarium_gallery', propArt: 'terrarium', x: 33, y: 10, label: 'Glass Terrarium',
+            description: "A third floating globe, this one home to a single glowing Alderaanian silk fern the size of a child's hand. Its fronds turn slowly toward the viewport as if awaiting sunrise on a world that no longer sets there." },
+          { id: 'model_case_flagships', propArt: 'model_case', x: 19, y: 10, label: 'Antique Starship Model Display Case',
+            description: "A vacuum sealed case of gold leaf miniatures: early Republic battle cruisers, Kuati diplomatic couriers from the Mandalorian Wars, a Hammerhead corvette with every rivet in place. Tiny internal components turn and pulse. A brass plate: PRESENTED TO THE SENATE BY THE SHIPWRIGHTS OF KUAT.",
+            grantsCodex: 'codex-starship-models' },
+          { id: 'model_case_suite', propArt: 'model_case', x: 4, y: 16, label: 'Vacuum Sealed Model Case',
+            description: "A smaller case holds a single model: a pre-Republic survey ship with its engine bells polished to a mirror. It is the only thing in the senators' private room that no one has ever tried to sell." },
+          { id: 'brass_register_a', propArt: 'brass_register', x: 16, y: 15, label: 'Heated Sub-Deck Floor Grate',
+            description: "A brass register set into the obsidian tile gently vents warm, perfumed air across the walkway. A drop of spilled drink hits the grate and evaporates with a faint hiss." },
+          { id: 'brass_register_b', propArt: 'brass_register', x: 23, y: 15, label: 'Heated Sub-Deck Floor Grate',
+            description: "The warm air carries amber incense and a note of crushed spice. Guests have drifted toward the grate in clumps, talking out of the sides of their mouths." },
+          { id: 'brass_register_c', propArt: 'brass_register', x: 17, y: 25, label: 'Heated Sub-Deck Floor Grate',
+            description: "Warm air from below fans the hems of long coats. The brass is polished by a thousand heel taps." },
+          { id: 'brass_register_d', propArt: 'brass_register', x: 22, y: 25, label: 'Heated Sub-Deck Floor Grate',
+            description: "The register near the entrance runs hot enough to dry a wet boot. A tray droid has learned to hover directly over it and keep the appetizers warm." },
+          // ---------- Private rooms (original content preserved and expanded)
+          { id: 'senator_conversation', propArt: 'booth', propVariant: 'senators', x: 5, y: 14, once: true, label: 'Overhear Senate Conversation', iconKind: 'booth',
             requiresFlag: 'syndicateManagement_active',
+            lockedMessage: 'Two senators sit in the private room speaking in undertones. A well dressed aide watches you from the door. Without a standing syndicate behind you, you have no business eavesdropping here.',
             description: 'Two senators speaking in undertones. Procurement codes. Defense budget line items. Words that should not be said here. You catch enough to know this is leverage.',
             triggersMinigame: 'interrogation',
             grantsFlag: 'senate_intel_acquired',
             grantsCodex: 'codex-black-sun' },
-          { id: 'landspeeder_showroom', propArt: 'lux_skiff', x: 25, y: 5, once: true, label: 'Ubrikkian Lux-Skiff Showroom', iconKind: 'panel',
-            description: 'A Lux-Skiff configured for Senate-district transit. The permit alone is worth 200 credits to the right broker. The owner is currently in session. The registration terminal is unattended.',
-            grantsItem: 'luxury_landspeeder_permit' },
-          { id: 'shipping_authority_terminal', propArt: 'console', propVariant: 'shipping', x: 16, y: 10, once: false, label: 'Coruscant Shipping Authority Terminal', iconKind: 'terminal',
+          { id: 'landspeeder_showroom', propArt: 'lux_skiff', x: 34, y: 15, once: true, label: 'Ubrikkian Lux-Skiff Showroom', iconKind: 'panel',
+            description: 'A Lux-Skiff configured for Senate-district transit, pearl coachwork and electrum trim under a spotlight. The permit alone is worth 200 credits to the right broker. The owner is currently in session. The registration terminal is unattended.',
+            grantsFlag: 'luxury_landspeeder_permit_seen', grantsItem: 'luxury_landspeeder_permit' },
+          { id: 'shipping_authority_terminal', propArt: 'console', propVariant: 'shipping', x: 32, y: 22, once: false, label: 'Coruscant Shipping Authority Terminal', iconKind: 'terminal',
             triggersMinigame: 'signal_siphon',
             grantsFlag: 'manifest_falsified',
             description: 'The Senate-adjacent manifest clearance terminal. Freight routes, Senate supply chains, diplomatic cargo exemptions. Access requires a slicing run.' },
-          { id: 'airtaxi_senatorial', propArt: 'airtaxi', propVariant: 'clean', x: 18, y: 18, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Senate District AirTaxi terminal.' },
-          { id: 'senate_slush_funds', propArt: 'console', propVariant: 'slush', x: 28, y: 15, once: true, label: 'Discretionary Fund Terminal', iconKind: 'panel',
+          { id: 'senate_slush_funds', propArt: 'console', propVariant: 'slush', x: 36, y: 24, once: true, label: 'Discretionary Fund Terminal', iconKind: 'panel',
             description: 'A discretionary account terminal left unlocked between sessions. The authorization window is still open.',
             grantsItem: null },
+          { id: 'sabacc_table_garnet', propArt: 'sabacc_table', x: 4, y: 23, label: 'High Stakes Sabacc Table, Garnet',
+            description: "An octagonal table of polished Choraxian wood with embedded card scanners, credit chip trays and a blue holographic dealer eye. A corrupt committee chairman, a visiting Czerka lobbyist and a Corellian importer are three hands in. The table limit is a number nobody says aloud.",
+            triggersMinigame: 'sabacc' },
+          { id: 'sabacc_table_azure', propArt: 'sabacc_table', x: 7, y: 23, label: 'High Stakes Sabacc Table, Azure',
+            description: "The second table, azure felt, a dealer eye that blinks in a slow tide. Every seat is taken by someone who owes someone else. A cigar of rare Corellian leaf burns, forgotten, in a brass tray.",
+            triggersMinigame: 'sabacc' },
+          { id: 'skylane_launch_berth', propArt: 'speeder_bay', x: 36, y: 8, label: 'Skylane Launch Berth', iconKind: 'beacon',
+            description: "A private repulsor berth cantilevered off the east end of the promenade, where senators keep racing skiffs for when the Plaza gets too small. The lane control board is live: step in and the skyway opens in front of you, orange ahead, white oncoming, with a drop on either side.",
+            triggersMinigame: 'sky_evasion' },
+          { id: 'airtaxi_senatorial', propArt: 'airtaxi', propVariant: 'clean', x: 24, y: 26, once: false, iconKind: 'beacon', label: 'Air-Taxi Fast-Transit Terminal', description: 'Senate District AirTaxi terminal. A yellow and black repulsor air taxi lands on the pad beyond the glass every few minutes, doors gliding open on a hiss of engine heat.' },
         ],
-        collectibles: [{ id: 'senate_slush_funds_cr', x: 27, y: 15, label: 'Senate Slush Fund Transfer', reward: 150 }],
+        collectibles: [{ id: 'senate_slush_funds_cr', x: 35, y: 24, label: 'Senate Slush Fund Transfer', reward: 150 }],
         npcs: [
-          {
-            id: 'senator_aide', x: 9, y: 4, kind: 'republic_guard', label: 'Senate Aide',
+          { id: 'horace_vane', x: 5, y: 9, kind: 'senator_horace', label: 'Senator Horace Vane', patrol: [[34, 9], [5, 9]],
+            repeatPrompt: 'Horace Vane glances at you over his glass and keeps walking. "Not now. I am being watched."',
             phases: [
-              { prompt: 'The aide holds a datapad at parade rest. They assess you once and look away. "This floor is for registered Senate personnel and cleared guests. I assume your clearance is in order."',
+              { id: 'phase_horace_intro',
+                requiresNoneFlags: ['horace_job_accepted', 'horace_job_done', 'horace_chip_kept'],
+                prompt: "He is an aging Core aristocrat in lavish burgundy silks, gold embroidered shoulder wraps and enough gemstone rings to bid on a small ship. An electrum tipped cane clicks with every step. He paces the viewport, sipping from a crystal glass, speaking to nobody. \"You. You have the look of someone who does not work for the Senate.\" He lowers his voice. \"I owe Czerka Corporation more than a man in my position should be able to owe. Someone has found out how much, and what I did to be allowed to owe it.\"",
                 choices: [
-                  { text: '"Of course."', grants: {} },
-                  { text: '"I have business with one of the senators."', grants: {} },
-                  { text: '[Offer a bribe.]', grants: { questFlags: 'senate_aide_bribed' }, morality: -5, result: 'The datapad shifts slightly. Their expression does not. After a pause, they say nothing and step aside. The silence costs you 300 credits.' },
+                  { text: '"You need a problem made to disappear. I can do that."', morality: -3, loyalty: { underworld: 5 }, result: "\"A direct person. Refreshing.\" He looks at the cane, the glass, the view. \"A slicer who calls himself Lantern is blackmailing me. The drop is somewhere in this lounge. One of the terrariums, I would guess, he is theatrical. Find the chip. Bring it to me. Eight hundred credits.\"", grants: { flags: ['horace_met', 'horace_job_accepted'] } },
+                  { text: '[Charm] "Senator, a man of your standing deserves a better arrangement."', morality: 0, loyalty: { underworld: 3 }, requires: { flag: 'buff_charisma' }, result: "He actually smiles. \"At last, someone with manners.\" He leans closer. \"Lantern. A terrarium. Fifteen hundred credits, and my continued gratitude, which has been known to move budgets.\"", grants: { flags: ['horace_met', 'horace_job_accepted', 'horace_pays_double'] } },
+                  { text: '"Who is Lantern, and what does he have?"', morality: 3, loyalty: {}, result: "\"A name, a chip and an excellent sense of timing.\" He grips the cane. \"I do not know what is on it exactly, but I know that if it is released, I will be a footnote.\"", grants: { flags: ['horace_met'] }, defer: true },
+                  { text: 'Say nothing and move on.', morality: 0, loyalty: {}, defer: true, result: 'He watches you go with something like betrayal and keeps pacing.' },
                 ] },
+              { id: 'phase_horace_pending',
+                requiresAllFlags: ['horace_job_accepted'],
+                requiresNoneFlags: ['horace_job_done', 'horace_chip_kept'],
+                prompt: "Horace is at the glass again, but his glass is empty and his hand is not steady. \"Well? Have you found Lantern's chip?\"",
+                choices: [
+                  { text: '"Here is the chip. It is yours."', morality: 5, loyalty: { republic: 3 }, requires: { item: 'senate_blackmail_chip' }, result: "He takes it and crushes it under a heel without looking at the contents. Credits shift into your account. \"Eight hundred. My thanks. The Senate does not forget a favor.\"", grants: { flags: ['horace_job_done'], credits: 800 } },
+                  { text: '[Keep the chip. A senator in your debt is worth more than eight hundred credits.]', morality: -8, loyalty: { underworld: 10 }, requires: { item: 'senate_blackmail_chip' }, result: "You let him see it and then you put it away. His face goes the color of his robes. \"What do you want.\" \"For now, nothing. Remember who has it.\"", grants: { flags: ['horace_chip_kept'] } },
+                  { text: '"Not yet. Still looking."', morality: 0, loyalty: {}, defer: true, result: '"Please hurry. Lantern has begun sending me proofs."' },
+                ],
+                repeatPrompt: '"The chip. Have you found Lantern\'s chip?"' },
+              { id: 'phase_horace_done',
+                requiresAllFlags: ['horace_job_done'],
+                prompt: "Horace raises his refilled glass. \"The Core is a smaller place for people like you and me than it looks. Dine with me when the Senate recesses.\"",
+                choices: [{ text: '"Gladly."', grants: {} }],
+                repeatPrompt: 'Horace nods warmly across the room. The cane clicks.' },
+              { id: 'phase_horace_kept',
+                requiresAllFlags: ['horace_chip_kept'],
+                prompt: "Horace will not look at you. His hand is on the cane's head and his knuckles are white. \"Whatever you want, I will arrange it. Do not ask me to enjoy it.\"",
+                choices: [{ text: '"I will let you know."', grants: {} }],
+                repeatPrompt: 'Horace pretends to study the skyline. He is clearly counting steps to the nearest exit.' },
             ],
           },
-          {
-            id: 'black_sun_vigo', x: 21, y: 6, kind: 'crime_boss', label: 'Malis',
+          { id: 'baroness_moira_kuat', x: 27, y: 17, kind: 'kuati_baroness', label: 'Baroness Moira Kuat',
+            repeatPrompt: 'Moira does not look up from her datapad. "The offer stands, as does the price."',
             phases: [
-              { requiresNoneFlags: ['black_sun_allied', 'black_sun_hostile'],
-                prompt: 'A woman in Senate-blue finery. No datapad. No aide. Just her and the view of the landing pad below. She turns when you approach. "You have been making noise. I appreciate noise, when it points in the right direction. My name is Malis. I represent certain interests that extend considerably further than this level."',
+              { id: 'phase_moira_intro',
+                requiresNoneFlags: ['moira_met'],
+                prompt: "A statuesque Kuati noblewoman in a structured navy gown with silver shoulder pauldrons, her hair in a braided tower pinned with silver. She sits in the pit as if she had been poured into it, assessing trade proposals on a datapad. \"A visitor.\" Her tone is the temperature of orbital space. \"I am Moira Kuat. I handle a number of introductions on behalf of House Kuat and its orbital interests. If you are here to sell me something, be brief. If you are here to buy something, be brief and honest.\"",
                 choices: [
-                  { text: '"What interests?"', grants: {} },
-                  { text: '"Black Sun."', grants: {}, result: 'The corner of her mouth moves. "Close enough. We prefer \'extended trade network.\' Our attorneys are very particular."' },
+                  { text: '"I want access to Kuat Drive Yards. I understand you hold the door."', morality: 0, loyalty: { underworld: 3 }, result: "\"I hold several. They open to different people.\" She considers you. \"A letter of introduction to the Executive Ring, signed in my hand, five hundred credits. It will open a door. It will not make you welcome.\"", grants: { flags: ['moira_met', 'moira_letter_offered'] } },
+                  { text: '[Hold her gaze.] "I know what your family built over Kuat, and what it costs."', morality: 3, loyalty: { republic: 3 }, requires: { flag: 'buff_composure' }, result: "For the first time she looks at you rather than past you. \"You are less tedious than you appear.\" She signs a slip. \"The letter is yours without the fee. House Kuat likes to be known to people who know it.\"", grants: { flags: ['moira_met', 'moira_letter'] , items: ['kdy_courtesy_letter'] } },
+                  { text: '"Just admiring the view."', morality: 0, loyalty: {}, result: '"The view is the only thing in this room that is not for sale." She returns to her datapad.', grants: { flags: ['moira_met'] } },
+                ] },
+              { id: 'phase_moira_dismissed',
+                requiresAllFlags: ['moira_met'],
+                requiresNoneFlags: ['moira_letter_offered', 'moira_letter'],
+                prompt: "Moira does not look up. \"Still here. If you want something, say it. If you want to look at the view, there are cheaper places to stand.\"",
+                choices: [
+                  { text: '"I want access to Kuat Drive Yards after all."', morality: 0, loyalty: { underworld: 3 }, result: "\"A letter of introduction to the Executive Ring. Five hundred credits.\" She says it as though she were reading it from a menu.", grants: { flags: ['moira_letter_offered'] } },
+                  { text: '"No, nothing."', morality: 0, loyalty: {}, defer: true, result: 'She returns to her datapad. The audience was always optional.' },
+                ],
+                repeatPrompt: 'Moira studies her datapad. You are not part of the room.' },
+              { id: 'phase_moira_letter_offered',
+                requiresAllFlags: ['moira_letter_offered'],
+                requiresNoneFlags: ['moira_letter'],
+                prompt: "Moira lays the datapad aside. \"You have reconsidered the letter. A sensible woman does.\" She waits.",
+                choices: [
+                  { text: '"Five hundred credits. Write it."', morality: 0, loyalty: { underworld: 3 }, requires: { credits: 500 }, result: "She signs with a flourish and presses a brass seal into wax. \"Present this to the Captain at the threshold. Do not mention my name unless he mentions it first.\"", grants: { flags: ['moira_letter'], items: ['kdy_courtesy_letter'] } },
+                  { text: '"Not yet."', morality: 0, loyalty: {}, defer: true, result: '"The Ring will not wait for your finances."' },
+                ],
+                repeatPrompt: '"The letter. Five hundred credits."' },
+              { id: 'phase_moira_after',
+                requiresAllFlags: ['moira_letter'],
+                prompt: "Moira lifts one finger and a tray droid veers politely away. \"The Executive Ring is quieter than the Senate and considerably more dangerous. Do not be seen to look at the walls.\"",
+                choices: [{ text: '"I will remember."', grants: {} }],
+                repeatPrompt: 'Moira inclines her head by exactly one degree. The audience is over.' },
+            ],
+          },
+          { id: 'agent_kaelen_sis', x: 22, y: 23, kind: 'sis_agent', label: 'Agent Kaelen (SIS)',
+            repeatPrompt: 'Kaelen does not look up from his datapad. "Eyes front. Talk to the bar like it is the bar."',
+            phases: [
+              { id: 'phase_kaelen_intro',
+                requiresNoneFlags: ['kaelen_sis_contract', 'kaelen_job_done'],
+                prompt: "A man in a crisp, unadorned grey duty tunic leans on the bar pretending to read a datapad. A flesh toned comm earpiece sits at his ear. His eyes never stop tracking the room: the Czerka lobbyist, the Black Sun woman at the rail, the Senator pacing. \"You have been looking at the same three people I have,\" he says, barely moving his lips. \"Junior staffer, Senate Office of Procedures. That is what the badge says. Let us leave it there.\"",
+                choices: [
+                  { text: '"Republic Special Intelligence. You are not a junior staffer."', morality: 3, loyalty: { republic: 5 }, result: "A very small flicker. \"Quietly.\" He angles the datapad away. \"The Senate has a leak and a Black Sun channel inside it. I need someone nobody connects to the Service. There is a dead drop in one of the orchid globes. Fetch the key I left and bring it back to me. Six hundred credits.\"", grants: { flags: ['kaelen_met', 'kaelen_sis_contract'] } },
+                  { text: '[Perception] "Your earpiece, your shoes, and the way you stand. The Service trains its people too well."', morality: 3, loyalty: { republic: 5 }, requires: { flag: 'buff_perception' }, result: "He almost laughs. \"Tarisian ale makes everyone observant. All right. Kaelen, SIS.\" He slides a code across the bar. \"The orchid globe has a key in it. Bring it to me, nine hundred credits, and I will remember you favorably when the next file lands.\"", grants: { flags: ['kaelen_met', 'kaelen_sis_contract', 'kaelen_trusts'] } },
+                  { text: '"Not my problem. Enjoy the view."', morality: 0, loyalty: {}, result: '"Everybody says that. Until it is." He goes back to his datapad.', grants: { flags: ['kaelen_met'] } },
+                ] },
+              { id: 'phase_kaelen_pending',
+                requiresAllFlags: ['kaelen_sis_contract'],
+                requiresNoneFlags: ['kaelen_job_done'],
+                prompt: "Kaelen lowers the datapad a centimeter. \"The drop. The orchid globe. Did you find it?\"",
+                choices: [
+                  { text: '"Here is the key."', morality: 5, loyalty: { republic: 5 }, requires: { item: 'sis_surveillance_key' }, result: "The key vanishes into his sleeve. Credits slide into your account. \"Six hundred, and a favor owed. Walk away like you were never here.\"", grants: { flags: ['kaelen_job_done'], credits: 600 } },
+                  { text: '"Still looking."', morality: 0, loyalty: {}, defer: true, result: '"Do not let the globe see you looking."' },
+                ],
+                repeatPrompt: '"The orchid globe. The key. Quietly."' },
+              { id: 'phase_kaelen_done',
+                requiresAllFlags: ['kaelen_job_done'],
+                prompt: "Kaelen studies the Senator across the room. \"The Service owes you. I do not say that often. When the file breaks, you will hear it from me before the holonet.\"",
+                choices: [{ text: '"I will be listening."', grants: {} }],
+                repeatPrompt: 'Kaelen nods once and returns to watching the room.' },
+            ],
+          },
+          { id: 'black_sun_vigo', x: 30, y: 8, kind: 'black_sun_envoy', label: 'Malis',
+            phases: [
+              { id: 'phase_malis_intro',
+                requiresNoneFlags: ['black_sun_allied', 'black_sun_hostile'],
+                prompt: 'A woman in Senate-blue finery, no datapad, no aide, a black sun brooch half hidden at her collar. She stands at the railing with the whole of Coruscant spread beneath her and the landing pad lights below. She turns when you approach. "You have been making noise. I appreciate noise, when it points in the right direction. My name is Malis. I represent certain interests that extend considerably further than this level."',
+                choices: [
+                  { text: '"What interests?"', grants: {}, defer: true },
+                  { text: '"Black Sun."', grants: {}, defer: true, result: 'The corner of her mouth moves. "Close enough. We prefer \'extended trade network.\' Our attorneys are very particular."' },
+                  { text: '"I read your meeting point in the fountain water."', morality: 3, loyalty: {}, requires: { flag: 'fountain_coords_found' }, result: 'The smile stops and starts again. "Clever. Slicers are always clever until they are expensive." She glances at the fountain, then at you. "Perhaps we should talk after all."', grants: { flags: ['malis_impressed'] }, defer: true },
                   { text: '"I am not interested in partners."', grants: { questFlags: 'black_sun_hostile' }, morality: 0 },
                 ] },
-              { requiresAllFlags: ['black_sun_hostile'],
+              { id: 'phase_malis_hostile',
+                requiresAllFlags: ['black_sun_hostile'],
+                requiresNoneFlags: ['black_sun_allied'],
                 prompt: '"You are still breathing, which means you are still useful." Malis examines her nails. "My offer stands. Even enemies can have working arrangements."',
                 choices: [
                   { text: '"Working arrangement. Define terms."', grants: { questFlags: 'black_sun_allied' }, morality: -5 },
                   { text: '"We are done here."', grants: {} },
                 ] },
-              { requiresAllFlags: ['black_sun_allied'],
+              { id: 'phase_malis_allied',
+                requiresAllFlags: ['black_sun_allied'],
                 prompt: '"Our channels are open." She inclines her head fractionally. "Your recent work in the sub-levels was noted. Clean. Efficient. We have a contract that would suit your capabilities."',
                 choices: [
                   { text: '"I am listening."', grants: { questFlags: 'black_sun_contract_offered' }, morality: -5 },
@@ -2744,16 +2962,82 @@ const PLANETS = {
                 ] },
             ],
           },
+          { id: 'senator_aide', x: 21, y: 26, kind: 'republic_guard', label: 'Senate Aide',
+            phases: [
+              { id: 'phase_aide_gate',
+                prompt: 'The aide holds a datapad at parade rest. They assess you once and look away. "This floor is for registered Senate personnel and cleared guests. I assume your clearance is in order."',
+                choices: [
+                  { text: '"Of course."', grants: {} },
+                  { text: '"I have business with one of the senators."', grants: {} },
+                  { text: '[Offer a bribe.]', grants: { questFlags: 'senate_aide_bribed' }, morality: -5, requires: { credits: 300 }, result: 'The datapad shifts slightly. Their expression does not. After a pause, they say nothing and step aside. The silence costs you 300 credits.' },
+                ] },
+            ],
+          },
+          // ---------- The staff: droids
+          { id: 'lux4_sommelier', x: 18, y: 20, kind: 'lux_sommelier', label: 'LUX-4 Sommelier and Mixologist', repeatable: true,
+            prompt: "A rose gold protocol chassis in a crisp black synth silk bow tie works behind the obsidian bar with flawless fluidity, pouring a multilayered glowing cocktail without looking at it. \"Good evening. LUX-4, at your service. I have been programmed with the complete vintage lists of nine worlds, and the preferences of every senator present. How may I assist you? The effects of my recommendations last until you leave the lounge.\"",
+            choices: [
+              { text: 'Order a Corellian Reserve (60 credits).', morality: 0, loyalty: {}, requires: { credits: 60 }, result: "He pours it over a single sphere of ice and slides it across with a faint, tasteful bow. Warmth loosens your shoulders and settles your breathing. You feel unshakeable, for the length of your visit.", grants: { flags: ['buff_composure'] } },
+              { text: 'Order a Tarisian Ale (40 credits).', morality: 0, loyalty: {}, requires: { credits: 40 }, result: "A tall glass with a green froth, sharp and clean. The room sharpens a notch: you hear the dealer eye's tick, the clink of the tray droid's glasses, a whispered word two pits away. Your perception is up until you leave.", grants: { flags: ['buff_perception'] } },
+              { text: 'Order an Alderaanian Nectar (90 credits).', morality: 0, loyalty: {}, requires: { credits: 90 }, result: "It arrives in a flute, pale gold with a faint glow. It tastes of a spring that no longer exists. Your words come easy and your smile lands. Your charm lasts until you leave the lounge.", grants: { flags: ['buff_charisma'] } },
+              { text: '"Just the view, thank you."', morality: 0, loyalty: {}, result: '"Of course. The view is complimentary, as is my silence."' },
+            ] },
+          { id: 'sv_tray_one', x: 15, y: 15, wander: 6, kind: 'sv_tray_droid', label: 'SV-Series Tray Attendant',
+            repeatPrompt: 'The tray droid drifts a polite arm\'s length away and waits for you to take a glass.',
+            prompt: 'A one meter disk of mirror chrome, silent on its repulsors, bearing crystal glasses and appetizers on a flat rubberized top. It drifts to waist height beside you. No sound, no wobble, and no sense of having been summoned.',
+            choices: [{ text: 'Take a glass.', morality: 0, loyalty: {}, result: 'It dips two centimeters as you reach, then rises silently. The glass is cold. It leaves without a word.' }] },
+          { id: 'sv_tray_two', x: 24, y: 13, wander: 6, kind: 'sv_tray_droid', label: 'SV-Series Tray Attendant',
+            repeatPrompt: 'The tray droid hovers out of earshot of the nearest pit and waits.',
+            prompt: 'A second chrome disk, patrolling the east pits. When a conversation rises in volume it drops to the floor level and stops dead, a silver lump beneath the discretion line.',
+            choices: [{ text: 'Ask what it is serving.', morality: 0, loyalty: {}, result: 'It rotates twelve degrees, displaying a tidy tray: stuffed pastry, candied spice root, a glass of something amber. It makes no sound whatsoever.' }] },
+          { id: 'sv_tray_three', x: 20, y: 24, wander: 5, kind: 'sv_tray_droid', label: 'SV-Series Tray Attendant',
+            repeatPrompt: 'The tray droid hovers politely over the nearest floor register.',
+            prompt: 'A third chrome attendant hovers over a warm floor register to keep its appetizers from cooling. It rises and falls with each guest it passes.',
+            choices: [{ text: 'Say thank you.', morality: 0, loyalty: {}, result: 'It tips toward you in what could be a bow and drifts toward the pits.' }] },
+          { id: 'sweep_drone_west', x: 19, y: 15, patrol: [[19, 25], [19, 15]], kind: 'sweep_drone', label: 'Micro-Scan Sweep Drone',
+            repeatPrompt: 'The drone scuttles on, a thin red line passing over you for the second time.',
+            prompt: 'A golden insectoid droid ten centimeters long crawls along a light fixture, emitting a thin infrared line across the lounge. It tests for concealed heavy weapons, explosive residue and slicing devices. Its line crosses you and moves on, which may or may not mean you are clean.',
+            choices: [{ text: 'Let it scan you.', morality: 0, loyalty: {}, result: 'The line passes over you twice, once from each side. The drone chirps a note too high for most ears and scuttles on.' }] },
+          { id: 'sweep_drone_far_west', x: 10, y: 12, patrol: [[10, 24], [10, 12]], kind: 'sweep_drone', label: 'Micro-Scan Sweep Drone',
+            repeatPrompt: 'The drone is already moving on.',
+            prompt: 'Another golden sweeper works the west wall, antennae twitching as it passes a sunken pit.',
+            choices: [{ text: 'Watch it work.', morality: 0, loyalty: {}, result: 'It stops at a decorative panel, taps it twice with a foreleg and moves on. Whatever was behind the panel is a matter for the Guard.' }] },
+          { id: 'sweep_drone_east', x: 29, y: 10, patrol: [[29, 25], [29, 10]], kind: 'sweep_drone', label: 'Micro-Scan Sweep Drone',
+            repeatPrompt: 'The drone scuttles away down the east wall.',
+            prompt: 'A third drone patrols the east wall, its red scan line lingering on the Black Sun woman at the railing for exactly as long as protocol allows.',
+            choices: [{ text: 'Follow its line.', morality: 0, loyalty: {}, result: 'The line lands on a Czerka delegate\'s attache case and pauses. The delegate turns the case slightly away. The drone moves on.' }] },
+          // ---------- Delegates, socialites, a card table
+          { id: 'twilek_delegate_ryl', x: 12, y: 16, wander: 1, kind: 'twilek_diplomat', label: 'Twi\'lek Delegate Ryl\'ae',
+            repeatPrompt: 'Ryl\'ae smiles over her glass. "The silks are better than the politics."',
+            prompt: "A Twi'lek diplomat in flowing amethyst silks and gold chains, lekku draped gracefully over her shoulders. She holds her glass at exactly the angle that suggests she has been listening to someone for hours. \"Welcome. The Senate is a beautiful way to waste a century.\"",
+            choices: [{ text: 'Ask what she thinks of the Rimward appropriation.', morality: 0, loyalty: {}, result: '"It will pass. The pirates will be paid by someone. If you want to know who, follow the Senators who vote against it loudly."' }] },
+          { id: 'alsakan_aristocrat_dessan', x: 25, y: 10, wander: 2, kind: 'alsakan_aristocrat', label: 'Lord Dessan of Alsakan',
+            repeatPrompt: 'Lord Dessan adjusts a gold button. "I was saying something quotable."',
+            prompt: 'A silver haired Alsakan aristocrat in an emerald tailcoat with gold buttons and a feathered cap, delivering a story to a half interested listener and enjoying every word of it.',
+            choices: [{ text: 'Ask about Alsakan.', morality: 0, loyalty: {}, result: '"Alsakan is the heart of the Core. People say that very quietly because the Senate would prefer it were the heart of the Senate."' }] },
+          { id: 'czerka_exec_haal', x: 3, y: 25, kind: 'czerka_executive', label: 'Czerka Executive Haal',
+            repeatPrompt: 'Haal stares at the dealer eye. "I fold. I always fold. They keep dealing."',
+            prompt: 'A Czerka executive in a dark suit with a blood red tie and a cybernetic eye implant that glows a fixed, unblinking red. He is three hands into a game he cannot win and will not stop playing.',
+            choices: [{ text: 'Ask how the evening is going.', morality: 0, loyalty: {}, result: '"Czerka\'s numbers are up. Mine are down. The cards do not care which."' }] },
+          { id: 'corrupt_chairman_oren', x: 6, y: 25, kind: 'alsakan_aristocrat', label: 'Chairman Oren Taa',
+            repeatPrompt: 'Oren waves a hand. "Later. The cards are warm."',
+            prompt: 'A committee chairman with a quick smile and a loose collar, one hand at his glass, the other tapping the credit tray in a pattern that means he has already lost more than he can explain.',
+            choices: [{ text: 'Ask about the table limit.', morality: 0, loyalty: {}, result: '"The limit is whatever the table will bear. Tonight it bears a great deal."' }] },
+          { id: 'czerka_exec_vess', x: 31, y: 19, wander: 2, kind: 'czerka_executive', label: 'Czerka Executive Vess',
+            repeatPrompt: 'Vess tilts the case away from you. "Not for sale."',
+            prompt: 'A younger Czerka executive in a charcoal suit and a red tie, an attache case chained to his wrist and a cybernetic eye that tracks everything but you.',
+            choices: [{ text: 'Ask what is in the case.', morality: 0, loyalty: {}, result: '"Quarterly projections. If you looked at them you would be rich, or in jail, or both."' }] },
         ],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 30, 18, 'floor');
-          carveRect(g, 1, 1, 8, 8, 'wall'); carveRect(g, 2, 2, 7, 7, 'floor');
-          carveRect(g, 23, 1, 30, 8, 'wall'); carveRect(g, 24, 2, 29, 7, 'floor');
-          carveRect(g, 1, 12, 8, 18, 'wall'); carveRect(g, 2, 13, 7, 17, 'floor');
-          carveRect(g, 23, 12, 30, 18, 'wall'); carveRect(g, 24, 13, 29, 17, 'floor');
-          pt(g, 16, 19, 'door');
-          [[8,5],[23,5],[8,15],[23,15]].forEach(([x,y]) => pt(g, x, y, 'floor')); // lounge suite doorways
+          carveRect(g, 1, 1, 38, 27, 'floor');
+          carveRect(g, 1, 1, 38, 4, 'wall');   // viewport wall: the skyline vista is drawn over these tiles
+          const room = (x0, y0, x1, y1, gaps) => { carveRect(g, x0, y0, x1, y1, 'wall'); carveRect(g, x0 + 1, y0 + 1, x1 - 1, y1 - 1, 'floor'); gaps.forEach(([gx, gy]) => pt(g, gx, gy, 'floor')); };
+          room(1, 11, 9, 17, [[9, 13], [9, 14]]);     // senators' private room
+          room(30, 11, 38, 17, [[30, 13], [30, 14]]); // Ubrikkian showroom
+          room(1, 20, 9, 26, [[9, 22], [9, 23]]);     // high stakes sabacc salon
+          room(30, 20, 38, 26, [[30, 22], [30, 23]]); // discretionary office
+          pt(g, 19, 28, 'door'); pt(g, 20, 28, 'door');
           return g;
         },
       },
@@ -3125,6 +3409,9 @@ const PLANETS = {
             choices: [
               { text: 'Present the KDY Director override token.', morality: 0, loyalty: {},
                 result: 'The token reads instantly. Both optical sensors in the visor shift to a cooler configuration. "Director clearance confirmed." He steps two centimeters to the left — the difference between blocking the corridor and permitting passage. "Lady Kuat will see you in the inner suite. She was expecting you." He says nothing else.',
+                grants: { flags: ['vaelen_cleared'] } },
+              { text: 'Present Baroness Moira Kuat\'s letter of introduction.', morality: 0, loyalty: {}, requires: { item: 'kdy_courtesy_letter' },
+                result: 'He reads the seal without lifting the letter. The visor shifts to the cooler setting. "House Kuat has vouched for you. That is its prerogative and its risk." He steps aside by the width of a boot. "The inner suite is to the east. Do not forget whose name opened this door."',
                 grants: { flags: ['vaelen_cleared'] } },
               { text: 'Tell him Tanner sent you.', morality: 0, loyalty: {},
                 result: '"Tanner has KDY operational clearance. Not residential clearance." He still does not look at you. "Those are not the same authorization tier. I recognize that you are here. I also recognize that you are not cleared past this threshold." A pause. "If someone in the suites wishes to clear you personally, I will be informed."',
@@ -4930,6 +5217,159 @@ function NpcPortrait({ kind, accent }) {
       </svg>
     );
   }
+  // SENATE PORTRAITS BEGIN
+  if (kind === 'senator_horace') {
+    const robe = '#7A1E2C', gold = '#D4AF37', skin = '#D9B98C', hair = '#B8B4B0';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M5 42 L8 22 L22 22 L25 42 Z" fill={robe} />
+        <path d="M13 22 L15 42 L17 42 L17 22 Z" fill="#5A1420" />
+        <path d="M8 22 L22 22 L21 11 L9 11 Z" fill={robe} />
+        <path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={robe} />
+        <path d="M4 12 L10 11 L10 15 L5 16 Z M26 12 L20 11 L20 15 L25 16 Z" fill={gold} /><path d="M9 12 L15 19 L21 12 L21 9 L9 9 Z" fill="#5A1420" /><rect x="9" y="8.6" width="12" height="1.6" fill={gold} />
+        <rect x="11" y="2" width="8" height="9" rx="2" fill={skin} /><path d="M10.4 5 C10.4 0 19.6 0 19.6 5 L19.6 3 L10.4 3 Z" fill={hair} />
+        <rect x="12.2" y="6" width="1.8" height="1.2" fill="#2A1A10" /><rect x="16" y="6" width="1.8" height="1.2" fill="#2A1A10" /><path d="M12.6 9.4 L17.4 9.4" stroke="#9A8A7A" strokeWidth="0.8" />
+        <circle cx="6" cy="26" r="1.2" fill="#3AB0FF" /><circle cx="24" cy="26" r="1.2" fill="#E02A55" />
+        <rect x="26" y="14" width="1.4" height="26" fill="#6A4A2A" /><rect x="25.4" y="12" width="2.6" height="3" fill="#CBD3DC" /><rect x="25.6" y="38.6" width="2.2" height="2.4" fill="#CBD3DC" />
+      </svg>
+    );
+  }
+  if (kind === 'kuati_baroness') {
+    const gown = '#1E2E52', silver = '#CBD3DC', skin = '#D2A98A', hair = '#2A1E1A';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M4 42 L8 22 L22 22 L26 42 Z" fill={gown} />
+        <path d="M13 24 L15 42 L17 42 L17 24 Z" fill="#14203C" />
+        <path d="M8 22 L22 22 L20 11 L10 11 Z" fill={gown} />
+        <path d="M8 22 C5 22 4 18 6 13 L9 14 L8 22 Z M22 22 C25 22 26 18 24 13 L21 14 L22 22 Z" fill={gown} />
+        <path d="M3 13 L10 11 L10 15 L4 17 Z M27 13 L20 11 L20 15 L26 17 Z" fill={silver} /><rect x="10" y="20.4" width="10" height="1.2" fill={silver} />
+        <path d="M11 11 L15 16 L19 11 L19 9 L11 9 Z" fill="#14203C" />
+        <rect x="11.6" y="3" width="6.8" height="8" rx="2" fill={skin} />
+        <path d="M11 3 C11 -1 19 -1 19 3 L19 1.6 L11 1.6 Z M12.6 -2 L17.4 -2 L18 1 L12 1 Z M13.4 -4 L16.6 -4 L17 -2 L13 -2 Z" fill={hair} transform="translate(0 4)" />
+        <rect x="14.4" y="0" width="1.2" height="3" fill={silver} transform="translate(0 0)" /><circle cx="15" cy="0.2" r="0.9" fill={silver} />
+        <rect x="12.6" y="6" width="1.6" height="1.2" fill="#1A1410" /><rect x="15.8" y="6" width="1.6" height="1.2" fill="#1A1410" /><rect x="13.6" y="8.6" width="2.8" height="0.9" fill="#A03040" />
+        <rect x="20" y="22" width="5" height="3" fill="#E8ECEF" /><rect x="20.4" y="22.4" width="4.2" height="2.2" fill="#7FD0FF" opacity="0.8" />
+      </svg>
+    );
+  }
+  if (kind === 'sis_agent') {
+    const tunic = '#6A7078', trim = '#4A4F56', skin = '#C8956A', hair = '#2A2320';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill="#3A3F45" />
+        <path d="M8 22 L22 22 L21 11 L9 11 Z" fill={tunic} /><path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={tunic} />
+        <rect x="14.4" y="12" width="1.2" height="10" fill={trim} /><rect x="9" y="21" width="12" height="1.4" fill="#1A1C1E" /><rect x="17" y="23" width="3" height="2" fill="#1A1C1E" />
+        <rect x="11" y="2" width="8" height="9" rx="2" fill={skin} /><path d="M10.4 5 C10.4 0 19.6 0 19.6 5 L19.6 3.6 L10.4 3.6 Z" fill={hair} />
+        <rect x="12.2" y="6" width="1.8" height="1.2" fill="#1A1410" /><rect x="16" y="6" width="1.8" height="1.2" fill="#1A1410" />
+        <rect x="19.6" y="6" width="1.6" height="2.6" fill="#D2A98A" /><circle cx="20.4" cy="9.4" r="0.8" fill="#7FD0FF" />
+        <rect x="21" y="18" width="5" height="4" fill="#0A1A24" /><rect x="21.6" y="18.6" width="3.8" height="2.6" fill="#7FD0FF" opacity="0.8" />
+      </svg>
+    );
+  }
+  if (kind === 'twilek_diplomat') {
+    const skin = '#3AA6A0', robe = '#5A2E7A', gold = '#D4AF37';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M4 42 L8 22 L22 22 L26 42 Z" fill={robe} /><path d="M10 26 C12 34 18 34 20 26" fill="none" stroke={gold} strokeWidth="1.2" />
+        <path d="M8 22 L22 22 L20 11 L10 11 Z" fill="#7A4AA0" /><path d="M8 22 C5 22 3 18 5 13 L9 14 L8 22 Z M22 22 C25 22 27 18 25 13 L21 14 L22 22 Z" fill={robe} />
+        <path d="M9 13 C13 20 17 20 21 13" fill="none" stroke={gold} strokeWidth="1.6" /><rect x="9" y="21" width="12" height="1.2" fill={gold} />
+        <rect x="11" y="3" width="8" height="9" rx="2" fill={skin} />
+        <path d="M10.6 4 C5 6 4 16 7 24 L9 23 C7 16 8 10 11 8 Z M19.4 4 C25 6 26 16 23 24 L21 23 C23 16 22 10 19 8 Z" fill="#2E8C86" />
+        <rect x="6" y="18" width="3" height="1.2" fill={gold} /><rect x="21" y="18" width="3" height="1.2" fill={gold} />
+        <rect x="12.2" y="6.4" width="1.8" height="1.2" fill="#1A1410" /><rect x="16" y="6.4" width="1.8" height="1.2" fill="#1A1410" /><rect x="13.6" y="9" width="2.8" height="0.9" fill="#B03050" />
+      </svg>
+    );
+  }
+  if (kind === 'alsakan_aristocrat') {
+    const coat = '#1F6A4A', shirt = '#F0E6C8', gold = '#D4AF37', skin = '#E0BC96', hair = '#EAE4D8';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M6 42 L8 22 L22 22 L24 42 Z" fill="#14402E" />
+        <path d="M8 22 L22 22 L21 11 L9 11 Z" fill={shirt} /><path d="M9 12 L14 12 L14 30 L9 32 Z M21 12 L16 12 L16 30 L21 32 Z" fill={coat} />
+        {[15, 18.4, 21.8, 25.2].map((y, i) => <circle key={i} cx="14.2" cy={y} r="0.8" fill={gold} />)}
+        <path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={coat} /><rect x="4" y="19" width="4" height="1.2" fill={gold} /><rect x="22" y="19" width="4" height="1.2" fill={gold} />
+        <path d="M10 12 L15 18 L20 12 Z" fill="#E8DCC0" />
+        <rect x="11" y="3" width="8" height="9" rx="2" fill={skin} />
+        <path d="M9.6 6 C9 -1 21 -1 20.4 6 L20.4 3 L9.6 3 Z" fill={hair} /><path d="M10 -1 L15 -3 L20 -1 L15 1 Z" fill={coat} /><rect x="14.6" y="-3" width="0.8" height="3" fill={gold} />
+        <rect x="12.2" y="6.4" width="1.8" height="1.2" fill="#1A1410" /><rect x="16" y="6.4" width="1.8" height="1.2" fill="#1A1410" />
+      </svg>
+    );
+  }
+  if (kind === 'czerka_executive') {
+    const suit = '#2A2E34', shirt = '#E8ECEF', tie = '#B02A2A', skin = '#C8956A', hair = '#1E1A18';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M7 42 L9 22 L21 22 L23 42 Z" fill="#1E2126" />
+        <path d="M8 22 L22 22 L21 11 L9 11 Z" fill={suit} /><path d="M12 11 L15 22 L18 11 Z" fill={shirt} /><path d="M14 13 L16 13 L16.6 24 L15 26 L13.4 24 Z" fill={tie} />
+        <path d="M8 22 C5 22 3 17 5 12 L9 13 L8 22 Z M22 22 C25 22 27 17 25 12 L21 13 L22 22 Z" fill={suit} /><rect x="4" y="12" width="4" height="1" fill="#B02A2A" /><rect x="22" y="12" width="4" height="1" fill="#B02A2A" />
+        <rect x="11" y="2" width="8" height="9" rx="2" fill={skin} /><path d="M10.4 5 C10.4 0 19.6 0 19.6 5 L19.6 3 L10.4 3 Z" fill={hair} />
+        <rect x="12" y="6" width="1.8" height="1.2" fill="#1A1410" /><circle cx="17.2" cy="6.4" r="2" fill="#0A1A24" /><circle cx="17.2" cy="6.4" r="1.3" fill="#FF3030" /><circle cx="17.2" cy="6.4" r="0.5" fill="#FFB0B0" />
+        <path d="M19 8 L19.6 11" stroke="#8E9AA8" strokeWidth="0.8" /><rect x="21" y="20" width="4" height="3" fill="#E8ECEF" />
+      </svg>
+    );
+  }
+  if (kind === 'lux_sommelier') {
+    const rose = '#C98A7A', roseHi = '#E8B4A4', shade = '#9A6458';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <rect x="10" y="30" width="3.4" height="12" fill={rose} /><rect x="16.6" y="30" width="3.4" height="12" fill={rose} />
+        <path d="M9 12 L21 12 L19 30 L11 30 Z" fill={rose} /><path d="M9 12 L13 12 L12 30 L11 30 Z" fill={shade} opacity="0.6" />
+        <rect x="10.4" y="20" width="9.2" height="1.4" fill="#D4AF37" /><rect x="10.4" y="29" width="9.2" height="1.4" fill="#D4AF37" />
+        <path d="M5 13 L9 12 L9 26 L6.4 26 Z M25 13 L21 12 L21 26 L23.6 26 Z" fill={rose} />
+        <rect x="5" y="22" width="3.6" height="1.4" fill="#D4AF37" /><rect x="21.4" y="22" width="3.6" height="1.4" fill="#D4AF37" />
+        <rect x="11" y="2" width="8" height="10" fill={rose} /><rect x="10" y="3" width="1.4" height="7" fill={shade} />
+        <circle cx="13" cy="6" r="1.7" fill="#FFB844" /><circle cx="17" cy="6" r="1.7" fill="#FFB844" /><circle cx="13" cy="6" r="0.6" fill="#FFF8DC" /><circle cx="17" cy="6" r="0.6" fill="#FFF8DC" />
+        <rect x="13" y="9" width="4" height="1.1" fill={shade} />
+        <polygon points="11.4,12 15,14.6 18.6,12 18.6,14.4 15,16 11.4,14.4" fill="#0A0A0F" /><rect x="14" y="12.6" width="2" height="2" fill="#0A0A0F" />
+        <rect x="3" y="14" width="3" height="8" fill="#D8E6F0" opacity="0.8" /><rect x="3.4" y="17" width="2.2" height="4.6" fill="#E8742A" opacity="0.9" />
+      </svg>
+    );
+  }
+  if (kind === 'sv_tray_droid') {
+    const chrome = '#E0E6EE', shade = '#8E9AA8', rub = '#2A2E34';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <ellipse cx="15" cy="40" rx="11" ry="2" fill="#0A0A0F" opacity="0.4" />
+        <polygon points="15,38 8,35 22,35" fill="#7FD0FF" opacity="0.5" />
+        <path d="M2 28 L6 33 L24 33 L28 28 L24 24 L6 24 Z" fill={shade} /><path d="M2 28 L6 24 L24 24 L28 28 L24 26 L6 26 Z" fill={chrome} />
+        <path d="M6 33 L24 33 L26 30 L4 30 Z" fill={chrome} opacity="0.7" /><circle cx="15" cy="29" r="2" fill="#7FD0FF" /><circle cx="15" cy="29" r="0.8" fill="#FFFFFF" />
+        <rect x="4" y="22" width="22" height="3" fill={rub} />
+        <polygon points="7,22 8,12 12,12 13,22" fill="#C8E6F4" opacity="0.85" /><rect x="8" y="16" width="3.4" height="5.6" fill="#E8742A" opacity="0.85" />
+        <polygon points="17,22 18,14 22,14 23,22" fill="#C8E6F4" opacity="0.85" /><rect x="18" y="18" width="3.4" height="3.6" fill="#A02A4A" opacity="0.85" />
+        <rect x="13" y="19" width="4" height="3" fill="#F0E6C8" />
+      </svg>
+    );
+  }
+  if (kind === 'sweep_drone') {
+    const gold = '#D4AF37', dark = '#7A5E1E';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <ellipse cx="15" cy="36" rx="9" ry="1.6" fill="#0A0A0F" opacity="0.35" />
+        {[[7, 28, 2, 36], [9, 30, 5, 38], [21, 30, 25, 38], [23, 28, 28, 36], [8, 25, 3, 29], [22, 25, 27, 29]].map(([x1, y1, x2, y2], i) => <polyline key={i} points={`${x1},${y1} ${(x1 + x2) / 2},${y1 - 3} ${x2},${y2}`} fill="none" stroke={dark} strokeWidth="1.2" />)}
+        <ellipse cx="15" cy="28" rx="8" ry="5" fill={gold} /><ellipse cx="15" cy="26.4" rx="6" ry="2.6" fill="#E8D890" opacity="0.8" />
+        <path d="M8 28 L22 28" stroke={dark} strokeWidth="0.8" /><path d="M11 24 L11 32 M15 23 L15 33 M19 24 L19 32" stroke={dark} strokeWidth="0.6" opacity="0.6" />
+        <circle cx="15" cy="22" r="3.4" fill={gold} /><circle cx="13.6" cy="21.4" r="1" fill="#FF3030" /><circle cx="16.4" cy="21.4" r="1" fill="#FF3030" />
+        <path d="M12 19 L9 14 M18 19 L21 14" stroke={dark} strokeWidth="1" />
+        <polygon points="15,31 6,40 24,40" fill="#FF6060" opacity="0.07" style={{ animation: 'holo-flicker 1.6s ease-in-out infinite' }} />
+      </svg>
+    );
+  }
+  if (kind === 'black_sun_envoy') {
+    const gown = '#1F3E7A', trim = '#C8CFE0', skin = '#D2A98A', hair = '#16100E';
+    return (
+      <svg viewBox="0 0 30 42" width="26" height="36">
+        <path d="M4 42 L8 22 L22 22 L26 42 Z" fill={gown} /><path d="M12 24 L15 42 L18 42 L18 24 Z" fill="#14284C" />
+        <path d="M8 22 L22 22 L20 11 L10 11 Z" fill={gown} /><path d="M8 22 C5 22 4 18 6 13 L9 14 L8 22 Z M22 22 C25 22 26 18 24 13 L21 14 L22 22 Z" fill={gown} />
+        <path d="M10 12 L15 22 L20 12 L20 10 L10 10 Z" fill={trim} opacity="0.9" /><rect x="8" y="21" width="14" height="1.2" fill={trim} />
+        <circle cx="15" cy="17" r="2.6" fill="#0A0A0F" /><circle cx="15" cy="17" r="1.6" fill="#FFB844" /><circle cx="15" cy="17" r="0.8" fill="#0A0A0F" />
+        {Array.from({ length: 8 }, (_, i) => <line key={i} x1="15" y1="17" x2={15 + Math.cos(i * Math.PI / 4) * 3.2} y2={17 + Math.sin(i * Math.PI / 4) * 3.2} stroke="#0A0A0F" strokeWidth="0.7" />)}
+        <rect x="11" y="3" width="8" height="9" rx="2" fill={skin} />
+        <path d="M10 6 C9 -1 21 -1 20 6 L20 4 L10 4 Z M9 4 C7 6 8 12 10 14 L11 8 Z" fill={hair} />
+        <rect x="12.2" y="6.4" width="1.8" height="1.2" fill="#1A1410" /><rect x="16" y="6.4" width="1.8" height="1.2" fill="#1A1410" /><rect x="13.4" y="9" width="3.2" height="1" fill="#8A1A3A" />
+      </svg>
+    );
+  }
+  // SENATE PORTRAITS END
   // BADOR PORTRAITS BEGIN
   if (kind === 'kuati_officer') {
     const tunic = '#243348', swath = '#F0F4F8', gold = '#C5A059', skin = '#C8956A', sapph = '#0F52BA';
@@ -5642,6 +6082,22 @@ function AmbientLayer({ kind, accent }) {
       </div>
     );
   }
+  if (kind === 'lounge') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={'b' + i} style={{ position:'absolute',top:'-10%',left:0,width:`${6 + (i % 3) * 3}%`,height:'130%',background: i % 2 ? 'rgba(255,90,40,0.08)' : 'rgba(210,235,255,0.07)',transform:'skewX(-18deg)',animation:`cast-sweep ${11 + i * 4}s linear ${i * 3.2}s infinite` }} />
+        ))}
+        {Array.from({ length: 18 }, (_, i) => (
+          <div key={'m' + i} style={{ position:'absolute',left:`${(i*41)%100}%`,top:`${(i*23)%90}%`,width:`${2+(i%3)}px`,height:`${2+(i%3)}px`,borderRadius:'50%',background:'rgba(255,220,140,0.5)',opacity:0.5,animation:`drift ${6+(i%5)}s ease-in-out ${i*0.4}s infinite alternate` }} />
+        ))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={'w' + i} style={{ position:'absolute',left:`${(i*17+8)%90}%`,bottom:`${(i*11)%30}%`,width:'18px',height:'18px',borderRadius:'50%',background:'rgba(255,230,190,0.07)',filter:'blur(5px)',animation:`rise ${5+(i%3)}s ease-out ${i*0.9}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',top:'8%',left:'-10%',width:'140%',height:'2px',background:'linear-gradient(90deg,transparent,rgba(210,235,255,0.15),transparent)',animation:'drift 6s ease-in-out infinite alternate' }} />
+      </div>
+    );
+  }
   if (kind === 'dust') {
     return (
       <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',opacity:0.6 }}>
@@ -5811,6 +6267,11 @@ const ITEMS = {
   csf_aux_badge:              { id:'csf_aux_badge',              name:'CSF Auxiliary Badge',                  type:'gear',       iconKind:'keycard',  value:0,   description:'Your official commission as a Coruscant Security Force Auxiliary. Designation AX-7. Signed by Officer Vane.' },
   forensic_slicing_suite:     { id:'forensic_slicing_suite',     name:'Forensic Slicing Suite',               type:'tool',       iconKind:'tool',     value:120, description:'A CSF-issue datapad rig for isolating corrupted code trails, altering customs manifests, and bypassing lower-tier security seals.' },
   emp_grenade:                { id:'emp_grenade',                name:'EMP Grenade',                          type:'consumable', iconKind:'supply',   value:90,  description:'Republic-issue electromagnetic pulse charge. Disables droid systems and powered locks in a short radius. Non-lethal. Mostly.' },
+  alderaanian_vintage:        { id:'alderaanian_vintage',        name:'Alderaanian Vintage, Forty Years',     type:'consumable', iconKind:'supply',   value:600, description:'Pale gold spirits from a vineyard that no longer exists. Senators weep into these.' },
+  corellian_vintage:          { id:'corellian_vintage',          name:'Corellian Reserve Bottle',             type:'consumable', iconKind:'supply',   value:500, description:'A smoky, amber Corellian sipping spirit from the Senate cellar. Worth more than most speeders.' },
+  senate_blackmail_chip:      { id:'senate_blackmail_chip',      name:'Lantern Blackmail Chip',               type:'quest',      iconKind:'datapad',  value:0,   description:'A slim data chip taped under a terrarium soil tray. The label reads, in a theatrical hand: FOR THE SENATOR, WITH REGRET.' },
+  sis_surveillance_key:       { id:'sis_surveillance_key',       name:'SIS Surveillance Key',                 type:'quest',      iconKind:'keycard',  value:0,   description:'A flesh toned slicer key left in an orchid planter. Agent Kaelen wants it back quietly.' },
+  kdy_courtesy_letter:        { id:'kdy_courtesy_letter',        name:'Baroness Kuat Letter of Introduction', type:'quest',      iconKind:'keycard',  value:0,   description:'Signed in a steady hand, sealed with a brass Kuat wheel. Opens the Executive Ring, and not much else.' },
   bador_access_pass:          { id:'bador_access_pass',          name:'Base Access Pass',                     type:'quest',      iconKind:'keycard',  value:0,   description:'A brass edged card stamped with the Kuat wheel. The Main HQ blast doors read it and nothing else.' },
   kdy_circuit_boards:         { id:'kdy_circuit_boards',         name:'Salvaged Circuit Boards',              type:'tool',       iconKind:'gear',     value:70,  description:'Burnt but serviceable boards with KDY serials filed off. Trike swears they are better than new.' },
   kdy_scrap_bundle:           { id:'kdy_scrap_bundle',           name:'Scrap Metal Bundle',                   type:'tool',       iconKind:'supply',   value:40,  description:'Bundled duranium offcuts and wiring from the robotics workshop salvage bin.' },
@@ -6187,6 +6648,54 @@ const CODEX_ENTRIES = {
       'K series automata do not engage cleared personnel. Visitors carrying a Base Access Pass are logged and ignored.',
     ],
   },
+  'codex-sky-lounges': {
+    id:'codex-sky-lounges', title:'The Senatorial Sky-Lounges', category:'lore',
+    summary:'Where the Senate does its real business, nine hundred meters above the Plaza.',
+    body:[
+      'The Sky-Lounges occupy the upper spires of the Senate District, overlooking the five hundred Republic world tower complexes. They are the Old Republic at its most decadent: soaring parabolic arches of electrum and sandstone, conversation pits carved into obsidian and wrapped in garnet velvet, kinetic chandelabras drifting under the vault.',
+      'High frequency encryption dampeners fill the air with a soothing acoustic pink noise that defeats long range directional microphones. The scent is rare Alderaanian wine, crushed spice and synthetic incense, masking the ozone of heavy repulsor traffic outside the glass.',
+      'Everything said in a pit stays in the pit, officially. Unofficially, everyone knows who is listening.',
+    ],
+  },
+  'codex-senate-rotunda': {
+    id:'codex-senate-rotunda', title:'The Galactic Senate Rotunda', category:'lore',
+    summary:'A bronze domed mountain among the towers, lit by beams that cut through the dusk.',
+    body:[
+      'From the Promenade the Senate Rotunda rises between art deco spires, its bronze plated dome and concentric window rings glowing in the last of the sun, ground based spotlights slicing the violet haze. Smaller executive saucer domes surround it like moons.',
+      'West along the railing, the five towers of the Jedi Temple catch the sun above the lanes. The macro binocular logs their range and bearing in cyan, and a notice reminds viewers that observing the Temple at close range is discouraged.',
+    ],
+  },
+  'codex-lower-canyon': {
+    id:'codex-lower-canyon', title:'The Lower Canyon', category:'lore',
+    summary:'Five thousand meters below the glass, the city keeps its own lights.',
+    body:[
+      'Between the cliff faces of durasteel, horizontal ribbons of neon mark the plazas and industrial transit tunnels of the lower levels. The warm gold of the upper sky cools into an indigo haze over the first thousand meters and into smog by the third.',
+      'A handful of towers on the canyon floor wear no Republic registry. The macro binocular tags them in amber and has no heading to file them under.',
+    ],
+  },
+  'codex-senate-politics': {
+    id:'codex-senate-politics', title:'Tonight in the Senate', category:'story',
+    summary:'The Rimward appropriation, a leaked debt, and a very quiet panic.',
+    body:[
+      'The Rimward Trade Routes appropriation passed committee 61 to 38. Pirate activity on the Rimward lanes is up, and so are the share indices of the three firms that stand to be paid to stop it: Czerka, Kuat Drive Yards and Rendili StarDrive.',
+      'Senator Horace Vane is deeply in debt to Czerka. He is not the only one. The ticker leaves that out.',
+    ],
+  },
+  'codex-black-market-coords': {
+    id:'codex-black-market-coords', title:'Fountain Water Coordinates', category:'story',
+    summary:'The fountain projector hides a Black Sun meeting point in its Aurebesh.',
+    body:[
+      'Under the proverbs, the fountain projector carries a second layer: a string of grid coordinates that change every three hours. They point to a lower plaza on Level 1450. Black Sun envoys use it for meetings that cannot be held in a pit.',
+    ],
+  },
+  'codex-starship-models': {
+    id:'codex-starship-models', title:'The Shipwrights\' Gift', category:'lore',
+    summary:'Gold leaf miniatures from the Kuati shipwrights, including a hull no one can name.',
+    body:[
+      'The display case holds the great flagships of the Republic in miniature: early battle cruisers, Kuati diplomatic couriers from the Mandalorian Wars, a Hammerhead corvette with every rivet in place. Moving internal components make them breathe.',
+      'In the back row, one model matches no published class. The plate beneath it is blank.',
+    ],
+  },
   'codex-bador-history': {
     id:'codex-bador-history', title:'Bador Moon: Survey Classification', category:'lore',
     summary:'A moon with a classified past and an inconvenient present.',
@@ -6260,7 +6769,7 @@ const SPEEDER_DESTINATIONS = [
   { id: 'shadow_town',       name: 'Shadow Town L.1312',           level: 'Lower Mid-Levels',      cost: 30,  requiredFlag: 'inheritance_active',       targetZone: 'shadow_town',       targetPos: { x: 3,  y: 12 } },
   { id: 'senate_district',   name: 'Senate Precinct L.1900',       level: 'Upper Levels',          cost: 100, requiredFlag: 'rook_eliminated',          targetZone: 'senate_district',   targetPos: { x: 2,  y: 16 } },
   { id: 'slicer_alleyway',   name: 'Slicer Alleyway L.1150',       level: 'Lower Mid-Levels',      cost: 0,   requiredFlag: 'echo7_found',              targetZone: 'slicer_alleyway',   targetPos: { x: 2,  y: 10 } },
-  { id: 'senatorial_lounges', name: 'Senatorial Sky-Lounges L.5100', level: 'Senate District',       cost: 150, requiredFlag: 'syndicateManagement_active', targetZone: 'senatorial_lounges', targetPos: { x: 16, y: 18 } },
+  { id: 'senatorial_lounges', name: 'Senatorial Sky-Lounges L.5100', level: 'Senate District',       cost: 150, requiredFlag: 'syndicateManagement_active', targetZone: 'senatorial_lounges', targetPos: { x: 19, y: 26 } },
   { id: 'undercity_outskirts', name: 'Undercity Outskirts',          level: 'Undercity',            cost: 100, requiredFlag: 'speeder_transit_unlocked',  targetZone: 'undercity_outskirts', targetPos: { x: 2,  y: 12 } },
 ];
 
@@ -8271,6 +8780,8 @@ const ART = {
   moss:     { hi:'#8FAE6A', base:'#56743F', shade:'#2E4222' },
   sand:     { hi:'#E0C890', base:'#B89C64', shade:'#7C6A40' },
   fabric:   { hi:'#8A5A7A', base:'#5E3A52', shade:'#35202E' },
+  sky:      { amber:'#E8742A', ember:'#C4482A', rose:'#9C3A5C', plum:'#5E2A66', violet:'#3A1E62', indigo:'#1C1744', haze:'#6E5040', spire:'#2A2238', spireHi:'#4A3A56' },
+  sky:      { amber:'#E8742A', ember:'#C4482A', rose:'#9C3A5C', plum:'#5E2A66', violet:'#3A1E62', indigo:'#1C1744', haze:'#6E5040', spire:'#2A2238', spireHi:'#4A3A56' },
   // Emissive and signal colors: screens, lamps, status lights, holograms. Never used for solid bodies.
   signal: {
     cyan:'#7FD0FF', cyanHi:'#BFF4FF', cyanLo:'#2A8A9A', amber:'#FFB844', amberHi:'#FFE9B0', gold:'#F4DA86',
@@ -12988,6 +13499,331 @@ function PropFloorInlay() {
   );
 }
 // ===== BADOR BASE PROPS END =====
+// ===== SENATE LOUNGE PROPS BEGIN =====
+// Senatorial Sky Lounges: deep garnet velvet, electrum and gold leaf, obsidian, royal azure, sandstone, and the dusk skyline.
+function PropSkylineVista({ variant }) {
+  const S = ART.signal, K = ART.sky;
+  const hud = variant === 'hud';
+  const r = rng(77);
+  const bands = [[0, 16, K.indigo], [16, 32, K.violet], [32, 46, K.plum], [46, 58, K.rose], [58, 70, K.ember], [70, 80, K.amber], [80, 100, K.haze]];
+  const pyramids = [[40, 100, 180, 62], [260, 100, 150, 74], [520, 100, 220, 56], [800, 100, 180, 70], [1010, 100, 190, 58]];
+  const spires = Array.from({ length: 30 }, (_, i) => { const x = 8 + i * 40 + r() * 10, w = 16 + r() * 18, h = 30 + r() * 60; return { x, w, h, tier: r() < 0.5, i }; });
+  const far = Array.from({ length: 26 }, (_, i) => ({ x: 20 + i * 46 + r() * 14, w: 14 + r() * 14, h: 14 + r() * 26 }));
+  const windows = (sx, sy, w, h, seed, c) => { const rr = rng(seed), out = []; for (let yy = sy + 4; yy < sy + h - 3; yy += 5) for (let xx = sx + 3; xx < sx + w - 3; xx += 5) if (rr() < 0.42) out.push(<rect key={xx + '_' + yy} x={xx} y={yy} width="2.4" height="2.4" fill={c} opacity={0.55 + rr() * 0.4} />); return out; };
+  const saucer = (cx, base, sc, key) => (
+    <g key={key}>
+      <polygon points={pts([[cx - 120 * sc, base - 100 * sc], [cx - 60 * sc, base - 120 * sc], [cx + 60 * sc, base - 120 * sc], [cx + 120 * sc, base - 100 * sc]])} fill={ART.bronze.shade} />
+      {[0, 1, 2].map((t) => <Bev key={t} t="polygon" points={pts([[cx - (150 - t * 24) * sc, base - (20 + t * 26) * sc], [cx - (120 - t * 24) * sc, base - (42 + t * 26) * sc], [cx + (120 - t * 24) * sc, base - (42 + t * 26) * sc], [cx + (150 - t * 24) * sc, base - (20 + t * 26) * sc]])} c="bronze" o={1} />)}
+      <polygon points={pts([[cx - 56 * sc, base - 98 * sc], [cx, base - 128 * sc], [cx + 56 * sc, base - 98 * sc]])} fill={ART.bronze.hi} />
+      <rect x={cx - 150 * sc} y={base - 20 * sc} width={300 * sc} height={20 * sc} fill={ART.dark.shade} />
+      {[0, 1, 2].map((t) => Array.from({ length: 14 }, (_, k) => <rect key={t + '_' + k} x={cx - (112 - t * 24) * sc + k * (16 - t * 3.2) * sc} y={base - (36 + t * 26) * sc} width={4 * sc} height={5 * sc} fill={S.amberHi} opacity={0.7} />))}
+      <line x1={cx} y1={base - 128 * sc} x2={cx} y2={base - 146 * sc} stroke={ART.steel.hi} strokeWidth="1.6" /><circle cx={cx} cy={base - 148 * sc} r="2" fill={S.red} style={{ animation: 'ship-blink 1.8s steps(2) infinite' }} />
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 1216 160" width="1216" height="160" style={PROP_STYLE}>
+      {bands.map(([a, b, c], i) => <rect key={i} x="0" y={a} width="1216" height={b - a + 1} fill={c} />)}
+      <circle cx="930" cy="82" r="44" fill={K.amber} opacity="0.2" /><circle cx="930" cy="82" r="30" fill={K.amber} opacity="0.4" /><circle cx="930" cy="82" r="20" fill={S.amberHi} />
+      {[[120, 24, 70], [420, 40, 90], [700, 18, 120], [1060, 34, 80]].map(([x, y, w], i) => <rect key={i} x={x} y={y} width={w} height="2.6" fill={K.rose} opacity="0.35" style={{ animation: `cast-sweep ${40 + i * 9}s linear ${i * 4}s infinite` }} />)}
+      {/* distant step pyramids and far spires, fading into haze */}
+      {pyramids.map(([x, y, w, h], i) => <polygon key={i} points={pts([[x, y], [x + w * 0.1, y - h * 0.6], [x + w * 0.22, y - h * 0.6], [x + w * 0.28, y - h * 0.86], [x + w * 0.42, y - h * 0.86], [x + w * 0.5, y - h], [x + w * 0.6, y - h * 0.86], [x + w * 0.76, y - h * 0.6], [x + w, y]])} fill={K.spire} opacity="0.45" />)}
+      {far.map((f, i) => <rect key={i} x={f.x} y={100 - f.h} width={f.w} height={f.h + 1} fill={K.spire} opacity="0.5" />)}
+      <rect x="0" y="70" width="1216" height="30" fill={K.haze} opacity="0.2" />
+      {saucer(180, 100, 0.34, 'sa')}{saucer(1030, 100, 0.4, 'sb')}
+      {/* spires, art deco crowns, amber window grids */}
+      {spires.map((s) => (
+        <g key={s.i}>
+          <rect x={s.x} y={100 - s.h} width={s.w} height={s.h + 40} fill={K.spire} />
+          <rect x={s.x} y={100 - s.h} width={s.w * 0.28} height={s.h + 40} fill={K.spireHi} opacity="0.45" />
+          {s.tier && <rect x={s.x + s.w * 0.18} y={100 - s.h - 10} width={s.w * 0.64} height="11" fill={K.spire} />}
+          {s.tier && <polygon points={pts([[s.x + s.w * 0.3, 100 - s.h - 10], [s.x + s.w * 0.5, 100 - s.h - 22], [s.x + s.w * 0.7, 100 - s.h - 10]])} fill={K.spireHi} />}
+          {Array.from({ length: 3 }, (_, k) => <line key={k} x1={s.x + (s.w * (k + 1)) / 4} y1={100 - s.h} x2={s.x + (s.w * (k + 1)) / 4} y2={100} stroke={ART.ink} strokeWidth="0.5" opacity="0.4" />)}
+          {windows(s.x, 100 - s.h, s.w, s.h, 200 + s.i, S.amberHi)}
+          {s.i % 5 === 0 && <circle cx={s.x + s.w / 2} cy={100 - s.h - (s.tier ? 24 : 4)} r="1.6" fill={S.red} style={{ animation: `ship-blink ${1.4 + (s.i % 4) * 0.4}s steps(2) infinite` }} />}
+        </g>
+      ))}
+      {/* Galactic Senate Rotunda: bronze domed saucer with spotlight beams */}
+      <g>
+        <polygon points={pts([[500, 70], [560, 38], [656, 38], [716, 70]])} fill={ART.bronze.shade} />
+        <Bev t="polygon" points={pts([[470, 100], [520, 72], [696, 72], [746, 100]])} c="bronze" o={1.6} />
+        <Bev t="polygon" points={pts([[520, 72], [556, 46], [660, 46], [696, 72]])} c="bronze" o={1.2} />
+        <polygon points={pts([[556, 46], [608, 14], [660, 46]])} fill={ART.bronze.hi} /><polygon points={pts([[608, 14], [660, 46], [632, 46]])} fill={ART.brass.hi} opacity="0.6" />
+        {Array.from({ length: 26 }, (_, k) => <rect key={k} x={486 + k * 9.6} y={90} width="4" height="4" fill={S.amberHi} opacity="0.8" />)}
+        {Array.from({ length: 18 }, (_, k) => <rect key={k} x={532 + k * 9} y={64} width="3.4" height="4" fill={S.amberHi} opacity="0.7" />)}
+        <line x1="608" y1="14" x2="608" y2="2" stroke={ART.steel.hi} strokeWidth="1.4" /><circle cx="608" cy="1.6" r="1.8" fill={S.red} style={{ animation: 'ship-blink 2s steps(2) infinite' }} />
+        {[[560, 600], [656, 700]].map(([bx, tx], i) => <polygon key={i} points={pts([[bx - 6, 100], [bx + 6, 100], [tx + 24, 0], [tx - 24, 0]])} fill={S.kyber} opacity="0.06" style={{ animation: `holo-flicker ${3 + i}s ease-in-out infinite` }} />)}
+      </g>
+      <rect x="0" y="94" width="1216" height="46" fill={K.indigo} opacity="0.55" />
+      {/* skyway traffic: orange northbound, blue white southbound */}
+      {[[96, S.orange, 'skyline-lane', 0], [104, S.orange, 'skyline-lane', 1], [112, S.kyber, 'skyline-lane-rev', 2], [120, S.kyber, 'skyline-lane-rev', 3]].map(([y, c, anim, i]) => (
+        <g key={i}>
+          <line x1="0" y1={y} x2="1216" y2={y} stroke={c} strokeWidth="1.6" strokeDasharray="6 10" opacity="0.85" style={{ animation: `${anim} ${5 + i * 1.3}s linear infinite` }} />
+          <line x1="0" y1={y} x2="1216" y2={y} stroke={c} strokeWidth="4" strokeDasharray="1 40" opacity="0.4" style={{ animation: `${anim} ${8 + i}s linear infinite` }} />
+        </g>
+      ))}
+      {[[92, 0, S.amberHi, 7], [100, 3, S.orange, 9], [108, 1, S.kyber, 8], [116, 5, S.kyber, 11], [88, 7, S.amberHi, 12]].map(([y, d, c, t], i) => (
+        <g key={i} style={{ animation: `${i % 2 ? 'skyline-fly-rev' : 'skyline-fly'} ${t}s linear ${d}s infinite` }}>
+          <polygon points={pts([[0, y], [10, y - 2], [14, y], [10, y + 2]])} fill={c} /><rect x="-18" y={y - 0.6} width="18" height="1.4" fill={c} opacity="0.5" />
+        </g>
+      ))}
+      {/* lower canyon glow */}
+      <rect x="0" y="124" width="1216" height="16" fill={ART.ink} opacity="0.55" />
+      {Array.from({ length: 12 }, (_, i) => <rect key={i} x={30 + i * 102} y={126 + (i % 3) * 4} width={50 + (i % 4) * 14} height="1.8" fill={[S.cyan, S.magenta, S.blue][i % 3]} opacity="0.7" />)}
+      {/* window mullions with reflected light streaks */}
+      {Array.from({ length: 9 }, (_, i) => <g key={i}><Bev t="polygon" points={pts([[i * 152 - 3, 0], [i * 152 + 3, 0], [i * 152 + 3, 140], [i * 152 - 3, 140]])} c="dark" o={0.8} /></g>)}
+      {[[130, 0.14], [470, 0.1], [840, 0.12]].map(([x, o], i) => <polygon key={i} points={pts([[x, 0], [x + 26, 0], [x - 40, 138], [x - 66, 138]])} fill={S.white} opacity={o * 0.6} />)}
+      {/* obsidian sill, brass inlay, repulsor safety field */}
+      <rect x="0" y="138" width="1216" height="22" fill={ART.dark.shade} /><rect x="0" y="138" width="1216" height="3" fill={ART.brass.base} />
+      {Array.from({ length: 38 }, (_, i) => <rect key={i} x={i * 32 + 8} y="146" width="16" height="2" fill={ART.brass.hi} opacity="0.5" />)}
+      <line x1="0" y1="133" x2="1216" y2="133" stroke={S.cyan} strokeWidth="1.2" strokeDasharray="3 5" opacity="0.8" style={{ animation: 'skyline-lane 2.4s linear infinite' }} />
+      {Array.from({ length: 20 }, (_, i) => <Bev key={i} t="polygon" points={pts(ngon(i * 64 + 24, 134, 3, 3, 6))} c="brass" o={0.6} />)}
+      <Seams x={0} y={138} w={1216} h={22} cols={37} op={0.25} /><Rivets x={4} y={157} w={1208} n={76} c="brass" />
+      <Grime x={0} y={138} w={1216} h={22} seed={801} n={10} op={0.2} /><Scuff x={0} y={140} w={1216} h={18} seed={802} n={14} c="dark" />
+      {hud && (
+        <g style={{ animation: 'holo-flicker 3s ease-in-out infinite' }}>
+          {[[608, 14, 'GALACTIC SENATE ROTUNDA', 640, 4], [180, 40, 'EXECUTIVE SAUCER 4', 120, 26], [1030, 36, 'EXECUTIVE SAUCER 7', 960, 18], [330, 56, 'JEDI TEMPLE SPIRES', 270, 44], [880, 92, 'LANE 5120 NORTH', 800, 78], [380, 114, 'LANE 5120 SOUTH', 300, 128], [1100, 130, 'LOWER CANYON 5000 M', 1010, 122]].map(([x, y, t, tx, ty], i) => (
+            <g key={i}>
+              <line x1={x} y1={y} x2={tx} y2={ty} stroke={S.cyanHi} strokeWidth="0.7" />
+              <circle cx={x} cy={y} r="2" fill="none" stroke={S.cyanHi} strokeWidth="0.8" />
+              <rect x={tx - 2} y={ty - 6} width={t.length * 4.6 + 8} height="9" fill={ART.screen.cyan} opacity="0.9" /><text x={tx + 2} y={ty + 0.8} fontSize="5.6" fill={S.cyanHi} fontWeight="700" {...PT}>{t}</text>
+            </g>
+          ))}
+        </g>
+      )}
+    </svg>
+  );
+}
+
+function PropCrestInlay() {
+  return (
+    <svg viewBox="0 0 160 160" width="160" height="160" style={PROP_STYLE}>
+      <Bev t="polygon" points={pts(ngon(80, 80, 76, 76, 40))} c="dark" o={1.2} />
+      <circle cx="80" cy="80" r="70" fill="none" stroke={ART.brass.base} strokeWidth="3" />
+      <circle cx="80" cy="80" r="60" fill="none" stroke={ART.brass.hi} strokeWidth="1.2" opacity="0.8" />
+      {Array.from({ length: 24 }, (_, i) => { const a = (i / 24) * Math.PI * 2; return <rect key={i} x={80 + Math.cos(a) * 65 - 1.4} y={80 + Math.sin(a) * 65 - 2} width="2.8" height="4" fill={ART.brass.hi} opacity="0.85" transform={`rotate(${(a * 180) / Math.PI + 90} ${80 + Math.cos(a) * 65} ${80 + Math.sin(a) * 65})`} />; })}
+      <Bev t="polygon" points={pts(Array.from({ length: 24 }, (_, i) => { const a = (i / 24) * Math.PI * 2, rr = i % 2 ? 28 : 38; return [+(80 + Math.cos(a) * rr).toFixed(2), +(80 + Math.sin(a) * rr).toFixed(2)]; }))} c="red" o={1} />
+      <polygon points={pts(ngon(80, 80, 22, 22, 24))} fill={ART.dark.base} /><polygon points={pts(ngon(80, 80, 12, 12, 24))} fill={ART.brass.hi} /><circle cx="80" cy="80" r="4" fill={ART.dark.shade} />
+      {Array.from({ length: 8 }, (_, i) => <line key={i} x1="80" y1="80" x2={80 + Math.cos(i * Math.PI / 4) * 12} y2={80 + Math.sin(i * Math.PI / 4) * 12} stroke={ART.dark.shade} strokeWidth="1.2" />)}
+      <Seams x={6} y={6} w={148} h={148} cols={4} rows={4} op={0.14} /><Rivets x={20} y={146} w={120} n={7} c="brass" />
+      <Grime x={8} y={8} w={144} h={144} seed={811} n={5} op={0.12} /><Scuff x={10} y={10} w={140} h={140} seed={812} n={8} c="dark" />
+    </svg>
+  );
+}
+
+function PropRepulsorChandelier() {
+  const S = ART.signal;
+  const ring = (cx, cy, rx, ry, k, n) => (
+    <g key={k}>
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="none" stroke={ART.bronze.base} strokeWidth="4" />
+      <ellipse cx={cx} cy={cy - 1} rx={rx} ry={ry} fill="none" stroke={ART.brass.hi} strokeWidth="1.2" />
+      {Array.from({ length: n }, (_, i) => { const a = (i / n) * Math.PI * 2; return <polygon key={i} points={pts([[cx + Math.cos(a) * rx - 3, cy + Math.sin(a) * ry], [cx + Math.cos(a) * rx, cy + Math.sin(a) * ry - 7], [cx + Math.cos(a) * rx + 3, cy + Math.sin(a) * ry]])} fill={S.amberHi} opacity="0.85" />; })}
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 128 128" width="128" height="128" style={PROP_STYLE}>
+      <g style={{ animation: 'drift 7s ease-in-out infinite alternate' }}>
+        <ellipse cx="64" cy="104" rx="46" ry="12" fill={ART.ink} opacity="0.3" />
+        <Glow cx={64} cy={100} rx={44} ry={14} c={S.amberHi} opacity={0.35} style={{ animation: 'holo-flicker 4s ease-in-out infinite' }} />
+        {[[64, 74, 52, 14, 'a', 14], [64, 58, 36, 10, 'b', 10], [64, 44, 20, 6, 'c', 6]].map(([cx, cy, rx, ry, k, n]) => ring(cx, cy, rx, ry, k, n))}
+        <Bev t="polygon" points={pts(ngon(64, 58, 6, 4, 8))} c="brass" o={0.8} />
+        <line x1="64" y1="12" x2="64" y2="50" stroke={ART.steel.base} strokeWidth="1" strokeDasharray="2 3" />
+        {[0, 1, 2, 3].map((i) => <polygon key={i} points={pts([[36 + i * 18, 78], [40 + i * 18, 78], [38 + i * 18, 94]])} fill={S.amberHi} opacity="0.16" />)}
+      </g>
+      <Rivets x={46} y={120} w={36} n={5} c="brass" /><Grime x={20} y={30} w={90} h={80} seed={821} n={3} op={0.1} /><Scuff x={24} y={34} w={80} h={70} seed={822} n={4} c="brass" />
+    </svg>
+  );
+}
+
+function PropConversationPit() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <ellipse cx="64" cy="52" rx="60" ry="38" fill={ART.ink} opacity="0.45" />
+      <Bev t="polygon" points={pts(ngon(64, 48, 58, 36, 28))} c="dark" o={1.3} />
+      <ellipse cx="64" cy="48" rx="56" ry="34" fill="none" stroke={S.blue} strokeWidth="2" strokeDasharray="4 4" opacity="0.8" style={{ animation: 'ship-engine 3s ease-in-out infinite' }} />
+      <polygon points={pts(ngon(64, 50, 48, 28, 28))} fill={ART.fabric.shade} />
+      <Bev t="polygon" points={pts([[16, 50], [26, 30], [102, 30], [112, 50], [104, 62], [24, 62]])} c="red" o={1.4} />
+      {[0, 1, 2, 3, 4, 5].map((i) => <ellipse key={i} cx={30 + i * 14} cy={42 + (i % 2) * 2} rx="6" ry="3.6" fill={ART.red.hi} opacity="0.5" />)}
+      <polyline points={pts([[16, 50], [26, 30], [102, 30], [112, 50], [104, 62], [24, 62], [16, 50]])} fill="none" stroke={ART.ink} strokeWidth="0.9" opacity="0.7" />
+      <polygon points={pts(ngon(64, 52, 20, 11, 20))} fill={ART.dark.base} /><polygon points={pts(ngon(64, 51, 18, 9.4, 20))} fill={ART.wood.base} /><polygon points={pts(ngon(64, 50, 12, 6, 16))} fill={ART.wood.hi} opacity="0.7" />
+      <rect x="58" y="46" width="12" height="3.6" fill={ART.brass.hi} /><circle cx="52" cy="52" r="2.2" fill={S.cyanHi} opacity="0.8" /><circle cx="74" cy="51" r="1.8" fill={S.amberHi} />
+      <Glow cx={64} cy={52} rx={52} ry={26} c={S.blue} opacity={0.25} />
+      <Seams x={16} y={30} w={96} h={32} cols={5} op={0.2} /><Rivets x={20} y={64} w={88} n={9} c="brass" />
+      <Grime x={8} y={20} w={112} h={64} seed={831} n={4} op={0.14} /><Scuff x={12} y={24} w={104} h={56} seed={832} n={6} c="fabric" />
+    </svg>
+  );
+}
+
+function PropNewsColumn() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={92} rx={24} ry={3} />
+      <Slab x={10} y={80} w={44} h={10} k={2} c="sand" /><Slab x={14} y={74} w={36} h={8} k={1.6} c="sand" o={0.9} />
+      <Bev t="polygon" points={pts([[16, 74], [16, 14], [48, 14], [48, 74]])} c="sand" o={1.4} />
+      {[0, 1, 2, 3, 4].map((i) => <line key={i} x1={20 + i * 6} y1="14" x2={20 + i * 6} y2="74" stroke={ART.sand.shade} strokeWidth="1" opacity="0.7" />)}
+      <Slab x={12} y={8} w={40} h={10} k={2} c="brass" /><Slab x={14} y={20} w={36} h={4} k={1} c="dark" o={0.8} />
+      <rect x="18" y="28" width="28" height="34" fill={ART.screen.amber} opacity="0.95" />
+      <g style={{ animation: 'holo-flicker 2.4s ease-in-out infinite' }}>
+        {[['SENATE VOTE 61 TO 38', 34], ['CZERKA +2.1  KDY -0.4', 41], ['RENDILI  +0.9', 48], ['PIRACY RISING', 55]].map(([t, y], i) => <text key={i} x="20" y={y} fontSize="3" fill={i === 3 ? S.redHi : S.amberHi} fontWeight="700" {...PT}>{t}</text>)}
+        <rect x="19" y="30" width="26" height="1.2" fill={S.amber} opacity="0.7" /><rect x="19" y="59" width="26" height="1.2" fill={S.amber} opacity="0.5" />
+      </g>
+      <Glow cx={32} cy={46} rx={22} ry={22} c={S.amber} opacity={0.25} />
+      <Rivets x={16} y={76} w={32} n={5} c="brass" /><Vent x={24} y={84} w={16} h={4} n={2} />
+      <Grime x={10} y={14} w={44} h={74} seed={841} n={3} op={0.14} /><Scuff x={14} y={18} w={36} h={60} seed={842} n={4} c="sand" />
+    </svg>
+  );
+}
+
+function PropObsidianBar() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 192 64" width="192" height="64" style={PROP_STYLE}>
+      <PropShadow cx={96} cy={60} rx={90} ry={3} />
+      {/* back bar shelves */}
+      <Slab x={10} y={2} w={172} h={22} k={3} c="wood" o={1} /><Seams x={10} y={2} w={172} h={22} cols={9} op={0.3} />
+      {Array.from({ length: 16 }, (_, i) => <g key={i}><polygon points={pts([[16 + i * 10.4, 22], [18 + i * 10.4, 10], [21 + i * 10.4, 10], [23 + i * 10.4, 22]])} fill={[ART.glass.base, ART.amber.base, ART.red.hi, ART.teal.hi][i % 4]} opacity="0.9" /><rect x={18 + i * 10.4} y="7" width="3" height="3" fill={ART.brass.hi} /></g>)}
+      <rect x="10" y="12" width="172" height="1.4" fill={ART.brass.base} />
+      {/* obsidian slab with electrum river */}
+      <Bev t="polygon" points={pts([[2, 34], [8, 26], [184, 26], [190, 34], [190, 52], [184, 58], [8, 58], [2, 52]])} c="dark" o={1.6} />
+      <path d="M12 40 C40 32, 60 50, 96 42 S150 34, 180 46" fill="none" stroke={ART.brass.hi} strokeWidth="2.6" /><path d="M12 40 C40 32, 60 50, 96 42 S150 34, 180 46" fill="none" stroke={S.cyanHi} strokeWidth="0.9" opacity="0.8" style={{ animation: 'holo-flicker 3s ease-in-out infinite' }} />
+      <path d="M12 48 C50 44, 70 54, 110 50 S160 44, 180 52" fill="none" stroke={ART.brass.base} strokeWidth="1.4" opacity="0.8" />
+      <Glow cx={96} cy={44} rx={80} ry={10} c={S.cyan} opacity={0.22} />
+      {[28, 60, 120, 152].map((x, i) => <g key={i}><polygon points={pts([[x, 38], [x + 5, 38], [x + 4, 31], [x + 1, 31]])} fill={ART.glass.hi} opacity="0.8" /><circle cx={x + 2.5} cy={39} r="1" fill={[S.amber, S.cyan, S.magenta, S.amber][i]} /></g>)}
+      <Slab x={8} y={52} w={176} h={8} k={1.4} c="brass" o={0.9} /><Rivets x={14} y={56} w={164} n={20} c="brass" />
+      <Vent x={86} y={14} w={20} h={6} n={2} />
+      <Grime x={2} y={26} w={188} h={34} seed={851} n={5} op={0.16} /><Scuff x={6} y={28} w={180} h={30} seed={852} n={7} c="dark" />
+    </svg>
+  );
+}
+
+function PropHoloFountain() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={90} rx={40} ry={4} />
+      <Slab x={6} y={76} w={84} h={12} k={3} c="stone" o={1.2} /><Seams x={6} y={76} w={84} h={12} cols={8} op={0.3} />
+      <polygon points={pts([[12, 78], [84, 78], [78, 70], [18, 70]])} fill={ART.teal.shade} />
+      <Bev t="polygon" points={pts([[20, 72], [20, 8], [76, 8], [76, 72]])} c="stone" o={1.4} />
+      <rect x="26" y="14" width="44" height="54" fill={ART.screen.cyan} />
+      {Array.from({ length: 14 }, (_, i) => <rect key={i} x={28 + i * 3} y="14" width="1.6" height="54" fill={S.cyanHi} opacity={0.2 + (i % 3) * 0.1} style={{ animation: `prop-scan ${1.6 + (i % 4) * 0.3}s linear ${i * 0.1}s infinite` }} />)}
+      <g style={{ animation: 'holo-flicker 3.4s ease-in-out infinite' }}>
+        {['PEACE', 'ORDER', 'PROSPERITY'].map((t, i) => <text key={i} x="48" y={28 + i * 16} textAnchor="middle" fontSize="7" fill={S.cyanHi} fontWeight="700" letterSpacing="1" {...PT}>{t}</text>)}
+        {[34, 50, 66].map((y) => <text key={y} x="48" y={y} textAnchor="middle" fontSize="3.2" fill={S.amberHi} opacity="0.9" {...PT}>aurek besh cresh</text>)}
+      </g>
+      <Slab x={24} y={4} w={48} h={6} k={1.4} c="brass" /><Slab x={26} y={66} w={44} h={6} k={1.4} c="dark" o={0.8} />
+      <Glow cx={48} cy={74} rx={34} ry={7} c={S.cyan} opacity={0.4} />
+      {[34, 48, 62].map((x, i) => <circle key={i} cx={x} cy={76} r="1.6" fill={S.white} opacity="0.7" style={{ animation: `ship-blink ${1.4 + i * 0.4}s ease-in-out infinite` }} />)}
+      <Rivets x={24} y={84} w={48} n={7} c="brass" /><Grime x={8} y={8} w={80} h={80} seed={861} n={4} op={0.14} /><Scuff x={12} y={12} w={72} h={72} seed={862} n={5} c="stone" />
+    </svg>
+  );
+}
+
+function PropDecanterPedestal() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={24} ry={3} />
+      {[14, 40].map((x, i) => (
+        <g key={i}>
+          <Slab x={x} y={46} w={14} h={12} k={1.6} c="dark" o={1} /><Slab x={x - 2} y={54} w={18} h={5} k={1} c="brass" o={0.8} />
+          <Bev t="polygon" points={pts([[x + 1, 46], [x + 3, 22], [x + 11, 22], [x + 13, 46]])} c="glass" o={0.8} />
+          <rect x={x + 2.4} y={32 + i * 4} width="9.2" height={14 - i * 4} fill={[ART.amber.base, ART.red.base][i]} opacity="0.85" />
+          <polygon points={pts([[x + 5, 22], [x + 5.6, 14], [x + 8.4, 14], [x + 9, 22]])} fill={ART.glass.hi} opacity="0.8" /><rect x={x + 4} y="11" width="6" height="4" fill={ART.brass.hi} />
+          <rect x={x + 3} y="48" width="8" height="5" fill={ART.screen.cyan} /><circle cx={x + 7} cy="50.4" r="1.4" fill={i ? S.red : S.green} style={{ animation: `ship-blink ${2 + i}s steps(2) infinite` }} />
+        </g>
+      ))}
+      <Rivets x={14} y={57} w={36} n={6} c="brass" /><Grime x={10} y={12} w={44} h={50} seed={871} n={3} op={0.14} /><Scuff x={12} y={16} w={40} h={44} seed={872} n={4} c="glass" />
+    </svg>
+  );
+}
+
+function PropTerrarium() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <ellipse cx="32" cy="58" rx="16" ry="3" fill={ART.ink} opacity="0.35" />
+      <g style={{ animation: 'drift 5s ease-in-out infinite alternate' }}>
+        <Bev t="polygon" points={pts(ngon(32, 30, 22, 22, 18))} c="glass" o={0.8} />
+        <polygon points={pts(ngon(32, 32, 18, 18, 18))} fill={ART.screen.green} opacity="0.7" />
+        {[[26, 38, 18], [34, 38, 22], [30, 38, 14], [38, 38, 12]].map(([x, y, h], i) => <g key={i}><path d={`M${x} ${y} C${x - 4} ${y - h / 2}, ${x + 3} ${y - h * 0.8}, ${x + (i % 2 ? 6 : -6)} ${y - h}`} fill="none" stroke={ART.moss.hi} strokeWidth="1.8" /><circle cx={x + (i % 2 ? 6 : -6)} cy={y - h} r="2.4" fill={[S.violet, S.magenta, S.lime, S.cyanHi][i]} /></g>)}
+        <polygon points={pts([[22, 40], [42, 40], [38, 48], [26, 48]])} fill={ART.moss.shade} />
+        <polygon points={pts([[20, 18], [30, 14], [24, 26]])} fill={S.white} opacity="0.35" />
+        <Slab x={24} y={46} w={16} h={5} k={1.2} c="brass" /><Glow cx={32} cy={34} r={16} c={S.lime} opacity={0.22} style={{ animation: 'holo-flicker 4s ease-in-out infinite' }} />
+      </g>
+      <Rivets x={22} y={56} w={20} n={4} c="brass" /><Grime x={12} y={10} w={40} h={44} seed={881} n={2} op={0.1} /><Scuff x={14} y={14} w={36} h={36} seed={882} n={3} c="glass" />
+    </svg>
+  );
+}
+
+function PropBrassRegister() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <Slab x={6} y={26} w={52} h={30} k={3} c="dark" o={1} />
+      <Bev t="polygon" points={pts([[10, 30], [54, 30], [52, 52], [12, 52]])} c="brass" o={1.2} />
+      {Array.from({ length: 7 }, (_, i) => <rect key={i} x="14" y={33 + i * 2.8} width="36" height="1.4" fill={ART.ink} opacity="0.85" />)}
+      {[18, 30, 42].map((x, i) => <g key={i}><ellipse cx={x} cy="24" rx="5" ry="2.4" fill={S.white} opacity="0.12" style={{ animation: `steam-rise ${2.2 + i * 0.5}s ease-out ${i * 0.4}s infinite` }} /><ellipse cx={x + 1} cy="16" rx="3.6" ry="1.8" fill={S.amberHi} opacity="0.1" style={{ animation: `steam-rise ${3 + i * 0.4}s ease-out ${i * 0.7}s infinite` }} /></g>)}
+      <Rivets x={10} y={54} w={44} n={6} c="brass" />
+      <Grime x={6} y={26} w={52} h={30} seed={891} n={3} op={0.2} /><Scuff x={8} y={28} w={48} h={26} seed={892} n={4} c="brass" />
+    </svg>
+  );
+}
+
+function PropMacroBinocular() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={22} ry={3} />
+      <Slab x={20} y={46} w={24} h={12} k={2} c="brass" o={1} /><Bev t="polygon" points={pts([[28, 46], [28, 22], [36, 22], [36, 46]])} c="brass" o={0.9} />
+      <Bev t="polygon" points={pts([[10, 24], [16, 12], [48, 12], [54, 24], [48, 28], [16, 28]])} c="dark" o={1.2} />
+      {[20, 38].map((x, i) => <g key={i}><Bev t="polygon" points={pts(ngon(x + 3, 20, 7, 7, 10))} c="steel" o={0.8} /><circle cx={x + 3} cy="20" r="4.6" fill={ART.deepglass.shade} /><circle cx={x + 3} cy="20" r="3" fill={ART.glass.base} opacity="0.7" /><circle cx={x + 1.6} cy="18.6" r="1" fill={S.white} opacity="0.7" /></g>)}
+      <rect x="12" y="25" width="40" height="2" fill={S.cyan} opacity="0.7" style={{ animation: 'ship-blink 2.4s ease-in-out infinite' }} />
+      <Slab x={22} y={48} w={20} h={6} k={1} c="dark" o={0.9} /><text x="32" y="52.6" textAnchor="middle" fontSize="3" fill={S.cyanHi} fontWeight="700" {...PT}>SCAN</text>
+      <Rivets x={22} y={56} w={20} n={4} c="brass" /><Grime x={10} y={12} w={44} h={46} seed={901} n={3} op={0.16} /><Scuff x={12} y={14} w={40} h={40} seed={902} n={4} c="brass" />
+    </svg>
+  );
+}
+
+function PropGlassOverhang() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <Bev t="polygon" points={pts([[6, 12], [122, 12], [124, 54], [4, 54]])} c="deepglass" o={1} />
+      <polygon points={pts([[10, 16], [118, 16], [120, 50], [8, 50]])} fill={ART.screen.space} />
+      {Array.from({ length: 9 }, (_, i) => <line key={i} x1={14 + i * 12.4} y1="16" x2={14 + i * 12.4} y2="50" stroke={S.cyan} strokeWidth="0.5" opacity="0.4" />)}
+      {Array.from({ length: 3 }, (_, i) => <line key={i} x1="10" y1={26 + i * 10} x2="118" y2={26 + i * 10} stroke={S.cyan} strokeWidth="0.5" opacity="0.4" />)}
+      {Array.from({ length: 10 }, (_, i) => <rect key={i} x={16 + i * 11} y={20 + (i % 3) * 10} width={5 + (i % 3) * 3} height="1.6" fill={[S.magenta, S.cyan, S.amber][i % 3]} opacity="0.7" />)}
+      <polygon points={pts([[26, 14], [44, 14], [34, 50], [16, 50]])} fill={S.white} opacity="0.16" />
+      <rect x="6" y="12" width="116" height="2.4" fill={ART.brass.base} /><rect x="4" y="52" width="120" height="2.4" fill={ART.brass.base} />
+      <Slab x={44} y={2} w={40} h={8} k={1.4} c="dark" o={0.9} /><text x="64" y="8" textAnchor="middle" fontSize="4" fill={S.amberHi} fontWeight="700" {...PT}>DEPTH 5000 M</text>
+      <Rivets x={10} y={56} w={108} n={13} c="brass" /><Seams x={6} y={12} w={116} h={42} cols={5} op={0.2} />
+      <Grime x={4} y={12} w={120} h={44} seed={911} n={4} op={0.12} /><Scuff x={6} y={14} w={116} h={38} seed={912} n={5} c="glass" />
+    </svg>
+  );
+}
+
+function PropTintConsole() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={24} ry={3} />
+      <Slab x={20} y={44} w={24} h={13} k={1.4} c="brass" /><Slab x={12} y={54} w={40} h={5} k={1.2} c="dark" o={0.9} />
+      <Bev t="polygon" points={pts([[8, 6], [56, 6], [60, 10], [60, 42], [56, 46], [8, 46], [4, 42], [4, 10]])} c="dark" o={1.2} />
+      <rect x="9" y="10" width="46" height="24" fill={ART.screen.cyan} />
+      <text x="32" y="16" textAnchor="middle" fontSize="3.2" fill={S.cyanHi} fontWeight="700" {...PT}>VIEWPORT TINT</text>
+      <rect x="14" y="20" width="36" height="4" fill={ART.dark.base} /><rect x="14" y="20" width="22" height="4" fill={S.cyan} opacity="0.8" /><rect x="35" y="19" width="3" height="6" fill={S.white} />
+      <text x="14" y="30" fontSize="2.6" fill={S.amberHi} {...PT}>CLEAR</text><text x="40" y="30" fontSize="2.6" fill={S.amberHi} {...PT}>OBSIDIAN</text>
+      <circle cx="16" cy="40" r="3" fill={ART.brass.hi} /><circle cx="26" cy="40" r="3" fill={ART.brass.base} /><Lights x={38} y={40} n={4} gap={4.4} seed={9} />
+      <Rivets x={8} y={8} w={48} n={7} c="brass" /><Seams x={4} y={6} w={56} h={40} cols={2} op={0.2} />
+      <Grime x={4} y={6} w={56} h={52} seed={921} n={3} op={0.16} /><Scuff x={8} y={10} w={48} h={34} seed={922} n={4} c="dark" />
+    </svg>
+  );
+}
+// ===== SENATE LOUNGE PROPS END =====
+
+
+
 
 
 
@@ -13133,6 +13969,21 @@ const PROP_DEFS = {
   terminal_bank:        { w: 4, h: 2, ax: 1, ay: 1 },
   floor_inlay:          { w: 5, h: 5, ax: 2, ay: 2, backdrop: true },
   // BADOR DEFS END
+  // SENATE DEFS BEGIN
+  skyline_vista:        { w: 38, h: 5, ax: 19, ay: 4, backdrop: true },
+  crest_inlay:          { w: 5, h: 5, ax: 2, ay: 2, backdrop: true },
+  repulsor_chandelier:  { w: 4, h: 4, ax: 2, ay: 3, backdrop: true },
+  conversation_pit:     { w: 4, h: 3, ax: 2, ay: 1 },
+  news_column:          { w: 2, h: 3, ax: 0, ay: 2 },
+  obsidian_bar:         { w: 6, h: 2, ax: 2, ay: 1 },
+  holo_fountain:        { w: 3, h: 3, ax: 1, ay: 2 },
+  decanter_pedestal:    { w: 2, h: 2, ax: 0, ay: 1 },
+  terrarium:            { w: 2, h: 2, ax: 0, ay: 1 },
+  brass_register:       { w: 2, h: 2, ax: 0, ay: 1 },
+  macro_binocular:      { w: 2, h: 2, ax: 0, ay: 1 },
+  glass_overhang:       { w: 4, h: 2, ax: 1, ay: 1 },
+  tint_console:         { w: 2, h: 2, ax: 0, ay: 1 },
+  // SENATE DEFS END
 };
 
 const PropArt = React.memo(function PropArt({ kind, variant, active }) {
@@ -13275,6 +14126,21 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'terminal_bank': return <PropTerminalBank />;
     case 'floor_inlay': return <PropFloorInlay />;
     // BADOR CASES END
+    // SENATE CASES BEGIN
+    case 'skyline_vista': return <PropSkylineVista variant={variant} />;
+    case 'crest_inlay': return <PropCrestInlay />;
+    case 'repulsor_chandelier': return <PropRepulsorChandelier />;
+    case 'conversation_pit': return <PropConversationPit />;
+    case 'news_column': return <PropNewsColumn />;
+    case 'obsidian_bar': return <PropObsidianBar />;
+    case 'holo_fountain': return <PropHoloFountain />;
+    case 'decanter_pedestal': return <PropDecanterPedestal />;
+    case 'terrarium': return <PropTerrarium />;
+    case 'brass_register': return <PropBrassRegister />;
+    case 'macro_binocular': return <PropMacroBinocular />;
+    case 'glass_overhang': return <PropGlassOverhang />;
+    case 'tint_console': return <PropTintConsole />;
+    // SENATE CASES END
     default: return null;
   }
 });
@@ -18181,6 +19047,10 @@ function StarWarsRPG() {
   useEffect(() => { posRef.current = pos; }, [pos]);
   useEffect(() => { questFlagsRef.current = questFlags; }, [questFlags]);
   useEffect(() => { setNpcPositions({}); encStepsRef.current = 0; patrolRef.current = {}; }, [zoneId]);
+  useEffect(() => {
+    if (zoneId === 'senatorial_lounges') return;
+    setQuestFlags((prev) => { if (!Object.keys(prev).some((k) => k.startsWith('buff_'))) return prev; const next = { ...prev }; Object.keys(next).forEach((k) => { if (k.startsWith('buff_')) delete next[k]; }); return next; });
+  }, [zoneId]);
   useEffect(() => {
     const lines = zone.paAnnouncements;
     if (!lines || !lines.length) return;

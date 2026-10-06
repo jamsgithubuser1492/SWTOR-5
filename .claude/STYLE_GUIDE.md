@@ -406,3 +406,12 @@ Future candidates: apply the lighting pass to tactical enemy sprites, redraw leg
 - Backdrop props (`backdrop: true` in PROP_DEFS) are large ground level pieces that sit under other props, NPCs and doors. The validator skips footprint overlap checks for them.
 - Kuati palette, used for noble and command architecture: alabaster `ART.pearl`, slate blue `ART.deepglass`, burnished gold `ART.brass`, cyan holo light `ART.signal.cyan`. Industrial and manufacturing areas keep the amber, rust and hazard stripe palette.
 - 11 new NPC portrait kinds: `k_series_droid`, `ge3_protocol`, `binary_loader`, `gnk_power`, `kuati_astromech`, `zabrak_techwright`, `devaronian_inspector`, `nautolan_engineer`, `kdy_contractor`, `cyborg_mechanic`, `kuati_officer`. `kdy_commander` was redrawn as Commander Vael (slate blue coat, alabaster epaulets, gold clasps, cyan cybernetic optic).
+
+
+## v6 changelog: Senatorial Sky-Lounges
+
+- 13 new prop kinds: `skyline_vista` (backdrop, variants `plain`, `hud`), `crest_inlay` (backdrop), `repulsor_chandelier` (backdrop, animated float), `conversation_pit`, `news_column`, `obsidian_bar`, `holo_fountain`, `decanter_pedestal`, `terrarium`, `brass_register`, `macro_binocular`, `glass_overhang`, `tint_console`.
+- New `ART.sky` materials for dusk: amber, ember, rose, plum, violet, indigo, haze, spire, spireHi. A gradient sky is built from flat bands, per the house style.
+- Palette for the Senate District: deep garnet velvet (`ART.red` and `ART.fabric`), electrum and gold leaf (`ART.brass`), obsidian (`ART.dark`), royal azure (`ART.deepglass`), warm sandstone (`ART.sand`), transparisteel blue tint (`ART.glass`).
+- New portrait kinds: `senator_horace`, `kuati_baroness`, `sis_agent`, `twilek_diplomat`, `alsakan_aristocrat`, `czerka_executive`, `lux_sommelier`, `sv_tray_droid`, `sweep_drone`, `black_sun_envoy`.
+- New keyframes: `skyline-lane`, `skyline-lane-rev`, `skyline-fly`, `skyline-fly-rev`, `cast-sweep`.
