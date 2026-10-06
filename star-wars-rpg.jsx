@@ -2621,7 +2621,7 @@ const PLANETS = {
             triggersMinigame: 'syndicate_management' },
           { id: 'conquest_table', propArt: 'tactical_table', propVariant: 'conquest', x: 14, y: 14, once: false, iconKind: 'terminal', label: 'Sector Control Holo',
             requiresFlag: 'syndicateManagement_active',
-            description: 'A secondary tactical display overlaying the five contested sectors of Coruscant mid-city. Garrison strength, income flows, defense ratings, and faction aggression indicators scroll in real time. From here you direct the long war: deploy units, build infrastructure, launch assaults, and respond to crisis events before they destabilize your hold.',
+            description: 'A secondary tactical display overlaying the sixteen sectors of Coruscant, from the Sky-Lounges to the Undercity. Garrison strength, income flows, defense ratings, and faction aggression indicators scroll in real time. From here you direct the long war: deploy units, build infrastructure, launch assaults, and respond to crisis events before they destabilize your hold.',
             triggersMinigame: 'coruscant_conquest',
             minigameConfig: { startCredits: 5000 } },
           { id: 'vault_terminal', propArt: 'console', propVariant: 'vault', x: 34, y: 10, once: true, iconKind: 'terminal', label: 'Credit Vault Terminal',
@@ -13324,7 +13324,7 @@ function PropTacticalTable({ variant }) {
         {conq && <g>
           {[[48, 56, 'green'], [34, 50, 'blue'], [62, 50, 'amber'], [40, 66, 'cyan'], [58, 68, 'red']].map(([x, y, k], i) => <g key={i}><polygon points={pts(ngon(x, y, 9, 4.2, 6))} fill={S[k]} opacity="0.55" stroke={S[k]} strokeWidth="0.8" /><rect x={x - 1} y={y - 12} width="2" height="9" fill={S[k]} /></g>)}
           <g stroke={S.white} strokeWidth="0.6" fill="none" opacity="0.7"><polyline points={pts([[48, 56], [34, 50]])} /><polyline points={pts([[48, 56], [62, 50]])} /><polyline points={pts([[48, 56], [40, 66]])} /><polyline points={pts([[48, 56], [58, 68]])} /></g>
-          <text x="48" y="14" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>SECTOR CONTROL: 5 CONTESTED</text>
+          <text x="48" y="14" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>SECTOR CONTROL: 16 SECTORS</text>
         </g>}
         {bad && <g>
           {Array.from({ length: 4 }, (_, i) => <polygon key={i} points={pts(ngon(48, 74 - i * 9, 32 - i * 5, 8 - i * 1.2, 8, Math.PI / 8))} fill="none" stroke={S.redHi} strokeWidth="0.5" opacity="0.7" />)}
@@ -16933,6 +16933,7 @@ function resolveDialoguePhase(npc, questFlags) {
 
 
 
+
 // ===== CONQUEST ENGINE BEGIN =====
 // Coruscant Conquest v2: a pure, testable strategy engine. No React in here. State is plain JSON.
 // Campaign layer: sectors, garrisons, buildings, economy, enemy factions.
@@ -17462,6 +17463,7 @@ CQ.camp = (() => {
   function recruit(st0, secId, k, n) {
     n = n || 1; const st = clone(st0); const sec = st.sec[secId], u = U[k]; if (!sec || sec.owner !== 'player' || !u || k === 'trt') return R(false, st0, 'Not available.');
     if (u.req && !hasB(sec, u.req)) return R(false, st0, `${u.name} needs a ${BLD[u.req].name} in this sector.`);
+    { const free = garCap(sec) - total(sec.gar); if (n > free && free > 0) n = free; }
     if (total(sec.gar) + n > garCap(sec)) return R(false, st0, `Garrison full (${garCap(sec)}). Build Barracks or a Command Center, or move units out.`);
     const cost = unitCost(st, secId, k) * n, pw = u.pwr * n;
     if (st.cr < cost) return R(false, st0, `Need ${cost} CR.`); if (st.pwr < pw) return R(false, st0, `Need ${pw} PWR.`);
@@ -17646,7 +17648,7 @@ CQ.camp = (() => {
     // enemy turns
     neutralRegen(st); AIF.slice().sort(() => rnd() - 0.5).forEach((f) => { factionEconomy(st, f, rnd); aiAttack(st, f, rnd, events); });
     events.forEach((m) => logTo(st, m)); logTo(st, `Turn ${st.turn}: ${cr >= 0 ? '+' : ''}${cr} CR (after ${eco.upkeepCR} payroll), ${net >= 0 ? '+' : ''}${net} PWR, Heat ${st.heat}.`);
-    if (!st.pending && economy(st).cr >= CQ.WIN_INCOME) st.over = 'win';
+    if (!st.pending && !st.won && economy(st).cr >= CQ.WIN_INCOME) st.over = 'win';
     return { ...R(true, st, 'Turn ended.'), events };
   }
   function adjustRelation(st0, f, delta) {
@@ -20711,6 +20713,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
 
 
 
+
 // ===== CONQUEST UI ART BEGIN =====
 const CQ_INK = '#0B1018', CQ_LIGHT = '#E8EEF8';
 // Unit glyphs: one flat silhouette per unit type. Used on the map, in panels and as battle tokens.
@@ -21156,7 +21159,7 @@ function CQBattle({ battle, meta, title, onDone }) {
           </div>
           <div style={{ ...panel, fontSize: 10, color: '#8A98B8', lineHeight: 1.5 }}>
             <div style={{ color: '#2FC8FF', fontWeight: 800, marginBottom: 3 }}>FIELD RULES</div>
-            Dark blocks block movement and sight. Crates give cover (-2 damage at range). Glowing patches burn at end of turn. Your side moves first when attacking. {b.attacker === 'p' ? 'Hold the Command Node to win early.' : 'Hold out for 18 rounds or destroy the attackers.'}
+            Dark blocks block movement and sight. Crates give cover (-2 damage at range). Glowing patches burn at end of turn. Your side moves first when attacking. {b.attacker === 'p' ? 'Hold the Command Node to win early.' : 'Hold out for 22 rounds or destroy the attackers.'}
           </div>
         </div>
       </div>
@@ -21213,7 +21216,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
 
   const endTurn = () => {
     const r = CQ.camp.endTurn(st, Math.random); if (!r.ok) { flash(r.msg); return; }
-    setSt(r.state); if (r.events.length) setReport({ title: `TURN ${r.state.turn} REPORT`, lines: r.events.concat([`Income +${CQ.camp.economy(st).cr} CR.`]) });
+    setSt(r.state); if (r.events.length) setReport({ title: `TURN ${r.state.turn} REPORT`, lines: r.events.concat([`Treasury ${r.state.cr} CR.`]) });
   };
   // ---- attack planner
   const openPlanner = (targetId) => {
@@ -21262,7 +21265,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
         </div>
         <div style={{ padding: 12 }}>
           <div style={{ fontSize: 11, color: '#8A98B8', fontStyle: 'italic', marginBottom: 8 }}>{sd.lore}</div>
-          <div style={{ display: 'flex', gap: 14, fontSize: 12, marginBottom: 8, flexWrap: 'wrap' }}><span style={{ color: '#FFD36A' }}>¢ {sd.income + fxs.income}/turn</span><span style={{ color: '#34D86A' }}>⚡ {sd.pwr + fxs.pwrGen} PWR</span><span style={{ color: '#7FD0FF' }}>Cap {CQ.camp.total(ss.gar)}/{fxs.cap}</span></div>
+          <div style={{ display: 'flex', gap: 14, fontSize: 12, marginBottom: 8, flexWrap: 'wrap' }}><span style={{ color: '#FFD36A' }}>¢ {sd.income + fxs.income}/turn</span><span style={{ color: '#34D86A' }}>⚡ {sd.pwr + fxs.pwrGen} PWR</span><span style={{ color: '#7FD0FF' }}>Cap {CQ.camp.total(ss.gar)}/{Math.max(fxs.cap, CQ.camp.total(ss.gar))}</span></div>
           <div style={{ display: 'flex', gap: 4, marginBottom: 10, flexWrap: 'wrap' }}>{own && ptBtn('overview', 'Overview')}{own && ptBtn('recruit', 'Recruit')}{own && ptBtn('build', 'Build')}{own && ptBtn('move', 'Move')}</div>
           {(!own || ptab === 'overview') && (
             <div>
@@ -21284,7 +21287,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
                 <div key={k} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 4px', borderBottom: '1px solid #131C2C', opacity: locked ? 0.55 : 1 }}>
                   <CQUnitGlyph type={k} size={30} />
                   <div style={{ flex: 1 }}><div style={{ fontSize: 12, fontWeight: 800, color: '#E8F0FF' }}>{u.name}</div><CQUnitStats k={k} /><div style={{ fontSize: 10, color: '#6A7898' }}>{locked ? `Needs: ${CQ.BLD[u.req].name}` : u.role}</div></div>
-                  <div style={{ textAlign: 'right' }}><div style={{ fontSize: 11, color: '#FFD36A' }}>{cost}¢{u.pwr ? ` +${u.pwr}⚡` : ''}</div><div style={{ display: 'flex', gap: 3, marginTop: 3 }}><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => !locked && run(CQ.camp.recruit(st, sel, k, 1))}>+1</button><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => !locked && run(CQ.camp.recruit(st, sel, k, 5))}>+5</button></div></div>
+                  <div style={{ textAlign: 'right' }}><div style={{ fontSize: 11, color: '#FFD36A' }}>{cost}¢{u.pwr ? ` +${u.pwr}⚡` : ''}</div><div style={{ display: 'flex', gap: 3, marginTop: 3 }}><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => run(CQ.camp.recruit(st, sel, k, 1))}>+1</button><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => run(CQ.camp.recruit(st, sel, k, 5))}>+5</button></div></div>
                 </div>); })}
             </div>
           )}
@@ -21402,7 +21405,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
     <div>
       <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>{[['howto', 'How to play'], ['units', 'Units'], ['buildings', 'Buildings']].map(([t, l]) => <button key={t} style={cqBtn(codexTab === t ? '#FFD36A' : '#6A7898', false, { background: codexTab === t ? '#2A2410' : undefined })} onClick={() => setCodexTab(t)}>{l}</button>)}</div>
       {codexTab === 'howto' && <div style={{ ...CQ_PANEL, fontSize: 12, lineHeight: 1.7, color: '#B8C4DC', maxHeight: 520, overflowY: 'auto' }}>
-        {[['GOAL', 'Reach ' + CQ.WIN_INCOME + ' credits of income per turn, then end the turn. Income comes from the sectors you hold and the buildings in them.'], ['THE MAP', 'Coruscant is a vertical cross-section. Each card is a sector with its owner (colored border and pennant), income, garrison and building slots. A red pulsing border means you can attack it; the red arrows show which of your sectors will join the assault.'], ['RECRUIT AND BUILD', 'Select a sector you own. Recruit units into that sector (the Recruit tab) and build in its slots (the Build tab). Advanced units need the right building in the same sector: Tanks and Speeders need a Motor Pool, Droids a Droid Foundry, Bruisers a Barracks, Walkers a War College.'], ['ATTACK', 'Select an enemy sector next to one of yours and press PLAN ATTACK. Choose units from every adjacent sector of yours, run a battle forecast, then fight a Tactical Battle yourself or Auto-Resolve. Units that fought or moved this turn are spent until next turn. Faction HQs (★) cannot be captured.'], ['TACTICAL BATTLES', 'Each sector has its own battlefield. Deploy your units inside the cyan zone, then take turns. Move, shoot, use abilities, use cover, avoid burning tiles. Win by wiping out the defenders or by holding the Command Node for two of your turns. Defenders win by surviving 18 rounds.'], ['BUILDINGS IN BATTLE', 'Buildings change fights. Bunkers give the defenders hard cover, Turret Nests add auto turrets, Shield Generators shield defenders, Armories add damage, Rally Points add first turn speed, Orbital Batteries give you one big strike, Medical Bays revive 40% of the fallen.'], ['ENEMIES FIGHT BACK', 'The Black Sun, Exchange and CSF recruit, build and attack neutral sectors, each other and you. When they attack you, you get to defend in a tactical battle or auto-resolve. You can bribe factions to a pact (+80 standing) or provoke them.'], ['POWER AND HEAT', 'Tanks, Droids and Walkers cost PWR to build and PWR upkeep every turn. A power shortfall browns out the grid and cuts income. Heat rises every turn and with every attack; at 100 the CSF raids you for credits and a building.']].map(([h, t]) => <div key={h} style={{ marginBottom: 10 }}><div style={{ color: '#FFD36A', fontWeight: 800, letterSpacing: '0.08em' }}>{h}</div>{t}</div>)}
+        {[['GOAL', 'Reach ' + CQ.WIN_INCOME + ' credits of income per turn, then end the turn. Income comes from the sectors you hold and the buildings in them.'], ['THE MAP', 'Coruscant is a vertical cross-section. Each card is a sector with its owner (colored border and pennant), income, garrison and building slots. A red pulsing border means you can attack it; the red arrows show which of your sectors will join the assault.'], ['RECRUIT AND BUILD', 'Select a sector you own. Recruit units into that sector (the Recruit tab) and build in its slots (the Build tab). Advanced units need the right building in the same sector: Tanks and Speeders need a Motor Pool, Droids a Droid Foundry, Bruisers a Barracks, Walkers a War College.'], ['ATTACK', 'Select an enemy sector next to one of yours and press PLAN ATTACK. Choose units from every adjacent sector of yours, run a battle forecast, then fight a Tactical Battle yourself or Auto-Resolve. Units that fought or moved this turn are spent until next turn. Faction HQs (★) cannot be captured.'], ['TACTICAL BATTLES', 'Each sector has its own battlefield. Deploy your units inside the cyan zone, then take turns. Move, shoot, use abilities, use cover, avoid burning tiles. Win by wiping out the defenders or by holding the Command Node for two of your turns. Defenders win by surviving 22 rounds.'], ['BUILDINGS IN BATTLE', 'Buildings change fights. Bunkers give the defenders hard cover, Turret Nests add auto turrets, Shield Generators shield defenders, Armories add damage, Rally Points add first turn speed, Orbital Batteries give you one big strike, Medical Bays revive 40% of the fallen.'], ['ENEMIES FIGHT BACK', 'The Black Sun, Exchange and CSF recruit, build and attack neutral sectors, each other and you. When they attack you, you get to defend in a tactical battle or auto-resolve. You can bribe factions to a pact (+80 standing) or provoke them.'], ['POWER AND HEAT', 'Tanks, Droids and Walkers cost PWR to build and PWR upkeep every turn. A power shortfall browns out the grid and cuts income. Heat rises every turn and with every attack; at 100 the CSF raids you for credits and, outside your HQ sector, a building.']].map(([h, t]) => <div key={h} style={{ marginBottom: 10 }}><div style={{ color: '#FFD36A', fontWeight: 800, letterSpacing: '0.08em' }}>{h}</div>{t}</div>)}
       </div>}
       {codexTab === 'units' && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 10 }}>{CQ.UNIT_ORDER.map((k) => { const u = U[k]; return <div key={k} style={{ ...CQ_PANEL, display: 'flex', gap: 10 }}><CQUnitGlyph type={k} size={46} /><div><div style={{ fontWeight: 800, color: '#E8F0FF' }}>{u.name}</div><div style={{ fontSize: 10, color: '#7A88A8' }}>{u.role} · {u.cr}¢{u.pwr ? ` + ${u.pwr}⚡` : ''} · payroll {u.ucr}¢/turn{u.upkeep ? ` · upkeep ${u.upkeep}⚡` : ''}{u.req ? ` · needs ${CQ.BLD[u.req].name}` : ''}</div><CQUnitStats k={k} /><div style={{ fontSize: 11, color: '#9AA8C8', marginTop: 3 }}>{u.passive}</div>{u.ab && <div style={{ fontSize: 11, color: '#FFC24A', marginTop: 3 }}><b>{u.ab.name}</b> (cooldown {u.ab.cd}): {u.ab.desc}</div>}<div style={{ fontSize: 10, color: '#5A6888', fontStyle: 'italic', marginTop: 3 }}>{u.lore}</div></div></div>; })}</div>}
       {codexTab === 'buildings' && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 8 }}>{CQ.BUILDINGS.map((b) => <div key={b.id} style={CQ_PANEL}><div style={{ display: 'flex', justifyContent: 'space-between' }}><b style={{ color: '#E8F0FF', fontSize: 12 }}>{b.name}</b><span style={{ fontSize: 11, color: '#FFD36A' }}>{b.cost}¢{b.pwr ? ` +${b.pwr}⚡` : ''}</span></div><div style={{ fontSize: 10, color: '#7A88A8' }}>{b.cat}</div><div style={{ fontSize: 11, color: '#9AA8C8', marginTop: 2 }}>{b.desc}</div></div>)}</div>}
@@ -21437,7 +21440,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
       {planner && !battleCtx && plannerView()}
       {st.pending && !battleCtx && !report && defenseView()}
       {report && <div style={{ position: 'fixed', inset: 0, zIndex: 95, background: 'rgba(3,6,12,0.82)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ ...CQ_PANEL, width: 'min(520px,92vw)', padding: 20, border: '2px solid #FFD36A' }}><div style={{ fontSize: 18, fontWeight: 800, color: '#FFD36A', letterSpacing: '0.1em', marginBottom: 10 }}>{report.title}</div>{report.lines.map((l, i) => <div key={i} style={{ fontSize: 13, color: '#E0E8F8', marginBottom: 6, lineHeight: 1.5 }}>{l}</div>)}<button style={cqBtn('#FFD36A', false, { width: '100%', marginTop: 10, padding: 10 })} onClick={() => setReport(null)}>OK</button></div></div>}
-      {st.over === 'win' && <div style={{ position: 'fixed', inset: 0, zIndex: 110, background: 'rgba(0,16,8,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ ...CQ_PANEL, width: 'min(560px,92vw)', padding: 28, border: '2px solid #34D86A', textAlign: 'center', boxShadow: '0 0 60px #34D86A66' }}><div style={{ fontSize: 30, fontWeight: 800, color: '#34D86A', letterSpacing: '0.15em' }}>CORUSCANT IS YOURS</div><div style={{ fontSize: 13, color: '#B8E8C8', margin: '12px 0 18px', lineHeight: 1.6 }}>Your syndicate pulls in {eco.cr} credits a turn. The Black Sun, the Exchange and the CSF all answer to you now, whether they admit it or not.</div><button style={cqBtn('#34D86A', false, { padding: '12px 28px', fontSize: 14 })} onClick={onSuccess}>CLAIM VICTORY</button></div></div>}
+      {st.over === 'win' && <div style={{ position: 'fixed', inset: 0, zIndex: 110, background: 'rgba(0,16,8,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ ...CQ_PANEL, width: 'min(560px,92vw)', padding: 28, border: '2px solid #34D86A', textAlign: 'center', boxShadow: '0 0 60px #34D86A66' }}><div style={{ fontSize: 30, fontWeight: 800, color: '#34D86A', letterSpacing: '0.15em' }}>CORUSCANT IS YOURS</div><div style={{ fontSize: 13, color: '#B8E8C8', margin: '12px 0 18px', lineHeight: 1.6 }}>Your syndicate pulls in {eco.cr} credits a turn. The Black Sun, the Exchange and the CSF all answer to you now, whether they admit it or not.</div><button style={cqBtn('#34D86A', false, { padding: '12px 28px', fontSize: 14 })} onClick={() => { setSt({ ...st, over: null, won: true }); onSuccess(); }}>CLAIM VICTORY</button><button style={cqBtn('#7FD0FF', false, { padding: '12px 22px', fontSize: 14, marginLeft: 12 })} onClick={() => setSt({ ...st, over: null, won: true })}>KEEP PLAYING</button></div></div>}
       {battleCtx && <CQBattle battle={battleCtx.battle} meta={battleCtx.meta} title={battleCtx.title} onDone={(res) => finishBattle(battleCtx.meta, res)} />}
     </div>
   );
