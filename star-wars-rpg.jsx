@@ -5427,65 +5427,155 @@ const PLANETS = {
       },
 
       zora_iv_wreckage: {
-        id: 'zora_iv_wreckage', name: 'Abandoned Capital Ship — Zora IV',
-        subtitle: 'Bador Moon · Grid 9-1 · Final Approach',
+        id: 'zora_iv_wreckage', name: 'The Zora IV — Ghost Keel Drydock',
+        subtitle: 'Bador Moon · Grid 9-1 · The Architect\'s Sanctum',
         width: 48, height: 32, spawnPos: { x: 2, y: 16 }, textureId: 'ferrowake',
         accent: '#B8D4E8', accentGlow: 'rgba(184,212,232,0.25)', accentDim: '#485868',
         floorColor: '#141C24', floorAlt: '#1A2430', wallDark: '#080C10', wallLight: '#101820',
-        bg: 'radial-gradient(circle at 50% 30%, #101820 0%, #060C10 70%)', ambient: 'traffic',
+        bg: 'radial-gradient(circle at 50% 30%, #101820 0%, #060C10 70%)', ambient: 'wreck',
         decor: ['girder', 'pipe'],
+        paAnnouncements: [
+          'All hands, report to your stations. This is a recording from the year of the Drayen Massacre.',
+          'Containment integrity at four percent. Do not approach the hypercore.',
+          'Drydock crane four is out of service. Crane four has been out of service for forty years.',
+        ],
         doors: [
           { x: 0, y: 16, targetZone: 'deep_caverns', targetPos: { x: 46, y: 14 }, label: 'Deep Caverns' },
           { x: 0, y: 17, targetZone: 'deep_caverns', targetPos: { x: 46, y: 15 }, label: 'Deep Caverns' },
         ],
         worldObjects: [
-          { id: 'hypercore_chamber', propArt: 'hypercore', x: 28, y: 12, label: 'Experimental Hypercore Chamber',
-            description: 'A sealed vault integrated into the old ship\'s reactor housing. Inside, the hypercore pulses with a power reading that should not exist outside a full Star Destroyer.',
-            once: true, requiresFlag: 'hypercore_location_known', grantsFlag: 'hypercore_visible' },
-          { id: 'zora_iv_bridge', propArt: 'bridge_console', x: 20, y: 5, label: 'Zora IV Bridge',
-            description: 'The original bridge of the Zora IV, a Venator-class survivor that limped here after the Drayen Massacre and never left. The flight logs are intact. Three decades of waiting.',
-            once: true, grantsFlag: 'zora_iv_history_known', grantsCodex: 'codex-zora-iv', grantsItem: 'cherit_logbook' },
-          { id: 'architect_terminal', propArt: 'console', propVariant: 'architect', x: 16, y: 18, label: 'The Architect\'s Personal Terminal',
-            description: 'Final access logs, forty-three years of shadow work. The terminal is unlocked — whoever last used it expected someone would come.',
-            once: true, requiresFlag: 'architect_identity_known',
+          { id: 'zora_vista_w', propArt: 'bvista_24x5', propVariant: 'hullbay_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Dead Dreadnought Hall',
+            description: 'Ribs of a Venator class hull arch overhead, red emergency lamps pulsing along the girders. Cables hang like roots. A cracked viewport frames the cavern beyond.' },
+          { id: 'zora_vista_e', propArt: 'bvista_24x5', propVariant: 'hullbay_b', x: 36, y: 5, once: false, iconKind: 'vista', label: 'The Reactor Gallery',
+            description: 'A half built keel lies under scaffolds that nobody has climbed in thirty years. Work lights still flicker along the gallery, as if the shift never ended.' },
+          { id: 'keel_frame', propArt: 'keel_frame', x: 15, y: 16, once: false, iconKind: 'floor', label: 'The Ghost Keel',
+            description: 'A pocket dreadnought frame in a drydock cradle. The forward third wears pearl hull plates, the rest is bare ribs around a dark reactor seat. A plate reads GHOST KEEL HULL 001.',
+            grantsCodex: 'codex-ghost-keel' },
+          { id: 'zora_crane', propArt: 'maglev_crane', x: 8, y: 10, once: false, iconKind: 'crate', label: 'Drydock Gantry Crane',
+            description: 'A gantry crane frozen mid lift, a pearl hull plate still hanging from its hook, the chain crusted with rust.' },
+          { id: 'zora_scaffold', propArt: 'catwalk_post', x: 25, y: 10, once: false, iconKind: 'crate', label: 'Scaffold Post',
+            description: 'A scaffold post with a hand scratched tally of days. The count stops at fifteen thousand seven hundred.' },
+          { id: 'zora_servers', propArt: 'server_stack', x: 7, y: 20, once: false, iconKind: 'terminal', label: 'Design Archive Racks',
+            description: 'Racks of drafting servers. Two are warm. Someone keeps them running.' },
+          { id: 'zora_crates', propArt: 'cargo_container', x: 25, y: 20, once: false, iconKind: 'crate', label: 'Sealed Plating Crates',
+            description: 'Pearl hull plating, crated and stenciled KDY SURPLUS with a lot number that never existed.' },
+          { id: 'zora_bench', propArt: 'robotics_bench', x: 22, y: 17, once: false, iconKind: 'crate', label: 'Welder\'s Bench',
+            description: 'A half finished valve, a mug of cold caf, and a pair of reading glasses folded on a blueprint.' },
+          { id: 'zora_iv_bridge', propArt: 'bridge_console', x: 36, y: 8, once: false, iconKind: 'terminal', label: 'Zora IV Bridge',
+            description: 'The bridge console of a Venator class survivor. The flight logs are intact: she limped here after the Drayen Massacre and never left.',
+            grantsFlag: 'zora_iv_history_known', grantsCodex: 'codex-zora-iv' },
+          { id: 'zora_star_chart', propArt: 'holo_projector', x: 33, y: 11, once: false, iconKind: 'terminal', label: 'Survey Star Chart',
+            description: 'A projected map of the cavern grid, tunnels in blue, one node in red: the vault.' },
+          { id: 'zora_bridge_racks', propArt: 'server_stack', x: 40, y: 10, once: false, iconKind: 'terminal', label: 'Bridge Data Racks',
+            description: 'Black data racks, their labels peeled off one by one.' },
+          { id: 'cherit_memorial', propArt: 'memorial_plinth', x: 10, y: 27, once: false, iconKind: 'floor', label: 'Cherit Memorial',
+            description: 'A plinth with a folded Republic Intelligence jacket, a datapad and one holo candle. A brass plate reads CHERIT. The candle cell was replaced this month.',
+            grantsFlag: 'cherit_memorial_seen', grantsCodex: 'codex-cherit' },
+          { id: 'zora_cabin_locker', propArt: 'archive_cabinet', x: 7, y: 26, once: false, iconKind: 'crate', label: 'Cherit\'s Paper Files',
+            description: 'A locker of files nobody digitized: dead drops, payrolls, one folder marked KEEL.' },
+          { id: 'zora_cabin_desk', propArt: 'datapad_table', x: 13, y: 27, once: false, iconKind: 'terminal', label: 'Memorial Desk',
+            description: 'A desk with two chairs, one dusty, the other worn smooth.' },
+          { id: 'zora_rebreathers', propArt: 'rebreather_rack', x: 19, y: 27, once: false, iconKind: 'crate', label: 'Spare Rebreathers',
+            description: 'Six cylinders, five empty. The Architect rations his breath.' },
+          { id: 'zora_drafting', propArt: 'holo_table', x: 23, y: 26, once: false, iconKind: 'terminal', label: 'Drafting Table',
+            description: 'A table projecting a rotating keel in red wire. The date stamp in the corner reads last week.' },
+          { id: 'architect_terminal', propArt: 'console', propVariant: 'architect', x: 27, y: 27, once: false, iconKind: 'terminal', label: 'The Architect\'s Terminal',
+            description: 'Forty three years of private logs. The terminal is unlocked, as if someone expected a visitor.',
+            requiresFlag: 'architect_identity_known', lockedMessage: 'The screen asks for a name you cannot give yet. Somebody in the surface trail knows it.',
             grantsFlag: 'architect_logs_read', grantsCodex: 'codex-the-architect' },
-        ],
-        npcs: [
-          { id: 'the_architect', x: 18, y: 12, kind: 'the_architect', label: 'The Architect',
-            questNpc: true,
-            hideAfterFlags: ['architect_dead', 'architect_departed', 'hypercore_choice_made'],
-            repeatPrompt: '"What was built here will outlast all of us. That was the point."',
-            prompt: 'He is older than you expected. The rebreather gives him a labored rhythm, but his eyes are the sharpest thing in the room. He does not seem surprised to see you. "Tanner\'s contractor. Or perhaps something more by now." He stands at the bridge viewport, looking at the shape of the half-assembled ship below. "I built the first frame for this vessel forty-three years ago. It was declared destroyed with me. I have been less certain lately what I was giving the Republic."',
-            choices: [
-              { text: 'Ask who originally commissioned Ghost Keel.', morality: 5, loyalty: { republic: 8 }, result: '"A Republic intelligence officer who died eight years after commissioning it. Her name was Cherit. She believed that a state capable of extreme force but unwilling to use it was more deterrent than one that used force freely." He touches the viewport. "She was probably right. The question is whether that remains true when the state is no longer the same state that commissioned it."', grants: { flags: ['cherit_history_known'] } },
-              { text: 'Tell him the Syndicate will protect it better than the Republic ever would.', morality: -15, loyalty: { underworld: 15 }, result: '"I have heard that argument before. From intelligence services, from crime lords, from four different Senate subcommittees over four decades." He turns away. "It is always convincing to the person making it. What the ship does when it is used will determine whether you were right."', grants: { flags: ['architect_syndicate_argument'] } },
-              { text: 'Tell him you intend to destroy it.', morality: 20, loyalty: { republic: 15 }, result: '"I thought about that for thirty years. I chose to complete it instead." He straightens. "If you destroy it, I will not stop you. I made my choice. You are allowed to make a different one." He steps away from the viewport. "I will not be here when you do."', grants: { flags: ['architect_accepted_destruction', 'architect_departed'] } },
-            ],
-          },
-          { id: 'the_architect_final', x: 18, y: 14, kind: 'the_architect', label: 'The Architect',
-            requiresFlag: 'hypercore_visible',
-            hideAfterFlags: ['hypercore_choice_made'],
-            repeatPrompt: '"The choice is still yours."',
-            prompt: '"You have seen it." He stands with his hands clasped, looking at the hypercore chamber. "Three paths. Tanner\'s contract. A Republic demolition protocol I left active in the vault. Or your own comlink, if the Syndicate has a frequency for claiming capital assets." He does not tell you which to choose. "Forty-three years is enough time to stop having opinions about that kind of thing."',
-            choices: [
-              { text: 'Transmit schematics to KDY. Complete Tanner\'s contract.', morality: 0, loyalty: { underworld: 5 }, result: 'The transfer completes. Tanner\'s response is immediate: seventy-five thousand credits and KDY transit rights, permanent. The hypercore begins powering down remotely. You handed over something that will become a weapon for someone else\'s war.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_kdy', 'tanner_contract_completed'], items: ['experimental_hypercore_fragment'] } },
-              { text: 'Trigger the Republic demolition protocol. Destroy it.', morality: 25, loyalty: { republic: 20 }, result: 'The countdown initiates. Three minutes. You walk out of the Zora IV as the reactor core exceeds tolerance. The detonation is quiet from outside — a pulse, not an explosion. Something that should never have existed no longer does.', grants: { flags: ['hypercore_choice_made', 'hypercore_destroyed', 'republic_commendation'] } },
-              { text: 'Claim it for the Syndicate. This is your flagship now.', morality: -15, loyalty: { underworld: 25 }, result: 'The Syndicate frequency receives the handshake. "Asset secured." Somewhere on Coruscant, a ghost ship just found an owner. The pocket dreadnaught will take months to complete. But it will be yours.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_syndicate', 'syndicate_flagship_active'], items: ['experimental_hypercore_fragment'] } },
-            ],
-          },
+          { id: 'hypercore_vault_lock', propArt: 'console', propVariant: 'architect', x: 39, y: 20, once: true, iconKind: 'terminal', label: 'Hypercore Vault Lock',
+            description: 'A phrik reinforced vault lock running a Republic protocol that was never meant to be guessed. Bolts as thick as your arm wait behind it.',
+            triggersMinigame: 'terminal_slicing', minigameConfig: { difficulty: 6 },
+            requiresNoneFlags: ['hypercore_location_known', 'hypercore_vault_open'], grantsFlag: 'hypercore_vault_open' },
+          { id: 'hypercore_vault_auth', propArt: 'console', propVariant: 'architect', x: 39, y: 20, once: true, iconKind: 'terminal', label: 'Hypercore Vault Lock (Authorized)',
+            description: 'The lock chimes at the authorization Unit 8-X gave you and the bolts draw back. Someone wanted this door opened by the right visitor.',
+            requiresAllFlags: ['hypercore_location_known'], requiresNoneFlags: ['hypercore_vault_open'], grantsFlag: 'hypercore_vault_open' },
+          { id: 'hypercore_guard_stage1', propArt: 'sentinel_droid', x: 38, y: 14, once: true, iconKind: 'floor', label: 'Hull Sentinels',
+            description: 'A line of KDY pattern hull sentinels, armed and dormant. They wake the moment the vault lock lets go.',
+            requiresFlag: 'hypercore_vault_open', lockedMessage: 'The sentinels are dormant, waiting on the vault lock. Open the lock first.',
+            triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'zora_hull_wardens', flavorText: 'The vault bolts withdraw and the hull sentinels wake. They were built to stop exactly one kind of visitor.' },
+            grantsFlag: 'warden_guards_down' },
+          { id: 'hypercore_warden_prime', propArt: 'warden_prime', x: 40, y: 17, once: true, iconKind: 'floor', label: 'Warden Prime',
+            description: 'A four legged defence droid on a hazard striped plinth, one red optic, shoulder cannons the length of a speeder. It stands across the vault threshold.',
+            requiresFlag: 'warden_guards_down', lockedMessage: 'The Warden Prime stands behind the sentinel line, powered down. Clear the sentinels first.',
+            triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'ghost_keel_warden', flavorText: 'Warden Prime unfolds from its plinth. Forty three years of maintenance, and it has never fired in earnest.' },
+            grantsFlag: 'warden_prime_down' },
+          { id: 'hypercore_chamber', propArt: 'hypercore', x: 45, y: 16, once: false, iconKind: 'floor', label: 'Experimental Hypercore',
+            description: 'The hypercore turns in its housing, a power rating that should not exist outside a Star Destroyer. The Architect waits beside it.',
+            requiresFlag: 'warden_prime_down', lockedMessage: 'The chamber is sealed behind the Warden. The core can wait.',
+            grantsFlag: 'hypercore_visible', grantsCodex: 'codex-hypercore' },
+          { id: 'ghost_keel_end_kdy', propArt: 'sanctum_holo', x: 44, y: 13, once: false, iconKind: 'terminal', label: 'KDY Retrieval Uplink',
+            description: 'Retrieval droids lift drawings from the archive racks. A KDY transit charter glows on the console. Somewhere above, a yard slot has been cleared for a hull that does not exist yet.',
+            invisibleLocked: true, requiresFlag: 'hypercore_to_kdy', grantsFlag: 'ghost_keel_ending_seen' },
+          { id: 'ghost_keel_end_destroyed', propArt: 'sanctum_holo', x: 44, y: 13, once: false, iconKind: 'terminal', label: 'Cooled Reactor Seat',
+            description: 'The hypercore housing is a cold black shell with dark lamps. Ash drifts through the chamber. A Republic seal is burned into the rim: DEMOLITION COMPLETE.',
+            invisibleLocked: true, requiresFlag: 'hypercore_destroyed', grantsFlag: 'ghost_keel_ending_seen' },
+          { id: 'ghost_keel_end_syndicate', propArt: 'sanctum_holo', x: 44, y: 13, once: false, iconKind: 'terminal', label: 'Syndicate Command Link',
+            description: 'Syndicate engineers clamp a command relay to the keel cradle. The hull plate has a new name stenciled in green. The crew already calls her yours.',
+            invisibleLocked: true, requiresFlag: 'hypercore_to_syndicate', grantsFlag: 'ghost_keel_ending_seen' },
         ],
         collectibles: [
-          { id: 'zora_iv_reactor_log', x: 30, y: 20, label: 'Zora IV Final Reactor Log', reward: 600 },
-          { id: 'zora_iv_turbolaser_crystal', x: 6, y: 18, label: 'Turbolaser Focus Crystal', reward: 1200 },
+          { id: 'zora_iv_reactor_log', x: 27, y: 19, label: 'Zora IV Final Reactor Log', reward: 600 },
+          { id: 'zora_iv_turbolaser_crystal', x: 7, y: 14, label: 'Turbolaser Focus Crystal', reward: 1200 },
+        ],
+        npcs: [
+          { id: 'the_architect', x: 17, y: 7, kind: 'the_architect', label: 'The Architect', questNpc: true,
+            hideAfterFlags: ['architect_dead', 'architect_departed', 'hypercore_choice_made'],
+            repeatPrompt: '"What was built here was meant to outlast us."',
+            prompt: 'An old man in a rebreather watches the half built keel from the gallery rail. "Tanner\'s contractor. Or something more by now. I drew that frame forty three years ago, and was declared dead with it."',
+            choices: [
+              { text: 'Who commissioned the Ghost Keel?', morality: 5, loyalty: { republic: 8 }, result: '"An intelligence officer named Cherit. She held that a state able to use force and unwilling to deters more than one that always does." He touches the rail. "The state changed. The ship did not."', grants: { flags: ['cherit_history_known'], codex: ['codex-cherit'] } },
+              { text: 'The Syndicate will keep it safer than the Republic.', morality: -15, loyalty: { underworld: 15 }, result: '"I have heard that from spies, from crime lords and from four Senate committees." He does not turn. "Every one was sincere. Ask what it does when it is used."', grants: { flags: ['architect_syndicate_argument'] } },
+              { text: 'I came to destroy it.', morality: 20, loyalty: { republic: 15 }, result: '"I thought about that for thirty years, then chose to finish it." He straightens. "If you destroy it, I will not stop you. You may choose differently than I did."', grants: { flags: ['architect_accepted_destruction'], codex: ['codex-the-architect'] } },
+            ] },
+          { id: 'the_architect_final', x: 44, y: 19, kind: 'the_architect', label: 'The Architect', questNpc: true,
+            requiresFlag: 'hypercore_visible', hideAfterFlags: ['hypercore_choice_made'],
+            repeatPrompt: '"The choice is still yours."',
+            prompt: '"You have seen it." He stands before the hypercore, hands clasped. "Three paths: Tanner\'s contract, the Republic demolition protocol I left armed in this vault, or your own comlink. I stopped having opinions long ago."',
+            choices: [
+              { text: 'Transmit the schematics to KDY. Complete Tanner\'s contract.', morality: 0, loyalty: { underworld: 5 }, result: 'The transfer completes. Tanner answers within seconds: seventy five thousand credits and a permanent KDY transit charter. The hypercore powers down by remote. You have armed someone else\'s war.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_kdy', 'tanner_contract_completed', 'ghost_keel_complete'], items: ['experimental_hypercore_fragment', 'zora_kdy_transit_charter'], credits: 75000, codex: ['codex-ending-keel-kdy'] } },
+              { text: 'Trigger the Republic demolition protocol. Destroy it.', morality: 25, loyalty: { republic: 20 }, result: 'Three minutes on the clock. You walk out as the core passes tolerance. The detonation is a quiet pulse from outside, not an explosion. Something that should never have existed no longer does.', grants: { flags: ['hypercore_choice_made', 'hypercore_destroyed', 'republic_commendation', 'ghost_keel_complete'], items: ['zora_republic_commendation'], credits: 15000, codex: ['codex-ending-keel-destroyed'] } },
+              { text: 'Claim it for the Syndicate. This is your flagship now.', morality: -15, loyalty: { underworld: 25 }, result: 'The Syndicate frequency accepts the handshake. "Asset secured." Somewhere on Coruscant a ghost ship just found an owner. It will take months to finish, but it is yours. Your passive income rises.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_syndicate', 'syndicate_flagship_active', 'ghost_keel_complete'], items: ['experimental_hypercore_fragment', 'zora_syndicate_command_key'], codex: ['codex-ending-keel-syndicate'] } },
+            ] },
+          { id: 'the_architect_after', x: 44, y: 19, kind: 'the_architect', label: 'The Architect', questNpc: true, repeatable: true,
+            requiresFlag: 'ghost_keel_complete',
+            phases: [
+              { id: 'phase_architect_after_kdy', requiresAllFlags: ['hypercore_to_kdy'],
+                prompt: 'The Architect watches KDY retrieval droids file past the vault door. "They will finish it faster than I could. That is what troubles me."',
+                repeatPrompt: '"Let them take the drawings. Not me."',
+                choices: [{ text: 'Will you go with them?', morality: 0, loyalty: {}, result: '"No. I am an old frame in a dead ship. I will stay with her until the last droid leaves."' }] },
+              { id: 'phase_architect_after_destroyed', requiresAllFlags: ['hypercore_destroyed'],
+                prompt: 'The Architect sits beside the cooled core, his rebreather ticking. "Quiet. Forty three years, and it is only quiet."',
+                repeatPrompt: '"Cherit would have laughed."',
+                choices: [{ text: 'What will you do now?', morality: 5, loyalty: { republic: 3 }, result: '"Walk out of this mountain. Plant something." A thin smile. "Cherit would have laughed at that too."' }] },
+              { id: 'phase_architect_after_syndicate', requiresAllFlags: ['hypercore_to_syndicate'],
+                prompt: 'The Architect studies Syndicate engineers measuring the keel. "Your people ask better questions than KDY did. They still want the wrong answers."',
+                repeatPrompt: '"Do not call her a flagship in my hearing."',
+                choices: [{ text: 'Stay and finish her.', morality: -3, loyalty: { underworld: 3 }, result: '"As a consultant. Pay well, and keep the green paint off the bridge."' }] },
+            ] },
         ],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 5, 46, 30, 'floor');
+          carveRect(g, 1, 5, 46, 5, 'floor');       // maintenance catwalk under the hull ribs
+          carveRect(g, 1, 14, 4, 19, 'floor');      // airlock vestibule
+          carveRect(g, 5, 16, 5, 17, 'floor');      // inner bulkhead
+          carveRect(g, 6, 8, 28, 21, 'floor');      // drydock hangar
+          carveRect(g, 12, 6, 22, 7, 'floor');      // frame gallery
+          carveRect(g, 11, 12, 19, 15, 'wall');     // the keel in its cradle (anchor row 16 stays floor)
+          carveRect(g, 6, 24, 15, 29, 'floor');     // Cherit memorial cabin
+          carveRect(g, 10, 22, 10, 23, 'floor');
+          carveRect(g, 18, 24, 28, 29, 'floor');    // the Architect's quarters
+          carveRect(g, 23, 22, 23, 23, 'floor');
+          carveRect(g, 31, 6, 41, 11, 'floor');     // bridge
+          carveRect(g, 29, 9, 30, 10, 'floor');
+          carveRect(g, 29, 15, 36, 18, 'floor');    // reactor corridor
+          carveRect(g, 37, 12, 41, 21, 'floor');    // vault antechamber
+          carveRect(g, 42, 16, 42, 17, 'floor');    // vault threshold
+          carveRect(g, 43, 11, 46, 22, 'floor');    // hypercore chamber
           pt(g, 0, 16, 'door'); pt(g, 0, 17, 'door');
           return g;
         },
       },
-
     },
   },
 };
@@ -7239,6 +7329,9 @@ const ITEMS = {
   ion_charged_coils:         { id:'ion_charged_coils',         name:'Ion-Charged Power Coils',               type:'gear',       iconKind:'gear',     value:600,  description:'Precision coils calibrated for a reactor-scale power draw. Not standard issue for any published vessel class.' },
   cherit_logbook:            { id:'cherit_logbook',            name:"Cherit's Personal Logbook",             type:'quest',      iconKind:'datapad',  value:0,    description:'The private log of Republic Intelligence Officer Cherit, spanning forty-three years. The final entry is dated eighteen months before she was officially declared killed.' },
   experimental_hypercore_fragment: { id:'experimental_hypercore_fragment', name:'Experimental Hypercore Fragment', type:'quest', iconKind:'artifact', value:8000, description:'A severed sliver of the Ghost Keel hypercore. Enough to reverse-engineer the power generation method. Enough to cause problems for anyone who does.' },
+  zora_kdy_transit_charter:  { id:'zora_kdy_transit_charter',  name:'KDY Permanent Transit Charter',          type:'quest',      iconKind:'keycard',  value:0,    description:'A gold sealed charter granting free transit through every KDY facility, signed by a broker who will deny it.' },
+  zora_republic_commendation:{ id:'zora_republic_commendation',name:'Republic Intelligence Commendation',    type:'quest',      iconKind:'artifact', value:0,    description:'A plain black medal with no inscription, issued by an office that does not exist. It opens doors that do not exist either.' },
+  zora_syndicate_command_key:{ id:'zora_syndicate_command_key',name:'Ghost Keel Command Key',                 type:'quest',      iconKind:'keycard',  value:0,    description:'A cylinder holding the only command authority for the Ghost Keel, sealed in Syndicate green.' },
   forged_transit_chit:       { id:'forged_transit_chit',       name:'Forged KDY Transit Chit',               type:'quest',      iconKind:'keycard',  value:300,  description:'A ring-standard transit pass with a falsified clearance tier. Garrok\'s work is clean enough that casual inspection passes. Do not push it against a biometric reader.' },
   corellian_moonshine:       { id:'corellian_moonshine',       name:'Corellian Reserve Moonshine',           type:'consumable', iconKind:'supply',   value:60,   description:'Genuine off-world distillate, amber and sharp. Not synthetic. Corporal Dren mentioned it in passing without exactly asking for it.' },
   missing_hyperdrive_manifest: { id:'missing_hyperdrive_manifest', name:'Jaxen\'s Original Cargo Receipt',  type:'quest',      iconKind:'datapad',  value:0,    description:'The Corellian dock authority receipt predating the manifest alteration. Twelve military-grade hyperdrive motivators appear nowhere in it. Jaxen was set up.' },
@@ -7290,6 +7383,38 @@ const PENTHOUSE_PACKAGES = [
 
 const CODEX_ENTRIES = {
   // BADOR CODEX BEGIN
+  'codex-zora-iv': {
+    id:'codex-zora-iv', title:'The Zora IV', category:'lore',
+    summary:'A Venator class survivor that limped into the dark and never left.',
+    body:['The Zora IV was a Republic Venator class cruiser that survived the Drayen Massacre with a failing drive and a crew of ninety. Her captain steered into the deep caverns of Bador to hide her from the pursuit.','The crew stayed. Over decades the wreck became a workshop, then a drydock, then a tomb with one living tenant.'] },
+  'codex-the-architect': {
+    id:'codex-the-architect', title:'The Architect', category:'dossier',
+    summary:'An engineer officially killed forty three years ago.',
+    body:['Registered as dead in the same incident that destroyed the first Ghost Keel frame, the Architect has worked in secret ever since, paid from an account that appears in no KDY registry.','His logs show a man arguing with his own work. Each decade he drew a weapon, and each decade he added a reason not to finish it.'] },
+  'codex-cherit': {
+    id:'codex-cherit', title:'Cherit', category:'dossier',
+    summary:'The officer who commissioned a ship nobody could use.',
+    body:['Republic Intelligence Officer Cherit believed in deterrence by capability. She commissioned the Ghost Keel as a weapon to be built and never fired.','She died eight years into the project. The Architect kept building for her, and kept her candle lit.'] },
+  'codex-ghost-keel': {
+    id:'codex-ghost-keel', title:'The Ghost Keel', category:'lore',
+    summary:'A pocket dreadnought hidden under a moon.',
+    body:['A pocket dreadnought: the firepower of a capital ship in a hull small enough to hide in a cavern. It was built in secret on Bador, hidden by the jamming of the Titan Manifold and by a payroll nobody at KDY ever audited.','Its hypercore is the reason three powers want it.'] },
+  'codex-hypercore': {
+    id:'codex-hypercore', title:'The Experimental Hypercore', category:'lore',
+    summary:'Star Destroyer output in a reactor the size of a cargo lift.',
+    body:['The design replaces three conventional cores with a single resonant crystal lattice. It is the only part of the Ghost Keel anyone truly needs, and the only part that cannot be rebuilt from drawings.'] },
+  'codex-ending-keel-kdy': {
+    id:'codex-ending-keel-kdy', title:'Ending: The Keel Goes to Kuat', category:'lore',
+    summary:'KDY takes the schematics.',
+    body:['Tanner\'s courier drones cleared the archive in nine hours. KDY announced a new heavy escort programme eleven months later. Nobody mentioned Bador.'] },
+  'codex-ending-keel-destroyed': {
+    id:'codex-ending-keel-destroyed', title:'Ending: A Quiet Pulse', category:'lore',
+    summary:'The hypercore is gone.',
+    body:['The demolition left the cavern cold and the Zora IV intact but empty. Republic Intelligence closed the file. The Architect left the mountain on foot and was not seen again.'] },
+  'codex-ending-keel-syndicate': {
+    id:'codex-ending-keel-syndicate', title:'Ending: The Ghost Flagship', category:'lore',
+    summary:'The Syndicate owns a dreadnought.',
+    body:['Syndicate engineers needed four months to seat the keel. When the hull finally flew it carried no registry, no crew list and no name any scanner could read.'] },
   'codex-outskirts-war': {
     id:'codex-outskirts-war', title:'Breach-Point Alpha', category:'lore',
     summary:'The war in the shadow of the Kuat Drive Yards wall.',
@@ -18620,6 +18745,8 @@ const AI_COMBAT_PROFILES = {
   furnace_husk:         { aggression:90, cover:5,  flank:20, overwatch:0,  optRange:2, name:'Furnace Husk',               hp:8,  shield:2, accent:'#FF7A1A' },
   piston_sentinel:      { aggression:50, cover:70, flank:15, overwatch:80, optRange:2, name:'Piston Sentinel',            hp:11, shield:5, accent:'#C4923E' },
   unchained_overseer:   { aggression:75, cover:40, flank:30, overwatch:80, optRange:4, name:'The Unchained Overseer',     hp:16, shield:6, accent:'#2B7895' },
+  zora_hull_wardens:    { aggression:70, cover:75, flank:50, overwatch:85, optRange:4, name:'Zora Hull Sentinels',        hp:14, shield:5, accent:'#B8D4E8' },
+  ghost_keel_warden:    { aggression:80, cover:55, flank:60, overwatch:90, optRange:5, name:'Warden Prime',               hp:24, shield:8, accent:'#FF4040' },
   // BADOR PROFILES END
 };
 
@@ -18739,6 +18866,8 @@ const COMBAT_LOOT = {
   furnace_husk: { credits:[70,130], itemChance:0.4, items:[{id:'loot_slag_residue',name:'Cooled Slag Residue',type:'consumable',iconKind:'supply',value:150,description:'Dense, warm and unexpectedly valuable to a forge.'}] },
   piston_sentinel: { credits:[120,220], itemChance:0.55, items:[{id:'loot_brass_plate',name:'Sentinel Brass Plate',type:'gear',iconKind:'gear',value:520,description:'Tarnished brass from a construct that was never meant to retire.'}] },
   unchained_overseer: { credits:[260,440], itemChance:0.9, items:[{id:'item_titan_cylinder_ring',name:'Titan Cylinder Ring',type:'gear',iconKind:'gear',value:800,description:'An ancient signet ring proving engineering rank.'}] },
+  zora_hull_wardens: { credits:[300,500], itemChance:0.8, items:[{id:'loot_zora_sentinel_core',name:'Sentinel Logic Core',type:'gear',iconKind:'gear',value:900,description:'A hardened logic core from a hull sentinel. Fenced for a month of rent in any yard.'}] },
+  ghost_keel_warden: { credits:[500,900], itemChance:1, items:[{id:'loot_warden_prime_actuator',name:'Warden Prime Actuator',type:'gear',iconKind:'gear',value:2000,description:'The pressure actuator from the Warden Prime\'s arm. Dense, Republic grade, still warm.'}] },
   // BADOR LOOT END
   csf_swat:             { credits:[90,160],  itemChance:0.45, items:[{id:'loot_csf_stun_baton',name:'CSF Stun Baton',type:'weapon',iconKind:'gear',value:200,description:'Regulation CSF close-quarters weapon. Still carries a charge.'},{id:'loot_csf_access_chip',name:'CSF Access Chip',type:'gear',iconKind:'keycard',value:350,description:'Biometric-coded to a SWAT officer. Crackable.'},{id:'loot_tactical_stim',name:'Tactical Stim',type:'consumable',iconKind:'supply',value:120,description:'Military-grade stim. Restores combat readiness fast.'}] },
   csf_scout:            { credits:[60,110],  itemChance:0.35, items:[{id:'loot_scout_earpiece',name:'CSF Scout Earpiece',type:'gear',iconKind:'gear',value:180,description:'Encrypted channel. 48-hour window before they rotate the key.'},{id:'loot_det_round',name:'Det Round x2',type:'consumable',iconKind:'supply',value:90,description:'Compact explosive rounds. Useful.'}] },
@@ -22012,7 +22141,20 @@ function StarWarsRPG() {
         if (!questFlags.governor_valve_acquired) return '[WASTES] Drain the Dead Boiler Matrix (three valve wheels) and take the Catalyst Governor Valve.';
         if (!questFlags.overseer_defeated) return '[WASTES] Defeat the Unchained Overseer at the base of the Exhaust Cathedral.';
         if (!questFlags.manifest_restarted) return '[WASTES] Seat the Governor Valve in the apex socket to restart the manifold.';
-        return '[WASTES] The central blast doors are open. Zone Five lies beyond.';
+        if (!questFlags.zone05_gate_open) return '[WASTES] Open the central blast doors on the east wall.';
+        return '[WASTES] The Zone Five descent is open in the east. The Slag Line to Sector 4 runs again.';
+      }
+      if (zoneId === 'deep_caverns') {
+        if (!(questFlags.unit8x_destroyed || questFlags.unit8x_reprogrammed || questFlags.unit8x_stood_down || questFlags.sentinel_cleared)) return '[CAVERNS] Get past Unit 8-X at the Guardian Gate in the east.';
+        return '[CAVERNS] The shutter is open. Enter the wreck of the Zora IV.';
+      }
+      if (zoneId === 'zora_iv_wreckage') {
+        if (questFlags.ghost_keel_complete) return '[GHOST KEEL] Complete. Report to Commander Vael at HQ and Tanner in the Private Suites.';
+        if (!questFlags.hypercore_vault_open) return '[ZORA IV] Cross the reactor corridor and open the hypercore vault lock.';
+        if (!questFlags.warden_guards_down) return '[ZORA IV] Destroy the hull sentinels guarding the vault.';
+        if (!questFlags.warden_prime_down) return '[ZORA IV] Defeat the Warden Prime.';
+        if (!questFlags.hypercore_visible) return '[ZORA IV] Enter the hypercore chamber.';
+        return '[ZORA IV] Decide the fate of the Ghost Keel with the Architect.';
       }
       if (zoneId === 'outpost_7') {
         if (!questFlags.o7_coop_briefed) return '[OUTPOST 7] Report to Major Coop in the command bunker.';
@@ -22091,7 +22233,7 @@ function StarWarsRPG() {
     return [...prev, { ...entry, unread: true }];
   }), []);
 
-  const phPerks = React.useMemo(() => PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: 0, decay: 0 }), [questFlags]);
+  const phPerks = React.useMemo(() => { const base = PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: 0, decay: 0 }); return questFlags.syndicate_flagship_active ? { income: base.income + 400, decay: base.decay + 1 } : base; }, [questFlags]);
   const installPenthousePackage = useCallback((pkg) => {
     setInventory(prev => prev.flatMap(i => i.id !== pkg.itemId ? [i] : (i.qty > 1 ? [{ ...i, qty: i.qty - 1 }] : [])));
     setFlag(pkg.flag);
