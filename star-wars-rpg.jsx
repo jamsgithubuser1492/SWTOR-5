@@ -5379,50 +5379,299 @@ const PLANETS = {
 
       deep_caverns: {
         id: 'deep_caverns', name: 'Deep Caverns of Bador',
-        subtitle: 'Bador Moon · Sub-Surface Grid 9-1',
+        subtitle: 'Bador Moon · Sub-Surface Grid 9-1 · Beneath the Titan Manifold',
         width: 48, height: 30, spawnPos: { x: 2, y: 14 }, textureId: 'verdanth',
-        accent: '#5A4B8A', accentGlow: 'rgba(90,75,138,0.28)', accentDim: '#28204A',
-        floorColor: '#14101E', floorAlt: '#1A1426', wallDark: '#080610', wallLight: '#100C18',
-        bg: 'radial-gradient(circle at 50% 50%, #100C18 0%, #060410 70%)', ambient: 'mist',
+        accent: '#7A5CC8', accentGlow: 'rgba(122,92,200,0.28)', accentDim: '#2C2250',
+        floorColor: '#14101E', floorAlt: '#1A1426', wallDark: '#080610', wallLight: '#18122A',
+        bg: 'radial-gradient(circle at 50% 30%, #1A1030 0%, #0A0818 55%, #040310 100%)', ambient: 'cavern',
         decor: ['rubble', 'moss'],
         doors: [
           { x: 0, y: 14,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 21 }, label: 'Engine Wastes' },
           { x: 0, y: 15,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 22 }, label: 'Engine Wastes' },
-          { x: 47, y: 14, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 16 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
-          { x: 47, y: 15, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 17 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
+          { x: 47, y: 14, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 16 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['unit8x_destroyed', 'unit8x_reprogrammed', 'unit8x_stood_down', 'sentinel_cleared'], lockedMessage: 'The Guardian Gate shutter is down and its lockout lamp burns red. Unit 8-X holds the line, and the sentinels hold it with him.' },
+          { x: 47, y: 15, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 17 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['unit8x_destroyed', 'unit8x_reprogrammed', 'unit8x_stood_down', 'sentinel_cleared'], lockedMessage: 'The Guardian Gate shutter is down and its lockout lamp burns red. Unit 8-X holds the line, and the sentinels hold it with him.' },
         ],
         worldObjects: [
-          { id: 'republic_survey_cache', propArt: 'crate_stack', propVariant: 'survey', x: 18, y: 12, label: 'Republic Survey Station Cache',
-            description: 'An Old Republic survey station, sealed for decades. Inside: geological samples and an encrypted data core. The encryption pattern is not Republic standard — it was resealed after the initial survey.',
-            once: true, requiresFlag: 'ghost_keel_active',
+          { id: 'cav_vista', propArt: 'bvista_48x5', propVariant: 'cavern_a', x: 24, y: 5, once: false, iconKind: 'vista', label: 'The Underground Lake and Kyber Veins',
+            description: 'Stalactites hang like organ pipes over a black lake. Violet kyber veins run through the rock and crystal spears rise from the far shore. A pale shaft of light falls from a fissure no one has ever mapped.' },
+
+          // ---- Republic survey station (west, near the entrance) ----
+          { id: 'cav_survey_console', propArt: 'console', propVariant: 'republic_old', x: 6, y: 12, label: 'Survey Station Logbook Terminal',
+            description: 'The Grid 9-1 survey logbook, Republic Geodetic Division. Six names on the roster, one crossed through. The last entry is a core sample from a cavity whose far wall no instrument could find.',
+            grantsCodex: 'codex-cav-survey-log' },
+          { id: 'cav_engineer_warning', propArt: 'board', propVariant: 'clipboard', x: 13, y: 12, label: 'Engineer\'s Warning',
+            description: 'A clipboard nailed to the wall in block capitals: DO NOT OPEN VAULT FOUR. THE RESONANCE IS A LOCK, NOT A LODE. WHOEVER TUNED IT IS STILL LISTENING. The signature has been scratched out.',
+            grantsCodex: 'codex-cav-engineer-warning' },
+          { id: 'republic_survey_cache', propArt: 'crate_stack', propVariant: 'survey', x: 13, y: 20, label: 'Republic Survey Station Cache',
+            description: 'Sealed geological sample crates and an encrypted data core. The resealing pattern is not Republic standard. Someone has been here since the survey team left.',
+            once: true, requiresFlag: 'ghost_keel_active', lockedMessage: 'The cache lock rejects you. It will open only for someone already working the Ghost Keel contract.',
             grantsFlag: 'survey_cache_opened', grantsItem: 'cherit_logbook' },
-          { id: 'cavern_crystal_formation', propArt: 'kyber_cluster', propVariant: 'cavern', x: 6, y: 16, label: 'Force-Resonant Crystal Formation',
-            description: 'A natural formation of kyber-adjacent crystal. Whoever designed the cavern installation placed it here deliberately. The resonance pattern is not naturally occurring.',
+          { id: 'cav_beacon_station', propArt: 'cav_survey_beacon', propVariant: 'survey', x: 5, y: 20, label: 'Station Survey Beacon',
+            description: 'A red and white Republic survey beacon on a folding tripod. Its amber lamp still blinks every few seconds, signalling a base that stopped listening decades ago.' },
+          { id: 'cav_station_archive', propArt: 'archive_cabinet', propVariant: 'dossier', x: 5, y: 17, label: 'Team Roster Cabinet',
+            description: 'A dossier cabinet with six drawers, five of them emptied in a hurry. The sixth holds a roster card for Team Nine and a requisition signed by an officer whose rank has been blacked out.' },
+          { id: 'cav_station_samples', propArt: 'datapad_table', propVariant: 'canister', x: 7, y: 20, label: 'Core Sample Table',
+            description: 'Core sample canisters, labelled in a neat hand and set in a rack. The deepest tube is warm to the touch and holds a violet stone that hums at the edge of hearing.' },
+          { id: 'cav_station_servers', propArt: 'server_stack', propVariant: 'republic', x: 14, y: 18, label: 'Station Data Stacks',
+            description: 'Republic server stacks, powered by a trickle line from the lake. The status lamps cycle green, amber, green. Something polls them every night and never logs in.' },
+          { id: 'cav_marker_vestibule', propArt: 'survey_marker', x: 2, y: 17, label: 'Airlock Survey Marker',
+            description: 'A brass survey marker at the airlock lip, stamped with the grid reference 9-1. Fresh scuffs show that heavy boots have crossed this threshold, but not many.' },
+
+          // ---- North ledge: abandoned KDY mining equipment, spore fields ----
+          { id: 'cav_rig_west', propArt: 'cav_mining_rig', x: 7, y: 8, label: 'Abandoned KDY Core Drill',
+            description: 'A KDY-7 core drill, its bit still seated in a bore plugged with sealing foam. The foreman\'s hard hat hangs from the control lever. Someone stopped the shift mid turn and walked away.' },
+          { id: 'cav_crates_west', propArt: 'crate_stack', propVariant: 'kdy', x: 13, y: 8, label: 'Mining Supply Crates',
+            description: 'Hazard striped KDY crates of blasting gel and drill teeth, still strapped to their pallet. The seals are intact. Whoever left this site left everything else too.' },
+          { id: 'cav_beacon_ledge', propArt: 'cav_survey_beacon', propVariant: 'survey', x: 4, y: 8, label: 'Ledge Survey Beacon',
+            description: 'A second survey beacon marks the west ledge. Its lamp is cracked and glows the faint amber of a dying cell, pointing every visitor toward the lake.' },
+          { id: 'cav_spore_a', propArt: 'cav_spore_pod', x: 19, y: 7, label: 'Bioluminescent Spore Field',
+            description: 'Five swollen pods of glowing green fungus, breathing slowly. Each exhale sends a lazy cloud of spores upward. The air tastes of damp stone and sweet rot.' },
+          { id: 'cav_stal_a', propArt: 'cav_stalactite', x: 22, y: 8, label: 'Stalactite Column',
+            description: 'A column where the ceiling has reached the floor. Violet veins run through the stone and pulse faintly in a slow rhythm, like something sleeping.' },
+          { id: 'cav_spore_b', propArt: 'cav_spore_pod', x: 26, y: 8, label: 'Spore Pod Cluster',
+            description: 'Fat green pods cling to the ledge edge. A pulse of light runs from pod to pod, as though they are passing a message along the cavern wall.' },
+          { id: 'cav_stal_b', propArt: 'cav_stalactite', x: 29, y: 8, label: 'Twin Stalactite Column',
+            description: 'Another stone column wrapped in kyber light. The floor around its base is smooth and dark, worn by something that circled it for years.' },
+          { id: 'cav_spore_c', propArt: 'cav_spore_pod', x: 32, y: 7, label: 'Spore Nursery',
+            description: 'Small pods bloom around a larger one at the center. A handful of dead insects lie among them, glowing faintly where the spores have taken hold.' },
+
+          // ---- Lake, bridges and the Cherit memorial ----
+          { id: 'cav_memorial', propArt: 'cav_survey_beacon', propVariant: 'memorial', x: 26, y: 13, label: 'Team Nine Memorial',
+            description: 'A pale beacon rises from the island above a plaque. TEAM NINE. DUG BY ORDER OF I. CHERIT. REMEMBERED BY THE ONE WHO STAYED. A cut stem of glow moss lies fresh against its base.',
+            grantsCodex: 'codex-cav-cherit-memorial' },
+          { id: 'cav_marker_shore', propArt: 'survey_marker', x: 16, y: 12, label: 'Lake Depth Marker',
+            description: 'A Republic depth marker on the west shore. The scale tops out at two hundred meters. The needle has been pushed past the end stop, and someone has bent it back.' },
+
+          // ---- Crystal grove (south west) ----
+          { id: 'cavern_crystal_formation', propArt: 'kyber_cluster', propVariant: 'cavern', x: 6, y: 26, label: 'Force-Resonant Crystal Formation',
+            description: 'A formation of kyber adjacent crystal, humming in a pattern that nature does not make. Whoever built the installation set it here on purpose. The resonance stays with you after you step away.',
             once: true, grantsFlag: 'cavern_crystal_found', grantsCodex: 'codex-bador-crystal' },
-          { id: 'cavern_sentinel_inactive', propArt: 'sentinel_droid', x: 26, y: 6, label: 'Automated Sentinel (Inactive)',
-            description: 'A KDY-pattern security droid, deactivated but recently serviced. Someone turned it off for you — or for themselves.',
-            once: true, requiresFlag: 'gharza_allied', grantsFlag: 'sentinel_cleared' },
+          { id: 'cav_pylon_a', propArt: 'cav_crystal_pylon', x: 3, y: 26, label: 'Tuned Crystal Pylon',
+            description: 'A brass collared pylon holds a violet crystal at head height, its inner veins aligned to the rest of the grove. Drilled into the base are a dozen tuning holes, each plugged with wax.' },
+          { id: 'cav_pylon_b', propArt: 'cav_crystal_pylon', x: 12, y: 25, label: 'Tuned Crystal Pylon',
+            description: 'A second pylon, its collar green with age. The crystal hums at a slightly different pitch from its twin, and the two beat together in a slow waver across the grove.' },
+          { id: 'cav_pylon_c', propArt: 'cav_crystal_pylon', x: 14, y: 28, label: 'Tuned Crystal Pylon',
+            description: 'The third pylon of the grove, the one closest to the station. Its lamp is cyan, not amber. Of the three, only this one has been serviced in the last year.' },
+          { id: 'cav_grove_cluster', propArt: 'kyber_cluster', propVariant: 'cavern', x: 9, y: 28, label: 'Violet Crystal Spears',
+            description: 'Crystal spears break out of the floor in a ragged crown. Where they catch the light they throw violet reflections across the grove ceiling and the stone drinks it up.' },
+          { id: 'cav_spore_grove', propArt: 'cav_spore_pod', x: 12, y: 27, label: 'Grove Spore Pods',
+            description: 'Pods swollen with green light nest between the crystals. They pulse in time with the pylons, as though the fungus has learned the resonance.' },
+
+          // ---- South yard: abandoned KDY mining equipment ----
+          { id: 'cav_crane', propArt: 'maglev_crane', x: 20, y: 27, label: 'Abandoned Maglev Crane',
+            description: 'A KDY maglev crane with its boom folded over a half loaded ore sled. The load is not ore. It is crates of Republic survey equipment, stencilled DO NOT LOG.' },
+          { id: 'cav_containers', propArt: 'container_stack', x: 27, y: 27, label: 'Ore Container Stack',
+            description: 'Four ore containers stacked two high, doors welded shut from the outside. Chalk tallies on the side count shifts: forty one, then nothing.' },
+          { id: 'cav_rig_south', propArt: 'cav_mining_rig', x: 32, y: 26, label: 'KDY Core Drill, Shift Four',
+            description: 'A second core drill, its derrick leaning where the floor settled. Shift Four was working a bore toward the east wall when they stopped. The bit is warm.' },
+          { id: 'cav_drums', propArt: 'drum_array', x: 23, y: 24, label: 'Coolant Drum Array',
+            description: 'A row of coolant drums with their valves open, drained long ago. A faint blue crust has grown where the last of it seeped into the rock.' },
+          { id: 'cav_scrap', propArt: 'scrap_bin', x: 17, y: 25, label: 'Salvage Bin',
+            description: 'A salvage bin heaped with bent drill teeth and cracked helmets. Under the pile is a boot with a tag still on it: SHIFT FOUR, SIZE NINE.' },
+
+          // ---- East shore, the sentinel line and the collapsed section ----
+          { id: 'cavern_sentinel_inactive', propArt: 'sentinel_droid', x: 37, y: 12, once: true, label: 'Automated Sentinel',
+            description: 'A KDY pattern sentinel, optics dark, a neat cutout clamp on its spine and a Trandoshan claw mark scratched beside it. Gharza told you she could not disable them from range. Up close, she did.',
+            requiresFlag: 'gharza_allied', lockedMessage: 'A sentinel stands powered at the gate approach, optics tracking. It would take someone who already has Gharza\'s trust, and her cutout charges, to silence it.',
+            requiresNoneFlags: ['sentinel_cleared'],
+            grantsFlags: ['sentinel_cleared', 'cavern_path_clear'] },
+          { id: 'cav_sentinel_off_a', propArt: 'cav_guardian_chassis', propVariant: 'dormant', x: 37, y: 12, label: 'Sentinel (Powered Down)',
+            description: 'The sentinel stands in standby, optics dark, a cutout clamp on its spine. Its sister units down the line have stopped tracking you. The line is silent.',
+            requiresAllFlags: ['sentinel_cleared'], invisibleLocked: true },
+          { id: 'cav_sentinel_line_b', propArt: 'sentinel_droid', x: 37, y: 18, label: 'Sentinel Line Unit',
+            description: 'A second KDY sentinel on the gate approach. Its optic sweeps the shore in a steady arc, and a red targeting lamp brushes your chest as it passes.',
+            requiresNoneFlags: ['sentinel_cleared'] },
+          { id: 'cav_sentinel_off_b', propArt: 'cav_guardian_chassis', propVariant: 'dormant', x: 37, y: 18, label: 'Sentinel Line Unit (Offline)',
+            description: 'The second sentinel hangs in its cradle, optic dark. Its targeting lamp is out and a thin curl of smoke rises from the cutout clamp on its back.',
+            requiresAllFlags: ['sentinel_cleared'], invisibleLocked: true },
+          { id: 'cav_catwalk_east', propArt: 'catwalk_post', x: 35, y: 21, label: 'East Shore Catwalk',
+            description: 'A KDY inspection catwalk over the shore, its stairs pulled up. A sniper nest sits on top, long abandoned. The sightline covers the whole approach to the gate.' },
+          { id: 'cav_leak', propArt: 'leaking_pipe', propVariant: 'coolant', x: 39, y: 6, label: 'Cracked Coolant Line',
+            description: 'A coolant line split by a rockfall, venting a thin blue vapor. The floor under it is slick and the stone has a faint frost.' },
+          { id: 'cav_crushed', propArt: 'cargo_container', x: 38, y: 8, label: 'Crushed Cargo Container',
+            description: 'A cargo container flattened under a slab of the ceiling. A boot print is pressed into the dust beside it, heading west. It has not been disturbed.' },
+          { id: 'cav_miner_diary', propArt: 'datapad_table', propVariant: 'logbook', x: 46, y: 9, label: 'Foreman\'s Diary',
+            description: 'A water stained foreman\'s diary beneath the collapsed ceiling. Day 41: humming in the rock. Day 44: told to keep digging and stop writing. Day 45: the entry ends mid word.',
+            grantsCodex: 'codex-cav-miner-diary' },
+          { id: 'cav_stal_fallen', propArt: 'cav_stalactite', x: 46, y: 7, label: 'Fallen Column',
+            description: 'A stalactite that fell and lodged in the wall. Its violet veins have gone dark where it broke, but the pieces still catch the light like glass.' },
+          { id: 'cav_spore_se1', propArt: 'cav_spore_pod', x: 39, y: 24, label: 'Southeast Spore Field',
+            description: 'A broad bed of spore pods spreads across the southeast floor, glowing green. Footprints lead into it and stop. Nothing comes out.' },
+          { id: 'cav_spore_se2', propArt: 'cav_spore_pod', x: 43, y: 26, label: 'Spore Bloom',
+            description: 'A bloom of larger pods ringed with smaller ones. Where the light is strongest, the stone floor has been eaten into a shallow bowl.' },
+          { id: 'cav_spore_se3', propArt: 'cav_spore_pod', x: 38, y: 28, label: 'Spore Mat',
+            description: 'A low mat of green fungus covers the corner. It glows brighter when you approach, as though it recognises the heat of a living body.' },
+          { id: 'cav_stal_se1', propArt: 'cav_stalactite', x: 46, y: 25, label: 'Southeast Column',
+            description: 'A column at the cavern edge, its base furred with moss. A boot print is pressed into the moss and filled with spores. Older than the diary.' },
+          { id: 'cav_stal_se2', propArt: 'cav_stalactite', x: 41, y: 23, label: 'Support Column',
+            description: 'A natural column. Drill marks run down one side where a KDY crew started a bore and gave up. The stone has healed over them.' },
+
+          // ---- Guardian Gate (east end) ----
+          { id: 'cav_gate_barricade_n', propArt: 'kdy_barricade', propVariant: 'kdy', x: 41, y: 12, label: 'Gate Barricade North',
+            description: 'A hazard striped KDY barricade across the north half of the checkpoint. The paint is scored by old fire, and a hand lettered sign reads: HALT. AUTHORIZATION CODE.' },
+          { id: 'cav_gate_barricade_s', propArt: 'kdy_barricade', propVariant: 'kdy', x: 41, y: 18, label: 'Gate Barricade South',
+            description: 'The south barricade, mirror of the north. A line of old burn marks climbs one side, as though something very large fired at it and was refused.' },
+          { id: 'cav_gate_turret_n', propArt: 'auto_turret', propVariant: 'hostile', x: 43, y: 12, label: 'Gate Turret (Idle)',
+            description: 'An automated turret in its mount, barrel cold, sensor lamp pale green. It is slaved to the warden, and the warden has not told it to wake.' },
+          { id: 'cav_gate_turret_s', propArt: 'auto_turret', propVariant: 'hostile', x: 43, y: 18, label: 'Gate Turret (Idle)',
+            description: 'A second turret on the south side, its barrel draped in cable. It tracks you for half a second, then goes back to sleep.' },
+          { id: 'cav_gate_eweb', propArt: 'eweb_turret', propVariant: 'plain', x: 46, y: 12, label: 'Gate E-Web Emplacement',
+            description: 'A heavy repeater mounted beside the shutter, aimed at the walkway. The ammunition feed is full. Its heat gauge reads a steady zero.' },
+          { id: 'cav_plinth_core', propArt: 'cav_guardian_chassis', propVariant: 'wreck', x: 44, y: 15, once: true, label: 'Unit 8-X Wreckage',
+            description: 'The warden lies in pieces across its plinth, optic shattered, chest plate peeled open. Inside the torn housing a cyan memory core still glows, faintly warm, with the patrol maps of a lifetime.',
+            requiresAllFlags: ['unit8x_destroyed'], requiresNoneFlags: ['cav_core_taken'], invisibleLocked: true,
+            grantsFlags: ['cav_core_taken', 'hypercore_location_known'], grantsItem: 'cav_8x_memory_core', grantsCodex: 'codex-cav-guardian' },
+          { id: 'cav_plinth_stripped', propArt: 'cav_guardian_chassis', propVariant: 'stripped', x: 44, y: 15, label: 'Unit 8-X Wreckage (Stripped)',
+            description: 'The warden\'s hulk lies cold on its plinth. The memory core is gone from the chest cavity. A last wisp of smoke curls from the empty housing.',
+            requiresAllFlags: ['cav_core_taken'], invisibleLocked: true },
+          { id: 'cav_plinth_dormant', propArt: 'cav_guardian_chassis', propVariant: 'dormant', x: 44, y: 15, label: 'Unit 8-X (Stood Down)',
+            description: 'Unit 8-X sits folded on its plinth, optic dark, a single amber standby lamp breathing in the chest. It will wake for the right code and for nothing else.',
+            requiresAllFlags: ['unit8x_stood_down'], invisibleLocked: true, grantsCodex: 'codex-cav-guardian' },
+          { id: 'cav_plinth', propArt: 'cav_guardian_chassis', propVariant: 'plinth', x: 44, y: 15, label: 'Guardian Plinth',
+            description: 'A heavy octagonal cradle bolted into the cavern floor, cabled to the rock walls. Hazard lamps ring its edge. This is where the warden stands, and has stood, for longer than the survey station has been silent.',
+            requiresNoneFlags: ['unit8x_destroyed', 'unit8x_stood_down'] },
+          { id: 'cav_shutter_sealed', propArt: 'cav_gate_shutter', propVariant: 'sealed', x: 46, y: 16, label: 'Guardian Gate Shutter',
+            description: 'A blast shutter hazard banded and locked down, the lockout lamp red. Stencilled across it: ZORA IV SECTOR. A diagnostic console beside it waits for a clear line.',
+            requiresNoneFlags: ['cavern_path_clear'] },
+          { id: 'cav_shutter_open', propArt: 'cav_gate_shutter', propVariant: 'open', x: 46, y: 16, label: 'Guardian Gate (Open)',
+            description: 'The shutter has gone up into the ceiling. Green guide lamps run down a long dark passage toward the wreck of the Zora IV.',
+            requiresAllFlags: ['cavern_path_clear'], invisibleLocked: true },
+          { id: 'cav_gate_console', propArt: 'console', propVariant: 'surveil', x: 46, y: 18, once: true, label: 'Gate Diagnostic Console',
+            description: 'The last gate log scrolls: transit to Zora IV sector, grid Alpha-7, one inhabited vault. An access order dated forty three years ago has never been countermanded.',
+            requiresFlag: 'cavern_path_clear', lockedMessage: 'The console is locked out while the shutter holds. The warden and its escort draw all the power.',
+            grantsFlag: 'hypercore_location_known' },
         ],
         npcs: [
-          { id: 'cavern_unit_8x', x: 22, y: 6, kind: 'droid', label: 'Unit 8-X',
-            requiresFlag: 'assembly_override_accessed',
-            hideAfterFlags: ['unit8x_destroyed', 'unit8x_reprogrammed'],
-            repeatPrompt: 'Unit 8-X\'s optical array tracks you. "ACCESS PROTOCOL ENGAGED."',
-            prompt: '"QUERY: AUTHORIZATION CODE." The droid is a heavily modified KDY assembly unit, repurposed as an armed guardian. Its chassis bears signs of unauthorized modification. "QUERY NOT ANSWERED. INITIATING THREAT ASSESSMENT."',
-            choices: [
-              { text: 'Input the assembly override code.', morality: 0, loyalty: {}, result: '"CODE ACCEPTED. THREAT ASSESSMENT SUSPENDED." The droid\'s posture shifts. "SECONDARY QUERY: MANIFEST REFERENCE GHOST KEEL. CONFIRM IDENTITY." It waits.', requiresFlag: 'assembly_override_accessed', grants: { flags: ['unit8x_interacted'] } },
-              { text: 'Tell it the Architect sent you.', morality: 0, loyalty: {}, result: '"AUTHORIZATION CONFIRMED — LEVEL EIGHT." The droid stands down completely. "UNIT 8-X AWAITING RELOCATION ORDERS. HYPERCORE STATUS: SECURED AT GRID REFERENCE ALPHA-7. ZORA IV SECTOR."', requiresFlag: 'architect_identity_known', grants: { flags: ['unit8x_reprogrammed', 'hypercore_location_known'] } },
-              { text: 'Engage it in combat.', morality: -5, loyalty: { underworld: 3 }, result: 'The droid\'s full weapons array activates. It was built to stop exactly this.', grants: { flags: ['unit8x_hostile'] }, triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'unit_8x', flavorText: 'Unit 8-X locks on. It was built to stop exactly this.' }, onSuccessFlags: ['unit8x_destroyed'] },
+          { id: 'cavern_unit_8x', x: 44, y: 14, kind: 'droid', label: 'Unit 8-X',
+            questNpc: true, repeatable: true,
+            hideAfterFlags: ['unit8x_destroyed', 'unit8x_stood_down'],
+            phases: [
+              {
+                id: 'phase_8x_challenge',
+                prompt: 'A KDY assembly frame rebuilt as a gate warden turns its single optic on you, cable bundles tethering it to the plinth. "HALT. AUTHORIZATION CODE. SENTINEL LINE ARMED."',
+                repeatPrompt: '"HALT. AUTHORIZATION CODE."',
+                choices: [
+                  { text: 'Input the assembly override code.', morality: 0, loyalty: {}, requiresFlag: 'assembly_override_accessed',
+                    result: '"OVERRIDE ACCEPTED. WARDEN FUNCTION SUSPENDED." The optic dims to amber. The lockout drops and the droid folds itself onto its plinth, a machine at rest. A maintenance purse drops into your hand.',
+                    grants: { flags: ['unit8x_interacted', 'unit8x_stood_down', 'cavern_path_clear'], credits: 250 } },
+                  { text: 'Tell it the Architect sent you.', morality: 0, loyalty: {}, requiresFlag: 'architect_identity_known',
+                    result: '"LEVEL EIGHT CONFIRMED." The optic turns cyan. "WARDEN RELIEVED. ZORA IV, GRID ALPHA-7. HE EXPECTS A VISITOR." It steps aside and keeps watching the dark.',
+                    grants: { flags: ['unit8x_reprogrammed', 'hypercore_location_known', 'cavern_path_clear'], codex: ['codex-cav-guardian'] } },
+                  { text: '[Fight] Break the escort line.', morality: -5, loyalty: { underworld: 3 },
+                    result: 'Servos scream awake. Two sentinels step off the wall and a third optic opens in the dark. The escort moves first, as designed.',
+                    grants: { flags: ['unit8x_hostile'] }, triggersMinigame: 'tactical_combat',
+                    minigameConfig: { opponentProfile: 'cav_unit_8x_guard', flavorText: 'The sentinel escort drops from the wall in perfect step, shields up, guns tracking. They were built to hold this gate against a company. You are one person with a plan.' },
+                    onSuccessFlags: ['unit8x_guard_down'] },
+                  { text: 'Back away slowly.', morality: 0, loyalty: {}, defer: true, result: 'You retreat out of its line of fire. The optic follows you until you are gone.' },
+                ],
+              },
+              {
+                id: 'phase_8x_sentinels_off',
+                requiresAllFlags: ['sentinel_cleared'],
+                prompt: 'The sentinel line is dark. Unit 8-X stands alone on its plinth, optic flickering. "ESCORT LINK LOST. WARDEN FUNCTION ACTIVE. AUTHORIZATION CODE."',
+                repeatPrompt: '"ESCORT LOST. WARDEN ACTIVE."',
+                choices: [
+                  { text: 'Input the assembly override code.', morality: 0, loyalty: {}, requiresFlag: 'assembly_override_accessed',
+                    result: '"OVERRIDE ACCEPTED. WARDEN FUNCTION SUSPENDED." The optic dims to amber. The droid folds itself onto its plinth and a maintenance purse drops into your hand.',
+                    grants: { flags: ['unit8x_interacted', 'unit8x_stood_down', 'cavern_path_clear'], credits: 250 } },
+                  { text: 'Tell it the Architect sent you.', morality: 0, loyalty: {}, requiresFlag: 'architect_identity_known',
+                    result: '"LEVEL EIGHT CONFIRMED." The optic turns cyan. "ZORA IV, GRID ALPHA-7. HE EXPECTS A VISITOR." It steps aside and keeps watching the dark.',
+                    grants: { flags: ['unit8x_reprogrammed', 'hypercore_location_known', 'cavern_path_clear'], codex: ['codex-cav-guardian'] } },
+                  { text: '[Fight] Take the lone warden.', morality: -5, loyalty: { underworld: 3 },
+                    result: 'The optic flares red. Without its escort the warden is slower and meaner, and it knows every inch of this floor.',
+                    grants: { flags: ['unit8x_hostile'] }, triggersMinigame: 'tactical_combat',
+                    minigameConfig: { opponentProfile: 'cav_unit_8x_boss', flavorText: 'Unit 8-X unbolts from its plinth. The sentinel line is dead, so the warden fights alone, pile drivers cycling and overwatch locked on the only way in.' },
+                    onSuccessFlags: ['unit8x_destroyed', 'cavern_path_clear'] },
+                  { text: 'Back away slowly.', morality: 0, loyalty: {}, defer: true, result: 'You retreat out of its line of fire. The optic follows you until you are gone.' },
+                ],
+              },
+              {
+                id: 'phase_8x_boss',
+                requiresAllFlags: ['unit8x_guard_down'],
+                prompt: 'The escort lies in pieces. Unit 8-X unbolts from its plinth and the whole gate hums. "ESCORT LOST. WARDEN ASSUMES DIRECT COMMAND. FIRING."',
+                repeatPrompt: '"WARDEN ASSUMES COMMAND."',
+                choices: [
+                  { text: '[Fight] End the warden.', morality: -5, loyalty: { underworld: 3 },
+                    result: 'The warden steps off the plinth and the cradle chains drag sparks across the floor. It does not speak again.',
+                    grants: { flags: ['unit8x_hostile'] }, triggersMinigame: 'tactical_combat',
+                    minigameConfig: { opponentProfile: 'cav_unit_8x_boss', flavorText: 'Unit 8-X has shed its tethers. Its shielding is up, its pile drivers are cycling and every approach is under overwatch. This is the gate. This is the end of the line.' },
+                    onSuccessFlags: ['unit8x_destroyed', 'cavern_path_clear'] },
+                  { text: 'Fall back and prepare.', morality: 0, loyalty: {}, defer: true, result: 'You back out of range. The warden does not follow. It cannot leave the plinth, and it knows you will be back.' },
+                ],
+              },
+              {
+                id: 'phase_8x_ally',
+                requiresAllFlags: ['unit8x_reprogrammed'],
+                requiresNoneFlags: ['cav_ally_gift'],
+                prompt: 'Unit 8-X holds its post at an angle, optic cyan, rifle arm lowered. "WATCH SET. VISITOR RECORDED. REQUEST: ANY."',
+                repeatPrompt: '"WATCH SET."',
+                choices: [
+                  { text: 'Ask for Level Eight escort credentials.', morality: 0, loyalty: {},
+                    result: 'A palm beacon unseats from its chassis. "ISSUE: ESCORT BEACON. SENTRIES WILL CONFIRM, NOT ENGAGE." It is warm, and heavier than it looks.',
+                    grants: { flags: ['cav_ally_gift'], items: ['cav_8x_escort_beacon'] } },
+                  { text: 'Ask what it guards.', morality: 0, loyalty: {},
+                    result: '"CRADLE. LAKE. SHUTTER. ONE VAULT BEYOND." The optic flicks east. "NOT THE SHIP. THE MAN."' },
+                ],
+              },
+              {
+                id: 'phase_8x_ally_after',
+                requiresAllFlags: ['unit8x_reprogrammed', 'cav_ally_gift'],
+                prompt: 'Unit 8-X turns its optic east, then back to you. "WATCH CONTINUES. THE GATE IS OPEN."',
+                repeatPrompt: '"WATCH CONTINUES."',
+                choices: [
+                  { text: 'Leave it to its watch.', morality: 0, loyalty: {}, result: 'It does not move. It never stopped watching.' },
+                ],
+              },
+            ],
+          },
+          { id: 'cav_gonk_mine', x: 24, y: 26, wander: 2, kind: 'gnk_power', label: 'GNK Power Droid',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_gonk',
+                prompt: 'A GNK power droid trundles between crates, drained cells stacked on its back. "Gonk. Gonk gonk." A crew tag is still bolted to its chassis.',
+                repeatPrompt: '"Gonk."',
+                choices: [
+                  { text: 'Read the tag.', morality: 0, loyalty: {}, result: 'SHIFT FOUR, GRID 9-1. UNAVAILABLE FOR PICKUP. The crew left it charging and never came back. It is still charging, patiently, for no one.' },
+                ],
+              },
             ],
           },
         ],
-        collectibles: [{ id: 'cavern_survey_data', x: 8, y: 8, label: 'Deep Survey Geological Record', reward: 350 }],
+        collectibles: [{ id: 'cavern_survey_data', x: 40, y: 9, label: 'Deep Survey Geological Record', reward: 350 }],
         buildMap() {
-          const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 5, 46, 28, 'floor');
-          pt(g, 0, 14, 'door'); pt(g, 0, 15, 'door');
-          pt(g, 47, 14, 'door'); pt(g, 47, 15, 'door');
-          return g;
+          return mapFromRows([
+            '################################################',
+            '################################################',
+            '################################################',
+            '################################################',
+            '################################################',
+            '####................................#.......##.#',
+            '###.................................#...###.##.#',
+            '##......................................###.##.#',
+            '##.............#........................###....#',
+            '#########..#####.wwwwwww..wwwwwwww.............#',
+            '####...........#.ww##www..www##www.....#########',
+            '####...........#.ww##www..www##www.....#.......#',
+            '#..#...........#.wwwwwww..wwwwwwww.....#.......#',
+            '#..#...........#.wwwwww....wwwwwww.....#.......#',
+            'D..............................................D',
+            'D..............................................D',
+            '#..#...........#.wwwwww....wwwwwww.....#.......#',
+            '#..#...........#.wwwwwww..wwwwwwww.....#.......#',
+            '####...........#.ww##www..wwwwwwww.....#.......#',
+            '####...........#.ww##www..wwww##ww.....#.......#',
+            '####...........#.wwww##w..wwww##ww.....#########',
+            '####...........#.wwww##w..wwwwwwww.....#########',
+            '#########..#####.wwwwwww..wwwwwwww.............#',
+            '##.............................................#',
+            '##.............................................#',
+            '##.............................................#',
+            '##.............................................#',
+            '###.............#.............................##',
+            '####............#.................##..........##',
+            '################################################',
+          ]);
         },
       },
 
@@ -7151,6 +7400,8 @@ const ITEMS = {
   pressurized_igniter:        { id:'pressurized_igniter',        name:'Pressurized Igniter',                   type:'weapon',     iconKind:'gear',     value:280, description:'Fires a directional plasma flare. Clears steam vents and lights very bad ideas.' },
   plasma_grenades:            { id:'plasma_grenades',            name:'Heavy Plasma Grenades',                 type:'consumable', iconKind:'supply',   value:350, description:'A bandolier of heavy plasma grenades taken from a KEF convoy. Throw one under a repulsor skirt.' },
   item_kef_cutter_01:         { id:'item_kef_cutter_01',         name:'KEF Industrial Breaching Cutter',      type:'weapon',     iconKind:'gear',     value:450, description:'Modified heavy cutter. Deals high damage against armored targets and can slice open sealed doors in Outpost 7.' },
+  cav_8x_memory_core:         { id:'cav_8x_memory_core',         name:'Unit 8-X Memory Core',                  type:'gear',       iconKind:'datapad',  value:900, description:'A scorched warden memory core. Forty years of patrol maps run through it, and the last route ends at the Zora IV.' },
+  cav_8x_escort_beacon:       { id:'cav_8x_escort_beacon',       name:'Level Eight Escort Beacon',             type:'gear',       iconKind:'keycard',  value:600, description:'A warm palm beacon issued by Unit 8-X. Sentinels that read it confirm instead of engaging.' },
   // BADOR ITEMS END
   // PH ITEMS BEGIN
   ph_pkg_skyview: { id:'ph_pkg_skyview', name:'Penthouse Package: Observatory Deck', type:'quest', iconKind:'datapad', value:1800, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A cut crystal night sky filter for the transparisteel wall, plus a brass refractor on a tripod. Voss swears the moons look closer.' },
@@ -7306,6 +7557,54 @@ const CODEX_ENTRIES = {
     id:'codex-iron-trench', title:'Outpost 7: The Iron Trench', category:'dossier',
     summary:'A hidden KDY forward incursion base wedge cut into a basalt ravine.',
     body:['Outpost 7 was established as a covert, hardened forward staging post in a sensor shadow zone. It is carved into volcanic basalt and shielded by thermal dampening arrays.','Thermal signature is everything here. Above thirty percent, KEF hunter killer squads sweep the perimeter. Above sixty, they drop mortar rounds on the ridge. Every shot, every alarm and every raid raises it. The Fusion Diverter Lever, the trench steam grates and decoys lower it.','Operation Sundown is the strike the outpost exists for: a simultaneous hit on the local power grid and communications array, launched when High Command gives the signal.'] },
+  'codex-bador-crystal': {
+    id:'codex-bador-crystal', title:"The Resonant Grove", category:'lore',
+    summary:"Crystals tuned like the pipes of an instrument.",
+    body:[
+      "Kyber forms where the Force pools. This grove is not a pool. The crystals stand in three tuned rings, spaced and sized like the pipes of an instrument, and each pylon carries wax plugged tuning holes cut by a human hand.",
+      "Republic survey instruments logged the resonance and could not decide whether it was a signal or a lock. Anyone attuned to the Force feels a pressure behind the eyes. The pattern repeats in the Titan Manifold and in the vault beyond the lake, which suggests one designer and one purpose that nobody has yet explained.",
+    ],
+  },
+  'codex-cav-survey-log': {
+    id:'codex-cav-survey-log', title:"Survey Team Nine", category:'lore',
+    summary:"A geological survey that was never geological.",
+    body:[
+      "Republic Geodetic Division sent Team Nine to Grid 9-1 under an intelligence requisition, not a geological one. The roster lists six surveyors and a liaison who never signed in.",
+      "Core samples showed the cavern was hollowed before any recorded excavation, to a depth and symmetry that water could not manage. The last entry reports a drilling cavity with no far wall, and a note in a second hand: the station will stay staffed by one volunteer. The log ends there. The station power has never failed since.",
+    ],
+  },
+  'codex-cav-engineer-warning': {
+    id:'codex-cav-engineer-warning', title:"Vault Four", category:'lore',
+    summary:"A structural engineer who did not like the crystals.",
+    body:[
+      "The note is in the block capitals of a Republic structural engineer. Vault Four is the sealed chamber beyond the lake, and he believed the grove crystals were set to guard it.",
+      "He argued that a resonance tuned this finely was a lock, and that opening it would wake whatever the lock protected. His signature was scratched out by someone who wanted him forgotten, or kept safe. Station records show he left the grid on the last transport and never filed another report.",
+    ],
+  },
+  'codex-cav-miner-diary': {
+    id:'codex-cav-miner-diary', title:"The Shift Four Diary", category:'lore',
+    summary:"A KDY foreman who kept writing after he was told to stop.",
+    body:[
+      "A KDY foreman kept a private diary while his crew bored east from the lake shore. The crew heard humming in the rock at night and found a Republic door older than the company.",
+      "His supervisors paid triple to keep drilling and ordered the diary burned. The final entry stops in the middle of a word, and the ceiling above the desk has collapsed. KDY records list Shift Four as relocated. No relocation orders exist.",
+    ],
+  },
+  'codex-cav-cherit-memorial': {
+    id:'codex-cav-cherit-memorial', title:"The Memorial on the Lake", category:'lore',
+    summary:"A plaque, and a caretaker nobody has seen.",
+    body:[
+      "The plaque names Team Nine and the officer who sent them, I. Cherit of Republic Intelligence, who never visited the site. The line about the one who stayed refers to a single caretaker who remained after the team was recalled.",
+      "Fresh moss is laid at the base every season. No KDY patrol has ever seen the caretaker, but the beacon lamp is cleaned and the station air is always breathable.",
+    ],
+  },
+  'codex-cav-guardian': {
+    id:'codex-cav-guardian', title:"Unit 8-X", category:'dossier',
+    summary:"The warden of the Guardian Gate.",
+    body:[
+      "Unit 8-X began as a KDY assembly frame on the Sector 4 line and was rebuilt as a gate warden by a Level Eight clearance that predates the Silent Shear. The sentinel line answers to it.",
+      "It recognises three things: an assembly override, the Architect's name, and force. Its memory core holds forty years of patrol maps, including the route to a vault in the Zora IV and a standing instruction nobody has rescinded: no one passes who is not expected.",
+    ],
+  },
   // BADOR CODEX END
   // PH CODEX BEGIN
   'codex-ph-design': {
@@ -15905,6 +16204,15 @@ const PROP_DEFS = {
   boiler_hull:           { w: 4, h: 3, ax: 1, ay: 2 },
   governor_socket:       { w: 2, h: 2, ax: 0, ay: 1 },
   // BADOR WAR DEFS END
+  // CAVERN DEFS BEGIN
+  cav_stalactite:        { w: 2, h: 3, ax: 0, ay: 2 },
+  cav_spore_pod:         { w: 3, h: 2, ax: 1, ay: 1 },
+  cav_survey_beacon:     { w: 2, h: 3, ax: 0, ay: 2 },
+  cav_mining_rig:        { w: 4, h: 3, ax: 1, ay: 2 },
+  cav_crystal_pylon:     { w: 2, h: 3, ax: 0, ay: 2 },
+  cav_guardian_chassis:  { w: 3, h: 3, ax: 1, ay: 2 },
+  cav_gate_shutter:      { w: 2, h: 4, ax: 0, ay: 3, backdrop: true },
+  // CAVERN DEFS END
 };
 
 const PropArt = React.memo(function PropArt({ kind, variant, active }) {
@@ -16110,6 +16418,15 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'boiler_hull': return <PropBoilerHull />;
     case 'governor_socket': return <PropGovernorSocket variant={variant} />;
     // BADOR WAR CASES END
+    // CAVERN CASES BEGIN
+    case 'cav_stalactite': return <PropCavStalactite />;
+    case 'cav_spore_pod': return <PropCavSporePod />;
+    case 'cav_survey_beacon': return <PropCavBeacon variant={variant} />;
+    case 'cav_mining_rig': return <PropCavRig />;
+    case 'cav_crystal_pylon': return <PropCavPylon />;
+    case 'cav_guardian_chassis': return <PropCavChassis variant={variant} />;
+    case 'cav_gate_shutter': return <PropCavShutter variant={variant} />;
+    // CAVERN CASES END
     default: return null;
   }
 });
@@ -17563,6 +17880,268 @@ function PitFightOverlay({ onSuccess, onFailure, opponentName, opponentHp, accen
   );
 }
 
+// ===== CAVERN PROPS BEGIN =====
+// Deep Caverns of Bador (tag cav): stalactite column, spore pods, survey beacon, KDY core drill, tuned crystal pylon,
+// the guardian cradle (plinth, wreck, stripped, dormant) and the sealed or open gate shutter.
+function PropCavStalactite() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={90} rx={28} ry={4} />
+      <Glow cx={32} cy={86} rx={27} ry={6} c={S.violet} opacity={0.4} style={{ animation:'ship-engine 3.2s ease-in-out infinite' }} />
+      <Bev t="polygon" points={pts([[8, 2], [56, 2], [45, 30], [41, 52], [50, 76], [61, 92], [3, 92], [15, 76], [23, 52], [19, 28]])} c="stone" o={1.1} />
+      <polygon points={pts([[8, 2], [26, 2], [25, 32], [24, 54], [17, 76], [3, 92], [12, 92], [20, 76], [26, 54], [27, 32]])} fill={ART.stone.hi} opacity="0.35" />
+      <polygon points={pts([[44, 6], [56, 2], [45, 30], [41, 52], [50, 76], [61, 92], [52, 92], [44, 74], [37, 54], [39, 30]])} fill={ART.stone.shade} opacity="0.5" />
+      <Seams x={14} y={4} w={36} h={86} cols={1} rows={4} op={0.3} />
+      <g fill="none" stroke={S.violet} strokeWidth="1" opacity="0.85">
+        <polyline points={pts([[22, 10], [28, 26], [26, 44], [33, 62], [30, 80]])} />
+        <polyline points={pts([[40, 12], [37, 30], [40, 50], [36, 70]])} opacity="0.6" />
+      </g>
+      <g>
+        <polygon points={pts([[10, 92], [13, 80], [17, 92]])} fill={ART.fabric.hi} />
+        <polygon points={pts([[14, 92], [18, 74], [22, 92]])} fill={S.violet} opacity="0.9" />
+        <polygon points={pts([[44, 92], [48, 78], [52, 92]])} fill={ART.fabric.hi} />
+        <polygon points={pts([[50, 92], [53, 82], [56, 92]])} fill={S.violet} opacity="0.9" />
+      </g>
+      <Greeble x={18} y={60} w={28} h={28} seed={640} n={6} c="stone" />
+      <Grime x={10} y={8} w={44} h={80} seed={641} n={7} op={0.3} /><Scuff x={14} y={10} w={34} h={76} seed={642} n={8} c="stone" />
+    </svg>
+  );
+}
+
+function PropCavSporePod() {
+  const S = ART.signal;
+  const pod = (x, y, r, k, d) => (
+    <g key={k}>
+      <line x1={x} y1={y + r} x2={x + (k % 2 ? 2 : -2)} y2={58} stroke={ART.moss.shade} strokeWidth="1.6" />
+      <Bev t="polygon" points={pts(ngon(x, y, r, r * 1.15, 7, 0.2))} c="moss" o={0.9} />
+      <polygon points={pts(ngon(x, y, r * 0.55, r * 0.62, 6, 0.4))} fill={S.lime} opacity="0.8" style={{ animation:`ship-engine ${3 + d}s ease-in-out ${d}s infinite` }} />
+      <polygon points={pts([[x - r * 0.5, y - r * 0.6], [x - r * 0.1, y - r * 0.9], [x - r * 0.2, y - r * 0.4]])} fill={ART.moss.hi} />
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={42} ry={3.6} />
+      <Glow cx={48} cy={38} rx={44} ry={20} c={S.lime} opacity={0.3} style={{ animation:'ship-engine 4s ease-in-out infinite' }} />
+      <polygon points={pts([[6, 61], [10, 54], [26, 50], [48, 52], [70, 50], [86, 54], [90, 61]])} fill={ART.dark.shade} />
+      <Bev t="polygon" points={pts([[8, 61], [13, 55], [28, 53], [48, 54], [68, 53], [83, 55], [88, 61]])} c="stone" o={0.9} />
+      {pod(20, 40, 9, 1, 0)}{pod(36, 32, 11, 2, 0.6)}{pod(54, 38, 12, 3, 1.2)}{pod(70, 42, 8, 4, 0.3)}{pod(80, 48, 5, 5, 0.9)}
+      <g fill={S.greenHi} opacity="0.7" style={{ animation:'steam-rise 5s ease-out infinite' }}>
+        <circle cx="30" cy="18" r="1" /><circle cx="50" cy="12" r="1.2" /><circle cx="66" cy="20" r="0.9" /><circle cx="44" cy="22" r="0.8" />
+      </g>
+      <Seams x={10} y={53} w={76} h={8} cols={5} op={0.3} />
+      <Greeble x={12} y={55} w={72} h={6} seed={650} n={7} c="stone" />
+      <Grime x={8} y={52} w={80} h={9} seed={651} n={5} op={0.3} /><Scuff x={10} y={53} w={74} h={7} seed={652} n={5} c="stone" />
+    </svg>
+  );
+}
+
+function PropCavBeacon({ variant }) {
+  const S = ART.signal;
+  const memorial = variant === 'memorial';
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={90} rx={26} ry={4} />
+      <Slab x={8} y={80} w={48} h={9} k={1.6} c="dark" />
+      <Hazard x={11} y={85} w={42} h={2.6} />
+      {memorial ? (
+        <g>
+          <Bev t="polygon" points={pts([[20, 80], [22, 26], [28, 14], [36, 14], [42, 26], [44, 80]])} c="pearl" o={1} />
+          <polygon points={pts([[28, 14], [32, 8], [36, 14]])} fill={ART.pearl.hi} />
+          <rect x="26" y="32" width="12" height="20" fill={ART.screen.cyan} />
+          <text x="32" y="38" textAnchor="middle" fontSize="2.6" fill={S.cyanHi} fontWeight="700" {...PT}>TEAM NINE</text>
+          <text x="32" y="43" textAnchor="middle" fontSize="1.8" fill={S.cyan} {...PT}>DUG BY ORDER</text>
+          <text x="32" y="47" textAnchor="middle" fontSize="1.8" fill={S.cyan} {...PT}>OF I. CHERIT</text>
+          <Glow cx={32} cy={10} r={9} c={S.cyanHi} opacity={0.5} style={{ animation:'ship-engine 3.6s ease-in-out infinite' }} />
+          <g>
+            <line x1="46" y1="84" x2="50" y2="74" stroke={ART.moss.base} strokeWidth="1.4" />
+            <polygon points={pts([[48, 76], [52, 72], [50, 78]])} fill={S.lime} />
+          </g>
+          <Seams x={21} y={16} w={22} h={62} cols={0} rows={5} op={0.3} />
+        </g>
+      ) : (
+        <g>
+          <polygon points={pts([[10, 82], [30, 34], [33, 34], [24, 82]])} fill={ART.steel.shade} />
+          <polygon points={pts([[54, 82], [36, 34], [33, 34], [42, 82]])} fill={ART.steel.shade} />
+          <Bev t="rect" c="steel" x={29} y={18} width={6} height={62} />
+          {[24, 36, 48, 60].map((y, i) => <rect key={y} x="29" y={y} width="6" height="6" fill={i % 2 ? ART.hull.hi : ART.red.base} />)}
+          <Slab x={22} y={8} w={20} h={12} k={2} c="dark" />
+          <rect x="26" y="11" width="12" height="6" fill={S.amber} style={{ animation:'ship-blink 2.4s steps(2) infinite' }} />
+          <Glow cx={32} cy={14} r={12} c={S.amber} opacity={0.45} style={{ animation:'ship-engine 2.4s ease-in-out infinite' }} />
+          <polygon points={pts([[38, 28], [52, 22], [50, 34]])} fill={ART.hull.base} />
+          <rect x="22" y="64" width="20" height="9" fill={ART.screen.amber} />
+          <text x="32" y="70" textAnchor="middle" fontSize="2.8" fill={S.amberHi} fontWeight="700" {...PT}>GRID 9-1</text>
+          <Lights x={25} y={76} n={4} gap={4.4} seed={660} />
+        </g>
+      )}
+      <Rivets x={12} y={82} w={40} n={7} c="dark" />
+      <Grime x={10} y={12} w={44} h={72} seed={661} n={6} op={0.26} /><Scuff x={14} y={14} w={36} h={66} seed={662} n={7} c={memorial ? 'pearl' : 'steel'} />
+    </svg>
+  );
+}
+
+function PropCavRig() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={90} rx={58} ry={4.4} />
+      <Slab x={6} y={74} w={116} h={14} k={2} c="dark" />
+      <Hazard x={10} y={82} w={108} h={3.4} />
+      <polygon points={pts([[40, 78], [52, 12], [60, 12], [62, 78]])} fill={ART.steel.shade} />
+      <polygon points={pts([[74, 78], [68, 12], [76, 12], [90, 78]])} fill={ART.steel.shade} />
+      <Bev t="polygon" points={pts([[44, 76], [53, 16], [58, 16], [58, 76]])} c="steel" o={0.9} />
+      <Bev t="polygon" points={pts([[76, 76], [70, 16], [75, 16], [86, 76]])} c="steel" o={0.9} />
+      <g stroke={ART.dark.base} strokeWidth="1.2" fill="none">
+        <polyline points={pts([[48, 70], [72, 54], [50, 40], [70, 26]])} />
+        <polyline points={pts([[72, 70], [50, 54], [70, 40], [54, 26]])} />
+      </g>
+      <Slab x={44} y={4} w={36} h={14} k={2.2} c="deepglass" />
+      <Slab x={48} y={7} w={28} h={8} k={1.4} c="dark" />
+      <rect x="52" y="9" width="20" height="3" fill={S.cyan} style={{ animation:'holo-flicker 3s steps(3) infinite' }} />
+      <Bev t="rect" c="steel" x={58} y={40} width={8} height={30} />
+      <polygon points={pts([[56, 70], [68, 70], [62, 86]])} fill={ART.dark.base} />
+      <polygon points={pts([[58, 78], [66, 78], [62, 90]])} fill={ART.steel.hi} opacity="0.7" />
+      <Bev t="polygon" points={pts(ngon(62, 88, 12, 3.4, 8))} c="dark" o={0.6} />
+      <Slab x={8} y={50} w={30} h={24} k={2} c="deepglass" />
+      <Vent x={11} y={53} w={24} h={8} n={3} />
+      <rect x="11" y="64" width="24" height="7" fill={ART.screen.amber} />
+      <text x="23" y="69.4" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>KDY-7 CORE DRILL</text>
+      <Bev t="polygon" points={pts(ngon(104, 62, 12, 12, 6))} c="steel" o={0.9} />
+      <Bev t="polygon" points={pts(ngon(104, 62, 7, 7, 6))} c="dark" o={0.6} />
+      <rect x="92" y="66" width="24" height="4" fill={ART.amber.base} />
+      <Cable d="M38 64 Q60 90 92 70" c={ART.amber.shade} w={1.8} />
+      <Lights x={100} y={46} n={4} gap={4} seed={670} />
+      <Rivets x={8} y={76} w={110} n={14} c="dark" />
+      <Seams x={8} y={50} w={30} h={24} cols={1} rows={0} op={0.4} />
+      <Greeble x={90} y={30} w={26} h={14} seed={671} n={7} c="steel" />
+      <Grime x={8} y={20} w={112} h={66} seed={672} n={9} op={0.28} /><Scuff x={10} y={24} w={108} h={60} seed={673} n={10} c="steel" />
+    </svg>
+  );
+}
+
+function PropCavPylon() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 96" width="64" height="96" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={90} rx={25} ry={4} />
+      <Glow cx={32} cy={36} rx={26} ry={32} c={S.violet} opacity={0.35} style={{ animation:'ship-engine 3.4s ease-in-out infinite' }} />
+      <Bev t="polygon" points={pts([[10, 90], [14, 72], [50, 72], [54, 90]])} c="stone" o={1} />
+      <Slab x={16} y={64} w={32} h={10} k={2} c="brass" />
+      <Slab x={20} y={54} w={24} h={10} k={1.8} c="bronze" />
+      <polygon points={pts([[32, 6], [44, 22], [42, 52], [22, 52], [20, 22]])} fill={ART.glass.shade} transform="translate(1 1.4)" />
+      <polygon points={pts([[32, 6], [44, 22], [42, 52], [22, 52], [20, 22]])} fill={ART.fabric.hi} />
+      <polygon points={pts([[32, 6], [44, 22], [42, 52], [32, 52]])} fill={ART.glass.base} opacity="0.65" />
+      <polyline points={pts([[27, 48], [30, 30], [34, 40], [36, 20]])} fill="none" stroke={S.cyanHi} strokeWidth="0.9" opacity="0.9" />
+      <rect x="29" y="66" width="6" height="5" fill={S.cyan} style={{ animation:'ship-blink 2.2s steps(2) infinite' }} />
+      <g stroke={ART.brass.hi} strokeWidth="0.7" fill="none"><polyline points={pts([[20, 60], [24, 57], [28, 60]])} /><polyline points={pts([[36, 60], [40, 57], [44, 60]])} /></g>
+      <Rivets x={19} y={74} w={26} n={5} c="brass" />
+      <Seams x={14} y={72} w={36} h={16} cols={3} op={0.35} />
+      <Greeble x={14} y={76} w={36} h={12} seed={680} n={5} c="stone" />
+      <Grime x={12} y={56} w={40} h={32} seed={681} n={5} op={0.26} /><Scuff x={14} y={58} w={36} h={28} seed={682} n={6} c="brass" />
+    </svg>
+  );
+}
+
+function PropCavChassis({ variant }) {
+  const S = ART.signal;
+  const v = variant || 'plinth';
+  const wreck = v === 'wreck' || v === 'stripped';
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={88} rx={44} ry={5} />
+      <Bev t="polygon" points={pts(ngon(48, 78, 42, 13, 8, 0.39))} c="dark" o={1.1} />
+      <polygon points={pts(ngon(48, 77, 32, 9.4, 8, 0.39))} fill={ART.steel.shade} />
+      <polygon points={pts(ngon(48, 76, 26, 7.4, 8, 0.39))} fill={ART.dark.base} />
+      {[0, 1, 2, 3].map((i) => <rect key={i} x={14 + i * 20} y="86" width="8" height="2.4" fill={i % 2 ? ART.hull.hi : ART.amber.base} />)}
+      <polygon points={pts(ngon(48, 76, 22, 6, 8, 0.39))} fill="none" stroke={S.amber} strokeWidth="0.8" opacity={v === 'ally' ? 0.2 : 0.8} style={{ animation:'ship-engine 3s ease-in-out infinite' }} />
+      <Cable d="M8 80 Q-2 70 4 56" c={ART.amber.shade} w={1.8} /><Cable d="M88 80 Q98 70 92 56" c={ART.amber.shade} w={1.8} />
+      {v === 'plinth' && (
+        <g>
+          <Slab x={14} y={56} w={10} h={22} k={2} c="steel" /><Slab x={72} y={56} w={10} h={22} k={2} c="steel" />
+          <rect x="16" y="60" width="6" height="2.4" fill={S.amber} /><rect x="74" y="60" width="6" height="2.4" fill={S.amber} />
+          <Lights x={36} y={80} n={5} gap={6} seed={690} />
+        </g>
+      )}
+      {v === 'dormant' && (
+        <g>
+          <Bev t="polygon" points={pts([[28, 70], [32, 48], [64, 48], [68, 70]])} c="deepglass" o={1} />
+          <Slab x={36} y={30} w={24} h={20} k={3} c="steel" />
+          <rect x="40" y="36" width="16" height="5" fill={ART.screen.off} />
+          <rect x="46" y="37.4" width="4" height="2.2" fill={S.amber} style={{ animation:'ship-blink 3s steps(2) infinite' }} />
+          <Slab x={20} y={50} w={10} h={22} k={2} c="steel" /><Slab x={66} y={50} w={10} h={22} k={2} c="steel" />
+          <Hazard x={32} y={58} w={32} h={4} />
+          <Vent x={38} y={52} w={20} h={5} n={2} />
+        </g>
+      )}
+      {wreck && (
+        <g>
+          <Bev t="polygon" points={pts([[24, 70], [36, 54], [66, 60], [72, 72], [44, 76]])} c="deepglass" o={1} />
+          <polygon points={pts([[38, 60], [60, 64], [56, 72], [40, 70]])} fill={ART.ink} />
+          {v === 'wreck' && (
+            <g>
+              <polygon points={pts(ngon(49, 66, 6, 5, 6))} fill={S.cyan} style={{ animation:'ship-engine 2.6s ease-in-out infinite' }} />
+              <Glow cx={49} cy={66} r={13} c={S.cyanHi} opacity={0.5} style={{ animation:'ship-engine 2.6s ease-in-out infinite' }} />
+            </g>
+          )}
+          <Slab x={64} y={50} w={18} h={12} k={2.4} c="steel" transform="rotate(24 72 56)" />
+          <rect x="70" y="53" width="5" height="3" fill={ART.screen.off} transform="rotate(24 72 56)" />
+          <Slab x={8} y={64} w={20} h={7} k={1.6} c="steel" transform="rotate(-18 18 68)" />
+          <Bev t="polygon" points={pts(ngon(78, 80, 5, 3, 6))} c="brass" o={0.6} /><Bev t="polygon" points={pts(ngon(20, 82, 4, 2.6, 6))} c="brass" o={0.6} />
+          <path d="M40 72 L44 56 L50 62" fill="none" stroke={ART.ink} strokeWidth="1.2" opacity="0.8" />
+          <circle cx="30" cy="56" r="1" fill={S.orange} style={{ animation:'ship-spark 1.8s steps(3) infinite' }} />
+        </g>
+      )}
+      <Seams x={20} y={68} w={56} h={18} cols={4} op={0.3} />
+      <Rivets x={20} y={84} w={56} n={9} c="dark" />
+      <Grime x={14} y={46} w={68} h={40} seed={691} n={8} op={wreck ? 0.4 : 0.26} /><Scuff x={16} y={48} w={64} h={36} seed={692} n={9} c="steel" />
+    </svg>
+  );
+}
+
+function PropCavShutter({ variant }) {
+  const S = ART.signal;
+  const open = variant === 'open';
+  return (
+    <svg viewBox="0 0 64 128" width="64" height="128" style={PROP_STYLE}>
+      <Slab x={2} y={6} w={14} h={116} k={3} c="dark" />
+      <Slab x={5} y={14} w={8} h={20} k={1.6} c="steel" />
+      <rect x="7" y="18" width="4" height="3" fill={open ? S.green : S.red} style={{ animation:'ship-blink 1.6s steps(2) infinite' }} />
+      <rect x="7" y="25" width="4" height="3" fill={open ? S.green : S.amber} />
+      <Bev t="polygon" points={pts([[16, 6], [62, 6], [62, 122], [16, 122]])} c="dark" o={1} />
+      <rect x="22" y="14" width="38" height="104" fill={ART.ink} />
+      {open ? (
+        <g>
+          <Slab x={22} y={14} w={38} h={14} k={1.8} c="steel" />
+          <Hazard x={22} y={28} w={38} h={3} />
+          <polygon points={pts([[30, 60], [46, 66], [30, 72]])} fill={S.green} opacity="0.85" />
+          <polygon points={pts([[40, 80], [54, 86], [40, 92]])} fill={S.green} opacity="0.55" />
+          {[44, 56, 68, 80, 92, 104].map((y, i) => <rect key={y} x="58" y={y} width="2" height="4" fill={S.green} style={{ animation:`ship-blink ${1.6 + i * 0.3}s steps(2) infinite` }} />)}
+          <Glow cx={44} cy={66} rx={18} ry={26} c={S.greenHi} opacity={0.3} style={{ animation:'ship-engine 3s ease-in-out infinite' }} />
+        </g>
+      ) : (
+        <g>
+          {[14, 34, 54, 74, 94].map((y, i) => (
+            <g key={y}>
+              <Slab x={22} y={y} w={38} h={19} k={1.6} c={i % 2 ? 'steel' : 'dark'} />
+              <Seams x={22} y={y} w={38} h={19} cols={2} op={0.4} />
+            </g>
+          ))}
+          <Hazard x={22} y={108} w={38} h={10} />
+          <rect x="26" y="52" width="30" height="9" fill={ART.red.base} />
+          <rect x="26" y="52" width="30" height="1.4" fill={ART.red.hi} />
+          <text x="41" y="58.8" textAnchor="middle" fontSize="3" fill={ART.paper.hi} fontWeight="700" {...PT}>ZORA IV SECTOR</text>
+          <text x="41" y="46" textAnchor="middle" fontSize="2.2" fill={S.amberHi} {...PT}>LOCKOUT ACTIVE</text>
+          <rect x="24" y="64" width="34" height="2" fill={S.red} opacity="0.8" style={{ animation:'ship-blink 1.6s steps(2) infinite' }} />
+        </g>
+      )}
+      <Rivets x={18} y={9} w={42} n={8} c="steel" />
+      <Vent x={4} y={40} w={10} h={12} n={4} />
+      <Grime x={4} y={10} w={56} h={110} seed={700} n={9} op={0.28} /><Scuff x={6} y={14} w={52} h={104} seed={701} n={10} c="steel" />
+    </svg>
+  );
+}
+// ===== CAVERN PROPS END =====
+
 // ===== PENTHOUSE DESIGN OVERLAY BEGIN =====
 function PenthouseDesignOverlay({ inventory, flags, onInstall, onRemove, onClose }) {
   const [sel, setSel] = React.useState(0);
@@ -18543,6 +19122,8 @@ const AI_COMBAT_PROFILES = {
   furnace_husk:         { aggression:90, cover:5,  flank:20, overwatch:0,  optRange:2, name:'Furnace Husk',               hp:8,  shield:2, accent:'#FF7A1A' },
   piston_sentinel:      { aggression:50, cover:70, flank:15, overwatch:80, optRange:2, name:'Piston Sentinel',            hp:11, shield:5, accent:'#C4923E' },
   unchained_overseer:   { aggression:75, cover:40, flank:30, overwatch:80, optRange:4, name:'The Unchained Overseer',     hp:16, shield:6, accent:'#2B7895' },
+  cav_unit_8x_guard:    { aggression:60, cover:85, flank:45, overwatch:80, optRange:4, name:'Gate Sentinel Escort',       hp:12, shield:5, accent:'#7A5CC8' },
+  cav_unit_8x_boss:     { aggression:72, cover:60, flank:35, overwatch:95, optRange:5, name:'Unit 8-X, Gate Warden',      hp:16, shield:6, accent:'#B8D4E8' },
   // BADOR PROFILES END
 };
 
@@ -18662,6 +19243,8 @@ const COMBAT_LOOT = {
   furnace_husk: { credits:[70,130], itemChance:0.4, items:[{id:'loot_slag_residue',name:'Cooled Slag Residue',type:'consumable',iconKind:'supply',value:150,description:'Dense, warm and unexpectedly valuable to a forge.'}] },
   piston_sentinel: { credits:[120,220], itemChance:0.55, items:[{id:'loot_brass_plate',name:'Sentinel Brass Plate',type:'gear',iconKind:'gear',value:520,description:'Tarnished brass from a construct that was never meant to retire.'}] },
   unchained_overseer: { credits:[260,440], itemChance:0.9, items:[{id:'item_titan_cylinder_ring',name:'Titan Cylinder Ring',type:'gear',iconKind:'gear',value:800,description:'An ancient signet ring proving engineering rank.'}] },
+  cav_unit_8x_guard: { credits:[180,300], itemChance:0.8, items:[{id:'loot_sentinel_servo',name:'Sentinel Servo Pack',type:'gear',iconKind:'gear',value:650,description:'A matched servo pack torn from an escort sentinel. Still twitching.'}] },
+  cav_unit_8x_boss: { credits:[360,560], itemChance:1.0, items:[{id:'loot_warden_actuator',name:'Warden Pile Driver Actuator',type:'weapon',iconKind:'gear',value:1100,description:'The pneumatic actuator from the warden\'s arm. Hits like a falling door.'}] },
   // BADOR LOOT END
   csf_swat:             { credits:[90,160],  itemChance:0.45, items:[{id:'loot_csf_stun_baton',name:'CSF Stun Baton',type:'weapon',iconKind:'gear',value:200,description:'Regulation CSF close-quarters weapon. Still carries a charge.'},{id:'loot_csf_access_chip',name:'CSF Access Chip',type:'gear',iconKind:'keycard',value:350,description:'Biometric-coded to a SWAT officer. Crackable.'},{id:'loot_tactical_stim',name:'Tactical Stim',type:'consumable',iconKind:'supply',value:120,description:'Military-grade stim. Restores combat readiness fast.'}] },
   csf_scout:            { credits:[60,110],  itemChance:0.35, items:[{id:'loot_scout_earpiece',name:'CSF Scout Earpiece',type:'gear',iconKind:'gear',value:180,description:'Encrypted channel. 48-hour window before they rotate the key.'},{id:'loot_det_round',name:'Det Round x2',type:'consumable',iconKind:'supply',value:90,description:'Compact explosive rounds. Useful.'}] },
