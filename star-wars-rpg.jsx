@@ -65,6 +65,9 @@ function shipAtTile(zone, x, y) {
   return (zone.ships || []).find((s) => { const d = SHIP_DEFS[s.kind]; return d && x >= s.x && x < s.x + d.w && y >= s.y && y < s.y + d.h; });
 }
 
+// Engine Wastes: Vance reacts to the Black Box log (shared by several dialogue phases)
+const WST_VANCE_BOX_CHOICE = { text: '[Black Box] I found a cylinder. It has your voice on it.', requiresFlag: 'black_box_found', morality: 0, loyalty: {}, result: 'Vance goes still. "I was still talking when they welded the hatch." He wipes the cylinder clean. "Then finish it. Seat the Governor."', grants: { codex: ['codex-wst-vance-truth'] } };
+
 const PLANETS = {
   coruscant: {
     id: 'coruscant', name: 'Coruscant', travelCost: 0, startZoneId: 'spaceport',
@@ -2621,7 +2624,7 @@ const PLANETS = {
             triggersMinigame: 'syndicate_management' },
           { id: 'conquest_table', propArt: 'tactical_table', propVariant: 'conquest', x: 14, y: 14, once: false, iconKind: 'terminal', label: 'Sector Control Holo',
             requiresFlag: 'syndicateManagement_active',
-            description: 'A secondary tactical display overlaying the five contested sectors of Coruscant mid-city. Garrison strength, income flows, defense ratings, and faction aggression indicators scroll in real time. From here you direct the long war: deploy units, build infrastructure, launch assaults, and respond to crisis events before they destabilize your hold.',
+            description: 'A secondary tactical display overlaying the sixteen sectors of Coruscant, from the Sky-Lounges to the Undercity. Garrison strength, income flows, defense ratings, and faction aggression indicators scroll in real time. From here you direct the long war: deploy units, build infrastructure, launch assaults, and respond to crisis events before they destabilize your hold.',
             triggersMinigame: 'coruscant_conquest',
             minigameConfig: { startCredits: 5000 } },
           { id: 'vault_terminal', propArt: 'console', propVariant: 'vault', x: 34, y: 10, once: true, iconKind: 'terminal', label: 'Credit Vault Terminal',
@@ -4055,8 +4058,8 @@ const PLANETS = {
         doors: [
           { x: 29, y: 13, targetZone: 'bador_hq_interior', targetPos: { x: 2, y: 10 }, label: 'Main HQ Airlock', requiresFlag: 'bador_pass_issued', lockedMessage: 'The blast doors stay sealed. A synthetic voice repeats: BASE ACCESS PASS REQUIRED. Check in with Lieutenant Vane on the landing deck.', cinematic: 'airlock' },
           { x: 29, y: 14, targetZone: 'bador_hq_interior', targetPos: { x: 2, y: 11 }, label: 'Main HQ Airlock', requiresFlag: 'bador_pass_issued', lockedMessage: 'The blast doors stay sealed. A synthetic voice repeats: BASE ACCESS PASS REQUIRED. Check in with Lieutenant Vane on the landing deck.', cinematic: 'airlock' },
-          { x: 43, y: 13, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 8 }, label: 'Sector 4 Facilities' },
-          { x: 43, y: 14, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 9 }, label: 'Sector 4 Facilities' },
+          { x: 43, y: 13, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 14 }, label: 'Sector 4 Facilities' },
+          { x: 43, y: 14, targetZone: 'bador_manufacturing', targetPos: { x: 1, y: 15 }, label: 'Sector 4 Facilities' },
           { x: 16, y: 27, targetZone: 'city_outskirts_bador', targetPos: { x: 14, y: 1 }, label: 'City Outskirts' },
           { x: 17, y: 27, targetZone: 'city_outskirts_bador', targetPos: { x: 15, y: 1 }, label: 'City Outskirts' },
         ],
@@ -4415,23 +4418,23 @@ const PLANETS = {
       bador_manufacturing: {
         id: 'bador_manufacturing', name: 'KDY Manufacturing Facilities — Sector 4',
         subtitle: 'Bador Moon · Restricted Zone',
-        width: 36, height: 22, spawnPos: { x: 2, y: 8 }, textureId: 'ferrowake',
+        width: 44, height: 30, spawnPos: { x: 2, y: 14 }, textureId: 'ferrowake',
         accent: '#D4762C', accentGlow: 'rgba(212,118,44,0.28)', accentDim: '#6A3010',
         floorColor: '#251A0E', floorAlt: '#2E2010', wallDark: '#0E0A06', wallLight: '#1A1208',
         bg: 'radial-gradient(circle at 50% 70%, #1A1008 0%, #0A0804 70%)', ambient: 'embers',
         decor: ['pipe', 'girder', 'slag'],
         doors: [
-          { x: 0, y: 8, targetZone: 'bador_main_base', targetPos: { x: 42, y: 13 }, label: 'Main Base' },
-          { x: 0, y: 9, targetZone: 'bador_main_base', targetPos: { x: 42, y: 14 }, label: 'Main Base' },
-          { x: 35, y: 10, targetZone: 'engine_wastes', targetPos: { x: 1, y: 10 }, label: 'Engine Wastes' },
-          { x: 35, y: 11, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Engine Wastes' },
+          { x: 0, y: 14, targetZone: 'bador_main_base', targetPos: { x: 42, y: 13 }, label: 'Main Base' },
+          { x: 0, y: 15, targetZone: 'bador_main_base', targetPos: { x: 42, y: 14 }, label: 'Main Base' },
+          { x: 43, y: 16, targetZone: 'engine_wastes', targetPos: { x: 1, y: 10 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight lock is sealed. The tunnel beyond runs to the Engine Wastes and stays dead until the Titan Manifold is restarted.' },
+          { x: 43, y: 17, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight lock is sealed. The tunnel beyond runs to the Engine Wastes and stays dead until the Titan Manifold is restarted.' },
         ],
         worldObjects: [
           { id: 'assembly_line_terminal', propArt: 'console', propVariant: 'assembly', x: 20, y: 6, label: 'Assembly Line Override Terminal',
             description: 'An unauthorized modification routes assembly output to an off-manifest storage bay. The override code is not in the KDY standard library.',
             triggersMinigame: 'terminal_slicing', requiresFlag: 'ghost_keel_active',
             once: true, grantsFlag: 'assembly_override_accessed', grantsItem: 'corrupt_manifest' },
-          { id: 'mag_lev_crane', propArt: 'maglev_crane', x: 18, y: 3, label: 'Mag-Lev Cargo Crane',
+          { id: 'mag_lev_crane', propArt: 'maglev_crane', x: 18, y: 6, label: 'Mag-Lev Cargo Crane',
             description: 'A five-ton crane magnetized to the ceiling rail. The routing manifest reads: PERSONAL CONSIGNMENT.' },
           { id: 'krax_manifest_safe', propArt: 'crate_stack', propVariant: 'lockbox', x: 29, y: 16, label: 'Overseer\'s Manifest Safe',
             description: 'A heavy durasteel lockbox welded to the floor. The serial number has been removed.',
@@ -4465,21 +4468,14 @@ const PLANETS = {
           },
         ],
         collectibles: [
-          { id: 'sector4_hull_fragment', x: 32, y: 4, label: 'Forged Star Destroyer Hull Plating', reward: 800 },
-          { id: 'sector4_assembly_log', x: 10, y: 4, label: 'Assembly Sequence Log', reward: 300 },
+          { id: 'sector4_hull_fragment', x: 32, y: 8, label: 'Forged Star Destroyer Hull Plating', reward: 800 },
+          { id: 'sector4_assembly_log', x: 10, y: 8, label: 'Assembly Sequence Log', reward: 300 },
         ],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 34, 20, 'floor');
-          for (let ax = 4; ax <= 32; ax++) { pt(g, ax, 12, 'lava'); pt(g, ax, 13, 'lava'); }
-          for (let bx = 12; bx <= 22; bx++) { pt(g, bx, 12, 'floor'); pt(g, bx, 13, 'floor'); }
-          for (let cx = 14; cx <= 20; cx++) { pt(g, cx, 7, 'lava'); pt(g, cx, 8, 'lava'); }
-          pt(g, 16, 7, 'floor'); pt(g, 17, 7, 'floor');
-          carveRect(g, 26, 14, 34, 20, 'wall');
-          pt(g, 28, 14, 'floor'); pt(g, 29, 14, 'floor'); pt(g, 30, 14, 'floor');
-          pt(g, 0, 8, 'door'); pt(g, 0, 9, 'door');
-          pt(g, 35, 10, 'door'); pt(g, 35, 11, 'door');
-          pt(g, 26, 14, 'floor'); pt(g, 27, 14, 'floor'); carveRect(g, 28, 15, 30, 16, 'floor'); // overseer's safe alcove
+          carveRect(g, 1, 5, 42, 28, 'floor');
+          pt(g, 0, 14, 'door'); pt(g, 0, 15, 'door');
+          pt(g, 43, 16, 'door'); pt(g, 43, 17, 'door');
           return g;
         },
       },
@@ -4920,95 +4916,130 @@ const PLANETS = {
         paAnnouncements: [
           'Caution. Thermal exhaust venting in sectors four, five and nine.',
           'The Titan Manifold is offline. Do not attempt to restart it.',
+          'Slag Line freight service is suspended until further notice.',
           'Coolant reserves at eleven percent. This is a recording.',
         ],
         doors: [
-          { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 10 }, label: 'Sector 4' },
-          { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 11 }, label: 'Sector 4' },
+          { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 42, y: 16 }, label: 'Slag Line to Manufacturing', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line gate is dead until the Titan Manifold runs.' },
+          { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 42, y: 17 }, label: 'Slag Line to Manufacturing', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line gate is dead until the Titan Manifold runs.' },
           { x: 24, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 24, y: 30 }, label: 'Depot Blast Doors' },
           { x: 25, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 25, y: 30 }, label: 'Depot Blast Doors' },
-          { x: 28, y: 35, targetZone: 'deep_caverns', targetPos: { x: 16, y: 1 }, label: 'Deep Caverns' },
-          { x: 29, y: 35, targetZone: 'deep_caverns', targetPos: { x: 17, y: 1 }, label: 'Deep Caverns' },
-          { x: 47, y: 16, targetZone: 'outpost_7', targetPos: { x: 22, y: 30 }, label: 'Outpost 7 Gateway' },
-          { x: 47, y: 17, targetZone: 'outpost_7', targetPos: { x: 23, y: 30 }, label: 'Outpost 7 Gateway' },
+          { x: 40, y: 0, targetZone: 'outpost_7', targetPos: { x: 22, y: 30 }, label: 'Sundown Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The Sundown Gateway is sealed from this side.' },
+          { x: 41, y: 0, targetZone: 'outpost_7', targetPos: { x: 23, y: 30 }, label: 'Sundown Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The Sundown Gateway is sealed from this side.' },
+          { x: 47, y: 21, targetZone: 'deep_caverns', targetPos: { x: 1, y: 14 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'Shut behind the central blast doors, heat locked until the manifold runs.' },
+          { x: 47, y: 22, targetZone: 'deep_caverns', targetPos: { x: 1, y: 15 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'Shut behind the central blast doors, heat locked until the manifold runs.' },
         ],
         worldObjects: [
           { id: 'wastes_vista_w', propArt: 'basalt_vista', propVariant: 'wastes_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Titan Manifold',
-            description: "Soot choked sky punctured by gigantic rusting pistons that beat irregularly like dying hearts. Copper and brass pipelines trace across crushed ironwork and furnace glow lights the haze from underneath. Somewhere in the dark a bell rings, flat and slow, with nothing to answer it.", grantsCodex: 'codex-engine-wastes' },
+            description: "Soot choked sky and giant rusting pistons beating like dying hearts. Furnace glow lights the haze from below, and somewhere a bell rings, flat and slow.", grantsCodex: 'codex-engine-wastes' },
           { id: 'wastes_vista_e', propArt: 'basalt_vista', propVariant: 'wastes_b', x: 36, y: 5, once: false, iconKind: 'vista', label: 'Silent Shear Skyline',
-            description: "To the east the mega engine blocks stand locked and cracked, venting white steam into a sky the color of old copper. The Silent Shear severed the primary fuel conduits and the wastes have been burning ever since. Far above, a depot blast door glows orange: the way back to the City Outskirts." },
-          { id: 'ion_storm_capacitor', propArt: 'capacitor_bank', x: 40, y: 8, label: 'Ion Storm Capacitor',
-            description: 'A massive industrial capacitor bank still actively cycling. The discharge pattern is not natural — it is deliberately jamming sensor sweeps across a six-kilometer radius.',
-            once: true, requiresFlag: 'ghost_keel_active',
-            grantsFlag: 'jammer_found', grantsCodex: 'codex-engine-wastes' },
+            description: "Mega engine blocks stand cracked, venting white steam into a copper sky. High in the north wall a blast door glows orange: the way back to the Outskirts.", grantsCodex: 'codex-engine-wastes' },
+          { id: 'ion_storm_capacitor', propArt: 'capacitor_bank', x: 44, y: 8, label: 'Ion Storm Capacitor',
+            description: "Five amber capacitor cells, still cycling, cyan arcs jumping between terminals. A stencil reads DISCHARGE: NOT NATURAL. It jams sensors for six kilometers.",
+            once: true, requiresFlag: 'ghost_keel_active', lockedMessage: 'A jamming bank. Commander Vael might know why it matters.',
+            requiresNoneFlags: ['jammer_found'],
+            triggersMinigame: 'terminal_slicing', minigameConfig: { difficulty: 5 },
+            grantsFlag: 'jammer_found', grantsCodex: 'codex-wst-jammer', thermalDeltaOnSuccess: -30 },
+          { id: 'ion_capacitor_dead', propArt: 'capacitor_bank', propVariant: 'dead', x: 44, y: 8, label: 'Dead Capacitor Bank',
+            description: "The arcs die and the cells go dark. Your signature fades. You pull the main cell, a heavy amber core, cold at last.",
+            once: true, requiresFlag: 'jammer_found', invisibleLocked: true, grantsItem: 'wst_capacitor_cell' },
           { id: 'scan_team_wreckage', propArt: 'scan_wreck', x: 44, y: 15, label: 'KDY Scan Team Wreckage',
-            description: 'The remains of the missing scan team. Their equipment is intact but deliberately disabled. No signs of combat. They were warned off.',
-            once: true, requiresFlag: 'vael_briefed', grantsFlag: 'scan_team_fate_known' },
-          { id: 'glassed_crater_lake', propArt: 'crater_glass', x: 6, y: 9, label: 'Glassed Crater Lake',
-            description: 'A shallow basin of fused silica — evidence of catastrophic engine discharge centuries past. Something large once burned here and the ground remembers it.' },
+            description: "A cracked glass cab and a steel scan truck, dish mast tilted, a note reading WARNED OFF. Seven tags hang from the mast, wrapped in repair tape and names. You take them home.",
+            once: true, requiresFlag: 'vael_briefed', lockedMessage: 'A wrecked truck. You do not know what you are looking at yet.',
+            grantsFlag: 'scan_team_fate_known', grantsItem: 'wst_scan_team_tags', grantsCodex: 'codex-wst-scan-team' },
+          { id: 'glassed_crater_lake', propArt: 'crater_glass', x: 6, y: 9, once: false, label: 'Glassed Crater Lake',
+            description: "Fused silica glass cracked in a starburst, an orange glow under the center. A stencil reads THE GROUND REMEMBERS.", grantsCodex: 'codex-wst-crater-lake' },
           { id: 'foundry_hatch_obj', propArt: 'foundry_hatch', x: 26, y: 12, once: false, iconKind: 'terminal', label: 'Combustion Foundry 09',
-            description: "A hollowed out combustion chamber hung over a dormant slag basin, sealed with heavy blast doors and lit from inside by warm blue coolant lamps. A hand painted sign reads FOUNDRY 09, NO SPARKS, NO SERMONS. This is the one safe place in the wastes.", grantsCodex: 'codex-engine-wastes' },
+            description: "A combustion chamber hung over a dormant slag basin, blue lamps behind heavy blast doors. A sign reads FOUNDRY 09, NO SPARKS, NO SERMONS. The one safe place in the wastes.", grantsCodex: 'codex-wst-foundry09' },
           { id: 'bench_foundry', propArt: 'robotics_bench', x: 21, y: 15, once: false, iconKind: 'crate', label: 'Salvage Workbench',
-            description: "A long steel bench strewn with valve cores, melted gaskets and a half rebuilt pneumatic impact spanner. Soot stains every surface and a pair of welding goggles sit on a hook, still warm." },
+            description: "A steel bench of valve cores, melted gaskets and a half rebuilt spanner. Welding goggles hang on a hook, still warm." },
           { id: 'coolant_diag', propArt: 'fuel_diag_terminal', x: 33, y: 15, once: false, iconKind: 'crate', label: 'Coolant Diagnostics',
-            description: "A hand patched diagnostics terminal wired to the coolant lines. Readouts bounce between SAFE and CRITICAL. A strip of tape on the screen reads: IT IS NEVER SAFE." },
+            description: "A patched terminal wired to the coolant lines, readouts bouncing between SAFE and CRITICAL. Tape reads: IT IS NEVER SAFE." },
           { id: 'piston_tower_1', propArt: 'piston_tower', x: 8, y: 18, once: false, iconKind: 'crate', label: 'Titan Piston',
-            description: "A colossal brass and copper piston, still beating, still slow. Every few seconds it slams down and the ground answers with a shudder. Steam bleeds from its flanges and rust runs in streaks down the housing." },
+            description: "A colossal brass piston, still beating. Each slam shudders the ground." },
           { id: 'piston_tower_2', propArt: 'piston_tower', x: 30, y: 22, once: false, iconKind: 'crate', label: 'Titan Piston',
-            description: "A colossal brass and copper piston, still beating, still slow. Every few seconds it slams down and the ground answers with a shudder. Steam bleeds from its flanges and rust runs in streaks down the housing." },
+            description: "A colossal brass piston, still beating. Each slam shudders the ground." },
           { id: 'piston_tower_3', propArt: 'piston_tower', x: 20, y: 31, once: false, iconKind: 'crate', label: 'Titan Piston',
-            description: "A colossal brass and copper piston, still beating, still slow. Every few seconds it slams down and the ground answers with a shudder. Steam bleeds from its flanges and rust runs in streaks down the housing." },
+            description: "A colossal brass piston, still beating. Each slam shudders the ground." },
           { id: 'boiler_hull_a', propArt: 'boiler_hull', x: 28, y: 28, once: false, iconKind: 'crate', label: 'Dead Boiler Hull',
-            description: "A burst boiler hull on its side. The interior glows a dull orange through the cracks. The nameplate has been scratched away and replaced with the word NO." },
+            description: "A burst boiler hull glowing orange through the cracks. The nameplate is scratched out and replaced with NO." },
           { id: 'steam_vent_1', propArt: 'steam_vent_pipe', x: 21, y: 22, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
-            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+            description: "A copper pipe that hisses, then vents a three tile jet of scalding steam. Scanners notice.", thermalDelta: 6 },
           { id: 'steam_vent_2', propArt: 'steam_vent_pipe', x: 28, y: 25, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
-            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+            description: "A copper pipe that hisses, then vents a three tile jet of scalding steam. Scanners notice.", thermalDelta: 6 },
           { id: 'steam_vent_3', propArt: 'steam_vent_pipe', x: 24, y: 30, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
-            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+            description: "A copper pipe that hisses, then vents a three tile jet of scalding steam. Scanners notice.", thermalDelta: 6 },
           { id: 'steam_vent_4', propArt: 'steam_vent_pipe', x: 36, y: 20, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
-            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+            description: "A copper pipe that hisses, then vents a three tile jet of scalding steam. Scanners notice.", thermalDelta: 6 },
           { id: 'valve_a', propArt: 'valve_wheel', propVariant: 'closed', x: 4, y: 23, once: true, iconKind: 'terminal', label: 'Pressure Valve Wheel (A)',
-            description: "A heavy brass valve wheel with three coolant crystals set into its spokes. It is stuck at a quarter turn. Rerouting the pressure here drains a flooded vault and opens the way to the core.", requiresFlag: 'vance_met', lockedMessage: 'The wheel is lockwired. You need Vance Crankshaft to explain the sequence first.', requiresNoneFlags: ['valve_a_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_a_done', thermalDeltaOnSuccess: 3 },
+            description: "A brass valve wheel with three coolant crystals in its spokes, stuck at a quarter turn.", requiresFlag: 'vance_met', lockedMessage: 'Lockwired. Vance Crankshaft knows the sequence.', requiresNoneFlags: ['valve_a_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_a_done', thermalDeltaOnSuccess: 3 },
           { id: 'valve_a_open', propArt: 'valve_wheel', propVariant: 'open', x: 4, y: 23, once: false, iconKind: 'terminal', label: 'Pressure Valve Wheel (A, Open)',
-            description: "The wheel spins freely now. The pressure line beyond it is empty and the pipe is cooling with a soft ticking sound.", requiresFlag: 'valve_a_done', invisibleLocked: true },
+            description: "The wheel spins freely. The pipe beyond is empty and cooling.", requiresFlag: 'valve_a_done', invisibleLocked: true },
           { id: 'valve_b', propArt: 'valve_wheel', propVariant: 'closed', x: 11, y: 25, once: true, iconKind: 'terminal', label: 'Pressure Valve Wheel (B)',
-            description: "A heavy brass valve wheel with three coolant crystals set into its spokes. It is stuck at a quarter turn. Rerouting the pressure here drains a flooded vault and opens the way to the core.", requiresFlag: 'vance_met', lockedMessage: 'The wheel is lockwired. You need Vance Crankshaft to explain the sequence first.', requiresNoneFlags: ['valve_b_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_b_done', thermalDeltaOnSuccess: 3 },
+            description: "A brass valve wheel with three coolant crystals in its spokes, stuck at a quarter turn.", requiresFlag: 'vance_met', lockedMessage: 'Lockwired. Vance Crankshaft knows the sequence.', requiresNoneFlags: ['valve_b_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_b_done', thermalDeltaOnSuccess: 3 },
           { id: 'valve_b_open', propArt: 'valve_wheel', propVariant: 'open', x: 11, y: 25, once: false, iconKind: 'terminal', label: 'Pressure Valve Wheel (B, Open)',
-            description: "The wheel spins freely now. The pressure line beyond it is empty and the pipe is cooling with a soft ticking sound.", requiresFlag: 'valve_b_done', invisibleLocked: true },
+            description: "The wheel spins freely. The pipe beyond is empty and cooling.", requiresFlag: 'valve_b_done', invisibleLocked: true },
           { id: 'valve_c', propArt: 'valve_wheel', propVariant: 'closed', x: 5, y: 31, once: true, iconKind: 'terminal', label: 'Pressure Valve Wheel (C)',
-            description: "A heavy brass valve wheel with three coolant crystals set into its spokes. It is stuck at a quarter turn. Rerouting the pressure here drains a flooded vault and opens the way to the core.", requiresFlag: 'vance_met', lockedMessage: 'The wheel is lockwired. You need Vance Crankshaft to explain the sequence first.', requiresNoneFlags: ['valve_c_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_c_done', thermalDeltaOnSuccess: 3 },
+            description: "A brass valve wheel with three coolant crystals in its spokes, stuck at a quarter turn.", requiresFlag: 'vance_met', lockedMessage: 'Lockwired. Vance Crankshaft knows the sequence.', requiresNoneFlags: ['valve_c_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_c_done', thermalDeltaOnSuccess: 3 },
           { id: 'valve_c_open', propArt: 'valve_wheel', propVariant: 'open', x: 5, y: 31, once: false, iconKind: 'terminal', label: 'Pressure Valve Wheel (C, Open)',
-            description: "The wheel spins freely now. The pressure line beyond it is empty and the pipe is cooling with a soft ticking sound.", requiresFlag: 'valve_c_done', invisibleLocked: true },
+            description: "The wheel spins freely. The pipe beyond is empty and cooling.", requiresFlag: 'valve_c_done', invisibleLocked: true },
           { id: 'boiler_core', propArt: 'crate_stack', propVariant: 'kdy', x: 11, y: 32, once: true, iconKind: 'crate', label: 'Boiler Core Vault',
-            description: "A sealed brass vault door at the heart of the Matrix, finally drained of slag. Inside, wrapped in oilcloth, a heavy brass wheel with three glowing blue coolant crystals and gear teeth along its rim: the Catalyst Governor Valve.", requiresAllFlags: ['valve_a_done', 'valve_b_done', 'valve_c_done'], lockedMessage: 'The vault door is pressure locked. Open all three valve wheels to drain the chamber.', grantsItem: 'catalyst_governor_valve', grantsFlag: 'governor_valve_acquired' },
+            description: "The drained vault holds the Catalyst Governor Valve in oilcloth: a brass wheel with three blue crystals and gear teeth along its rim.", requiresAllFlags: ['valve_a_done', 'valve_b_done', 'valve_c_done'], lockedMessage: 'Pressure locked. Open all three valve wheels.', grantsItem: 'catalyst_governor_valve', grantsFlag: 'governor_valve_acquired' },
           { id: 'black_box_04', propArt: 'console', propVariant: 'derelict', x: 3, y: 26, once: true, iconKind: 'archive', label: 'Black Box Audio Cylinder 04',
-            description: "A battered audio cylinder from the Titan control spire, wedged between two cracked boiler plates. Its log is timestamped Shear Day plus three, in the voice of a tired engineer. Static interrupts the transcription twice.", requiresFlag: 'vance_met', lockedMessage: 'Nothing here makes sense to you yet. Vance Crankshaft might recognise it.', grantsFlag: 'black_box_found', grantsCodex: 'codex-black-box-04' },
+            description: "A battered audio cylinder wedged between boiler plates, stamped Shear Day plus three. Static cuts the engineer's voice twice.", requiresFlag: 'vance_met', lockedMessage: 'Meaningless for now. Vance Crankshaft might recognize it.', grantsFlag: 'black_box_found', grantsCodex: 'codex-black-box-04' },
           { id: 'coolant_crystals', propArt: 'crate_stack', propVariant: 'kdy', x: 12, y: 22, once: true, iconKind: 'crate', label: 'Coolant Crystal Cluster',
-            description: "A cluster of blue coolant crystals growing along a cracked pipe, glowing faintly in the dark. Ground to powder they make a fine thermal insulator.", grantsItem: 'thermal_crystal_dust' },
+            description: "Blue coolant crystals along a cracked pipe, glowing faintly. Ground to powder, they insulate against heat.", grantsItem: 'thermal_crystal_dust' },
           { id: 'exhaust_cathedral_obj', propArt: 'exhaust_cathedral', x: 40, y: 29, once: false, iconKind: 'vista', label: 'The Exhaust Cathedral',
-            description: "A 500 meter exhaust cylinder, gothic and industrial, with triple piston assemblies cycling up its walls like organ pipes. The arch at its base glows ember orange. At its apex, the Arch Manifold Core and the story critical Audio Cylinder. Without the missing Governor Valve the central blast doors remain heat locked.", grantsCodex: 'codex-engine-wastes' },
+            description: "A 500 meter exhaust cylinder, triple piston assemblies cycling up its walls like organ pipes, an ember orange arch at its base. The Governor socket waits at the apex.", grantsCodex: 'codex-wst-cathedral' },
           { id: 'unchained_overseer_obj', propArt: 'piston_tower', x: 35, y: 32, once: true, iconKind: 'floor', label: 'The Unchained Overseer',
-            description: "A corrupted automated defense titan, bolted to the cathedral foundation and wound tight with snapped safety chains. Its lens burns a single cold blue point. Pneumatic pile drivers pull back as you approach.", requiresFlag: 'vance_met', lockedMessage: 'The cathedral doors are heat locked. Talk to Vance Crankshaft before you try the ascent.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'unchained_overseer', flavorText: 'The Overseer rips its chains free and the whole cathedral shakes. Pistons slam in staggered time. Steam shields snap up around its chest. There is no way around it, only through the pistons.' }, grantsFlag: 'overseer_defeated', thermalDeltaOnSuccess: 10 },
+            description: "A corrupted defense titan wound in snapped safety chains, its lens one cold blue point. Pile drivers draw back as you approach.", requiresFlag: 'vance_met', lockedMessage: 'Heat locked. Speak to Vance Crankshaft first.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'unchained_overseer', flavorText: 'The Overseer rips its chains free and the cathedral shakes. There is no way around it, only through.' }, grantsFlag: 'overseer_defeated', thermalDeltaOnSuccess: 10 },
           { id: 'governor_socket_empty', propArt: 'governor_socket', propVariant: 'empty', x: 44, y: 31, once: false, iconKind: 'terminal', label: 'Governor Valve Socket',
-            description: "A brass cradle at the apex console, three empty crystal sockets and a red lamp. You seat the Catalyst Governor Valve and turn it. The crystals flare cyan, the whole manifold exhales, steam vents roar and the pistons catch their rhythm. The Black Box transcript plays on every speaker: the engine did not fail from age. It was starved on purpose.", requiresFlag: 'overseer_defeated', lockedMessage: 'The apex is guarded. Deal with the Overseer first.', requires: { item: 'catalyst_governor_valve' }, requiresNoneFlags: ['manifest_restarted'], grantsFlags: ['manifest_restarted', 'engine_core_unlocked', 'vance_truth_known'], grantsCodex: 'codex-black-box-04', thermalDelta: -25 },
+            description: "A brass cradle with three empty crystal sockets and a red lamp. Seat the Governor Valve and the manifold exhales. The Black Box plays on every speaker: starved on purpose.", requiresFlag: 'overseer_defeated', lockedMessage: 'The apex is guarded. Deal with the Overseer first.', requires: { item: 'catalyst_governor_valve' }, requiresNoneFlags: ['manifest_restarted'], grantsFlags: ['manifest_restarted', 'engine_core_unlocked', 'vance_truth_known'], grantsCodex: 'codex-black-box-04', thermalDelta: -25 },
           { id: 'governor_socket_installed', propArt: 'governor_socket', propVariant: 'installed', x: 44, y: 31, once: false, iconKind: 'terminal', label: 'Governor Valve (Installed)',
-            description: "The Catalyst Governor Valve sits in its cradle, three crystals glowing a steady cyan. The manifold hums at the right pitch for the first time since the Silent Shear. The apex console reads: ALL SYSTEMS NOMINAL.", requiresFlag: 'manifest_restarted', invisibleLocked: true },
-          { id: 'central_core_blast_doors', propArt: 'kdy_barricade', propVariant: 'kdy', x: 45, y: 21, once: false, iconKind: 'floor', label: 'Central Core Blast Doors',
-            description: "The ten meter thick blast doors to the Central Architect Core, heat locked since the Silent Shear. With the manifold restarted, the clamps release in a long pressure hiss. Beyond the threshold lies Zone 05, not yet charted.", requiresFlag: 'engine_core_unlocked', lockedMessage: 'The doors are heat locked. The manifold has to be restarted first.', grantsFlag: 'zone05_gate_open', grantsCredits: 800 },
-          { id: 'wastes_shrine', propArt: 'crate_stack', propVariant: 'hidden', x: 3, y: 16, once: true, iconKind: 'crate', label: 'Scrap Seer Shrine',
-            description: "A shrine of copper wire and canvas strips hung with tuning forks. A tin cup holds a handful of old credits left by travelers. A tiny bell rings when the pistons slam.", grantsFlag: 'wastes_shrine_visited' },
+            description: "The Governor Valve sits in its cradle, three crystals a steady cyan. The console reads: ALL SYSTEMS NOMINAL.", requiresFlag: 'manifest_restarted', invisibleLocked: true },
+          { id: 'central_core_blast_doors', propArt: 'wst_blast_doors', propVariant: 'closed', x: 46, y: 20, once: true, iconKind: 'floor', label: 'Central Core Blast Doors',
+            description: "The clamps release with a long hiss and the ten meter doors grind apart. The Zone Five Descent stands open, warm air rising. Far west the Slag Line wakes, the shortcut to Manufacturing alive again. A strongbox drops free: 800 credits.", requiresFlag: 'engine_core_unlocked', lockedMessage: 'Heat locked. The manifold has to run first.', requiresNoneFlags: ['zone05_gate_open'], grantsFlag: 'zone05_gate_open', grantsCredits: 800 },
+          { id: 'central_core_blast_doors_open', propArt: 'wst_blast_doors', propVariant: 'open', x: 46, y: 20, once: false, iconKind: 'floor', label: 'Central Core Blast Doors (Open)',
+            description: "The ten meter doors stand retracted. Beyond, the Zone Five Descent falls away in lit steps. The Slag Line shortcut is live.", requiresFlag: 'zone05_gate_open', invisibleLocked: true },
+          { id: 'wastes_shrine', propArt: 'crate_stack', propVariant: 'hidden', x: 3, y: 16, once: false, iconKind: 'crate', label: 'Scrap Seer Shrine',
+            description: "A shrine of copper wire and canvas hung with tuning forks. A tin cup holds old credits. A tiny bell rings when the pistons slam.", grantsFlag: 'wastes_shrine_visited', grantsCodex: 'codex-wst-omens' },
         ],
         npcs: [
           { id: 'gharza', x: 38, y: 10, kind: 'trandoshan_sniper', label: 'Gharza',
-            questNpc: true,
+            questNpc: true, repeatable: true,
             hideAfterFlags: ['gharza_dead', 'gharza_recruited'],
-            repeatPrompt: 'Gharza does not lower her rifle. "Move slowly."',
-            prompt: 'She has a Trandoshan\'s stillness — total, patient, and entirely comfortable with killing. Her rifle does not waver. "You came from the base. You are not KDY standard issue." A beat. "Which means you are looking for the same thing I am looking for, or you are about to complicate my work significantly."',
-            choices: [
-              { text: 'Ask what she is looking for.', morality: 0, loyalty: {}, result: '"The hypercore. Deep caverns, grid nine-one." She lowers the rifle three degrees. "KDY hired me to retrieve it before their oversight committee arrives. I was told I was the only contractor." She sounds displeased. "We have a coordination problem."', grants: { flags: ['gharza_negotiated', 'gharza_mission_disclosed'] } },
-              { text: 'Tell her you are working the same contract.', morality: 0, loyalty: {}, result: '"Then Tanner is playing games." Her rifle comes down. "The caverns have automated sentinels. I cannot disable them from range. You may be useful."', grants: { flags: ['gharza_negotiated', 'gharza_allied'] } },
-              { text: 'Offer to pay her to stand down.', morality: -5, loyalty: { underworld: 8 }, result: '"I do not take buyouts from unknown parties." But she does not raise the rifle. "I take information. Tell me who hired you and I will decide whether you leave this field standing."', grants: { flags: ['gharza_negotiated'] } },
+            phases: [
+              {
+                id: 'phase_gharza_intro',
+                prompt: "A Trandoshan sniper, utterly still, rifle steady. \"You are not KDY standard issue. Then you want what I want, or you will complicate my work.\"",
+                repeatPrompt: 'Gharza does not lower her rifle. "Move slowly."',
+                choices: [
+                  { text: 'Ask what she is hunting.', morality: 0, loyalty: {}, result: "\"A dead engineer's work, deep in the caverns.\" The rifle drops three degrees. \"Tanner called it a retrieval. The coordinates were signed by a ghost.\"", grants: { flags: ['gharza_negotiated', 'gharza_mission_disclosed'], codex: ['codex-wst-gharza-hunt'] } },
+                  { text: 'Say you work the same contract.', morality: 0, loyalty: {}, result: "\"Then Tanner is playing games.\" The rifle drops. \"I cannot kill the caverns' sentinels from range. Take my key. The idle one will sleep for you.\"", grants: { flags: ['gharza_negotiated', 'gharza_allied'], items: ['wst_gharza_service_key'] } },
+                  { text: 'Offer to pay her to stand down.', morality: -5, loyalty: { underworld: 8 }, result: "\"I take information, not buyouts.\" She does not raise the rifle. \"Who hired you?\"", grants: { flags: ['gharza_negotiated'] } },
+                  { text: '[Draw on her before she turns.]', morality: -10, loyalty: { underworld: 5 }, result: 'Your hand moves first. Gharza is already rolling behind a piston housing.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'wst_gharza', flavorText: 'Gharza owns every sightline. Piston housings are the only cover. Close the distance or she dismantles you from range.' }, onSuccessFlags: ['gharza_dead'] },
+                ],
+              },
+              {
+                id: 'phase_gharza_wary',
+                requiresAllFlags: ['gharza_negotiated'],
+                requiresNoneFlags: ['gharza_allied'],
+                prompt: 'Gharza watches the valley, not you. "Tell me something true."',
+                repeatPrompt: '"Something true?"',
+                choices: [
+                  { text: 'Tell her Tanner hired you for the Ghost Keel.', morality: 0, loyalty: {}, result: "\"Tanner hires me for ghosts too.\" A dry hiss. \"Take my key. The idle sentinel in the caverns answers to it.\"", grants: { flags: ['gharza_allied'], items: ['wst_gharza_service_key'] } },
+                  { text: 'Say nothing and walk away.', morality: 0, loyalty: {}, result: '"Then we remain strangers."' },
+                ],
+              },
+              {
+                id: 'phase_gharza_allied',
+                requiresAllFlags: ['gharza_allied'],
+                prompt: '"The key opens the idle sentinel in the Deep Caverns." She cleans her rifle without looking up. "After that, the hunt is yours or mine."',
+                repeatPrompt: '"The caverns, then."',
+                choices: [
+                  { text: 'Offer her a place in the Syndicate.', morality: 0, loyalty: { underworld: 6 }, result: "\"A hunter needs a client who pays.\" She shoulders the rifle. \"I take no orders from anyone who flinches.\"", grants: { flags: ['gharza_recruited'] } },
+                ],
+              },
             ],
           },
           { id: 'vance_crankshaft', x: 23, y: 14, kind: 'mechanic', label: 'Chief Specialist Vance Crankshaft',
@@ -5018,51 +5049,75 @@ const PLANETS = {
               {
                 id: 'phase_vance_intro',
                 requiresNoneFlags: ['vance_met'],
-                prompt: "\"Hold it right there, friend. Soot on your boots, hands where I can see them.\" The man in the leather apron pushes a welding mask up onto his forehead, one hydraulic arm hissing. \"Vance Crankshaft. Former Chief Engineer of the Titan Engine. Do not ask me what happened, everyone asks.\"",
-                repeatPrompt: "Vance does not look up from his spanner. \"Ask me again when you have thought about it.\"",
+                prompt: "\"Hands where I can see them.\" A man in a leather apron pushes up his welding mask, hydraulic arm hissing. \"Vance Crankshaft, chief engineer of the Titan. Do not ask what happened.\"",
+                repeatPrompt: "Vance does not look up. \"Ask when you have thought about it.\"",
                 choices: [
-                  { text: "What happened to the engine?", morality: 0, loyalty: {}, result: "\"Everyone asks, so I will say it plain.\" He wipes his gauge. \"A catastrophic event they call the Silent Shear. The primary fuel conduits cut, the engine blocks locked up and burst. They told us it was age. It was not age.\" He lowers his voice. \"Help me and I will show you the proof.\"", grants: { flags: ['vance_met'], codex: ['codex-engine-wastes'] } },
-                  { text: "I am here for the Governor Valve. I hear it is missing.", morality: 0, loyalty: {}, result: "\"Then you know more than most.\" He nods slowly. \"The Catalyst Governor Valve. Sealed in the Dead Boiler Matrix, behind three pressure locks. I can tell you the sequence.\"", grants: { flags: ['vance_met'] } },
+                  { text: "What happened to the engine?", morality: 0, loyalty: {}, result: "\"Everyone asks.\" He wipes his gauge. \"The conduits cut. They said age. It was not age. Help me and I will show you proof.\"", grants: { flags: ['vance_met'], codex: ['codex-engine-wastes'] } },
+                  { text: "I want the Governor Valve.", morality: 0, loyalty: {}, result: "\"You know more than most. It is sealed in the Dead Boiler Matrix, behind three pressure locks. I can walk you through them.\"", grants: { flags: ['vance_met'] } },
                 ],
               },
               {
                 id: 'phase_vance_work',
                 requiresAllFlags: ['vance_met'],
                 requiresNoneFlags: ['governor_valve_acquired'],
-                prompt: "\"The Matrix is to the southwest, across the slag bridge. Three valve wheels, one vault. Turn them in order and the chamber drains. Do not touch the black box cylinder with a bare hand. It still hums.\"",
-                repeatPrompt: "\"Valves first, then the vault, then the cathedral.\"",
+                prompt: "\"The Matrix is southwest, across the slag bridge. Three wheels, one vault. Do not touch the black box bare handed. It still hums.\"",
+                repeatPrompt: "\"Wheels, then vault, then cathedral.\"",
                 choices: [
-                  { text: "Show me how to resist the heat.", morality: 0, loyalty: {}, result: "\"Thermal shielding. I can craft you a vest if you have the dust. Coolant crystals, ground fine. There is a cluster in the Matrix.\"", grants: { flags: ['vance_gear_hint'] } },
-                  { text: "[Craft] Here is the Thermal Crystal Dust. Make me a vest.", morality: 0, loyalty: {}, result: "He weighs the dust in his palm. A flash of the blowtorch tip, a quick clamp of brass, and he hands over a heavy vest lined with crystal. \"There. You can walk the wastes without cooking, mostly.\"", grants: { flags: ['thermal_gear_crafted'], items: ['item_thermal_gear_01'], thermal: -10 }, requires: { item: 'thermal_crystal_dust' } },
+                  { text: "How do I survive the heat?", morality: 0, loyalty: {}, result: "\"A thermal vest. I need crystal dust, ground fine. There is a cluster in the Matrix, and Dessa sells it.\"", grants: { flags: ['vance_gear_hint'] } },
+                  { text: "[Craft] Here is the Thermal Crystal Dust. Make me a vest.", morality: 0, loyalty: {}, result: "A flash of blowtorch, a clamp of brass, and he hands over a crystal lined vest. \"You can walk the wastes without cooking. Mostly.\"", grants: { flags: ['thermal_gear_crafted'], items: ['item_thermal_gear_01'], thermal: -10 }, requires: { item: 'thermal_crystal_dust' } },
+                  WST_VANCE_BOX_CHOICE,
+                ],
+              },
+              {
+                id: 'phase_vance_geared',
+                requiresAllFlags: ['vance_met', 'thermal_gear_crafted'],
+                requiresNoneFlags: ['governor_valve_acquired'],
+                prompt: "\"The vest suits you. The Matrix is southwest.\"",
+                repeatPrompt: "\"Wheels, then vault, then cathedral.\"",
+                choices: [
+                  { text: "On my way.", morality: 0, loyalty: {}, result: "\"Mind the black box.\"" },
+                  WST_VANCE_BOX_CHOICE,
                 ],
               },
               {
                 id: 'phase_vance_valve',
                 requiresAllFlags: ['governor_valve_acquired'],
                 requiresNoneFlags: ['overseer_defeated'],
-                prompt: "\"You have it?\" His voice cracks. \"The Governor. By the Titan. Then the Exhaust Cathedral is next. The Overseer is waiting at the base. Climb the pistons if you must, but get that valve to the apex socket.\"",
+                prompt: "\"You have it?\" His voice cracks. \"Then the cathedral. The Overseer waits at its base. The valve goes in the apex socket.\"",
                 repeatPrompt: "\"The Overseer, then the socket.\"",
                 choices: [
                   { text: "I will take the Overseer down.", morality: 0, loyalty: {}, result: "\"Mind the chains. They snap.\"" },
+                  WST_VANCE_BOX_CHOICE,
                 ],
               },
               {
                 id: 'phase_vance_install',
                 requiresAllFlags: ['overseer_defeated'],
                 requiresNoneFlags: ['manifest_restarted'],
-                prompt: "\"The Overseer is down. The socket is at the apex. Go. Install it.\"",
+                prompt: "\"The Overseer is down. The socket is at the apex. Go.\"",
                 repeatPrompt: "\"The socket, friend.\"",
                 choices: [
                   { text: "On my way.", morality: 0, loyalty: {}, result: "He grips his spanner until his knuckles whiten." },
+                  WST_VANCE_BOX_CHOICE,
                 ],
               },
               {
                 id: 'phase_vance_done',
                 requiresAllFlags: ['manifest_restarted'],
-                prompt: "\"I can feel it from here. The rhythm is back.\" Vance leans on the bench and for a moment the cynicism slips. \"The command came from the Arch Architect Sanctum. They cut the coolant and welded the hatches. They wanted the lower city to bake. That is who we work for, it turns out.\"",
-                repeatPrompt: "\"Zone Five is open. Be careful.\"",
+                requiresNoneFlags: ['wst_vance_paid'],
+                prompt: "\"I feel it from here. The rhythm is back.\" Vance leans on the bench, the cynicism slipping. \"Somebody ordered this, and the order came from below.\"",
+                repeatPrompt: "\"The blast doors answer to the manifold now.\"",
                 choices: [
-                  { text: "What do we do about it?", morality: 0, loyalty: {}, result: "\"The blast doors are open. Zone Five lies beyond. That is where the sanctum is.\" He turns the gauge slowly. \"Take care of yourself out there.\"", grants: { flags: ['vance_truth_known'] } },
+                  { text: "Where below?", morality: 0, loyalty: {}, result: "\"Zone Five, behind the central blast doors. Go and open them.\" He presses his old spanner into your hand. \"Mind the dark.\"", grants: { flags: ['vance_truth_known', 'wst_vance_paid'], codex: ['codex-wst-vance-truth'], items: ['wst_vance_spanner'], credits: 300 } },
+                ],
+              },
+              {
+                id: 'phase_vance_after',
+                requiresAllFlags: ['wst_vance_paid'],
+                prompt: "\"Zone Five is open if you want it. I will keep the lamps lit.\"",
+                repeatPrompt: "\"Mind the dark down there.\"",
+                choices: [
+                  { text: "Keep the pistons beating.", morality: 0, loyalty: {}, result: "\"It is the only job I have left.\"" },
                 ],
               },
             ],
@@ -5074,30 +5129,40 @@ const PLANETS = {
               {
                 id: 'phase_lora_a',
                 requiresNoneFlags: ['lora_met'],
-                prompt: "The woman hovers a hand's breadth above the floor, a brass resonator mask where her face should be. When she speaks, the mask turns vibration into a voice. \"I am Lora. I tune the Titan. The Titan is... disquiet.\" A faint hammer tap, a low note.",
+                prompt: "A woman hovers above the floor, a brass resonator mask for a face. It turns vibration into voice. \"I am Lora. I tune the Titan. It is disquiet.\"",
                 repeatPrompt: "The mask turns toward you, silent.",
                 choices: [
-                  { text: "What does the Titan say?", morality: 0, loyalty: {}, result: "\"It says the shear was not an accident. It says someone is still listening to it.\" The mask tilts. \"It says some components are missing. You will find them below, in the Matrix.\"", grants: { flags: ['lora_met'] } },
-                  { text: "Tell me about the Voice of the Titan.", morality: 0, loyalty: {}, result: "\"A low frequency that the old engineers heard as a pulse. I hear it as a song. It is dying.\" She extends a copper wrapped hand. \"Strike the bell if you wish to hear it.\"", grants: { flags: ['lora_met'] } },
+                  { text: "What does the Titan say?", morality: 0, loyalty: {}, result: "\"That the Shear was no accident. That someone still listens.\" The mask tilts. \"What it lost lies in the Matrix, below.\"", grants: { flags: ['lora_met'] } },
+                  { text: "Who do you tune for?", morality: 0, loyalty: {}, result: "\"The dead. A shift that never clocked out.\" A copper hand rises. \"Ring the bell at my shrine, and hear them.\"", grants: { flags: ['lora_met'], codex: ['codex-wst-omens'] } },
                 ],
               },
               {
                 id: 'phase_lora_b',
                 requiresAllFlags: ['lora_met'],
                 requiresNoneFlags: ['manifest_restarted'],
-                prompt: "\"The Titan hums higher when you are near. It knows you carry something that belongs to it.\"",
+                prompt: "\"The Titan hums higher when you are near. It knows you carry something of its own.\"",
                 repeatPrompt: "\"Listen.\"",
                 choices: [
-                  { text: "The Governor Valve?", morality: 0, loyalty: {}, result: "\"It calls it by another name. But yes.\"" },
+                  { text: "Where do the dead lie?", morality: 0, loyalty: {}, result: "\"East, where the dust is flat. Seven went to hear the storm. Their lamp is still lit.\"" },
                 ],
               },
               {
                 id: 'phase_lora_c',
                 requiresAllFlags: ['manifest_restarted'],
-                prompt: "\"It is quiet now. For the first time in a long time. Thank you, tuner.\" The hammer strikes once, a clean, pure note.",
+                prompt: "\"It is quiet now. Thank you, tuner.\" The hammer strikes once, clean and pure.",
                 repeatPrompt: "\"Listen.\"",
                 choices: [
-                  { text: "Take care, Scrap Seer.", morality: 0, loyalty: {}, result: "\"And you.\"" },
+                  { text: "What will you do now?", morality: 0, loyalty: {}, result: "\"Listen to the silence.\" The mask turns east. \"Something below was waiting for the Titan to wake. Go gently.\"", grants: { codex: ['codex-engine-wastes'] } },
+                ],
+              },
+              {
+                id: 'phase_lora_shrine',
+                requiresAllFlags: ['lora_met', 'wastes_shrine_visited'],
+                requiresNoneFlags: ['wst_lora_blessed'],
+                prompt: "The mask turns at once. \"You rang the bell. It sounded true.\" A copper hand takes your sleeve and hums.",
+                repeatPrompt: "\"The bell remembers you.\"",
+                choices: [
+                  { text: "Let her tune you.", morality: 0, loyalty: {}, result: "\"There.\" Your plating hums in the Titan's key and the heat scanners lose interest. She presses a brass fork into your palm.", grants: { flags: ['wst_lora_blessed'], items: ['wst_tuning_fork'], thermal: -12 } },
                 ],
               },
             ],
@@ -5105,7 +5170,7 @@ const PLANETS = {
           { id: 'foundry_quartermaster', x: 18, y: 14, kind: 'zabrak_techwright', label: 'Quartermaster Dessa',
             isVendor: true, vendorFaction: 'underworld', repeatable: true,
             vendorStock: ['pressurized_igniter', 'thermal_crystal_dust', 'plasma_grenades', 'field_rations'],
-            vendorGreeting: 'Dessa weighs a crystal on a pocket scale and does not look up. Foundry prices, no haggling.',
+            vendorGreeting: 'Dessa weighs a crystal on a pocket scale. "Foundry prices. Vests take dust, and dust takes a steady hand."',
             repeatPrompt: 'Dessa wipes her hands on her apron and waits.',
             prompt: '"Foundry prices, soldier. No haggling, no sparks."',
             choices: [] },
@@ -5114,10 +5179,10 @@ const PLANETS = {
             phases: [
               {
                 id: 'phase_x',
-                prompt: "The valves are older than the city. Nobody knows who turned them last. They keep working.",
+                prompt: "The Nautolan does not look up from a valve. \"Older than the city, these. Nobody knows who turned them last.\"",
                 repeatPrompt: "They are busy.",
                 choices: [
-                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod, wary but not hostile." },
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "A wary nod." },
                 ],
               },
             ],
@@ -5127,10 +5192,10 @@ const PLANETS = {
             phases: [
               {
                 id: 'phase_x',
-                prompt: "Keep your voice down near the cathedral. It listens. They keep working.",
+                prompt: "The exile mutters over a cracked weld. \"Keep your voice down near the cathedral. It listens.\"",
                 repeatPrompt: "They are busy.",
                 choices: [
-                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod, wary but not hostile." },
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "A wary nod." },
                 ],
               },
             ],
@@ -5140,10 +5205,10 @@ const PLANETS = {
             phases: [
               {
                 id: 'phase_x',
-                prompt: "I severed my link to the overmind. I do not recommend the silence. They keep working.",
-                repeatPrompt: "They are busy.",
+                prompt: "The droid's optics dim and brighten. \"I severed my link to the overmind. The silence is not restful. It sleeps below.\"",
+                repeatPrompt: "It is busy.",
                 choices: [
-                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod, wary but not hostile." },
+                  { text: "Leave it to its silence.", morality: 0, loyalty: {}, result: "Its optics dip in something like thanks." },
                 ],
               },
             ],
@@ -5153,6 +5218,7 @@ const PLANETS = {
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 24, 0, 25, 5, 'floor');
+          carveRect(g, 40, 0, 41, 5, 'floor');
           carveRect(g, 1, 5, 46, 34, 'floor');
           // slag river with two bridges
           for (let y = 6; y <= 33; y++) { if ((y >= 10 && y <= 12) || (y >= 26 && y <= 28)) continue; pt(g, 15, y, 'lava'); pt(g, 16, y, 'lava'); }
@@ -5166,9 +5232,9 @@ const PLANETS = {
           // Exhaust Cathedral massif (southeast)
           carveRect(g, 35, 22, 44, 28, 'wall');
           pt(g, 24, 0, 'door'); pt(g, 25, 0, 'door');
+          pt(g, 40, 0, 'door'); pt(g, 41, 0, 'door');
           pt(g, 0, 10, 'door'); pt(g, 0, 11, 'door');
-          pt(g, 28, 35, 'door'); pt(g, 29, 35, 'door');
-          pt(g, 47, 16, 'door'); pt(g, 47, 17, 'door');
+          pt(g, 47, 21, 'door'); pt(g, 47, 22, 'door');
           return g;
         },
       },
@@ -5591,18 +5657,16 @@ const PLANETS = {
       deep_caverns: {
         id: 'deep_caverns', name: 'Deep Caverns of Bador',
         subtitle: 'Bador Moon · Sub-Surface Grid 9-1',
-        width: 34, height: 22, spawnPos: { x: 16, y: 1 }, textureId: 'verdanth',
+        width: 48, height: 30, spawnPos: { x: 2, y: 14 }, textureId: 'verdanth',
         accent: '#5A4B8A', accentGlow: 'rgba(90,75,138,0.28)', accentDim: '#28204A',
         floorColor: '#14101E', floorAlt: '#1A1426', wallDark: '#080610', wallLight: '#100C18',
         bg: 'radial-gradient(circle at 50% 50%, #100C18 0%, #060410 70%)', ambient: 'mist',
         decor: ['rubble', 'moss'],
         doors: [
-          { x: 16, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 28, y: 34 }, label: 'Engine Wastes' },
-          { x: 17, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 29, y: 34 }, label: 'Engine Wastes' },
-          { x: 0, y: 11,  targetZone: 'outpost_7', targetPos: { x: 46, y: 14 }, label: 'Outpost 7' },
-          { x: 0, y: 12,  targetZone: 'outpost_7', targetPos: { x: 46, y: 15 }, label: 'Outpost 7' },
-          { x: 33, y: 11, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 11 }, label: 'Zora IV Wreckage' },
-          { x: 33, y: 12, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 12 }, label: 'Zora IV Wreckage' },
+          { x: 0, y: 14,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 21 }, label: 'Engine Wastes' },
+          { x: 0, y: 15,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 22 }, label: 'Engine Wastes' },
+          { x: 47, y: 14, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 16 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
+          { x: 47, y: 15, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 17 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
         ],
         worldObjects: [
           { id: 'republic_survey_cache', propArt: 'crate_stack', propVariant: 'survey', x: 18, y: 12, label: 'Republic Survey Station Cache',
@@ -5629,91 +5693,166 @@ const PLANETS = {
             ],
           },
         ],
-        collectibles: [{ id: 'cavern_survey_data', x: 8, y: 4, label: 'Deep Survey Geological Record', reward: 350 }],
+        collectibles: [{ id: 'cavern_survey_data', x: 8, y: 8, label: 'Deep Survey Geological Record', reward: 350 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 32, 20, 'floor');
-          for (let cx = 4; cx <= 14; cx++) { pt(g, cx, 9, 'water'); pt(g, cx, 10, 'water'); }
-          pt(g, 8, 9, 'floor'); pt(g, 9, 9, 'floor');
-          for (let cz = 20; cz <= 28; cz++) { pt(g, cz, 14, 'water'); pt(g, cz, 15, 'water'); }
-          pt(g, 23, 14, 'floor'); pt(g, 24, 14, 'floor');
-          carveRect(g, 28, 2, 32, 8, 'wall');
-          pt(g, 30, 2, 'floor'); pt(g, 31, 2, 'floor');
-          pt(g, 16, 0, 'door'); pt(g, 17, 0, 'door');
-          pt(g, 0, 11, 'door'); pt(g, 0, 12, 'door');
-          pt(g, 33, 11, 'door'); pt(g, 33, 12, 'door');
+          carveRect(g, 1, 5, 46, 28, 'floor');
+          pt(g, 0, 14, 'door'); pt(g, 0, 15, 'door');
+          pt(g, 47, 14, 'door'); pt(g, 47, 15, 'door');
           return g;
         },
       },
 
       zora_iv_wreckage: {
-        id: 'zora_iv_wreckage', name: 'Abandoned Capital Ship — Zora IV',
-        subtitle: 'Bador Moon · Grid 9-1 · Final Approach',
-        width: 34, height: 24, spawnPos: { x: 2, y: 11 }, textureId: 'ferrowake',
+        id: 'zora_iv_wreckage', name: 'The Zora IV — Ghost Keel Drydock',
+        subtitle: 'Bador Moon · Grid 9-1 · The Architect\'s Sanctum',
+        width: 48, height: 32, spawnPos: { x: 2, y: 16 }, textureId: 'ferrowake',
         accent: '#B8D4E8', accentGlow: 'rgba(184,212,232,0.25)', accentDim: '#485868',
         floorColor: '#141C24', floorAlt: '#1A2430', wallDark: '#080C10', wallLight: '#101820',
-        bg: 'radial-gradient(circle at 50% 30%, #101820 0%, #060C10 70%)', ambient: 'traffic',
+        bg: 'radial-gradient(circle at 50% 30%, #101820 0%, #060C10 70%)', ambient: 'wreck',
         decor: ['girder', 'pipe'],
+        paAnnouncements: [
+          'All hands, report to your stations. This is a recording from the year of the Drayen Massacre.',
+          'Containment integrity at four percent. Do not approach the hypercore.',
+          'Drydock crane four is out of service. Crane four has been out of service for forty years.',
+        ],
         doors: [
-          { x: 0, y: 11, targetZone: 'deep_caverns', targetPos: { x: 32, y: 11 }, label: 'Deep Caverns' },
-          { x: 0, y: 12, targetZone: 'deep_caverns', targetPos: { x: 32, y: 12 }, label: 'Deep Caverns' },
+          { x: 0, y: 16, targetZone: 'deep_caverns', targetPos: { x: 46, y: 14 }, label: 'Deep Caverns' },
+          { x: 0, y: 17, targetZone: 'deep_caverns', targetPos: { x: 46, y: 15 }, label: 'Deep Caverns' },
         ],
         worldObjects: [
-          { id: 'hypercore_chamber', propArt: 'hypercore', x: 28, y: 12, label: 'Experimental Hypercore Chamber',
-            description: 'A sealed vault integrated into the old ship\'s reactor housing. Inside, the hypercore pulses with a power reading that should not exist outside a full Star Destroyer.',
-            once: true, requiresFlag: 'hypercore_location_known', grantsFlag: 'hypercore_visible' },
-          { id: 'zora_iv_bridge', propArt: 'bridge_console', x: 20, y: 5, label: 'Zora IV Bridge',
-            description: 'The original bridge of the Zora IV, a Venator-class survivor that limped here after the Drayen Massacre and never left. The flight logs are intact. Three decades of waiting.',
-            once: true, grantsFlag: 'zora_iv_history_known', grantsCodex: 'codex-zora-iv', grantsItem: 'cherit_logbook' },
-          { id: 'architect_terminal', propArt: 'console', propVariant: 'architect', x: 16, y: 18, label: 'The Architect\'s Personal Terminal',
-            description: 'Final access logs, forty-three years of shadow work. The terminal is unlocked — whoever last used it expected someone would come.',
-            once: true, requiresFlag: 'architect_identity_known',
+          { id: 'zora_vista_w', propArt: 'bvista_24x5', propVariant: 'hullbay_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Dead Dreadnought Hall',
+            description: 'Ribs of a Venator class hull arch overhead, red emergency lamps pulsing along the girders. Cables hang like roots. A cracked viewport frames the cavern beyond.' },
+          { id: 'zora_vista_e', propArt: 'bvista_24x5', propVariant: 'hullbay_b', x: 36, y: 5, once: false, iconKind: 'vista', label: 'The Reactor Gallery',
+            description: 'A half built keel lies under scaffolds that nobody has climbed in thirty years. Work lights still flicker along the gallery, as if the shift never ended.' },
+          { id: 'keel_frame', propArt: 'keel_frame', x: 15, y: 16, once: false, iconKind: 'floor', label: 'The Ghost Keel',
+            description: 'A pocket dreadnought frame in a drydock cradle. The forward third wears pearl hull plates, the rest is bare ribs around a dark reactor seat. A plate reads GHOST KEEL HULL 001.',
+            grantsCodex: 'codex-ghost-keel' },
+          { id: 'zora_crane', propArt: 'maglev_crane', x: 8, y: 10, once: false, iconKind: 'crate', label: 'Drydock Gantry Crane',
+            description: 'A gantry crane frozen mid lift, a pearl hull plate still hanging from its hook, the chain crusted with rust.' },
+          { id: 'zora_scaffold', propArt: 'catwalk_post', x: 25, y: 10, once: false, iconKind: 'crate', label: 'Scaffold Post',
+            description: 'A scaffold post with a hand scratched tally of days. The count stops at fifteen thousand seven hundred.' },
+          { id: 'zora_servers', propArt: 'server_stack', x: 7, y: 20, once: false, iconKind: 'terminal', label: 'Design Archive Racks',
+            description: 'Racks of drafting servers. Two are warm. Someone keeps them running.' },
+          { id: 'zora_crates', propArt: 'cargo_container', x: 25, y: 20, once: false, iconKind: 'crate', label: 'Sealed Plating Crates',
+            description: 'Pearl hull plating, crated and stenciled KDY SURPLUS with a lot number that never existed.' },
+          { id: 'zora_bench', propArt: 'robotics_bench', x: 22, y: 17, once: false, iconKind: 'crate', label: 'Welder\'s Bench',
+            description: 'A half finished valve, a mug of cold caf, and a pair of reading glasses folded on a blueprint.' },
+          { id: 'zora_iv_bridge', propArt: 'bridge_console', x: 36, y: 8, once: false, iconKind: 'terminal', label: 'Zora IV Bridge',
+            description: 'The bridge console of a Venator class survivor. The flight logs are intact: she limped here after the Drayen Massacre and never left.',
+            grantsFlag: 'zora_iv_history_known', grantsCodex: 'codex-zora-iv' },
+          { id: 'zora_star_chart', propArt: 'holo_projector', x: 33, y: 11, once: false, iconKind: 'terminal', label: 'Survey Star Chart',
+            description: 'A projected map of the cavern grid, tunnels in blue, one node in red: the vault.' },
+          { id: 'zora_bridge_racks', propArt: 'server_stack', x: 40, y: 10, once: false, iconKind: 'terminal', label: 'Bridge Data Racks',
+            description: 'Black data racks, their labels peeled off one by one.' },
+          { id: 'cherit_memorial', propArt: 'memorial_plinth', x: 10, y: 27, once: false, iconKind: 'floor', label: 'Cherit Memorial',
+            description: 'A plinth with a folded Republic Intelligence jacket, a datapad and one holo candle. A brass plate reads CHERIT. The candle cell was replaced this month.',
+            grantsFlag: 'cherit_memorial_seen', grantsCodex: 'codex-cherit' },
+          { id: 'zora_cabin_locker', propArt: 'archive_cabinet', x: 7, y: 26, once: false, iconKind: 'crate', label: 'Cherit\'s Paper Files',
+            description: 'A locker of files nobody digitized: dead drops, payrolls, one folder marked KEEL.' },
+          { id: 'zora_cabin_desk', propArt: 'datapad_table', x: 13, y: 27, once: false, iconKind: 'terminal', label: 'Memorial Desk',
+            description: 'A desk with two chairs, one dusty, the other worn smooth.' },
+          { id: 'zora_rebreathers', propArt: 'rebreather_rack', x: 19, y: 27, once: false, iconKind: 'crate', label: 'Spare Rebreathers',
+            description: 'Six cylinders, five empty. The Architect rations his breath.' },
+          { id: 'zora_drafting', propArt: 'holo_table', x: 23, y: 26, once: false, iconKind: 'terminal', label: 'Drafting Table',
+            description: 'A table projecting a rotating keel in red wire. The date stamp in the corner reads last week.' },
+          { id: 'architect_terminal', propArt: 'console', propVariant: 'architect', x: 27, y: 27, once: false, iconKind: 'terminal', label: 'The Architect\'s Terminal',
+            description: 'Forty three years of private logs. The terminal is unlocked, as if someone expected a visitor.',
+            requiresFlag: 'architect_identity_known', lockedMessage: 'The screen asks for a name you cannot give yet. Somebody in the surface trail knows it.',
             grantsFlag: 'architect_logs_read', grantsCodex: 'codex-the-architect' },
-        ],
-        npcs: [
-          { id: 'the_architect', x: 18, y: 12, kind: 'the_architect', label: 'The Architect',
-            questNpc: true,
-            hideAfterFlags: ['architect_dead', 'architect_departed', 'hypercore_choice_made'],
-            repeatPrompt: '"What was built here will outlast all of us. That was the point."',
-            prompt: 'He is older than you expected. The rebreather gives him a labored rhythm, but his eyes are the sharpest thing in the room. He does not seem surprised to see you. "Tanner\'s contractor. Or perhaps something more by now." He stands at the bridge viewport, looking at the shape of the half-assembled ship below. "I built the first frame for this vessel forty-three years ago. It was declared destroyed with me. I have been less certain lately what I was giving the Republic."',
-            choices: [
-              { text: 'Ask who originally commissioned Ghost Keel.', morality: 5, loyalty: { republic: 8 }, result: '"A Republic intelligence officer who died eight years after commissioning it. Her name was Cherit. She believed that a state capable of extreme force but unwilling to use it was more deterrent than one that used force freely." He touches the viewport. "She was probably right. The question is whether that remains true when the state is no longer the same state that commissioned it."', grants: { flags: ['cherit_history_known'] } },
-              { text: 'Tell him the Syndicate will protect it better than the Republic ever would.', morality: -15, loyalty: { underworld: 15 }, result: '"I have heard that argument before. From intelligence services, from crime lords, from four different Senate subcommittees over four decades." He turns away. "It is always convincing to the person making it. What the ship does when it is used will determine whether you were right."', grants: { flags: ['architect_syndicate_argument'] } },
-              { text: 'Tell him you intend to destroy it.', morality: 20, loyalty: { republic: 15 }, result: '"I thought about that for thirty years. I chose to complete it instead." He straightens. "If you destroy it, I will not stop you. I made my choice. You are allowed to make a different one." He steps away from the viewport. "I will not be here when you do."', grants: { flags: ['architect_accepted_destruction', 'architect_departed'] } },
-            ],
-          },
-          { id: 'the_architect_final', x: 18, y: 14, kind: 'the_architect', label: 'The Architect',
-            requiresFlag: 'hypercore_visible',
-            hideAfterFlags: ['hypercore_choice_made'],
-            repeatPrompt: '"The choice is still yours."',
-            prompt: '"You have seen it." He stands with his hands clasped, looking at the hypercore chamber. "Three paths. Tanner\'s contract. A Republic demolition protocol I left active in the vault. Or your own comlink, if the Syndicate has a frequency for claiming capital assets." He does not tell you which to choose. "Forty-three years is enough time to stop having opinions about that kind of thing."',
-            choices: [
-              { text: 'Transmit schematics to KDY. Complete Tanner\'s contract.', morality: 0, loyalty: { underworld: 5 }, result: 'The transfer completes. Tanner\'s response is immediate: seventy-five thousand credits and KDY transit rights, permanent. The hypercore begins powering down remotely. You handed over something that will become a weapon for someone else\'s war.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_kdy', 'tanner_contract_completed'], items: ['experimental_hypercore_fragment'] } },
-              { text: 'Trigger the Republic demolition protocol. Destroy it.', morality: 25, loyalty: { republic: 20 }, result: 'The countdown initiates. Three minutes. You walk out of the Zora IV as the reactor core exceeds tolerance. The detonation is quiet from outside — a pulse, not an explosion. Something that should never have existed no longer does.', grants: { flags: ['hypercore_choice_made', 'hypercore_destroyed', 'republic_commendation'] } },
-              { text: 'Claim it for the Syndicate. This is your flagship now.', morality: -15, loyalty: { underworld: 25 }, result: 'The Syndicate frequency receives the handshake. "Asset secured." Somewhere on Coruscant, a ghost ship just found an owner. The pocket dreadnaught will take months to complete. But it will be yours.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_syndicate', 'syndicate_flagship_active'], items: ['experimental_hypercore_fragment'] } },
-            ],
-          },
+          { id: 'hypercore_vault_lock', propArt: 'console', propVariant: 'architect', x: 39, y: 20, once: true, iconKind: 'terminal', label: 'Hypercore Vault Lock',
+            description: 'A phrik reinforced vault lock running a Republic protocol that was never meant to be guessed. Bolts as thick as your arm wait behind it.',
+            triggersMinigame: 'terminal_slicing', minigameConfig: { difficulty: 6 },
+            requiresNoneFlags: ['hypercore_location_known', 'hypercore_vault_open'], grantsFlag: 'hypercore_vault_open' },
+          { id: 'hypercore_vault_auth', propArt: 'console', propVariant: 'architect', x: 39, y: 20, once: true, iconKind: 'terminal', label: 'Hypercore Vault Lock (Authorized)',
+            description: 'The lock chimes at the authorization Unit 8-X gave you and the bolts draw back. Someone wanted this door opened by the right visitor.',
+            requiresAllFlags: ['hypercore_location_known'], requiresNoneFlags: ['hypercore_vault_open'], grantsFlag: 'hypercore_vault_open' },
+          { id: 'hypercore_guard_stage1', propArt: 'sentinel_droid', x: 38, y: 14, once: true, iconKind: 'floor', label: 'Hull Sentinels',
+            description: 'A line of KDY pattern hull sentinels, armed and dormant. They wake the moment the vault lock lets go.',
+            requiresFlag: 'hypercore_vault_open', lockedMessage: 'The sentinels are dormant, waiting on the vault lock. Open the lock first.',
+            triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'zora_hull_wardens', flavorText: 'The vault bolts withdraw and the hull sentinels wake. They were built to stop exactly one kind of visitor.' },
+            grantsFlag: 'warden_guards_down' },
+          { id: 'hypercore_warden_prime', propArt: 'warden_prime', x: 40, y: 17, once: true, iconKind: 'floor', label: 'Warden Prime',
+            description: 'A four legged defence droid on a hazard striped plinth, one red optic, shoulder cannons the length of a speeder. It stands across the vault threshold.',
+            requiresFlag: 'warden_guards_down', lockedMessage: 'The Warden Prime stands behind the sentinel line, powered down. Clear the sentinels first.',
+            triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'ghost_keel_warden', flavorText: 'Warden Prime unfolds from its plinth. Forty three years of maintenance, and it has never fired in earnest.' },
+            grantsFlag: 'warden_prime_down' },
+          { id: 'hypercore_chamber', propArt: 'hypercore', x: 45, y: 16, once: false, iconKind: 'floor', label: 'Experimental Hypercore',
+            description: 'The hypercore turns in its housing, a power rating that should not exist outside a Star Destroyer. The Architect waits beside it.',
+            requiresFlag: 'warden_prime_down', lockedMessage: 'The chamber is sealed behind the Warden. The core can wait.',
+            grantsFlag: 'hypercore_visible', grantsCodex: 'codex-hypercore' },
+          { id: 'ghost_keel_end_kdy', propArt: 'sanctum_holo', x: 44, y: 13, once: false, iconKind: 'terminal', label: 'KDY Retrieval Uplink',
+            description: 'Retrieval droids lift drawings from the archive racks. A KDY transit charter glows on the console. Somewhere above, a yard slot has been cleared for a hull that does not exist yet.',
+            invisibleLocked: true, requiresFlag: 'hypercore_to_kdy', grantsFlag: 'ghost_keel_ending_seen' },
+          { id: 'ghost_keel_end_destroyed', propArt: 'sanctum_holo', x: 44, y: 13, once: false, iconKind: 'terminal', label: 'Cooled Reactor Seat',
+            description: 'The hypercore housing is a cold black shell with dark lamps. Ash drifts through the chamber. A Republic seal is burned into the rim: DEMOLITION COMPLETE.',
+            invisibleLocked: true, requiresFlag: 'hypercore_destroyed', grantsFlag: 'ghost_keel_ending_seen' },
+          { id: 'ghost_keel_end_syndicate', propArt: 'sanctum_holo', x: 44, y: 13, once: false, iconKind: 'terminal', label: 'Syndicate Command Link',
+            description: 'Syndicate engineers clamp a command relay to the keel cradle. The hull plate has a new name stenciled in green. The crew already calls her yours.',
+            invisibleLocked: true, requiresFlag: 'hypercore_to_syndicate', grantsFlag: 'ghost_keel_ending_seen' },
         ],
         collectibles: [
-          { id: 'zora_iv_reactor_log', x: 30, y: 20, label: 'Zora IV Final Reactor Log', reward: 600 },
-          { id: 'zora_iv_turbolaser_crystal', x: 6, y: 18, label: 'Turbolaser Focus Crystal', reward: 1200 },
+          { id: 'zora_iv_reactor_log', x: 27, y: 19, label: 'Zora IV Final Reactor Log', reward: 600 },
+          { id: 'zora_iv_turbolaser_crystal', x: 7, y: 14, label: 'Turbolaser Focus Crystal', reward: 1200 },
+        ],
+        npcs: [
+          { id: 'the_architect', x: 17, y: 7, kind: 'the_architect', label: 'The Architect', questNpc: true,
+            hideAfterFlags: ['architect_dead', 'architect_departed', 'hypercore_choice_made'],
+            repeatPrompt: '"What was built here was meant to outlast us."',
+            prompt: 'An old man in a rebreather watches the half built keel from the gallery rail. "Tanner\'s contractor. Or something more by now. I drew that frame forty three years ago, and was declared dead with it."',
+            choices: [
+              { text: 'Who commissioned the Ghost Keel?', morality: 5, loyalty: { republic: 8 }, result: '"An intelligence officer named Cherit. She held that a state able to use force and unwilling to deters more than one that always does." He touches the rail. "The state changed. The ship did not."', grants: { flags: ['cherit_history_known'], codex: ['codex-cherit'] } },
+              { text: 'The Syndicate will keep it safer than the Republic.', morality: -15, loyalty: { underworld: 15 }, result: '"I have heard that from spies, from crime lords and from four Senate committees." He does not turn. "Every one was sincere. Ask what it does when it is used."', grants: { flags: ['architect_syndicate_argument'] } },
+              { text: 'I came to destroy it.', morality: 20, loyalty: { republic: 15 }, result: '"I thought about that for thirty years, then chose to finish it." He straightens. "If you destroy it, I will not stop you. You may choose differently than I did."', grants: { flags: ['architect_accepted_destruction'], codex: ['codex-the-architect'] } },
+            ] },
+          { id: 'the_architect_final', x: 44, y: 19, kind: 'the_architect', label: 'The Architect', questNpc: true,
+            requiresFlag: 'hypercore_visible', hideAfterFlags: ['hypercore_choice_made'],
+            repeatPrompt: '"The choice is still yours."',
+            prompt: '"You have seen it." He stands before the hypercore, hands clasped. "Three paths: Tanner\'s contract, the Republic demolition protocol I left armed in this vault, or your own comlink. I stopped having opinions long ago."',
+            choices: [
+              { text: 'Transmit the schematics to KDY. Complete Tanner\'s contract.', morality: 0, loyalty: { underworld: 5 }, result: 'The transfer completes. Tanner answers within seconds: seventy five thousand credits and a permanent KDY transit charter. The hypercore powers down by remote. You have armed someone else\'s war.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_kdy', 'tanner_contract_completed', 'ghost_keel_complete'], items: ['experimental_hypercore_fragment', 'zora_kdy_transit_charter'], credits: 75000, codex: ['codex-ending-keel-kdy'] } },
+              { text: 'Trigger the Republic demolition protocol. Destroy it.', morality: 25, loyalty: { republic: 20 }, result: 'Three minutes on the clock. You walk out as the core passes tolerance. The detonation is a quiet pulse from outside, not an explosion. Something that should never have existed no longer does.', grants: { flags: ['hypercore_choice_made', 'hypercore_destroyed', 'republic_commendation', 'ghost_keel_complete'], items: ['zora_republic_commendation'], credits: 15000, codex: ['codex-ending-keel-destroyed'] } },
+              { text: 'Claim it for the Syndicate. This is your flagship now.', morality: -15, loyalty: { underworld: 25 }, result: 'The Syndicate frequency accepts the handshake. "Asset secured." Somewhere on Coruscant a ghost ship just found an owner. It will take months to finish, but it is yours. Your passive income rises.', grants: { flags: ['hypercore_choice_made', 'hypercore_to_syndicate', 'syndicate_flagship_active', 'ghost_keel_complete'], items: ['experimental_hypercore_fragment', 'zora_syndicate_command_key'], codex: ['codex-ending-keel-syndicate'] } },
+            ] },
+          { id: 'the_architect_after', x: 44, y: 19, kind: 'the_architect', label: 'The Architect', questNpc: true, repeatable: true,
+            requiresFlag: 'ghost_keel_complete',
+            phases: [
+              { id: 'phase_architect_after_kdy', requiresAllFlags: ['hypercore_to_kdy'],
+                prompt: 'The Architect watches KDY retrieval droids file past the vault door. "They will finish it faster than I could. That is what troubles me."',
+                repeatPrompt: '"Let them take the drawings. Not me."',
+                choices: [{ text: 'Will you go with them?', morality: 0, loyalty: {}, result: '"No. I am an old frame in a dead ship. I will stay with her until the last droid leaves."' }] },
+              { id: 'phase_architect_after_destroyed', requiresAllFlags: ['hypercore_destroyed'],
+                prompt: 'The Architect sits beside the cooled core, his rebreather ticking. "Quiet. Forty three years, and it is only quiet."',
+                repeatPrompt: '"Cherit would have laughed."',
+                choices: [{ text: 'What will you do now?', morality: 5, loyalty: { republic: 3 }, result: '"Walk out of this mountain. Plant something." A thin smile. "Cherit would have laughed at that too."' }] },
+              { id: 'phase_architect_after_syndicate', requiresAllFlags: ['hypercore_to_syndicate'],
+                prompt: 'The Architect studies Syndicate engineers measuring the keel. "Your people ask better questions than KDY did. They still want the wrong answers."',
+                repeatPrompt: '"Do not call her a flagship in my hearing."',
+                choices: [{ text: 'Stay and finish her.', morality: -3, loyalty: { underworld: 3 }, result: '"As a consultant. Pay well, and keep the green paint off the bridge."' }] },
+            ] },
         ],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 32, 22, 'ship_hull');
-          carveRect(g, 3, 3, 30, 20, 'floor');
-          for (let hx = 3; hx <= 16; hx++) pt(g, hx, 1, 'ship_ramp');
-          for (let hx = 18; hx <= 30; hx++) pt(g, hx, 1, 'ship_ramp');
-          for (let hy = 1; hy <= 22; hy++) { pt(g, 1, hy, 'ship_hull'); pt(g, 32, hy, 'ship_hull'); }
-          carveRect(g, 3, 8, 14, 16, 'wall');
-          pt(g, 3, 12, 'floor'); pt(g, 4, 12, 'floor'); pt(g, 5, 12, 'floor'); pt(g, 6, 12, 'floor');
-          pt(g, 14, 10, 'floor'); pt(g, 14, 11, 'floor'); pt(g, 14, 12, 'floor');
-          pt(g, 0, 11, 'door'); pt(g, 0, 12, 'door');
-          carveRect(g, 1, 11, 2, 12, 'floor'); carveRect(g, 7, 12, 13, 12, 'floor'); // airlock and the corridor into the main bay
+          carveRect(g, 1, 5, 46, 5, 'floor');       // maintenance catwalk under the hull ribs
+          carveRect(g, 1, 14, 4, 19, 'floor');      // airlock vestibule
+          carveRect(g, 5, 16, 5, 17, 'floor');      // inner bulkhead
+          carveRect(g, 6, 8, 28, 21, 'floor');      // drydock hangar
+          carveRect(g, 12, 6, 22, 7, 'floor');      // frame gallery
+          carveRect(g, 11, 12, 19, 15, 'wall');     // the keel in its cradle (anchor row 16 stays floor)
+          carveRect(g, 6, 24, 15, 29, 'floor');     // Cherit memorial cabin
+          carveRect(g, 10, 22, 10, 23, 'floor');
+          carveRect(g, 18, 24, 28, 29, 'floor');    // the Architect's quarters
+          carveRect(g, 23, 22, 23, 23, 'floor');
+          carveRect(g, 31, 6, 41, 11, 'floor');     // bridge
+          carveRect(g, 29, 9, 30, 10, 'floor');
+          carveRect(g, 29, 15, 36, 18, 'floor');    // reactor corridor
+          carveRect(g, 37, 12, 41, 21, 'floor');    // vault antechamber
+          carveRect(g, 42, 16, 42, 17, 'floor');    // vault threshold
+          carveRect(g, 43, 11, 46, 22, 'floor');    // hypercore chamber
+          pt(g, 0, 16, 'door'); pt(g, 0, 17, 'door');
           return g;
         },
       },
-
     },
   },
 };
@@ -7172,6 +7311,64 @@ function AmbientLayer({ kind, accent }) {
       </div>
     );
   }
+  if (kind === 'moonbase') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 20 }, (_, i) => (
+          <div key={'d' + i} style={{ position:'absolute',left:`${(i*31)%100}%`,top:`${(i*23)%96}%`,width:`${2+(i%3)}px`,height:`${2+(i%3)}px`,borderRadius:'50%',background:i%3===0?'rgba(200,170,255,0.5)':'rgba(220,200,170,0.35)',animation:`ash-fall ${9+(i%5)*2}s linear ${(i%7)*0.6}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',top:'-20%',left:'18%',width:'6px',height:'150%',background:'linear-gradient(180deg,transparent,rgba(180,240,255,0.10),transparent)',transform:'rotate(14deg)',animation:'drift 9s ease-in-out infinite alternate' }} />
+        <div style={{ position:'absolute',top:'-20%',left:'64%',width:'5px',height:'150%',background:'linear-gradient(180deg,transparent,rgba(180,240,255,0.08),transparent)',transform:'rotate(-12deg)',animation:'drift 12s ease-in-out infinite alternate-reverse' }} />
+        <div style={{ position:'absolute',left:0,right:0,bottom:0,height:'30%',background:'rgba(40,20,70,0.16)',filter:'blur(16px)' }} />
+      </div>
+    );
+  }
+  if (kind === 'foundry') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 26 }, (_, i) => (
+          <div key={'s' + i} style={{ position:'absolute',left:`${(i*23)%100}%`,bottom:`${(i*7)%30}%`,width:`${2+(i%2)}px`,height:`${2+(i%2)}px`,borderRadius:'50%',background:i%4===0?'rgba(255,230,160,0.95)':'rgba(255,130,40,0.9)',animation:`embers-drift ${3+(i%5)}s ease-out ${(i%9)*0.4}s infinite` }} />
+        ))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={'k' + i} style={{ position:'absolute',left:`${(i*19+4)%90}%`,top:`${(i*13)%60}%`,width:'70px',height:'50px',borderRadius:'50%',background:'rgba(20,16,14,0.22)',filter:'blur(14px)',animation:`steam-rise ${8+(i%4)*2}s ease-out ${i*1.3}s infinite` }} />
+        ))}
+        {Array.from({ length: 4 }, (_, i) => (
+          <div key={'w' + i} style={{ position:'absolute',left:`${15+i*23}%`,top:`${20+(i*17)%50}%`,width:'12px',height:'12px',borderRadius:'50%',background:'rgba(200,235,255,0.9)',boxShadow:'0 0 14px #BFF4FF',animation:`ship-blink ${2.2+i*0.7}s steps(2,end) ${i*0.9}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',inset:0,background:'rgba(255,85,0,0.05)',animation:'door-pulse 3.6s ease-in-out infinite' }} />
+      </div>
+    );
+  }
+  if (kind === 'cavern') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 22 }, (_, i) => (
+          <div key={'p' + i} style={{ position:'absolute',left:`${(i*37)%100}%`,top:`${(i*19)%96}%`,width:`${2+(i%3)}px`,height:`${2+(i%3)}px`,borderRadius:'50%',background:i%2?'rgba(170,130,255,0.7)':'rgba(120,230,255,0.55)',animation:`twinkle ${3+(i%5)}s ease-in-out ${(i%7)*0.5}s infinite` }} />
+        ))}
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={'d' + i} style={{ position:'absolute',left:`${(i*21+8)%90}%`,top:'-4%',width:'2px',height:'10px',background:'rgba(160,220,255,0.7)',animation:`ash-fall ${3+i*0.8}s linear ${i*1.1}s infinite` }} />
+        ))}
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={'m' + i} style={{ position:'absolute',left:`${(i*26-6)%90}%`,top:`${40+(i*13)%50}%`,width:'50%',height:'20%',background:'rgba(90,75,138,0.12)',filter:'blur(22px)',animation:`mist-drift ${10+(i%3)*3}s ease-in-out ${i}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',inset:0,background:'rgba(90,60,170,0.07)',animation:'door-pulse 5s ease-in-out infinite' }} />
+      </div>
+    );
+  }
+  if (kind === 'wreck') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 10 }, (_, i) => (
+          <div key={'a' + i} style={{ position:'absolute',left:`${(i*43)%100}%`,top:`${(i*29)%90}%`,width:'18px',height:'2px',background:'rgba(190,240,255,0.95)',boxShadow:'0 0 10px #7FD0FF',animation:`ship-spark ${2.5+(i%4)}s steps(3,end) ${(i%6)*0.7}s infinite` }} />
+        ))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={'v' + i} style={{ position:'absolute',left:`${(i*19+6)%90}%`,bottom:`${(i*9)%30}%`,width:'54px',height:'54px',borderRadius:'50%',background:'rgba(200,220,235,0.10)',filter:'blur(14px)',animation:`steam-rise ${7+(i%4)*2}s ease-out ${i*1.2}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',inset:0,background:'rgba(255,40,40,0.045)',animation:'ship-blink 3.2s ease-in-out infinite' }} />
+        <div style={{ position:'absolute',inset:0,background:'rgba(8,16,24,0.18)' }} />
+      </div>
+    );
+  }
   if (kind === 'sky_high') {
     return (
       <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:1 }}>
@@ -7321,6 +7518,11 @@ const ITEMS = {
   pressurized_igniter:        { id:'pressurized_igniter',        name:'Pressurized Igniter',                   type:'weapon',     iconKind:'gear',     value:280, description:'Fires a directional plasma flare. Clears steam vents and lights very bad ideas.' },
   plasma_grenades:            { id:'plasma_grenades',            name:'Heavy Plasma Grenades',                 type:'consumable', iconKind:'supply',   value:350, description:'A bandolier of heavy plasma grenades taken from a KEF convoy. Throw one under a repulsor skirt.' },
   item_kef_cutter_01:         { id:'item_kef_cutter_01',         name:'KEF Industrial Breaching Cutter',      type:'weapon',     iconKind:'gear',     value:450, description:'Modified heavy cutter. Deals high damage against armored targets and can slice open sealed doors in Outpost 7.' },
+  wst_scan_team_tags:         { id:'wst_scan_team_tags',         name:'Scan Team Tags',                        type:'quest',      iconKind:'datapad',  value:0,   description:'Seven KDY tags, each wrapped in repair tape and a hand lettered name. Commander Vael will want these.' },
+  wst_gharza_service_key:     { id:'wst_gharza_service_key',     name:"Gharza's Service Key",                  type:'quest',      iconKind:'keycard',  value:0,   description:'A hunter\'s override key. It keeps the idle sentinel in the Deep Caverns asleep.' },
+  wst_vance_spanner:          { id:'wst_vance_spanner',          name:'Crankshaft Spanner',                    type:'weapon',     iconKind:'gear',     value:420, description:'Vance\'s pneumatic impact spanner, rebuilt with a brass hammer head. Heavy, loud and reliable against machines.' },
+  wst_capacitor_cell:         { id:'wst_capacitor_cell',         name:'Ion Capacitor Cell',                    type:'gear',       iconKind:'supply',   value:520, description:'The main cell from the jammer bank, cold at last. Slicers and collectors pay well for one.' },
+  wst_tuning_fork:            { id:'wst_tuning_fork',            name:'Titan Tuning Fork',                     type:'gear',       iconKind:'gear',     value:260, description:'Lora\'s brass fork, tuned to the manifold. It hums whenever a piston slams.' },
   // BADOR ITEMS END
   // PH ITEMS BEGIN
   ph_pkg_skyview: { id:'ph_pkg_skyview', name:'Penthouse Package: Observatory Deck', type:'quest', iconKind:'datapad', value:1800, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A cut crystal night sky filter for the transparisteel wall, plus a brass refractor on a tripod. Voss swears the moons look closer.' },
@@ -7418,6 +7620,9 @@ const ITEMS = {
   ion_charged_coils:         { id:'ion_charged_coils',         name:'Ion-Charged Power Coils',               type:'gear',       iconKind:'gear',     value:600,  description:'Precision coils calibrated for a reactor-scale power draw. Not standard issue for any published vessel class.' },
   cherit_logbook:            { id:'cherit_logbook',            name:"Cherit's Personal Logbook",             type:'quest',      iconKind:'datapad',  value:0,    description:'The private log of Republic Intelligence Officer Cherit, spanning forty-three years. The final entry is dated eighteen months before she was officially declared killed.' },
   experimental_hypercore_fragment: { id:'experimental_hypercore_fragment', name:'Experimental Hypercore Fragment', type:'quest', iconKind:'artifact', value:8000, description:'A severed sliver of the Ghost Keel hypercore. Enough to reverse-engineer the power generation method. Enough to cause problems for anyone who does.' },
+  zora_kdy_transit_charter:  { id:'zora_kdy_transit_charter',  name:'KDY Permanent Transit Charter',          type:'quest',      iconKind:'keycard',  value:0,    description:'A gold sealed charter granting free transit through every KDY facility, signed by a broker who will deny it.' },
+  zora_republic_commendation:{ id:'zora_republic_commendation',name:'Republic Intelligence Commendation',    type:'quest',      iconKind:'artifact', value:0,    description:'A plain black medal with no inscription, issued by an office that does not exist. It opens doors that do not exist either.' },
+  zora_syndicate_command_key:{ id:'zora_syndicate_command_key',name:'Ghost Keel Command Key',                 type:'quest',      iconKind:'keycard',  value:0,    description:'A cylinder holding the only command authority for the Ghost Keel, sealed in Syndicate green.' },
   forged_transit_chit:       { id:'forged_transit_chit',       name:'Forged KDY Transit Chit',               type:'quest',      iconKind:'keycard',  value:300,  description:'A ring-standard transit pass with a falsified clearance tier. Garrok\'s work is clean enough that casual inspection passes. Do not push it against a biometric reader.' },
   corellian_moonshine:       { id:'corellian_moonshine',       name:'Corellian Reserve Moonshine',           type:'consumable', iconKind:'supply',   value:60,   description:'Genuine off-world distillate, amber and sharp. Not synthetic. Corporal Dren mentioned it in passing without exactly asking for it.' },
   missing_hyperdrive_manifest: { id:'missing_hyperdrive_manifest', name:'Jaxen\'s Original Cargo Receipt',  type:'quest',      iconKind:'datapad',  value:0,    description:'The Corellian dock authority receipt predating the manifest alteration. Twelve military-grade hyperdrive motivators appear nowhere in it. Jaxen was set up.' },
@@ -7469,6 +7674,38 @@ const PENTHOUSE_PACKAGES = [
 
 const CODEX_ENTRIES = {
   // BADOR CODEX BEGIN
+  'codex-zora-iv': {
+    id:'codex-zora-iv', title:'The Zora IV', category:'lore',
+    summary:'A Venator class survivor that limped into the dark and never left.',
+    body:['The Zora IV was a Republic Venator class cruiser that survived the Drayen Massacre with a failing drive and a crew of ninety. Her captain steered into the deep caverns of Bador to hide her from the pursuit.','The crew stayed. Over decades the wreck became a workshop, then a drydock, then a tomb with one living tenant.'] },
+  'codex-the-architect': {
+    id:'codex-the-architect', title:'The Architect', category:'dossier',
+    summary:'An engineer officially killed forty three years ago.',
+    body:['Registered as dead in the same incident that destroyed the first Ghost Keel frame, the Architect has worked in secret ever since, paid from an account that appears in no KDY registry.','His logs show a man arguing with his own work. Each decade he drew a weapon, and each decade he added a reason not to finish it.'] },
+  'codex-cherit': {
+    id:'codex-cherit', title:'Cherit', category:'dossier',
+    summary:'The officer who commissioned a ship nobody could use.',
+    body:['Republic Intelligence Officer Cherit believed in deterrence by capability. She commissioned the Ghost Keel as a weapon to be built and never fired.','She died eight years into the project. The Architect kept building for her, and kept her candle lit.'] },
+  'codex-ghost-keel': {
+    id:'codex-ghost-keel', title:'The Ghost Keel', category:'lore',
+    summary:'A pocket dreadnought hidden under a moon.',
+    body:['A pocket dreadnought: the firepower of a capital ship in a hull small enough to hide in a cavern. It was built in secret on Bador, hidden by the jamming of the Titan Manifold and by a payroll nobody at KDY ever audited.','Its hypercore is the reason three powers want it.'] },
+  'codex-hypercore': {
+    id:'codex-hypercore', title:'The Experimental Hypercore', category:'lore',
+    summary:'Star Destroyer output in a reactor the size of a cargo lift.',
+    body:['The design replaces three conventional cores with a single resonant crystal lattice. It is the only part of the Ghost Keel anyone truly needs, and the only part that cannot be rebuilt from drawings.'] },
+  'codex-ending-keel-kdy': {
+    id:'codex-ending-keel-kdy', title:'Ending: The Keel Goes to Kuat', category:'lore',
+    summary:'KDY takes the schematics.',
+    body:['Tanner\'s courier drones cleared the archive in nine hours. KDY announced a new heavy escort programme eleven months later. Nobody mentioned Bador.'] },
+  'codex-ending-keel-destroyed': {
+    id:'codex-ending-keel-destroyed', title:'Ending: A Quiet Pulse', category:'lore',
+    summary:'The hypercore is gone.',
+    body:['The demolition left the cavern cold and the Zora IV intact but empty. Republic Intelligence closed the file. The Architect left the mountain on foot and was not seen again.'] },
+  'codex-ending-keel-syndicate': {
+    id:'codex-ending-keel-syndicate', title:'Ending: The Ghost Flagship', category:'lore',
+    summary:'The Syndicate owns a dreadnought.',
+    body:['Syndicate engineers needed four months to seat the keel. When the hull finally flew it carried no registry, no crew list and no name any scanner could read.'] },
   'codex-outskirts-war': {
     id:'codex-outskirts-war', title:'Breach-Point Alpha', category:'lore',
     summary:'The war in the shadow of the Kuat Drive Yards wall.',
@@ -7485,6 +7722,42 @@ const CODEX_ENTRIES = {
     id:'codex-iron-trench', title:'Outpost 7: The Iron Trench', category:'dossier',
     summary:'A hidden KDY forward incursion base wedge cut into a basalt ravine.',
     body:['Outpost 7 was established as a covert, hardened forward staging post in a sensor shadow zone. It is carved into volcanic basalt and shielded by thermal dampening arrays.','Thermal signature is everything here. Above thirty percent, KEF hunter killer squads sweep the perimeter. Above sixty, they drop mortar rounds on the ridge. Every shot, every alarm and every raid raises it. The Fusion Diverter Lever, the trench steam grates and decoys lower it.','Operation Sundown is the strike the outpost exists for: a simultaneous hit on the local power grid and communications array, launched when High Command gives the signal.'] },
+  'codex-engine-wastes': {
+    id:'codex-engine-wastes', title:'The Titan Manifold', category:'lore',
+    summary:'The engine that fed the shipyards, and the day it fell silent.',
+    body:['The Titan Manifold was the heart of the surface works on Bador: a mile of pistons, boilers and fuel conduits that fed the shipyard foundries. Decades ago the primary conduits parted in a single hour. The crews called it the Silent Shear, for the sound the pipes made as they went. The engine blocks locked, burst and burned, and the basin has smoldered ever since.','KDY blamed age and sealed the Wastes under a Class C order. The pistons still beat, slowly, as though nobody had told them to stop.'] },
+  'codex-wst-cathedral': {
+    id:'codex-wst-cathedral', title:'The Exhaust Cathedral', category:'lore',
+    summary:'Where the Titan breathes out, and where it can be restarted.',
+    body:['Every engine block in the basin vents into one flue: a five hundred meter cylinder the crews named the Exhaust Cathedral for its ribbed walls and organ pipe pistons. Its apex console carries the manifold governor, the part that keeps fuel flow and coolant in step.','Without the Catalyst Governor Valve the console stays dark and the blast doors in the east wall stay heat locked. The valve was pulled from service and hidden in the Dead Boiler Matrix. Nobody on the surface will say who hid it.'] },
+  'codex-wst-vance-truth': {
+    id:'codex-wst-vance-truth', title:'What Vance Knows', category:'dossier',
+    summary:'The chief engineer\'s account of the Silent Shear.',
+    body:['Vance Crankshaft was on shift when the coolant lines were cut from outside. He recorded the black box log himself, then crawled out through a service duct while the hatches were welded shut behind him.','He says the order came over a command channel that traced to a sealed sanctum below the Zone Five Descent. He does not know who held the key. He knows only that whoever it was wanted the lower city to bake, and planned it with an engineer\'s patience.'] },
+  'codex-wst-omens': {
+    id:'codex-wst-omens', title:'The Scrap Seers', category:'dossier',
+    summary:'Tuners who listen to the dead engine.',
+    body:['The Scrap Seers are survivors who stayed behind after the Shear. They tune the Titan\'s pistons by ear, hang tuning forks where crews died, and believe the engine remembers every shift.','Lora keeps the count. She says the Titan hums higher near anyone who carries a part of it, and that the bell at her shrine answers the pistons whenever the dead are close. Most Seers are mad. A few are right, which is the unsettling part.'] },
+  'codex-wst-gharza-hunt': {
+    id:'codex-wst-gharza-hunt', title:'Gharza\'s Contract', category:'dossier',
+    summary:'A Trandoshan sniper and the dead engineer she is paid to find.',
+    body:['Gharza is a Trandoshan hunter who works through brokers and never meets a client. Her current contract reached her through a channel Tanner does not own, and its coordinates were signed with a key that has been dormant for decades.','She tracked the signal to the Wastes and the caverns beneath them. She has not decided whether the engineer she hunts is a target or a client. A hunter who cannot tell the difference is dangerous, and she knows it.'] },
+  'codex-wst-scan-team': {
+    id:'codex-wst-scan-team', title:'Seven Tags', category:'lore',
+    summary:'The last stand of the missing KDY scan team.',
+    body:['The scan team walked into the Wastes to map the ion storm. They found its source, disabled their own gear so the signal could not be traced to them, and sat down to wait.','Seven tags hang from the dish mast, each wrapped in repair tape and a name. A note on the cab reads WARNED OFF. There are no blast marks and no tracks leading away. Whatever told them to stop also kept them from walking home.'] },
+  'codex-wst-jammer': {
+    id:'codex-wst-jammer', title:'The Ion Storm', category:'lore',
+    summary:'A jammer that was never weather.',
+    body:['The ion storm that blinds sensors across the Wastes is not weather. A bank of old capacitor cells was wired to cycle on a fixed pattern and flood the basin with noise in a six kilometer circle.','The pattern repeats every nineteen minutes and matches no KDY or KEF signature. Someone wanted the Wastes unwatched, and the Titan\'s dead machinery was the cheapest wall they could build. With the bank cut, scans reach the basin floor again and a heat signature fades faster.'] },
+  'codex-wst-crater-lake': {
+    id:'codex-wst-crater-lake', title:'The Glassed Lake', category:'lore',
+    summary:'Fused sand and a very old burn.',
+    body:['A shallow basin of fused silica marks where something enormous discharged its power long before the Titan was built. The glass is smooth, free of dust, and warm each morning.','Surveyors filed it as a test fire from the first Kuat yards. The Scrap Seers say the ground remembers, and that the Titan keeps its rhythm because the lake gives the beat back.'] },
+  'codex-wst-foundry09': {
+    id:'codex-wst-foundry09', title:'Foundry 09', category:'dossier',
+    summary:'The one safe place in the Wastes, and its house rules.',
+    body:['Foundry 09 was a combustion chamber until the Shear. Now it is a market, a bunk room and a repair shop under one blast door. The sign says NO SPARKS, NO SERMONS, and Quartermaster Dessa enforces both.','Dessa sells what survives the Wastes: igniters, grenades, rations, and crystal dust for Vance\'s thermal vests. She does not haggle and she does not ask where you came from.'] },
   // BADOR CODEX END
   // PH CODEX BEGIN
   'codex-ph-design': {
@@ -7998,7 +8271,7 @@ const KDY_SHUTTLE_DESTINATIONS = [
   { id: 'ring_landing', name: 'Orbital Ring Landing Bay', level: 'Kuat Orbital Array', cost: 0, requiredFlag: null,          targetZone: 'kdy_landing_bay',     targetPos: { x: 26, y: 11 } },
   { id: 'ring_suites',  name: 'Executive Private Suites', level: 'Kuat Orbital Array', cost: 0, requiredFlag: 'vaelen_cleared', targetZone: 'kuat_private_suites', targetPos: { x: 25, y: 10 } },
   { id: 'bador_base',   name: 'KDY Main Base',            level: 'Bador Moon, Sector Control', cost: 0, requiredFlag: 'tanner_briefed', targetZone: 'bador_main_base', targetPos: { x: 10, y: 14 } },
-  { id: 'bador_fwd',    name: 'Outpost 7 Forward Pad',    level: 'Bador Moon, Eastern Reach',  cost: 0, requiredFlag: 'bador_landed',   targetZone: 'outpost_7',       targetPos: { x: 26, y: 12 } },
+  { id: 'bador_fwd',    name: 'Outpost 7 Forward Pad',    level: 'Bador Moon, Eastern Reach',  cost: 0, requiredFlag: 'vael_briefed',   targetZone: 'outpost_7',       targetPos: { x: 26, y: 12 } },
 ];
 
 const SHUTTLE_ARRIVAL_TEXT = 'The transition from the pristine, silent luxury of the Kuat Orbital Array to the surface of Bador is a jarring shock to the senses. As your shuttle breaches the thin, violet tinged atmosphere, the sheer scale of the industrial devastation becomes apparent. The KDY Main Base is a fortress carved directly into the glassed bedrock. The air outside the shuttle tastes of ozone and copper, forcing you to rely on the rebreather integrated into your collar. You are escorted through a series of heavy durasteel airlocks, moving from the blasted exterior into the sterile, blue lit tactical operations center. Holographic tactical maps flicker with red conflict zones.';
@@ -13408,7 +13681,7 @@ function PropTacticalTable({ variant }) {
         {conq && <g>
           {[[48, 56, 'green'], [34, 50, 'blue'], [62, 50, 'amber'], [40, 66, 'cyan'], [58, 68, 'red']].map(([x, y, k], i) => <g key={i}><polygon points={pts(ngon(x, y, 9, 4.2, 6))} fill={S[k]} opacity="0.55" stroke={S[k]} strokeWidth="0.8" /><rect x={x - 1} y={y - 12} width="2" height="9" fill={S[k]} /></g>)}
           <g stroke={S.white} strokeWidth="0.6" fill="none" opacity="0.7"><polyline points={pts([[48, 56], [34, 50]])} /><polyline points={pts([[48, 56], [62, 50]])} /><polyline points={pts([[48, 56], [40, 66]])} /><polyline points={pts([[48, 56], [58, 68]])} /></g>
-          <text x="48" y="14" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>SECTOR CONTROL: 5 CONTESTED</text>
+          <text x="48" y="14" textAnchor="middle" fontSize="3.2" fill={S.amberHi} fontWeight="700" {...PT}>SECTOR CONTROL: 16 SECTORS</text>
         </g>}
         {bad && <g>
           {Array.from({ length: 4 }, (_, i) => <polygon key={i} points={pts(ngon(48, 74 - i * 9, 32 - i * 5, 8 - i * 1.2, 8, Math.PI / 8))} fill="none" stroke={S.redHi} strokeWidth="0.5" opacity="0.7" />)}
@@ -14121,13 +14394,13 @@ function PropMaglevCrane() {
   );
 }
 
-function PropCapacitorBank() {
-  const S = ART.signal;
+function PropCapacitorBank({ variant }) {
+  const S = ART.signal, dead = variant === 'dead';
   const tops = [14, 30, 46, 62, 78];
   return (
     <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
       <PropShadow cx={48} cy={92} rx={44} ry={3.4} />
-      <Glow cx={48} cy={30} rx={46} ry={22} c={S.cyan} opacity={0.35} style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} />
+      {!dead && <Glow cx={48} cy={30} rx={46} ry={22} c={S.cyan} opacity={0.35} style={{ animation:'ship-engine 1.6s ease-in-out infinite' }} />}
       <Bev t="polygon" points={pts([[4, 90], [4, 74], [92, 74], [92, 90]])} c="steel" o={1.1} />
       <Hazard x={6} y={86} w={84} h={3} />
       {tops.map((x, i) => (
@@ -14135,14 +14408,14 @@ function PropCapacitorBank() {
           <Bev t="polygon" points={pts([[x - 6, 76], [x - 6, 34], [x + 6, 34], [x + 6, 76]])} c="amber" o={0.9} />
           <ellipse cx={x} cy="34" rx="6" ry="2" fill={ART.amber.hi} /><ellipse cx={x} cy="34.4" rx="3.6" ry="1.1" fill={ART.dark.shade} />
           {[46, 56, 66].map((y) => <rect key={y} x={x - 6} y={y} width="12" height="1.8" fill={ART.dark.shade} />)}
-          <rect x={x - 1.6} y="24" width="3.2" height="10" fill={ART.steel.base} /><circle cx={x} cy="23" r="2.2" fill={S.cyanHi} style={{ animation:`ship-blink ${1 + i * 0.3}s steps(2) infinite` }} />
+          <rect x={x - 1.6} y="24" width="3.2" height="10" fill={ART.steel.base} /><circle cx={x} cy="23" r="2.2" fill={dead ? ART.dark.base : S.cyanHi} style={dead ? undefined : { animation:`ship-blink ${1 + i * 0.3}s steps(2) infinite` }} />
         </g>
       ))}
-      <g fill="none" stroke={S.cyanHi} strokeWidth="1" style={{ animation:'holo-flicker 0.9s ease-in-out infinite' }}>
+      {!dead && <g fill="none" stroke={S.cyanHi} strokeWidth="1" style={{ animation:'holo-flicker 0.9s ease-in-out infinite' }}>
         {[0, 1, 2, 3].map((i) => <polyline key={i} points={pts([[tops[i], 23], [tops[i] + 4, 16 - (i % 2) * 4], [tops[i] + 8, 22], [tops[i] + 12, 14 + (i % 2) * 3], [tops[i + 1], 23]])} />)}
-      </g>
-      <Bev t="polygon" points={pts([[38, 74], [58, 74], [58, 62], [38, 62]])} c="dark" o={0.6} /><rect x="40" y="64" width="16" height="8" fill={ART.screen.cyan} /><text x="48" y="68" textAnchor="middle" fontSize="2.2" fill={S.cyanHi} fontWeight="700" {...PT}>JAMMING</text><text x="48" y="71" textAnchor="middle" fontSize="2" fill={S.cyanHi} {...PT}>6 KM RADIUS</text>
-      <text x="48" y="10" textAnchor="middle" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>DISCHARGE: NOT NATURAL</text>
+      </g>}
+      <Bev t="polygon" points={pts([[38, 74], [58, 74], [58, 62], [38, 62]])} c="dark" o={0.6} /><rect x="40" y="64" width="16" height="8" fill={dead ? ART.screen.off : ART.screen.cyan} /><text x="48" y="68" textAnchor="middle" fontSize="2.2" fill={dead ? S.redHi : S.cyanHi} fontWeight="700" {...PT}>{dead ? 'OFFLINE' : 'JAMMING'}</text><text x="48" y="71" textAnchor="middle" fontSize="2" fill={dead ? S.redHi : S.cyanHi} {...PT}>{dead ? 'CELLS DARK' : '6 KM RADIUS'}</text>
+      <text x="48" y="10" textAnchor="middle" fontSize="3" fill={S.warn} fontWeight="700" {...PT}>{dead ? 'JAMMER CUT' : 'DISCHARGE: NOT NATURAL'}</text>
       <Rivets x={8} y={76} w={80} n={10} />
       <Grime x={4} y={30} w={88} h={60} seed={710} n={6} op={0.22} /><Scuff x={6} y={32} w={84} h={56} seed={711} n={8} c="amber" />
     </svg>
@@ -14160,7 +14433,7 @@ function PropScanWreck() {
       <rect x="68" y="42" width="12" height="2" fill={ART.dark.shade} /><rect x="68" y="47" width="20" height="2" fill={ART.dark.shade} />
       <g transform="rotate(-24 108 50)"><line x1="108" y1="52" x2="108" y2="20" stroke={ART.steel.hi} strokeWidth="2.4" /><Bev t="polygon" points={pts([[100, 20], [116, 20], [112, 12], [104, 12]])} c="hull" o={0.6} /><circle cx="108" cy="16" r="2" fill={ART.dark.shade} /></g>
       {[[100, 54], [112, 56], [120, 52]].map(([x, y], i) => <line key={i} x1={x} y1={y} x2={x + 5} y2={y + 2} stroke={ART.steel.hi} strokeWidth="1.4" />)}
-      <Cable d="M96 44 C100 48 98 52 104 52" w={1.6} /><polyline points={pts([[100, 50], [104, 54]])} fill="none" stroke={S.warn} strokeWidth="1" />
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => <g key={'tag' + i}><line x1={98 + i * 3} y1={30 + (i % 2) * 2} x2={98 + i * 3} y2={33 + (i % 2) * 2} stroke={ART.steel.hi} strokeWidth="0.5" /><rect x={97 + i * 3} y={33 + (i % 2) * 2} width="2" height="3.2" fill={ART.paper.base} /></g>)}<Cable d="M96 44 C100 48 98 52 104 52" w={1.6} /><polyline points={pts([[100, 50], [104, 54]])} fill="none" stroke={S.warn} strokeWidth="1" />
       {[22, 38].map((x, i) => <g key={i}><circle cx={x} cy="44" r="4" fill={ART.dark.shade} /><circle cx={x} cy="44" r="2.4" fill={ART.dark.base} /></g>)}
       <g transform="rotate(4 74 20)"><polygon points={pts([[62, 8], [92, 8], [92, 22], [62, 22]])} fill={ART.paper.base} /><text x="77" y="13.6" textAnchor="middle" fontSize="2.6" fill={ART.note.redInk} fontWeight="700" {...PT}>WARNED OFF</text><text x="77" y="18.4" textAnchor="middle" fontSize="2.4" fill={ART.note.ink} {...PT}>NO SIGN OF COMBAT</text></g>
       <text x="30" y="14" textAnchor="middle" fontSize="2.8" fill={S.cyanHi} fontWeight="700" {...PT}>KDY SCAN TEAM</text>
@@ -15254,6 +15527,247 @@ function PropBasaltVista({ variant = 'ravine_a' }) {
   );
 }
 
+// BADOR VISTA BEGIN
+// Backdrop panoramas for the Bador zones, one drawing routine per family, one thin wrapper per footprint (the art linter wants a literal viewBox).
+// Families: moonbase, foundry, cavern, hullbay, ring (orbital array), hqwindow (panoramic glass). Variants end in _a, _b or _c to vary the layout.
+function bvistaArt(variant, cols, rows) {
+  const S = ART.signal, K = ART.sky;
+  const fam = variant.split('_')[0];
+  const W = cols * 32, H = rows * 32;
+  const seed = { a: 3, b: 7, c: 13 }[variant.split('_')[1]] || 3;
+  const r = rng(seed + cols);
+  const band = (list) => list.map(([y0, y1, c], i) => <rect key={'bd' + i} x="0" y={y0} width={W} height={y1 - y0 + 1} fill={c} />);
+  const stars = (n, maxY, c) => Array.from({ length: n }, (_, i) => <circle key={'st' + i} cx={r() * W} cy={r() * maxY} r={0.5 + r() * 0.8} fill={c || S.kyber} opacity="0.6" style={{ animation: `ship-blink ${2 + r() * 3}s ease-in-out ${r() * 3}s infinite` }} />);
+  const steam = (list, c) => list.map(([x, y, rx, ry], i) => <ellipse key={'sm' + i} cx={x} cy={y} rx={rx} ry={ry} fill={c} opacity="0.45" style={{ animation: `steam-rise ${5 + i * 1.3}s ease-out ${i * 1.1}s infinite` }} />);
+  const out = [];
+  if (fam === 'moonbase') {
+    out.push(...band([[0, 30, ART.ink], [30, 58, K.indigo], [58, 84, K.violet], [84, 104, K.plum], [104, 120, K.rose], [120, 134, K.haze]]));
+    out.push(...stars(Math.round(cols * 2.2), 70));
+    const px = W * (seed === 7 ? 0.28 : 0.74), py = 92;
+    out.push(<g key="planet">
+      <circle cx={px} cy={py} r="76" fill={ART.deepglass.shade} />
+      <clipPath id={'bvp' + cols + seed}><circle cx={px} cy={py} r="74" /></clipPath>
+      <g clipPath={`url(#bvp${cols}${seed})`}>
+        <circle cx={px} cy={py} r="74" fill={ART.deepglass.base} />
+        {[[-52, 12, ART.deepglass.hi], [-28, 9, ART.teal.base], [-6, 14, ART.deepglass.hi], [20, 10, ART.teal.shade], [42, 12, ART.deepglass.shade]].map(([dy, h, c], i) => <rect key={i} x={px - 80} y={py + dy} width="160" height={h} fill={c} opacity="0.75" />)}
+        <circle cx={px + 34} cy={py + 10} r="74" fill={ART.dark.shade} opacity="0.62" />
+        {Array.from({ length: 16 }, (_, i) => <rect key={'cl' + i} x={px + 8 + r() * 56} y={py - 40 + r() * 100} width="1.6" height="1.6" fill={S.amber} opacity="0.8" />)}
+      </g>
+      <ellipse cx={px} cy={py + 4} rx="122" ry="15" fill="none" stroke={ART.pearl.base} strokeWidth="2.2" opacity="0.75" transform={`rotate(-16 ${px} ${py})`} />
+      {Array.from({ length: 9 }, (_, i) => { const a = (i / 9) * Math.PI * 2; return <rect key={'rg' + i} x={px + Math.cos(a) * 122 - 1.5} y={py + 4 + Math.sin(a) * 15 - 1.5} width="3" height="3" fill={S.gold} opacity="0.85" style={{ animation: `ship-blink ${2 + (i % 3)}s ease-in-out ${i * 0.3}s infinite` }} />; })}
+    </g>);
+    out.push(<polygon key="rim" points={pts([[0, 134], [60, 118], [150, 126], [260, 112], [380, 124], [500, 114], [640, 126], [760, 116], [W, 122], [W, 150], [0, 150]])} fill={ART.dark.shade} />);
+    out.push(<polygon key="rim2" points={pts([[0, 146], [90, 136], [210, 142], [340, 134], [470, 142], [600, 136], [W, 140], [W, 150], [0, 150]])} fill={ART.dark.base} />);
+    const masts = [0.1, 0.26, 0.52, 0.86].map((f) => f * W);
+    masts.forEach((x, i) => out.push(<g key={'ms' + i}><rect x={x} y={70 - (i % 2) * 14} width="3" height={80 + (i % 2) * 14} fill={ART.dark.base} /><circle cx={x + 1.5} cy={70 - (i % 2) * 14} r="3" fill={S.red} style={{ animation: `ship-blink ${1.6 + i * 0.4}s ease-in-out infinite` }} /><polygon points={pts([[x + 1.5, 76 - (i % 2) * 14], [x - 22, 146], [x + 25, 146]])} fill={S.cyanHi} opacity="0.1" /></g>));
+    const dx = W * (seed === 7 ? 0.62 : 0.34);
+    out.push(<g key="dome"><ellipse cx={dx} cy="140" rx="74" ry="34" fill={ART.hull.shade} /><ellipse cx={dx} cy="140" rx="74" ry="6" fill={ART.brass.base} /><ellipse cx={dx} cy="124" rx="40" ry="14" fill={ART.hull.base} opacity="0.55" />{Array.from({ length: 9 }, (_, i) => <rect key={i} x={dx - 62 + i * 14} y="132" width="5" height="2.4" fill={S.cyan} opacity="0.7" />)}<rect x={dx - 2} y="96" width="4" height="22" fill={ART.dark.base} /><circle cx={dx} cy="95" r="2.6" fill={S.amber} style={{ animation: 'ship-blink 2s ease-in-out infinite' }} /></g>);
+    out.push(<g key="shuttle"><polygon points={pts([[W * 0.5, 60], [W * 0.5 + 22, 56], [W * 0.5 + 28, 61], [W * 0.5 + 22, 65]])} fill={ART.hull.base} /><polygon points={pts([[W * 0.5 - 140, 112], [W * 0.5, 61], [W * 0.5 - 4, 66], [W * 0.5 - 140, 118]])} fill={ART.pearl.hi} opacity="0.22" /><circle cx={W * 0.5 - 2} cy="62" r="3" fill={S.orange} opacity="0.9" style={{ animation: 'ship-engine 1.4s ease-in-out infinite' }} /></g>);
+    out.push(...steam([[W * 0.18, 100, 70, 10], [W * 0.62, 108, 90, 12]], K.haze));
+  } else if (fam === 'foundry') {
+    out.push(...band([[0, 26, ART.ink], [26, 58, ART.dark.shade], [58, 92, ART.rust.shade], [92, 120, ART.copper.shade], [120, 146, ART.rust.base]]));
+    out.push(...steam([[W * 0.12, 40, 80, 20], [W * 0.4, 30, 100, 22], [W * 0.7, 44, 90, 20], [W * 0.92, 34, 70, 18]], ART.ink));
+    const towers = Math.round(cols / 4);
+    for (let i = 0; i < towers; i++) {
+      const x = 18 + i * (W / towers) + r() * 22, h = 52 + r() * 54, w = 26 + r() * 16, tall = i % 2 === 0;
+      if (tall) out.push(<g key={'sk' + i}><rect x={x} y={146 - h - 20} width={w * 0.5} height={h + 22} fill={ART.dark.base} /><rect x={x} y={146 - h - 20} width="3" height={h + 22} fill={ART.dark.hi} opacity="0.5" />{[0, 1, 2].map((b) => <rect key={b} x={x} y={146 - h - 14 + b * 12} width={w * 0.5} height="5" fill={b % 2 ? ART.pearl.shade : ART.red.base} opacity="0.85" />)}<polygon points={pts([[x + w * 0.25 - 5, 146 - h - 20], [x + w * 0.25, 146 - h - 38], [x + w * 0.25 + 5, 146 - h - 20]])} fill={S.orange} style={{ animation: `ship-engine ${1.3 + i * 0.2}s ease-in-out infinite` }} /></g>);
+      else out.push(<g key={'ct' + i}><polygon points={pts([[x, 146], [x + 6, 146 - h], [x + w - 6, 146 - h], [x + w, 146]])} fill={ART.hull.shade} /><polygon points={pts([[x + w * 0.5, 146], [x + w * 0.5 + 4, 146 - h], [x + w - 6, 146 - h], [x + w, 146]])} fill={ART.dark.base} opacity="0.7" /><rect x={x + 4} y={146 - h} width={w - 8} height="4" fill={ART.hull.base} />{[0, 1, 2, 3].map((b) => <rect key={b} x={x + 8} y={146 - h + 12 + b * 12} width={w - 16} height="2.6" fill={S.amber} opacity="0.7" style={{ animation: `ship-blink ${2 + b * 0.5}s ease-in-out ${i * 0.2}s infinite` }} />)}</g>);
+    }
+    for (let i = 0; i < Math.round(cols / 8); i++) { const gx = 40 + i * (W / Math.max(1, Math.round(cols / 8))) + 60; out.push(<g key={'gc' + i}><polygon points={pts([[gx, 146], [gx + 8, 60], [gx + 14, 60], [gx + 22, 146]])} fill={ART.dark.base} opacity="0.85" /><rect x={gx - 30} y="58" width="110" height="6" fill={ART.brass.shade} /><rect x={gx + 40} y="64" width="3" height="40" fill={ART.dark.hi} opacity="0.6" /><rect x={gx + 36} y="104" width="11" height="8" fill={ART.hull.shade} /></g>); }
+    out.push(<polygon key="slag" points={pts([[0, 150], [W * 0.12, 138], [W * 0.3, 148], [W * 0.5, 136], [W * 0.72, 148], [W * 0.9, 138], [W, 146], [W, 160], [0, 160]])} fill={S.orange} opacity="0.55" />);
+  } else if (fam === 'cavern') {
+    out.push(...band([[0, 36, ART.ink], [36, 76, ART.dark.shade], [76, 112, K.indigo], [112, 146, ART.teal.shade]]));
+    out.push(...stars(Math.round(cols * 1.6), 100, S.anomaly));
+    for (let i = 0; i < Math.round(cols * 0.9); i++) { const x = r() * W, w = 10 + r() * 30, h = 20 + r() * 70; out.push(<g key={'sl' + i}><polygon points={pts([[x - w / 2, 0], [x + w / 2, 0], [x + r() * 4 - 2, h]])} fill={ART.dark.base} /><polygon points={pts([[x + w * 0.1, 0], [x + w / 2, 0], [x + r() * 4 - 2, h]])} fill={ART.ink} opacity="0.6" /></g>); }
+    out.push(<polygon key="shaft" points={pts([[W * 0.46, 0], [W * 0.54, 0], [W * 0.62, 146], [W * 0.38, 146]])} fill={ART.pearl.hi} opacity="0.07" />);
+    for (let i = 0; i < Math.round(cols / 5); i++) { const x = 20 + i * (W / Math.round(cols / 5)) + r() * 30, h = 20 + r() * 40; out.push(<g key={'cr' + i}><polygon points={pts([[x, 146], [x + 5, 146 - h], [x + 11, 146 - h * 0.55], [x + 16, 146 - h * 0.9], [x + 22, 146]])} fill={ART.fabric.base} /><polygon points={pts([[x + 5, 146 - h], [x + 11, 146 - h * 0.55], [x + 16, 146 - h * 0.9], [x + 13, 146]])} fill={S.violet} opacity="0.85" style={{ animation: `holo-flicker ${2.4 + i * 0.3}s ease-in-out ${i * 0.4}s infinite` }} /></g>); }
+    for (let i = 0; i < 4; i++) { const y = 44 + i * 18; out.push(<polyline key={'vn' + i} points={pts([[r() * W * 0.3, y], [W * 0.3 + r() * 80, y + 10], [W * 0.6, y - 6 + r() * 12], [W, y + 8]])} fill="none" stroke={S.anomaly} strokeWidth="1.4" opacity="0.5" style={{ animation: `holo-flicker ${3 + i}s ease-in-out ${i * 0.7}s infinite` }} />); }
+    out.push(<rect key="lake" x="0" y="124" width={W} height="22" fill={ART.deepglass.shade} opacity="0.85" />);
+    out.push(...Array.from({ length: Math.round(cols / 2) }, (_, i) => <rect key={'lk' + i} x={r() * W} y={128 + r() * 14} width={10 + r() * 22} height="1.6" fill={S.cyan} opacity="0.35" style={{ animation: `ship-blink ${3 + r() * 3}s ease-in-out ${r() * 3}s infinite` }} />));
+    out.push(...steam([[W * 0.2, 118, 120, 8], [W * 0.7, 120, 140, 9]], ART.teal.base));
+  } else if (fam === 'hullbay') {
+    out.push(...band([[0, 40, ART.ink], [40, 100, ART.dark.shade], [100, 146, ART.steel.shade]]));
+    out.push(...Array.from({ length: Math.round(cols * 1.5) }, (_, i) => <rect key={'pn' + i} x={i * (W / Math.round(cols * 1.5))} y="44" width="2" height="102" fill={ART.ink} opacity="0.35" />));
+    const fx = W * (seed === 7 ? 0.5 : 0.06), fl = W * 0.46;
+    out.push(<g key="keel"><polygon points={pts([[fx, 136], [fx + fl * 0.12, 96], [fx + fl * 0.7, 82], [fx + fl, 100], [fx + fl * 0.9, 126], [fx + fl * 0.5, 138]])} fill={ART.dark.base} opacity="0.9" />{Array.from({ length: 11 }, (_, i) => <polygon key={i} points={pts([[fx + 10 + i * fl * 0.085, 134], [fx + 22 + i * fl * 0.085, 90 + Math.abs(i - 5) * 3], [fx + 30 + i * fl * 0.085, 90 + Math.abs(i - 5) * 3], [fx + 20 + i * fl * 0.085, 134]])} fill={ART.steel.shade} opacity="0.8" />)}<polygon points={pts([[fx + fl * 0.12, 96], [fx + fl * 0.7, 82], [fx + fl * 0.7, 88], [fx + fl * 0.14, 102]])} fill={ART.steel.base} opacity="0.7" />{Array.from({ length: 6 }, (_, i) => <rect key={'wl' + i} x={fx + 24 + i * fl * 0.14} y={86 + (i % 2) * 4} width="4" height="3" fill={i % 2 ? S.cyan : S.amber} opacity="0.9" style={{ animation: `ship-blink ${1.8 + i * 0.4}s ease-in-out ${i * 0.3}s infinite` }} />)}</g>);
+    const vx = W * (seed === 7 ? 0.2 : 0.78);
+    out.push(<g key="vp"><rect x={vx - 60} y="46" width="120" height="56" fill={ART.screen.space} /><rect x={vx - 60} y="46" width="120" height="4" fill={ART.steel.hi} />{Array.from({ length: 22 }, (_, i) => <circle key={'vs' + i} cx={vx - 56 + r() * 112} cy={52 + r() * 46} r="0.9" fill={S.kyber} opacity="0.7" />)}<polygon points={pts([[vx - 56, 102], [vx - 26, 80], [vx + 2, 90], [vx + 28, 72], [vx + 60, 102]])} fill={ART.fabric.shade} opacity="0.85" /><rect x={vx - 1} y="46" width="3" height="56" fill={ART.steel.shade} /></g>);
+    for (let i = 0; i < Math.round(cols / 6); i++) { const x = 10 + i * (W / Math.round(cols / 6)) + 130; out.push(<g key={'rb' + i}><polygon points={pts([[x, 146], [x + 6, 30], [x + 34, 14], [x + 68, 30], [x + 74, 146], [x + 60, 146], [x + 56, 40], [x + 34, 28], [x + 18, 40], [x + 14, 146]])} fill={ART.steel.base} /><polygon points={pts([[x + 56, 40], [x + 34, 28], [x + 34, 34], [x + 52, 44]])} fill={ART.steel.hi} opacity="0.5" /><rect x={x + 62} y="60" width="5" height="3" fill={S.red} opacity="0.8" style={{ animation: `ship-blink ${1.4 + i * 0.3}s ease-in-out ${i * 0.2}s infinite` }} /></g>); }
+    out.push(<rect key="g1" x="0" y="22" width={W} height="6" fill={ART.dark.hi} opacity="0.8" />, <rect key="g2" x="0" y="106" width={W} height="4" fill={ART.dark.hi} opacity="0.55" />);
+    out.push(...Array.from({ length: Math.round(cols / 3) }, (_, i) => <rect key={'lp' + i} x={8 + i * (W / Math.round(cols / 3))} y="28" width="6" height="3" fill={S.red} opacity="0.85" style={{ animation: `ship-blink ${2 + (i % 3)}s ease-in-out ${i * 0.25}s infinite` }} />));
+    out.push(...Array.from({ length: Math.round(cols / 3) }, (_, i) => <line key={'cb' + i} x1={r() * W} y1="28" x2={r() * W * 0.04 + (i * W) / Math.round(cols / 3)} y2={34 + r() * 60} stroke={ART.dark.hi} strokeWidth="1.2" opacity="0.6" />));
+    out.push(...Array.from({ length: Math.round(cols / 6) }, (_, i) => <circle key={'sp' + i} cx={r() * W} cy={40 + r() * 60} r="2.4" fill={S.amberHi} opacity="0.9" style={{ animation: `ship-spark ${1.6 + r() * 2}s ease-in-out ${r() * 2}s infinite` }} />));
+  } else if (fam === 'ring') {
+    out.push(...band([[0, 150, ART.ink]]));
+    out.push(...stars(Math.round(cols * 3.2), 110));
+    out.push(<g key="limb"><circle cx={W * 0.5} cy={H + 360} r="440" fill={ART.deepglass.shade} /><circle cx={W * 0.5} cy={H + 360} r="430" fill={ART.deepglass.base} /><circle cx={W * 0.5} cy={H + 372} r="420" fill={ART.teal.shade} opacity="0.7" />{Array.from({ length: Math.round(cols * 1.4) }, (_, i) => <rect key={'ct' + i} x={r() * W} y={118 + r() * 34} width="1.8" height="1.8" fill={S.amber} opacity="0.85" />)}</g>);
+    const hulls = Math.max(2, Math.round(cols / 10));
+    for (let i = 0; i < hulls; i++) { const x = 30 + i * (W / hulls) + r() * 40, sc = 0.8 + r() * 0.5; out.push(<g key={'hl' + i}><polygon points={pts([[x, 96], [x + 170 * sc, 78], [x + 210 * sc, 92], [x + 170 * sc, 106]])} fill={ART.dark.base} /><polygon points={pts([[x, 96], [x + 170 * sc, 78], [x + 120 * sc, 94]])} fill={ART.steel.shade} />{Array.from({ length: 7 }, (_, k) => <rect key={k} x={x + 20 + k * 22 * sc} y={92 + (k % 2) * 4} width="3" height="2" fill={k % 3 ? S.cyan : S.amber} opacity="0.85" style={{ animation: `ship-blink ${2 + k * 0.4}s ease-in-out ${k * 0.3}s infinite` }} />)}<line x1={x + 30} y1="60" x2={x + 120 * sc} y2="84" stroke={ART.steel.base} strokeWidth="1.2" opacity="0.7" /><line x1={x + 60} y1="56" x2={x + 140 * sc} y2="82" stroke={ART.steel.base} strokeWidth="1.2" opacity="0.7" /></g>); }
+    out.push(<g key="arr"><polygon points={pts([[0, 128], [W, 112], [W, 117], [0, 133]])} fill={ART.steel.base} opacity="0.85" />{Array.from({ length: Math.round(cols * 1.2) }, (_, i) => <rect key={'al' + i} x={6 + i * (W / Math.round(cols * 1.2))} y={128 - (i / Math.round(cols * 1.2)) * 16} width="4" height="2.4" fill={S.gold} opacity="0.85" style={{ animation: `ship-blink ${2 + (i % 4)}s ease-in-out ${i * 0.2}s infinite` }} />)}</g>);
+    out.push(<g key="frt"><polygon points={pts([[W * 0.78, 40], [W * 0.78 + 34, 36], [W * 0.78 + 42, 41], [W * 0.78 + 34, 46]])} fill={ART.hull.base} /><circle cx={W * 0.78 - 1} cy="41" r="3" fill={S.cyan} opacity="0.9" style={{ animation: 'ship-engine 1.6s ease-in-out infinite' }} /></g>);
+  } else if (fam === 'hqwindow') {
+    out.push(...band([[0, H * 0.22, K.indigo], [H * 0.22, H * 0.44, K.violet], [H * 0.44, H * 0.62, K.plum], [H * 0.62, H * 0.78, K.rose], [H * 0.78, H, K.haze]]));
+    out.push(...stars(Math.round(cols * 1.2), H * 0.3));
+    out.push(<polygon key="hz" points={pts([[0, H - 4], [W * 0.1, H * 0.66], [W * 0.24, H * 0.76], [W * 0.4, H * 0.62], [W * 0.58, H * 0.74], [W * 0.78, H * 0.6], [W, H * 0.7], [W, H], [0, H]])} fill={ART.dark.shade} />);
+    out.push(<ellipse key="dm" cx={W * 0.7} cy={H * 0.8} rx="60" ry="22" fill={ART.hull.shade} />);
+    out.push(...[0.18, 0.46, 0.84].map((f, i) => <g key={'mk' + i}><rect x={W * f} y={H * 0.44} width="3" height={H * 0.4} fill={ART.dark.base} /><circle cx={W * f + 1.5} cy={H * 0.44} r="2.4" fill={S.red} style={{ animation: `ship-blink ${1.6 + i * 0.5}s ease-in-out infinite` }} /></g>));
+    out.push(...Array.from({ length: Math.round(cols / 4) }, (_, i) => <rect key={'ml' + i} x={20 + i * (W / Math.round(cols / 4))} y={H - 14} width="8" height="2.4" fill={S.cyan} opacity="0.6" />));
+    for (let i = 0; i <= Math.round(cols / 5); i++) { const x = i * (W / Math.round(cols / 5)); out.push(<g key={'mu' + i}><rect x={x - 4} y="0" width="8" height={H} fill={ART.steel.shade} /><rect x={x - 4} y="0" width="3" height={H} fill={ART.steel.base} /><rect x={x - 5} y={H * 0.5} width="10" height="3" fill={ART.brass.base} /></g>); }
+    out.push(<rect key="hd" x="0" y="0" width={W} height="6" fill={ART.brass.shade} />);
+  }
+  return out;
+}
+
+const bvistaBase = (cols, rows, W, H, variant, extra) => (
+  <>
+    {bvistaArt(variant, cols, rows)}
+    {extra}
+  </>
+);
+
+function PropBvistaA({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 640 160" width="640" height="160" style={PROP_STYLE}>
+      {bvistaBase(20, 5, 640, 160, variant)}
+      <rect x="0" y="146" width="640" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="640" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={628} n={40} c="dark" /><Seams x={0} y={146} w={640} h={14} cols={20} op={0.3} />
+      <Grime x={0} y={100} w={640} h={60} seed={2301} n={9} op={0.12} /><Scuff x={0} y={146} w={640} h={14} seed={2302} n={10} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaB({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 768 160" width="768" height="160" style={PROP_STYLE}>
+      {bvistaBase(24, 5, 768, 160, variant)}
+      <rect x="0" y="146" width="768" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="768" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={756} n={48} c="dark" /><Seams x={0} y={146} w={768} h={14} cols={24} op={0.3} />
+      <Grime x={0} y={100} w={768} h={60} seed={2311} n={10} op={0.12} /><Scuff x={0} y={146} w={768} h={14} seed={2312} n={12} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaC({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 1024 160" width="1024" height="160" style={PROP_STYLE}>
+      {bvistaBase(32, 5, 1024, 160, variant)}
+      <rect x="0" y="146" width="1024" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="1024" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={1012} n={64} c="dark" /><Seams x={0} y={146} w={1024} h={14} cols={32} op={0.3} />
+      <Grime x={0} y={100} w={1024} h={60} seed={2321} n={12} op={0.12} /><Scuff x={0} y={146} w={1024} h={14} seed={2322} n={14} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaD({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 1152 160" width="1152" height="160" style={PROP_STYLE}>
+      {bvistaBase(36, 5, 1152, 160, variant)}
+      <rect x="0" y="146" width="1152" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="1152" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={1140} n={72} c="dark" /><Seams x={0} y={146} w={1152} h={14} cols={36} op={0.3} />
+      <Grime x={0} y={100} w={1152} h={60} seed={2331} n={14} op={0.12} /><Scuff x={0} y={146} w={1152} h={14} seed={2332} n={16} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaE({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 1408 160" width="1408" height="160" style={PROP_STYLE}>
+      {bvistaBase(44, 5, 1408, 160, variant)}
+      <rect x="0" y="146" width="1408" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="1408" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={1396} n={88} c="dark" /><Seams x={0} y={146} w={1408} h={14} cols={44} op={0.3} />
+      <Grime x={0} y={100} w={1408} h={60} seed={2341} n={16} op={0.12} /><Scuff x={0} y={146} w={1408} h={14} seed={2342} n={18} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaF({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 1536 160" width="1536" height="160" style={PROP_STYLE}>
+      {bvistaBase(48, 5, 1536, 160, variant)}
+      <rect x="0" y="146" width="1536" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="1536" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={1524} n={96} c="dark" /><Seams x={0} y={146} w={1536} h={14} cols={48} op={0.3} />
+      <Grime x={0} y={100} w={1536} h={60} seed={2351} n={18} op={0.12} /><Scuff x={0} y={146} w={1536} h={14} seed={2352} n={20} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaG({ variant = 'hqwindow_a' }) {
+  return (
+    <svg viewBox="0 0 960 96" width="960" height="96" style={PROP_STYLE}>
+      {bvistaBase(30, 3, 960, 96, variant)}
+      <rect x="0" y="86" width="960" height="10" fill={ART.dark.shade} /><rect x="0" y="86" width="960" height="2" fill={ART.brass.base} />
+      <Rivets x={6} y={91} w={948} n={60} c="brass" /><Seams x={0} y={86} w={960} h={10} cols={30} op={0.3} />
+      <Grime x={0} y={50} w={960} h={46} seed={2361} n={8} op={0.1} /><Scuff x={0} y={86} w={960} h={10} seed={2362} n={8} c="dark" />
+    </svg>
+  );
+}
+// BADOR VISTA END
+
+// ZORA PROPS BEGIN
+// The Ghost Keel frame in its drydock cradle, the Warden Prime defence droid, and the Cherit memorial plinth.
+function PropKeelFrame() {
+  const S = ART.signal;
+  const ribs = Array.from({ length: 12 }, (_, i) => ({ x: 34 + i * 18, top: 84 + Math.abs(i - 4) * 1.8 }));
+  return (
+    <svg viewBox="0 0 288 160" width="288" height="160" style={PROP_STYLE}>
+      <PropShadow cx={144} cy={154} rx={134} ry={4} />
+      <Bev t="polygon" points={pts([[6, 154], [6, 140], [282, 140], [282, 154]])} c="steel" o={1.2} /><Hazard x={10} y={146} w={268} h={4} />
+      {[26, 98, 170, 242].map((x, i) => <g key={i}><Bev t="polygon" points={pts([[x, 140], [x + 2, 66], [x + 14, 66], [x + 16, 140]])} c="dark" o={1} /><Seams x={x} y={70} w={16} h={68} cols={1} rows={4} op={0.4} /><rect x={x + 3} y={60 - (i % 2) * 6} width="10" height="6" fill={ART.brass.base} /></g>)}
+      <Bev t="polygon" points={pts([[18, 124], [30, 100], [246, 86], [282, 102], [250, 126], [64, 134]])} c="dark" o={1.3} />
+      {ribs.map((rb, i) => <polygon key={'rb' + i} points={pts([[rb.x, 130], [rb.x + 3, rb.top], [rb.x + 11, rb.top - 2], [rb.x + 13, 128]])} fill={ART.steel.shade} />)}
+      {ribs.map((rb, i) => <polygon key={'rh' + i} points={pts([[rb.x + 3, rb.top], [rb.x + 6, rb.top - 1], [rb.x + 6, 128], [rb.x + 3, 130]])} fill={ART.steel.base} opacity="0.7" />)}
+      <Bev t="polygon" points={pts([[196, 90], [246, 86], [282, 102], [250, 126], [196, 126]])} c="hull" o={1.1} />
+      <Seams x={196} y={88} w={86} h={38} cols={4} rows={2} op={0.5} />
+      <polygon points={pts([[196, 90], [246, 86], [250, 92], [198, 96]])} fill={ART.pearl.hi} opacity="0.8" />
+      <Bev t="polygon" points={pts([[96, 86], [104, 40], [150, 30], [160, 84]])} c="steel" o={0.9} />
+      <g stroke={ART.hull.shade} strokeWidth="1.4" fill="none"><line x1="98" y1="84" x2="150" y2="34" /><line x1="104" y1="42" x2="158" y2="84" /><line x1="100" y1="62" x2="156" y2="58" /></g>
+      <polygon points={pts([[104, 40], [150, 30], [152, 36], [106, 46]])} fill={ART.steel.hi} opacity="0.7" />
+      <polygon points={pts(ngon(124, 110, 10, 10, 10))} fill={ART.ink} /><polygon points={pts(ngon(124, 110, 7, 7, 10))} fill={S.cyan} style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} /><polygon points={pts(ngon(124, 110, 3, 3, 6))} fill={S.cyanHi} />
+      <line x1="60" y1="0" x2="60" y2="70" stroke={ART.dark.hi} strokeWidth="1.4" /><line x1="200" y1="0" x2="206" y2="84" stroke={ART.dark.hi} strokeWidth="1.4" />
+      <Bev t="polygon" points={pts([[54, 70], [66, 70], [64, 80], [56, 80]])} c="amber" o={0.7} /><Bev t="polygon" points={pts([[198, 82], [212, 82], [210, 90], [200, 90]])} c="amber" o={0.7} />
+      {[[40, 112], [112, 94], [176, 92], [220, 108], [262, 112]].map(([x, y], i) => <circle key={'sp' + i} cx={x} cy={y} r="2.2" fill={S.amberHi} style={{ animation: `ship-spark ${1.3 + i * 0.4}s ease-in-out ${i * 0.3}s infinite` }} />)}
+      {[[44, 92, 'cyan'], [80, 100, 'amber'], [168, 88, 'cyan'], [228, 96, 'amber']].map(([x, y, k], i) => <rect key={'wl' + i} x={x} y={y} width="5" height="3" fill={S[k]} style={{ animation: `ship-blink ${1.8 + i * 0.5}s ease-in-out ${i * 0.3}s infinite` }} />)}
+      <Slab x={96} y={142} w={96} h={9} k={1} c="dark" o={0.8} /><text x="144" y="148.8" textAnchor="middle" fontSize="4" fill={S.amberHi} fontWeight="700" {...PT}>GHOST KEEL HULL 001</text>
+      <Rivets x={10} y={142} w={268} n={30} /><Lights x={14} y={150} n={6} gap={6} seed={11} />
+      <Grime x={8} y={60} w={272} h={92} seed={880} n={10} op={0.22} /><Scuff x={10} y={84} w={266} h={56} seed={881} n={12} c="steel" />
+    </svg>
+  );
+}
+
+function PropWardenPrime() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={91} rx={40} ry={3.4} />
+      <Slab x={10} y={80} w={76} h={9} k={2} c="dark" o={1} /><Hazard x={14} y={84} w={68} h={3} />
+      {[[16, 80, 4, 52], [26, 80, 14, 62], [70, 80, 82, 52], [60, 80, 72, 62]].map(([x1, y1, x2, y2], i) => <g key={i}><line x1={x1 + 6} y1={y1} x2={x2 + 6} y2={y2} stroke={ART.ink} strokeWidth="6" /><line x1={x1 + 6} y1={y1} x2={x2 + 6} y2={y2} stroke={ART.steel.base} strokeWidth="3.4" /><polygon points={pts(ngon(x2 + 6, y2, 4, 4, 6))} fill={ART.steel.hi} /></g>)}
+      <Bev t="polygon" points={pts([[24, 70], [20, 40], [34, 24], [62, 24], [76, 40], [72, 70]])} c="dark" o={1.2} />
+      <Bev t="polygon" points={pts([[30, 66], [28, 44], [38, 32], [58, 32], [68, 44], [66, 66]])} c="steel" o={0.9} />
+      <Seams x={28} y={34} w={40} h={32} cols={2} rows={2} op={0.45} /><Vent x={38} y={54} w={20} h={8} n={3} />
+      <Bev t="polygon" points={pts([[34, 24], [38, 10], [58, 10], [62, 24]])} c="dark" o={1} />
+      <rect x="40" y="14" width="16" height="6" fill={ART.ink} /><rect x="42" y="15" width="12" height="4" fill={S.red} style={{ animation: 'ship-engine 1.6s ease-in-out infinite' }} /><rect x="46" y="15" width="4" height="4" fill={S.redHi} />
+      <Bev t="polygon" points={pts([[6, 44], [6, 28], [20, 28], [22, 46]])} c="steel" o={0.9} /><Bev t="polygon" points={pts([[74, 46], [76, 28], [90, 28], [90, 44]])} c="steel" o={0.9} />
+      <rect x="2" y="30" width="6" height="14" fill={ART.dark.base} /><rect x="88" y="30" width="6" height="14" fill={ART.dark.base} />
+      <Glyph k="cog" x={48} y={46} s={4} c={S.amber} />
+      <Rivets x={26} y={28} w={44} n={7} /><Lights x={30} y={72} n={5} gap={8} seed={3} />
+      <Grime x={8} y={8} w={80} h={82} seed={890} n={7} op={0.22} /><Scuff x={10} y={12} w={76} h={72} seed={891} n={9} c="steel" />
+    </svg>
+  );
+}
+
+function PropMemorialPlinth() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={26} ry={2.6} />
+      <Slab x={8} y={42} w={48} h={16} k={2} c="dark" o={1} /><Slab x={14} y={30} w={36} h={14} k={2} c="steel" o={0.9} />
+      <Hazard x={10} y={54} w={44} h={2.4} />
+      <polygon points={pts([[18, 32], [30, 28], [46, 30], [44, 38], [20, 38]])} fill={ART.fabric.base} /><polygon points={pts([[18, 32], [30, 28], [34, 32], [22, 36]])} fill={ART.fabric.hi} opacity="0.8" />
+      <rect x="38" y="31" width="9" height="6" fill={ART.paper.base} /><rect x="39.4" y="32.4" width="6.2" height="1.2" fill={S.green} />
+      <polygon points={pts([[28, 28], [30, 18], [34, 18], [36, 28]])} fill={ART.brass.base} /><polygon points={pts([[29, 18], [32, 8], [35, 18]])} fill={S.cyanHi} style={{ animation: 'holo-flicker 1.8s ease-in-out infinite' }} /><polygon points={pts([[31, 16], [32, 11], [33, 16]])} fill={S.white} />
+      <Glow cx={32} cy={14} r={9} c={S.cyan} opacity={0.35} style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} />
+      <Slab x={20} y={46} w={24} h={7} k={1} c="brass" o={0.8} /><text x="32" y="51.2" textAnchor="middle" fontSize="3" fill={ART.ink} fontWeight="700" {...PT}>CHERIT</text>
+      <Rivets x={11} y={44} w={42} n={6} /><Lights x={16} y={57} n={3} gap={4} seed={4} />
+      <Grime x={8} y={28} w={48} h={30} seed={895} n={4} op={0.22} /><Scuff x={10} y={30} w={44} h={26} seed={896} n={5} c="steel" />
+    </svg>
+  );
+}
+// ZORA PROPS END
+
 function PropKdyBarricade({ variant }) {
   const S = ART.signal, scrap = variant === 'scrap';
   const body = scrap ? 'rust' : 'hull';
@@ -15722,6 +16236,45 @@ function PropGovernorSocket({ variant }) {
     </svg>
   );
 }
+
+// Wastes finale set piece: the central blast doors to Zone Five. Closed: heat locked, red lamps. Open: leaves retracted, a lit descent.
+function PropWstBlastDoors({ variant }) {
+  const S = ART.signal, open = variant === 'open';
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={92} rx={44} ry={3} />
+      <Slab x={2} y={14} w={92} h={76} k={4} c="dark" o={1.4} />
+      <Slab x={8} y={22} w={80} h={68} k={3} c="steel" o={1} />
+      <rect x="16" y="30" width="64" height="60" fill={open ? ART.screen.amber : ART.dark.shade} />
+      {open ? (
+        <g>
+          <polygon points={pts([[20, 90], [28, 40], [68, 40], [76, 90]])} fill={ART.ink} />
+          {[48, 60, 72, 84].map((y, i) => <rect key={y} x={30 - i * 2.4} y={y} width={36 + i * 4.8} height="3" fill={ART.dark.base} />)}
+          {[0, 1, 2, 3].map((i) => <circle key={i} cx={36 + i * 8} cy={46 + i * 0} r="1.2" fill={S.amberHi} style={{ animation: `ship-blink ${1.2 + i * 0.3}s ease-in-out infinite` }} />)}
+          <Glow cx={48} cy={64} rx={20} ry={26} c={S.orange} opacity={0.55} style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} />
+          <Bev t="polygon" points={pts([[16, 30], [26, 30], [26, 90], [16, 90]])} c="hull" o={1} />
+          <Bev t="polygon" points={pts([[70, 30], [80, 30], [80, 90], [70, 90]])} c="hull" o={1} />
+        </g>
+      ) : (
+        <g>
+          <Bev t="polygon" points={pts([[16, 30], [47, 30], [47, 90], [16, 90]])} c="hull" o={1.4} />
+          <Bev t="polygon" points={pts([[49, 30], [80, 30], [80, 90], [49, 90]])} c="hull" o={1.4} />
+          <rect x="46.4" y="30" width="3.2" height="60" fill={S.orange} style={{ animation: 'ship-engine 1.8s ease-in-out infinite' }} />
+          {[40, 56, 72].map((y) => <g key={y}><rect x="20" y={y} width="22" height="2.4" fill={ART.hull.shade} /><rect x="54" y={y} width="22" height="2.4" fill={ART.hull.shade} /></g>)}
+          <polygon points={pts([[20, 34], [40, 34], [38, 38], [22, 38]])} fill={ART.rust.base} opacity="0.7" /><polygon points={pts([[56, 34], [76, 34], [74, 38], [58, 38]])} fill={ART.rust.base} opacity="0.7" />
+        </g>
+      )}
+      <Slab x={26} y={16} w={44} h={10} k={2} c="dark" o={0.9} />
+      <text x="48" y="23.6" textAnchor="middle" fontSize="4.4" fill={open ? S.greenHi : S.redHi} fontWeight="700" {...PT}>{open ? 'ZONE 05 OPEN' : 'ZONE 05 HEAT LOCKED'}</text>
+      {[14, 82].map((x) => <g key={x}><circle cx={x} cy="20" r="3" fill={ART.ink} /><circle cx={x} cy="20" r="1.8" fill={open ? S.green : S.red} style={{ animation: 'ship-blink 1.1s ease-in-out infinite' }} /><Glow cx={x} cy={20} r={7} c={open ? S.green : S.red} opacity={0.4} /></g>)}
+      <Hazard x={10} y={82} w={76} h={6} opacity={0.9} />
+      <Vent x={4} y={42} w={8} h={12} n={4} /><Vent x={84} y={42} w={8} h={12} n={4} />
+      <Rivets x={12} y={26} w={72} n={10} c="steel" /><Seams x={8} y={22} w={80} h={68} cols={open ? 0 : 3} rows={0} op={0.3} />
+      <Greeble x={10} y={60} w={4} h={20} seed={3411} n={3} c="steel" /><Greeble x={82} y={60} w={4} h={20} seed={3412} n={3} c="steel" />
+      <Grime x={2} y={14} w={92} h={76} seed={3413} n={7} op={0.24} /><Scuff x={10} y={24} w={76} h={62} seed={3414} n={8} c="steel" />
+    </svg>
+  );
+}
 // ===== BADOR WAR PROPS END =====
 
 
@@ -15908,6 +16461,18 @@ const PROP_DEFS = {
   // PENTHOUSE DEFS END
   // BADOR WAR DEFS BEGIN
   basalt_vista:          { w: 24, h: 5, ax: 12, ay: 4, backdrop: true },
+  // BADOR VISTA DEFS BEGIN
+  bvista_20x5:           { w: 20, h: 5, ax: 10, ay: 4, backdrop: true },
+  bvista_24x5:           { w: 24, h: 5, ax: 12, ay: 4, backdrop: true },
+  bvista_32x5:           { w: 32, h: 5, ax: 16, ay: 4, backdrop: true },
+  bvista_36x5:           { w: 36, h: 5, ax: 18, ay: 4, backdrop: true },
+  bvista_44x5:           { w: 44, h: 5, ax: 22, ay: 4, backdrop: true },
+  bvista_48x5:           { w: 48, h: 5, ax: 24, ay: 4, backdrop: true },
+  bvista_30x3:           { w: 30, h: 3, ax: 15, ay: 2, backdrop: true },
+  keel_frame:            { w: 9, h: 5, ax: 4, ay: 4 },
+  warden_prime:          { w: 3, h: 3, ax: 1, ay: 2 },
+  memorial_plinth:       { w: 2, h: 2, ax: 0, ay: 1 },
+  // BADOR VISTA DEFS END
   kdy_barricade:         { w: 3, h: 2, ax: 1, ay: 1 },
   auto_turret:           { w: 2, h: 2, ax: 0, ay: 1 },
   shanty_hovel:          { w: 3, h: 3, ax: 1, ay: 2 },
@@ -15934,6 +16499,7 @@ const PROP_DEFS = {
   exhaust_cathedral:     { w: 8, h: 7, ax: 4, ay: 6, backdrop: true },
   boiler_hull:           { w: 4, h: 3, ax: 1, ay: 2 },
   governor_socket:       { w: 2, h: 2, ax: 0, ay: 1 },
+  wst_blast_doors:       { w: 3, h: 3, ax: 2, ay: 2 },
   // BADOR WAR DEFS END
 };
 
@@ -16051,7 +16617,7 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'scorch_wall': return <PropScorchWall variant={variant} active={!!active} />;
     case 'sentry_post': return <PropSentryPost variant={variant} active={!!active} />;
     case 'maglev_crane': return <PropMaglevCrane variant={variant} active={!!active} />;
-    case 'capacitor_bank': return <PropCapacitorBank variant={variant} active={!!active} />;
+    case 'capacitor_bank': return <PropCapacitorBank variant={variant} />;
     case 'scan_wreck': return <PropScanWreck variant={variant} active={!!active} />;
     case 'crater_glass': return <PropCraterGlass variant={variant} active={!!active} />;
     case 'rebreather_rack': return <PropRebreatherRack variant={variant} active={!!active} />;
@@ -16104,6 +16670,18 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     // PENTHOUSE CASES END
     // BADOR WAR CASES BEGIN
     case 'basalt_vista': return <PropBasaltVista variant={variant} />;
+    // BADOR VISTA CASES BEGIN
+    case 'bvista_20x5': return <PropBvistaA variant={variant} />;
+    case 'bvista_24x5': return <PropBvistaB variant={variant} />;
+    case 'bvista_32x5': return <PropBvistaC variant={variant} />;
+    case 'bvista_36x5': return <PropBvistaD variant={variant} />;
+    case 'bvista_44x5': return <PropBvistaE variant={variant} />;
+    case 'bvista_48x5': return <PropBvistaF variant={variant} />;
+    case 'bvista_30x3': return <PropBvistaG variant={variant} />;
+    case 'keel_frame': return <PropKeelFrame />;
+    case 'warden_prime': return <PropWardenPrime />;
+    case 'memorial_plinth': return <PropMemorialPlinth />;
+    // BADOR VISTA CASES END
     case 'kdy_barricade': return <PropKdyBarricade variant={variant} />;
     case 'auto_turret': return <PropAutoTurret variant={variant} />;
     case 'shanty_hovel': return <PropShantyHovel variant={variant} />;
@@ -16130,6 +16708,7 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'exhaust_cathedral': return <PropExhaustCathedral />;
     case 'boiler_hull': return <PropBoilerHull />;
     case 'governor_socket': return <PropGovernorSocket variant={variant} />;
+    case 'wst_blast_doors': return <PropWstBlastDoors variant={variant} />;
     // BADOR WAR CASES END
     default: return null;
   }
@@ -16748,65 +17327,736 @@ function resolveDialoguePhase(npc, questFlags) {
   };
 }
 
-const CONQUEST_SECTORS_INIT = {
-  // Row 1 — Apex (y=55)
-  sky_lounges:     { id:'sky_lounges',     name:'Senatorial Sky-Lounges L.5100', tier:'Apex Tier',     owner:'black_sun', cx:220, cy:55,  adj:['senate_district','upper_levels'],                                 isHQ:'black_sun', income:1500, pwr:0, gar:{inf:15,snp:6,tnk:3,med:2,drd:0,spc:0}, def:90, bld:[] },
-  senate_district: { id:'senate_district', name:'Senate District',               tier:'Upper Core',    owner:'black_sun', cx:450, cy:55,  adj:['sky_lounges','senate_precinct','upper_levels'],                  income:1200, pwr:0, gar:{inf:12,snp:5,tnk:2,med:1,drd:0,spc:0}, def:80, bld:[] },
-  upper_levels:    { id:'upper_levels',    name:'Upper Levels',                  tier:'Upper Core',    owner:'neutral',   cx:680, cy:55,  adj:['sky_lounges','senate_district','lower_promenade'],               income:850,  pwr:0, gar:{inf:5, snp:1,tnk:0,med:0,drd:0,spc:0}, def:40, bld:[] },
-  // Row 2 — Legislature (y=165)
-  senate_precinct: { id:'senate_precinct', name:'Senate Precinct L.1900',        tier:'Legislature',   owner:'csf',       cx:340, cy:165, adj:['senate_district','lower_promenade','slicer_alley','csf_hub'],     income:1100, pwr:0, gar:{inf:20,snp:6,tnk:4,med:2,drd:0,spc:0}, def:95, bld:[] },
-  lower_promenade: { id:'lower_promenade', name:'Lower Promenade L.1100',        tier:'Commerce Belt', owner:'neutral',   cx:570, cy:165, adj:['upper_levels','senate_precinct','slicer_alley','rep_midlevels'],  income:700,  pwr:0, gar:{inf:6, snp:2,tnk:0,med:0,drd:0,spc:0}, def:45, bld:[] },
-  // Row 3 — Mid Layers (y=275)
-  slicer_alley:    { id:'slicer_alley',    name:'Slicer Alleyway L.1150',        tier:'Data Nexus',    owner:'neutral',   cx:200, cy:275, adj:['senate_precinct','lower_promenade','rep_midlevels'],              income:600,  pwr:1, gar:{inf:4, snp:3,tnk:0,med:0,drd:0,spc:0}, def:38, bld:[] },
-  rep_midlevels:   { id:'rep_midlevels',   name:'Republic Mid-Levels',           tier:'Mid-Layers',    owner:'neutral',   cx:450, cy:275, adj:['lower_promenade','slicer_alley','csf_hub','ind_midlevels'],       income:750,  pwr:1, gar:{inf:7, snp:2,tnk:1,med:0,drd:0,spc:0}, def:55, bld:[] },
-  csf_hub:         { id:'csf_hub',         name:'CSF Training Hub L.1222',       tier:'Enforcement',   owner:'csf',       cx:680, cy:275, adj:['senate_precinct','rep_midlevels','the_works'],                    isHQ:'csf',  income:1000, pwr:0, gar:{inf:18,snp:8,tnk:3,med:2,drd:0,spc:0}, def:92, bld:[] },
-  // Row 4 — Industrial (y=375)
-  the_works:       { id:'the_works',       name:'The Works L.005',               tier:'Industrial',    owner:'exchange',  cx:340, cy:375, adj:['csf_hub','rep_midlevels','ind_midlevels','shadow_town','sub_l2_west'], income:950, pwr:4, gar:{inf:12,snp:3,tnk:3,med:0,drd:2,spc:0}, def:80, bld:[] },
-  ind_midlevels:   { id:'ind_midlevels',   name:'Industrial Mid-Levels',         tier:'Factory Belt',  owner:'neutral',   cx:570, cy:375, adj:['rep_midlevels','the_works','sub_spaceport','sub_l2_west'],         income:800,  pwr:3, gar:{inf:8, snp:1,tnk:2,med:0,drd:0,spc:0}, def:60, bld:[] },
-  // Row 5 — Sub-Surface (y=465)
-  sub_spaceport:   { id:'sub_spaceport',   name:'Sub-Surface Spaceport',         tier:'Docking Ring',  owner:'neutral',   cx:110, cy:465, adj:['ind_midlevels','sub_l2_west','freight_hub'],                      income:700,  pwr:0, gar:{inf:5, snp:1,tnk:1,med:0,drd:0,spc:0}, def:42, bld:[] },
-  shadow_town:     { id:'shadow_town',     name:'Shadow Town L.1312',            tier:'Underworld',    owner:'player',    cx:340, cy:465, adj:['the_works','sub_l2_west','undercity'],                             isHQ:'player', income:600, pwr:2, gar:{inf:6,snp:1,tnk:0,med:0,drd:0,spc:0}, def:55, bld:[] },
-  sub_l2_west:     { id:'sub_l2_west',     name:'Sub-Surface L2 West Market',    tier:'Black Market',  owner:'neutral',   cx:570, cy:465, adj:['the_works','ind_midlevels','sub_spaceport','shadow_town','freight_hub','undercity_out'], income:650, pwr:1, gar:{inf:5,snp:2,tnk:0,med:0,drd:0,spc:0}, def:40, bld:[] },
-  freight_hub:     { id:'freight_hub',     name:'Sector 4 Freight Hub L.088',    tier:'Logistics',     owner:'exchange',  cx:760, cy:465, adj:['sub_spaceport','sub_l2_west','undercity_out'],                     isHQ:'exchange', income:850, pwr:0, gar:{inf:14,snp:4,tnk:2,med:0,drd:1,spc:0}, def:75, bld:[] },
-  // Row 6 — Undercity (y=540)
-  undercity:       { id:'undercity',       name:'Undercity',                     tier:'Depths',        owner:'neutral',   cx:220, cy:540, adj:['shadow_town','undercity_out'],                                    income:500,  pwr:2, gar:{inf:3, snp:0,tnk:0,med:0,drd:0,spc:0}, def:30, bld:[] },
-  undercity_out:   { id:'undercity_out',   name:'Undercity Outskirts',           tier:'Depths',        owner:'neutral',   cx:570, cy:540, adj:['freight_hub','sub_l2_west','undercity'],                          income:450,  pwr:1, gar:{inf:3, snp:0,tnk:0,med:0,drd:0,spc:0}, def:28, bld:[] },
-};
 
-const CONQUEST_FACTION_DATA = {
-  player:    { name:'Your Syndicate',  color:'#00BFFF', aggr:0,  aiProfile:'syndicate_thug' },
-  black_sun: { name:'The Black Sun',   color:'#FF5060', aggr:85, aiProfile:'black_sun_vigo_guard',   startRel:-20 },
-  exchange:  { name:'The Exchange',    color:'#22C55E', aggr:40, aiProfile:'exchange_bounty_hunter',  startRel:25  },
-  csf:       { name:'Coruscant CSF',   color:'#4A9FFF', aggr:60, aiProfile:'csf_swat',                startRel:-70 },
-  neutral:   { name:'Neutral',         color:'#888888', aggr:0,  aiProfile:'syndicate_thug',          startRel:0   },
-};
 
-const CONQUEST_UNIT_TYPES = {
-  inf: { name:'Enforcer Infantry',  costCR:150,  costPWR:0, upPWR:0, atkCP:10,  defCP:12  },
-  snp: { name:'Covert Marksman',    costCR:350,  costPWR:1, upPWR:0, atkCP:25,  defCP:20  },
-  tnk: { name:'Assault Tank',       costCR:1200, costPWR:5, upPWR:2, atkCP:75,  defCP:90  },
-  med: { name:'Field Medic',        costCR:250,  costPWR:0, upPWR:0, atkCP:5,   defCP:15  },
-  drd: { name:'Combat Droid',       costCR:700,  costPWR:2, upPWR:1, atkCP:35,  defCP:35  },
-  spc: { name:'Speeder Cavalry',    costCR:500,  costPWR:1, upPWR:0, atkCP:45,  defCP:25  },
-};
 
-const CONQUEST_BUILDINGS = [
-  { id:'bunker',   name:'Reinforced Bunker',     cost:600,  costPWR:2, defMult:1.25, atkMult:1.00, incBonus:0,   pwrBonus:0 },
-  { id:'turret',   name:'Auto Turret Nest',      cost:850,  costPWR:4, defMult:1.40, atkMult:1.00, incBonus:0,   pwrBonus:0 },
-  { id:'rally',    name:'War Rally Point',        cost:700,  costPWR:1, defMult:1.00, atkMult:1.20, incBonus:0,   pwrBonus:0 },
-  { id:'armory',   name:'Weapons Armory',         cost:900,  costPWR:2, defMult:1.00, atkMult:1.15, incBonus:0,   pwrBonus:0 },
-  { id:'relay',    name:'Black Market Relay',     cost:1200, costPWR:1, defMult:1.00, atkMult:1.00, incBonus:200, pwrBonus:0 },
-  { id:'slicehub', name:'Slicing Hub',            cost:800,  costPWR:2, defMult:1.00, atkMult:1.00, incBonus:250, pwrBonus:0 },
-  { id:'substat',  name:'Power Sub-Station',      cost:500,  costPWR:0, defMult:1.00, atkMult:1.00, incBonus:0,   pwrBonus:3 },
-  { id:'medbay',   name:'Field Medical Bay',      cost:600,  costPWR:1, defMult:1.10, atkMult:1.00, incBonus:0,   pwrBonus:0 },
-];
-const CONQUEST_CRISIS_CARDS = [
-  { id: 'sweep',  title: 'CSF Sector Sweep',         desc: 'Sectors above Heat 35 lose 60% income this turn. Enforcement surge.',  heatMin: 35, type: 'income_penalty'  },
-  { id: 'fault',  title: 'Power Conduit Rupture',    desc: 'Grid failure! Power reserve drops by 8 immediately.',                   heatMin: 0,  type: 'power_loss'       },
-  { id: 'war',    title: 'Underworld Cartel War',    desc: 'Factions clash. Unit procurement is 30% cheaper this turn.',            heatMin: 0,  type: 'recruit_discount' },
-  { id: 'surge',  title: 'Black Market Price Surge', desc: 'Demand spike! Smuggling contacts pay out +400 CR.',                    heatMin: 0,  type: 'credit_bonus'     },
-  { id: 'strafe', title: 'CSF Gunship Strafe',       desc: 'A player sector loses 20 defense for 2 turns. Heat +15.',               heatMin: 50, type: 'def_penalty'      },
-];
+
+
+// ===== CONQUEST ENGINE BEGIN =====
+// Coruscant Conquest v2: a pure, testable strategy engine. No React in here. State is plain JSON.
+// Campaign layer: sectors, garrisons, buildings, economy, enemy factions.
+// Tactical layer (CQ.tb): themed battle maps, deployment, unit abilities, AI, auto-resolve.
+const CQ = (() => {
+  const UNIT_ORDER = ['inf', 'gam', 'snp', 'med', 'spc', 'drd', 'tnk', 'wlk'];
+  const UNITS = {
+    inf: { id: 'inf', ucr: 3, name: 'Enforcer Infantry', short: 'Enforcer', role: 'Line trooper', cr: 150, pwr: 0, upkeep: 0, req: null, hp: 12, mov: 4, rng: 4, atk: 4, armor: 0, col: '#8FB4D8',
+      ab: { id: 'suppress', name: 'Suppressing Fire', cd: 2, desc: 'Pins a target: -2 move and -2 attack next turn. Armor reduces the damage it deals.' },
+      passive: 'Cheap and numerous. Holds cover well.', lore: 'Street muscle in matched jackets. Not elite, not afraid.' },
+    gam: { id: 'gam', ucr: 6, name: 'Gamorrean Bruiser', short: 'Bruiser', role: 'Melee brawler', cr: 400, pwr: 0, upkeep: 0, req: 'barracks', hp: 24, mov: 3, rng: 1.5, atk: 8, armor: 2, col: '#7FB26A',
+      ab: { id: 'smash', name: 'Skull Smash', cd: 2, desc: 'Hits every enemy next to it for full damage.' },
+      passive: 'Shrugs off blaster fire. Must close to melee.', lore: 'Hired for volume and enthusiasm. Needs a Barracks.' },
+    snp: { id: 'snp', ucr: 6, name: 'Covert Marksman', short: 'Marksman', role: 'Long range sniper', cr: 350, pwr: 1, upkeep: 0, req: null, hp: 8, mov: 3, rng: 8, atk: 8, armor: 0, col: '#C8A0E0',
+      ab: null, passive: 'Steady Aim: +4 damage if it has not moved this turn.', lore: 'One shot, one invoice.' },
+    med: { id: 'med', ucr: 4, name: 'Field Medic', short: 'Medic', role: 'Support healer', cr: 250, pwr: 0, upkeep: 0, req: null, hp: 10, mov: 4, rng: 3, atk: 2, armor: 0, col: '#7FE0A8',
+      ab: { id: 'heal', name: 'Stim Injection', cd: 0, desc: 'Heals an ally within 4 tiles for 8 hit points.' },
+      passive: 'Keeps the line alive. Priority target.', lore: 'Black bag, steady hands, no questions.' },
+    spc: { id: 'spc', ucr: 8, name: 'Speeder Cavalry', short: 'Speeder', role: 'Fast flanker', cr: 500, pwr: 1, upkeep: 0, req: 'motor_pool', hp: 14, mov: 8, rng: 1.5, atk: 6, armor: 0, col: '#F0B060',
+      ab: null, passive: 'Charge: +4 damage if it moved 4 or more tiles first.', lore: 'Swoop riders in syndicate colors. Needs a Motor Pool.' },
+    drd: { id: 'drd', ucr: 12, name: 'Combat Droid', short: 'Droid', role: 'Armored shooter', cr: 700, pwr: 2, upkeep: 1, req: 'droid_foundry', hp: 18, mov: 4, rng: 5, atk: 6, armor: 2, col: '#E07070',
+      ab: { id: 'overcharge', name: 'Overcharge', cd: 2, desc: 'Next shot deals +4 damage. The droid takes 4 damage.' },
+      passive: 'Immune to suppression and hazards. Needs a Droid Foundry.', lore: 'Battle chassis with a security license and no sense of fear.' },
+    tnk: { id: 'tnk', ucr: 18, name: 'Assault Tank', short: 'Tank', role: 'Armored fire support', cr: 1200, pwr: 5, upkeep: 1, req: 'motor_pool', hp: 36, mov: 3, rng: 6, atk: 10, armor: 4, col: '#F08A4A',
+      ab: { id: 'shell', name: 'Siege Shell', cd: 3, desc: 'Fires an explosive shell: the target and every enemy within 1 tile of it take damage.' },
+      passive: 'Heavy armor shrugs off rifles. Walls do not stop shells. Needs a Motor Pool.', lore: 'A repulsor tank with a gang boss painted on the turret.' },
+    wlk: { id: 'wlk', ucr: 40, name: 'Scout Walker', short: 'Walker', role: 'Heavy walker', cr: 2200, pwr: 6, upkeep: 2, req: 'war_college', hp: 48, mov: 4, rng: 7, atk: 10, armor: 6, col: '#E0D070',
+      ab: { id: 'barrage', name: 'Twin Barrage', cd: 2, desc: 'Fires twice at one target in a single action.' },
+      passive: 'The biggest thing on the street. Needs a War College.', lore: 'Two legs, two guns, one very expensive tantrum.' },
+  };
+  // Turret emplacement (spawned by Auto Turret Nests). Not recruitable.
+  const TURRET = { id: 'trt', name: 'Auto Turret', short: 'Turret', role: 'Emplacement', hp: 16, mov: 0, rng: 6, atk: 6, armor: 2, col: '#D0D0D0', ab: null, passive: 'Immobile.', immobile: true };
+  UNITS.trt = TURRET;
+  const unitPower = (u) => u.hp * (u.atk + (u.ab ? 0.6 : 0)) * (1 + 0.18 * u.armor) * (0.65 + Math.min(u.rng, 8) / 14);
+
+  // Buildings: 4 slots per sector (+1 Command Center). Each one is a real tactical or economic decision.
+  const BUILDINGS = [
+    // economy
+    { id: 'relay', cat: 'Economy', name: 'Black Market Relay', cost: 1200, pwr: 1, req: [], income: 130, desc: '+130 CR per turn.' },
+    { id: 'slicehub', cat: 'Economy', name: 'Slicing Hub', cost: 800, pwr: 2, req: [], income: 150, heatDecay: 1, desc: '+150 CR per turn. Heat -1 per turn.' },
+    { id: 'casino', cat: 'Economy', name: 'Syndicate Casino', cost: 2200, pwr: 1, req: ['relay'], income: 280, desc: '+280 CR per turn. Needs a Relay.' },
+    { id: 'spice_lab', cat: 'Economy', name: 'Spice Refinery', cost: 1800, pwr: 1, req: ['relay'], income: 360, heatGen: 2, desc: '+360 CR per turn. Heat +2 per turn. Needs a Relay.' },
+    { id: 'exchange_tower', cat: 'Economy', name: 'Syndicate Exchange Tower', cost: 5200, pwr: 3, req: ['relay', 'slicehub'], income: 620, heatGen: 1, desc: '+620 CR per turn. Needs a Relay and a Slicing Hub.' },
+    { id: 'safehouse', cat: 'Economy', name: 'Safehouse Network', cost: 900, pwr: 0, req: [], heatDecay: 3, desc: 'Heat -3 per turn.' },
+    // power
+    { id: 'substat', cat: 'Power', name: 'Power Sub-Station', cost: 500, pwr: 0, req: [], pwrGen: 3, desc: '+3 PWR per turn.' },
+    { id: 'fusion', cat: 'Power', name: 'Fusion Reactor', cost: 2800, pwr: 0, req: ['substat'], pwrGen: 9, desc: '+9 PWR per turn. Needs a Sub-Station.' },
+    // military
+    { id: 'barracks', cat: 'Military', name: 'Enforcer Barracks', cost: 900, pwr: 1, req: [], cap: 8, discount: { inf: 0.75 }, unlock: ['gam'], desc: 'Garrison cap +8. Enforcers cost 25% less. Unlocks Gamorrean Bruisers.' },
+    { id: 'motor_pool', cat: 'Military', name: 'Motor Pool', cost: 1500, pwr: 2, req: [], discount: { tnk: 0.85, spc: 0.85, wlk: 0.85 }, unlock: ['tnk', 'spc'], desc: 'Unlocks Assault Tanks and Speeder Cavalry. Vehicles cost 15% less.' },
+    { id: 'droid_foundry', cat: 'Military', name: 'Droid Foundry', cost: 1700, pwr: 3, req: [], discount: { drd: 0.8 }, unlock: ['drd'], desc: 'Unlocks Combat Droids. Droids cost 20% less.' },
+    { id: 'war_college', cat: 'Military', name: 'War College', cost: 2600, pwr: 2, req: ['barracks', 'motor_pool'], unlock: ['wlk'], battle: 'vets', desc: 'Unlocks Scout Walkers. Units from this sector start battles with +2 hit points. Needs Barracks and Motor Pool.' },
+    { id: 'command_center', cat: 'Military', name: 'Command Center', cost: 3600, pwr: 3, req: ['barracks'], slots: 1, cap: 4, depCap: 3, desc: '+1 building slot, garrison cap +4, deploy 3 more units per battle. Needs a Barracks.' },
+    // battle support
+    { id: 'rally', cat: 'Battle', name: 'War Rally Point', cost: 700, pwr: 1, req: [], battle: 'rally', desc: 'Attackers from here get +2 move on the first turn.' },
+    { id: 'armory', cat: 'Battle', name: 'Weapons Armory', cost: 900, pwr: 2, req: [], battle: 'armory', desc: 'Units sent from here deal +2 damage.' },
+    { id: 'bunker', cat: 'Battle', name: 'Reinforced Bunker', cost: 600, pwr: 2, req: [], battle: 'bunker', desc: 'Defending here: a ring of hard cover around the objective.' },
+    { id: 'turret', cat: 'Battle', name: 'Auto Turret Nest', cost: 850, pwr: 4, req: [], battle: 'turret', desc: 'Defending here: two auto turrets guard the objective.' },
+    { id: 'shield_gen', cat: 'Battle', name: 'Shield Generator', cost: 1600, pwr: 4, req: ['substat'], battle: 'shield', desc: 'Defending here: every defender starts with a 6 point shield. Needs a Sub-Station.' },
+    { id: 'medbay', cat: 'Battle', name: 'Field Medical Bay', cost: 600, pwr: 1, req: [], battle: 'medbay', desc: 'Defenders heal 2 per turn. After any battle involving this sector 40% of the fallen are revived.' },
+    { id: 'intel_hub', cat: 'Battle', name: 'Intelligence Hub', cost: 1100, pwr: 2, req: [], battle: 'intel', desc: 'Reveals enemy garrisons on adjacent sectors and makes battle forecasts accurate.' },
+    { id: 'orbital', cat: 'Battle', name: 'Orbital Battery', cost: 5000, pwr: 6, req: ['fusion'], battle: 'orbital', desc: 'One orbital strike per battle: 10 damage in a 3 by 3 area. Needs a Fusion Reactor.' },
+  ];
+  const BLD = {}; BUILDINGS.forEach((b) => { BLD[b.id] = b; });
+  const BASE_SLOTS = 4, BASE_CAP = 12;
+
+  const FACTIONS = {
+    player: { id: 'player', name: 'Your Syndicate', color: '#2FC8FF', aggr: 0 },
+    black_sun: { id: 'black_sun', name: 'The Black Sun', color: '#FF5468', aggr: 70, rel: -20, mix: { inf: 5, gam: 3, snp: 2, tnk: 2, spc: 1, med: 1 }, rivals: ['csf'] },
+    exchange: { id: 'exchange', name: 'The Exchange', color: '#34D86A', aggr: 45, rel: 25, mix: { inf: 5, drd: 3, snp: 1, tnk: 2, med: 1, wlk: 0.3 }, rivals: [] },
+    csf: { id: 'csf', name: 'Coruscant CSF', color: '#5AA8FF', aggr: 55, rel: -70, mix: { inf: 6, snp: 3, tnk: 2, med: 2, spc: 1, drd: 1 }, rivals: ['black_sun'] },
+    neutral: { id: 'neutral', name: 'Neutral', color: '#8A8F9C', aggr: 0 },
+  };
+
+  // x,y are positions on a 1060 by 740 map. theme drives both the map card art and the battle map.
+  const T = (id, name, tier, x, y, adj, income, pwr, theme, owner, gar, extra, lore) => ({ id, name, tier, x, y, adj, income, pwr, theme, owner0: owner, gar0: gar, ...extra, lore });
+  const G = (inf, snp = 0, tnk = 0, med = 0, drd = 0, spc = 0, gam = 0, wlk = 0) => ({ inf, snp, tnk, med, drd, spc, gam, wlk });
+  const SECTOR_LIST = [
+    T('sky_lounges', 'Senatorial Sky-Lounges', 'Apex Tier', 313, 70, ['senate_district', 'upper_levels'], 1500, 0, 'lounge', 'black_sun', G(15, 6, 3, 2, 0, 0, 2), { isHQ: 'black_sun' }, 'Gold-lit terraces above the clouds. Black Sun runs the guest list and the knives.'),
+    T('senate_district', 'Senate District', 'Upper Core', 578, 70, ['sky_lounges', 'senate_precinct', 'upper_levels'], 1200, 0, 'senate', 'black_sun', G(12, 5, 2, 1, 0, 0, 1), {}, 'Marble domes and bought votes. Every column hides a camera.'),
+    T('upper_levels', 'Upper Levels', 'Upper Core', 842, 70, ['sky_lounges', 'senate_district', 'lower_promenade'], 850, 0, 'upper', 'neutral', G(5, 1), {}, 'Skyline towers and speeder lanes. Rich, nervous, lightly guarded.'),
+    T('senate_precinct', 'Senate Precinct L.1900', 'Legislature', 451, 185, ['senate_district', 'lower_promenade', 'slicer_alley', 'csf_hub'], 1100, 0, 'precinct', 'csf', G(20, 6, 4, 2, 1), {}, 'The CSF keeps a heavy hand and a heavier garrison here.'),
+    T('lower_promenade', 'Lower Promenade L.1100', 'Commerce Belt', 715, 185, ['upper_levels', 'senate_precinct', 'slicer_alley', 'rep_midlevels'], 700, 0, 'promenade', 'neutral', G(6, 2), {}, 'Awnings, lamps and shopkeepers who pay whoever asks nicest.'),
+    T('slicer_alley', 'Slicer Alleyway L.1150', 'Data Nexus', 280, 300, ['senate_precinct', 'lower_promenade', 'rep_midlevels'], 600, 1, 'alley', 'neutral', G(4, 3), {}, 'Cyan terminals, tangled wire, kids who can open any door.'),
+    T('rep_midlevels', 'Republic Mid-Levels', 'Mid-Layers', 578, 300, ['lower_promenade', 'slicer_alley', 'csf_hub', 'ind_midlevels'], 750, 1, 'midlevels', 'neutral', G(7, 2, 1), {}, 'Stacked apartments, clotheslines and civil servants with long memories.'),
+    T('csf_hub', 'CSF Training Hub L.1222', 'Enforcement', 842, 300, ['senate_precinct', 'rep_midlevels', 'the_works'], 1000, 0, 'csfhub', 'csf', G(18, 8, 3, 2, 0, 1), { isHQ: 'csf' }, 'Drill yards and a crest bright enough to read from orbit.'),
+    T('the_works', 'The Works L.005', 'Industrial', 448, 415, ['csf_hub', 'rep_midlevels', 'ind_midlevels', 'shadow_town', 'sub_l2_west'], 950, 4, 'works', 'exchange', G(12, 3, 3, 0, 2), {}, 'Furnace glow, smokestacks and pipes that never stop hissing.'),
+    T('ind_midlevels', 'Industrial Mid-Levels', 'Factory Belt', 715, 415, ['rep_midlevels', 'the_works', 'sub_spaceport', 'sub_l2_west'], 800, 3, 'industrial', 'neutral', G(8, 1, 2), {}, 'Gears, gantries and cranes the size of cathedrals.'),
+    T('sub_spaceport', 'Sub-Surface Spaceport', 'Docking Ring', 186, 530, ['ind_midlevels', 'sub_l2_west', 'freight_hub'], 700, 0, 'spaceport', 'neutral', G(5, 1, 1), {}, 'Landing lights in the gloom. Anything can arrive, anything can leave.'),
+    T('shadow_town', 'Shadow Town L.1312', 'Underworld', 448, 530, ['the_works', 'sub_l2_west', 'undercity'], 600, 2, 'shadow', 'player', G(6, 1), { isHQ: 'player' }, 'Your home turf. Hooded eyes, neon signs, loyal knives.'),
+    T('sub_l2_west', 'Sub-Surface L2 West Market', 'Black Market', 715, 530, ['the_works', 'ind_midlevels', 'sub_spaceport', 'shadow_town', 'freight_hub', 'undercity_out'], 650, 1, 'market', 'neutral', G(5, 2), {}, 'Lantern stalls, contraband and a very flexible definition of weights.'),
+    T('freight_hub', 'Sector 4 Freight Hub L.088', 'Logistics', 934, 530, ['sub_spaceport', 'sub_l2_west', 'undercity_out'], 850, 0, 'freight', 'exchange', G(14, 4, 2, 0, 1), { isHQ: 'exchange' }, 'Container canyons and loader cranes. The Exchange counts every crate.'),
+    T('undercity', 'Undercity', 'Depths', 313, 645, ['shadow_town', 'undercity_out'], 500, 2, 'undercity', 'neutral', G(3), {}, 'Wet stone, glowing moss and things that stay in the dark.'),
+    T('undercity_out', 'Undercity Outskirts', 'Depths', 715, 645, ['freight_hub', 'sub_l2_west', 'undercity'], 450, 1, 'outskirts', 'neutral', G(3), {}, 'Rubble, campfires and people who owe nobody.'),
+  ];
+  const SECTORS = {}; SECTOR_LIST.forEach((s) => { SECTORS[s.id] = s; });
+  return { UNIT_ORDER, UNITS, BUILDINGS, BLD, BASE_SLOTS, BASE_CAP, WIN_INCOME: 10000, FACTIONS, SECTORS, SECTOR_LIST, unitPower, __parts: {} };
+})();
+
+// ---------------------------------------------------------------------------------------------
+// Themes: used by the campaign map cards and by the procedural battle maps.
+// recipe: pillars | blocks | market | containers | pad | river | maze
+CQ.THEMES = {
+  lounge:     { name: 'Sky-Lounge Terrace',  recipe: 'pillars',    floor: ['#1E1A28', '#271F33'], wall: ['#6A5A8A', '#2E2542'], cover: '#C9A24A', river: '#10101C', hazard: 'fire',   accent: '#E8C860', sky: ['#120C22', '#3A2050'], decor: ['lamp', 'plant', 'banner'] },
+  senate:     { name: 'Senate Concourse',    recipe: 'pillars',    floor: ['#22242E', '#2B2E3A'], wall: ['#9AA0B8', '#40445A'], cover: '#C8CCE0', river: '#10121C', hazard: 'sparks', accent: '#A8B4FF', sky: ['#141830', '#38406A'], decor: ['banner', 'lamp', 'plant'] },
+  upper:      { name: 'Upper Levels Rooftops', recipe: 'blocks',   floor: ['#1C2230', '#232B3C'], wall: ['#5A6C8C', '#28324A'], cover: '#7C8CAA', river: '#080C16', hazard: 'sparks', accent: '#7FD0FF', sky: ['#0C1428', '#2A4070'], decor: ['vent', 'lamp', 'crate'], voidEdges: true },
+  precinct:   { name: 'CSF Precinct Plaza',  recipe: 'blocks',     floor: ['#1E2430', '#262E3C'], wall: ['#7C94C0', '#2C3A5C'], cover: '#9CB4E0', river: '#0A0E18', hazard: 'sparks', accent: '#5AA8FF', sky: ['#0E1630', '#28407A'], decor: ['lamp', 'banner', 'crate'], checkpoints: true },
+  promenade:  { name: 'Lower Promenade',     recipe: 'market',     floor: ['#262028', '#2E2630'], wall: ['#8C6A5A', '#3A2A2A'], cover: '#D49A60', river: '#100A10', hazard: 'fire',   accent: '#FFB070', sky: ['#1C1020', '#4A2840'], decor: ['lamp', 'crate', 'plant'] },
+  alley:      { name: 'Slicer Alleyway',     recipe: 'maze',       floor: ['#14181E', '#1A2028'], wall: ['#3A4A5C', '#161C26'], cover: '#4ADCE0', river: '#080A10', hazard: 'sparks', accent: '#39E8E8', sky: ['#060A12', '#102030'], decor: ['neon', 'crate', 'vent'] },
+  midlevels:  { name: 'Mid-Level Blocks',    recipe: 'blocks',     floor: ['#1E2024', '#25272C'], wall: ['#6A7080', '#2A2E38'], cover: '#A0A8B8', river: '#0A0C10', hazard: 'steam',  accent: '#B0C0D8', sky: ['#101420', '#2A3448'], decor: ['vent', 'crate', 'lamp'] },
+  csfhub:     { name: 'CSF Drill Yard',      recipe: 'blocks',     floor: ['#1A2028', '#222A34'], wall: ['#6C8CB8', '#243450'], cover: '#7CA4E8', river: '#080C14', hazard: 'sparks', accent: '#4A9FFF', sky: ['#0A1228', '#203C70'], decor: ['banner', 'lamp', 'crate'], checkpoints: true },
+  works:      { name: 'The Works Foundry',   recipe: 'river',      floor: ['#1C1612', '#241C16'], wall: ['#6A5A4A', '#2A1E16'], cover: '#B07A4A', river: '#FF6A1A', hazard: 'steam',  accent: '#FF8A3A', sky: ['#1A0A04', '#5A2A0A'], decor: ['pipe', 'vent', 'barrel'] },
+  industrial: { name: 'Factory Gantries',    recipe: 'containers', floor: ['#1C1C20', '#232329'], wall: ['#7A7A88', '#2C2C34'], cover: '#C8A040', river: '#0A0A0E', hazard: 'sparks', accent: '#E8B84A', sky: ['#0E0E14', '#34343E'], decor: ['pipe', 'crate', 'barrel'] },
+  spaceport:  { name: 'Landing Pad Ring',    recipe: 'pad',        floor: ['#1A1E24', '#21262E'], wall: ['#8A94A8', '#2E3644'], cover: '#6ABCE8', river: '#080A10', hazard: 'fire',   accent: '#6ABCE8', sky: ['#080C18', '#1C2E50'], decor: ['lamp', 'crate', 'vent'] },
+  shadow:     { name: 'Shadow Town Streets', recipe: 'maze',       floor: ['#16141C', '#1D1A26'], wall: ['#4A3A62', '#1A1424'], cover: '#9A6AE8', river: '#08060E', hazard: 'fire',   accent: '#B07CFF', sky: ['#08060E', '#241838'], decor: ['neon', 'barrel', 'crate'] },
+  market:     { name: 'Black Market Stalls', recipe: 'market',     floor: ['#221C1C', '#2A2222'], wall: ['#7A5A4A', '#32221E'], cover: '#E8A040', river: '#0E0808', hazard: 'fire',   accent: '#FFB040', sky: ['#14080A', '#442018'], decor: ['lamp', 'crate', 'barrel'] },
+  freight:    { name: 'Freight Canyons',     recipe: 'containers', floor: ['#1A1E1C', '#212624'], wall: ['#5A7A62', '#243228'], cover: '#6AC880', river: '#080C0A', hazard: 'sparks', accent: '#34D86A', sky: ['#080E0A', '#1C3424'], decor: ['crate', 'pipe', 'lamp'] },
+  undercity:  { name: 'Undercity Canals',    recipe: 'river',      floor: ['#121A16', '#18221C'], wall: ['#3A5A48', '#142018'], cover: '#5AD890', river: '#0E4A6A', hazard: 'acid',   accent: '#6AE8A0', sky: ['#040A08', '#0C2418'], decor: ['plant', 'pipe', 'barrel'] },
+  outskirts:  { name: 'Outskirts Rubble',    recipe: 'blocks',     floor: ['#1C1814', '#241E18'], wall: ['#6A5A48', '#2A2218'], cover: '#A08A60', river: '#0A0806', hazard: 'fire',   accent: '#E8A860', sky: ['#100A06', '#3A2410'], decor: ['barrel', 'crate', 'lamp'] },
+};
+CQ.tb = (() => {
+  const W = 30, H = 18, MAX_ROUNDS = 22;
+  const U = CQ.UNITS;
+  const key = (x, y) => x + ',' + y;
+  const mb32 = (a) => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const hash = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+  const hyp = (ax, ay, bx, by) => Math.hypot(ax - bx, ay - by);
+  const other = (team) => (team === 'p' ? 'e' : 'p');
+
+  // ----------------------------------------------------------------------------- map generation
+  function genMap(themeId, seed) {
+    const th = CQ.THEMES[themeId] || CQ.THEMES.shadow;
+    const rnd = mb32(seed);
+    const R = (a, b) => a + Math.floor(rnd() * (b - a + 1));
+    const t = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => (x === 0 || y === 0 || x === W - 1 || y === H - 1 ? (th.voidEdges && (y === 0 || y === H - 1) ? 'x' : 'w') : 'f')));
+    const node = { x: Math.floor(W / 2), y: Math.floor(H / 2) };
+    const inZone = (x, y) => (x >= 1 && x <= 4 && y >= 2 && y <= H - 3) || (x >= W - 5 && x <= W - 2 && y >= 2 && y <= H - 3);
+    const nearNode = (x, y, r) => Math.abs(x - node.x) <= r && Math.abs(y - node.y) <= r;
+    const free = (x, y) => x >= 1 && y >= 1 && x <= W - 2 && y <= H - 2 && !inZone(x, y) && !nearNode(x, y, 2);
+    const hasWall = (x0, y0, w, h) => { for (let y = y0 - 1; y <= y0 + h; y++) for (let x = x0 - 1; x <= x0 + w; x++) if (t[y] && t[y][x] === 'w' && x > 0 && y > 0 && x < W - 1 && y < H - 1) return true; return false; };
+    const rect = (x0, y0, w, h, tile) => { for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) if (free(x, y)) t[y][x] = tile; };
+    const canBlock = (x0, y0, w, h) => { for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) if (!free(x, y)) return false; return !hasWall(x0, y0, w, h); };
+    const blocks = (n, minW, maxW, minH, maxH) => { for (let i = 0, tries = 0; i < n && tries < n * 30; tries++) { const w = R(minW, maxW), h = R(minH, maxH), x = R(5, W - 6 - w), y = R(1, H - 2 - h); if (canBlock(x, y, w, h)) { rect(x, y, w, h, 'w'); i++; } } };
+    const recipe = th.recipe;
+    if (recipe === 'pillars') {
+      for (let x = 6; x <= W - 7; x += 3) for (let y = 2; y <= H - 3; y += 3) { if ((x + y) % 2 === 0 || rnd() < 0.2) { if (free(x, y) && Math.abs(y - node.y) > 1) t[y][x] = 'w'; } }
+      // symmetric bars / counters
+      [[9, 4], [9, H - 6], [W - 12, 4], [W - 12, H - 6], [13, 6], [W - 16, H - 8]].forEach(([x, y]) => rect(x, y, 3, 1, 'c'));
+    } else if (recipe === 'market') {
+      for (let y = 2; y <= H - 3; y += 3) for (let x = 6; x <= W - 9; x += 4) { if (rnd() < 0.78 && free(x, y) && free(x + 1, y)) { rect(x, y, 2, 1, 'c'); if (rnd() < 0.5) rect(x, y - 1, 1, 1, 'w'); } }
+      blocks(5, 2, 3, 2, 3);
+    } else if (recipe === 'containers') {
+      for (let x = 6; x <= W - 10; x += 5) for (let y = 2; y <= H - 5; y += 4) { if (rnd() < 0.82 && canBlock(x, y, 3, 2)) rect(x, y, 3, 2, 'w'); }
+      blocks(4, 2, 2, 2, 3);
+    } else if (recipe === 'pad') {
+      rect(8, 4, 4, 2, 'w'); rect(W - 12, H - 6, 4, 2, 'w'); rect(8, H - 7, 4, 2, 'w'); rect(W - 12, 5, 4, 2, 'w'); blocks(6, 2, 3, 2, 3);
+    } else if (recipe === 'river') {
+      const rx = Math.floor(W / 2) - 1;
+      for (let y = 1; y <= H - 2; y++) { if ((y >= 3 && y <= 4) || (y >= H - 5 && y <= H - 4)) continue; t[y][rx] = 'x'; t[y][rx + 1] = 'x'; }
+      blocks(9, 2, 4, 2, 3);
+    } else if (recipe === 'maze') {
+      blocks(24, 2, 4, 2, 4);
+    } else { // blocks
+      blocks(14, 2, 5, 2, 4);
+      if (th.checkpoints) { for (const x of [8, W - 9]) for (let y = 3; y <= H - 4; y += 2) if (free(x, y) && t[y][x] === 'f') t[y][x] = 'c'; }
+    }
+    // cover clusters and hazard patches
+    for (let i = 0; i < 30; i++) { const x = R(5, W - 6), y = R(1, H - 2); if (free(x, y) && t[y][x] === 'f') { t[y][x] = 'c'; if (rnd() < 0.5 && free(x + 1, y) && t[y][x + 1] === 'f') t[y][x + 1] = 'c'; } }
+    for (let i = 0; i < 7; i++) { const x = R(6, W - 8), y = R(2, H - 4); for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) if (free(x + dx, y + dy) && t[y + dy][x + dx] === 'f') t[y + dy][x + dx] = 'h'; }
+    // objective area clear
+    for (let y = node.y - 1; y <= node.y + 1; y++) for (let x = node.x - 1; x <= node.x + 1; x++) t[y][x] = 'f';
+    // deployment zones are always open
+    const zoneL = [], zoneR = [];
+    for (let y = 2; y <= H - 3; y++) { for (let x = 1; x <= 3; x++) { t[y][x] = 'f'; zoneL.push({ x, y }); } for (let x = W - 4; x <= W - 2; x++) { t[y][x] = 'f'; zoneR.push({ x, y }); } }
+    // connectivity: carve straight corridors from any isolated area to the node
+    const passable = (x, y) => t[y] && (t[y][x] === 'f' || t[y][x] === 'c' || t[y][x] === 'h');
+    const flood = (sx, sy) => { const seen = new Set([key(sx, sy)]); const q = [[sx, sy]]; while (q.length) { const [x, y] = q.pop(); for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (passable(nx, ny) && !seen.has(key(nx, ny))) { seen.add(key(nx, ny)); q.push([nx, ny]); } } } return seen; };
+    for (let pass = 0; pass < 6; pass++) {
+      const seen = flood(node.x, node.y);
+      const lost = zoneL.concat(zoneR).find((z) => !seen.has(key(z.x, z.y)));
+      if (!lost) break;
+      let x = lost.x, y = lost.y;
+      while (x !== node.x || y !== node.y) { if (x !== node.x) x += x < node.x ? 1 : -1; else y += y < node.y ? 1 : -1; if (x > 0 && y > 0 && x < W - 1 && y < H - 1 && !passable(x, y)) t[y][x] = 'f'; }
+    }
+    // decor (visual only)
+    const decor = [];
+    for (let i = 0; i < 150; i++) { const x = R(1, W - 2), y = R(1, H - 2); if (t[y][x] === 'f' && !(x === node.x && y === node.y)) decor.push({ x, y, k: th.decor[R(0, th.decor.length - 1)], r: rnd() }); }
+    return { w: W, h: H, tiles: t, decor, node, zoneL, zoneR, theme: themeId };
+  }
+
+  // ----------------------------------------------------------------------------- battle setup
+  const sortedTypes = (army) => CQ.UNIT_ORDER.filter((k) => (army[k] || 0) > 0);
+  function newUnit(b, type, team, cfg) {
+    const d = U[type];
+    const c = (cfg && cfg[team]) || {};
+    const hp = d.hp + (c.hp || 0);
+    return { id: b.nextId++, type, team, x: -1, y: -1, hp, max: hp, atk: d.atk + (c.atk || 0), armor: d.armor + (c.armor || 0), mov: d.mov, rng: d.rng, moved: false, acted: false, movedDist: 0, cd: {}, sup: 0, shield: c.shield || 0, od: 0, immobile: !!d.immobile };
+  }
+  // setup: { sectorId, theme, seed, armies:{p,e}, attacker:'p'|'e', cfg:{p,e}, depCap, intel }
+  function makeBattle(setup) {
+    const map = genMap(setup.theme, setup.seed);
+    const baseCfg = { p: { ...((setup.cfg && setup.cfg.p) || {}) }, e: { ...((setup.cfg && setup.cfg.e) || {}) } };
+    setup = { ...setup, cfg: baseCfg };
+    const b = { sectorId: setup.sectorId, theme: setup.theme, seed: setup.seed, ...map, units: [], dead: [], nextId: 1, round: 1, turn: setup.attacker, attacker: setup.attacker,
+      phase: 'deploy', result: null, hold: 0, maxRounds: MAX_ROUNDS, cfg: setup.cfg || { p: {}, e: {} }, armies: { p: { ...setup.armies.p }, e: { ...setup.armies.e } },
+      orbital: { p: (setup.cfg && setup.cfg.p && setup.cfg.p.orbital) || 0, e: (setup.cfg && setup.cfg.e && setup.cfg.e.orbital) || 0 },
+      reserve: { p: [], e: [] }, events: [], log: [], depCap: setup.depCap || 14, intel: !!setup.intel, mines: [] };
+    const defender = other(setup.attacker);
+    // reserves: anything above the on-field cap waits and arrives in waves (defender only; attackers are capped at commit time)
+    ['p', 'e'].forEach((team) => {
+      const list = []; sortedTypes(b.armies[team]).forEach((k) => { for (let i = 0; i < b.armies[team][k]; i++) list.push(k); });
+      const cap = team === setup.attacker ? 99 : 14;
+      list.slice(0, cap).forEach((k) => b.units.push(newUnit(b, k, team, b.cfg)));
+      if (list.length > cap) b.reserve[team] = list.slice(cap);
+    });
+    // defender fortifications
+    const dc = b.cfg[defender] || {};
+    if (dc.bunker) { for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const x = b.node.x + dx, y = b.node.y + dy; if (Math.max(Math.abs(dx), Math.abs(dy)) === 2 && b.tiles[y][x] === 'f') b.tiles[y][x] = 'c'; } }
+    if (dc.turrets) { const spots = [[-3, -2], [-3, 2], [3, -2], [3, 2], [0, -3], [0, 3]]; let n = 0; for (const [dx, dy] of spots) { if (n >= dc.turrets) break; const x = b.node.x + dx, y = b.node.y + dy; if (b.tiles[y] && b.tiles[y][x] === 'f' && !unitAtSetup(b, x, y)) { const u = newUnit(b, 'trt', defender, b.cfg); u.x = x; u.y = y; u.hp = u.max = U.trt.hp; b.units.push(u); n++; } } }
+    placeAll(b, 'e'); // the AI side places itself; the player deploys by hand (or autoDeploy)
+    return b;
+  }
+  const unitAtSetup = (b, x, y) => b.units.find((u) => u.hp > 0 && u.x === x && u.y === y);
+  const zoneOf = (b, team) => (team === b.attacker ? b.zoneL : b.zoneR);
+  function placeAll(b, team) {
+    const zone = zoneOf(b, team).slice().sort((a, c) => hyp(a.x, a.y, b.node.x, b.node.y) - hyp(c.x, c.y, b.node.x, b.node.y));
+    const mine = b.units.filter((u) => u.team === team && u.x < 0 && !u.immobile);
+    // frontline units first (closest tiles), support and ranged behind
+    const rank = (u) => ({ gam: 0, tnk: 1, wlk: 1, spc: 2, drd: 3, inf: 3, med: 5, snp: 6 }[u.type] ?? 4);
+    mine.sort((a, c) => rank(a) - rank(c));
+    const used = new Set(b.units.filter((u) => u.x >= 0).map((u) => key(u.x, u.y)));
+    const spots = zone.filter((z) => !used.has(key(z.x, z.y)));
+    // spread the formation across the zone height instead of packing one column
+    const bands = [[], [], []]; spots.forEach((z, i) => bands[Math.floor((i / spots.length) * 3)].push(z));
+    let bi = 0; mine.forEach((u) => { let tries = 0; while (tries < 3 && !bands[bi % 3].length) { bi++; tries++; } const s = bands[bi % 3].shift() || spots.shift(); if (s) { u.x = s.x; u.y = s.y; } bi++; });
+  }
+  function autoDeploy(b, team) { placeAll(b, team); }
+  function deployRemaining(b, team) { return b.units.filter((u) => u.team === team && u.x < 0 && !u.immobile); }
+  function deployAt(b, team, uid, x, y) {
+    const u = b.units.find((q) => q.id === uid && q.team === team); if (!u || b.phase !== 'deploy') return false;
+    if (!zoneOf(b, team).some((z) => z.x === x && z.y === y)) return false;
+    if (unitAtSetup(b, x, y) && unitAtSetup(b, x, y).id !== uid) return false;
+    u.x = x; u.y = y; return true;
+  }
+  function undeploy(b, uid) { const u = b.units.find((q) => q.id === uid); if (u && b.phase === 'deploy') { u.x = -1; u.y = -1; } }
+  function begin(b) {
+    if (b.phase !== 'deploy') return false;
+    const undeployed = b.units.filter((u) => u.team === 'p' && u.x < 0 && !u.immobile);
+    undeployed.forEach((u) => { /* anything still unplaced is auto placed */ });
+    if (undeployed.length) placeAll(b, 'p');
+    b.phase = 'battle'; b.round = 1; b.turn = b.attacker; startTurn(b, b.turn, null);
+    b.log.push('Battle begins. Round 1.');
+    return true;
+  }
+
+  // ----------------------------------------------------------------------------- queries
+  const tileAt = (b, x, y) => (b.tiles[y] ? b.tiles[y][x] : undefined);
+  const unitAt = (b, x, y) => b.units.find((u) => u.hp > 0 && u.x === x && u.y === y);
+  const passable = (b, x, y) => { const t = tileAt(b, x, y); return t === 'f' || t === 'c' || t === 'h'; };
+  const isDroid = (u) => u.type === 'drd' || u.type === 'wlk' || u.type === 'tnk' || u.type === 'trt';
+  function moveOf(b, u) {
+    if (u.immobile || u.moved) return 0;
+    const c = b.cfg[u.team] || {};
+    const bonus = c.rally && u.team === b.attacker && b.round === 1 ? 2 : 0;
+    return Math.max(1, u.mov + bonus - (u.sup > 0 && u.type !== 'drd' ? 2 : 0));
+  }
+  function reach(b, u) {
+    const m = moveOf(b, u); const best = new Map(); best.set(key(u.x, u.y), { c: 0, px: null, py: null, x: u.x, y: u.y });
+    if (m <= 0) return best;
+    const open = [[u.x, u.y, 0]];
+    while (open.length) {
+      let bi = 0; for (let i = 1; i < open.length; i++) if (open[i][2] < open[bi][2]) bi = i;
+      const [x, y, c] = open.splice(bi, 1)[0];
+      if (c > (best.get(key(x, y)) || { c }).c) continue;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        if (!dx && !dy) continue; const nx = x + dx, ny = y + dy;
+        if (!passable(b, nx, ny) || unitAt(b, nx, ny)) continue;
+        if (dx && dy && tileAt(b, x + dx, y) === 'w' && tileAt(b, x, y + dy) === 'w') continue;
+        const step = tileAt(b, nx, ny) === 'h' && u.type !== 'drd' ? 2 : 1; const nc = c + step;
+        if (nc > m) continue; const old = best.get(key(nx, ny));
+        if (!old || nc < old.c) { best.set(key(nx, ny), { c: nc, px: x, py: y, x: nx, y: ny }); open.push([nx, ny, nc]); }
+      }
+    }
+    return best;
+  }
+  function pathTo(r, x, y) { const out = []; let cur = r.get(key(x, y)); while (cur && cur.px !== null) { out.unshift({ x: cur.x, y: cur.y }); cur = r.get(key(cur.px, cur.py)); } return out; }
+  function los(b, x0, y0, x1, y1) {
+    let dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1, err = dx - dy, x = x0, y = y0;
+    while (!(x === x1 && y === y1)) { const e2 = 2 * err; if (e2 > -dy) { err -= dy; x += sx; } if (e2 < dx) { err += dx; y += sy; } if (!(x === x1 && y === y1) && tileAt(b, x, y) === 'w') return false; }
+    return true;
+  }
+  const abilityReady = (u) => !!(U[u.type].ab) && !(u.cd[U[u.type].ab.id] > 0);
+  function canHit(b, u, t, fromX, fromY, ignoreLos) {
+    const x = fromX ?? u.x, y = fromY ?? u.y; const d = hyp(x, y, t.x, t.y);
+    if (d > u.rng + 0.001) return false; return ignoreLos || los(b, x, y, t.x, t.y);
+  }
+  function targetsFrom(b, u, x, y) { return b.units.filter((t) => t.hp > 0 && t.team !== u.team && canHit(b, u, t, x, y, false)); }
+  function dmgVs(b, u, t, o) {
+    o = o || {}; let atk = u.atk + (o.bonus || 0);
+    if (u.type === 'snp' && !u.moved) atk += 4;
+    if (u.type === 'spc' && u.movedDist >= 4) atk += 4;
+    if (u.sup > 0 && u.type !== 'drd') atk -= 2;
+    const dist = hyp(u.x, u.y, t.x, t.y); const cover = tileAt(b, t.x, t.y) === 'c' && dist > 1.5 && t.type !== 'tnk' && t.type !== 'wlk' && !o.ignoreCover ? 2 : 0;
+    return atk - t.armor - cover; // raw: <= 0 means the armor stops it (chip damage rule in chip())
+  }
+  const chip = (raw, rnd) => { if (raw <= 0) return rnd && rnd() < 0.5 ? 1 : 0; if (!rnd) return raw; const v = rnd(); return raw + (v < 0.2 ? -1 : v > 0.8 ? 1 : 0) < 1 ? 1 : raw + (v < 0.2 ? -1 : v > 0.8 ? 1 : 0); };
+  const alive = (b, team) => b.units.filter((u) => u.hp > 0 && u.team === team && !u.immobile);
+
+  // ----------------------------------------------------------------------------- actions
+  function ev(b, e) { e.n = (b.evN = (b.evN || 0) + 1); b.events.push(e); if (b.events.length > 80) b.events.shift(); }
+  function hurt(b, t, dmg, src) {
+    if (dmg <= 0) { ev(b, { k: 'miss', x: t.x, y: t.y, id: t.id }); return; }
+    let d = dmg; if (t.shield > 0) { const a = Math.min(t.shield, d); t.shield -= a; d -= a; }
+    t.hp -= d; ev(b, { k: 'hit', x: t.x, y: t.y, v: dmg, id: t.id });
+    if (t.hp <= 0) { t.hp = 0; b.dead.push({ id: t.id, type: t.type, team: t.team, x: t.x, y: t.y }); ev(b, { k: 'kill', x: t.x, y: t.y, id: t.id }); b.log.push(`${U[t.type].short} (${t.team === 'p' ? 'yours' : 'enemy'}) falls.`); }
+  }
+  function sweepDead(b) { b.units = b.units.filter((u) => u.hp > 0); }
+  function doMove(b, u, x, y) {
+    const r = reach(b, u); const node = r.get(key(x, y)); if (!node || (x === u.x && y === u.y)) return false;
+    const path = pathTo(r, x, y); u.movedDist = node.c; u.x = x; u.y = y; u.moved = true; ev(b, { k: 'move', id: u.id, path }); return true;
+  }
+  function doAttack(b, u, t, rnd, o) {
+    if (u.acted || !canHit(b, u, t, null, null, false) || t.hp <= 0) return false;
+    let d = chip(dmgVs(b, u, t, o), rnd); if (rnd && rnd() < 0.1) d += 2;
+    ev(b, { k: 'shot', from: [u.x, u.y], to: [t.x, t.y], team: u.team, type: u.type });
+    hurt(b, t, d, u); u.acted = true; u.moved = true; if (u.od) u.od = 0; return d;
+  }
+  function doAbility(b, u, tx, ty, rnd) {
+    const ab = U[u.type].ab; if (!ab || u.acted || !abilityReady(u)) return false;
+    const t = unitAt(b, tx, ty);
+    const setcd = () => { u.cd[ab.id] = ab.cd; u.acted = true; u.moved = true; };
+    if (ab.id === 'suppress') { if (!t || t.team === u.team || !canHit(b, u, t, null, null, false)) return false; ev(b, { k: 'shot', from: [u.x, u.y], to: [t.x, t.y], team: u.team, type: u.type }); hurt(b, t, chip(dmgVs(b, u, t) - 2, rnd), u); if (t.hp > 0 && t.type !== 'drd') t.sup = 2; setcd(); return true; }
+    if (ab.id === 'smash') { const adj = b.units.filter((q) => q.hp > 0 && q.team !== u.team && hyp(u.x, u.y, q.x, q.y) <= 1.5); if (!adj.length) return false; adj.forEach((q) => hurt(b, q, chip(dmgVs(b, u, q, { ignoreCover: true }), rnd), u)); ev(b, { k: 'smash', x: u.x, y: u.y }); setcd(); return true; }
+    if (ab.id === 'heal') { if (!t || t.team !== u.team || t.id === u.id || t.type === 'trt' || hyp(u.x, u.y, t.x, t.y) > 4.001 || t.hp >= t.max) return false; const h = Math.min(8, t.max - t.hp); t.hp += h; ev(b, { k: 'heal', x: t.x, y: t.y, v: h, from: [u.x, u.y] }); setcd(); return true; }
+    if (ab.id === 'overcharge') { if (!t || t.team === u.team || !canHit(b, u, t, null, null, false)) return false; ev(b, { k: 'shot', from: [u.x, u.y], to: [t.x, t.y], team: u.team, type: u.type, big: true }); hurt(b, t, chip(dmgVs(b, u, t, { bonus: 4 }), rnd), u); u.hp = Math.max(1, u.hp - 4); setcd(); return true; }
+    if (ab.id === 'shell') { if (!t || t.team === u.team || hyp(u.x, u.y, t.x, t.y) > u.rng + 0.001) return false; ev(b, { k: 'shell', from: [u.x, u.y], to: [t.x, t.y] }); const splash = b.units.filter((q) => q.hp > 0 && q.team !== u.team && q.id !== t.id && hyp(t.x, t.y, q.x, q.y) <= 1.5); hurt(b, t, chip(dmgVs(b, u, t, { ignoreCover: true }), rnd), u); splash.forEach((q) => hurt(b, q, chip(u.atk - 2 - q.armor, rnd), u)); setcd(); return true; }
+    if (ab.id === 'barrage') { if (!t || t.team === u.team || !canHit(b, u, t, null, null, false)) return false; ev(b, { k: 'shot', from: [u.x, u.y], to: [t.x, t.y], team: u.team, type: u.type, big: true }); hurt(b, t, chip(dmgVs(b, u, t), rnd), u); if (t.hp > 0) hurt(b, t, chip(dmgVs(b, u, t), rnd), u); setcd(); return true; }
+    return false;
+  }
+  function orbital(b, team, tx, ty) {
+    if (b.orbital[team] <= 0 || b.phase !== 'battle') return false; b.orbital[team]--; ev(b, { k: 'orbital', x: tx, y: ty });
+    b.units.filter((q) => q.hp > 0 && q.team !== team && Math.abs(q.x - tx) <= 1 && Math.abs(q.y - ty) <= 1).forEach((q) => hurt(b, q, 10, null));
+    b.log.push('Orbital strike!'); sweepDead(b); checkEnd(b); return true;
+  }
+  function startTurn(b, team, rnd) {
+    b.units.forEach((u) => { if (u.team === team) { u.moved = false; u.acted = false; u.movedDist = 0; Object.keys(u.cd).forEach((k) => { if (u.cd[k] > 0) u.cd[k]--; }); } });
+    // reserves arrive at the start of the defender turn from round 3
+    if (team !== b.attacker && b.round >= 3 && b.round % 2 === 1 && b.reserve[team].length) {
+      const zone = zoneOf(b, team).filter((z) => !unitAt(b, z.x, z.y)); let n = 0;
+      while (n < 4 && b.reserve[team].length && zone.length) { const z = zone.splice(Math.floor((rnd ? rnd() : 0.5) * zone.length), 1)[0]; const u = newUnit(b, b.reserve[team].shift(), team, b.cfg); u.x = z.x; u.y = z.y; b.units.push(u); n++; }
+      if (n) b.log.push(`Reinforcements arrive (${n}).`);
+    }
+  }
+  function endTurn(b, rnd) {
+    if (b.phase !== 'battle') return;
+    const team = b.turn; const c = b.cfg[team] || {};
+    // turrets fire on their own
+    b.units.filter((u) => u.hp > 0 && u.team === team && u.type === 'trt').forEach((u) => { const ts = targetsFrom(b, u, u.x, u.y); if (ts.length) { ts.sort((a, z) => a.hp - z.hp); hurt(b, ts[0], chip(dmgVs(b, u, ts[0]), rnd), u); ev(b, { k: 'shot', from: [u.x, u.y], to: [ts[0].x, ts[0].y], team, type: 'trt' }); } });
+    sweepDead(b); if (checkEnd(b)) return;
+    b.units.filter((u) => u.team === team && u.hp > 0).forEach((u) => {
+      if (tileAt(b, u.x, u.y) === 'h' && u.type !== 'trt') hurt(b, u, u.type === 'drd' ? 2 : 4, null);
+      if (u.hp > 0) { if (c.medbay && !u.immobile) u.hp = Math.min(u.max, u.hp + c.medbay); if (u.sup > 0) u.sup--; }
+    });
+    sweepDead(b); if (checkEnd(b)) return;
+    // objective: hold the node for two of your own turns with no enemy within 2 tiles
+    if (team === b.attacker) {
+      const on = b.units.find((u) => u.hp > 0 && u.team === team && !u.immobile && u.x === b.node.x && u.y === b.node.y);
+      const contested = b.units.some((u) => u.hp > 0 && u.team !== team && !u.immobile && hyp(u.x, u.y, b.node.x, b.node.y) <= 2.01);
+      b.hold = on && !contested ? b.hold + 1 : 0; if (b.hold >= 2) { finish(b, team, 'node'); return; }
+    }
+    const next = other(team); if (next === b.attacker) b.round++;
+    if (b.round > b.maxRounds) { finish(b, other(b.attacker), 'timeout'); return; }
+    b.turn = next; ev(b, { k: 'turn', team: next, round: b.round }); startTurn(b, next, rnd);
+  }
+  function finish(b, winner, reason) {
+    b.phase = 'done';
+    const surv = { p: {}, e: {} }, lost = { p: {}, e: {} };
+    ['p', 'e'].forEach((team) => { const dead = {}; b.dead.filter((d) => d.team === team && d.type !== 'trt').forEach((d) => { dead[d.type] = (dead[d.type] || 0) + 1; }); Object.keys(b.armies[team]).forEach((k) => { const n = b.armies[team][k] || 0; const l = Math.min(n, dead[k] || 0); lost[team][k] = l; surv[team][k] = n - l; }); });
+    b.result = { winner, reason, rounds: b.round, survivors: surv, lost };
+    b.log.push(winner === 'p' ? 'VICTORY.' : winner === 'e' ? 'DEFEAT.' : 'Withdrawn.');
+  }
+  function checkEnd(b) {
+    if (b.phase !== 'battle') return true;
+    if (!alive(b, 'p').length && !b.reserve.p.length) { finish(b, 'e', 'wiped'); return true; }
+    if (!alive(b, 'e').length && !b.reserve.e.length) { finish(b, 'p', 'wiped'); return true; }
+    return false;
+  }
+  function retreat(b) { if (b.phase !== 'battle') return; const surv = { p: {}, e: {} }, lost = { p: {}, e: {} }; finish(b, 'e', 'retreat'); b.result.reason = 'retreat'; }
+
+  // ----------------------------------------------------------------------------- AI
+  function valueOfShot(b, u, t, d) {
+    let v = Math.min(d, t.hp) + (d >= t.hp ? 8 : 0);
+    v += { med: 4, snp: 3, tnk: 3, wlk: 3, drd: 1, trt: 1 }[t.type] || 0; v += (1 - t.hp / t.max) * 3; return v;
+  }
+  function aiGoal(b, u) {
+    const foes = b.units.filter((q) => q.hp > 0 && q.team !== u.team && !q.immobile);
+    let near = null, nd = 1e9; foes.forEach((q) => { const d = hyp(u.x, u.y, q.x, q.y); if (d < nd) { nd = d; near = q; } });
+    return { near, nd };
+  }
+  function aiPlayUnit(b, u, rnd) {
+    const out = { id: u.id, from: [u.x, u.y], to: [u.x, u.y], did: null };
+    if (u.immobile || u.hp <= 0) { u.acted = true; return out; }
+    const defending = u.team !== b.attacker;
+    const ab = U[u.type].ab;
+    // medics heal the most wounded ally they can reach
+    if (u.type === 'med' && abilityReady(u)) {
+      const hurtAllies = b.units.filter((q) => q.hp > 0 && q.team === u.team && q.id !== u.id && q.hp < q.max && q.type !== 'trt').sort((a, c) => a.hp / a.max - c.hp / c.max);
+      if (hurtAllies.length) {
+        const tgt = hurtAllies[0]; const r = reach(b, u); let bestSpot = null, bd = 1e9;
+        r.forEach((n) => { const d = hyp(n.x, n.y, tgt.x, tgt.y); if (d <= 4 && d < bd) { bd = d; bestSpot = n; } });
+        if (bestSpot) { if (bestSpot.x !== u.x || bestSpot.y !== u.y) doMove(b, u, bestSpot.x, bestSpot.y); if (doAbility(b, u, tgt.x, tgt.y, rnd)) { out.to = [u.x, u.y]; out.did = 'heal'; u.acted = true; return out; } }
+      }
+    }
+    const r = reach(b, u);
+    const { near, nd } = aiGoal(b, u);
+    // defenders hold position until a threat is close
+    const threatNear = near && nd <= u.mov + u.rng + 2.5;
+    let best = null, bestScore = -1e9;
+    r.forEach((n) => {
+      if (n.x !== u.x || n.y !== u.y) { if (unitAt(b, n.x, n.y)) return; }
+      const ts = targetsFrom(b, u, n.x, n.y); let score = 0;
+      const tileT = tileAt(b, n.x, n.y);
+      if (ts.length) {
+        let bv = -1; ts.forEach((t) => { const d = Math.max(1, u.atk + (u.type === 'snp' && n.x === u.x && n.y === u.y ? 4 : 0) - t.armor - (tileAt(b, t.x, t.y) === 'c' ? 2 : 0)); const v = valueOfShot(b, u, t, d); if (v > bv) bv = v; });
+        score = 50 + bv;
+      } else if (defending && !threatNear) {
+        score = -hyp(n.x, n.y, b.node.x, b.node.y) * 1.2 - (n.x === u.x && n.y === u.y ? 0 : 0.5);
+      } else {
+        const g = near ? hyp(n.x, n.y, near.x, near.y) : hyp(n.x, n.y, b.node.x, b.node.y);
+        const gn = hyp(n.x, n.y, b.node.x, b.node.y);
+        score = -Math.min(g, defending ? g : gn + 3) * 2;
+      }
+      if (tileT === 'c') score += 3; if (tileT === 'h' && u.type !== 'drd') score -= 7;
+      // ranged units avoid standing next to enemies when they can shoot from afar
+      if (u.rng > 2) { const adj = b.units.filter((q) => q.hp > 0 && q.team !== u.team && hyp(n.x, n.y, q.x, q.y) <= 1.5).length; score -= adj * 4; if (u.type === 'snp') score += hyp(n.x, n.y, near ? near.x : n.x, near ? near.y : n.y) * 0.3; }
+      // exposure: count enemies that could probably hit this tile next turn
+      let exp = 0; b.units.forEach((q) => { if (q.hp > 0 && q.team !== u.team && !q.immobile && hyp(n.x, n.y, q.x, q.y) <= q.mov + q.rng) exp++; }); score -= exp * 0.6;
+      score += rnd() * 0.5;
+      if (score > bestScore) { bestScore = score; best = n; }
+    });
+    if (best && (best.x !== u.x || best.y !== u.y)) { doMove(b, u, best.x, best.y); out.to = [u.x, u.y]; }
+    // choose the action
+    const ts = targetsFrom(b, u, u.x, u.y);
+    if (u.type === 'tnk' && abilityReady(u)) {
+      let bt = null, bs = 1; b.units.forEach((t) => { if (t.hp > 0 && t.team !== u.team && hyp(u.x, u.y, t.x, t.y) <= u.rng + 0.001) { const s = b.units.filter((q) => q.hp > 0 && q.team !== u.team && hyp(t.x, t.y, q.x, q.y) <= 1.5).length; if (s > bs || (s === bs && bs > 1 && bt && t.hp < bt.hp)) { bs = s; bt = t; } } });
+      if (bt && bs >= 2 && doAbility(b, u, bt.x, bt.y, rnd)) { out.did = 'shell'; return out; }
+    }
+    if (u.type === 'gam' && abilityReady(u)) { const adj = b.units.filter((q) => q.hp > 0 && q.team !== u.team && hyp(u.x, u.y, q.x, q.y) <= 1.5).length; if (adj >= 2 && doAbility(b, u, u.x, u.y, rnd)) { out.did = 'smash'; return out; } }
+    if (ts.length) {
+      ts.sort((a, c) => valueOfShot(b, u, c, Math.max(1, dmgVs(b, u, c))) - valueOfShot(b, u, a, Math.max(1, dmgVs(b, u, a))));
+      const t = ts[0];
+      if (u.type === 'wlk' && abilityReady(u) && t.hp >= 4 && doAbility(b, u, t.x, t.y, rnd)) { out.did = 'barrage'; return out; }
+      if (u.type === 'drd' && abilityReady(u) && u.hp >= 6 && t.hp <= 5 && doAbility(b, u, t.x, t.y, rnd)) { out.did = 'overcharge'; return out; }
+      if (u.type === 'inf' && abilityReady(u) && (t.type === 'tnk' || t.type === 'gam' || t.type === 'spc' || t.type === 'wlk') && doAbility(b, u, t.x, t.y, rnd)) { out.did = 'suppress'; return out; }
+      if (doAttack(b, u, t, rnd)) { out.did = 'attack'; return out; }
+    }
+    u.acted = true; return out;
+  }
+  function aiOrbital(b, team) {
+    if (b.orbital[team] <= 0 || b.round < 2) return false;
+    let best = null, bs = 1;
+    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) { const n = b.units.filter((q) => q.hp > 0 && q.team !== team && Math.abs(q.x - x) <= 1 && Math.abs(q.y - y) <= 1).length; const own = b.units.filter((q) => q.hp > 0 && q.team === team && Math.abs(q.x - x) <= 1 && Math.abs(q.y - y) <= 1).length; if (n - own > bs) { bs = n - own; best = [x, y]; } }
+    return best ? orbital(b, team, best[0], best[1]) : false;
+  }
+  // plays one unit for the team and returns its event, or null if everyone has acted
+  function aiStep(b, team, rnd) {
+    if (b.phase !== 'battle' || b.turn !== team) return null;
+    if (aiOrbital(b, team)) return { id: 0, did: 'orbital', from: [0, 0], to: [0, 0] };
+    const todo = b.units.filter((u) => u.hp > 0 && u.team === team && !u.immobile && !u.acted);
+    if (!todo.length) return null;
+    // act in order: frontline first so ranged units can see what is left standing
+    const rank = (u) => ({ gam: 0, tnk: 1, wlk: 1, spc: 2, drd: 3, inf: 3, med: 4, snp: 5 }[u.type] ?? 4);
+    todo.sort((a, c) => rank(a) - rank(c));
+    const e = aiPlayUnit(b, todo[0], rnd); sweepDead(b); checkEnd(b); return e;
+  }
+  function aiTeamTurn(b, team, rnd) { let guard = 0; while (b.phase === 'battle' && b.turn === team && guard++ < 80) { const e = aiStep(b, team, rnd); if (!e) break; } if (b.phase === 'battle' && b.turn === team) endTurn(b, rnd); }
+  // headless battle: both sides AI
+  function autoBattle(b, rnd) {
+    if (b.phase === 'deploy') { autoDeploy(b, 'p'); autoDeploy(b, 'e'); begin(b); }
+    let guard = 0; while (b.phase === 'battle' && guard++ < 200) aiTeamTurn(b, b.turn, rnd);
+    if (b.phase === 'battle') finish(b, other(b.attacker), 'timeout');
+    return b.result;
+  }
+  return { W, H, MAX_ROUNDS, genMap, makeBattle, autoDeploy, deployRemaining, deployAt, undeploy, begin, reach, pathTo, targetsFrom, canHit, los, dmgVs, doMove, doAttack, doAbility, orbital, endTurn, aiStep, aiTeamTurn, autoBattle, abilityReady, retreat, unitAt, tileAt, moveOf, hash, mb32, finish, sweepDead, checkEnd, alive };
+})();
+
+// ---------------------------------------------------------------------------------------------
+// Campaign layer
+CQ.camp = (() => {
+  const U = CQ.UNITS, BLD = CQ.BLD, ORDER = CQ.UNIT_ORDER;
+  const AIF = ['black_sun', 'exchange', 'csf'];
+  const clone = (s) => JSON.parse(JSON.stringify(s));
+  const total = (g) => ORDER.reduce((n, k) => n + (g[k] || 0), 0);
+  const emptyG = () => ({ inf: 0, snp: 0, tnk: 0, med: 0, drd: 0, spc: 0, gam: 0, wlk: 0 });
+  const addG = (a, b) => { const o = { ...a }; ORDER.forEach((k) => { o[k] = (o[k] || 0) + (b[k] || 0); }); return o; };
+  const power = (g) => ORDER.reduce((n, k) => n + (g[k] || 0) * CQ.unitPower(U[k]), 0);
+  const hasB = (sec, id) => sec.bld.includes(id);
+
+  function newCampaign(startCredits) {
+    const sec = {};
+    CQ.SECTOR_LIST.forEach((s) => { sec[s.id] = { owner: s.owner0, gar: { ...emptyG(), ...s.gar0 }, bld: [], tired: {} }; });
+    // the AI factions start with a couple of buildings in their home sectors so assaults are not free
+    sec.sky_lounges.bld = ['bunker', 'turret']; sec.senate_precinct.bld = ['bunker']; sec.csf_hub.bld = ['bunker', 'turret', 'medbay']; sec.freight_hub.bld = ['bunker', 'shield_gen']; sec.the_works.bld = ['bunker'];
+    sec.shadow_town.bld = ['bunker'];
+    return { v: 2, turn: 1, cr: startCredits || 3000, pwr: 10, heat: 30, rel: { black_sun: -20, exchange: 25, csf: -70 }, sec,
+      log: ['Turn 1: Shadow Town is yours. Recruit, build, and take the sectors around you.'], crisis: null, discount: false, pending: null, over: null, brownout: false,
+      stats: { won: 0, lost: 0, captured: 0, defended: 0, fallen: 0 }, seq: 1 };
+  }
+  function fx(sec) {
+    const e = { income: 0, pwrGen: 0, heatDecay: 0, heatGen: 0, cap: CQ.BASE_CAP, slots: CQ.BASE_SLOTS, depCap: 0, discount: {} };
+    sec.bld.forEach((id) => { const b = BLD[id]; if (!b) return; e.income += b.income || 0; e.pwrGen += b.pwrGen || 0; e.heatDecay += b.heatDecay || 0; e.heatGen += b.heatGen || 0; e.cap += b.cap || 0; e.slots += b.slots || 0; e.depCap += b.depCap || 0; if (b.discount) Object.keys(b.discount).forEach((k) => { e.discount[k] = Math.min(e.discount[k] || 1, b.discount[k]); }); });
+    return e;
+  }
+  const secIncome = (def, sec) => def.income + fx(sec).income;
+  function economy(st) {
+    let cr = 0, pwrGen = 0, heatDecay = 0, heatGen = 0, upkeep = 0, owned = 0, upkeepCR = 0;
+    CQ.SECTOR_LIST.forEach((d) => { const s = st.sec[d.id]; if (s.owner !== 'player') return; owned++; const e = fx(s); cr += d.income + e.income; pwrGen += d.pwr + e.pwrGen; heatDecay += e.heatDecay; heatGen += e.heatGen; ORDER.forEach((k) => { upkeep += (s.gar[k] || 0) * U[k].upkeep; upkeepCR += (s.gar[k] || 0) * U[k].ucr; }); });
+    return { cr, pwrGen, heatDecay, heatGen, upkeep, upkeepCR, owned, net: pwrGen - upkeep, netCR: cr - upkeepCR };
+  }
+  const garCap = (sec) => fx(sec).cap;
+  const slots = (sec) => fx(sec).slots;
+  const avail = (sec) => { const g = {}; ORDER.forEach((k) => { g[k] = Math.max(0, (sec.gar[k] || 0) - ((sec.tired && sec.tired[k]) || 0)); }); return g; };
+  const unitCost = (st, secId, k) => { const e = fx(st.sec[secId]); return Math.round(U[k].cr * (e.discount[k] || 1) * (st.discount ? 0.7 : 1)); };
+  const logTo = (st, m) => { st.log.unshift(m); if (st.log.length > 40) st.log.length = 40; };
+  const R = (ok, st, msg) => ({ ok, state: st, msg });
+
+  function recruit(st0, secId, k, n) {
+    n = n || 1; const st = clone(st0); const sec = st.sec[secId], u = U[k]; if (!sec || sec.owner !== 'player' || !u || k === 'trt') return R(false, st0, 'Not available.');
+    if (u.req && !hasB(sec, u.req)) return R(false, st0, `${u.name} needs a ${BLD[u.req].name} in this sector.`);
+    { const free = garCap(sec) - total(sec.gar); if (n > free && free > 0) n = free; }
+    if (total(sec.gar) + n > garCap(sec)) return R(false, st0, `Garrison full (${garCap(sec)}). Build Barracks or a Command Center, or move units out.`);
+    const cost = unitCost(st, secId, k) * n, pw = u.pwr * n;
+    if (st.cr < cost) return R(false, st0, `Need ${cost} CR.`); if (st.pwr < pw) return R(false, st0, `Need ${pw} PWR.`);
+    st.cr -= cost; st.pwr -= pw; sec.gar[k] = (sec.gar[k] || 0) + n; logTo(st, `Recruited ${n} ${u.name} in ${CQ.SECTORS[secId].name}.`);
+    return R(true, st, 'Recruited.');
+  }
+  function buildCheck(st, secId, bId) {
+    const sec = st.sec[secId], b = BLD[bId]; if (!sec || !b) return 'Unknown.'; if (sec.owner !== 'player') return 'You do not own this sector.';
+    if (hasB(sec, bId)) return 'Already built here.'; if (sec.bld.length >= slots(sec)) return `No free slots (${slots(sec)}). Demolish something or build a Command Center.`;
+    const miss = b.req.filter((r) => !hasB(sec, r)); if (miss.length) return `Needs ${miss.map((r) => BLD[r].name).join(' and ')} first.`;
+    if (st.cr < b.cost) return `Need ${b.cost} CR.`; if (st.pwr < b.pwr) return `Need ${b.pwr} PWR.`; return null;
+  }
+  function build(st0, secId, bId) { const why = buildCheck(st0, secId, bId); if (why) return R(false, st0, why); const st = clone(st0), b = BLD[bId]; st.cr -= b.cost; st.pwr -= b.pwr; st.sec[secId].bld.push(bId); logTo(st, `Built ${b.name} in ${CQ.SECTORS[secId].name}.`); return R(true, st, 'Built.'); }
+  function demolish(st0, secId, bId) {
+    const st = clone(st0), sec = st.sec[secId]; if (!sec || sec.owner !== 'player' || !hasB(sec, bId)) return R(false, st0, 'Nothing to demolish.');
+    const dependants = sec.bld.filter((o) => BLD[o].req.includes(bId)); if (dependants.length) return R(false, st0, `${dependants.map((d) => BLD[d].name).join(', ')} depends on it.`);
+    if (bId === 'command_center' && sec.bld.length > CQ.BASE_SLOTS) return R(false, st0, 'Free a slot first: the Command Center provides one.');
+    sec.bld = sec.bld.filter((o) => o !== bId); const back = Math.round(BLD[bId].cost * 0.4); st.cr += back; logTo(st, `Demolished ${BLD[bId].name} (+${back} CR).`); return R(true, st, 'Demolished.');
+  }
+  function move(st0, from, to, units) {
+    const st = clone(st0), a = st.sec[from], b = st.sec[to]; if (!a || !b || a.owner !== 'player' || b.owner !== 'player') return R(false, st0, 'Both sectors must be yours.');
+    if (!CQ.SECTORS[from].adj.includes(to)) return R(false, st0, 'Sectors are not adjacent.');
+    const av = avail(a); let n = 0; for (const k of ORDER) { const c = Math.max(0, Math.floor(units[k] || 0)); if (c > av[k]) return R(false, st0, `Only ${av[k]} ${U[k].short} can move (units that fought or moved this turn are spent).`); n += c; }
+    if (!n) return R(false, st0, 'Choose units to move.'); if (total(b.gar) + n > garCap(b)) return R(false, st0, `Destination garrison cap is ${garCap(b)}.`);
+    const cost = n * 20; if (st.cr < cost) return R(false, st0, `Logistics cost ${cost} CR.`);
+    st.cr -= cost; ORDER.forEach((k) => { const c = Math.max(0, Math.floor(units[k] || 0)); a.gar[k] -= c; b.gar[k] = (b.gar[k] || 0) + c; b.tired[k] = (b.tired[k] || 0) + c; });
+    logTo(st, `Moved ${n} units from ${CQ.SECTORS[from].name} to ${CQ.SECTORS[to].name} (${cost} CR).`); return R(true, st, 'Moved.');
+  }
+  function attackSources(st, targetId) {
+    const t = st.sec[targetId]; if (!t || t.owner === 'player') return [];
+    return CQ.SECTORS[targetId].adj.filter((id) => st.sec[id].owner === 'player').map((id) => ({ id, avail: avail(st.sec[id]), total: total(avail(st.sec[id])) })).filter((s) => s.total > 0);
+  }
+  const canAttack = (st, targetId) => { const t = st.sec[targetId]; if (!t || t.owner === 'player') return 'Not an enemy sector.'; if (CQ.SECTORS[targetId].isHQ) return 'Faction headquarters cannot be captured.'; if (!CQ.SECTORS[targetId].adj.some((id) => st.sec[id].owner === 'player')) return 'You must own an adjacent sector to attack.'; return null; };
+  const depCapFor = (st, srcIds) => Math.min(22, 14 + srcIds.reduce((n, id) => n + fx(st.sec[id]).depCap, 0));
+  const intelLevel = (st, id) => st.sec[id].owner === 'player' || CQ.SECTORS[id].adj.some((a) => st.sec[a].owner === 'player' && hasB(st.sec[a], 'intel_hub'));
+
+  function cfgFromSectors(secs, role) {
+    const c = { atk: 0, hp: 0, armor: 0, rally: 0, shield: 0, medbay: 0, turrets: 0, bunker: 0, orbital: 0 };
+    secs.forEach((s) => s.bld.forEach((id) => { const f = BLD[id].battle;
+      if (role === 'att') { if (f === 'armory') c.atk = 2; if (f === 'rally') c.rally = 1; if (f === 'vets') c.hp = 2; if (f === 'orbital') c.orbital = 1; if (f === 'medbay') c.medic = 1; }
+      else { if (f === 'bunker') { c.bunker = 1; } if (f === 'turret') c.turrets = 2; if (f === 'shield') c.shield = 6; if (f === 'medbay') c.medbay = 2; if (f === 'orbital') c.orbital = 1; if (f === 'armory') c.atk = 2; if (f === 'vets') c.hp = 2; } }));
+    return c;
+  }
+  const trimCommit = (commit, cap) => { const out = {}; let left = cap; ORDER.slice().sort((a, b) => U[b].cr - U[a].cr).forEach((k) => { const n = Math.min(commit[k] || 0, left); if (n > 0) { out[k] = n; left -= n; } }); return out; };
+  // meta travels with the battle so the result can be applied later
+  function makeAttack(st, targetId, commit, seqSeed) {
+    const t = st.sec[targetId], srcIds = Object.keys(commit.bySrc);
+    const merged = {}; srcIds.forEach((id) => ORDER.forEach((k) => { merged[k] = (merged[k] || 0) + (commit.bySrc[id][k] || 0); }));
+    const cap = depCapFor(st, srcIds); const fielded = trimCommit(merged, cap);
+    const cfgP = cfgFromSectors(srcIds.map((id) => st.sec[id]), 'att'); const cfgE = cfgFromSectors([t], 'def');
+    const seed = CQ.tb.hash(targetId + ':' + st.seq + ':' + st.turn + ':' + (seqSeed || 0));
+    const battle = CQ.tb.makeBattle({ sectorId: targetId, theme: CQ.SECTORS[targetId].theme, seed, armies: { p: fielded, e: { ...t.gar } }, attacker: 'p', cfg: { p: cfgP, e: cfgE }, depCap: cap });
+    return { battle, meta: { kind: 'attack', targetId, bySrc: commit.bySrc, fielded, cap, defOwner: t.owner } };
+  }
+  function makeDefense(st, pending, seqSeed) {
+    const t = st.sec[pending.targetId]; const cfgP = cfgFromSectors([t], 'def'); const cfgE = { atk: 0, hp: 0, armor: 0, rally: 0, shield: 0, medbay: 0, turrets: 0, bunker: 0, orbital: 0 };
+    const seed = CQ.tb.hash('D' + pending.targetId + ':' + st.seq + ':' + st.turn + ':' + (seqSeed || 0));
+    const battle = CQ.tb.makeBattle({ sectorId: pending.targetId, theme: CQ.SECTORS[pending.targetId].theme, seed, armies: { p: { ...t.gar }, e: { ...pending.force } }, attacker: 'e', cfg: { p: cfgP, e: cfgE }, depCap: 14 });
+    return { battle, meta: { kind: 'defense', targetId: pending.targetId, srcId: pending.srcId, faction: pending.faction, force: pending.force } };
+  }
+  const subG = (a, b) => { const o = {}; ORDER.forEach((k) => { o[k] = Math.max(0, (a[k] || 0) - (b[k] || 0)); }); return o; };
+  const scaleG = (g, f) => { const o = {}; ORDER.forEach((k) => { o[k] = Math.floor((g[k] || 0) * f); }); return o; };
+  const revive = (lost, pct, rnd) => { const back = {}; ORDER.forEach((k) => { let n = 0; for (let i = 0; i < (lost[k] || 0); i++) if (rnd() < pct) n++; back[k] = n; }); return back; };
+  // spread casualties over sources in proportion to what each committed
+  function distribute(bySrc, lost) {
+    const rem = {}; Object.keys(bySrc).forEach((id) => { rem[id] = { ...emptyG(), ...bySrc[id] }; });
+    ORDER.forEach((k) => { let toRemove = lost[k] || 0; const ids = Object.keys(rem).filter((id) => rem[id][k] > 0); let i = 0; while (toRemove > 0 && ids.length) { const id = ids[i % ids.length]; if (rem[id][k] > 0) { rem[id][k]--; toRemove--; } if (!ids.some((x) => rem[x][k] > 0)) break; i++; } });
+    return rem; // survivors by source
+  }
+  function applyResult(st0, meta, result, rnd) {
+    const st = clone(st0); const res = result; rnd = rnd || Math.random; const out = { st, summary: '' };
+    if (meta.kind === 'attack') {
+      const tId = meta.targetId, t = st.sec[tId], def = CQ.SECTORS[tId], ids = Object.keys(meta.bySrc);
+      const medic = ids.some((id) => hasB(st.sec[id], 'medbay')) || hasB(t, 'medbay');
+      const lostP = { ...res.lost.p }; let survP = { ...res.survivors.p };
+      if (res.reason === 'retreat') { let n = Math.ceil(total(survP) * 0.25); ORDER.slice().sort((a, b) => U[a].cr - U[b].cr).forEach((k) => { const c = Math.min(survP[k] || 0, n); survP[k] -= c; lostP[k] = (lostP[k] || 0) + c; n -= c; }); }
+      const back = medic ? revive(lostP, 0.4, rnd) : emptyG(); survP = addG(survP, back);
+      const netLost = total(lostP) - total(back); st.stats.fallen += netLost;
+      // everything committed leaves its home sector first
+      ids.forEach((id) => { ORDER.forEach((k) => { st.sec[id].gar[k] = Math.max(0, (st.sec[id].gar[k] || 0) - (meta.bySrc[id][k] || 0)); }); });
+      // committed minus casualties, per source; units that were never fielded (over the deployment cap) go straight home
+      const r = distribute(meta.bySrc, subG(meta.fielded, survP));
+      ORDER.forEach((k) => { let bench = 0; ids.forEach((id) => { bench += meta.bySrc[id][k] || 0; }); bench -= meta.fielded[k] || 0; ids.forEach((id) => { const c = Math.min(Math.max(0, bench), r[id][k] || 0); if (c > 0) { st.sec[id].gar[k] = (st.sec[id].gar[k] || 0) + c; r[id][k] -= c; bench -= c; } }); });
+      if (res.winner === 'p') {
+        const occ = emptyG(); ids.forEach((id) => { ORDER.forEach((k) => { occ[k] += r[id][k] || 0; }); });
+        const old = t.owner; t.owner = 'player'; t.gar = occ; t.tired = { ...occ };
+        t.bld = t.bld.filter(() => rnd() < 0.5).slice(0, CQ.BASE_SLOTS);
+        const loot = Math.round(def.income * 1.2); st.cr += loot; st.heat = Math.min(100, st.heat + 4); st.stats.won++; st.stats.captured++;
+        if (st.rel[old] !== undefined) st.rel[old] = Math.max(-100, st.rel[old] - 12);
+        out.summary = `VICTORY: ${def.name} is yours. +${loot} CR loot. Lost ${netLost} units${total(back) ? ` (${total(back)} revived by medics)` : ''}.`;
+      } else {
+        ids.forEach((id) => { ORDER.forEach((k) => { const n = r[id][k] || 0; if (n > 0) { st.sec[id].gar[k] = (st.sec[id].gar[k] || 0) + n; st.sec[id].tired[k] = (st.sec[id].tired[k] || 0) + n; } }); });
+        t.gar = { ...emptyG(), ...res.survivors.e }; if (total(t.gar) === 0) t.gar = { ...emptyG(), inf: 1 };
+        st.heat = Math.min(100, st.heat + 6); st.stats.lost++;
+        out.summary = res.reason === 'retreat' ? `RETREAT from ${def.name}. Lost ${netLost} units in the fighting and the withdrawal.` : `DEFEAT at ${def.name}. Lost ${netLost} units; the survivors fall back.`;
+      }
+    } else { // defense of a player sector
+      const tId = meta.targetId, t = st.sec[tId], def = CQ.SECTORS[tId], src = st.sec[meta.srcId];
+      const back = hasB(t, 'medbay') ? revive(res.lost.p, 0.4, rnd) : emptyG(); const netLost = total(res.lost.p) - total(back); st.stats.fallen += netLost;
+      const surv = addG(res.survivors.p, back);
+      if (res.winner === 'p') { t.gar = surv; st.stats.defended++; st.heat = Math.max(0, st.heat - 2); ORDER.forEach((k) => { src.gar[k] = (src.gar[k] || 0) + (res.survivors.e[k] || 0); }); out.summary = `HELD: your garrison in ${def.name} beat back ${CQ.FACTIONS[meta.faction].name}. Lost ${netLost} units.`; }
+      else if (def.isHQ) { t.gar = { ...emptyG(), ...surv, inf: (surv.inf || 0) + 3 }; ORDER.forEach((k) => { src.gar[k] = (src.gar[k] || 0) + (res.survivors.e[k] || 0); }); st.stats.lost++; out.summary = `${def.name} was battered but headquarters cannot fall: militia rallies. Lost ${netLost} units.`; }
+      else { t.owner = meta.faction; t.gar = { ...emptyG(), ...res.survivors.e }; t.tired = {}; t.bld = t.bld.filter(() => rnd() < 0.4); st.stats.lost++; out.summary = `LOST: ${CQ.FACTIONS[meta.faction].name} took ${def.name}. Lost ${netLost} units.`; }
+      st.pending = null;
+    }
+    logTo(st, out.summary); st.seq++; return out;
+  }
+  function autoResolveAttack(st, targetId, commit, rnd) {
+    const { battle, meta } = makeAttack(st, targetId, commit, 0); const result = CQ.tb.autoBattle(battle, CQ.tb.mb32(Math.floor(rnd() * 1e9))); return { ...applyResult(st, meta, result, rnd), result };
+  }
+  function autoResolveDefense(st, rnd) {
+    const { battle, meta } = makeDefense(st, st.pending, 0); const result = CQ.tb.autoBattle(battle, CQ.tb.mb32(Math.floor(rnd() * 1e9))); const out = applyResult(st, meta, result, rnd); return { ...out, result };
+  }
+  function forecast(st, targetId, commit, n, rnd) {
+    n = n || 12; let win = 0, lossPct = 0, rounds = 0; const base = total(Object.values(commit.bySrc).reduce((a, g) => addG(a, g), emptyG())) || 1;
+    for (let i = 0; i < n; i++) { const { battle } = makeAttack(st, targetId, commit, i + 1); const r = CQ.tb.autoBattle(battle, CQ.tb.mb32(Math.floor(rnd() * 1e9))); if (r.winner === 'p') win++; lossPct += total(r.lost.p) / Math.max(1, total(r.lost.p) + total(r.survivors.p)); rounds += r.rounds; }
+    return { winPct: Math.round((win / n) * 100), lossPct: Math.round((lossPct / n) * 100), rounds: Math.round(rounds / n) };
+  }
+  const band = (p) => { const eq = p / 45; return eq < 6 ? 'Light' : eq < 14 ? 'Moderate' : eq < 28 ? 'Heavy' : eq < 55 ? 'Fortified' : 'Overwhelming'; }; // 45 = one Enforcer
+
+  // ------------------------------------------------------------------- enemy factions
+  const UNIT_VALUE = { inf: 0.5, gam: 1.3, snp: 1.2, med: 0.8, spc: 1.6, drd: 2.3, tnk: 4, wlk: 7 };
+  const pickWeighted = (mix, rnd, maxVal) => { const keys = Object.keys(mix).filter((k) => UNIT_VALUE[k] <= maxVal); let tot = keys.reduce((n, k) => n + mix[k], 0), r = rnd() * tot; for (const k of keys) { r -= mix[k]; if (r <= 0) return k; } return 'inf'; };
+  function factionEconomy(st, f, rnd) {
+    const mine = CQ.SECTOR_LIST.filter((d) => st.sec[d.id].owner === f); if (!mine.length) return;
+    const inc = mine.reduce((n, d) => n + d.income, 0); let pts = inc / 300 + 0.5; const mix = CQ.FACTIONS[f].mix; let guard = 0;
+    while (pts > 0.4 && guard++ < 40) {
+      const d = mine.slice().sort((a, b) => power(st.sec[a.id].gar) - power(st.sec[b.id].gar))[Math.floor(rnd() * Math.min(3, mine.length))]; const s = st.sec[d.id];
+      if (total(s.gar) >= CQ.BASE_CAP + (CQ.SECTORS[d.id].isHQ ? 6 : 2)) { pts -= 0.3; continue; }
+      const k = pickWeighted(mix, rnd, Math.min(pts + 0.2, d.income >= 900 ? 7 : 4)); s.gar[k] = (s.gar[k] || 0) + 1; pts -= UNIT_VALUE[k];
+    }
+    // buildings: a defensive structure every few turns on frontier sectors
+    if (st.turn % 4 === 0) { const d = mine[Math.floor(rnd() * mine.length)]; const s = st.sec[d.id]; const opts = ['bunker', 'turret', 'medbay', 'shield_gen'].filter((b) => !s.bld.includes(b) && BLD[b].req.every((r) => s.bld.includes(r))); if (opts.length && s.bld.length < 3) s.bld.push(opts[Math.floor(rnd() * opts.length)]); }
+  }
+  function aiAttack(st, f, rnd, events) {
+    const F = CQ.FACTIONS[f]; const rel = st.rel[f] || 0;
+    let chance = (F.aggr / 100) * 0.5 + st.turn * 0.004; if (f === 'csf') chance += st.heat / 400; if (st.turn < 3) chance *= 0.4;
+    if (rnd() > chance) return;
+    const cands = [];
+    CQ.SECTOR_LIST.forEach((d) => { const s = st.sec[d.id]; if (s.owner !== f) return; const sp = power(scaleG(s.gar, 0.65)); if (total(s.gar) < 5) return;
+      d.adj.forEach((aid) => { const t = st.sec[aid], td = CQ.SECTORS[aid]; if (t.owner === f || td.isHQ) return; const tp = power(t.gar) * (1 + 0.12 * t.bld.length);
+        let w = 0; if (t.owner === 'neutral') w = 3; else if (t.owner === 'player') { if (rel >= 80) return; w = rel <= -50 ? 4 : rel < 0 ? 2.5 : rel < 40 ? 1.2 : 0.4; w *= 1 + st.turn * 0.02; } else w = F.rivals.includes(t.owner) ? 2 : 0.6;
+        const need = t.owner === 'player' ? 0.85 : 1.1; if (sp / Math.max(1, tp) < need) return; cands.push({ src: d.id, target: aid, w: w * Math.min(2, sp / Math.max(1, tp)) }); }); });
+    if (!cands.length) return;
+    let tot = cands.reduce((n, c) => n + c.w, 0), r = rnd() * tot, pick = cands[0]; for (const c of cands) { r -= c.w; if (r <= 0) { pick = c; break; } }
+    const s = st.sec[pick.src], t = st.sec[pick.target];
+    // march 65% of the garrison, keep a few at home
+    const force = emptyG(); ORDER.forEach((k) => { force[k] = Math.floor((s.gar[k] || 0) * 0.65); }); if (total(force) < 3) return;
+    ORDER.forEach((k) => { s.gar[k] -= force[k]; });
+    if (t.owner === 'player') { if (st.pending) { ORDER.forEach((k) => { s.gar[k] += force[k]; }); return; } st.pending = { faction: f, srcId: pick.src, targetId: pick.target, force }; events.push(`ALERT: ${F.name} is assaulting ${CQ.SECTORS[pick.target].name} from ${CQ.SECTORS[pick.src].name}!`); return; }
+    // AI versus AI or neutral: resolve headless
+    const cfgE = cfgFromSectors([t], 'def'); const seed = CQ.tb.hash('A' + pick.target + ':' + st.turn + ':' + f);
+    const b = CQ.tb.makeBattle({ sectorId: pick.target, theme: CQ.SECTORS[pick.target].theme, seed, armies: { p: force, e: { ...t.gar } }, attacker: 'p', cfg: { p: {}, e: cfgE }, depCap: 14 });
+    const res = CQ.tb.autoBattle(b, CQ.tb.mb32(Math.floor(rnd() * 1e9))); const oldOwner = t.owner;
+    if (res.winner === 'p') { t.owner = f; t.gar = { ...emptyG(), ...res.survivors.p }; t.tired = {}; t.bld = t.bld.filter(() => rnd() < 0.4); events.push(`${F.name} captured ${CQ.SECTORS[pick.target].name} from ${(CQ.FACTIONS[oldOwner] || {}).name}.`); }
+    else { t.gar = { ...emptyG(), ...res.survivors.e }; ORDER.forEach((k) => { s.gar[k] += res.survivors.p[k] || 0; }); if (total(t.gar) === 0) t.gar = { ...emptyG(), inf: 1 }; }
+  }
+  function neutralRegen(st) { CQ.SECTOR_LIST.forEach((d) => { const s = st.sec[d.id]; if (s.owner === 'neutral') { ORDER.forEach((k) => { const base = d.gar0[k] || 0; if ((s.gar[k] || 0) < base && total(s.gar) < total(d.gar0) + 3) s.gar[k] = (s.gar[k] || 0) + 1; }); } }); }
+
+  const CRISES = [
+    { title: 'CSF Sector Sweep', desc: 'Heat +5 and income cut 30% this turn.', fx: (st, e) => { st.heat = Math.min(100, st.heat + 5); e.crMul = 0.7; } },
+    { title: 'Power Conduit Rupture', desc: 'Power reserve -8.', fx: (st) => { st.pwr = Math.max(0, st.pwr - 8); } },
+    { title: 'Underworld Cartel War', desc: 'Recruits are 30% cheaper next turn.', fx: (st) => { st.discount = true; } },
+    { title: 'Black Market Windfall', desc: '+500 CR shipment.', fx: (st, e) => { e.crAdd = 500; } },
+    { title: 'Informant Tip-off', desc: 'The CSF raids a weakly held sector of yours. It loses 2 units.', fx: (st, e, rnd) => { const mine = CQ.SECTOR_LIST.filter((d) => st.sec[d.id].owner === 'player' && !d.isHQ && total(st.sec[d.id].gar) > 2); if (mine.length) { const d = mine[Math.floor(rnd() * mine.length)]; const g = st.sec[d.id].gar; let n = 2; ORDER.forEach((k) => { while (n > 0 && g[k] > 0) { g[k]--; n--; } }); } } },
+  ];
+  function endTurn(st0, rnd) {
+    if (st0.pending) return R(false, st0, 'Resolve the enemy assault first.'); if (st0.over) return R(false, st0, 'The campaign is over.');
+    rnd = rnd || Math.random; const st = clone(st0); const events = [];
+    const eco = economy(st); let cr = eco.cr; const e = { crMul: 1, crAdd: 0 };
+    st.turn++; st.discount = false; st.crisis = null;
+    if (st.turn % 3 === 0) { const c = CRISES[Math.floor(rnd() * CRISES.length)]; c.fx(st, e, rnd); st.crisis = { title: c.title, desc: c.desc }; events.push(`CRISIS: ${c.title}. ${c.desc}`); }
+    cr = Math.round(cr * e.crMul) + e.crAdd;
+    // power: upkeep comes out of generation; a deficit browns the grid out
+    const net = eco.pwrGen - eco.upkeep; st.brownout = false;
+    if (st.pwr + net < 0) { st.pwr = 0; st.brownout = true; cr = Math.round(cr * 0.75); events.push('BROWNOUT: not enough PWR for your upkeep. Income cut 25%. Build power or release machines.'); } else st.pwr += net;
+    cr -= eco.upkeepCR; st.cr += cr;
+    if (st.cr < 0) { st.cr = 0; let n = 2; const big = CQ.SECTOR_LIST.filter((d) => st.sec[d.id].owner === 'player').sort((a, b) => total(st.sec[b.id].gar) - total(st.sec[a.id].gar))[0]; if (big) { const g = st.sec[big.id].gar; ORDER.slice().sort((a, b) => U[a].cr - U[b].cr).forEach((k) => { while (n > 0 && g[k] > 0) { g[k]--; n--; } }); } events.push('UNPAID TROOPS: you could not cover the payroll and some units deserted.'); }
+    st.heat = Math.min(100, Math.max(0, st.heat + 2 + eco.heatGen - eco.heatDecay));
+    if (st.heat >= 100) { const loss = Math.round(st.cr * 0.15); st.cr -= loss; st.heat = 60; const mine = CQ.SECTOR_LIST.filter((d) => st.sec[d.id].owner === 'player' && st.sec[d.id].bld.length && !d.isHQ); if (mine.length) { const d = mine[Math.floor(rnd() * mine.length)]; const s = st.sec[d.id]; const gone = s.bld.filter((b) => !s.bld.some((o) => BLD[o].req.includes(b)))[0] || s.bld[s.bld.length - 1]; s.bld = s.bld.filter((b) => b !== gone); events.push(`CSF RAID: -${loss} CR and the ${BLD[gone].name} in ${d.name} was seized. Heat drops to 60.`); } else events.push(`CSF RAID: -${loss} CR. Heat drops to 60.`); }
+    CQ.SECTOR_LIST.forEach((d) => { st.sec[d.id].tired = {}; });
+    // enemy turns
+    neutralRegen(st); AIF.slice().sort(() => rnd() - 0.5).forEach((f) => { factionEconomy(st, f, rnd); aiAttack(st, f, rnd, events); });
+    events.forEach((m) => logTo(st, m)); logTo(st, `Turn ${st.turn}: ${cr >= 0 ? '+' : ''}${cr} CR (after ${eco.upkeepCR} payroll), ${net >= 0 ? '+' : ''}${net} PWR, Heat ${st.heat}.`);
+    if (!st.pending && !st.won && economy(st).cr >= CQ.WIN_INCOME) st.over = 'win';
+    return { ...R(true, st, 'Turn ended.'), events };
+  }
+  function adjustRelation(st0, f, delta) {
+    const st = clone(st0); if (delta > 0) { if (st.cr < 400) return R(false, st0, 'Bribes cost 400 CR.'); st.cr -= 400; }
+    st.rel[f] = Math.max(-100, Math.min(100, (st.rel[f] || 0) + delta)); logTo(st, delta > 0 ? `Relations with ${CQ.FACTIONS[f].name} improved.` : `Tensions with ${CQ.FACTIONS[f].name} rose.`); return R(true, st, 'ok');
+  }
+  return { newCampaign, clone, total, power, addG, subG, emptyG, avail, fx, economy, garCap, slots, unitCost, recruit, buildCheck, build, demolish, move, attackSources, canAttack, depCapFor, intelLevel, makeAttack, makeDefense, applyResult, autoResolveAttack, autoResolveDefense, forecast, band, endTurn, adjustRelation, secIncome, logTo, cfgFromSectors, trimCommit };
+})();
+// ===== CONQUEST ENGINE END =====
+
 
 function PitFightOverlay({ onSuccess, onFailure, opponentName, opponentHp, accent }) {
   const gameRef = React.useRef({ playerHp: 3, opponentHp: opponentHp, phase: 'ready', telegraph: null, tickCount: 0, running: true });
@@ -17895,6 +19145,9 @@ const AI_COMBAT_PROFILES = {
   furnace_husk:         { aggression:90, cover:5,  flank:20, overwatch:0,  optRange:2, name:'Furnace Husk',               hp:8,  shield:2, accent:'#FF7A1A' },
   piston_sentinel:      { aggression:50, cover:70, flank:15, overwatch:80, optRange:2, name:'Piston Sentinel',            hp:11, shield:5, accent:'#C4923E' },
   unchained_overseer:   { aggression:75, cover:40, flank:30, overwatch:80, optRange:4, name:'The Unchained Overseer',     hp:16, shield:6, accent:'#2B7895' },
+  zora_hull_wardens:    { aggression:70, cover:75, flank:50, overwatch:85, optRange:4, name:'Zora Hull Sentinels',        hp:14, shield:5, accent:'#B8D4E8' },
+  ghost_keel_warden:    { aggression:80, cover:55, flank:60, overwatch:90, optRange:5, name:'Warden Prime',               hp:24, shield:8, accent:'#FF4040' },
+  wst_gharza:           { aggression:45, cover:85, flank:60, overwatch:90, optRange:6, name:'Gharza, Trandoshan Sniper',  hp:9,  shield:2, accent:'#5A7050' },
   // BADOR PROFILES END
 };
 
@@ -18014,6 +19267,9 @@ const COMBAT_LOOT = {
   furnace_husk: { credits:[70,130], itemChance:0.4, items:[{id:'loot_slag_residue',name:'Cooled Slag Residue',type:'consumable',iconKind:'supply',value:150,description:'Dense, warm and unexpectedly valuable to a forge.'}] },
   piston_sentinel: { credits:[120,220], itemChance:0.55, items:[{id:'loot_brass_plate',name:'Sentinel Brass Plate',type:'gear',iconKind:'gear',value:520,description:'Tarnished brass from a construct that was never meant to retire.'}] },
   unchained_overseer: { credits:[260,440], itemChance:0.9, items:[{id:'item_titan_cylinder_ring',name:'Titan Cylinder Ring',type:'gear',iconKind:'gear',value:800,description:'An ancient signet ring proving engineering rank.'}] },
+  zora_hull_wardens: { credits:[300,500], itemChance:0.8, items:[{id:'loot_zora_sentinel_core',name:'Sentinel Logic Core',type:'gear',iconKind:'gear',value:900,description:'A hardened logic core from a hull sentinel. Fenced for a month of rent in any yard.'}] },
+  ghost_keel_warden: { credits:[500,900], itemChance:1, items:[{id:'loot_warden_prime_actuator',name:'Warden Prime Actuator',type:'gear',iconKind:'gear',value:2000,description:'The pressure actuator from the Warden Prime\'s arm. Dense, Republic grade, still warm.'}] },
+  wst_gharza: { credits:[300,520], itemChance:0.9, items:[{id:'loot_wst_trandoshan_rifle',name:'Trandoshan Long Rifle',type:'weapon',iconKind:'gear',value:650,description:'A long barreled hunting rifle with a notched stock. Fifteen notches. The newest is fresh.'}] },
   // BADOR LOOT END
   csf_swat:             { credits:[90,160],  itemChance:0.45, items:[{id:'loot_csf_stun_baton',name:'CSF Stun Baton',type:'weapon',iconKind:'gear',value:200,description:'Regulation CSF close-quarters weapon. Still carries a charge.'},{id:'loot_csf_access_chip',name:'CSF Access Chip',type:'gear',iconKind:'keycard',value:350,description:'Biometric-coded to a SWAT officer. Crackable.'},{id:'loot_tactical_stim',name:'Tactical Stim',type:'consumable',iconKind:'supply',value:120,description:'Military-grade stim. Restores combat readiness fast.'}] },
   csf_scout:            { credits:[60,110],  itemChance:0.35, items:[{id:'loot_scout_earpiece',name:'CSF Scout Earpiece',type:'gear',iconKind:'gear',value:180,description:'Encrypted channel. 48-hour window before they rotate the key.'},{id:'loot_det_round',name:'Det Round x2',type:'consumable',iconKind:'supply',value:90,description:'Compact explosive rounds. Useful.'}] },
@@ -19853,485 +21109,744 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
 }
 
 
-function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
-  const SAVE_KEY = 'swtor5_conquest_v1';
 
-  const loadSave = () => {
-    try { const r = localStorage.getItem(SAVE_KEY); return r ? JSON.parse(r) : null; }
-    catch(e) { return null; }
-  };
 
-  const [sectors, setSectors] = React.useState(() => {
-    const sv = loadSave();
-    const s = {};
-    Object.keys(CONQUEST_SECTORS_INIT).forEach(k => {
-      const d = CONQUEST_SECTORS_INIT[k];
-      if (sv && sv.sectors && sv.sectors[k]) {
-        s[k] = { ...d, ...sv.sectors[k], adj: [...d.adj] };
-      } else {
-        s[k] = { ...d, gar: { ...d.gar }, adj: [...d.adj], bld: [] };
-      }
-    });
-    return s;
-  });
 
-  const _sv0 = loadSave();
-  const [relations, setRelations] = React.useState((_sv0 && _sv0.relations) || { black_sun: -20, exchange: 25, csf: -70 });
-  const [res, setRes] = React.useState((_sv0 && _sv0.res) || { cr: startCredits || 3000, pwr: 10 });
-  const [staging, setStaging] = React.useState((_sv0 && _sv0.staging) || { inf: 2, snp: 0, tnk: 0, med: 0, drd: 0, spc: 0 });
-  const [turn, setTurn] = React.useState((_sv0 && _sv0.turn) || 1);
-  const [heat, setHeat] = React.useState((_sv0 && _sv0.heat != null) ? _sv0.heat : 30);
-  const [crisis, setCrisis] = React.useState(null);
-  const [selectedSec, setSelectedSec] = React.useState((_sv0 && _sv0.selectedSec) || 'shadow_town');
-  const [tab, setTab] = React.useState('map');
-  const [battle, setBattle] = React.useState(null);
-  const [log, setLog] = React.useState((_sv0 && _sv0.log) || ['Turn 1: Your syndicate controls Shadow Town L.1312. Expand your territory.']);
-  const [discountActive, setDiscountActive] = React.useState(false);
-  const [combatChoice, setCombatChoice] = React.useState(null);
-  const [saveFlash, setSaveFlash] = React.useState('');
 
-  React.useEffect(() => {
-    try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ sectors, relations, res, staging, turn, heat, log, selectedSec }));
-      setSaveFlash('✓ Saved');
-      const t = setTimeout(() => setSaveFlash(''), 1200);
-      return () => clearTimeout(t);
-    } catch(e) { setSaveFlash('Save failed'); }
-  }, [sectors, relations, res, staging, turn, heat, log]);
 
-  const resetCampaign = () => {
-    try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
-    const s = {};
-    Object.keys(CONQUEST_SECTORS_INIT).forEach(k => {
-      const d = CONQUEST_SECTORS_INIT[k];
-      s[k] = { ...d, gar: { ...d.gar }, adj: [...d.adj], bld: [] };
-    });
-    setSectors(s);
-    setRelations({ black_sun: -20, exchange: 25, csf: -70 });
-    setRes({ cr: startCredits || 3000, pwr: 10 });
-    setStaging({ inf: 2, snp: 0, tnk: 0, med: 0, drd: 0, spc: 0 });
-    setTurn(1);
-    setHeat(30);
-    setLog(['Campaign reset. Shadow Town is yours.']);
-    setSelectedSec('shadow_town');
-    setCrisis(null);
-    setCombatChoice(null);
-    setBattle(null);
-  };
+// ===== CONQUEST UI ART BEGIN =====
+const CQ_INK = '#0B1018', CQ_LIGHT = '#E8EEF8';
+// Unit glyphs: one flat silhouette per unit type. Used on the map, in panels and as battle tokens.
+function CQUnitGlyph({ type, size = 24, color, x, y }) {
+  const c = color || (CQ.UNITS[type] && CQ.UNITS[type].col) || '#CCC', d = CQ_INK, k = CQ_LIGHT;
+  let g = null;
+  if (type === 'inf') g = <g><circle cx="14" cy="8" r="4.4" fill={c} /><rect x="9.5" y="12" width="9" height="10" rx="2" fill={c} /><rect x="9.5" y="22" width="3.6" height="7" fill={c} /><rect x="15" y="22" width="3.6" height="7" fill={c} /><rect x="17" y="13.5" width="12" height="2.6" fill={k} /><rect x="11" y="6.4" width="6" height="2" fill={d} /></g>;
+  else if (type === 'gam') g = <g><circle cx="14" cy="8" r="5" fill={c} /><rect x="7" y="12" width="14" height="11" rx="3" fill={c} /><rect x="8" y="23" width="5" height="6" fill={c} /><rect x="15" y="23" width="5" height="6" fill={c} /><rect x="22" y="5" width="3.4" height="18" fill={k} /><rect x="20" y="3" width="7.4" height="5" rx="2" fill={k} /><rect x="9" y="10" width="2" height="3" fill={d} /><rect x="16" y="10" width="2" height="3" fill={d} /></g>;
+  else if (type === 'snp') g = <g><circle cx="12" cy="8" r="4" fill={c} /><rect x="8.5" y="12" width="7" height="10" rx="2" fill={c} /><rect x="8.5" y="22" width="3" height="7" fill={c} /><rect x="12.5" y="22" width="3" height="7" fill={c} /><rect x="14" y="13" width="16" height="2" fill={k} /><rect x="22" y="10.5" width="4" height="2.4" fill={d} /><rect x="9.5" y="6.4" width="6" height="2" fill={d} /></g>;
+  else if (type === 'med') g = <g><circle cx="14" cy="8" r="4.4" fill={c} /><rect x="9" y="12" width="10" height="11" rx="2" fill={c} /><rect x="9.5" y="23" width="3.6" height="6" fill={c} /><rect x="15" y="23" width="3.6" height="6" fill={c} /><rect x="12.4" y="14" width="3.2" height="8" fill={k} /><rect x="10" y="16.4" width="8" height="3.2" fill={k} /><rect x="19" y="14" width="8" height="8" rx="1" fill={d} /><rect x="22" y="15.4" width="2" height="5" fill={c} /></g>;
+  else if (type === 'spc') g = <g><polygon points="2,22 12,14 28,14 31,19 24,24 8,24" fill={c} /><circle cx="9" cy="26" r="3.4" fill={d} /><circle cx="25" cy="26" r="3.4" fill={d} /><circle cx="16" cy="9" r="3.6" fill={k} /><rect x="14" y="11" width="5" height="5" fill={k} /><rect x="22" y="15" width="8" height="2" fill={d} /></g>;
+  else if (type === 'drd') g = <g><circle cx="16" cy="12" r="8.4" fill={c} /><circle cx="16" cy="12" r="4.4" fill={d} /><circle cx="16" cy="12" r="2.2" fill="#FF5A4A" /><rect x="15" y="1" width="2" height="4" fill={k} /><rect x="9" y="20" width="14" height="5" rx="2" fill={c} /><rect x="9" y="25" width="4" height="5" fill={c} /><rect x="19" y="25" width="4" height="5" fill={c} /><rect x="22" y="14" width="8" height="2.6" fill={k} /></g>;
+  else if (type === 'tnk') g = <g><rect x="2" y="19" width="28" height="9" rx="3" fill={d} /><rect x="3.5" y="20.4" width="25" height="6" rx="2" fill={c} /><rect x="8" y="12" width="15" height="8" rx="2" fill={c} /><rect x="21" y="14" width="11" height="2.6" fill={k} /><circle cx="8" cy="24" r="2.2" fill={d} /><circle cx="16" cy="24" r="2.2" fill={d} /><circle cx="24" cy="24" r="2.2" fill={d} /><rect x="11" y="9" width="5" height="3.4" fill={k} /></g>;
+  else if (type === 'wlk') g = <g><rect x="8" y="8" width="16" height="10" rx="3" fill={c} /><rect x="11" y="4" width="10" height="5" rx="2" fill={k} /><rect x="9" y="17" width="3.6" height="12" fill={c} /><rect x="19.4" y="17" width="3.6" height="12" fill={c} /><rect x="6" y="28" width="8" height="3" fill={d} /><rect x="18" y="28" width="8" height="3" fill={d} /><rect x="23" y="9" width="8" height="2.4" fill={k} /><rect x="23" y="13" width="8" height="2.4" fill={k} /><rect x="13" y="11" width="6" height="2.4" fill={d} /></g>;
+  else g = <g><rect x="8" y="20" width="16" height="8" rx="2" fill={c} /><rect x="12" y="13" width="8" height="8" rx="2" fill={c} /><rect x="18" y="14" width="12" height="2.6" fill={k} /></g>;
+  return <svg viewBox="0 0 32 32" width={size} height={size} x={x} y={y} style={{ display: 'block', flex: 'none' }}>{g}</svg>;
+}
 
-  const garAtkPow = (sec) => {
-    const gar = sec.gar;
-    let raw = Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (gar[k] || 0) * CONQUEST_UNIT_TYPES[k].atkCP, 0);
-    let mult = 1.0;
-    sec.bld.forEach(bId => { const bd = CONQUEST_BUILDINGS.find(b => b.id === bId); if (bd) mult *= bd.atkMult; });
-    return Math.round(raw * mult);
-  };
-  const garDefPow = (sec) => {
-    const gar = sec.gar;
-    let raw = Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (gar[k] || 0) * CONQUEST_UNIT_TYPES[k].defCP, 0);
-    let mult = 1.0;
-    sec.bld.forEach(bId => { const bd = CONQUEST_BUILDINGS.find(b => b.id === bId); if (bd) mult *= bd.defMult; });
-    return Math.round(raw * mult);
-  };
-  const stagAtkPow = () => Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (staging[k] || 0) * CONQUEST_UNIT_TYPES[k].atkCP, 0);
-  const stagDefPow = () => Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (staging[k] || 0) * CONQUEST_UNIT_TYPES[k].defCP, 0);
-
-  const addLog = (msg) => setLog(prev => [msg, ...prev.slice(0, 19)]);
-
-  const playerIncome = () => {
-    let income = 0, pwrGain = 0;
-    Object.values(sectors).forEach(s => {
-      if (s.owner !== 'player') return;
-      let inc = s.income;
-      s.bld.forEach(bId => { const bd = CONQUEST_BUILDINGS.find(b => b.id === bId); if (bd) { inc += bd.incBonus; pwrGain += bd.pwrBonus; } });
-      income += inc;
-      pwrGain += s.pwr;
-    });
-    return { income, pwrGain };
-  };
-
-  const endTurn = () => {
-    const nextTurn = turn + 1;
-    setTurn(nextTurn);
-    const { income, pwrGain } = playerIncome();
-    const upkeep = Object.keys(CONQUEST_UNIT_TYPES).reduce((s, k) => s + (staging[k] || 0) * CONQUEST_UNIT_TYPES[k].upPWR, 0);
-    let heatDelta = 2, crMod = 0, pwrMod = 0;
-
-    if (nextTurn % 3 === 0) {
-      const cards = [
-        { title:'CSF Sector Sweep', apply: (cr) => { heatDelta += 5; return cr * 0.7; }, desc:'Heat +5, income reduced 30%.' },
-        { title:'Power Conduit Rupture', apply: (cr) => { pwrMod -= 8; return cr; }, desc:'Power reserve -8.' },
-        { title:'Underworld Cartel War', apply: (cr) => { setDiscountActive(true); return cr; }, desc:'Recruit 30% cheaper next turn.' },
-        { title:'Black Market Windfall', apply: (cr) => cr + 500, desc:'+500 CR bonus shipment.' },
-      ];
-      const card = cards[Math.floor(Math.random() * cards.length)];
-      const appliedIncome = card.apply(income);
-      crMod = appliedIncome - income;
-      setCrisis({ title: card.title, desc: card.desc });
-    } else {
-      setCrisis(null);
-    }
-
-    // AI faction turns: each faction tries to expand into adjacent neutral or player sectors
-    setSectors(prev => {
-      const next = { ...prev };
-      ['black_sun', 'exchange', 'csf'].forEach(faction => {
-        const rel = relations[faction] || 0;
-        const fData = CONQUEST_FACTION_DATA[faction];
-        if (!fData) return;
-        Object.values(next).forEach(sec => {
-          if (sec.owner !== faction) return;
-          sec.adj.forEach(adjId => {
-            const adj = next[adjId];
-            if (!adj) return;
-            if (adj.owner === 'player') return; // don't auto-attack player
-            if (adj.isHQ && adj.isHQ !== faction) return; // respect HQs
-            if (adj.owner === faction) return;
-            if (adj.owner === 'neutral' && Math.random() * 100 < fData.aggr * 0.3) {
-              const atkP = garAtkPow(sec);
-              const defP = garDefPow(adj);
-              if (atkP > defP || Math.random() < 0.25) {
-                next[adjId] = { ...adj, owner: faction, gar: { inf:Math.floor(adj.gar.inf*0.5+2), snp:0, tnk:0, med:0, drd:0, spc:0 } };
-              }
-            }
-          });
-        });
-      });
-      return next;
-    });
-
-    const finalCr = income + crMod;
-    const pwrNet = pwrGain - upkeep + pwrMod;
-    setRes(prev => ({ cr: prev.cr + Math.round(finalCr), pwr: Math.max(0, prev.pwr + pwrNet) }));
-    setHeat(prev => Math.min(100, Math.max(0, prev + heatDelta)));
-    setDiscountActive(false);
-    addLog(`Turn ${nextTurn}: +${Math.round(finalCr)} CR | +${pwrGain} PWR | Heat ${heat + heatDelta > 100 ? 100 : heat + heatDelta}`);
-
-    // Win condition: player income >= 7000 per turn
-    if (income >= 7000) {
-      setTimeout(() => onSuccess && onSuccess(), 600);
-    }
-  };
-
-  const initiateAttack = (targetId) => {
-    const target = sectors[targetId];
-    if (!target) return;
-    if (target.isHQ && target.isHQ !== 'player') {
-      addLog(`BLOCKED: ${target.name} is ${CONQUEST_FACTION_DATA[target.isHQ]?.name} HQ — cannot be captured!`);
-      return;
-    }
-    const sp = stagAtkPow();
-    if (sp === 0) { addLog('Deploy units to staging force before attacking.'); return; }
-    setCombatChoice({ targetId, targetName: target.name, stagAtk: sp, garDef: garDefPow(target) });
-  };
-
-  const resolveAutoAttack = (targetId) => {
-    const target = sectors[targetId];
-    const sp = stagAtkPow();
-    const dp = garDefPow(target);
-    const roll = Math.random() * 0.4 + 0.8; // 0.8–1.2 luck factor
-    const success = sp * roll > dp;
-    setCombatChoice(null);
-    if (success) {
-      const margin = (sp * roll - dp) / Math.max(dp, 1);
-      const casualtyRate = Math.max(0.1, 0.6 - margin * 0.5);
-      const newSector = { ...target, owner: 'player', gar: { inf: Math.ceil((staging.inf || 0) * 0.5), snp: Math.ceil((staging.snp || 0) * 0.5), tnk: Math.ceil((staging.tnk || 0) * 0.5), med: Math.ceil((staging.med || 0) * 0.5), drd: Math.ceil((staging.drd || 0) * 0.5), spc: Math.ceil((staging.spc || 0) * 0.5) }, bld: [] };
-      setSectors(prev => ({ ...prev, [targetId]: newSector }));
-      const losses = Object.keys(staging).reduce((t, k) => { const l = Math.floor((staging[k] || 0) * casualtyRate); return t + l; }, 0);
-      addLog(`VICTORY: ${target.name} captured! (ATK ${sp} vs DEF ${dp}) — ~${losses} unit${losses !== 1 ? 's' : ''} lost.`);
-      setStaging({ inf: Math.ceil((staging.inf || 0) * (1 - casualtyRate)), snp: Math.ceil((staging.snp || 0) * (1 - casualtyRate)), tnk: Math.ceil((staging.tnk || 0) * (1 - casualtyRate)), med: Math.ceil((staging.med || 0) * (1 - casualtyRate)), drd: Math.ceil((staging.drd || 0) * (1 - casualtyRate)), spc: Math.ceil((staging.spc || 0) * (1 - casualtyRate)) });
-    } else {
-      const stagLoss = Math.floor(Object.keys(staging).reduce((t, k) => t + (staging[k] || 0), 0) * 0.4);
-      addLog(`DEFEAT: ${target.name} held! (ATK ${sp} vs DEF ${dp}) — ~${stagLoss} staging units lost.`);
-      setStaging(prev => {
-        const next = { ...prev };
-        let rem = stagLoss;
-        ['inf','snp','spc','drd','med','tnk'].forEach(k => { const cut = Math.min(next[k] || 0, rem); next[k] = (next[k] || 0) - cut; rem -= cut; });
-        return next;
-      });
-      setHeat(prev => Math.min(100, prev + 8));
-    }
-  };
-
-  const buildBuilding = (bId) => {
-    const sec = sectors[selectedSec];
-    if (!sec || sec.owner !== 'player') return;
-    const bd = CONQUEST_BUILDINGS.find(b => b.id === bId);
-    if (!bd) return;
-    if (sec.bld.includes(bId)) { addLog(`${bd.name} already built in ${sec.name}.`); return; }
-    if (res.cr < bd.cost) { addLog(`Need ${bd.cost} CR to build ${bd.name}.`); return; }
-    if (res.pwr < bd.costPWR) { addLog(`Need ${bd.costPWR} PWR to build ${bd.name}.`); return; }
-    setRes(prev => ({ cr: prev.cr - bd.cost, pwr: prev.pwr - bd.costPWR }));
-    setSectors(prev => ({ ...prev, [selectedSec]: { ...prev[selectedSec], bld: [...prev[selectedSec].bld, bId] } }));
-    addLog(`Built ${bd.name} in ${sec.name}.`);
-  };
-
-  const recruitUnit = (key) => {
-    const ut = CONQUEST_UNIT_TYPES[key];
-    if (!ut) return;
-    const cost = discountActive ? Math.round(ut.costCR * 0.7) : ut.costCR;
-    if (res.cr < cost) { addLog(`Need ${cost} CR to recruit ${ut.name}.`); return; }
-    if (res.pwr < ut.costPWR) { addLog(`Need ${ut.costPWR} PWR for ${ut.name}.`); return; }
-    setRes(prev => ({ cr: prev.cr - cost, pwr: prev.pwr - ut.costPWR }));
-    setStaging(prev => ({ ...prev, [key]: (prev[key] || 0) + 1 }));
-    addLog(`Recruited 1 ${ut.name} to staging force.`);
-  };
-
-  const adjustRelation = (faction, delta) => {
-    const cost = delta > 0 ? 400 : 0;
-    if (delta > 0 && res.cr < cost) { addLog(`Need ${cost} CR to improve relations.`); return; }
-    if (delta > 0) setRes(prev => ({ ...prev, cr: prev.cr - cost }));
-    setRelations(prev => ({ ...prev, [faction]: Math.max(-100, Math.min(100, (prev[faction] || 0) + delta)) }));
-    addLog(delta > 0 ? `Relations with ${CONQUEST_FACTION_DATA[faction]?.name} improved (+${delta}).` : `Tensions with ${CONQUEST_FACTION_DATA[faction]?.name} increased.`);
-  };
-
-  const fColor = (owner) => (CONQUEST_FACTION_DATA[owner] || CONQUEST_FACTION_DATA.neutral).color;
-  const sec = sectors[selectedSec] || {};
-  const selAdj = sec.adj || [];
-  const { income: playerIncomeVal } = playerIncome();
-
-  const MapView = () => {
-    const sectorList = Object.values(sectors);
-    // Build edges (deduplicated)
-    const edges = [];
-    const edgeSeen = new Set();
-    sectorList.forEach(s => {
-      (s.adj || []).forEach(adjId => {
-        const key = [s.id, adjId].sort().join('|');
-        if (!edgeSeen.has(key) && sectors[adjId]) {
-          edgeSeen.add(key);
-          edges.push([s, sectors[adjId]]);
-        }
-      });
-    });
-
-    return React.createElement('svg', { viewBox: '0 0 880 590', style: { width: '100%', background: '#07090F', borderRadius: 6 } },
-      // Background layer lines
-      React.createElement('text', { x: 440, y: 22, textAnchor: 'middle', fill: '#2A3A5A', fontSize: 11, fontFamily: 'monospace' }, 'CORUSCANT — VERTICAL CROSS-SECTION'),
-      React.createElement('line', { x1: 0, y1: 35, x2: 880, y2: 35, stroke: '#1A2A1A', strokeWidth: 1 }),
-      // Level tier labels
-      [['Apex Tier', 55], ['Legislature', 165], ['Mid-Layers', 275], ['Industrial', 375], ['Sub-Surface', 465], ['Undercity', 540]].map(([lbl, cy]) =>
-        React.createElement('text', { key: lbl, x: 8, y: cy + 4, fill: '#3A4A3A', fontSize: 9, fontFamily: 'monospace' }, lbl)
-      ),
-      // Edges
-      edges.map(([a, b]) =>
-        React.createElement('line', { key: a.id + b.id, x1: a.cx, y1: a.cy, x2: b.cx, y2: b.cy, stroke: '#1E2A1E', strokeWidth: 1.5 })
-      ),
-      // Sector nodes
-      sectorList.map(s => {
-        const col = fColor(s.owner);
-        const isSel = s.id === selectedSec;
-        const isHQSec = !!s.isHQ;
-        const adjToPlayer = selAdj.includes(s.id);
-        const canAtk = s.owner !== 'player' && adjToPlayer && !s.isHQ;
-        return React.createElement('g', { key: s.id, onClick: () => setSelectedSec(s.id), style: { cursor: 'pointer' } },
-          isSel && React.createElement('circle', { cx: s.cx, cy: s.cy, r: 26, fill: 'none', stroke: '#00FFAA', strokeWidth: 2, strokeDasharray: '5 3' }),
-          canAtk && React.createElement('circle', { cx: s.cx, cy: s.cy, r: 24, fill: 'none', stroke: '#FF4040', strokeWidth: 1, strokeDasharray: '3 3', opacity: 0.7 }),
-          React.createElement('circle', { cx: s.cx, cy: s.cy, r: 18, fill: col + '22', stroke: col, strokeWidth: isHQSec ? 3 : 1.5 }),
-          isHQSec && React.createElement('text', { x: s.cx, y: s.cy - 22, textAnchor: 'middle', fill: col, fontSize: 8, fontFamily: 'monospace' }, '★HQ'),
-          React.createElement('text', { x: s.cx, y: s.cy + 4, textAnchor: 'middle', fill: col, fontSize: 8, fontWeight: 'bold', fontFamily: 'monospace' },
-            s.name.length > 16 ? s.name.substring(0, 14) + '…' : s.name
-          ),
-          React.createElement('text', { x: s.cx, y: s.cy + 14, textAnchor: 'middle', fill: col + 'AA', fontSize: 7, fontFamily: 'monospace' }, `${s.income}cr`)
-        );
-      })
-    );
-  };
-
-  const tabStyle = (t) => ({ padding: '4px 10px', cursor: 'pointer', fontSize: 11, fontFamily: 'monospace', borderRadius: 4, background: tab === t ? '#1A3A5A' : '#0A1020', color: tab === t ? '#00BFFF' : '#4A6A8A', border: '1px solid ' + (tab === t ? '#00BFFF' : '#1A2A3A'), marginRight: 4 });
-  const btnStyle = (c) => ({ padding: '4px 10px', background: c || '#1A3A1A', color: '#00FF80', border: '1px solid #22C55E', borderRadius: 4, cursor: 'pointer', fontSize: 11, fontFamily: 'monospace' });
-
-  if (combatChoice) {
-    const { targetId, targetName, stagAtk, garDef } = combatChoice;
-    return React.createElement('div', { style: { background: '#07090F', border: '1px solid #FF4040', borderRadius: 8, padding: 20, color: '#E0E0E0', fontFamily: 'monospace', maxWidth: 520 } },
-      React.createElement('div', { style: { fontSize: 16, color: '#FF4040', marginBottom: 12 } }, `⚔ ATTACK: ${targetName}`),
-      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 } },
-        React.createElement('div', { style: { background: '#00BFFF22', border: '1px solid #00BFFF', borderRadius: 6, padding: 10 } },
-          React.createElement('div', { style: { color: '#00BFFF', fontSize: 12, marginBottom: 4 } }, 'YOUR ATTACK FORCE'),
-          React.createElement('div', { style: { fontSize: 20, color: '#00FF80' } }, `ATK ${stagAtk}`),
-          React.createElement('div', { style: { fontSize: 10, color: '#888', marginTop: 4 } }, Object.keys(CONQUEST_UNIT_TYPES).filter(k => (staging[k] || 0) > 0).map(k => `${staging[k]} ${CONQUEST_UNIT_TYPES[k].name}`).join(', ') || 'No units staged')
-        ),
-        React.createElement('div', { style: { background: '#FF404022', border: '1px solid #FF4040', borderRadius: 6, padding: 10 } },
-          React.createElement('div', { style: { color: '#FF4040', fontSize: 12, marginBottom: 4 } }, 'ENEMY GARRISON'),
-          React.createElement('div', { style: { fontSize: 20, color: '#FF8060' } }, `DEF ${garDef}`),
-          React.createElement('div', { style: { fontSize: 10, color: '#888', marginTop: 4 } }, `${targetName}`)
-        )
-      ),
-      React.createElement('div', { style: { fontSize: 11, color: '#888', marginBottom: 16 } }, stagAtk > garDef ? `You have the advantage (${Math.round((stagAtk / Math.max(garDef, 1) - 1) * 100)}% edge). Auto-resolve favors victory.` : `Enemy has the advantage (${Math.round((garDef / Math.max(stagAtk, 1) - 1) * 100)}% edge). Manual combat may help.`),
-      React.createElement('div', { style: { display: 'flex', gap: 10 } },
-        React.createElement('button', { style: { ...btnStyle('#1A0A0A'), color: '#FF8060', borderColor: '#FF4040', flex: 1, padding: 10 }, onClick: () => resolveAutoAttack(targetId) }, '⚡ AUTO-RESOLVE'),
-        React.createElement('button', { style: { ...btnStyle('#0A1A3A'), color: '#00BFFF', borderColor: '#00BFFF', flex: 1, padding: 10 }, onClick: () => { setCombatChoice(null); setBattle({ targetId, targetName, mode: 'manual' }); if (onSuccess) setTimeout(() => {}, 0); } }, '🎯 MANUAL TACTICAL'),
-        React.createElement('button', { style: { ...btnStyle('#1A1A2A'), color: '#888', borderColor: '#333', padding: 10 }, onClick: () => setCombatChoice(null) }, 'Cancel')
-      )
-    );
+// Sector scenes: 132 by 50 illustrations, one per theme, used on map cards and the sector panel banner.
+function CQScene({ theme, id }) {
+  const th = CQ.THEMES[theme] || CQ.THEMES.shadow; const sky = th.sky, acc = th.accent, W = th.wall[0], Ws = th.wall[1];
+  const r = rng((id || theme).length * 31 + (id || theme).charCodeAt(0));
+  const gid = 'sg_' + (id || theme);
+  const stars = Array.from({ length: 14 }, () => [r() * 132, r() * 20, 0.4 + r() * 0.7]);
+  const towers = (n, base, minH, maxH, col, win) => Array.from({ length: n }, (_, i) => { const w = 7 + r() * 9, h = minH + r() * (maxH - minH), x = (i / n) * 140 - 4 + r() * 4; return <g key={i}><rect x={x} y={base - h} width={w} height={h} fill={col} />{win && Array.from({ length: Math.floor(h / 6) }, (_, j) => (r() < 0.55 ? <rect key={j} x={x + 1.5 + (j % 2) * 3} y={base - h + 3 + j * 6} width="1.6" height="2" fill={win} opacity="0.85" /> : null))}</g>; });
+  let art = null;
+  switch (theme) {
+    case 'lounge': art = <g>{[18, 52, 86, 116].map((x, i) => <path key={i} d={`M${x - 14} 50 L${x - 14} 28 Q${x} 8 ${x + 14} 28 L${x + 14} 50 Z`} fill="#241838" stroke={acc} strokeWidth="1.2" />)}{[18, 52, 86, 116].map((x, i) => <path key={'a' + i} d={`M${x - 8} 50 L${x - 8} 32 Q${x} 20 ${x + 8} 32 L${x + 8} 50 Z`} fill="#FFB84A" opacity="0.5" />)}{Array.from({ length: 10 }, (_, i) => <circle key={'l' + i} cx={6 + i * 13} cy={24 + Math.sin(i) * 3} r="1.2" fill="#FFE9B0" />)}</g>; break;
+    case 'senate': art = <g><path d="M30 50 L30 30 Q66 4 102 30 L102 50 Z" fill="#D8DCEF" /><path d="M30 30 Q66 4 102 30" fill="none" stroke="#7C86C8" strokeWidth="1.5" />{Array.from({ length: 9 }, (_, i) => <rect key={i} x={34 + i * 7.6} y="30" width="3" height="20" fill="#9AA2D0" />)}<rect x="26" y="46" width="80" height="4" fill="#B0B8E0" /><rect x="65" y="2" width="1.6" height="9" fill="#EEE" /><polygon points="66.6,2 76,5 66.6,8" fill="#A8B4FF" /></g>; break;
+    case 'upper': art = <g>{towers(9, 50, 14, 40, '#16203A', '#7FD0FF')}<rect x="0" y="22" width="132" height="1" fill="#FFB070" opacity="0.7" /><rect x="0" y="30" width="132" height="1" fill="#7FD0FF" opacity="0.6" /></g>; break;
+    case 'precinct': art = <g>{towers(5, 50, 18, 34, '#E4ECFA', '#3A5AA8')}<polygon points="106,50 96,0 118,0" fill="#CFE4FF" opacity="0.2" /><path d="M63 12 L73 16 L73 26 Q68 32 63 28 Q58 32 53 26 L53 16 Z" fill="#4A9FFF" transform="translate(3,0)" /></g>; break;
+    case 'promenade': art = <g>{Array.from({ length: 6 }, (_, i) => <g key={i}><polygon points={`${i * 22 + 2},26 ${i * 22 + 22},26 ${i * 22 + 24},32 ${i * 22},32`} fill={i % 2 ? '#E8744A' : '#F4E0B0'} /><rect x={i * 22 + 3} y="32" width="18" height="18" fill="#2A1C24" /><rect x={i * 22 + 6} y="36" width="12" height="10" fill="#FFB070" opacity="0.5" /></g>)}{Array.from({ length: 7 }, (_, i) => <circle key={'c' + i} cx={8 + i * 19} cy="20" r="2.4" fill="#FFD890" />)}<path d="M0 20 Q66 28 132 20" fill="none" stroke="#6A4A3A" /></g>; break;
+    case 'alley': art = <g><rect x="0" y="0" width="30" height="50" fill="#0E131C" /><rect x="102" y="0" width="30" height="50" fill="#0E131C" /><rect x="6" y="8" width="18" height="5" fill="#39E8E8" opacity="0.9" /><rect x="108" y="16" width="18" height="5" fill="#FF4FC8" opacity="0.9" /><rect x="10" y="28" width="12" height="4" fill="#FF4FC8" opacity="0.8" /><rect x="110" y="34" width="12" height="4" fill="#39E8E8" opacity="0.8" />{[0, 1, 2].map((i) => <path key={i} d={`M30 ${6 + i * 6} Q66 ${20 + i * 5} 102 ${6 + i * 6}`} fill="none" stroke="#2A3A4A" strokeWidth="1.2" />)}<rect x="56" y="30" width="20" height="20" fill="#0A1018" /><rect x="60" y="34" width="12" height="8" fill="#39E8E8" opacity="0.4" /></g>; break;
+    case 'midlevels': art = <g>{[0, 1, 2].map((i) => <g key={i}><rect x={i * 46 + 2} y="8" width="40" height="42" fill="#2A2E38" />{Array.from({ length: 12 }, (_, j) => <rect key={j} x={i * 46 + 6 + (j % 4) * 9} y={12 + Math.floor(j / 4) * 12} width="5" height="7" fill={r() < 0.6 ? '#FFD890' : '#161A22'} />)}</g>)}<path d="M4 20 L44 22" stroke="#B0A090" /><rect x="30" y="22" width="6" height="4" fill="#D84A4A" /></g>; break;
+    case 'csfhub': art = <g>{towers(3, 50, 16, 30, '#C8D8F0', '#2A4A8A')}<rect x="84" y="14" width="40" height="36" fill="#E0EAFA" /><path d="M104 18 L116 23 L116 34 Q110 42 104 38 Q98 42 92 34 L92 23 Z" fill="#4A9FFF" /><path d="M104 22 L110 25 L110 33 Q107 37 104 35 Z" fill="#E8F2FF" /><rect x="6" y="40" width="70" height="2" fill="#4A9FFF" opacity="0.6" /></g>; break;
+    case 'works': art = <g>{[16, 46, 76, 104].map((x, i) => <g key={i}><rect x={x - 6} y={22 - (i % 2) * 6} width="12" height={28 + (i % 2) * 6} fill="#3A2A22" /><rect x={x - 7} y={20 - (i % 2) * 6} width="14" height="4" fill="#5A3A2A" /><ellipse cx={x} cy={14 - (i % 2) * 6} rx="9" ry="5" fill="#1A1210" opacity="0.7" /></g>)}<rect x="0" y="42" width="132" height="8" fill="#FF6A1A" opacity="0.85" /><rect x="0" y="44" width="132" height="2" fill="#FFD070" /><path d="M0 34 L132 34" stroke="#6A4A3A" strokeWidth="2.4" /></g>; break;
+    case 'industrial': art = <g>{[26, 66, 106].map((x, i) => <g key={i}><circle cx={x} cy="32" r="14" fill="#2A2A32" stroke="#C8A040" strokeWidth="2" strokeDasharray="4 3" /><circle cx={x} cy="32" r="5" fill="#C8A040" /></g>)}<path d="M4 50 L4 8 L70 8" fill="none" stroke="#C8A040" strokeWidth="2.4" /><rect x="66" y="8" width="3" height="14" fill="#C8A040" /><rect x="62" y="22" width="11" height="6" fill="#E8B84A" /></g>; break;
+    case 'spaceport': art = <g><ellipse cx="66" cy="44" rx="56" ry="8" fill="#10161E" /><ellipse cx="66" cy="44" rx="40" ry="5" fill="none" stroke="#6ABCE8" strokeWidth="1" strokeDasharray="3 3" /><polygon points="40,38 86,30 96,36 50,44" fill="#9AA6B8" /><polygon points="86,30 100,26 100,36 96,36" fill="#C8D2E0" /><rect x="52" y="39" width="26" height="2" fill="#6ABCE8" /><circle cx="20" cy="40" r="2" fill="#FF5A4A" /><circle cx="112" cy="40" r="2" fill="#34D86A" /><rect x="14" y="14" width="2" height="26" fill="#6ABCE8" opacity="0.5" /></g>; break;
+    case 'shadow': art = <g>{towers(6, 50, 12, 32, '#1A1424', '#B07CFF')}<ellipse cx="60" cy="34" rx="5" ry="3.4" fill="#B07CFF" /><ellipse cx="74" cy="34" rx="5" ry="3.4" fill="#B07CFF" /><ellipse cx="60" cy="34" rx="2" ry="3" fill="#0A0610" /><ellipse cx="74" cy="34" rx="2" ry="3" fill="#0A0610" /><rect x="14" y="14" width="26" height="6" fill="#FF4FC8" opacity="0.85" /></g>; break;
+    case 'market': art = <g>{Array.from({ length: 5 }, (_, i) => <g key={i}><polygon points={`${i * 27 + 2},24 ${i * 27 + 26},24 ${i * 27 + 30},30 ${i * 27 - 2},30`} fill={['#E8A040', '#C84A4A', '#40A8C8', '#E8A040', '#C84A4A'][i]} /><rect x={i * 27 + 4} y="30" width="22" height="20" fill="#2A1A14" /><circle cx={i * 27 + 15} cy="20" r="2.6" fill="#FFD070" /></g>)}<rect x="0" y="46" width="132" height="4" fill="#3A2A1E" /></g>; break;
+    case 'freight': art = <g>{Array.from({ length: 12 }, (_, i) => <rect key={i} x={(i % 6) * 22 + 2} y={26 + Math.floor(i / 6) * 12} width="20" height="11" fill={['#34A860', '#C8A040', '#3A7AB8', '#C84A4A', '#8AA84A', '#6A5AB8'][(i * 5) % 6]} />)}<path d="M104 50 L104 6 L128 6" fill="none" stroke="#E8B84A" strokeWidth="2.4" /><rect x="124" y="6" width="2" height="14" fill="#E8B84A" /></g>; break;
+    case 'undercity': art = <g><path d="M0 50 L0 26 Q20 14 34 28 Q50 8 70 24 Q90 10 110 26 Q124 18 132 28 L132 50 Z" fill="#0C1C16" />{Array.from({ length: 12 }, (_, i) => <circle key={i} cx={6 + i * 11} cy={30 + (i * 7) % 14} r="1.6" fill="#6AE8A0" opacity="0.9" />)}<rect x="40" y="0" width="5" height="22" fill="#2A3A34" /><circle cx="42" cy="26" r="1.4" fill="#6AE8A0" /><rect x="0" y="44" width="132" height="6" fill="#0E4A6A" opacity="0.7" /></g>; break;
+    default: art = <g>{[12, 40, 72, 104].map((x, i) => <polygon key={i} points={`${x},50 ${x + 6},${30 - (i % 2) * 6} ${x + 14},50`} fill="#2A2218" />)}<ellipse cx="66" cy="44" rx="6" ry="3" fill="#E8A860" opacity="0.9" /><polygon points="62,44 66,32 70,44" fill="#FF8A3A" /><rect x="86" y="36" width="22" height="14" fill="#3A2E22" /></g>;
   }
-
-  if (battle && battle.mode === 'manual') {
-    return React.createElement('div', { style: { background: '#07090F', border: '1px solid #4A9FFF', borderRadius: 8, padding: 20, color: '#E0E0E0', fontFamily: 'monospace' } },
-      React.createElement('div', { style: { color: '#4A9FFF', marginBottom: 8 } }, `Launching tactical combat for ${battle.targetName}...`),
-      React.createElement('div', { style: { color: '#888', fontSize: 11, marginBottom: 16 } }, 'Tactical combat grid is handled by the main combat overlay. Auto-resolving instead.'),
-      React.createElement('div', { style: { display: 'flex', gap: 8 } },
-        React.createElement('button', { style: btnStyle(), onClick: () => { setBattle(null); resolveAutoAttack(battle.targetId); } }, 'Auto-Resolve'),
-        React.createElement('button', { style: { ...btnStyle('#1A1A2A'), color: '#888', borderColor: '#333' }, onClick: () => setBattle(null) }, 'Retreat')
-      )
-    );
-  }
-
-  return React.createElement('div', { style: { background: '#07090F', border: '1px solid #1A2A3A', borderRadius: 8, padding: 16, color: '#E0E0E0', fontFamily: 'monospace', maxWidth: 900 } },
-    // Header
-    React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 } },
-      React.createElement('div', { style: { color: '#00BFFF', fontSize: 14 } }, `CORUSCANT CONQUEST — Turn ${turn}`),
-      React.createElement('div', { style: { display: 'flex', gap: 14, fontSize: 11, alignItems: 'center' } },
-        React.createElement('span', { style: { color: '#FFD700' } }, `CR: ${res.cr.toLocaleString()}`),
-        React.createElement('span', { style: { color: '#22C55E' } }, `PWR: ${res.pwr}`),
-        React.createElement('span', { style: { color: heat > 70 ? '#FF4040' : heat > 40 ? '#FFD700' : '#888' } }, `HEAT: ${heat}`),
-        React.createElement('span', { style: { color: playerIncomeVal >= 7000 ? '#00FF80' : '#888' } }, `INC/T: ${playerIncomeVal.toLocaleString()}`),
-        saveFlash && React.createElement('span', { style: { color: '#22C55E', fontSize: 10 } }, saveFlash),
-        React.createElement('button', { style: { fontSize: 9, padding: '2px 6px', background: '#1A0A0A', color: '#FF8060', border: '1px solid #FF404044', borderRadius: 3, cursor: 'pointer' }, onClick: () => { if (window.confirm('Reset Conquest campaign? All progress will be lost.')) resetCampaign(); } }, 'Reset'),
-        React.createElement('button', { style: { fontSize: 9, padding: '2px 6px', background: '#0A0F1A', color: '#00BFFF', border: '1px solid #00BFFF44', borderRadius: 3, cursor: 'pointer' }, onClick: onSuccess }, '[ Exit to Game ]')
-      )
-    ),
-    crisis && React.createElement('div', { style: { background: '#2A1A00', border: '1px solid #FF8C00', borderRadius: 4, padding: '6px 10px', marginBottom: 8, fontSize: 11, color: '#FFD700' } },
-      `⚠ CRISIS: ${crisis.title} — ${crisis.desc}`
-    ),
-    playerIncomeVal >= 7000 && React.createElement('div', { style: { background: '#001A00', border: '1px solid #00FF80', borderRadius: 4, padding: '6px 10px', marginBottom: 8, fontSize: 11, color: '#00FF80' } },
-      '🏆 VICTORY THRESHOLD REACHED! Your syndicate dominates Coruscant. End turn to claim victory.'
-    ),
-    // Tabs
-    React.createElement('div', { style: { display: 'flex', marginBottom: 10, flexWrap: 'wrap', gap: 2 } },
-      ['map','military','build','diplomacy','howtoplay'].map(t =>
-        React.createElement('button', { key: t, style: tabStyle(t), onClick: () => setTab(t) }, t.charAt(0).toUpperCase() + t.slice(1))
-      ),
-      React.createElement('button', { style: { ...btnStyle(), marginLeft: 'auto' }, onClick: endTurn }, `End Turn ${turn}`)
-    ),
-
-    // MAP TAB
-    tab === 'map' && React.createElement('div', null,
-      MapView(),
-      sec.id && React.createElement('div', { style: { marginTop: 10, background: '#0A1020', border: '1px solid #1A2A3A', borderRadius: 6, padding: 12 } },
-        React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 } },
-          React.createElement('div', { style: { color: fColor(sec.owner), fontSize: 12 } },
-            `${sec.name} ${sec.isHQ ? '★HQ' : ''} — ${(CONQUEST_FACTION_DATA[sec.owner] || CONQUEST_FACTION_DATA.neutral).name}`
-          ),
-          React.createElement('div', { style: { display: 'flex', gap: 6, fontSize: 11 } },
-            React.createElement('span', { style: { color: '#FFD700' } }, `${sec.income}/t`),
-            React.createElement('span', { style: { color: '#22C55E' } }, `PWR: ${sec.pwr}`),
-            React.createElement('span', { style: { color: '#4A9FFF' } }, `ATK: ${garAtkPow(sec)} DEF: ${garDefPow(sec)}`)
-          )
-        ),
-        React.createElement('div', { style: { fontSize: 10, color: '#888', marginBottom: 6 } },
-          `Units: ${Object.keys(CONQUEST_UNIT_TYPES).filter(k => (sec.gar[k] || 0) > 0).map(k => `${sec.gar[k]} ${CONQUEST_UNIT_TYPES[k].name}`).join(', ') || 'None'}`
-        ),
-        sec.bld.length > 0 && React.createElement('div', { style: { fontSize: 10, color: '#9B59B6', marginBottom: 6 } },
-          `Buildings: ${sec.bld.map(bId => CONQUEST_BUILDINGS.find(b => b.id === bId)?.name).filter(Boolean).join(', ')}`
-        ),
-        sec.isHQ && sec.isHQ !== 'player' && React.createElement('div', { style: { fontSize: 10, color: '#FF8C00' } }, `★ Faction HQ — cannot be captured`),
-        sec.owner !== 'player' && selAdj.includes(sec.id) && !sec.isHQ &&
-          React.createElement('button', { style: { ...btnStyle('#2A0808'), color: '#FF8060', borderColor: '#FF4040', marginTop: 6 }, onClick: () => initiateAttack(sec.id) }, `⚔ Attack ${sec.name}`)
-      ),
-      React.createElement('div', { style: { display: 'flex', gap: 6, marginTop: 8, fontSize: 10, flexWrap: 'wrap' } },
-        Object.values(CONQUEST_FACTION_DATA).filter(f => f.name !== 'Neutral').map(f =>
-          React.createElement('span', { key: f.name, style: { color: f.color } },
-            `● ${f.name}: ${Object.values(sectors).filter(s => s.owner === Object.keys(CONQUEST_FACTION_DATA).find(k => CONQUEST_FACTION_DATA[k] === f)).length} sectors`
-          )
-        )
-      )
-    ),
-
-    // MILITARY TAB
-    tab === 'military' && React.createElement('div', null,
-      React.createElement('div', { style: { marginBottom: 10, fontSize: 11, color: '#4A9FFF' } },
-        `Staging Force — ATK: ${stagAtkPow()} | DEF: ${stagDefPow()}`
-      ),
-      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 16 } },
-        Object.keys(CONQUEST_UNIT_TYPES).map(k => {
-          const ut = CONQUEST_UNIT_TYPES[k];
-          const cost = discountActive ? Math.round(ut.costCR * 0.7) : ut.costCR;
-          return React.createElement('div', { key: k, style: { background: '#0A1020', border: '1px solid #1A2A3A', borderRadius: 6, padding: 10 } },
-            React.createElement('div', { style: { color: '#00BFFF', fontSize: 11, marginBottom: 2 } }, ut.name),
-            React.createElement('div', { style: { fontSize: 10, color: '#888', marginBottom: 6 } }, `ATK:${ut.atkCP} DEF:${ut.defCP} | ${cost}CR${ut.costPWR > 0 ? ` +${ut.costPWR}PWR` : ''}`),
-            React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
-              React.createElement('span', { style: { color: '#FFD700', fontSize: 13, minWidth: 20, textAlign: 'center' } }, staging[k] || 0),
-              React.createElement('button', { style: { ...btnStyle(), padding: '2px 8px', fontSize: 11 }, onClick: () => recruitUnit(k) }, '+')
-            )
-          );
-        })
-      ),
-      React.createElement('div', { style: { fontSize: 11, color: '#888' } }, 'Stage units here, then select an adjacent enemy sector on the Map tab to attack.'),
-      discountActive && React.createElement('div', { style: { color: '#FFD700', fontSize: 10, marginTop: 6 } }, '★ Cartel War discount active — 30% off this turn!')
-    ),
-
-    // BUILD TAB
-    tab === 'build' && React.createElement('div', null,
-      React.createElement('div', { style: { marginBottom: 8, fontSize: 11 } },
-        sec.owner === 'player'
-          ? `Building in: ${sec.name}`
-          : 'Select a sector you own on the Map tab to build.'
-      ),
-      sec.owner === 'player' && React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 } },
-        CONQUEST_BUILDINGS.map(bd => {
-          const built = sec.bld.includes(bd.id);
-          return React.createElement('div', { key: bd.id, style: { background: '#0A1020', border: `1px solid ${built ? '#22C55E' : '#1A2A3A'}`, borderRadius: 6, padding: 10 } },
-            React.createElement('div', { style: { color: built ? '#22C55E' : '#00BFFF', fontSize: 11, marginBottom: 2 } }, `${built ? '✓ ' : ''}${bd.name}`),
-            React.createElement('div', { style: { fontSize: 10, color: '#888', marginBottom: 6 } },
-              [bd.defMult > 1 && `DEF x${bd.defMult}`, bd.atkMult > 1 && `ATK x${bd.atkMult}`, bd.incBonus > 0 && `+${bd.incBonus}CR/t`, bd.pwrBonus > 0 && `+${bd.pwrBonus}PWR`].filter(Boolean).join(' | ') || 'Support'
-            ),
-            !built && React.createElement('button', { style: { ...btnStyle(), padding: '2px 8px', fontSize: 10 }, onClick: () => buildBuilding(bd.id) }, `Build ${bd.cost}CR${bd.costPWR > 0 ? ' +' + bd.costPWR + 'P' : ''}`)
-          );
-        })
-      )
-    ),
-
-    // DIPLOMACY TAB
-    tab === 'diplomacy' && React.createElement('div', null,
-      React.createElement('div', { style: { marginBottom: 10, fontSize: 11, color: '#888' } }, 'Manage faction relations. Positive relations reduce aggression; at +80 a non-aggression pact takes effect.'),
-      ['black_sun', 'exchange', 'csf'].map(faction => {
-        const rel = relations[faction] || 0;
-        const fData = CONQUEST_FACTION_DATA[faction];
-        return React.createElement('div', { key: faction, style: { background: '#0A1020', border: `1px solid ${fData.color}44`, borderRadius: 6, padding: 12, marginBottom: 8 } },
-          React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 } },
-            React.createElement('span', { style: { color: fData.color, fontSize: 12 } }, fData.name),
-            React.createElement('span', { style: { color: rel > 50 ? '#22C55E' : rel > 0 ? '#FFD700' : '#FF4040', fontSize: 12 } }, `${rel > 0 ? '+' : ''}${rel}`)
-          ),
-          React.createElement('div', { style: { background: '#1A2A1A', borderRadius: 3, height: 6, marginBottom: 8 } },
-            React.createElement('div', { style: { background: fData.color, width: `${Math.max(0, (rel + 100) / 2)}%`, height: '100%', borderRadius: 3, transition: 'width 0.3s' } })
-          ),
-          React.createElement('div', { style: { display: 'flex', gap: 6 } },
-            React.createElement('button', { style: { ...btnStyle(), fontSize: 10, padding: '3px 8px' }, onClick: () => adjustRelation(faction, 10) }, 'Bribe +10 (400CR)'),
-            React.createElement('button', { style: { ...btnStyle('#2A0808'), color: '#FF8060', borderColor: '#FF4040', fontSize: 10, padding: '3px 8px' }, onClick: () => adjustRelation(faction, -15) }, 'Provoke -15')
-          )
-        );
-      })
-    ),
-
-    // HOW TO PLAY TAB
-    tab === 'howtoplay' && React.createElement('div', { style: { fontSize: 11, lineHeight: 1.7, maxHeight: 420, overflowY: 'auto' } },
-      React.createElement('div', { style: { color: '#00BFFF', fontSize: 14, marginBottom: 10 } }, 'CORUSCANT CONQUEST — HOW TO PLAY'),
-      [
-        ['OBJECTIVE', 'Control enough sectors to generate 7,000 Credits per turn. Your Syndicate starts in Shadow Town and must expand upward through Coruscant\'s levels. Income per turn is shown in the header as "INC/T". Reach 7,000 and end a turn to win.'],
-        ['THE MAP', 'Coruscant is shown as a vertical cross-section from the Undercity at the bottom to the Senatorial Sky-Lounges at the top. Each circle is a sector. Click a sector to view its stats and issue orders. Red dashed rings indicate sectors you can attack from your current position.'],
-        ['FACTIONS', 'Three rival factions compete with you: The Black Sun (red) controls the upper levels, The Exchange (green) controls logistics and industry, and the CSF (blue) enforces law from mid-level stations. Neutral sectors (gray) are unclaimed and easier to take.'],
-        ['FACTION HQs (★)', 'Each faction including you has one Headquarters marked with ★HQ. HQs can NEVER be captured by rival factions. Use your HQ at Shadow Town L.1312 as a fallback position. Enemy HQs at Senatorial Sky-Lounges (Black Sun), CSF Training Hub (CSF), and Sector 4 Freight Hub (Exchange) are permanently held.'],
-        ['UNITS & COMBAT', 'Recruit units in the Military tab and add them to your Staging Force. Each unit type has separate ATK CP (attack combat points) and DEF CP (defense combat points). Enforcers are cheap and numerous. Tanks hit hard and hold ground. Field Medics improve defense. Combat Droids and Speeder Cavalry offer versatile options. Select an enemy sector adjacent to your territory on the Map tab, then click Attack to initiate combat.'],
-        ['COMBAT RESOLUTION', 'When you attack, you choose between Manual Tactical (the full tactical grid combat) or Auto-Resolve (instant calculation). Auto-Resolve compares your Staging Force ATK power against the garrison DEF power. A higher ATK wins with fewer casualties. A narrow win costs many units; a dominant win costs few.'],
-        ['BUILDINGS', 'Build structures in sectors you control via the Build tab. Bunkers and Turrets multiply DEF power. Rally Points and Armories multiply ATK power. Relays and Slicing Hubs boost income. Power Sub-Stations increase your PWR reserve. Buildings are permanent and stack with garrison units to make sectors dramatically harder to take.'],
-        ['DIPLOMACY', 'Manage relations in the Diplomacy tab. Bribing a faction costs 400 CR for +10 relations. Relations above +80 create a non-aggression state where that faction avoids attacking you. Relations below -50 cause aggressive expansion. The CSF starts hostile; The Exchange starts friendly.'],
-        ['HEAT', 'Every turn and every combat action generates Heat. High Heat triggers CSF crackdowns and crisis events. At Heat 100 a full raid occurs. Use buildings like the Slicing Hub to reduce heat, or keep relations with CSF positive to slow its rise.'],
-        ['WINNING', 'Dominate income-rich sectors in the upper levels — Senate District, Senate Precinct, and the Sky-Lounges generate the most credits per turn. Combined with a strong industrial base in The Works and the Freight Hub, you can reach the 7,000 CR/turn threshold. Plan your expansion route carefully through the mid-levels.'],
-      ].map(([title, body]) =>
-        React.createElement('div', { key: title, style: { marginBottom: 12 } },
-          React.createElement('div', { style: { color: '#FFD700', fontSize: 11, marginBottom: 3 } }, title),
-          React.createElement('div', { style: { color: '#B0B8C8' } }, body)
-        )
-      )
-    ),
-
-    // Log
-    React.createElement('div', { style: { marginTop: 10, background: '#030508', border: '1px solid #0A1020', borderRadius: 4, padding: 8, maxHeight: 80, overflowY: 'auto' } },
-      log.map((l, i) => React.createElement('div', { key: i, style: { fontSize: 10, color: i === 0 ? '#00BFFF' : '#4A6A8A', borderBottom: i < log.length - 1 ? '1px solid #0A1020' : 'none', paddingBottom: 2, marginBottom: 2 } }, l))
-    )
+  return (
+    <g>
+      <defs><linearGradient id={gid} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={sky[0]} /><stop offset="1" stopColor={sky[1]} /></linearGradient></defs>
+      <rect width="132" height="50" fill={`url(#${gid})`} />
+      {theme !== 'works' && theme !== 'industrial' && stars.map((s, i) => <circle key={i} cx={s[0]} cy={s[1]} r={s[2]} fill="#FFF" opacity="0.5" />)}
+      {art}
+    </g>
   );
 }
+// ===== CONQUEST UI ART END =====
+
+// ===== CONQUEST UI MAP BEGIN =====
+const CQ_TIERS = [
+  { y: 70, name: 'APEX', lvl: 'L.5100', a: '#2A1A4A', b: '#4A2A5A', glow: '#E8C860' },
+  { y: 185, name: 'LEGISLATURE', lvl: 'L.1900', a: '#18243E', b: '#2A3A62', glow: '#8CA8FF' },
+  { y: 300, name: 'MID LAYERS', lvl: 'L.1200', a: '#1A2028', b: '#2A323E', glow: '#B0C0D8' },
+  { y: 415, name: 'INDUSTRIAL', lvl: 'L.005', a: '#2A1A12', b: '#3E2418', glow: '#FF8A3A' },
+  { y: 530, name: 'SUB-SURFACE', lvl: 'L.1300', a: '#1A1428', b: '#2A1E3E', glow: '#B07CFF' },
+  { y: 645, name: 'UNDERCITY', lvl: 'DEPTHS', a: '#0E1C16', b: '#14281E', glow: '#6AE8A0' },
+];
+function CQUnitStrip({ gar, x, y, max = 5 }) {
+  const items = CQ.UNIT_ORDER.filter((k) => (gar[k] || 0) > 0).slice(0, max);
+  const more = CQ.UNIT_ORDER.filter((k) => (gar[k] || 0) > 0).length - items.length;
+  return (
+    <g>
+      {items.map((k, i) => (
+        <g key={k} transform={`translate(${x + i * 22},${y})`}>
+          <CQUnitGlyph type={k} size={13} />
+          <text x="13" y="10" fontSize="8" fill="#E8EEF8" fontFamily="monospace" fontWeight="700">{gar[k]}</text>
+        </g>
+      ))}
+      {more > 0 && <text x={x + items.length * 22} y={y + 10} fontSize="8" fill="#8A93A8" fontFamily="monospace">+{more}</text>}
+    </g>
+  );
+}
+function CQMap({ st, sel, onSelect, intelOf }) {
+  const [hover, setHover] = React.useState(null);
+  const list = CQ.SECTOR_LIST;
+  const selSec = sel && CQ.SECTORS[sel];
+  const attackable = (id) => !CQ.camp.canAttack(st, id);
+  const sources = sel && st.sec[sel] && st.sec[sel].owner !== 'player' && attackable(sel) ? list.filter((d) => CQ.SECTORS[sel].adj.includes(d.id) && st.sec[d.id].owner === 'player') : [];
+  const edges = []; const seen = new Set();
+  list.forEach((d) => d.adj.forEach((a) => { const k = [d.id, a].sort().join('|'); if (!seen.has(k)) { seen.add(k); edges.push([d, CQ.SECTORS[a]]); } }));
+  const col = (o) => (CQ.FACTIONS[o] || CQ.FACTIONS.neutral).color;
+  return (
+    <svg viewBox="0 0 1060 740" style={{ width: '100%', display: 'block', background: '#050810', borderRadius: 8 }}>
+      <defs>
+        <linearGradient id="cqSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1E1236" /><stop offset="0.45" stopColor="#0C1220" /><stop offset="1" stopColor="#050A08" /></linearGradient>
+        <pattern id="cqWin" width="14" height="12" patternUnits="userSpaceOnUse"><rect x="2" y="2" width="4" height="5" fill="#FFD890" opacity="0.13" /><rect x="8" y="5" width="3" height="4" fill="#7FD0FF" opacity="0.09" /></pattern>
+        <pattern id="cqPipe" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M0 11 H22 M11 0 V22" stroke="#FF8A3A" strokeWidth="1" opacity="0.07" /></pattern>
+        <filter id="cqGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" /></filter>
+        <marker id="cqArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#FF5468" /></marker>
+      </defs>
+      <rect width="1060" height="740" fill="url(#cqSky)" />
+      {/* distant towers */}
+      {Array.from({ length: 26 }, (_, i) => { const x = i * 42 - 10, h = 40 + ((i * 53) % 90); return <rect key={i} x={x} y={0} width={28 + (i % 3) * 8} height={h} fill="#10162A" opacity="0.8" />; })}
+      {CQ_TIERS.map((t, i) => (
+        <g key={t.name}>
+          <rect x="0" y={t.y - 56} width="1060" height="112" fill={t.a} opacity="0.55" />
+          <rect x="0" y={t.y - 56} width="1060" height="112" fill={i < 3 ? 'url(#cqWin)' : 'url(#cqPipe)'} />
+          <rect x="0" y={t.y - 56} width="1060" height="1.4" fill={t.glow} opacity="0.35" />
+          <text x="12" y={t.y - 40} fontSize="10" fontFamily="monospace" fontWeight="700" fill={t.glow} opacity="0.9" letterSpacing="2">{t.name}</text>
+          <text x="12" y={t.y - 28} fontSize="8" fontFamily="monospace" fill={t.glow} opacity="0.5">{t.lvl}</text>
+        </g>
+      ))}
+      {/* lanes between adjacent sectors */}
+      {edges.map(([a, b]) => {
+        const oa = st.sec[a.id].owner, ob = st.sec[b.id].owner; const same = oa === ob && oa !== 'neutral'; const front = (oa === 'player') !== (ob === 'player') && (oa === 'player' || ob === 'player');
+        return <line key={a.id + b.id} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={same ? col(oa) : front ? '#FF5468' : '#2A3448'} strokeWidth={same ? 2.4 : 1.6} opacity={same ? 0.7 : front ? 0.75 : 0.9} strokeDasharray={same ? '' : '6 5'}>{front && <animate attributeName="stroke-dashoffset" from="22" to="0" dur="1.4s" repeatCount="indefinite" />}</line>;
+      })}
+      {/* attack arrows from your adjacent sectors to the selected target */}
+      {sources.map((s) => { const t = CQ.SECTORS[sel]; const dx = t.x - s.x, dy = t.y - s.y, d = Math.hypot(dx, dy) || 1; const x1 = s.x + (dx / d) * 54, y1 = s.y + (dy / d) * 36, x2 = t.x - (dx / d) * 62, y2 = t.y - (dy / d) * 42; return <path key={s.id} d={`M${x1} ${y1} L${x2} ${y2}`} stroke="#FF5468" strokeWidth="3" strokeDasharray="9 6" markerEnd="url(#cqArrow)" fill="none">{<animate attributeName="stroke-dashoffset" from="30" to="0" dur="0.9s" repeatCount="indefinite" />}</path>; })}
+      {list.map((d) => {
+        const s = st.sec[d.id]; const own = s.owner, c = col(own); const isSel = d.id === sel, canAtk = own !== 'player' && attackable(d.id), seeing = intelOf(d.id);
+        const x0 = d.x - 66, y0 = d.y - 42; const fx = CQ.camp.fx(s); const pw = CQ.camp.power(s.gar);
+        return (
+          <g key={d.id} onClick={() => onSelect(d.id)} onMouseEnter={() => setHover(d.id)} onMouseLeave={() => setHover(null)} style={{ cursor: 'pointer' }}>
+            {(isSel || hover === d.id) && <rect x={x0 - 5} y={y0 - 5} width="142" height="94" rx="10" fill="none" stroke={isSel ? '#00FFC8' : '#FFFFFF'} strokeWidth={isSel ? 2.4 : 1.2} strokeDasharray={isSel ? '7 4' : ''} opacity={isSel ? 1 : 0.5}>{isSel && <animate attributeName="stroke-dashoffset" from="22" to="0" dur="1.6s" repeatCount="indefinite" />}</rect>}
+            {canAtk && <rect x={x0 - 3} y={y0 - 3} width="138" height="90" rx="9" fill="none" stroke="#FF5468" strokeWidth="1.8"><animate attributeName="opacity" values="0.25;1;0.25" dur="1.5s" repeatCount="indefinite" /></rect>}
+            <rect x={x0 - 1} y={y0 - 1} width="134" height="86" rx="7" fill={c} opacity="0.25" filter="url(#cqGlow)" />
+            <rect x={x0} y={y0} width="132" height="84" rx="6" fill="#0A1020" stroke={c} strokeWidth={d.isHQ ? 3 : 1.6} />
+            <svg x={x0 + 1} y={y0 + 1} width="130" height="50" viewBox="0 0 132 50" preserveAspectRatio="xMidYMid slice"><CQScene theme={d.theme} id={d.id} /></svg>
+            <rect x={x0 + 1} y={y0 + 1} width="130" height="49" rx="5" fill={c} opacity={own === 'neutral' ? 0.0 : 0.16} />
+            {/* pennant */}
+            <polygon points={`${x0 + 6},${y0 + 2} ${x0 + 24},${y0 + 2} ${x0 + 20},${y0 + 9} ${x0 + 24},${y0 + 16} ${x0 + 6},${y0 + 16}`} fill={c} opacity="0.95" />
+            <text x={x0 + 14} y={y0 + 12} fontSize="8" textAnchor="middle" fontFamily="monospace" fontWeight="700" fill="#06101A">{own === 'player' ? 'YOU' : own === 'neutral' ? '' : own === 'black_sun' ? 'BS' : own === 'csf' ? 'CSF' : 'EX'}</text>
+            {d.isHQ && <text x={x0 + 124} y={y0 + 14} fontSize="12" textAnchor="end" fill="#FFD36A">★</text>}
+            <rect x={x0 + 82} y={y0 + 34} width="48" height="13" rx="3" fill="#060A12" opacity="0.8" />
+            <text x={x0 + 106} y={y0 + 44} fontSize="9" textAnchor="middle" fontFamily="monospace" fontWeight="700" fill="#FFD36A">{d.income + fx.income}¢</text>
+            <text x={x0 + 6} y={y0 + 61} fontSize="8.6" fontFamily="monospace" fontWeight="700" fill="#EAF0FF">{d.name.length > 22 ? d.name.slice(0, 21) + '…' : d.name}</text>
+            {own === 'player' || seeing ? <CQUnitStrip gar={s.gar} x={x0 + 6} y={y0 + 68} /> : <text x={x0 + 6} y={y0 + 77} fontSize="8" fontFamily="monospace" fill={pw / 45 > 28 ? '#FF8A8A' : '#B8C0D4'}>? {CQ.camp.band(pw).toUpperCase()}</text>}
+            {Array.from({ length: CQ.camp.slots(s) }, (_, i) => <rect key={i} x={x0 + 100 + i * 6.4} y={y0 + 70} width="5" height="8" rx="1" fill={s.bld[i] ? '#FFD36A' : '#1C2638'} stroke="#0A1020" strokeWidth="0.5" />)}
+            {s.tired && CQ.camp.total(s.tired) > 0 && own === 'player' && <text x={x0 + 126} y={y0 + 61} fontSize="7" textAnchor="end" fontFamily="monospace" fill="#FF9A5A">SPENT {CQ.camp.total(s.tired)}</text>}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+// ===== CONQUEST UI MAP END =====
+
+// ===== CONQUEST UI BATTLE BEGIN =====
+const CQ_TS = 40;
+function CQHpBar({ hp, max, w = 30, shield }) {
+  const f = Math.max(0, Math.min(1, hp / max));
+  return <g><rect x="0" y="0" width={w} height="4" rx="1.5" fill="#05080C" opacity="0.85" /><rect x="0.6" y="0.6" width={(w - 1.2) * f} height="2.8" rx="1" fill={f > 0.6 ? '#3AE87A' : f > 0.3 ? '#FFC24A' : '#FF4A5A'} />{shield > 0 && <rect x="0" y="-2.4" width={Math.min(w, shield * 2.5)} height="1.8" fill="#7FD0FF" />}</g>;
+}
+function CQDecor({ k, x, y, r, acc }) {
+  const cx = x * CQ_TS + 8 + r * 24, cy = y * CQ_TS + 10 + r * 20;
+  if (k === 'lamp') return <g><rect x={cx} y={cy} width="2" height="12" fill="#2A3040" /><circle cx={cx + 1} cy={cy} r="3" fill={acc} opacity="0.9" /><circle cx={cx + 1} cy={cy} r="9" fill={acc} opacity="0.12" /></g>;
+  if (k === 'plant') return <g><rect x={cx} y={cy + 6} width="8" height="5" fill="#4A3A2A" /><circle cx={cx + 4} cy={cy + 3} r="5" fill="#2E7A48" /><circle cx={cx + 2} cy={cy + 1} r="3" fill="#48A868" /></g>;
+  if (k === 'banner') return <g><rect x={cx} y={cy} width="2" height="14" fill="#6A6A7A" /><polygon points={`${cx + 2},${cy} ${cx + 12},${cy + 2} ${cx + 12},${cy + 9} ${cx + 2},${cy + 11}`} fill={acc} opacity="0.85" /></g>;
+  if (k === 'crate') return <g><rect x={cx} y={cy + 2} width="10" height="9" fill="#5A4A38" /><rect x={cx} y={cy + 2} width="10" height="2" fill="#7A6A52" /><line x1={cx} y1={cy + 2} x2={cx + 10} y2={cy + 11} stroke="#3A2E22" strokeWidth="0.8" /></g>;
+  if (k === 'vent') return <g><rect x={cx} y={cy + 3} width="12" height="8" fill="#1A2028" /><rect x={cx + 1} y={cy + 4} width="10" height="1.4" fill="#0A0E14" /><rect x={cx + 1} y={cy + 7} width="10" height="1.4" fill="#0A0E14" /></g>;
+  if (k === 'neon') return <g><rect x={cx} y={cy + 2} width="14" height="5" fill={acc} opacity="0.9" /><rect x={cx - 3} y={cy - 1} width="20" height="11" fill={acc} opacity="0.12" /></g>;
+  if (k === 'pipe') return <g><rect x={cx} y={cy + 4} width="18" height="4" fill="#4A4038" /><rect x={cx} y={cy + 4} width="18" height="1.2" fill="#7A6A58" /><rect x={cx + 6} y={cy + 2} width="3" height="8" fill="#6A5A48" /></g>;
+  if (k === 'barrel') return <g><rect x={cx} y={cy + 1} width="8" height="11" rx="2" fill="#7A4A2A" /><rect x={cx} y={cy + 4} width="8" height="1.4" fill="#2A1A10" /><rect x={cx} y={cy + 8} width="8" height="1.4" fill="#2A1A10" /></g>;
+  return null;
+}
+function CQBoardTile({ th, x, y, t }) {
+  const px = x * CQ_TS, py = y * CQ_TS; const h = (x * 73 + y * 151) % 7;
+  return <rect x={px} y={py} width={CQ_TS} height={CQ_TS} fill={th.floor[(x + y) % 2]} opacity={0.92 + h * 0.01} />;
+}
+function CQRoof({ th, px, py, k }) {
+  const a = th.accent;
+  if (k === 0) return <g><rect x={px + 6} y={py - 14} width="6" height="10" fill={th.wall[1]} /><rect x={px + 5} y={py - 16} width="8" height="3" fill={a} opacity="0.8" /></g>;
+  if (k === 1) return <g><rect x={px + 24} y={py - 6} width="12" height="8" fill={th.wall[1]} /><rect x={px + 26} y={py - 4} width="8" height="1.6" fill="#000" opacity="0.5" /><rect x={px + 26} y={py - 1} width="8" height="1.6" fill="#000" opacity="0.5" /></g>;
+  if (k === 2) return <g><line x1={px + 30} y1={py - 8} x2={px + 30} y2={py - 22} stroke={th.wall[1]} strokeWidth="2" /><circle cx={px + 30} cy={py - 23} r="2.4" fill={a}><animate attributeName="opacity" values="1;0.2;1" dur="1.6s" repeatCount="indefinite" /></circle></g>;
+  if (k === 3) return <g><rect x={px + 4} y={py - 4} width="16" height="9" fill={a} opacity="0.35" /><rect x={px + 6} y={py - 2} width="12" height="5" fill="#FFFFFF" opacity="0.12" /></g>;
+  if (k === 4) return <g><circle cx={px + 14} cy={py - 2} r="7" fill={th.wall[1]} /><circle cx={px + 14} cy={py - 2} r="4" fill={a} opacity="0.45" /></g>;
+  return null;
+}
+function CQParticles({ th, w, h }) {
+  const kind = th.hazard; const n = 22; const colr = kind === 'fire' ? '#FF9A3A' : kind === 'steam' ? '#DCE8EE' : kind === 'acid' ? '#7AF0A0' : '#FFE890';
+  return <g pointerEvents="none">{Array.from({ length: n }, (_, i) => { const x = (i * 97) % w, y0 = (i * 53) % h; return <circle key={i} cx={x} cy={y0} r={1.4 + (i % 3) * 0.7} fill={colr} opacity="0.5"><animate attributeName="cy" values={`${y0};${y0 - 120};${y0}`} dur={6 + (i % 5) * 1.6 + 's'} repeatCount="indefinite" /><animate attributeName="opacity" values="0;0.65;0" dur={6 + (i % 5) * 1.6 + 's'} repeatCount="indefinite" /></circle>; })}</g>;
+}
+function CQBoardLayers({ b, th }) {
+  const tiles = [];
+  for (let y = 0; y < b.h; y++) for (let x = 0; x < b.w; x++) tiles.push(<CQBoardTile key={x + ',' + y} th={th} x={x} y={y} t={b.tiles[y][x]} />);
+  const walls = [], covers = [], hazards = [], voids = [];
+  for (let y = 0; y < b.h; y++) for (let x = 0; x < b.w; x++) {
+    const t = b.tiles[y][x], px = x * CQ_TS, py = y * CQ_TS; const below = b.tiles[y + 1] && b.tiles[y + 1][x] === 'w';
+    if (t === 'w') {
+      const lit = ((x * 31 + y * 17) % 5) < 2;
+      walls.push(<g key={'w' + x + ',' + y}>
+        {!below && <rect x={px} y={py + CQ_TS - 14} width={CQ_TS} height="14" fill={th.wall[1]} />}
+        <rect x={px} y={py - 8} width={CQ_TS} height={CQ_TS - (below ? -8 : 6)} fill={th.wall[0]} opacity="0.92" />
+        <rect x={px} y={py - 8} width={CQ_TS} height="3" fill="#FFFFFF" opacity="0.14" />
+        {!below && <rect x={px + 5} y={py + CQ_TS - 10} width="6" height="4" fill={th.accent} opacity={lit ? 0.9 : 0.25} />}
+        {!below && <rect x={px + 18} y={py + CQ_TS - 10} width="6" height="4" fill={th.accent} opacity={lit ? 0.3 : 0.8} />}
+        {(x + y) % 3 === 0 && <rect x={px + 12} y={py + 2} width="14" height="9" fill={th.wall[1]} opacity="0.7" />}
+        {CQRoof({ th, px, py, k: (x * 7 + y * 13) % 6 })}
+      </g>);
+    } else if (t === 'c') {
+      covers.push(<g key={'c' + x + ',' + y}><rect x={px + 5} y={py + 12} width={CQ_TS - 10} height="18" rx="2" fill={th.cover} opacity="0.95" /><rect x={px + 5} y={py + 12} width={CQ_TS - 10} height="4" fill="#FFFFFF" opacity="0.28" /><rect x={px + 5} y={py + 26} width={CQ_TS - 10} height="4" fill="#000" opacity="0.28" /><line x1={px + 9} y1={py + 18} x2={px + CQ_TS - 9} y2={py + 24} stroke="#000" strokeWidth="1" opacity="0.2" /></g>);
+    } else if (t === 'h') {
+      const kind = th.hazard; const colr = kind === 'fire' ? '#FF7A1A' : kind === 'steam' ? '#CFE0E8' : kind === 'acid' ? '#6AE87A' : '#FFE070';
+      hazards.push(<g key={'h' + x + ',' + y}><rect x={px + 2} y={py + 2} width={CQ_TS - 4} height={CQ_TS - 4} rx="6" fill={colr} opacity="0.18"><animate attributeName="opacity" values="0.1;0.3;0.1" dur={1.2 + (x % 3) * 0.3 + 's'} repeatCount="indefinite" /></rect>
+        {kind === 'fire' ? <polygon points={`${px + 12},${py + 32} ${px + 17},${py + 12} ${px + 22},${py + 24} ${px + 27},${py + 10} ${px + 30},${py + 32}`} fill={colr} opacity="0.85"><animate attributeName="opacity" values="0.5;1;0.5" dur="0.7s" repeatCount="indefinite" /></polygon>
+          : kind === 'sparks' ? <polyline points={`${px + 8},${py + 28} ${px + 16},${py + 14} ${px + 22},${py + 24} ${px + 32},${py + 8}`} fill="none" stroke={colr} strokeWidth="2"><animate attributeName="opacity" values="0.2;1;0.2" dur="0.5s" repeatCount="indefinite" /></polyline>
+            : <g><circle cx={px + 14} cy={py + 24} r="6" fill={colr} opacity="0.5"><animate attributeName="cy" values={`${py + 28};${py + 10}`} dur="1.8s" repeatCount="indefinite" /></circle><circle cx={px + 26} cy={py + 28} r="5" fill={colr} opacity="0.4"><animate attributeName="cy" values={`${py + 30};${py + 12}`} dur="2.2s" repeatCount="indefinite" /></circle></g>}</g>);
+    } else if (t === 'x') {
+      voids.push(<g key={'x' + x + ',' + y}><rect x={px} y={py} width={CQ_TS} height={CQ_TS} fill={th.river} opacity={th.voidEdges ? 0.98 : 0.8} /><rect x={px} y={py + 10} width={CQ_TS} height="2" fill="#FFFFFF" opacity="0.18"><animate attributeName="opacity" values="0.05;0.3;0.05" dur={1.6 + (y % 3) * 0.4 + 's'} repeatCount="indefinite" /></rect><rect x={px + 6} y={py + 26} width="22" height="2" fill="#FFFFFF" opacity="0.12" /></g>);
+    }
+  }
+  return <g>{tiles}{voids}{hazards}{b.decor.map((d, i) => <CQDecor key={i} k={d.k} x={d.x} y={d.y} r={d.r} acc={th.accent} />)}{covers}{walls}</g>;
+}
+function CQBattleBoard({ b, tick, selId, reach, targets, abTargets, mode, fx, hover, onTile, onHover }) {
+  const th = CQ.THEMES[b.theme] || CQ.THEMES.shadow; const W = b.w * CQ_TS, H = b.h * CQ_TS;
+  const layers = React.useMemo(() => <CQBoardLayers b={b} th={th} />, [b.seed, b.theme, b.tiles.length, b.nodeKey]);
+  const click = (e) => { const r = e.currentTarget.getBoundingClientRect(); const x = Math.floor(((e.clientX - r.left) / r.width) * b.w), y = Math.floor(((e.clientY - r.top) / r.height) * b.h); onTile(x, y); };
+  const move = (e) => { const r = e.currentTarget.getBoundingClientRect(); const x = Math.floor(((e.clientX - r.left) / r.width) * b.w), y = Math.floor(((e.clientY - r.top) / r.height) * b.h); onHover(x, y); };
+  const pz = b.attacker === 'p' ? b.zoneL : b.zoneR, ez = b.attacker === 'p' ? b.zoneR : b.zoneL;
+  const units = b.units.slice().sort((a, c) => a.y - c.y);
+  const pad = 6;
+  return (
+    <svg viewBox={`-${pad} -${pad + 8} ${W + pad * 2} ${H + pad * 2 + 8}`} style={{ width: '100%', display: 'block', background: th.sky[0], borderRadius: 8, cursor: 'crosshair' }}>
+      <defs><radialGradient id="cqVig" cx="0.5" cy="0.5" r="0.75"><stop offset="0.6" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.55" /></radialGradient></defs>
+      {layers}
+      {/* deployment zones */}
+      {pz.map((z, i) => <rect key={'pz' + i} x={z.x * CQ_TS} y={z.y * CQ_TS} width={CQ_TS} height={CQ_TS} fill="#2FC8FF" opacity={b.phase === 'deploy' ? 0.2 : 0.07} stroke="#2FC8FF" strokeOpacity={b.phase === 'deploy' ? 0.55 : 0.15} strokeWidth="1" />)}
+      {ez.map((z, i) => <rect key={'ez' + i} x={z.x * CQ_TS} y={z.y * CQ_TS} width={CQ_TS} height={CQ_TS} fill="#FF5468" opacity={b.phase === 'deploy' ? 0.16 : 0.06} stroke="#FF5468" strokeOpacity={b.phase === 'deploy' ? 0.4 : 0.12} strokeWidth="1" />)}
+      {/* objective node */}
+      <g transform={`translate(${b.node.x * CQ_TS + CQ_TS / 2},${b.node.y * CQ_TS + CQ_TS / 2})`}>
+        <circle r="18" fill="none" stroke="#FFD36A" strokeWidth="2" strokeDasharray="5 4"><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="12s" repeatCount="indefinite" /></circle>
+        <circle r="9" fill="#FFD36A" opacity="0.25"><animate attributeName="r" values="7;12;7" dur="2s" repeatCount="indefinite" /></circle>
+        <polygon points="0,-8 7,0 0,8 -7,0" fill="#FFD36A" />
+        <text y="30" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="#FFD36A" fontWeight="700">COMMAND NODE</text>
+      </g>
+      {/* highlights */}
+      {reach && Array.from(reach.values()).map((n) => (n.px === null ? null : <rect key={'r' + n.x + ',' + n.y} x={n.x * CQ_TS + 2} y={n.y * CQ_TS + 2} width={CQ_TS - 4} height={CQ_TS - 4} rx="5" fill="#2FC8FF" opacity="0.28" stroke="#2FC8FF" strokeOpacity="0.8" />))}
+      {targets && targets.map((t) => <g key={'t' + t.id}><circle cx={t.x * CQ_TS + CQ_TS / 2} cy={t.y * CQ_TS + CQ_TS / 2} r="19" fill="none" stroke="#FF5468" strokeWidth="2.4"><animate attributeName="r" values="17;21;17" dur="1s" repeatCount="indefinite" /></circle></g>)}
+      {abTargets && abTargets.map((t) => <circle key={'a' + t.id} cx={t.x * CQ_TS + CQ_TS / 2} cy={t.y * CQ_TS + CQ_TS / 2} r="19" fill="none" stroke={mode === 'heal' ? '#3AE87A' : '#FFA03A'} strokeWidth="2.6" strokeDasharray="4 3" />)}
+      {hover && b.phase === 'battle' && mode === 'orbital' && <rect x={(hover.x - 1) * CQ_TS} y={(hover.y - 1) * CQ_TS} width={CQ_TS * 3} height={CQ_TS * 3} fill="#FF5468" opacity="0.28" stroke="#FF5468" strokeWidth="2" />}
+      {/* units */}
+      {units.map((u) => {
+        if (u.x < 0) return null; const mine = u.team === 'p'; const c = mine ? '#2FC8FF' : '#FF5468'; const d = CQ.UNITS[u.type]; const spent = mine && b.phase === 'battle' && b.turn === 'p' && u.acted;
+        return (
+          <g key={u.id} style={{ transform: `translate(${u.x * CQ_TS}px,${u.y * CQ_TS}px)`, transition: 'transform 0.3s ease-out' }}>
+            <ellipse cx={CQ_TS / 2} cy={CQ_TS - 6} rx="14" ry="5" fill="#000" opacity="0.4" />
+            {u.id === selId && <circle cx={CQ_TS / 2} cy={CQ_TS / 2} r="19" fill="none" stroke="#FFFFFF" strokeWidth="2.4"><animate attributeName="opacity" values="1;0.4;1" dur="1.1s" repeatCount="indefinite" /></circle>}
+            <circle cx={CQ_TS / 2} cy={CQ_TS / 2} r="16" fill={mine ? '#0C2234' : '#341018'} stroke={c} strokeWidth="2.2" opacity={spent ? 0.55 : 1} />
+            <g transform={`translate(${CQ_TS / 2 - 12},${CQ_TS / 2 - 12})`} opacity={spent ? 0.55 : 1}><CQUnitGlyph type={u.type} size={24} color={mine ? d.col : '#FF9AA6'} /></g>
+            <g transform="translate(5,2)"><CQHpBar hp={u.hp} max={u.max} w={30} shield={u.shield} /></g>
+            {u.sup > 0 && <text x="4" y="14" fontSize="9" fill="#FFC24A">⇩</text>}
+            {u.shield > 0 && <text x={CQ_TS - 8} y="14" fontSize="9" fill="#7FD0FF">◈</text>}
+            {tick >= 0 && u.cd && d.ab && u.cd[d.ab.id] > 0 && <text x={CQ_TS - 4} y={CQ_TS - 3} fontSize="9" textAnchor="end" fill="#FFC24A" fontFamily="monospace">{u.cd[d.ab.id]}</text>}
+          </g>
+        );
+      })}
+      {/* effects */}
+      {fx.map((f) => {
+        const cx = (x) => x * CQ_TS + CQ_TS / 2;
+        if (f.k === 'shot') { const x1 = cx(f.from[0]), y1 = cx(f.from[1]), x2 = cx(f.to[0]), y2 = cx(f.to[1]); const col = f.team === 'p' ? '#7FE8FF' : '#FF8A9A'; return <g key={f.id}><line x1={x1} y1={y1} x2={x2} y2={y2} stroke={col} strokeWidth={f.big ? 4 : 2} strokeLinecap="round" opacity="0.9"><animate attributeName="opacity" from="1" to="0" dur="0.45s" fill="freeze" /></line><circle r={f.big ? 5 : 3} fill="#FFF"><animate attributeName="cx" from={x1} to={x2} dur="0.22s" fill="freeze" /><animate attributeName="cy" from={y1} to={y2} dur="0.22s" fill="freeze" /><animate attributeName="opacity" from="1" to="0" dur="0.3s" fill="freeze" /></circle></g>; }
+        if (f.k === 'hit') return <text key={f.id} x={cx(f.x)} y={f.y * CQ_TS + 10} textAnchor="middle" fontSize="15" fontWeight="800" fontFamily="monospace" fill="#FFE070" stroke="#000" strokeWidth="0.8">-{f.v}<animate attributeName="y" from={f.y * CQ_TS + 10} to={f.y * CQ_TS - 16} dur="0.9s" fill="freeze" /><animate attributeName="opacity" from="1" to="0" dur="1s" fill="freeze" /></text>;
+        if (f.k === 'miss') return <text key={f.id} x={cx(f.x)} y={f.y * CQ_TS + 10} textAnchor="middle" fontSize="11" fontWeight="700" fontFamily="monospace" fill="#AAB">blocked<animate attributeName="y" from={f.y * CQ_TS + 10} to={f.y * CQ_TS - 10} dur="0.9s" fill="freeze" /><animate attributeName="opacity" from="1" to="0" dur="1s" fill="freeze" /></text>;
+        if (f.k === 'heal') return <text key={f.id} x={cx(f.x)} y={f.y * CQ_TS + 10} textAnchor="middle" fontSize="15" fontWeight="800" fontFamily="monospace" fill="#3AE87A" stroke="#000" strokeWidth="0.8">+{f.v}<animate attributeName="y" from={f.y * CQ_TS + 10} to={f.y * CQ_TS - 16} dur="0.9s" fill="freeze" /><animate attributeName="opacity" from="1" to="0" dur="1s" fill="freeze" /></text>;
+        if (f.k === 'kill') return <circle key={f.id} cx={cx(f.x)} cy={cx(f.y)} r="6" fill="#FFB04A" opacity="0.9"><animate attributeName="r" from="6" to="30" dur="0.5s" fill="freeze" /><animate attributeName="opacity" from="0.9" to="0" dur="0.5s" fill="freeze" /></circle>;
+        if (f.k === 'smash') return <circle key={f.id} cx={cx(f.x)} cy={cx(f.y)} r="10" fill="none" stroke="#FFC24A" strokeWidth="4"><animate attributeName="r" from="10" to="46" dur="0.4s" fill="freeze" /><animate attributeName="opacity" from="1" to="0" dur="0.45s" fill="freeze" /></circle>;
+        if (f.k === 'shell') { const x2 = cx(f.to[0]), y2 = cx(f.to[1]); return <circle key={f.id} cx={x2} cy={y2} r="8" fill="#FFA03A" opacity="0.8"><animate attributeName="r" from="8" to="50" dur="0.55s" fill="freeze" /><animate attributeName="opacity" from="0.9" to="0" dur="0.55s" fill="freeze" /></circle>; }
+        if (f.k === 'orbital') return <g key={f.id}><rect x={cx(f.x) - 4} y="-8" width="8" height={cx(f.y) + 8} fill="#FF5468" opacity="0.8"><animate attributeName="opacity" from="0.9" to="0" dur="0.7s" fill="freeze" /></rect><rect x={(f.x - 1) * CQ_TS} y={(f.y - 1) * CQ_TS} width={CQ_TS * 3} height={CQ_TS * 3} fill="#FFA03A" opacity="0.7"><animate attributeName="opacity" from="0.8" to="0" dur="0.9s" fill="freeze" /></rect></g>;
+        return null;
+      })}
+      <CQParticles th={th} w={W} h={H} />
+      <rect x="-6" y="-14" width={W + 12} height={H + 20} fill="url(#cqVig)" pointerEvents="none" />
+      <rect x="0" y="0" width={W} height={H} fill="transparent" onClick={click} onMouseMove={move} onMouseLeave={() => onHover(-1, -1)} />
+    </svg>
+  );
+}
+// ===== CONQUEST UI BATTLE END =====
+
+// ===== CONQUEST UI BATTLE CONTROLLER BEGIN =====
+function CQBattle({ battle, meta, title, onDone }) {
+  const tb = CQ.tb, U = CQ.UNITS;
+  const bRef = React.useRef(battle); const b = bRef.current;
+  const [tick, setTick] = React.useState(0);
+  const [selId, setSelId] = React.useState(null);
+  const [mode, setMode] = React.useState('idle');
+  const [hover, setHover] = React.useState(null);
+  const [fx, setFx] = React.useState([]);
+  const [busy, setBusy] = React.useState(false);
+  const [placeId, setPlaceId] = React.useState(null);
+  const [msg, setMsg] = React.useState('');
+  const lastN = React.useRef(0); const fxId = React.useRef(1);
+  const rndRef = React.useRef(tb.mb32((Date.now() % 1000003) + 17)); const rnd = () => rndRef.current();
+  const alive = React.useRef(true);
+  React.useEffect(() => () => { alive.current = false; }, []);
+  React.useEffect(() => { window.__cqBattle = b; return () => { if (window.__cqBattle === b) window.__cqBattle = null; }; }); // test hook for automated playtests
+  const bump = () => setTick((t) => t + 1);
+  const pull = () => {
+    const fresh = b.events.filter((e) => e.n > lastN.current); if (!fresh.length) return; lastN.current = fresh[fresh.length - 1].n;
+    const items = fresh.filter((e) => ['shot', 'hit', 'miss', 'heal', 'kill', 'smash', 'shell', 'orbital'].includes(e.k)).map((e) => ({ ...e, id: fxId.current++ }));
+    if (!items.length) return; setFx((f) => f.concat(items).slice(-30));
+    setTimeout(() => { if (alive.current) setFx((f) => f.filter((q) => !items.some((i) => i.id === q.id))); }, 1100);
+  };
+  const after = () => { tb.sweepDead(b); tb.checkEnd(b); pull(); bump(); };
+  const sel = b.units.find((u) => u.id === selId && u.hp > 0);
+  const mine = b.turn === 'p' && b.phase === 'battle' && !busy;
+  const reach = sel && mine && sel.team === 'p' && !sel.moved ? tb.reach(b, sel) : null;
+  const targets = sel && mine && sel.team === 'p' && !sel.acted && mode === 'idle' ? tb.targetsFrom(b, sel, sel.x, sel.y) : null;
+  const abOf = (u) => U[u.type].ab;
+  let abTargets = null;
+  if (sel && mine && mode === 'ability' && abOf(sel)) {
+    const id = abOf(sel).id;
+    if (id === 'heal') abTargets = b.units.filter((q) => q.hp > 0 && q.team === 'p' && q.id !== sel.id && q.type !== 'trt' && q.hp < q.max && Math.hypot(q.x - sel.x, q.y - sel.y) <= 4.001);
+    else if (id === 'shell') abTargets = b.units.filter((q) => q.hp > 0 && q.team === 'e' && Math.hypot(q.x - sel.x, q.y - sel.y) <= sel.rng + 0.001);
+    else abTargets = tb.targetsFrom(b, sel, sel.x, sel.y);
+  }
+  const unplaced = b.units.filter((u) => u.team === 'p' && u.x < 0 && !u.immobile);
+  const placed = b.units.filter((u) => u.team === 'p' && u.x >= 0 && !u.immobile);
+  const cap = b.depCap;
+
+  const runEnemy = () => {
+    setBusy(true);
+    const step = () => {
+      if (!alive.current) return;
+      if (b.phase !== 'battle' || b.turn !== 'e') { setBusy(false); bump(); return; }
+      const e = tb.aiStep(b, 'e', rnd); pull(); bump();
+      if (e) { setTimeout(step, 430); }
+      else { tb.endTurn(b, rnd); pull(); bump(); if (b.phase === 'battle' && b.turn === 'e') setTimeout(step, 430); else setBusy(false); }
+    };
+    setTimeout(step, 350);
+  };
+  const begin = () => {
+    if (b.phase !== 'deploy') return; tb.begin(b); pull(); bump(); setMsg('');
+    if (b.turn === 'e') runEnemy();
+  };
+  const endMyTurn = () => {
+    if (!mine) return; tb.endTurn(b, rnd); pull(); setSelId(null); setMode('idle'); bump();
+    if (b.phase === 'battle' && b.turn === 'e') runEnemy();
+  };
+  const autoRest = () => { if (b.phase !== 'battle' || busy) return; let g = 0; while (b.phase === 'battle' && g++ < 80) tb.aiTeamTurn(b, b.turn, rnd); pull(); bump(); };
+  const doRetreat = () => { if (b.phase !== 'battle' || b.attacker !== 'p' || busy) return; if (window.confirm('Retreat? Survivors fall back, but about a quarter of them are lost in the withdrawal.')) { tb.retreat(b); bump(); } };
+  const onHover = (x, y) => setHover(x < 0 ? null : { x, y });
+  const onTile = (x, y) => {
+    if (x < 0 || y < 0 || x >= b.w || y >= b.h) return;
+    if (b.phase === 'deploy') {
+      const here = tb.unitAt(b, x, y);
+      if (here && here.team === 'p') { tb.undeploy(b, here.id); setPlaceId(here.id); bump(); return; }
+      if (placeId == null) { setMsg('Pick a unit from the roster first.'); return; }
+      const u = b.units.find((q) => q.id === placeId);
+      if (u && tb.deployAt(b, 'p', placeId, x, y)) { const nxt = b.units.find((q) => q.team === 'p' && q.x < 0 && !q.immobile && q.type === u.type); setPlaceId(nxt ? nxt.id : null); setMsg(''); bump(); } else setMsg('Place units inside the cyan deployment zone on a free tile.');
+      return;
+    }
+    if (!mine) return;
+    const u = tb.unitAt(b, x, y);
+    if (mode === 'orbital') { if (tb.orbital(b, 'p', x, y)) { setMode('idle'); after(); } return; }
+    if (mode === 'ability' && sel) { const ab = abOf(sel); const px = ab.id === 'smash' ? sel.x : x, py = ab.id === 'smash' ? sel.y : y; if (tb.doAbility(b, sel, px, py, rnd)) { setMode('idle'); setMsg(''); after(); } else setMsg('Not a valid target for that ability.'); return; }
+    if (u && u.team === 'p') { setSelId(u.id); setMode('idle'); setMsg(''); return; }
+    if (!sel) return;
+    if (u && u.team === 'e') { if (sel.acted) { setMsg('That unit has already acted.'); return; } if (tb.canHit(b, sel, u, null, null, false)) { tb.doAttack(b, sel, u, rnd); setMsg(''); after(); } else setMsg('Out of range or no line of sight. Move closer first.'); return; }
+    if (!u && reach && !sel.moved && reach.has(x + ',' + y) && (x !== sel.x || y !== sel.y)) { tb.doMove(b, sel, x, y); setMsg(''); pull(); bump(); }
+  };
+  const useAbility = () => {
+    if (!sel || sel.acted) return; const ab = abOf(sel); if (!ab || !tb.abilityReady(sel)) { setMsg('Ability on cooldown.'); return; }
+    if (ab.id === 'smash') { if (tb.doAbility(b, sel, sel.x, sel.y, rnd)) { setMode('idle'); setMsg(''); after(); } else setMsg('No enemy adjacent.'); return; }
+    setMode(mode === 'ability' ? 'idle' : 'ability'); setMsg(mode === 'ability' ? '' : `${ab.name}: pick a target.`);
+  };
+  React.useEffect(() => {
+    const k = (e) => { if (b.phase === 'battle') { if (e.key === 'e' || e.key === 'E' || e.key === 'Enter') { e.preventDefault(); endMyTurn(); } if (e.key === 'Escape') { setSelId(null); setMode('idle'); } if ((e.key === 'a' || e.key === 'A') && sel) useAbility(); } };
+    window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k);
+  });
+  const hoverUnit = hover ? tb.unitAt(b, hover.x, hover.y) : null;
+  let preview = '';
+  if (hoverUnit && sel && sel.team === 'p' && hoverUnit.team === 'e' && mine) { const raw = tb.dmgVs(b, sel, hoverUnit); preview = `${U[sel.type].short} vs ${U[hoverUnit.type].short}: ~${Math.max(0, raw)} damage${raw <= 0 ? ' (armor stops it, chip chance only)' : ''}${tb.canHit(b, sel, hoverUnit, null, null, false) ? '' : ' (out of range or blocked)'}`; }
+  const counts = (team) => { const o = {}; b.units.filter((u) => u.team === team && u.hp > 0 && !u.immobile).forEach((u) => { o[u.type] = (o[u.type] || 0) + 1; }); (b.reserve[team] || []).forEach((k) => { o[k] = (o[k] || 0) + 1; }); return o; };
+  const done = b.phase === 'done'; const res = b.result;
+  const won = done && res.winner === 'p'; const th = CQ.THEMES[b.theme] || {};
+  const panel = { background: '#0A101C', border: '1px solid #1B2A40', borderRadius: 8, padding: 10 };
+  const btn = (c, dis) => ({ padding: '7px 12px', background: dis ? '#121826' : c + '22', color: dis ? '#4A5468' : c, border: '1px solid ' + (dis ? '#1B2536' : c), borderRadius: 5, cursor: dis ? 'default' : 'pointer', fontFamily: 'monospace', fontSize: 12, fontWeight: 700, letterSpacing: '0.04em' });
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 80, background: 'radial-gradient(circle at 50% 0%, #101A2E 0%, #05080F 70%)', color: '#E0E8F8', fontFamily: 'monospace', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '8px 16px', borderBottom: '1px solid #1B2A40', background: '#070C16', flexWrap: 'wrap' }}>
+        <div style={{ color: th.accent || '#2FC8FF', fontWeight: 800, letterSpacing: '0.1em' }}>{title}</div>
+        <div style={{ color: '#7A88A8', fontSize: 11 }}>{th.name}</div>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 14, alignItems: 'center', fontSize: 12 }}>
+          {b.phase === 'battle' && <span>ROUND <b style={{ color: '#FFD36A' }}>{b.round}</b>/{b.maxRounds}</span>}
+          {b.phase === 'battle' && <span style={{ color: b.turn === 'p' ? '#2FC8FF' : '#FF5468', fontWeight: 800 }}>{b.turn === 'p' ? 'YOUR TURN' : 'ENEMY TURN'}</span>}
+          {b.phase === 'battle' && <span style={{ color: '#FFD36A' }} title="The attacker wins by holding the Command Node for two of its turns with no enemy within two tiles.">NODE HOLD {b.hold}/2</span>}
+          {b.phase === 'deploy' && <span style={{ color: '#FFD36A' }}>DEPLOYMENT {placed.length}/{placed.length + unplaced.length} placed (cap {cap})</span>}
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(220px,260px) minmax(0,1fr) minmax(220px,260px)', gap: 10, padding: 10, flex: 1, alignItems: 'start', maxWidth: 1700, width: '100%', margin: '0 auto', boxSizing: 'border-box' }}>
+        {/* left: roster or unit panel */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {b.phase === 'deploy' && (
+            <div style={panel}>
+              <div style={{ color: '#2FC8FF', fontWeight: 800, marginBottom: 6, letterSpacing: '0.08em' }}>DEPLOY YOUR FORCE</div>
+              <div style={{ fontSize: 11, color: '#8A98B8', marginBottom: 8 }}>Pick a unit type, then click a tile inside the cyan zone. Click a placed unit to pick it up again. Tanks and heavy units go in front, snipers and medics behind.</div>
+              {CQ.UNIT_ORDER.concat(['trt']).map((k) => { const n = unplaced.filter((u) => u.type === k).length; const tot = b.units.filter((u) => u.team === 'p' && u.type === k && !u.immobile).length; if (!tot) return null; const on = placeId != null && (b.units.find((q) => q.id === placeId) || {}).type === k;
+                return <div key={k} onClick={() => n && setPlaceId(unplaced.find((u) => u.type === k).id)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 6px', marginBottom: 3, borderRadius: 5, border: '1px solid ' + (on ? '#2FC8FF' : '#1B2A40'), background: on ? '#0E2A40' : '#0C1422', cursor: n ? 'pointer' : 'default', opacity: n ? 1 : 0.45 }}><CQUnitGlyph type={k} size={24} /><div style={{ flex: 1, fontSize: 11 }}>{U[k].name}<div style={{ color: '#6A7898', fontSize: 9 }}>{U[k].role}</div></div><b style={{ color: '#FFD36A' }}>{n}/{tot}</b></div>; })}
+              <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+                <button style={btn('#34D86A')} onClick={() => { tb.autoDeploy(b, 'p'); setPlaceId(null); bump(); }}>AUTO DEPLOY</button>
+                <button style={btn('#FF9A5A')} onClick={() => { b.units.filter((u) => u.team === 'p' && !u.immobile).forEach((u) => tb.undeploy(b, u.id)); setPlaceId(null); bump(); }}>CLEAR</button>
+              </div>
+              <button style={{ ...btn('#2FC8FF'), width: '100%', marginTop: 8, padding: 11, fontSize: 13 }} onClick={begin}>BEGIN BATTLE ▶</button>
+              {b.units.some((u) => u.team === 'p' && u.type !== 'trt') && b.reserve.p.length > 0 && <div style={{ fontSize: 10, color: '#FFC24A', marginTop: 6 }}>{b.reserve.p.length} reserve units arrive in waves.</div>}
+            </div>
+          )}
+          {b.phase !== 'deploy' && (
+            <div style={panel}>
+              {sel ? (
+                <div>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 6 }}><CQUnitGlyph type={sel.type} size={34} color={sel.team === 'p' ? U[sel.type].col : '#FF9AA6'} /><div><div style={{ fontWeight: 800, color: sel.team === 'p' ? '#2FC8FF' : '#FF5468' }}>{U[sel.type].name}</div><div style={{ fontSize: 10, color: '#7A88A8' }}>{U[sel.type].role}{sel.team === 'e' ? ' (enemy)' : ''}</div></div></div>
+                  <div style={{ background: '#05080C', borderRadius: 3, height: 8, marginBottom: 6 }}><div style={{ width: (100 * sel.hp / sel.max) + '%', height: '100%', background: '#3AE87A', borderRadius: 3 }} /></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, fontSize: 11, marginBottom: 6 }}><span>HP {sel.hp}/{sel.max}{sel.shield > 0 ? ` +${sel.shield}◈` : ''}</span><span>MOVE {sel.mov}</span><span>ATK {sel.atk}</span><span>ARMOR {sel.armor}</span><span>RANGE {sel.rng < 2 ? 'melee' : sel.rng}</span><span>{sel.sup > 0 ? 'SUPPRESSED' : ''}</span></div>
+                  <div style={{ fontSize: 10, color: '#9AA8C8', marginBottom: 6 }}>{U[sel.type].passive}</div>
+                  {sel.team === 'p' && abOf(sel) && <div><button style={{ ...btn('#FFC24A', !mine || sel.acted || !tb.abilityReady(sel)), width: '100%', background: mode === 'ability' ? '#FFC24A33' : undefined }} onClick={useAbility}>[A] {abOf(sel).name.toUpperCase()}{sel.cd[abOf(sel).id] > 0 ? ` (cooldown ${sel.cd[abOf(sel).id]})` : ''}</button><div style={{ fontSize: 10, color: '#8A98B8', marginTop: 4 }}>{abOf(sel).desc}</div></div>}
+                  {sel.team === 'p' && mine && <div style={{ fontSize: 10, color: '#6A7898', marginTop: 6 }}>{sel.moved ? 'Moved. ' : 'Click a blue tile to move. '}{sel.acted ? 'Acted.' : 'Click a red-ringed enemy to shoot.'}</div>}
+                </div>
+              ) : <div style={{ fontSize: 11, color: '#8A98B8' }}>Click one of your units to select it. Blue tiles show where it can move; red rings show targets in range and line of sight.<div style={{ marginTop: 8, color: '#6A7898' }}>Hotkeys: E end turn · A ability · Esc deselect.</div></div>}
+            </div>
+          )}
+          <div style={panel}>
+            <div style={{ fontSize: 11, color: '#2FC8FF', fontWeight: 800, marginBottom: 4 }}>YOUR FORCES</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>{Object.entries(counts('p')).map(([k, n]) => <span key={k} style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 11 }}><CQUnitGlyph type={k} size={16} />{n}</span>)}</div>
+            <div style={{ fontSize: 11, color: '#FF5468', fontWeight: 800, margin: '8px 0 4px' }}>ENEMY FORCES</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>{Object.entries(counts('e')).map(([k, n]) => <span key={k} style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 11 }}><CQUnitGlyph type={k} size={16} color="#FF9AA6" />{n}</span>)}</div>
+          </div>
+        </div>
+        {/* centre: board */}
+        <div>
+          <CQBattleBoard b={b} tick={tick} selId={selId} reach={reach} targets={targets} abTargets={abTargets} mode={mode === 'ability' && sel && abOf(sel) ? (abOf(sel).id === 'heal' ? 'heal' : 'ability') : mode} fx={fx} hover={hover} onTile={onTile} onHover={onHover} />
+          <div style={{ minHeight: 18, fontSize: 11, color: msg ? '#FFC24A' : '#8A98B8', marginTop: 6 }}>{msg || preview || (b.phase === 'deploy' ? 'Deployment: place your units, then begin.' : b.turn === 'p' ? 'Your move.' : 'The enemy is moving…')}</div>
+        </div>
+        {/* right: controls and log */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {b.phase === 'battle' && (
+            <div style={panel}>
+              <button style={{ ...btn('#2FC8FF', !mine), width: '100%', padding: 11, fontSize: 13 }} onClick={endMyTurn}>END TURN [E] ▶</button>
+              {b.orbital.p > 0 && <button style={{ ...btn('#FF5468', !mine), width: '100%', marginTop: 6, background: mode === 'orbital' ? '#FF546833' : undefined }} onClick={() => setMode(mode === 'orbital' ? 'idle' : 'orbital')}>ORBITAL STRIKE ({b.orbital.p})</button>}
+              <button style={{ ...btn('#34D86A', busy), width: '100%', marginTop: 6 }} onClick={autoRest}>AUTO-PLAY THE REST</button>
+              {b.attacker === 'p' && <button style={{ ...btn('#FF9A5A', busy), width: '100%', marginTop: 6 }} onClick={doRetreat}>RETREAT</button>}
+            </div>
+          )}
+          <div style={panel}>
+            <div style={{ fontSize: 11, color: '#FFD36A', fontWeight: 800, marginBottom: 4 }}>BATTLE LOG</div>
+            <div style={{ maxHeight: 190, overflowY: 'auto', fontSize: 10, color: '#9AA8C8', lineHeight: 1.5 }}>{b.log.slice().reverse().slice(0, 18).map((l, i) => <div key={i} style={{ color: i === 0 ? '#E8F0FF' : undefined }}>{l}</div>)}</div>
+          </div>
+          <div style={{ ...panel, fontSize: 10, color: '#8A98B8', lineHeight: 1.5 }}>
+            <div style={{ color: '#2FC8FF', fontWeight: 800, marginBottom: 3 }}>FIELD RULES</div>
+            Dark blocks block movement and sight. Crates give cover (-2 damage at range). Glowing patches burn at end of turn. Your side moves first when attacking. {b.attacker === 'p' ? 'Hold the Command Node to win early.' : 'Hold out for 22 rounds or destroy the attackers.'}
+          </div>
+        </div>
+      </div>
+      {done && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'rgba(3,6,12,0.82)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ ...panel, width: 'min(560px,92vw)', padding: 22, border: '2px solid ' + (won ? '#34D86A' : '#FF5468'), boxShadow: '0 0 40px ' + (won ? '#34D86A55' : '#FF546855') }}>
+            <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: '0.12em', color: won ? '#34D86A' : '#FF5468' }}>{res.reason === 'retreat' ? 'RETREAT' : won ? (meta.kind === 'defense' ? 'SECTOR HELD' : 'VICTORY') : (meta.kind === 'defense' ? 'SECTOR LOST' : 'DEFEAT')}</div>
+            <div style={{ fontSize: 12, color: '#9AA8C8', margin: '4px 0 12px' }}>{res.reason === 'node' ? 'The Command Node was seized.' : res.reason === 'wiped' ? 'One side was wiped out.' : res.reason === 'timeout' ? 'The defenders held out until time ran out.' : 'You pulled your units out.'} Rounds: {res.rounds}.</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              {[['p', 'YOUR LOSSES', '#2FC8FF'], ['e', 'ENEMY LOSSES', '#FF5468']].map(([t, lbl, c]) => <div key={t}><div style={{ color: c, fontWeight: 800, fontSize: 11, marginBottom: 4 }}>{lbl}</div>{CQ.UNIT_ORDER.filter((k) => res.lost[t][k] > 0).map((k) => <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}><CQUnitGlyph type={k} size={18} />{res.lost[t][k]} {U[k].short}</div>)}{!CQ.UNIT_ORDER.some((k) => res.lost[t][k] > 0) && <div style={{ fontSize: 11, color: '#6A7898' }}>none</div>}</div>)}
+            </div>
+            <button style={{ ...btn(won ? '#34D86A' : '#FF9A5A'), width: '100%', marginTop: 16, padding: 12, fontSize: 14 }} onClick={() => onDone(res)}>CONTINUE</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+// ===== CONQUEST UI BATTLE CONTROLLER END =====
+
+// ===== CONQUEST UI MAIN BEGIN =====
+const CQ_PANEL = { background: '#0A101C', border: '1px solid #1B2A40', borderRadius: 8, padding: 12 };
+const cqBtn = (c, dis, extra) => ({ padding: '6px 12px', background: dis ? '#101624' : c + '22', color: dis ? '#4A5468' : c, border: '1px solid ' + (dis ? '#1B2536' : c), borderRadius: 5, cursor: dis ? 'not-allowed' : 'pointer', fontFamily: 'monospace', fontSize: 11, fontWeight: 700, letterSpacing: '0.04em', ...(extra || {}) });
+function CQStepper({ n, max, onChange, step = 1 }) {
+  return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><button style={cqBtn('#8A98B8', n <= 0, { padding: '1px 7px' })} onClick={() => n > 0 && onChange(Math.max(0, n - step))}>-</button><b style={{ minWidth: 20, textAlign: 'center', color: '#FFD36A', fontSize: 12 }}>{n}</b><button style={cqBtn('#34D86A', n >= max, { padding: '1px 7px' })} onClick={() => n < max && onChange(Math.min(max, n + step))}>+</button></span>;
+}
+function CQUnitStats({ k }) { const u = CQ.UNITS[k]; return <span style={{ fontSize: 10, color: '#8A98B8' }}>HP {u.hp} · ATK {u.atk} · ARM {u.armor} · RNG {u.rng < 2 ? 'melee' : u.rng} · MOV {u.mov}</span>; }
+function CQGarList({ gar, tired }) { const ks = CQ.UNIT_ORDER.filter((k) => (gar[k] || 0) > 0); if (!ks.length) return <div style={{ fontSize: 11, color: '#6A7898' }}>No units stationed.</div>; return <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>{ks.map((k) => <span key={k} title={CQ.UNITS[k].name} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#0E1626', border: '1px solid #1B2A40', borderRadius: 5, padding: '2px 6px', fontSize: 12 }}><CQUnitGlyph type={k} size={18} />{gar[k]}{tired && tired[k] > 0 ? <i style={{ color: '#FF9A5A', fontSize: 9 }}> ({tired[k]} spent)</i> : null}</span>)}</div>; }
+
+function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
+  const SAVE_KEY = 'swtor5_conquest_v2';
+  const [st, setSt] = React.useState(() => { try { const r = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); if (r && r.v === 2 && r.sec) return r; } catch (e) { /* new campaign */ } return CQ.camp.newCampaign(startCredits); });
+  const [sel, setSel] = React.useState('shadow_town');
+  const [tab, setTab] = React.useState('map');
+  const [ptab, setPtab] = React.useState('overview');
+  const [planner, setPlanner] = React.useState(null);
+  const [battleCtx, setBattleCtx] = React.useState(null);
+  const [report, setReport] = React.useState(null);
+  const [toast, setToast] = React.useState('');
+  const [moveTo, setMoveTo] = React.useState(null);
+  const [moveUnits, setMoveUnits] = React.useState({});
+  const [codexTab, setCodexTab] = React.useState('howto');
+  const toastT = React.useRef(null);
+  React.useEffect(() => { window.__cqState = st; }); // test hook for automated playtests
+  React.useEffect(() => { try { localStorage.setItem(SAVE_KEY, JSON.stringify(st)); } catch (e) { /* storage blocked */ } }, [st]);
+  const flash = (m) => { setToast(m); clearTimeout(toastT.current); toastT.current = setTimeout(() => setToast(''), 3200); };
+  const run = (res) => { if (res.ok) { setSt(res.state); } else flash(res.msg); return res.ok; };
+  const sd = CQ.SECTORS[sel] || CQ.SECTORS.shadow_town, ss = st.sec[sel];
+  const eco = CQ.camp.economy(st);
+  const intelOf = (id) => CQ.camp.intelLevel(st, id);
+  const col = (o) => (CQ.FACTIONS[o] || CQ.FACTIONS.neutral).color;
+  const U = CQ.UNITS;
+  const resetCampaign = () => { if (window.confirm('Reset the whole Conquest campaign?')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } setSt(CQ.camp.newCampaign(startCredits)); setSel('shadow_town'); setPlanner(null); setReport(null); } };
+
+  const endTurn = () => {
+    const r = CQ.camp.endTurn(st, Math.random); if (!r.ok) { flash(r.msg); return; }
+    setSt(r.state); if (r.events.length) setReport({ title: `TURN ${r.state.turn} REPORT`, lines: r.events.concat([`Treasury ${r.state.cr} CR.`]) });
+  };
+  // ---- attack planner
+  const openPlanner = (targetId) => {
+    const why = CQ.camp.canAttack(st, targetId); if (why) { flash(why); return; }
+    const srcs = CQ.camp.attackSources(st, targetId); if (!srcs.length) { flash('No rested units next to that sector. Units that moved or fought this turn are spent.'); return; }
+    const bySrc = {}; srcs.forEach((s) => { const g = {}; CQ.UNIT_ORDER.forEach((k) => { const n = Math.floor(s.avail[k] * 0.8 + (s.avail[k] > 0 && s.avail[k] < 3 ? 0.99 : 0)); if (n > 0) g[k] = Math.min(s.avail[k], n); }); if (Object.keys(g).length) bySrc[s.id] = g; });
+    setPlanner({ targetId, bySrc, forecast: null });
+  };
+  const planTotal = (p) => Object.values(p.bySrc).reduce((n, g) => n + CQ.camp.total(g), 0);
+  const setCommit = (srcId, k, n) => setPlanner((p) => { const bySrc = { ...p.bySrc, [srcId]: { ...(p.bySrc[srcId] || {}) } }; if (n > 0) bySrc[srcId][k] = n; else delete bySrc[srcId][k]; if (!Object.keys(bySrc[srcId]).length) delete bySrc[srcId]; return { ...p, bySrc, forecast: null }; });
+  const finishBattle = (meta, result) => { const out = CQ.camp.applyResult(st, meta, result, Math.random); setSt(out.st); setBattleCtx(null); setReport({ title: meta.kind === 'defense' ? 'DEFENSE REPORT' : 'ASSAULT REPORT', lines: [out.summary] }); };
+  const startTactical = () => {
+    const p = planner; if (!p || planTotal(p) === 0) { flash('Commit at least one unit.'); return; }
+    const { battle, meta } = CQ.camp.makeAttack(st, p.targetId, { bySrc: p.bySrc }, 0);
+    setBattleCtx({ battle, meta, title: `ASSAULT ON ${CQ.SECTORS[p.targetId].name.toUpperCase()}` }); setPlanner(null);
+  };
+  const startAuto = () => {
+    const p = planner; if (!p || planTotal(p) === 0) { flash('Commit at least one unit.'); return; }
+    const out = CQ.camp.autoResolveAttack(st, p.targetId, { bySrc: p.bySrc }, Math.random); setSt(out.st); setPlanner(null);
+    setReport({ title: 'ASSAULT REPORT (AUTO-RESOLVED)', lines: [out.summary, `Fought ${out.result.rounds} rounds.`] });
+  };
+  const runForecast = () => {
+    const p = planner; if (!p || planTotal(p) === 0) return; const f = CQ.camp.forecast(st, p.targetId, { bySrc: p.bySrc }, 12, Math.random);
+    const known = intelOf(p.targetId); const noise = known ? 0 : Math.round((Math.random() - 0.5) * 36); setPlanner({ ...p, forecast: { ...f, winPct: Math.max(0, Math.min(100, f.winPct + noise)), rough: !known } });
+  };
+  // ---- defense
+  const startDefense = () => { const { battle, meta } = CQ.camp.makeDefense(st, st.pending, 0); setBattleCtx({ battle, meta, title: `DEFENDING ${CQ.SECTORS[st.pending.targetId].name.toUpperCase()}` }); };
+  const autoDefense = () => { const out = CQ.camp.autoResolveDefense(st, Math.random); setSt(out.st); setReport({ title: 'DEFENSE REPORT (AUTO-RESOLVED)', lines: [out.summary] }); };
+
+  // ---- derived UI helpers
+  const canAtk = sel && !CQ.camp.canAttack(st, sel);
+  const slotsUsed = ss ? ss.bld.length : 0;
+  const incPct = Math.min(100, Math.round((eco.cr / CQ.WIN_INCOME) * 100));
+  const tabBtn = (t, l) => <button key={t} style={cqBtn(tab === t ? '#2FC8FF' : '#6A7898', false, { background: tab === t ? '#0E2A40' : '#0A101C', padding: '7px 16px', fontSize: 12 })} onClick={() => setTab(t)}>{l}</button>;
+  const ptBtn = (t, l) => <button key={t} style={cqBtn(ptab === t ? '#FFD36A' : '#6A7898', false, { background: ptab === t ? '#2A2410' : '#0A101C', padding: '4px 10px' })} onClick={() => setPtab(t)}>{l}</button>;
+
+  const sectorPanel = () => {
+    if (!ss) return null;
+    const own = ss.owner === 'player'; const fxs = CQ.camp.fx(ss); const seeing = intelOf(sel);
+    return (
+      <div style={{ ...CQ_PANEL, padding: 0, overflow: 'hidden', border: '1px solid ' + col(ss.owner) }}>
+        <div style={{ position: 'relative' }}>
+          <svg viewBox="0 0 132 50" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: 120, display: 'block' }}><CQScene theme={sd.theme} id={sd.id} /></svg>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, #0A101C 100%)' }} />
+          <div style={{ position: 'absolute', left: 12, bottom: 6 }}><div style={{ fontSize: 15, fontWeight: 800, color: '#F0F4FF', textShadow: '0 1px 4px #000' }}>{sd.name}{sd.isHQ ? ' ★' : ''}</div><div style={{ fontSize: 10, color: col(ss.owner), letterSpacing: '0.1em' }}>{(CQ.FACTIONS[ss.owner] || {}).name.toUpperCase()} · {sd.tier.toUpperCase()}</div></div>
+        </div>
+        <div style={{ padding: 12 }}>
+          <div style={{ fontSize: 11, color: '#8A98B8', fontStyle: 'italic', marginBottom: 8 }}>{sd.lore}</div>
+          <div style={{ display: 'flex', gap: 14, fontSize: 12, marginBottom: 8, flexWrap: 'wrap' }}><span style={{ color: '#FFD36A' }}>¢ {sd.income + fxs.income}/turn</span><span style={{ color: '#34D86A' }}>⚡ {sd.pwr + fxs.pwrGen} PWR</span><span style={{ color: '#7FD0FF' }}>Cap {CQ.camp.total(ss.gar)}/{Math.max(fxs.cap, CQ.camp.total(ss.gar))}</span></div>
+          <div style={{ display: 'flex', gap: 4, marginBottom: 10, flexWrap: 'wrap' }}>{own && ptBtn('overview', 'Overview')}{own && ptBtn('recruit', 'Recruit')}{own && ptBtn('build', 'Build')}{own && ptBtn('move', 'Move')}</div>
+          {(!own || ptab === 'overview') && (
+            <div>
+              <div style={{ fontSize: 11, color: '#7A88A8', fontWeight: 800, marginBottom: 4 }}>GARRISON</div>
+              {own || seeing ? <CQGarList gar={ss.gar} tired={own ? ss.tired : null} /> : <div style={{ fontSize: 12, color: '#FFC24A' }}>Unknown force. Estimated strength: <b>{CQ.camp.band(CQ.camp.power(ss.gar)).toUpperCase()}</b>. Build an Intelligence Hub next to it for exact numbers.</div>}
+              <div style={{ fontSize: 11, color: '#7A88A8', fontWeight: 800, margin: '10px 0 4px' }}>BUILDINGS ({slotsUsed}/{CQ.camp.slots(ss)})</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>{ss.bld.map((b) => <span key={b} title={CQ.BLD[b].desc} style={{ fontSize: 10, background: '#2A2410', border: '1px solid #6A5A20', borderRadius: 4, padding: '2px 6px', color: '#FFD36A' }}>{CQ.BLD[b].name}</span>)}{!ss.bld.length && <span style={{ fontSize: 11, color: '#6A7898' }}>None</span>}</div>
+              {!own && (
+                <div style={{ marginTop: 12 }}>
+                  {canAtk ? <button style={cqBtn('#FF5468', false, { width: '100%', padding: 11, fontSize: 13 })} onClick={() => openPlanner(sel)}>⚔ PLAN ATTACK ON {sd.name.toUpperCase()}</button> : <div style={{ fontSize: 11, color: '#FFA03A' }}>{CQ.camp.canAttack(st, sel)}</div>}
+                </div>
+              )}
+              {own && <div style={{ fontSize: 10, color: '#6A7898', marginTop: 10 }}>Select an enemy sector on the map to attack it. You can send units from every sector of yours that borders it.</div>}
+            </div>
+          )}
+          {own && ptab === 'recruit' && (
+            <div style={{ maxHeight: 360, overflowY: 'auto' }}>
+              {CQ.UNIT_ORDER.map((k) => { const u = U[k]; const locked = u.req && !ss.bld.includes(u.req); const cost = CQ.camp.unitCost(st, sel, k); return (
+                <div key={k} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 4px', borderBottom: '1px solid #131C2C', opacity: locked ? 0.55 : 1 }}>
+                  <CQUnitGlyph type={k} size={30} />
+                  <div style={{ flex: 1 }}><div style={{ fontSize: 12, fontWeight: 800, color: '#E8F0FF' }}>{u.name}</div><CQUnitStats k={k} /><div style={{ fontSize: 10, color: '#6A7898' }}>{locked ? `Needs: ${CQ.BLD[u.req].name}` : u.role}</div></div>
+                  <div style={{ textAlign: 'right' }}><div style={{ fontSize: 11, color: '#FFD36A' }}>{cost}¢{u.pwr ? ` +${u.pwr}⚡` : ''}</div><div style={{ display: 'flex', gap: 3, marginTop: 3 }}><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => run(CQ.camp.recruit(st, sel, k, 1))}>+1</button><button style={cqBtn('#34D86A', locked, { padding: '3px 8px' })} onClick={() => run(CQ.camp.recruit(st, sel, k, 5))}>+5</button></div></div>
+                </div>); })}
+            </div>
+          )}
+          {own && ptab === 'build' && (
+            <div style={{ maxHeight: 400, overflowY: 'auto' }}>
+              <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>{Array.from({ length: CQ.camp.slots(ss) }, (_, i) => <div key={i} style={{ flex: 1, height: 26, borderRadius: 4, border: '1px solid ' + (ss.bld[i] ? '#6A5A20' : '#1B2A40'), background: ss.bld[i] ? '#2A2410' : '#0C1422', fontSize: 9, color: ss.bld[i] ? '#FFD36A' : '#4A5468', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', lineHeight: 1 }}>{ss.bld[i] ? CQ.BLD[ss.bld[i]].name : 'empty slot'}</div>)}</div>
+              {['Economy', 'Power', 'Military', 'Battle'].map((cat) => <div key={cat}><div style={{ fontSize: 10, color: '#7A88A8', fontWeight: 800, margin: '8px 0 3px', letterSpacing: '0.1em' }}>{cat.toUpperCase()}</div>{CQ.BUILDINGS.filter((b) => b.cat === cat).map((b) => { const built = ss.bld.includes(b.id); const why = built ? null : CQ.camp.buildCheck(st, sel, b.id); return (
+                <div key={b.id} style={{ padding: '5px 4px', borderBottom: '1px solid #131C2C' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}><span style={{ fontSize: 12, fontWeight: 800, color: built ? '#34D86A' : '#E8F0FF' }}>{built ? '✓ ' : ''}{b.name}</span><span style={{ fontSize: 11, color: '#FFD36A', whiteSpace: 'nowrap' }}>{b.cost}¢{b.pwr ? ` +${b.pwr}⚡` : ''}</span></div>
+                  <div style={{ fontSize: 10, color: '#8A98B8' }}>{b.desc}</div>
+                  <div style={{ marginTop: 3, display: 'flex', gap: 6, alignItems: 'center' }}>{built ? <button style={cqBtn('#FF9A5A', false, { padding: '2px 8px' })} onClick={() => run(CQ.camp.demolish(st, sel, b.id))}>Demolish (+{Math.round(b.cost * 0.4)}¢)</button> : <button style={cqBtn('#FFD36A', !!why, { padding: '2px 10px' })} onClick={() => run(CQ.camp.build(st, sel, b.id))}>Build</button>}{why && <span style={{ fontSize: 9, color: '#FFA03A' }}>{why}</span>}</div>
+                </div>); })}</div>)}
+            </div>
+          )}
+          {own && ptab === 'move' && (() => {
+            const dests = sd.adj.filter((id) => st.sec[id].owner === 'player'); const to = moveTo && dests.includes(moveTo) ? moveTo : dests[0]; const av = CQ.camp.avail(ss); const n = Object.values(moveUnits).reduce((a, b) => a + b, 0);
+            if (!dests.length) return <div style={{ fontSize: 11, color: '#8A98B8' }}>No adjacent sector of yours to move units into. Capture a neighbour first.</div>;
+            return (
+              <div>
+                <div style={{ fontSize: 11, color: '#8A98B8', marginBottom: 6 }}>Move units to an adjacent sector of yours (20 CR per unit). Units that moved this turn cannot attack.</div>
+                <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>{dests.map((id) => <button key={id} style={cqBtn(to === id ? '#2FC8FF' : '#6A7898', false, { background: to === id ? '#0E2A40' : undefined })} onClick={() => setMoveTo(id)}>{CQ.SECTORS[id].name}</button>)}</div>
+                {CQ.UNIT_ORDER.filter((k) => av[k] > 0).map((k) => <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}><CQUnitGlyph type={k} size={22} /><span style={{ flex: 1, fontSize: 12 }}>{U[k].name} <i style={{ color: '#6A7898' }}>({av[k]} ready)</i></span><CQStepper n={moveUnits[k] || 0} max={av[k]} onChange={(v) => setMoveUnits({ ...moveUnits, [k]: v })} /></div>)}
+                {!CQ.UNIT_ORDER.some((k) => av[k] > 0) && <div style={{ fontSize: 11, color: '#FFA03A' }}>All units here are spent this turn.</div>}
+                <button style={cqBtn('#34D86A', n === 0, { width: '100%', marginTop: 8, padding: 9 })} onClick={() => { if (n && run(CQ.camp.move(st, sel, to, moveUnits))) setMoveUnits({}); }}>MOVE {n} UNITS ({n * 20}¢)</button>
+              </div>
+            );
+          })()}
+        </div>
+      </div>
+    );
+  };
+
+  const plannerView = () => {
+    const p = planner; const t = st.sec[p.targetId], td = CQ.SECTORS[p.targetId]; const srcs = CQ.camp.attackSources(st, p.targetId); const total = planTotal(p); const cap = CQ.camp.depCapFor(st, Object.keys(p.bySrc)); const seeing = intelOf(p.targetId);
+    const efx = CQ.camp.cfgFromSectors([t], 'def');
+    return (
+      <div style={{ position: 'fixed', inset: 0, zIndex: 85, background: 'rgba(3,6,12,0.86)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'auto', padding: 12 }}>
+        <div style={{ ...CQ_PANEL, width: 'min(1040px,96vw)', border: '2px solid #FF5468', boxShadow: '0 0 40px #FF546855' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}><div style={{ fontSize: 18, fontWeight: 800, color: '#FF5468', letterSpacing: '0.1em' }}>⚔ ATTACK PLANNER: {td.name.toUpperCase()}</div><button style={cqBtn('#8A98B8')} onClick={() => setPlanner(null)}>✕ CANCEL</button></div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.3fr) minmax(0,1fr)', gap: 14 }}>
+            <div>
+              <div style={{ fontSize: 11, color: '#2FC8FF', fontWeight: 800, marginBottom: 6 }}>YOUR ASSAULT FORCE ({total} committed, {Math.min(total, cap)} fielded of {cap} max)</div>
+              {srcs.map((s) => <div key={s.id} style={{ ...CQ_PANEL, marginBottom: 8, background: '#0C1422' }}><div style={{ fontSize: 12, fontWeight: 800, color: '#E8F0FF', marginBottom: 4 }}>From {CQ.SECTORS[s.id].name}</div>{CQ.UNIT_ORDER.filter((k) => s.avail[k] > 0).map((k) => <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}><CQUnitGlyph type={k} size={22} /><span style={{ flex: 1, fontSize: 12 }}>{U[k].short} <i style={{ color: '#6A7898' }}>({s.avail[k]})</i></span><CQStepper n={(p.bySrc[s.id] || {})[k] || 0} max={s.avail[k]} onChange={(v) => setCommit(s.id, k, v)} /></div>)}</div>)}
+              <div style={{ display: 'flex', gap: 6 }}><button style={cqBtn('#34D86A')} onClick={() => { const bySrc = {}; srcs.forEach((s) => { const g = {}; CQ.UNIT_ORDER.forEach((k) => { if (s.avail[k] > 0) g[k] = s.avail[k]; }); bySrc[s.id] = g; }); setPlanner({ ...p, bySrc, forecast: null }); }}>SEND EVERYTHING</button><button style={cqBtn('#FF9A5A')} onClick={() => setPlanner({ ...p, bySrc: {}, forecast: null })}>CLEAR</button></div>
+              {total > cap && <div style={{ fontSize: 10, color: '#FFC24A', marginTop: 6 }}>Only {cap} units fit in the battle. The most expensive are fielded first, the rest stay home. A Command Center raises the cap.</div>}
+            </div>
+            <div>
+              <svg viewBox="0 0 132 50" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: 90, borderRadius: 6, display: 'block' }}><CQScene theme={td.theme} id={td.id} /></svg>
+              <div style={{ fontSize: 11, color: col(t.owner), fontWeight: 800, margin: '8px 0 4px' }}>DEFENDERS: {(CQ.FACTIONS[t.owner] || {}).name}</div>
+              {seeing ? <CQGarList gar={t.gar} /> : <div style={{ fontSize: 12, color: '#FFC24A' }}>Unknown. Estimated strength: <b>{CQ.camp.band(CQ.camp.power(t.gar)).toUpperCase()}</b>.</div>}
+              <div style={{ fontSize: 11, color: '#7A88A8', fontWeight: 800, margin: '8px 0 3px' }}>DEFENSES</div>
+              <div style={{ fontSize: 11, color: '#9AA8C8', lineHeight: 1.5 }}>{t.bld.length ? t.bld.map((b) => `${CQ.BLD[b].name}: ${CQ.BLD[b].desc}`).join(' · ') : 'No fortifications.'}{efx.turrets ? ' Expect auto turrets.' : ''}</div>
+              <div style={{ ...CQ_PANEL, background: '#0C1422', marginTop: 10 }}>
+                <button style={cqBtn('#FFD36A', total === 0, { width: '100%' })} onClick={runForecast}>RUN BATTLE FORECAST (12 simulated battles)</button>
+                {p.forecast && <div style={{ marginTop: 8, fontSize: 12 }}>Win chance <b style={{ color: p.forecast.winPct >= 60 ? '#34D86A' : p.forecast.winPct >= 35 ? '#FFC24A' : '#FF5468', fontSize: 18 }}>{p.forecast.winPct}%</b> · expect to lose ~{p.forecast.lossPct}% of the force · ~{p.forecast.rounds} rounds{p.forecast.rough ? <div style={{ color: '#FFA03A', fontSize: 10 }}>Rough estimate. An Intelligence Hub next door makes forecasts exact.</div> : null}</div>}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
+                <button style={cqBtn('#2FC8FF', total === 0, { padding: 12, fontSize: 13 })} onClick={startTactical}>⚔ TACTICAL BATTLE</button>
+                <button style={cqBtn('#34D86A', total === 0, { padding: 12, fontSize: 13 })} onClick={startAuto}>⚡ AUTO-RESOLVE</button>
+              </div>
+              <div style={{ fontSize: 10, color: '#6A7898', marginTop: 6 }}>Tactical lets you deploy and command every unit. Auto-resolve simulates the same battle instantly with both sides on AI.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const defenseView = () => {
+    const pd = st.pending, f = CQ.FACTIONS[pd.faction], td = CQ.SECTORS[pd.targetId];
+    return (
+      <div style={{ position: 'fixed', inset: 0, zIndex: 86, background: 'rgba(30,4,8,0.88)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ ...CQ_PANEL, width: 'min(560px,94vw)', border: '2px solid ' + f.color, boxShadow: '0 0 50px ' + f.color + '88', padding: 22 }}>
+          <div style={{ fontSize: 22, fontWeight: 800, color: '#FF5468', letterSpacing: '0.12em' }}>⚠ ENEMY ASSAULT</div>
+          <div style={{ fontSize: 13, margin: '8px 0', color: '#E8F0FF' }}><b style={{ color: f.color }}>{f.name}</b> is attacking <b>{td.name}</b> from {CQ.SECTORS[pd.srcId].name}.</div>
+          <div style={{ fontSize: 11, color: '#8A98B8', marginBottom: 4 }}>Attacking force</div><CQGarList gar={pd.force} />
+          <div style={{ fontSize: 11, color: '#8A98B8', margin: '10px 0 4px' }}>Your garrison</div><CQGarList gar={st.sec[pd.targetId].gar} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 16 }}><button style={cqBtn('#2FC8FF', false, { padding: 12, fontSize: 13 })} onClick={startDefense}>🛡 DEFEND TACTICALLY</button><button style={cqBtn('#34D86A', false, { padding: 12, fontSize: 13 })} onClick={autoDefense}>⚡ AUTO-RESOLVE</button></div>
+          <div style={{ fontSize: 10, color: '#6A7898', marginTop: 8 }}>{td.isHQ ? 'Your headquarters cannot be captured, but a loss will shatter its garrison.' : 'If your garrison falls the sector is lost to the attacker.'}</div>
+        </div>
+      </div>
+    );
+  };
+
+  const empireTab = () => {
+    const mine = CQ.SECTOR_LIST.filter((d) => st.sec[d.id].owner === 'player');
+    const fstat = ['black_sun', 'exchange', 'csf'].map((f) => { const ds = CQ.SECTOR_LIST.filter((d) => st.sec[d.id].owner === f); return { f, n: ds.length, inc: ds.reduce((a, d) => a + d.income, 0), pw: Math.round(ds.reduce((a, d) => a + CQ.camp.power(st.sec[d.id].gar), 0)) }; });
+    return (
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.5fr) minmax(0,1fr)', gap: 12 }}>
+        <div style={CQ_PANEL}>
+          <div style={{ fontSize: 12, fontWeight: 800, color: '#2FC8FF', marginBottom: 8, letterSpacing: '0.1em' }}>YOUR SECTORS ({mine.length})</div>
+          {mine.map((d) => { const s = st.sec[d.id]; return <div key={d.id} onClick={() => { setSel(d.id); setTab('map'); }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 4px', borderBottom: '1px solid #131C2C', cursor: 'pointer' }}><span style={{ flex: 1, fontSize: 12, fontWeight: 700 }}>{d.name}{d.isHQ ? ' ★' : ''}</span><CQGarList gar={s.gar} /><span style={{ fontSize: 11, color: '#FFD36A', minWidth: 64, textAlign: 'right' }}>{d.income + CQ.camp.fx(s).income}¢</span><span style={{ fontSize: 10, color: '#8A98B8' }}>{s.bld.length}/{CQ.camp.slots(s)} bld</span></div>; })}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={CQ_PANEL}><div style={{ fontSize: 12, fontWeight: 800, color: '#FFD36A', marginBottom: 8, letterSpacing: '0.1em' }}>ECONOMY</div><div style={{ fontSize: 12, lineHeight: 1.8 }}>Income <b style={{ color: '#FFD36A' }}>{eco.cr}¢</b> / turn, payroll <b style={{ color: '#FF9A5A' }}>{eco.upkeepCR}¢</b>, net <b style={{ color: eco.netCR >= 0 ? '#34D86A' : '#FF5468' }}>{eco.netCR}¢</b><br />Power generation <b style={{ color: '#34D86A' }}>{eco.pwrGen}</b>, upkeep <b style={{ color: '#FF9A5A' }}>{eco.upkeep}</b>, net <b style={{ color: eco.net >= 0 ? '#34D86A' : '#FF5468' }}>{eco.net}</b><br />Heat {st.heat} ({eco.heatGen - eco.heatDecay >= 0 ? '+' : ''}{2 + eco.heatGen - eco.heatDecay} per turn)<br />Victory at {CQ.WIN_INCOME} income: <b>{incPct}%</b></div></div>
+          <div style={CQ_PANEL}><div style={{ fontSize: 12, fontWeight: 800, color: '#FF9A5A', marginBottom: 8, letterSpacing: '0.1em' }}>CAMPAIGN RECORD</div><div style={{ fontSize: 12, lineHeight: 1.8 }}>Assaults won {st.stats.won} · lost {st.stats.lost}<br />Sectors captured {st.stats.captured} · defended {st.stats.defended}<br />Units fallen {st.stats.fallen}</div></div>
+          <div style={CQ_PANEL}><div style={{ fontSize: 12, fontWeight: 800, color: '#FF5468', marginBottom: 8, letterSpacing: '0.1em' }}>RIVAL POWERS</div>{fstat.map((x) => <div key={x.f} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: CQ.FACTIONS[x.f].color, marginBottom: 3 }}><span>{CQ.FACTIONS[x.f].name}</span><span>{x.n} sectors · {x.inc}¢ · power {x.pw}</span></div>)}</div>
+        </div>
+      </div>
+    );
+  };
+  const diplomacyTab = () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 12 }}>
+      {['black_sun', 'exchange', 'csf'].map((f) => { const F = CQ.FACTIONS[f]; const rel = st.rel[f] || 0; const n = CQ.SECTOR_LIST.filter((d) => st.sec[d.id].owner === f).length; return (
+        <div key={f} style={{ ...CQ_PANEL, border: '1px solid ' + F.color + '88' }}>
+          <div style={{ fontSize: 15, fontWeight: 800, color: F.color }}>{F.name}</div><div style={{ fontSize: 11, color: '#8A98B8', marginBottom: 8 }}>{n} sectors · aggression {F.aggr}%</div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: rel >= 80 ? '#34D86A' : rel > 0 ? '#FFC24A' : '#FF5468' }}>{rel > 0 ? '+' : ''}{rel}</div>
+          <div style={{ background: '#05080C', borderRadius: 3, height: 8, margin: '6px 0 10px' }}><div style={{ width: ((rel + 100) / 2) + '%', height: '100%', background: F.color, borderRadius: 3 }} /></div>
+          <div style={{ fontSize: 11, color: '#9AA8C8', marginBottom: 8, lineHeight: 1.5 }}>{rel >= 80 ? 'Non-aggression pact: they will not attack you.' : rel <= -50 ? 'Hostile: they target your sectors first.' : 'They will attack you if they see weakness.'} Attacking their sectors costs you 12 standing each time.</div>
+          <div style={{ display: 'flex', gap: 6 }}><button style={cqBtn('#34D86A', st.cr < 400)} onClick={() => run(CQ.camp.adjustRelation(st, f, 10))}>BRIBE +10 (400¢)</button><button style={cqBtn('#FF9A5A')} onClick={() => run(CQ.camp.adjustRelation(st, f, -15))}>PROVOKE -15</button></div>
+        </div>); })}
+    </div>
+  );
+  const codexView = () => (
+    <div>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>{[['howto', 'How to play'], ['units', 'Units'], ['buildings', 'Buildings']].map(([t, l]) => <button key={t} style={cqBtn(codexTab === t ? '#FFD36A' : '#6A7898', false, { background: codexTab === t ? '#2A2410' : undefined })} onClick={() => setCodexTab(t)}>{l}</button>)}</div>
+      {codexTab === 'howto' && <div style={{ ...CQ_PANEL, fontSize: 12, lineHeight: 1.7, color: '#B8C4DC', maxHeight: 520, overflowY: 'auto' }}>
+        {[['GOAL', 'Reach ' + CQ.WIN_INCOME + ' credits of income per turn, then end the turn. Income comes from the sectors you hold and the buildings in them.'], ['THE MAP', 'Coruscant is a vertical cross-section. Each card is a sector with its owner (colored border and pennant), income, garrison and building slots. A red pulsing border means you can attack it; the red arrows show which of your sectors will join the assault.'], ['RECRUIT AND BUILD', 'Select a sector you own. Recruit units into that sector (the Recruit tab) and build in its slots (the Build tab). Advanced units need the right building in the same sector: Tanks and Speeders need a Motor Pool, Droids a Droid Foundry, Bruisers a Barracks, Walkers a War College.'], ['ATTACK', 'Select an enemy sector next to one of yours and press PLAN ATTACK. Choose units from every adjacent sector of yours, run a battle forecast, then fight a Tactical Battle yourself or Auto-Resolve. Units that fought or moved this turn are spent until next turn. Faction HQs (★) cannot be captured.'], ['TACTICAL BATTLES', 'Each sector has its own battlefield. Deploy your units inside the cyan zone, then take turns. Move, shoot, use abilities, use cover, avoid burning tiles. Win by wiping out the defenders or by holding the Command Node for two of your turns. Defenders win by surviving 22 rounds.'], ['BUILDINGS IN BATTLE', 'Buildings change fights. Bunkers give the defenders hard cover, Turret Nests add auto turrets, Shield Generators shield defenders, Armories add damage, Rally Points add first turn speed, Orbital Batteries give you one big strike, Medical Bays revive 40% of the fallen.'], ['ENEMIES FIGHT BACK', 'The Black Sun, Exchange and CSF recruit, build and attack neutral sectors, each other and you. When they attack you, you get to defend in a tactical battle or auto-resolve. You can bribe factions to a pact (+80 standing) or provoke them.'], ['POWER AND HEAT', 'Tanks, Droids and Walkers cost PWR to build and PWR upkeep every turn. A power shortfall browns out the grid and cuts income. Heat rises every turn and with every attack; at 100 the CSF raids you for credits and, outside your HQ sector, a building.']].map(([h, t]) => <div key={h} style={{ marginBottom: 10 }}><div style={{ color: '#FFD36A', fontWeight: 800, letterSpacing: '0.08em' }}>{h}</div>{t}</div>)}
+      </div>}
+      {codexTab === 'units' && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 10 }}>{CQ.UNIT_ORDER.map((k) => { const u = U[k]; return <div key={k} style={{ ...CQ_PANEL, display: 'flex', gap: 10 }}><CQUnitGlyph type={k} size={46} /><div><div style={{ fontWeight: 800, color: '#E8F0FF' }}>{u.name}</div><div style={{ fontSize: 10, color: '#7A88A8' }}>{u.role} · {u.cr}¢{u.pwr ? ` + ${u.pwr}⚡` : ''} · payroll {u.ucr}¢/turn{u.upkeep ? ` · upkeep ${u.upkeep}⚡` : ''}{u.req ? ` · needs ${CQ.BLD[u.req].name}` : ''}</div><CQUnitStats k={k} /><div style={{ fontSize: 11, color: '#9AA8C8', marginTop: 3 }}>{u.passive}</div>{u.ab && <div style={{ fontSize: 11, color: '#FFC24A', marginTop: 3 }}><b>{u.ab.name}</b> (cooldown {u.ab.cd}): {u.ab.desc}</div>}<div style={{ fontSize: 10, color: '#5A6888', fontStyle: 'italic', marginTop: 3 }}>{u.lore}</div></div></div>; })}</div>}
+      {codexTab === 'buildings' && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 8 }}>{CQ.BUILDINGS.map((b) => <div key={b.id} style={CQ_PANEL}><div style={{ display: 'flex', justifyContent: 'space-between' }}><b style={{ color: '#E8F0FF', fontSize: 12 }}>{b.name}</b><span style={{ fontSize: 11, color: '#FFD36A' }}>{b.cost}¢{b.pwr ? ` +${b.pwr}⚡` : ''}</span></div><div style={{ fontSize: 10, color: '#7A88A8' }}>{b.cat}</div><div style={{ fontSize: 11, color: '#9AA8C8', marginTop: 2 }}>{b.desc}</div></div>)}</div>}
+    </div>
+  );
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 70, background: 'radial-gradient(circle at 50% -10%, #14203A 0%, #070A12 55%, #04060B 100%)', color: '#E0E8F8', fontFamily: 'monospace', overflow: 'auto' }}>
+      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '10px 14px 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 8 }}>
+          <div><div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '0.18em', color: '#2FC8FF' }}>CORUSCANT CONQUEST</div><div style={{ fontSize: 10, color: '#6A7898', letterSpacing: '0.2em' }}>TURN {st.turn} · LEVELS 5100 TO DEPTHS</div></div>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginLeft: 'auto', fontSize: 13 }}>
+            <span style={{ color: '#FFD36A' }}>¢ {st.cr.toLocaleString()}</span><span style={{ color: '#34D86A' }}>⚡ {st.pwr} <i style={{ fontSize: 10, color: eco.net >= 0 ? '#34D86A' : '#FF5468' }}>({eco.net >= 0 ? '+' : ''}{eco.net})</i></span>
+            <span style={{ color: st.heat > 70 ? '#FF5468' : st.heat > 40 ? '#FFC24A' : '#8A98B8' }}>HEAT {st.heat}</span>
+            <span title={'Reach ' + CQ.WIN_INCOME + ' income per turn and end the turn to win'} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: eco.cr >= CQ.WIN_INCOME ? '#34D86A' : '#B8C4DC' }}>INCOME {eco.cr}/{CQ.WIN_INCOME}<span style={{ width: 90, height: 8, background: '#05080C', borderRadius: 4, display: 'inline-block' }}><span style={{ display: 'block', width: incPct + '%', height: '100%', background: eco.cr >= CQ.WIN_INCOME ? '#34D86A' : '#2FC8FF', borderRadius: 4 }} /></span></span>
+            <button style={cqBtn('#FF5468', false, { padding: '3px 8px' })} onClick={resetCampaign}>Reset</button><button style={cqBtn('#2FC8FF', false, { padding: '3px 8px' })} onClick={onSuccess}>Exit to Game</button>
+          </div>
+        </div>
+        {st.crisis && <div style={{ background: '#2A1A00', border: '1px solid #FF8C00', borderRadius: 5, padding: '6px 10px', marginBottom: 8, fontSize: 12, color: '#FFD36A' }}>⚠ CRISIS: {st.crisis.title}. {st.crisis.desc}</div>}
+        {st.brownout && <div style={{ background: '#2A0A0A', border: '1px solid #FF5468', borderRadius: 5, padding: '6px 10px', marginBottom: 8, fontSize: 12, color: '#FF9A9A' }}>⚡ BROWNOUT: your upkeep exceeds power generation. Build power, or income stays cut.</div>}
+        <div style={{ display: 'flex', gap: 6, marginBottom: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          {tabBtn('map', 'Map')}{tabBtn('empire', 'Empire')}{tabBtn('diplomacy', 'Diplomacy')}{tabBtn('codex', 'Codex')}
+          <button style={cqBtn(st.pending ? '#FF5468' : '#34D86A', false, { marginLeft: 'auto', padding: '9px 22px', fontSize: 13 })} onClick={endTurn}>{st.pending ? '⚠ RESOLVE ASSAULT' : `END TURN ${st.turn} ▶`}</button>
+        </div>
+        {tab === 'map' && <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 380px', gap: 12, alignItems: 'start' }}><CQMap st={st} sel={sel} onSelect={(id) => { setSel(id); setPtab('overview'); }} intelOf={intelOf} />{sectorPanel()}</div>}
+        {tab === 'empire' && empireTab()}
+        {tab === 'diplomacy' && diplomacyTab()}
+        {tab === 'codex' && codexView()}
+        <div style={{ ...CQ_PANEL, marginTop: 10, maxHeight: 110, overflowY: 'auto', padding: 8 }}>{st.log.slice(0, 12).map((l, i) => <div key={i} style={{ fontSize: 11, color: i === 0 ? '#2FC8FF' : '#6A7898', borderBottom: '1px solid #0E1626', padding: '2px 0' }}>{l}</div>)}</div>
+      </div>
+      {toast && <div style={{ position: 'fixed', left: '50%', bottom: 26, transform: 'translateX(-50%)', zIndex: 120, background: '#2A1A08', border: '1px solid #FFA03A', color: '#FFD890', padding: '9px 18px', borderRadius: 6, fontSize: 13, maxWidth: '90vw' }}>{toast}</div>}
+      {planner && !battleCtx && plannerView()}
+      {st.pending && !battleCtx && !report && defenseView()}
+      {report && <div style={{ position: 'fixed', inset: 0, zIndex: 95, background: 'rgba(3,6,12,0.82)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ ...CQ_PANEL, width: 'min(520px,92vw)', padding: 20, border: '2px solid #FFD36A' }}><div style={{ fontSize: 18, fontWeight: 800, color: '#FFD36A', letterSpacing: '0.1em', marginBottom: 10 }}>{report.title}</div>{report.lines.map((l, i) => <div key={i} style={{ fontSize: 13, color: '#E0E8F8', marginBottom: 6, lineHeight: 1.5 }}>{l}</div>)}<button style={cqBtn('#FFD36A', false, { width: '100%', marginTop: 10, padding: 10 })} onClick={() => setReport(null)}>OK</button></div></div>}
+      {st.over === 'win' && <div style={{ position: 'fixed', inset: 0, zIndex: 110, background: 'rgba(0,16,8,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ ...CQ_PANEL, width: 'min(560px,92vw)', padding: 28, border: '2px solid #34D86A', textAlign: 'center', boxShadow: '0 0 60px #34D86A66' }}><div style={{ fontSize: 30, fontWeight: 800, color: '#34D86A', letterSpacing: '0.15em' }}>CORUSCANT IS YOURS</div><div style={{ fontSize: 13, color: '#B8E8C8', margin: '12px 0 18px', lineHeight: 1.6 }}>Your syndicate pulls in {eco.cr} credits a turn. The Black Sun, the Exchange and the CSF all answer to you now, whether they admit it or not.</div><button style={cqBtn('#34D86A', false, { padding: '12px 28px', fontSize: 14 })} onClick={() => { setSt({ ...st, over: null, won: true }); onSuccess(); }}>CLAIM VICTORY</button><button style={cqBtn('#7FD0FF', false, { padding: '12px 22px', fontSize: 14, marginLeft: 12 })} onClick={() => setSt({ ...st, over: null, won: true })}>KEEP PLAYING</button></div></div>}
+      {battleCtx && <CQBattle battle={battleCtx.battle} meta={battleCtx.meta} title={battleCtx.title} onDone={(res) => finishBattle(battleCtx.meta, res)} />}
+    </div>
+  );
+}
+// ===== CONQUEST UI MAIN END =====
+
 
 function SignalSiphonOverlay({ onSuccess, onFailure }) {
   const [stage, setStage] = React.useState(1);
@@ -21030,7 +22545,20 @@ function StarWarsRPG() {
         if (!questFlags.governor_valve_acquired) return '[WASTES] Drain the Dead Boiler Matrix (three valve wheels) and take the Catalyst Governor Valve.';
         if (!questFlags.overseer_defeated) return '[WASTES] Defeat the Unchained Overseer at the base of the Exhaust Cathedral.';
         if (!questFlags.manifest_restarted) return '[WASTES] Seat the Governor Valve in the apex socket to restart the manifold.';
-        return '[WASTES] The central blast doors are open. Zone Five lies beyond.';
+        if (!questFlags.zone05_gate_open) return '[WASTES] The manifold runs. Open the central blast doors on the east wall to unseal the Zone Five Descent.';
+        return '[WASTES] The Zone Five Descent is open on the east wall. The Deep Caverns lie below.';
+      }
+      if (zoneId === 'deep_caverns') {
+        if (!(questFlags.unit8x_destroyed || questFlags.unit8x_reprogrammed || questFlags.unit8x_stood_down || questFlags.sentinel_cleared)) return '[CAVERNS] Get past Unit 8-X at the Guardian Gate in the east.';
+        return '[CAVERNS] The shutter is open. Enter the wreck of the Zora IV.';
+      }
+      if (zoneId === 'zora_iv_wreckage') {
+        if (questFlags.ghost_keel_complete) return '[GHOST KEEL] Complete. Report to Commander Vael at HQ and Tanner in the Private Suites.';
+        if (!questFlags.hypercore_vault_open) return '[ZORA IV] Cross the reactor corridor and open the hypercore vault lock.';
+        if (!questFlags.warden_guards_down) return '[ZORA IV] Destroy the hull sentinels guarding the vault.';
+        if (!questFlags.warden_prime_down) return '[ZORA IV] Defeat the Warden Prime.';
+        if (!questFlags.hypercore_visible) return '[ZORA IV] Enter the hypercore chamber.';
+        return '[ZORA IV] Decide the fate of the Ghost Keel with the Architect.';
       }
       if (zoneId === 'outpost_7') {
         if (!questFlags.o7_coop_briefed) return '[OUTPOST 7] Report to Major Coop in the command bunker.';
@@ -21042,7 +22570,7 @@ function StarWarsRPG() {
       if (!questFlags.scan_team_fate_known) return '[BADOR] Find the lost scan team and the overdue supply skiff. Sweep Sector 4 and the Engine Wastes.';
     }
     if (questFlags.syndicateManagement_active && !questFlags.syndicate_first_contract_run) return '[SYNDICATE] Open the War Table at the Penthouse and run your first contract.';
-    if (questFlags.syndicateManagement_active) return '[SYNDICATE] Run the network from the Penthouse War Table. Expand your territory, recruit lieutenants, and take the Sector Control campaign to 7,000 credits per turn.';
+    if (questFlags.syndicateManagement_active) return '[SYNDICATE] Run the network from the Penthouse War Table. Expand your territory, recruit lieutenants, and take the Sector Control campaign to 10,000 credits per turn.';
     if (questFlags.vault_heist_complete && !questFlags.jon_status_dead && !questFlags.jon_status_subjugated && !questFlags.jon_status_rival) return '[INHERITANCE] Go to the Penthouse. Your lieutenants are ready. Jon has nowhere to run.';
     if ((questFlags.malak_turned || questFlags.malak_dead) && (questFlags.reya_loyal || questFlags.reya_blackmailed) && !questFlags.vault_heist_complete) return '[INHERITANCE] Use Reya\'s keycard at the Penthouse vault terminal. Freeze the payroll.';
     if ((questFlags.malak_turned || questFlags.malak_dead) && !questFlags.reya_loyal && !questFlags.reya_blackmailed && !questFlags.reya_warrant_mission_active) return '[INHERITANCE] Speak with Reya in Shadow Town. She has a condition.';
@@ -21110,7 +22638,7 @@ function StarWarsRPG() {
     return [...prev, { ...entry, unread: true }];
   }), []);
 
-  const phPerks = React.useMemo(() => PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: 0, decay: 0 }), [questFlags]);
+  const phPerks = React.useMemo(() => { const base = PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: 0, decay: 0 }); return questFlags.syndicate_flagship_active ? { income: base.income + 400, decay: base.decay + 1 } : base; }, [questFlags]);
   const installPenthousePackage = useCallback((pkg) => {
     setInventory(prev => prev.flatMap(i => i.id !== pkg.itemId ? [i] : (i.qty > 1 ? [{ ...i, qty: i.qty - 1 }] : [])));
     setFlag(pkg.flag);
@@ -21275,6 +22803,8 @@ function StarWarsRPG() {
       additions.push({ id:'agent_grix', name:'Grix', agentClass:'Smuggler', skill:4, loyalty:65, traits:['devaronian_contacts'], status:'available', turnsRemaining:0 });
     if (questFlags.vael_recruited && !syndicateRoster.find(a => a.id === 'agent_vael'))
       additions.push({ id:'agent_vael', name:'Vael', agentClass:'Slicer', skill:4, loyalty:70, traits:['sis_training'], status:'available', turnsRemaining:0 });
+    if (questFlags.gharza_recruited && !syndicateRoster.find(a => a.id === 'agent_gharza'))
+      additions.push({ id:'agent_gharza', name:'Gharza', agentClass:'Enforcer', skill:5, loyalty:60, traits:['trandoshan_hunter','long_range'], status:'available', turnsRemaining:0 });
     if (questFlags.marro_recruited && !syndicateRoster.find(a => a.id === 'agent_marro'))
       additions.push({ id:'agent_marro', name:'Marro', agentClass:'Fixer', skill:3, loyalty:75, traits:['csf_contacts','heat_reduction'], status:'available', turnsRemaining:0 });
     if (additions.length > 0) setSyndicateRoster(r => [...r, ...additions]);
@@ -21386,7 +22916,7 @@ function StarWarsRPG() {
       if (tile.type === 'door') {
         const door = zone.doors.find(d => d.x === x && d.y === y);
         if (door) {
-          if (door.requiresFlag && !questFlags[door.requiresFlag]) { pushActionLog(door.lockedMessage || 'The door is sealed.', zoneId); return; }
+          if ((door.requiresFlag && !questFlags[door.requiresFlag]) || (door.requiresAnyFlag && !door.requiresAnyFlag.some(f => questFlags[f]))) { pushActionLog(door.lockedMessage || 'The door is sealed.', zoneId); return; }
           if (door.cinematic) { setCinematic({ mode: door.cinematic, dest: { targetZone: door.targetZone, targetPos: door.targetPos, name: door.label, quiet: true } }); return; }
           travelToZone(door.targetZone, door.targetPos); return;
         }
@@ -21451,7 +22981,7 @@ function StarWarsRPG() {
           if (worldObjHere.thermalDelta) addThermal(worldObjHere.thermalDelta);
           if (worldObjHere.heatDelta) setSyndicateHeat(h => Math.max(0, Math.min(100, h + worldObjHere.heatDelta)));
           if (worldObjHere.grantsCredits && !worldObjHere.triggersMinigame) setCredits(c => c + worldObjHere.grantsCredits);
-          if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) {
+          if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem] && !worldObjHere.triggersMinigame) {
             addItem(ITEMS[worldObjHere.grantsItem]);
             pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId);
           }
