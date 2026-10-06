@@ -4423,8 +4423,8 @@ const PLANETS = {
         doors: [
           { x: 0, y: 8, targetZone: 'bador_main_base', targetPos: { x: 42, y: 13 }, label: 'Main Base' },
           { x: 0, y: 9, targetZone: 'bador_main_base', targetPos: { x: 42, y: 14 }, label: 'Main Base' },
-          { x: 35, y: 10, targetZone: 'engine_wastes', targetPos: { x: 1, y: 10 }, label: 'Engine Wastes' },
-          { x: 35, y: 11, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Engine Wastes' },
+          { x: 35, y: 10, targetZone: 'engine_wastes', targetPos: { x: 1, y: 10 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight lock is sealed. The tunnel beyond runs to the Engine Wastes and stays dead until the Titan Manifold is restarted.' },
+          { x: 35, y: 11, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight lock is sealed. The tunnel beyond runs to the Engine Wastes and stays dead until the Titan Manifold is restarted.' },
         ],
         worldObjects: [
           { id: 'assembly_line_terminal', propArt: 'console', propVariant: 'assembly', x: 20, y: 6, label: 'Assembly Line Override Terminal',
@@ -4830,14 +4830,14 @@ const PLANETS = {
           'Coolant reserves at eleven percent. This is a recording.',
         ],
         doors: [
-          { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 10 }, label: 'Sector 4' },
-          { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 11 }, label: 'Sector 4' },
+          { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 10 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight tunnel is dead, its rails cold and its gate chained. It only runs when the Titan Manifold is alive.' },
+          { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 11 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight tunnel is dead, its rails cold and its gate chained. It only runs when the Titan Manifold is alive.' },
           { x: 24, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 24, y: 30 }, label: 'Depot Blast Doors' },
           { x: 25, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 25, y: 30 }, label: 'Depot Blast Doors' },
-          { x: 28, y: 35, targetZone: 'deep_caverns', targetPos: { x: 16, y: 1 }, label: 'Deep Caverns' },
-          { x: 29, y: 35, targetZone: 'deep_caverns', targetPos: { x: 17, y: 1 }, label: 'Deep Caverns' },
-          { x: 47, y: 16, targetZone: 'outpost_7', targetPos: { x: 22, y: 30 }, label: 'Outpost 7 Gateway' },
-          { x: 47, y: 17, targetZone: 'outpost_7', targetPos: { x: 23, y: 30 }, label: 'Outpost 7 Gateway' },
+          { x: 40, y: 0, targetZone: 'outpost_7', targetPos: { x: 22, y: 30 }, label: 'Outpost 7 Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway tunnel to Outpost 7 is shut tight from this side. It opens once Operation Sundown breaks the line.' },
+          { x: 41, y: 0, targetZone: 'outpost_7', targetPos: { x: 23, y: 30 }, label: 'Outpost 7 Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway tunnel to Outpost 7 is shut tight from this side. It opens once Operation Sundown breaks the line.' },
+          { x: 47, y: 21, targetZone: 'deep_caverns', targetPos: { x: 1, y: 11 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'The Zone Five descent is sealed behind the central blast doors. Restart the manifold and open them first.' },
+          { x: 47, y: 22, targetZone: 'deep_caverns', targetPos: { x: 1, y: 12 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'The Zone Five descent is sealed behind the central blast doors. Restart the manifold and open them first.' },
         ],
         worldObjects: [
           { id: 'wastes_vista_w', propArt: 'basalt_vista', propVariant: 'wastes_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Titan Manifold',
@@ -5059,8 +5059,8 @@ const PLANETS = {
         collectibles: [{ id: 'wastes_salvage', x: 3, y: 12, label: 'KDY Engine Debris Component', reward: 400 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 24, 0, 25, 5, 'floor');
-          carveRect(g, 1, 5, 46, 34, 'floor');
+          carveRect(g, 24, 0, 25, 5, 'floor'); carveRect(g, 40, 0, 41, 5, 'floor');
+          carveRect(g, 1, 5, 46, 34, 'floor'); carveRect(g, 46, 21, 47, 22, 'floor');
           // slag river with two bridges
           for (let y = 6; y <= 33; y++) { if ((y >= 10 && y <= 12) || (y >= 26 && y <= 28)) continue; pt(g, 15, y, 'lava'); pt(g, 16, y, 'lava'); }
           // Combustion Foundry 09 facade (north center)
@@ -5074,8 +5074,8 @@ const PLANETS = {
           carveRect(g, 35, 22, 44, 28, 'wall');
           pt(g, 24, 0, 'door'); pt(g, 25, 0, 'door');
           pt(g, 0, 10, 'door'); pt(g, 0, 11, 'door');
-          pt(g, 28, 35, 'door'); pt(g, 29, 35, 'door');
-          pt(g, 47, 16, 'door'); pt(g, 47, 17, 'door');
+          pt(g, 40, 0, 'door'); pt(g, 41, 0, 'door');
+          pt(g, 47, 21, 'door'); pt(g, 47, 22, 'door');
           return g;
         },
       },
@@ -5097,10 +5097,8 @@ const PLANETS = {
         doors: [
           { x: 0, y: 14, targetZone: 'city_outskirts_bador', targetPos: { x: 46, y: 14 }, label: 'City Outskirts' },
           { x: 0, y: 15, targetZone: 'city_outskirts_bador', targetPos: { x: 46, y: 15 }, label: 'City Outskirts' },
-          { x: 47, y: 14, targetZone: 'deep_caverns', targetPos: { x: 1, y: 11 }, label: 'Deep Caverns' },
-          { x: 47, y: 15, targetZone: 'deep_caverns', targetPos: { x: 1, y: 12 }, label: 'Deep Caverns' },
-          { x: 22, y: 31, targetZone: 'engine_wastes', targetPos: { x: 46, y: 16 }, label: 'Gateway to the Engine Wastes', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway is sealed. Operation Sundown has not cleared it.' },
-          { x: 23, y: 31, targetZone: 'engine_wastes', targetPos: { x: 46, y: 17 }, label: 'Gateway to the Engine Wastes', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway is sealed. Operation Sundown has not cleared it.' },
+          { x: 22, y: 31, targetZone: 'engine_wastes', targetPos: { x: 40, y: 1 }, label: 'Gateway to the Engine Wastes', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway is sealed. Operation Sundown has not cleared it.' },
+          { x: 23, y: 31, targetZone: 'engine_wastes', targetPos: { x: 41, y: 1 }, label: 'Gateway to the Engine Wastes', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway is sealed. Operation Sundown has not cleared it.' },
         ],
         worldObjects: [
           { id: 'o7_vista_w', propArt: 'basalt_vista', propVariant: 'ravine_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Iron Trench Ravine',
@@ -5381,7 +5379,6 @@ const PLANETS = {
           // Sub-Level Brig (southeast)
           carveRect(g, 32, 21, 45, 29, 'wall'); carveRect(g, 33, 22, 44, 28, 'floor'); pt(g, 32, 25, 'floor');
           pt(g, 0, 14, 'door'); pt(g, 0, 15, 'door');
-          pt(g, 47, 14, 'door'); pt(g, 47, 15, 'door');
           pt(g, 22, 31, 'door'); pt(g, 23, 31, 'door');
           return g;
         },
@@ -5390,18 +5387,16 @@ const PLANETS = {
       deep_caverns: {
         id: 'deep_caverns', name: 'Deep Caverns of Bador',
         subtitle: 'Bador Moon · Sub-Surface Grid 9-1',
-        width: 34, height: 22, spawnPos: { x: 16, y: 1 }, textureId: 'verdanth',
+        width: 34, height: 22, spawnPos: { x: 2, y: 11 }, textureId: 'verdanth',
         accent: '#5A4B8A', accentGlow: 'rgba(90,75,138,0.28)', accentDim: '#28204A',
         floorColor: '#14101E', floorAlt: '#1A1426', wallDark: '#080610', wallLight: '#100C18',
         bg: 'radial-gradient(circle at 50% 50%, #100C18 0%, #060410 70%)', ambient: 'mist',
         decor: ['rubble', 'moss'],
         doors: [
-          { x: 16, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 28, y: 34 }, label: 'Engine Wastes' },
-          { x: 17, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 29, y: 34 }, label: 'Engine Wastes' },
-          { x: 0, y: 11,  targetZone: 'outpost_7', targetPos: { x: 46, y: 14 }, label: 'Outpost 7' },
-          { x: 0, y: 12,  targetZone: 'outpost_7', targetPos: { x: 46, y: 15 }, label: 'Outpost 7' },
-          { x: 33, y: 11, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 11 }, label: 'Zora IV Wreckage' },
-          { x: 33, y: 12, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 12 }, label: 'Zora IV Wreckage' },
+          { x: 0, y: 11,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 21 }, label: 'Engine Wastes' },
+          { x: 0, y: 12,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 22 }, label: 'Engine Wastes' },
+          { x: 33, y: 11, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 11 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
+          { x: 33, y: 12, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 12 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
         ],
         worldObjects: [
           { id: 'republic_survey_cache', propArt: 'crate_stack', propVariant: 'survey', x: 18, y: 12, label: 'Republic Survey Station Cache',
@@ -5438,7 +5433,6 @@ const PLANETS = {
           pt(g, 23, 14, 'floor'); pt(g, 24, 14, 'floor');
           carveRect(g, 28, 2, 32, 8, 'wall');
           pt(g, 30, 2, 'floor'); pt(g, 31, 2, 'floor');
-          pt(g, 16, 0, 'door'); pt(g, 17, 0, 'door');
           pt(g, 0, 11, 'door'); pt(g, 0, 12, 'door');
           pt(g, 33, 11, 'door'); pt(g, 33, 12, 'door');
           return g;
@@ -6971,6 +6965,64 @@ function AmbientLayer({ kind, accent }) {
       </div>
     );
   }
+  if (kind === 'moonbase') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 20 }, (_, i) => (
+          <div key={'d' + i} style={{ position:'absolute',left:`${(i*31)%100}%`,top:`${(i*23)%96}%`,width:`${2+(i%3)}px`,height:`${2+(i%3)}px`,borderRadius:'50%',background:i%3===0?'rgba(200,170,255,0.5)':'rgba(220,200,170,0.35)',animation:`ash-fall ${9+(i%5)*2}s linear ${(i%7)*0.6}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',top:'-20%',left:'18%',width:'6px',height:'150%',background:'linear-gradient(180deg,transparent,rgba(180,240,255,0.10),transparent)',transform:'rotate(14deg)',animation:'drift 9s ease-in-out infinite alternate' }} />
+        <div style={{ position:'absolute',top:'-20%',left:'64%',width:'5px',height:'150%',background:'linear-gradient(180deg,transparent,rgba(180,240,255,0.08),transparent)',transform:'rotate(-12deg)',animation:'drift 12s ease-in-out infinite alternate-reverse' }} />
+        <div style={{ position:'absolute',left:0,right:0,bottom:0,height:'30%',background:'rgba(40,20,70,0.16)',filter:'blur(16px)' }} />
+      </div>
+    );
+  }
+  if (kind === 'foundry') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 26 }, (_, i) => (
+          <div key={'s' + i} style={{ position:'absolute',left:`${(i*23)%100}%`,bottom:`${(i*7)%30}%`,width:`${2+(i%2)}px`,height:`${2+(i%2)}px`,borderRadius:'50%',background:i%4===0?'rgba(255,230,160,0.95)':'rgba(255,130,40,0.9)',animation:`embers-drift ${3+(i%5)}s ease-out ${(i%9)*0.4}s infinite` }} />
+        ))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={'k' + i} style={{ position:'absolute',left:`${(i*19+4)%90}%`,top:`${(i*13)%60}%`,width:'70px',height:'50px',borderRadius:'50%',background:'rgba(20,16,14,0.22)',filter:'blur(14px)',animation:`steam-rise ${8+(i%4)*2}s ease-out ${i*1.3}s infinite` }} />
+        ))}
+        {Array.from({ length: 4 }, (_, i) => (
+          <div key={'w' + i} style={{ position:'absolute',left:`${15+i*23}%`,top:`${20+(i*17)%50}%`,width:'12px',height:'12px',borderRadius:'50%',background:'rgba(200,235,255,0.9)',boxShadow:'0 0 14px #BFF4FF',animation:`ship-blink ${2.2+i*0.7}s steps(2,end) ${i*0.9}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',inset:0,background:'rgba(255,85,0,0.05)',animation:'door-pulse 3.6s ease-in-out infinite' }} />
+      </div>
+    );
+  }
+  if (kind === 'cavern') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 22 }, (_, i) => (
+          <div key={'p' + i} style={{ position:'absolute',left:`${(i*37)%100}%`,top:`${(i*19)%96}%`,width:`${2+(i%3)}px`,height:`${2+(i%3)}px`,borderRadius:'50%',background:i%2?'rgba(170,130,255,0.7)':'rgba(120,230,255,0.55)',animation:`twinkle ${3+(i%5)}s ease-in-out ${(i%7)*0.5}s infinite` }} />
+        ))}
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={'d' + i} style={{ position:'absolute',left:`${(i*21+8)%90}%`,top:'-4%',width:'2px',height:'10px',background:'rgba(160,220,255,0.7)',animation:`ash-fall ${3+i*0.8}s linear ${i*1.1}s infinite` }} />
+        ))}
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={'m' + i} style={{ position:'absolute',left:`${(i*26-6)%90}%`,top:`${40+(i*13)%50}%`,width:'50%',height:'20%',background:'rgba(90,75,138,0.12)',filter:'blur(22px)',animation:`mist-drift ${10+(i%3)*3}s ease-in-out ${i}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',inset:0,background:'rgba(90,60,170,0.07)',animation:'door-pulse 5s ease-in-out infinite' }} />
+      </div>
+    );
+  }
+  if (kind === 'wreck') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 10 }, (_, i) => (
+          <div key={'a' + i} style={{ position:'absolute',left:`${(i*43)%100}%`,top:`${(i*29)%90}%`,width:'18px',height:'2px',background:'rgba(190,240,255,0.95)',boxShadow:'0 0 10px #7FD0FF',animation:`ship-spark ${2.5+(i%4)}s steps(3,end) ${(i%6)*0.7}s infinite` }} />
+        ))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={'v' + i} style={{ position:'absolute',left:`${(i*19+6)%90}%`,bottom:`${(i*9)%30}%`,width:'54px',height:'54px',borderRadius:'50%',background:'rgba(200,220,235,0.10)',filter:'blur(14px)',animation:`steam-rise ${7+(i%4)*2}s ease-out ${i*1.2}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',inset:0,background:'rgba(255,40,40,0.045)',animation:'ship-blink 3.2s ease-in-out infinite' }} />
+        <div style={{ position:'absolute',inset:0,background:'rgba(8,16,24,0.18)' }} />
+      </div>
+    );
+  }
   if (kind === 'sky_high') {
     return (
       <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:1 }}>
@@ -7758,7 +7810,7 @@ const KDY_SHUTTLE_DESTINATIONS = [
   { id: 'ring_landing', name: 'Orbital Ring Landing Bay', level: 'Kuat Orbital Array', cost: 0, requiredFlag: null,          targetZone: 'kdy_landing_bay',     targetPos: { x: 26, y: 11 } },
   { id: 'ring_suites',  name: 'Executive Private Suites', level: 'Kuat Orbital Array', cost: 0, requiredFlag: 'vaelen_cleared', targetZone: 'kuat_private_suites', targetPos: { x: 25, y: 10 } },
   { id: 'bador_base',   name: 'KDY Main Base',            level: 'Bador Moon, Sector Control', cost: 0, requiredFlag: 'tanner_briefed', targetZone: 'bador_main_base', targetPos: { x: 10, y: 14 } },
-  { id: 'bador_fwd',    name: 'Outpost 7 Forward Pad',    level: 'Bador Moon, Eastern Reach',  cost: 0, requiredFlag: 'bador_landed',   targetZone: 'outpost_7',       targetPos: { x: 26, y: 12 } },
+  { id: 'bador_fwd',    name: 'Outpost 7 Forward Pad',    level: 'Bador Moon, Eastern Reach',  cost: 0, requiredFlag: 'vael_briefed',   targetZone: 'outpost_7',       targetPos: { x: 26, y: 12 } },
 ];
 
 const SHUTTLE_ARRIVAL_TEXT = 'The transition from the pristine, silent luxury of the Kuat Orbital Array to the surface of Bador is a jarring shock to the senses. As your shuttle breaches the thin, violet tinged atmosphere, the sheer scale of the industrial devastation becomes apparent. The KDY Main Base is a fortress carved directly into the glassed bedrock. The air outside the shuttle tastes of ozone and copper, forcing you to rely on the rebreather integrated into your collar. You are escorted through a series of heavy durasteel airlocks, moving from the blasted exterior into the sterile, blue lit tactical operations center. Holographic tactical maps flicker with red conflict zones.';
@@ -15014,6 +15066,176 @@ function PropBasaltVista({ variant = 'ravine_a' }) {
   );
 }
 
+// BADOR VISTA BEGIN
+// Backdrop panoramas for the Bador zones, one drawing routine per family, one thin wrapper per footprint (the art linter wants a literal viewBox).
+// Families: moonbase, foundry, cavern, hullbay, ring (orbital array), hqwindow (panoramic glass). Variants end in _a, _b or _c to vary the layout.
+function bvistaArt(variant, cols, rows) {
+  const S = ART.signal, K = ART.sky;
+  const fam = variant.split('_')[0];
+  const W = cols * 32, H = rows * 32;
+  const seed = { a: 3, b: 7, c: 13 }[variant.split('_')[1]] || 3;
+  const r = rng(seed + cols);
+  const band = (list) => list.map(([y0, y1, c], i) => <rect key={'bd' + i} x="0" y={y0} width={W} height={y1 - y0 + 1} fill={c} />);
+  const stars = (n, maxY, c) => Array.from({ length: n }, (_, i) => <circle key={'st' + i} cx={r() * W} cy={r() * maxY} r={0.5 + r() * 0.8} fill={c || S.kyber} opacity="0.6" style={{ animation: `ship-blink ${2 + r() * 3}s ease-in-out ${r() * 3}s infinite` }} />);
+  const steam = (list, c) => list.map(([x, y, rx, ry], i) => <ellipse key={'sm' + i} cx={x} cy={y} rx={rx} ry={ry} fill={c} opacity="0.45" style={{ animation: `steam-rise ${5 + i * 1.3}s ease-out ${i * 1.1}s infinite` }} />);
+  const out = [];
+  if (fam === 'moonbase') {
+    out.push(...band([[0, 30, ART.ink], [30, 58, K.indigo], [58, 84, K.violet], [84, 104, K.plum], [104, 120, K.rose], [120, 134, K.haze]]));
+    out.push(...stars(Math.round(cols * 2.2), 70));
+    const px = W * (seed === 7 ? 0.28 : 0.74), py = 92;
+    out.push(<g key="planet">
+      <circle cx={px} cy={py} r="76" fill={ART.deepglass.shade} />
+      <clipPath id={'bvp' + cols + seed}><circle cx={px} cy={py} r="74" /></clipPath>
+      <g clipPath={`url(#bvp${cols}${seed})`}>
+        <circle cx={px} cy={py} r="74" fill={ART.deepglass.base} />
+        {[[-52, 12, ART.deepglass.hi], [-28, 9, ART.teal.base], [-6, 14, ART.deepglass.hi], [20, 10, ART.teal.shade], [42, 12, ART.deepglass.shade]].map(([dy, h, c], i) => <rect key={i} x={px - 80} y={py + dy} width="160" height={h} fill={c} opacity="0.75" />)}
+        <circle cx={px + 34} cy={py + 10} r="74" fill={ART.dark.shade} opacity="0.62" />
+        {Array.from({ length: 16 }, (_, i) => <rect key={'cl' + i} x={px + 8 + r() * 56} y={py - 40 + r() * 100} width="1.6" height="1.6" fill={S.amber} opacity="0.8" />)}
+      </g>
+      <ellipse cx={px} cy={py + 4} rx="122" ry="15" fill="none" stroke={ART.pearl.base} strokeWidth="2.2" opacity="0.75" transform={`rotate(-16 ${px} ${py})`} />
+      {Array.from({ length: 9 }, (_, i) => { const a = (i / 9) * Math.PI * 2; return <rect key={'rg' + i} x={px + Math.cos(a) * 122 - 1.5} y={py + 4 + Math.sin(a) * 15 - 1.5} width="3" height="3" fill={S.gold} opacity="0.85" style={{ animation: `ship-blink ${2 + (i % 3)}s ease-in-out ${i * 0.3}s infinite` }} />; })}
+    </g>);
+    out.push(<polygon key="rim" points={pts([[0, 134], [60, 118], [150, 126], [260, 112], [380, 124], [500, 114], [640, 126], [760, 116], [W, 122], [W, 150], [0, 150]])} fill={ART.dark.shade} />);
+    out.push(<polygon key="rim2" points={pts([[0, 146], [90, 136], [210, 142], [340, 134], [470, 142], [600, 136], [W, 140], [W, 150], [0, 150]])} fill={ART.dark.base} />);
+    const masts = [0.1, 0.26, 0.52, 0.86].map((f) => f * W);
+    masts.forEach((x, i) => out.push(<g key={'ms' + i}><rect x={x} y={70 - (i % 2) * 14} width="3" height={80 + (i % 2) * 14} fill={ART.dark.base} /><circle cx={x + 1.5} cy={70 - (i % 2) * 14} r="3" fill={S.red} style={{ animation: `ship-blink ${1.6 + i * 0.4}s ease-in-out infinite` }} /><polygon points={pts([[x + 1.5, 76 - (i % 2) * 14], [x - 22, 146], [x + 25, 146]])} fill={S.cyanHi} opacity="0.1" /></g>));
+    const dx = W * (seed === 7 ? 0.62 : 0.34);
+    out.push(<g key="dome"><ellipse cx={dx} cy="140" rx="74" ry="34" fill={ART.hull.shade} /><ellipse cx={dx} cy="140" rx="74" ry="6" fill={ART.brass.base} /><ellipse cx={dx} cy="124" rx="40" ry="14" fill={ART.hull.base} opacity="0.55" />{Array.from({ length: 9 }, (_, i) => <rect key={i} x={dx - 62 + i * 14} y="132" width="5" height="2.4" fill={S.cyan} opacity="0.7" />)}<rect x={dx - 2} y="96" width="4" height="22" fill={ART.dark.base} /><circle cx={dx} cy="95" r="2.6" fill={S.amber} style={{ animation: 'ship-blink 2s ease-in-out infinite' }} /></g>);
+    out.push(<g key="shuttle"><polygon points={pts([[W * 0.5, 60], [W * 0.5 + 22, 56], [W * 0.5 + 28, 61], [W * 0.5 + 22, 65]])} fill={ART.hull.base} /><polygon points={pts([[W * 0.5 - 140, 112], [W * 0.5, 61], [W * 0.5 - 4, 66], [W * 0.5 - 140, 118]])} fill={ART.pearl.hi} opacity="0.22" /><circle cx={W * 0.5 - 2} cy="62" r="3" fill={S.orange} opacity="0.9" style={{ animation: 'ship-engine 1.4s ease-in-out infinite' }} /></g>);
+    out.push(...steam([[W * 0.18, 100, 70, 10], [W * 0.62, 108, 90, 12]], K.haze));
+  } else if (fam === 'foundry') {
+    out.push(...band([[0, 26, ART.ink], [26, 58, ART.dark.shade], [58, 92, ART.rust.shade], [92, 120, ART.copper.shade], [120, 146, ART.rust.base]]));
+    out.push(...steam([[W * 0.12, 40, 80, 20], [W * 0.4, 30, 100, 22], [W * 0.7, 44, 90, 20], [W * 0.92, 34, 70, 18]], ART.ink));
+    const towers = Math.round(cols / 4);
+    for (let i = 0; i < towers; i++) {
+      const x = 18 + i * (W / towers) + r() * 22, h = 52 + r() * 54, w = 26 + r() * 16, tall = i % 2 === 0;
+      if (tall) out.push(<g key={'sk' + i}><rect x={x} y={146 - h - 20} width={w * 0.5} height={h + 22} fill={ART.dark.base} /><rect x={x} y={146 - h - 20} width="3" height={h + 22} fill={ART.dark.hi} opacity="0.5" />{[0, 1, 2].map((b) => <rect key={b} x={x} y={146 - h - 14 + b * 12} width={w * 0.5} height="5" fill={b % 2 ? ART.pearl.shade : ART.red.base} opacity="0.85" />)}<polygon points={pts([[x + w * 0.25 - 5, 146 - h - 20], [x + w * 0.25, 146 - h - 38], [x + w * 0.25 + 5, 146 - h - 20]])} fill={S.orange} style={{ animation: `ship-engine ${1.3 + i * 0.2}s ease-in-out infinite` }} /></g>);
+      else out.push(<g key={'ct' + i}><polygon points={pts([[x, 146], [x + 6, 146 - h], [x + w - 6, 146 - h], [x + w, 146]])} fill={ART.hull.shade} /><polygon points={pts([[x + w * 0.5, 146], [x + w * 0.5 + 4, 146 - h], [x + w - 6, 146 - h], [x + w, 146]])} fill={ART.dark.base} opacity="0.7" /><rect x={x + 4} y={146 - h} width={w - 8} height="4" fill={ART.hull.base} />{[0, 1, 2, 3].map((b) => <rect key={b} x={x + 8} y={146 - h + 12 + b * 12} width={w - 16} height="2.6" fill={S.amber} opacity="0.7" style={{ animation: `ship-blink ${2 + b * 0.5}s ease-in-out ${i * 0.2}s infinite` }} />)}</g>);
+    }
+    for (let i = 0; i < Math.round(cols / 8); i++) { const gx = 40 + i * (W / Math.max(1, Math.round(cols / 8))) + 60; out.push(<g key={'gc' + i}><polygon points={pts([[gx, 146], [gx + 8, 60], [gx + 14, 60], [gx + 22, 146]])} fill={ART.dark.base} opacity="0.85" /><rect x={gx - 30} y="58" width="110" height="6" fill={ART.brass.shade} /><rect x={gx + 40} y="64" width="3" height="40" fill={ART.dark.hi} opacity="0.6" /><rect x={gx + 36} y="104" width="11" height="8" fill={ART.hull.shade} /></g>); }
+    out.push(<polygon key="slag" points={pts([[0, 150], [W * 0.12, 138], [W * 0.3, 148], [W * 0.5, 136], [W * 0.72, 148], [W * 0.9, 138], [W, 146], [W, 160], [0, 160]])} fill={S.orange} opacity="0.55" />);
+  } else if (fam === 'cavern') {
+    out.push(...band([[0, 36, ART.ink], [36, 76, ART.dark.shade], [76, 112, K.indigo], [112, 146, ART.teal.shade]]));
+    out.push(...stars(Math.round(cols * 1.6), 100, S.anomaly));
+    for (let i = 0; i < Math.round(cols * 0.9); i++) { const x = r() * W, w = 10 + r() * 30, h = 20 + r() * 70; out.push(<g key={'sl' + i}><polygon points={pts([[x - w / 2, 0], [x + w / 2, 0], [x + r() * 4 - 2, h]])} fill={ART.dark.base} /><polygon points={pts([[x + w * 0.1, 0], [x + w / 2, 0], [x + r() * 4 - 2, h]])} fill={ART.ink} opacity="0.6" /></g>); }
+    out.push(<polygon key="shaft" points={pts([[W * 0.46, 0], [W * 0.54, 0], [W * 0.62, 146], [W * 0.38, 146]])} fill={ART.pearl.hi} opacity="0.07" />);
+    for (let i = 0; i < Math.round(cols / 5); i++) { const x = 20 + i * (W / Math.round(cols / 5)) + r() * 30, h = 20 + r() * 40; out.push(<g key={'cr' + i}><polygon points={pts([[x, 146], [x + 5, 146 - h], [x + 11, 146 - h * 0.55], [x + 16, 146 - h * 0.9], [x + 22, 146]])} fill={ART.fabric.base} /><polygon points={pts([[x + 5, 146 - h], [x + 11, 146 - h * 0.55], [x + 16, 146 - h * 0.9], [x + 13, 146]])} fill={S.violet} opacity="0.85" style={{ animation: `holo-flicker ${2.4 + i * 0.3}s ease-in-out ${i * 0.4}s infinite` }} /></g>); }
+    for (let i = 0; i < 4; i++) { const y = 44 + i * 18; out.push(<polyline key={'vn' + i} points={pts([[r() * W * 0.3, y], [W * 0.3 + r() * 80, y + 10], [W * 0.6, y - 6 + r() * 12], [W, y + 8]])} fill="none" stroke={S.anomaly} strokeWidth="1.4" opacity="0.5" style={{ animation: `holo-flicker ${3 + i}s ease-in-out ${i * 0.7}s infinite` }} />); }
+    out.push(<rect key="lake" x="0" y="124" width={W} height="22" fill={ART.deepglass.shade} opacity="0.85" />);
+    out.push(...Array.from({ length: Math.round(cols / 2) }, (_, i) => <rect key={'lk' + i} x={r() * W} y={128 + r() * 14} width={10 + r() * 22} height="1.6" fill={S.cyan} opacity="0.35" style={{ animation: `ship-blink ${3 + r() * 3}s ease-in-out ${r() * 3}s infinite` }} />));
+    out.push(...steam([[W * 0.2, 118, 120, 8], [W * 0.7, 120, 140, 9]], ART.teal.base));
+  } else if (fam === 'hullbay') {
+    out.push(...band([[0, 40, ART.ink], [40, 100, ART.dark.shade], [100, 146, ART.steel.shade]]));
+    out.push(...Array.from({ length: Math.round(cols * 1.5) }, (_, i) => <rect key={'pn' + i} x={i * (W / Math.round(cols * 1.5))} y="44" width="2" height="102" fill={ART.ink} opacity="0.35" />));
+    const fx = W * (seed === 7 ? 0.5 : 0.06), fl = W * 0.46;
+    out.push(<g key="keel"><polygon points={pts([[fx, 136], [fx + fl * 0.12, 96], [fx + fl * 0.7, 82], [fx + fl, 100], [fx + fl * 0.9, 126], [fx + fl * 0.5, 138]])} fill={ART.dark.base} opacity="0.9" />{Array.from({ length: 11 }, (_, i) => <polygon key={i} points={pts([[fx + 10 + i * fl * 0.085, 134], [fx + 22 + i * fl * 0.085, 90 + Math.abs(i - 5) * 3], [fx + 30 + i * fl * 0.085, 90 + Math.abs(i - 5) * 3], [fx + 20 + i * fl * 0.085, 134]])} fill={ART.steel.shade} opacity="0.8" />)}<polygon points={pts([[fx + fl * 0.12, 96], [fx + fl * 0.7, 82], [fx + fl * 0.7, 88], [fx + fl * 0.14, 102]])} fill={ART.steel.base} opacity="0.7" />{Array.from({ length: 6 }, (_, i) => <rect key={'wl' + i} x={fx + 24 + i * fl * 0.14} y={86 + (i % 2) * 4} width="4" height="3" fill={i % 2 ? S.cyan : S.amber} opacity="0.9" style={{ animation: `ship-blink ${1.8 + i * 0.4}s ease-in-out ${i * 0.3}s infinite` }} />)}</g>);
+    const vx = W * (seed === 7 ? 0.2 : 0.78);
+    out.push(<g key="vp"><rect x={vx - 60} y="46" width="120" height="56" fill={ART.screen.space} /><rect x={vx - 60} y="46" width="120" height="4" fill={ART.steel.hi} />{Array.from({ length: 22 }, (_, i) => <circle key={'vs' + i} cx={vx - 56 + r() * 112} cy={52 + r() * 46} r="0.9" fill={S.kyber} opacity="0.7" />)}<polygon points={pts([[vx - 56, 102], [vx - 26, 80], [vx + 2, 90], [vx + 28, 72], [vx + 60, 102]])} fill={ART.fabric.shade} opacity="0.85" /><rect x={vx - 1} y="46" width="3" height="56" fill={ART.steel.shade} /></g>);
+    for (let i = 0; i < Math.round(cols / 6); i++) { const x = 10 + i * (W / Math.round(cols / 6)) + 130; out.push(<g key={'rb' + i}><polygon points={pts([[x, 146], [x + 6, 30], [x + 34, 14], [x + 68, 30], [x + 74, 146], [x + 60, 146], [x + 56, 40], [x + 34, 28], [x + 18, 40], [x + 14, 146]])} fill={ART.steel.base} /><polygon points={pts([[x + 56, 40], [x + 34, 28], [x + 34, 34], [x + 52, 44]])} fill={ART.steel.hi} opacity="0.5" /><rect x={x + 62} y="60" width="5" height="3" fill={S.red} opacity="0.8" style={{ animation: `ship-blink ${1.4 + i * 0.3}s ease-in-out ${i * 0.2}s infinite` }} /></g>); }
+    out.push(<rect key="g1" x="0" y="22" width={W} height="6" fill={ART.dark.hi} opacity="0.8" />, <rect key="g2" x="0" y="106" width={W} height="4" fill={ART.dark.hi} opacity="0.55" />);
+    out.push(...Array.from({ length: Math.round(cols / 3) }, (_, i) => <rect key={'lp' + i} x={8 + i * (W / Math.round(cols / 3))} y="28" width="6" height="3" fill={S.red} opacity="0.85" style={{ animation: `ship-blink ${2 + (i % 3)}s ease-in-out ${i * 0.25}s infinite` }} />));
+    out.push(...Array.from({ length: Math.round(cols / 3) }, (_, i) => <line key={'cb' + i} x1={r() * W} y1="28" x2={r() * W * 0.04 + (i * W) / Math.round(cols / 3)} y2={34 + r() * 60} stroke={ART.dark.hi} strokeWidth="1.2" opacity="0.6" />));
+    out.push(...Array.from({ length: Math.round(cols / 6) }, (_, i) => <circle key={'sp' + i} cx={r() * W} cy={40 + r() * 60} r="2.4" fill={S.amberHi} opacity="0.9" style={{ animation: `ship-spark ${1.6 + r() * 2}s ease-in-out ${r() * 2}s infinite` }} />));
+  } else if (fam === 'ring') {
+    out.push(...band([[0, 150, ART.ink]]));
+    out.push(...stars(Math.round(cols * 3.2), 110));
+    out.push(<g key="limb"><circle cx={W * 0.5} cy={H + 360} r="440" fill={ART.deepglass.shade} /><circle cx={W * 0.5} cy={H + 360} r="430" fill={ART.deepglass.base} /><circle cx={W * 0.5} cy={H + 372} r="420" fill={ART.teal.shade} opacity="0.7" />{Array.from({ length: Math.round(cols * 1.4) }, (_, i) => <rect key={'ct' + i} x={r() * W} y={118 + r() * 34} width="1.8" height="1.8" fill={S.amber} opacity="0.85" />)}</g>);
+    const hulls = Math.max(2, Math.round(cols / 10));
+    for (let i = 0; i < hulls; i++) { const x = 30 + i * (W / hulls) + r() * 40, sc = 0.8 + r() * 0.5; out.push(<g key={'hl' + i}><polygon points={pts([[x, 96], [x + 170 * sc, 78], [x + 210 * sc, 92], [x + 170 * sc, 106]])} fill={ART.dark.base} /><polygon points={pts([[x, 96], [x + 170 * sc, 78], [x + 120 * sc, 94]])} fill={ART.steel.shade} />{Array.from({ length: 7 }, (_, k) => <rect key={k} x={x + 20 + k * 22 * sc} y={92 + (k % 2) * 4} width="3" height="2" fill={k % 3 ? S.cyan : S.amber} opacity="0.85" style={{ animation: `ship-blink ${2 + k * 0.4}s ease-in-out ${k * 0.3}s infinite` }} />)}<line x1={x + 30} y1="60" x2={x + 120 * sc} y2="84" stroke={ART.steel.base} strokeWidth="1.2" opacity="0.7" /><line x1={x + 60} y1="56" x2={x + 140 * sc} y2="82" stroke={ART.steel.base} strokeWidth="1.2" opacity="0.7" /></g>); }
+    out.push(<g key="arr"><polygon points={pts([[0, 128], [W, 112], [W, 117], [0, 133]])} fill={ART.steel.base} opacity="0.85" />{Array.from({ length: Math.round(cols * 1.2) }, (_, i) => <rect key={'al' + i} x={6 + i * (W / Math.round(cols * 1.2))} y={128 - (i / Math.round(cols * 1.2)) * 16} width="4" height="2.4" fill={S.gold} opacity="0.85" style={{ animation: `ship-blink ${2 + (i % 4)}s ease-in-out ${i * 0.2}s infinite` }} />)}</g>);
+    out.push(<g key="frt"><polygon points={pts([[W * 0.78, 40], [W * 0.78 + 34, 36], [W * 0.78 + 42, 41], [W * 0.78 + 34, 46]])} fill={ART.hull.base} /><circle cx={W * 0.78 - 1} cy="41" r="3" fill={S.cyan} opacity="0.9" style={{ animation: 'ship-engine 1.6s ease-in-out infinite' }} /></g>);
+  } else if (fam === 'hqwindow') {
+    out.push(...band([[0, H * 0.22, K.indigo], [H * 0.22, H * 0.44, K.violet], [H * 0.44, H * 0.62, K.plum], [H * 0.62, H * 0.78, K.rose], [H * 0.78, H, K.haze]]));
+    out.push(...stars(Math.round(cols * 1.2), H * 0.3));
+    out.push(<polygon key="hz" points={pts([[0, H - 4], [W * 0.1, H * 0.66], [W * 0.24, H * 0.76], [W * 0.4, H * 0.62], [W * 0.58, H * 0.74], [W * 0.78, H * 0.6], [W, H * 0.7], [W, H], [0, H]])} fill={ART.dark.shade} />);
+    out.push(<ellipse key="dm" cx={W * 0.7} cy={H * 0.8} rx="60" ry="22" fill={ART.hull.shade} />);
+    out.push(...[0.18, 0.46, 0.84].map((f, i) => <g key={'mk' + i}><rect x={W * f} y={H * 0.44} width="3" height={H * 0.4} fill={ART.dark.base} /><circle cx={W * f + 1.5} cy={H * 0.44} r="2.4" fill={S.red} style={{ animation: `ship-blink ${1.6 + i * 0.5}s ease-in-out infinite` }} /></g>));
+    out.push(...Array.from({ length: Math.round(cols / 4) }, (_, i) => <rect key={'ml' + i} x={20 + i * (W / Math.round(cols / 4))} y={H - 14} width="8" height="2.4" fill={S.cyan} opacity="0.6" />));
+    for (let i = 0; i <= Math.round(cols / 5); i++) { const x = i * (W / Math.round(cols / 5)); out.push(<g key={'mu' + i}><rect x={x - 4} y="0" width="8" height={H} fill={ART.steel.shade} /><rect x={x - 4} y="0" width="3" height={H} fill={ART.steel.base} /><rect x={x - 5} y={H * 0.5} width="10" height="3" fill={ART.brass.base} /></g>); }
+    out.push(<rect key="hd" x="0" y="0" width={W} height="6" fill={ART.brass.shade} />);
+  }
+  return out;
+}
+
+const bvistaBase = (cols, rows, W, H, variant, extra) => (
+  <>
+    {bvistaArt(variant, cols, rows)}
+    {extra}
+  </>
+);
+
+function PropBvistaA({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 640 160" width="640" height="160" style={PROP_STYLE}>
+      {bvistaBase(20, 5, 640, 160, variant)}
+      <rect x="0" y="146" width="640" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="640" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={628} n={40} c="dark" /><Seams x={0} y={146} w={640} h={14} cols={20} op={0.3} />
+      <Grime x={0} y={100} w={640} h={60} seed={2301} n={9} op={0.12} /><Scuff x={0} y={146} w={640} h={14} seed={2302} n={10} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaB({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 768 160" width="768" height="160" style={PROP_STYLE}>
+      {bvistaBase(24, 5, 768, 160, variant)}
+      <rect x="0" y="146" width="768" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="768" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={756} n={48} c="dark" /><Seams x={0} y={146} w={768} h={14} cols={24} op={0.3} />
+      <Grime x={0} y={100} w={768} h={60} seed={2311} n={10} op={0.12} /><Scuff x={0} y={146} w={768} h={14} seed={2312} n={12} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaC({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 1024 160" width="1024" height="160" style={PROP_STYLE}>
+      {bvistaBase(32, 5, 1024, 160, variant)}
+      <rect x="0" y="146" width="1024" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="1024" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={1012} n={64} c="dark" /><Seams x={0} y={146} w={1024} h={14} cols={32} op={0.3} />
+      <Grime x={0} y={100} w={1024} h={60} seed={2321} n={12} op={0.12} /><Scuff x={0} y={146} w={1024} h={14} seed={2322} n={14} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaD({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 1152 160" width="1152" height="160" style={PROP_STYLE}>
+      {bvistaBase(36, 5, 1152, 160, variant)}
+      <rect x="0" y="146" width="1152" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="1152" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={1140} n={72} c="dark" /><Seams x={0} y={146} w={1152} h={14} cols={36} op={0.3} />
+      <Grime x={0} y={100} w={1152} h={60} seed={2331} n={14} op={0.12} /><Scuff x={0} y={146} w={1152} h={14} seed={2332} n={16} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaE({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 1408 160" width="1408" height="160" style={PROP_STYLE}>
+      {bvistaBase(44, 5, 1408, 160, variant)}
+      <rect x="0" y="146" width="1408" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="1408" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={1396} n={88} c="dark" /><Seams x={0} y={146} w={1408} h={14} cols={44} op={0.3} />
+      <Grime x={0} y={100} w={1408} h={60} seed={2341} n={16} op={0.12} /><Scuff x={0} y={146} w={1408} h={14} seed={2342} n={18} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaF({ variant = 'moonbase_a' }) {
+  return (
+    <svg viewBox="0 0 1536 160" width="1536" height="160" style={PROP_STYLE}>
+      {bvistaBase(48, 5, 1536, 160, variant)}
+      <rect x="0" y="146" width="1536" height="14" fill={ART.dark.shade} /><rect x="0" y="146" width="1536" height="2" fill={ART.steel.shade} />
+      <Rivets x={6} y={152} w={1524} n={96} c="dark" /><Seams x={0} y={146} w={1536} h={14} cols={48} op={0.3} />
+      <Grime x={0} y={100} w={1536} h={60} seed={2351} n={18} op={0.12} /><Scuff x={0} y={146} w={1536} h={14} seed={2352} n={20} c="dark" />
+    </svg>
+  );
+}
+function PropBvistaG({ variant = 'hqwindow_a' }) {
+  return (
+    <svg viewBox="0 0 960 96" width="960" height="96" style={PROP_STYLE}>
+      {bvistaBase(30, 3, 960, 96, variant)}
+      <rect x="0" y="86" width="960" height="10" fill={ART.dark.shade} /><rect x="0" y="86" width="960" height="2" fill={ART.brass.base} />
+      <Rivets x={6} y={91} w={948} n={60} c="brass" /><Seams x={0} y={86} w={960} h={10} cols={30} op={0.3} />
+      <Grime x={0} y={50} w={960} h={46} seed={2361} n={8} op={0.1} /><Scuff x={0} y={86} w={960} h={10} seed={2362} n={8} c="dark" />
+    </svg>
+  );
+}
+// BADOR VISTA END
+
 function PropKdyBarricade({ variant }) {
   const S = ART.signal, scrap = variant === 'scrap';
   const body = scrap ? 'rust' : 'hull';
@@ -15668,6 +15890,15 @@ const PROP_DEFS = {
   // PENTHOUSE DEFS END
   // BADOR WAR DEFS BEGIN
   basalt_vista:          { w: 24, h: 5, ax: 12, ay: 4, backdrop: true },
+  // BADOR VISTA DEFS BEGIN
+  bvista_20x5:           { w: 20, h: 5, ax: 10, ay: 4, backdrop: true },
+  bvista_24x5:           { w: 24, h: 5, ax: 12, ay: 4, backdrop: true },
+  bvista_32x5:           { w: 32, h: 5, ax: 16, ay: 4, backdrop: true },
+  bvista_36x5:           { w: 36, h: 5, ax: 18, ay: 4, backdrop: true },
+  bvista_44x5:           { w: 44, h: 5, ax: 22, ay: 4, backdrop: true },
+  bvista_48x5:           { w: 48, h: 5, ax: 24, ay: 4, backdrop: true },
+  bvista_30x3:           { w: 30, h: 3, ax: 15, ay: 2, backdrop: true },
+  // BADOR VISTA DEFS END
   kdy_barricade:         { w: 3, h: 2, ax: 1, ay: 1 },
   auto_turret:           { w: 2, h: 2, ax: 0, ay: 1 },
   shanty_hovel:          { w: 3, h: 3, ax: 1, ay: 2 },
@@ -15864,6 +16095,15 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     // PENTHOUSE CASES END
     // BADOR WAR CASES BEGIN
     case 'basalt_vista': return <PropBasaltVista variant={variant} />;
+    // BADOR VISTA CASES BEGIN
+    case 'bvista_20x5': return <PropBvistaA variant={variant} />;
+    case 'bvista_24x5': return <PropBvistaB variant={variant} />;
+    case 'bvista_32x5': return <PropBvistaC variant={variant} />;
+    case 'bvista_36x5': return <PropBvistaD variant={variant} />;
+    case 'bvista_44x5': return <PropBvistaE variant={variant} />;
+    case 'bvista_48x5': return <PropBvistaF variant={variant} />;
+    case 'bvista_30x3': return <PropBvistaG variant={variant} />;
+    // BADOR VISTA CASES END
     case 'kdy_barricade': return <PropKdyBarricade variant={variant} />;
     case 'auto_turret': return <PropAutoTurret variant={variant} />;
     case 'shanty_hovel': return <PropShantyHovel variant={variant} />;
@@ -21727,7 +21967,7 @@ function StarWarsRPG() {
       if (!questFlags.scan_team_fate_known) return '[BADOR] Find the lost scan team and the overdue supply skiff. Sweep Sector 4 and the Engine Wastes.';
     }
     if (questFlags.syndicateManagement_active && !questFlags.syndicate_first_contract_run) return '[SYNDICATE] Open the War Table at the Penthouse and run your first contract.';
-    if (questFlags.syndicateManagement_active) return '[SYNDICATE] Run the network from the Penthouse War Table. Expand your territory, recruit lieutenants, and take the Sector Control campaign to 7,000 credits per turn.';
+    if (questFlags.syndicateManagement_active) return '[SYNDICATE] Run the network from the Penthouse War Table. Expand your territory, recruit lieutenants, and take the Sector Control campaign to 10,000 credits per turn.';
     if (questFlags.vault_heist_complete && !questFlags.jon_status_dead && !questFlags.jon_status_subjugated && !questFlags.jon_status_rival) return '[INHERITANCE] Go to the Penthouse. Your lieutenants are ready. Jon has nowhere to run.';
     if ((questFlags.malak_turned || questFlags.malak_dead) && (questFlags.reya_loyal || questFlags.reya_blackmailed) && !questFlags.vault_heist_complete) return '[INHERITANCE] Use Reya\'s keycard at the Penthouse vault terminal. Freeze the payroll.';
     if ((questFlags.malak_turned || questFlags.malak_dead) && !questFlags.reya_loyal && !questFlags.reya_blackmailed && !questFlags.reya_warrant_mission_active) return '[INHERITANCE] Speak with Reya in Shadow Town. She has a condition.';
@@ -22071,7 +22311,7 @@ function StarWarsRPG() {
       if (tile.type === 'door') {
         const door = zone.doors.find(d => d.x === x && d.y === y);
         if (door) {
-          if (door.requiresFlag && !questFlags[door.requiresFlag]) { pushActionLog(door.lockedMessage || 'The door is sealed.', zoneId); return; }
+          if ((door.requiresFlag && !questFlags[door.requiresFlag]) || (door.requiresAnyFlag && !door.requiresAnyFlag.some(f => questFlags[f]))) { pushActionLog(door.lockedMessage || 'The door is sealed.', zoneId); return; }
           if (door.cinematic) { setCinematic({ mode: door.cinematic, dest: { targetZone: door.targetZone, targetPos: door.targetPos, name: door.label, quiet: true } }); return; }
           travelToZone(door.targetZone, door.targetPos); return;
         }
@@ -22136,7 +22376,7 @@ function StarWarsRPG() {
           if (worldObjHere.thermalDelta) addThermal(worldObjHere.thermalDelta);
           if (worldObjHere.heatDelta) setSyndicateHeat(h => Math.max(0, Math.min(100, h + worldObjHere.heatDelta)));
           if (worldObjHere.grantsCredits && !worldObjHere.triggersMinigame) setCredits(c => c + worldObjHere.grantsCredits);
-          if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) {
+          if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem] && !worldObjHere.triggersMinigame) {
             addItem(ITEMS[worldObjHere.grantsItem]);
             pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId);
           }
