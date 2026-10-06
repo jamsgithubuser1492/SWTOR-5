@@ -22745,6 +22745,7 @@ function StarWarsRPG() {
               [worldObjHere.grantsFlag, ...(worldObjHere.grantsFlags || [])].filter(Boolean).forEach(setFlag);
               if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) { addItem(ITEMS[worldObjHere.grantsItem]); pushActionLog(`Acquired: ${ITEMS[worldObjHere.grantsItem].name}`, zoneId); }
               if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
+              if (worldObjHere.grantsCredits) { setCredits(c => c + worldObjHere.grantsCredits); pushActionLog(`+${worldObjHere.grantsCredits} credits.`, zoneId); }
               if (worldObjHere.once) setCompletedInteractions(prev => new Set([...prev, worldObjHere.id]));
               if (worldObjHere.heatDeltaOnSuccess) setSyndicateHeat(h => Math.max(0, Math.min(100, h + worldObjHere.heatDeltaOnSuccess)));
               if (worldObjHere.thermalDeltaOnSuccess) addThermal(worldObjHere.thermalDeltaOnSuccess);
