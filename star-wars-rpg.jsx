@@ -273,6 +273,13 @@ const PLANETS = {
           { id: 'graffiti_tag', propArt: 'wall_marks', propVariant: 'free', x: 24, y: 17, label: 'Graffiti Tag', description: 'Spray-etched into the durasteel wall: a stylised flame over a broken chain. The symbol of the Free Coruscant movement.', once: true },
         ],
         npcs: [
+          { id: 'ph_merchant_orrel', x: 20, y: 11, kind: 'medic', label: 'Ysmin Orrel, Calm and Growth',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true, requiresFlag: 'inheritance_active',
+            vendorStock: ['ph_pkg_spa', 'ph_pkg_garden'],
+            vendorGreeting: "\"Calm is a resource. Hot water, green leaves, quiet. You will think better and sleep better, and your people will thank you.\"",
+            repeatPrompt: "Orrel waters a small orchid and does not look up.",
+            prompt: "\"Calm is a resource. Hot water, green leaves, quiet. You will think better and sleep better, and your people will thank you.\"",
+            choices: [] },
           { id: 'calla_ren', x: 10, y: 7, kind: 'jedi', label: "Senator's Aide Calla Ren",
             repeatPrompt: 'Calla notices you again and smiles thinly. She has nothing more to share in public.',
             prompt: 'She speaks without looking at you, watching the plaza. "The Senator I work for has received three death threats this week. All three were traced back to a single Level 1 address. All three were dismissed as crank messages."',
@@ -322,6 +329,13 @@ const PLANETS = {
           { id: 'trex_keypad', propArt: 'apt_door', propVariant: 'trex', x: 20, y: 15, label: "Trex's Apt Keypad", description: 'A reinforced door with a seven-digit keypad. Three of the digits are worn smooth from repeated use.', once: true },
         ],
         npcs: [
+          { id: 'ph_merchant_tark', x: 16, y: 11, kind: 'czerka_liaison', label: 'Boolo Tark, Home Entertainment',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true, requiresFlag: 'inheritance_active',
+            vendorStock: ['ph_pkg_theater', 'ph_pkg_lounge'],
+            vendorGreeting: "\"Entertainment is the foundation of a stable household. A theater wall, a lounge, a bar. You will thank me when the heat is on.\"",
+            repeatPrompt: "Tark taps a holo remote against his palm like a man who has sold many remotes.",
+            prompt: "\"Entertainment is the foundation of a stable household. A theater wall, a lounge, a bar. You will thank me when the heat is on.\"",
+            choices: [] },
           { id: 'sally', x: 8, y: 12, kind: 'cantina_owner', label: 'Sally',
             repeatPrompt: 'Sally slides a drink down the bar without looking at you. She remembers what you ordered.',
             prompt: '"Sit. Drink. Whatever you are about to ask me, the answer is: I did not see anything, I do not know anything, and my establishment has nothing to do with it. That said." She leans in. "You look like you need to know things."',
@@ -712,7 +726,7 @@ const PLANETS = {
           { x: 0, y: 12, targetZone: 'sky_customs', targetPos: { x: 33, y: 12 }, label: 'Skyway Customs' },
           { x: 0, y: 13, targetZone: 'sky_customs', targetPos: { x: 33, y: 11 }, label: 'Skyway Customs' },
           { x: 15, y: 25, targetZone: 'heat_sink_slums', targetPos: { x: 15, y: 1 }, label: 'Heat Sink Slums' },
-          { x: 36, y: 0, targetZone: 'penthouse', targetPos: { x: 14, y: 17 }, label: 'Penthouse Elevator' },
+          { x: 36, y: 0, targetZone: 'penthouse', targetPos: { x: 19, y: 27 }, label: 'Penthouse Elevator' },
           { x: 5, y: 0, targetZone: 'senatorial_lounges', targetPos: { x: 19, y: 26 }, label: 'Senatorial Sky-Lounges' },
         ],
         worldObjects: [
@@ -753,6 +767,13 @@ const PLANETS = {
           { id: 'maintenance_catwalk_junction', propArt: 'catwalk_junction', x: 30, y: 23, once: false, label: 'Maintenance Catwalk Junction', description: 'The narrow catwalk beneath the promenade splits here into three branches: east to the freight crane platforms, west back under the Aurebesh Lounge, and straight down via a ladder access to the Level 1222 ventilation spine. The junction is unmarked. The ladder rungs disappear into darkness forty meters below the grate. Above you, through the floor, you can hear market vendors and the faint pulse of Aurebesh neon.' },
         ],
         npcs: [
+          { id: 'ph_merchant_voss', x: 19, y: 13, kind: 'broker', label: 'Ilmara Voss, Skyline Interiors',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true, requiresFlag: 'inheritance_active',
+            vendorStock: ['ph_pkg_skyview', 'ph_pkg_tint'],
+            vendorGreeting: "\"A penthouse without a view is a very expensive box. I sell the view. Nightfall for the glass, a polarization suite for privacy. Take a look.\"",
+            repeatPrompt: "Voss runs a fingertip along a sample of night glass. \"Skylines are my religion. Penthouse owners are my congregation.\"",
+            prompt: "\"A penthouse without a view is a very expensive box. I sell the view. Nightfall for the glass, a polarization suite for privacy. Take a look.\"",
+            choices: [] },
           { id: 'marlo_sky', x: 6, y: 7, kind: 'broker', label: '"Slick" Marlo',
             prompt: 'He does not look up from his drink. "You have the look of someone who wandered three hundred levels off course. Give me one reason I should not have my guard droids show you the long way down."',
             repeatPrompt: 'Marlo is watching the exits. His glass stays full.',
@@ -1143,6 +1164,13 @@ const PLANETS = {
             grantsFlags: ['sector4_raid_complete'] },
         ],
         npcs: [
+          { id: 'ph_merchant_quill', x: 20, y: 14, kind: 'smuggler', label: 'Dara Quill, Holdings Modeling',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true, requiresFlag: 'inheritance_active',
+            vendorStock: ['ph_pkg_ops'],
+            vendorGreeting: "\"You own more than you know. I build the model that shows you. Operations Annex: a holdings table and a console that runs the numbers. Buy it, and the money starts talking.\"",
+            repeatPrompt: "Quill counts crates with her lips moving, then writes a number on her wrist.",
+            prompt: "\"You own more than you know. I build the model that shows you. Operations Annex: a holdings table and a console that runs the numbers. Buy it, and the money starts talking.\"",
+            choices: [] },
           { id: 'jax_freight', x: 18, y: 6, kind: 'mechanic', label: 'Dock Engineer Jax',
             repeatPrompt: 'Jax is running diagnostics on a loading claw. He does not acknowledge you.',
             prompt: '"Whatever you are here for, I did not see anything. Go find someone else."',
@@ -1874,6 +1902,13 @@ const PLANETS = {
           { id: 'airtaxi_lower_sky_market', propArt: 'airtaxi', propVariant: 'worn', x: 20, y: 24, once: false, iconKind: 'beacon', label: 'AirTaxi Terminal', description: 'Coruscant AirTaxi Network. Exit from lower promenade.' },
         ],
         npcs: [
+          { id: 'ph_merchant_ro', x: 19, y: 13, kind: 'archivist', label: 'Tamsin Ro, Fine Art and Fixtures',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true, requiresFlag: 'inheritance_active',
+            vendorStock: ['ph_pkg_gallery', 'ph_pkg_trophy'],
+            vendorGreeting: "\"Every wall tells a story. I can make yours tell a better one. Canvases, pedestals, trophy cases, all with provenance. Mostly.\"",
+            repeatPrompt: "Tamsin Ro arranges a frame by a hair and steps back to admire it.",
+            prompt: "\"Every wall tells a story. I can make yours tell a better one. Canvases, pedestals, trophy cases, all with provenance. Mostly.\"",
+            choices: [] },
           { id: 'marlo_1100', x: 8, y: 8, kind: 'broker', label: '"Slick" Marlo',
             repeatPrompt: 'Marlo watches the promenade through a one-way panel. He is always watching.',
             prompt: '"Welcome to the neighborhood. Rook operates out of the east side. He is Black Sun, old guard — thinks the territory is his because it was his father\'s. I disagree. Here is what I need from you."',
@@ -2564,25 +2599,25 @@ const PLANETS = {
       },
       penthouse: {
         id: 'penthouse', name: 'Scylla Tower Penthouse', subtitle: 'Coruscant · Sky-Market · Level 1452',
-        width: 30, height: 20, spawnPos: { x: 14, y: 17 }, textureId: 'coruscant',
+        width: 40, height: 30, spawnPos: { x: 19, y: 26 }, textureId: 'coruscant',
         accent: '#C8A000', accentGlow: 'rgba(200,160,0,0.30)', accentDim: '#604800',
         floorColor: '#1A1608', floorAlt: '#24200E', wallDark: '#0A0800', wallLight: '#1E1A08',
         bg: 'radial-gradient(circle at 50% 0%, #2A1E00 0%, #181000 30%, #080600 70%)', ambient: 'neon_haze', floorPattern: 'clean',
         decor: ['pillar', 'neon_sign', 'scan_arch'],
         doors: [
-          { x: 14, y: 19, targetZone: 'sky_market', targetPos: { x: 35, y: 1 }, label: 'Elevator to Sky-Market' },
+          { x: 19, y: 29, targetZone: 'sky_market', targetPos: { x: 35, y: 1 }, label: 'Elevator to Sky-Market' },
         ],
         worldObjects: [
-          { id: 'war_table', propArt: 'tactical_table', propVariant: 'war', x: 14, y: 10, once: false, iconKind: 'terminal', label: 'Holo-War Table',
+          { id: 'war_table', propArt: 'tactical_table', propVariant: 'war', x: 24, y: 14, once: false, iconKind: 'terminal', label: 'Holo-War Table',
             requiresFlag: 'syndicateManagement_active',
             description: 'A holographic tactical display showing your territories, active agents, and contract queue. The Iron Syndicate operational map, rendered in cold blue light over a relief projection of Coruscant sub-levels 800 through 1450.',
             triggersMinigame: 'syndicate_management' },
-          { id: 'conquest_table', propArt: 'tactical_table', propVariant: 'conquest', x: 10, y: 10, once: false, iconKind: 'terminal', label: 'Sector Control Holo',
+          { id: 'conquest_table', propArt: 'tactical_table', propVariant: 'conquest', x: 14, y: 14, once: false, iconKind: 'terminal', label: 'Sector Control Holo',
             requiresFlag: 'syndicateManagement_active',
             description: 'A secondary tactical display overlaying the five contested sectors of Coruscant mid-city. Garrison strength, income flows, defense ratings, and faction aggression indicators scroll in real time. From here you direct the long war: deploy units, build infrastructure, launch assaults, and respond to crisis events before they destabilize your hold.',
             triggersMinigame: 'coruscant_conquest',
             minigameConfig: { startCredits: 5000 } },
-          { id: 'vault_terminal', propArt: 'console', propVariant: 'vault', x: 25, y: 4, once: true, iconKind: 'terminal', label: 'Credit Vault Terminal',
+          { id: 'vault_terminal', propArt: 'console', propVariant: 'vault', x: 34, y: 10, once: true, iconKind: 'terminal', label: 'Credit Vault Terminal',
             requiresFlag: 'inheritance_active',
             requires: { item: 'vane_vault_keycard' },
             requiresNoneFlags: ['vault_heist_complete'],
@@ -2590,21 +2625,15 @@ const PLANETS = {
             triggersMinigame: 'signal_siphon',
             grantsFlag: 'vault_heist_complete',
             grantsCodex: 'codex-penthouse' },
-          { id: 'trophy_armory', propArt: 'trophy_wall', x: 5, y: 4, once: false, iconKind: 'crate', label: 'Trophy Room',
+          { id: 'trophy_armory', propArt: 'trophy_wall', x: 5, y: 10, once: false, iconKind: 'crate', label: 'Trophy Room',
             description: 'Weapons, plaques, commendations from fifteen years of operation. Some of them Jon earned. Most of them he took from the person who had them before him.' },
-          { id: 'security_console', propArt: 'monitor_wall', x: 25, y: 16, once: false, iconKind: 'terminal', label: 'Security Console',
+          { id: 'security_console', propArt: 'monitor_wall', x: 34, y: 25, once: false, iconKind: 'terminal', label: 'Security Console',
             requiresFlag: 'syndicateManagement_active',
             description: 'Fifteen surveillance feeds across Level 1450. Three CSF patrol routes mapped in real time. One heat meter currently showing a number that will keep climbing as long as the Syndicate operates.' },
-          { id: 'roster_lounge', propArt: 'roster_wall', x: 5, y: 16, once: false, iconKind: 'archive', label: 'Agent Roster',
+          { id: 'roster_lounge', propArt: 'roster_wall', x: 5, y: 25, once: false, iconKind: 'archive', label: 'Agent Roster',
             requiresFlag: 'syndicateManagement_active',
             description: 'Your people. Enforcers, slicers, smugglers, fixers. Each one costs something. Each one is worth something. The question is whether those two numbers ever match.' },
-          { id: 'penthouse_viewport', propArt: 'skyline', propVariant: 'viewport', x: 14, y: 1, once: false, iconKind: 'vista', label: 'Transparisteel Viewport',
-            description: 'Floor-to-ceiling transparisteel. Level 1452. The skylanes run like rivers of light below. The Senate dome is visible on the horizon, white and permanent. From up here, things feel very clear.',
-            worldStateVariant: {
-              underworld: 'Your city. You can see it from here in a way that most people never will. Everything the Syndicate touches, visible at once. It is a remarkable amount of ground to own.',
-              lawful: 'The Republic\'s skyline. The Senate dome in the distance. You are standing in a criminal\'s living room looking at the seat of Republic government and wondering if the view is different from either side.',
-            } },
-          { id: 'jon_fight_start', propArt: 'duel_ring', x: 14, y: 7, once: true, label: 'Confront Jon', iconKind: 'floor',
+          { id: 'jon_fight_start', propArt: 'duel_ring', x: 19, y: 10, once: true, label: 'Confront Jon', iconKind: 'floor',
             requiresFlag: 'jon_confrontation_path_a_chosen',
             requiresNoneFlags: ['jon_status_dead'],
             description: 'The space between you and Jon Vane. Twelve years of operation about to end. You have both made your calculation.',
@@ -2613,16 +2642,63 @@ const PLANETS = {
             grantsFlags: ['jon_status_dead', 'syndicateManagement_active'],
             grantsItem: 'weapon_vane_custom_blaster',
             grantsCodex: 'codex-penthouse' },
-          { id: 'airtaxi_penthouse', propArt: 'airtaxi', propVariant: 'private', x: 28, y: 10, once: false, iconKind: 'beacon', label: 'Private Transit Terminal',
+          { id: 'airtaxi_penthouse', propArt: 'airtaxi', propVariant: 'private', x: 28, y: 17, once: false, iconKind: 'beacon', label: 'Private Transit Terminal',
             description: 'A private transit node registered to Scylla Tower Seven Holdings. No destination log. No arrival record. Complete transit discretion for an additional surcharge billed to an account that does not appear in any public registry.' },
-          { id: 'holonet_transmission_index', propArt: 'console', propVariant: 'transmission', x: 20, y: 3, once: true, iconKind: 'terminal', label: 'Encrypted Holonet Transmission',
+          { id: 'holonet_transmission_index', propArt: 'console', propVariant: 'transmission', x: 24, y: 5, once: true, iconKind: 'terminal', label: 'Encrypted Holonet Transmission',
             requiresFlag: 'senate_line_secured',
             requiresNoneFlags: ['kuat_summons_received'],
             description: 'No sender name. No origin trace. The routing signature is cleaner than any unsolicited message has a right to be. Three lines: "The Senate matter. You handled it well. I have been watching this city for a long time and I rarely see work done that cleanly. I have a use for someone who operates the way you operate. Ring Berth Seven, Kuat orbital. When you are ready." A KDY docking beacon is appended at the end. Nothing else.',
             grantsFlag: 'kuat_summons_received' },
+          { id: 'ph_vista_dusk', propArt: 'skyline_vista', propVariant: 'plain', x: 20, y: 5, once: false, iconKind: 'vista', label: 'Transparisteel Viewport', requiresNoneFlags: ['ph_skyview', 'ph_tint'],
+            description: "Floor to ceiling transparisteel, triple paned, canted out over the edge of Level 1452. The skylanes run below like rivers of orange and blue light. The Senate dome sits white and permanent on the horizon. From up here, things feel very clear.",
+            worldStateVariant: { underworld: 'Your city. You can see it from here in a way that most people never will. Everything the Syndicate touches, visible at once. It is a remarkable amount of ground to own.', lawful: 'The Republic skyline. The Senate dome in the distance. You are standing in a criminal living room looking at the seat of Republic government and wondering if the view is different from either side.' } },
+          { id: 'ph_vista_hud', propArt: 'skyline_vista', propVariant: 'hud', x: 20, y: 5, once: false, iconKind: 'vista', label: 'Transparisteel Viewport (Tactical Overlay)', requiresFlag: 'ph_tint', requiresNoneFlags: ['ph_skyview'], invisibleLocked: true,
+            description: "The smart glass suite has switched on a tactical overlay. Cyan callouts tag the Senate Rotunda, both skyway lanes, the Jedi Temple spires and the canyon floor. Three lane vectors pass within a kilometer of your tower, and the overlay tells you which ones are carrying cargo you would like to own." },
+          { id: 'ph_vista_night', propArt: 'skyline_vista', propVariant: 'night', x: 20, y: 5, once: false, iconKind: 'vista', label: 'Transparisteel Viewport (Night Filter)', requiresFlag: 'ph_skyview', requiresNoneFlags: ['ph_tint'], invisibleLocked: true,
+            description: "The night filter strips the haze from the glass and Coruscant finally has a sky. A handful of real stars, a pearl white moon, and a canyon of light below. The city looks like a second galaxy laid over the first." },
+          { id: 'ph_vista_nighthud', propArt: 'skyline_vista', propVariant: 'nighthud', x: 20, y: 5, once: false, iconKind: 'vista', label: 'Transparisteel Viewport (Night and Overlay)', requiresAllFlags: ['ph_skyview', 'ph_tint'], invisibleLocked: true,
+            description: "Stars above, tactical callouts below. The overlay pins every lane and every landing light against a true night sky, and a thin cyan line follows a Senate courier all the way to the horizon. You could run a war from this window." },
+          { id: 'ph_design_console', propArt: 'design_console', x: 27, y: 10, once: false, iconKind: 'terminal', label: 'Interior Design Console',
+            description: "A brass and dark glass console with a wireframe model of the penthouse rotating on its screen, and a swatch strip of garnets, golds and teals along the lower edge. Insert a design package from your cargo and the suite rebuilds itself while you watch. Remove one and it returns to your cargo.",triggersMinigame: 'penthouse_design', grantsCodex: 'codex-ph-design' },
+          { id: 'ph_telescope', propArt: 'observatory_telescope', x: 6, y: 5, once: false, iconKind: 'vista', label: 'Brass Refractor Telescope', requiresFlag: 'ph_skyview', invisibleLocked: true,
+            description: "A brass refractor on a three legged tripod, its eyepiece warm from the lamp. Through it, a pearl white moon, two orbital shipyards and a Senate courier running dark. A small star chart lies on the stand with someone's pencil notes in the margin. Yours, you assume.",grantsCodex: 'codex-ph-observatory' },
+          { id: 'ph_tint_console', propArt: 'tint_console', x: 11, y: 10, once: false, iconKind: 'terminal', label: 'Polarization Console', requiresFlag: 'ph_tint', invisibleLocked: true,
+            description: "The same brass and dark glass slider the senators use, running from CLEAR to OBSIDIAN. Push it all the way and the viewport goes black. Pull it back and the tactical overlay tags every lane in the sky. A small plate reads: DISCRETION IS A SERVICE." },
+          { id: 'ph_garden_west', propArt: 'garden_planter', x: 12, y: 5, once: false, iconKind: 'crate', label: 'Hanging Garden, West Planter', requiresFlag: 'ph_garden', invisibleLocked: true,
+            description: "A long sandstone planter of Naboo glow lilies and Alderaanian moon orchids on a self watering rail. The blooms pulse softly in violet and lime. The air here is cooler and smells faintly of rain on a world that is no longer there. Your pulse slows without being asked." },
+          { id: 'ph_garden_east', propArt: 'garden_planter', x: 27, y: 5, once: false, iconKind: 'crate', label: 'Hanging Garden, East Planter', requiresFlag: 'ph_garden', invisibleLocked: true,
+            description: "The east planter holds taller stems with bell shaped flowers in amber and magenta. A tiny repulsor sprinkler passes over them every few minutes with a polite hum. An attached plaque reads: THE GARDEN IS OFFICIALLY NOT A FRONT." },
+          { id: 'ph_soak_pool', propArt: 'soak_pool', x: 14, y: 25, once: false, iconKind: 'crate', label: 'Soak Pool', requiresFlag: 'ph_spa', invisibleLocked: true,
+            description: "A recessed stone pool of warm mineral water, steam curling off it into the dim light. Brass fittings, a stack of folded towels and a low lamp make it feel like the quietest room on the planet. You sink in to your shoulders and the week leaves your body. Your people could use this too.",healsRoster: true, heatDelta: -3 },
+          { id: 'ph_gallery_art_west', propArt: 'wall_art', propVariant: 'skyline', x: 4, y: 16, once: false, iconKind: 'vista', label: 'Framed Canvas, Dusk Over 5120', requiresFlag: 'ph_gallery', invisibleLocked: true,
+            description: "A large framed canvas of the skyline at dusk, painted by a Coruscanti artist who never once went below Level 5000. The colors are right. The silence in the streets is wrong. Tamsin says it will appreciate in value. She says that about everything." },
+          { id: 'ph_gallery_art_east', propArt: 'wall_art', x: 8, y: 16, once: false, iconKind: 'vista', label: 'Framed Canvas, Composition in Garnet', requiresFlag: 'ph_gallery', invisibleLocked: true,
+            description: "An abstract canvas in garnet, brass and deep glass, sold with a certificate of provenance that has actually been checked. The shapes fight for dominance across the frame. You find yourself rooting for the red one." },
+          { id: 'ph_gallery_ped_1', propArt: 'art_pedestal', x: 2, y: 19, once: false, iconKind: 'crate', label: 'Gallery Pedestal', requiresFlag: 'ph_gallery', invisibleLocked: true,
+            description: "A cast brass spiral on a lit pedestal, titled ASCENT I. The plaque is engraved, the light is warm, and the sculpture looks like it is climbing out of its own base." },
+          { id: 'ph_gallery_ped_2', propArt: 'art_pedestal', x: 5, y: 19, once: false, iconKind: 'crate', label: 'Gallery Pedestal', requiresFlag: 'ph_gallery', invisibleLocked: true,
+            description: "A second pedestal holds a polished mineral specimen from the deepest levels, lit from beneath so it glows amber. Its plaque reads: FOUND, NOT STOLEN." },
+          { id: 'ph_gallery_ped_3', propArt: 'art_pedestal', x: 8, y: 19, once: false, iconKind: 'crate', label: 'Gallery Pedestal', requiresFlag: 'ph_gallery', invisibleLocked: true,
+            description: "The third pedestal is empty except for a small card: RESERVED FOR SOMETHING YOU HAVE NOT YET ACQUIRED." },
+          { id: 'ph_trophy_wall2', propArt: 'trophy_wall', x: 5, y: 13, once: false, iconKind: 'crate', label: 'Trophy Hall, Second Wall', requiresFlag: 'ph_trophy', invisibleLocked: true,
+            description: "A second wall of matched cases with engraved plaques: a rival's dueling blade, a sabacc deck with one card missing, a CSF badge with a bend in it. Each plaque has a name and a date. Several dates are very recent." },
+          { id: 'ph_trophy_pedestal', propArt: 'decanter_pedestal', x: 2, y: 12, once: false, iconKind: 'crate', label: 'Trophy Hall Display Pedestal', requiresFlag: 'ph_trophy', invisibleLocked: true,
+            description: "A lit pedestal under glass holding a single object that changes with your mood. Today it is a small gold coin, worn smooth. The plaque says: THE FIRST ONE." },
+          { id: 'ph_theater', propArt: 'holo_theater', x: 14, y: 19, once: false, iconKind: 'vista', label: 'Holo Theater', requiresFlag: 'ph_theater', invisibleLocked: true,
+            description: "A wide holo wall in front of six seats of garnet velvet. The screen is running a harbor documentary with the sound off, ships coming and going in silence. A small remote on the armrest has three buttons: PLAY, PAUSE and PRETEND TO WORK. You sit for a while. The numbers in your head quiet down.",heatDelta: -4 },
+          { id: 'ph_lounge_rug', propArt: 'lounge_rug', x: 25, y: 19, once: false, iconKind: 'crate', label: 'Garnet Lounge Rug', requiresFlag: 'ph_lounge', invisibleLocked: true,
+            description: "A hand knotted rug in garnet and brass, its border a pattern of nested diamonds. Whoever made it had patience that nobody in this city has anymore. It cushions every step and mutes every argument." },
+          { id: 'ph_lounge_pit', propArt: 'conversation_pit', x: 25, y: 19, once: false, iconKind: 'crate', label: 'Sunken Conversation Pit', requiresFlag: 'ph_lounge', invisibleLocked: true,
+            description: "A circular sunken pit of garnet velvet with a low brass table. The cushions hold the shape of every deal ever made there. You can sit and think, or you can sit and pretend to." },
+          { id: 'ph_lounge_bar', propArt: 'obsidian_bar', x: 26, y: 24, once: false, iconKind: 'crate', label: 'Obsidian Bar', requiresFlag: 'ph_lounge', invisibleLocked: true,
+            description: "A long bar of polished black stone with a brass rail and a row of Corellian and Alderaanian bottles behind it. Pour one and the warmth settles in your shoulders. You feel composed, and ready for anyone, until you leave the penthouse.",grantsFlags: ['buff_composure'] },
+          { id: 'ph_ops_model', propArt: 'model_case', x: 34, y: 17, once: false, iconKind: 'crate', label: 'Holdings Model', requiresFlag: 'ph_ops', invisibleLocked: true,
+            description: "A table sized model of every property the Syndicate holds, rendered in lit glass and brass. Tiny markers glow where money moves. A thin red line crosses the model where the CSF patrols. The numbers behind it are better than they used to be." },
+          { id: 'ph_ops_console', propArt: 'console', x: 31, y: 20, once: false, iconKind: 'terminal', label: 'Analysis Console', requiresFlag: 'ph_ops', invisibleLocked: true,
+            description: "A second analysis console, wired to the holdings model. It runs cash flow projections, patrol overlaps and a rolling list titled PEOPLE WHO OWE YOU. The list is longer than you remembered." },
         ],
         npcs: [
-          { id: 'jon_penthouse', x: 14, y: 5, kind: 'crime_boss', label: 'Jon',
+          { id: 'jon_penthouse', x: 19, y: 8, kind: 'crime_boss', label: 'Jon',
             questNpc: true,
             requiresFlag: 'vault_heist_complete',
             hideAfterFlags: ['jon_status_dead'],
@@ -2669,31 +2745,43 @@ const PLANETS = {
               },
             ],
           },
+          { id: 'ph_concierge', x: 22, y: 27, kind: 'droid', label: 'Concierge Droid CX-9', repeatable: true,
+            requiresFlag: 'inheritance_active',
+            repeatPrompt: 'CX-9 adjusts a vase that did not need adjusting.',
+            phases: [
+              {
+                id: 'phase_ph_start',
+                requiresNoneFlags: ['ph_complete'],
+                prompt: '"Welcome home. I am CX-9, your concierge. The suite is functional, as the previous tenant preferred. May I suggest improvements? Merchants across Coruscant sell design packages, and the console in the great hall installs them. Five vendors: Ilmara Voss in the Sky-Market, Tamsin Ro in the Lower Sky-Market, Boolo Tark on the Commercial Level, Ysmin Orrel in the Plaza and Dara Quill at the Freight Hub."',
+                choices: [
+                  { text: 'Ask what the packages actually do.', morality: 0, loyalty: {}, result: '"Some are purely aesthetic. Others pay. The Gallery and the Trophy Hall bring in collectors and visitors, the Operations Annex improves your planning, and the Hanging Garden and the Holo Theater lower your heat over time. The Soak Pool heals injured agents. The Grand Lounge pours a very good drink."', grants: { codex: ['codex-ph-design'] } },
+                  { text: 'Ask where to start.', morality: 0, loyalty: {}, result: '"The Observatory Deck is the visual centerpiece, sir or madam. The night filter transforms the viewport. Ilmara Voss will sell you one in the Sky-Market. I would begin there."', grants: {} },
+                ],
+              },
+              {
+                id: 'phase_ph_complete',
+                requiresAllFlags: ['ph_complete'],
+                prompt: '"The penthouse is complete. Every room is furnished, every package installed. I took the liberty of polishing the telescope. May I say that it has been an honor to serve a household of such taste?"',
+                choices: [
+                  { text: 'Thank the concierge.', morality: 2, loyalty: {}, result: '"Not at all. I will be here, polishing something."', grants: {} },
+                ],
+              },
+            ],
+          },
         ],
-        collectibles: [{ id: 'penthouse_credstick', x: 23, y: 16, label: 'Vault Overflow Credstick', reward: 200 }],
+        collectibles: [{ id: 'penthouse_credstick', x: 35, y: 27, label: 'Vault Overflow Credstick', reward: 200 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 28, 18, 'floor');
-          // Trophy alcove (northwest)
-          carveRect(g, 1, 1, 7, 6, 'wall');
-          carveRect(g, 2, 2, 6, 5, 'floor');
-          pt(g, 7, 4, 'floor');
-          // Vault alcove (northeast)
-          carveRect(g, 22, 1, 28, 6, 'wall');
-          carveRect(g, 23, 2, 27, 5, 'floor');
-          pt(g, 22, 3, 'floor');
-          // Security alcove (southeast)
-          carveRect(g, 22, 14, 28, 18, 'wall');
-          carveRect(g, 23, 15, 27, 17, 'floor');
-          pt(g, 22, 16, 'floor');
-          // Roster alcove (southwest)
-          carveRect(g, 1, 14, 7, 18, 'wall');
-          carveRect(g, 2, 15, 6, 17, 'floor');
-          pt(g, 7, 16, 'floor');
-          // Center corridor connections
-          pt(g, 14, 1, 'floor'); pt(g, 14, 2, 'floor');
-          pt(g, 14, 17, 'floor'); pt(g, 14, 18, 'floor');
-          pt(g, 14, 19, 'door');
+          carveRect(g, 1, 1, 38, 28, 'floor');
+          // Trophy room (west)
+          carveRect(g, 1, 8, 9, 14, 'wall'); carveRect(g, 2, 9, 8, 13, 'floor'); pt(g, 9, 11, 'floor');
+          // Roster room (southwest)
+          carveRect(g, 1, 22, 9, 28, 'wall'); carveRect(g, 2, 23, 8, 27, 'floor'); pt(g, 9, 25, 'floor');
+          // Vault (east)
+          carveRect(g, 30, 8, 38, 14, 'wall'); carveRect(g, 31, 9, 37, 13, 'floor'); pt(g, 30, 11, 'floor');
+          // Security room (southeast)
+          carveRect(g, 30, 22, 38, 28, 'wall'); carveRect(g, 31, 23, 37, 27, 'floor'); pt(g, 30, 25, 'floor');
+          pt(g, 19, 29, 'door');
           return g;
         },
       },
@@ -6246,6 +6334,17 @@ function AlignmentPanel({ alignment }) {
 }
 
 const ITEMS = {
+  // PH ITEMS BEGIN
+  ph_pkg_skyview: { id:'ph_pkg_skyview', name:'Penthouse Package: Observatory Deck', type:'quest', iconKind:'datapad', value:1800, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A cut crystal night sky filter for the transparisteel wall, plus a brass refractor on a tripod. Voss swears the moons look closer.' },
+  ph_pkg_tint: { id:'ph_pkg_tint', name:'Penthouse Package: Smart Glass Suite', type:'quest', iconKind:'datapad', value:1200, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. The same polarization console the senators use, tuned for a criminal clientele. The glass goes obsidian on command.' },
+  ph_pkg_garden: { id:'ph_pkg_garden', name:'Penthouse Package: Hanging Garden', type:'quest', iconKind:'datapad', value:1500, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. Two long planters of Alderaanian moon orchids and Naboo glow lilies on a self watering rail. Calming, and good for the nerves.' },
+  ph_pkg_spa: { id:'ph_pkg_spa', name:'Penthouse Package: Soak Pool', type:'quest', iconKind:'datapad', value:2400, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A recessed stone pool with warm mineral water, brass fittings and a stack of folded towels. Orrel delivers the first soak herself.' },
+  ph_pkg_gallery: { id:'ph_pkg_gallery', name:'Penthouse Package: Gallery of Ascent', type:'quest', iconKind:'datapad', value:2200, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. Two framed canvases, three lit pedestals and a certificate of provenance on each. All of it is legal, which surprises everyone.' },
+  ph_pkg_trophy: { id:'ph_pkg_trophy', name:'Penthouse Package: Trophy Hall Expansion', type:'quest', iconKind:'datapad', value:1600, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. Matching cases for the trophy room, with engraved plaques for every rival you have outlived.' },
+  ph_pkg_theater: { id:'ph_pkg_theater', name:'Penthouse Package: Holo Theater', type:'quest', iconKind:'datapad', value:2600, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A wide holo wall, six seats of garnet velvet and a subscription to every channel on the Holonet. Tark claims to have approved none of them.' },
+  ph_pkg_lounge: { id:'ph_pkg_lounge', name:'Penthouse Package: Grand Lounge', type:'quest', iconKind:'datapad', value:2000, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A hand knotted rug, a sunken seating pit and a full obsidian bar, stocked from a Corellian cellar.' },
+  ph_pkg_ops: { id:'ph_pkg_ops', name:'Penthouse Package: Operations Annex', type:'quest', iconKind:'datapad', value:2800, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A table sized model of every property you own, with a console that runs the numbers nobody wants to see.' },
+  // PH ITEMS END
   comlink:                    { id:'comlink',                    name:'Comlink',                               type:'gear',       iconKind:'tool',     value:0,   description:'Encrypted comlink. Jon is on speed-dial.' },
   field_rations:              { id:'field_rations',              name:'Field Rations',                         type:'consumable', iconKind:'supply',   value:5,   description:'Tasteless. Effective.' },
   stolen_manifest:            { id:'stolen_manifest',            name:'Scylla Freight Manifest',               type:'quest',      iconKind:'datapad',  value:150, description:'Encrypted cargo log from Docking Bay 14. Lists Phrik alloy and Jedi archive crates as cargo, both reported destroyed in a dock fire. Someone is lying.' },
@@ -6339,7 +6438,49 @@ const ITEMS = {
 
 };
 
+// ===== PENTHOUSE PACKAGES BEGIN =====
+const PENTHOUSE_PACKAGES = [
+  { id: 'skyview', flag: 'ph_skyview', itemId: 'ph_pkg_skyview', name: 'Observatory Deck', price: 1800, income: 0, heatDecay: 0,
+    where: 'Ilmara Voss, Sky-Market', perk: 'The viewport turns to a star dusted night. A brass telescope joins the deck and logs a star codex.',
+    blurb: 'A cut crystal night sky filter for the transparisteel wall, plus a brass refractor on a tripod. Voss swears the moons look closer.' },
+  { id: 'tint', flag: 'ph_tint', itemId: 'ph_pkg_tint', name: 'Smart Glass Suite', price: 1200, income: 0, heatDecay: 0,
+    where: 'Ilmara Voss, Sky-Market', perk: 'A polarization console and a tactical overlay on the viewport that tags every skylane.',
+    blurb: 'The same polarization console the senators use, tuned for a criminal clientele. The glass goes obsidian on command.' },
+  { id: 'garden', flag: 'ph_garden', itemId: 'ph_pkg_garden', name: 'Hanging Garden', price: 1500, income: 0, heatDecay: 1,
+    where: 'Ysmin Orrel, Plaza', perk: 'Glowing planters line the viewport. Heat falls by 1 extra point on every Advance Time.',
+    blurb: 'Two long planters of Alderaanian moon orchids and Naboo glow lilies on a self watering rail. Calming, and good for the nerves.' },
+  { id: 'spa', flag: 'ph_spa', itemId: 'ph_pkg_spa', name: 'Soak Pool', price: 2400, income: 0, heatDecay: 0,
+    where: 'Ysmin Orrel, Plaza', perk: 'A heated stone pool. Soaking heals injured agents and lowers heat by 3.',
+    blurb: 'A recessed stone pool with warm mineral water, brass fittings and a stack of folded towels. Orrel delivers the first soak herself.' },
+  { id: 'gallery', flag: 'ph_gallery', itemId: 'ph_pkg_gallery', name: 'Gallery of Ascent', price: 2200, income: 80, heatDecay: 0,
+    where: 'Tamsin Ro, Lower Sky-Market', perk: 'Framed art and lit pedestals. Visiting collectors pay 80 extra credits per Advance Time.',
+    blurb: 'Two framed canvases, three lit pedestals and a certificate of provenance on each. All of it is legal, which surprises everyone.' },
+  { id: 'trophy', flag: 'ph_trophy', itemId: 'ph_pkg_trophy', name: 'Trophy Hall Expansion', price: 1600, income: 40, heatDecay: 0,
+    where: 'Tamsin Ro, Lower Sky-Market', perk: 'A second trophy wall and a display pedestal. Your reputation pays 40 extra credits per Advance Time.',
+    blurb: 'Matching cases for the trophy room, with engraved plaques for every rival you have outlived.' },
+  { id: 'theater', flag: 'ph_theater', itemId: 'ph_pkg_theater', name: 'Holo Theater', price: 2600, income: 0, heatDecay: 1,
+    where: 'Boolo Tark, Commercial Level', perk: 'A wall screen and a velvet couch. Watching a show lowers heat by 4, and heat falls 1 extra on every Advance Time.',
+    blurb: 'A wide holo wall, six seats of garnet velvet and a subscription to every channel on the Holonet. Tark claims to have approved none of them.' },
+  { id: 'lounge', flag: 'ph_lounge', itemId: 'ph_pkg_lounge', name: 'Grand Lounge', price: 2000, income: 0, heatDecay: 0,
+    where: 'Boolo Tark, Commercial Level', perk: 'A garnet rug, a conversation pit and an obsidian bar. A drink at the bar gives you a calm head until you leave the penthouse.',
+    blurb: 'A hand knotted rug, a sunken seating pit and a full obsidian bar, stocked from a Corellian cellar.' },
+  { id: 'ops', flag: 'ph_ops', itemId: 'ph_pkg_ops', name: 'Operations Annex', price: 2800, income: 150, heatDecay: 0,
+    where: 'Dara Quill, Freight Hub', perk: 'A holdings model and a second analysis console. Better planning pays 150 extra credits per Advance Time.',
+    blurb: 'A table sized model of every property you own, with a console that runs the numbers nobody wants to see.' },
+];
+// ===== PENTHOUSE PACKAGES END =====
+
 const CODEX_ENTRIES = {
+  // PH CODEX BEGIN
+  'codex-ph-design': {
+    id:'codex-ph-design', title:'Penthouse Interior Design', category:'dossier',
+    summary:'How to turn the Scylla Tower Penthouse into a home.',
+    body:['The penthouse came furnished the way Jon Vane liked it: functional, expensive and a little cold. The interior design console in the middle of the great hall can install any package you buy.','Merchants across Coruscant sell the packages: Ilmara Voss in the Sky-Market, Tamsin Ro in the Lower Sky-Market, Boolo Tark on the Commercial Level, Ysmin Orrel in the Plaza and Dara Quill at the Freight Hub.','Installed packages change the rooms you see, and some pay: extra income, faster heat decay, healing and calm. You can remove a package at any time and it returns to your cargo.'] },
+  'codex-ph-observatory': {
+    id:'codex-ph-observatory', title:'The Night Sky Over Coruscant', category:'lore',
+    summary:'What you can see from Level 1452 when the planet goes dark.',
+    body:['Coruscant has no true night, only a long dusk of light pollution. At Level 1452, above most of the glow, the filter in the viewport removes the haze and a handful of real stars appear.','The telescope picks out three moons of the Core, a slow orbital shipyard and a Senate courier running dark. Voss insists that the courier is not your concern. She is probably right.'] },
+  // PH CODEX END
   'codex-jon-network': {
     id:'codex-jon-network', title:"Jon's Smuggling Network", category:'dossier',
     summary:'An old friend operating in the Coruscant underworld.',
@@ -6743,17 +6884,17 @@ const DEBUG_STAGES = [
   },
   {
     key: '7', label: 'Vault Approach Ready',
-    zone: 'penthouse', pos: { x: 14, y: 10 }, credits: 2000,
+    zone: 'penthouse', pos: { x: 19, y: 22 }, credits: 2000,
     flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, echo7_vault_approach_active: true, vault_approach_active: true, csf_training_complete: true },
   },
   {
     key: '8', label: 'Vault Heist Complete',
-    zone: 'penthouse', pos: { x: 14, y: 10 }, credits: 3000,
+    zone: 'penthouse', pos: { x: 19, y: 22 }, credits: 3000,
     flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, vault_heist_complete: true, rook_eliminated: true, inside_man_path: true, csf_training_complete: true },
   },
   {
     key: '9', label: 'Full Endgame — Syndicate Founded',
-    zone: 'penthouse', pos: { x: 14, y: 10 }, credits: 8000,
+    zone: 'penthouse', pos: { x: 19, y: 22 }, credits: 8000,
     flags: { speeder_transit_unlocked: true, senate_line_secured: true, echo7_found: true, inheritance_active: true, cargo_skimmed: true, malak_turned: true, reya_loyal: true, vault_heist_complete: true, rook_eliminated: true, jon_confrontation_path_a_chosen: true, jon_status_dead: true, syndicateManagement_active: true, syndicate_1313_founded: true, trait_crime_lord: true, grix_recruited: true, vael_recruited: true, marro_recruited: true, anzati_contracted: true, black_sun_allied: true, sith_contact: true, csf_training_complete: true },
   },
 ];
@@ -8780,6 +8921,7 @@ const ART = {
   moss:     { hi:'#8FAE6A', base:'#56743F', shade:'#2E4222' },
   sand:     { hi:'#E0C890', base:'#B89C64', shade:'#7C6A40' },
   fabric:   { hi:'#8A5A7A', base:'#5E3A52', shade:'#35202E' },
+  sky:      { amber:'#E8742A', ember:'#C4482A', rose:'#9C3A5C', plum:'#5E2A66', violet:'#3A1E62', indigo:'#1C1744', haze:'#6E5040', spire:'#2A2238', spireHi:'#4A3A56' },
   sky:      { amber:'#E8742A', ember:'#C4482A', rose:'#9C3A5C', plum:'#5E2A66', violet:'#3A1E62', indigo:'#1C1744', haze:'#6E5040', spire:'#2A2238', spireHi:'#4A3A56' },
   sky:      { amber:'#E8742A', ember:'#C4482A', rose:'#9C3A5C', plum:'#5E2A66', violet:'#3A1E62', indigo:'#1C1744', haze:'#6E5040', spire:'#2A2238', spireHi:'#4A3A56' },
   // Emissive and signal colors: screens, lamps, status lights, holograms. Never used for solid bodies.
@@ -13503,13 +13645,15 @@ function PropFloorInlay() {
 // Senatorial Sky Lounges: deep garnet velvet, electrum and gold leaf, obsidian, royal azure, sandstone, and the dusk skyline.
 function PropSkylineVista({ variant }) {
   const S = ART.signal, K = ART.sky;
-  const hud = variant === 'hud';
+  const night = variant === 'night' || variant === 'nighthud';
+  const hud = variant === 'hud' || variant === 'nighthud';
   const r = rng(77);
-  const bands = [[0, 16, K.indigo], [16, 32, K.violet], [32, 46, K.plum], [46, 58, K.rose], [58, 70, K.ember], [70, 80, K.amber], [80, 100, K.haze]];
+  const bands = night ? [[0, 24, ART.ink], [24, 46, K.indigo], [46, 64, K.violet], [64, 78, K.plum], [78, 88, K.rose], [88, 100, K.haze]] : [[0, 16, K.indigo], [16, 32, K.violet], [32, 46, K.plum], [46, 58, K.rose], [58, 70, K.ember], [70, 80, K.amber], [80, 100, K.haze]];
+  const stars = Array.from({ length: 70 }, () => ({ x: r() * 1216, y: r() * 70, s: 0.6 + r() * 0.9, d: r() * 4 }));
   const pyramids = [[40, 100, 180, 62], [260, 100, 150, 74], [520, 100, 220, 56], [800, 100, 180, 70], [1010, 100, 190, 58]];
   const spires = Array.from({ length: 30 }, (_, i) => { const x = 8 + i * 40 + r() * 10, w = 16 + r() * 18, h = 30 + r() * 60; return { x, w, h, tier: r() < 0.5, i }; });
   const far = Array.from({ length: 26 }, (_, i) => ({ x: 20 + i * 46 + r() * 14, w: 14 + r() * 14, h: 14 + r() * 26 }));
-  const windows = (sx, sy, w, h, seed, c) => { const rr = rng(seed), out = []; for (let yy = sy + 4; yy < sy + h - 3; yy += 5) for (let xx = sx + 3; xx < sx + w - 3; xx += 5) if (rr() < 0.42) out.push(<rect key={xx + '_' + yy} x={xx} y={yy} width="2.4" height="2.4" fill={c} opacity={0.55 + rr() * 0.4} />); return out; };
+  const windows = (sx, sy, w, h, seed, c) => { const rr = rng(seed), out = []; for (let yy = sy + 4; yy < sy + h - 3; yy += 5) for (let xx = sx + 3; xx < sx + w - 3; xx += 5) if (rr() < (night ? 0.64 : 0.42)) out.push(<rect key={xx + '_' + yy} x={xx} y={yy} width="2.4" height="2.4" fill={c} opacity={0.55 + rr() * 0.4} />); return out; };
   const saucer = (cx, base, sc, key) => (
     <g key={key}>
       <polygon points={pts([[cx - 120 * sc, base - 100 * sc], [cx - 60 * sc, base - 120 * sc], [cx + 60 * sc, base - 120 * sc], [cx + 120 * sc, base - 100 * sc]])} fill={ART.bronze.shade} />
@@ -13523,7 +13667,9 @@ function PropSkylineVista({ variant }) {
   return (
     <svg viewBox="0 0 1216 160" width="1216" height="160" style={PROP_STYLE}>
       {bands.map(([a, b, c], i) => <rect key={i} x="0" y={a} width="1216" height={b - a + 1} fill={c} />)}
-      <circle cx="930" cy="82" r="44" fill={K.amber} opacity="0.2" /><circle cx="930" cy="82" r="30" fill={K.amber} opacity="0.4" /><circle cx="930" cy="82" r="20" fill={S.amberHi} />
+      {!night && <g><circle cx="930" cy="82" r="44" fill={K.amber} opacity="0.2" /><circle cx="930" cy="82" r="30" fill={K.amber} opacity="0.4" /><circle cx="930" cy="82" r="20" fill={S.amberHi} /></g>}
+      {night && stars.map((st, i) => <circle key={i} cx={st.x} cy={st.y} r={st.s} fill={S.kyber} opacity="0.7" style={{ animation: `ship-blink ${2 + st.d}s ease-in-out ${st.d}s infinite` }} />)}
+      {night && <g><circle cx="150" cy="30" r="14" fill={ART.pearl.base} opacity="0.85" /><circle cx="144" cy="26" r="3" fill={ART.pearl.shade} opacity="0.5" /><circle cx="156" cy="35" r="2" fill={ART.pearl.shade} opacity="0.4" /></g>}
       {[[120, 24, 70], [420, 40, 90], [700, 18, 120], [1060, 34, 80]].map(([x, y, w], i) => <rect key={i} x={x} y={y} width={w} height="2.6" fill={K.rose} opacity="0.35" style={{ animation: `cast-sweep ${40 + i * 9}s linear ${i * 4}s infinite` }} />)}
       {/* distant step pyramids and far spires, fading into haze */}
       {pyramids.map(([x, y, w, h], i) => <polygon key={i} points={pts([[x, y], [x + w * 0.1, y - h * 0.6], [x + w * 0.22, y - h * 0.6], [x + w * 0.28, y - h * 0.86], [x + w * 0.42, y - h * 0.86], [x + w * 0.5, y - h], [x + w * 0.6, y - h * 0.86], [x + w * 0.76, y - h * 0.6], [x + w, y]])} fill={K.spire} opacity="0.45" />)}
@@ -13551,7 +13697,7 @@ function PropSkylineVista({ variant }) {
         {Array.from({ length: 26 }, (_, k) => <rect key={k} x={486 + k * 9.6} y={90} width="4" height="4" fill={S.amberHi} opacity="0.8" />)}
         {Array.from({ length: 18 }, (_, k) => <rect key={k} x={532 + k * 9} y={64} width="3.4" height="4" fill={S.amberHi} opacity="0.7" />)}
         <line x1="608" y1="14" x2="608" y2="2" stroke={ART.steel.hi} strokeWidth="1.4" /><circle cx="608" cy="1.6" r="1.8" fill={S.red} style={{ animation: 'ship-blink 2s steps(2) infinite' }} />
-        {[[560, 600], [656, 700]].map(([bx, tx], i) => <polygon key={i} points={pts([[bx - 6, 100], [bx + 6, 100], [tx + 24, 0], [tx - 24, 0]])} fill={S.kyber} opacity="0.06" style={{ animation: `holo-flicker ${3 + i}s ease-in-out infinite` }} />)}
+        {[[560, 600], [656, 700]].map(([bx, tx], i) => <polygon key={i} points={pts([[bx - 6, 100], [bx + 6, 100], [tx + 24, 0], [tx - 24, 0]])} fill={S.kyber} opacity={night ? 0.12 : 0.06} style={{ animation: `holo-flicker ${3 + i}s ease-in-out infinite` }} />)}
       </g>
       <rect x="0" y="94" width="1216" height="46" fill={K.indigo} opacity="0.55" />
       {/* skyway traffic: orange northbound, blue white southbound */}
@@ -13821,6 +13967,185 @@ function PropTintConsole() {
   );
 }
 // ===== SENATE LOUNGE PROPS END =====
+// ===== PENTHOUSE PROPS BEGIN =====
+function PropObservatoryTelescope() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={90} rx={34} ry={4} />
+      {[[26, 90], [48, 94], [70, 90]].map(([x, y], i) => <polygon key={i} points={pts([[48, 56], [x - 2, y], [x + 2, y], [49, 56]])} fill={ART.brass.shade} />)}
+      <Bev t="polygon" points={pts(ngon(48, 88, 26, 5, 10))} c="dark" o={0.8} />
+      <Bev t="polygon" points={pts([[38, 60], [38, 46], [58, 46], [58, 60]])} c="brass" o={1} />
+      <Slab x={36} y={56} w={24} h={8} k={1.6} c="dark" /><Lights x={40} y={60} n={4} gap={5} seed={3} />
+      <g transform="rotate(-38 48 46)">
+        <Bev t="polygon" points={pts([[16, 38], [16, 54], [80, 52], [80, 40]])} c="pearl" o={1.2} />
+        <Bev t="polygon" points={pts([[8, 36], [8, 56], [20, 54], [20, 38]])} c="brass" o={1} />
+        <polygon points={pts([[10, 38], [10, 54], [18, 52], [18, 40]])} fill={ART.deepglass.base} /><polygon points={pts([[11, 40], [15, 40], [13, 46]])} fill={S.kyber} opacity="0.7" />
+        <rect x="30" y="38" width="3" height="16" fill={ART.brass.base} /><rect x="52" y="38" width="3" height="16" fill={ART.brass.base} />
+        <Bev t="polygon" points={pts([[78, 42], [92, 44], [92, 50], [78, 50]])} c="dark" o={0.9} /><circle cx="90" cy="47" r="2" fill={S.cyanHi} opacity="0.8" />
+      </g>
+      <Bev t="polygon" points={pts(ngon(72, 70, 12, 12, 16))} c="deepglass" o={0.9} />
+      <polygon points={pts(ngon(72, 70, 9, 9, 16))} fill={ART.screen.space} />
+      {[[68, 66], [74, 72], [70, 74], [77, 65], [66, 72]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="0.9" fill={S.kyber} style={{ animation: `ship-blink ${1.6 + i * 0.3}s ease-in-out infinite` }} />)}
+      <polyline points={pts([[64, 70], [70, 66], [76, 72]])} fill="none" stroke={S.cyan} strokeWidth="0.6" opacity="0.8" />
+      <Rivets x={40} y={63} w={20} n={4} c="brass" /><Seams x={36} y={46} w={24} h={18} rows={1} op={0.3} />
+      <Grime x={10} y={30} w={76} h={60} seed={931} n={3} op={0.14} /><Scuff x={14} y={34} w={68} h={52} seed={932} n={4} c="brass" />
+    </svg>
+  );
+}
+
+function PropGardenPlanter() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={42} ry={3} />
+      <Bev t="polygon" points={pts([[6, 56], [6, 34], [90, 34], [90, 56]])} c="sand" o={1.4} />
+      <Seams x={6} y={34} w={84} h={22} cols={5} op={0.3} /><Slab x={4} y={30} w={88} h={7} k={1.6} c="sand" o={0.9} />
+      <rect x="10" y="36" width="76" height="5" fill={ART.moss.shade} />
+      {[[16, 40], [28, 40], [40, 40], [54, 40], [66, 40], [78, 40]].map(([x, y], i) => (
+        <g key={i}>
+          <path d={`M${x} ${y} C${x - 6} ${y - 10}, ${x + 5} ${y - 18}, ${x + (i % 2 ? 9 : -9)} ${y - 24}`} fill="none" stroke={ART.moss.hi} strokeWidth="2.4" />
+          <path d={`M${x} ${y} C${x + 5} ${y - 8}, ${x - 4} ${y - 14}, ${x + (i % 2 ? -6 : 6)} ${y - 18}`} fill="none" stroke={ART.moss.base} strokeWidth="2" />
+          <circle cx={x + (i % 2 ? 9 : -9)} cy={y - 25} r="3" fill={[S.violet, S.magenta, S.lime, S.cyanHi, S.amberHi, S.violet][i]} />
+          <Glow cx={x + (i % 2 ? 9 : -9)} cy={y - 25} r={7} c={[S.violet, S.magenta, S.lime, S.cyan, S.amber, S.violet][i]} opacity={0.35} style={{ animation: `holo-flicker ${3 + i * 0.4}s ease-in-out infinite` }} />
+        </g>
+      ))}
+      <rect x="10" y="50" width="76" height="2" fill={ART.brass.base} /><Lights x={14} y={53} n={8} gap={10} seed={4} />
+      <Rivets x={10} y={32} w={76} n={10} c="brass" /><Grime x={6} y={34} w={84} h={24} seed={941} n={3} op={0.16} /><Scuff x={8} y={34} w={80} h={20} seed={942} n={4} c="sand" />
+    </svg>
+  );
+}
+
+function PropGalleryPedestal() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={60} rx={20} ry={3} />
+      <polygon points={pts([[14, 6], [50, 6], [58, 56], [6, 56]])} fill={S.amberHi} opacity="0.08" />
+      <Bev t="polygon" points={pts([[16, 58], [16, 38], [48, 38], [48, 58]])} c="dark" o={1.4} /><Slab x={12} y={54} w={40} h={6} k={1.4} c="brass" o={0.8} />
+      <rect x="16" y="38" width="32" height="2.4" fill={ART.brass.hi} />
+      <path d="M32 36 C20 34, 22 24, 32 24 S44 14, 32 12 C26 12, 24 18, 30 20" fill="none" stroke={ART.brass.hi} strokeWidth="4" />
+      <path d="M32 36 C20 34, 22 24, 32 24 S44 14, 32 12 C26 12, 24 18, 30 20" fill="none" stroke={ART.brass.base} strokeWidth="1.4" />
+      <circle cx="30" cy="20" r="2.4" fill={S.amberHi} /><Glow cx={32} cy={24} r={16} c={S.amberHi} opacity={0.25} />
+      <Slab x={22} y={44} w={20} h={7} k={1} c="brass" o={0.5} /><text x="32" y="49.4" textAnchor="middle" fontSize="2.8" fill={ART.ink} fontWeight="700" {...PT}>ASCENT I</text>
+      <Rivets x={18} y={57} w={28} n={5} c="brass" /><Grime x={10} y={30} w={44} h={30} seed={951} n={2} op={0.14} /><Scuff x={14} y={34} w={36} h={22} seed={952} n={3} c="dark" />
+    </svg>
+  );
+}
+
+function PropWallArt({ variant }) {
+  const S = ART.signal, K = ART.sky;
+  const sky = variant === 'skyline';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={61} rx={42} ry={2.4} />
+      <Bev t="polygon" points={pts([[4, 4], [92, 4], [92, 56], [4, 56]])} c="brass" o={1.4} />
+      <rect x="9" y="9" width="78" height="42" fill={ART.dark.shade} />
+      {sky ? (
+        <g>
+          {[[9, 20, K.indigo], [29, 12, K.violet], [41, 10, K.plum], [51, 8, K.rose], [59, 8, K.ember], [67, 8, K.amber]].map(([y, h, c], i) => <rect key={i} x="9" y={y} width="78" height={h + 1} fill={c} />)}
+          {[[12, 20, 30], [20, 14, 38], [30, 22, 28], [40, 12, 40], [50, 18, 32], [60, 10, 42], [68, 16, 34], [76, 12, 38]].map(([x, w, h], i) => <rect key={i} x={x} y={51 - h} width={w * 0.5} height={h} fill={K.spire} />)}
+          <circle cx="66" cy="42" r="8" fill={S.amberHi} opacity="0.8" />
+          {Array.from({ length: 16 }, (_, i) => <rect key={i} x={13 + i * 5} y={34 + (i % 4) * 4} width="1.6" height="1.6" fill={S.amberHi} opacity="0.8" />)}
+          <rect x="9" y="46" width="78" height="1.4" fill={S.orange} opacity="0.8" /><rect x="9" y="48" width="78" height="1.2" fill={S.kyber} opacity="0.7" />
+        </g>
+      ) : (
+        <g>
+          <polygon points={pts([[9, 51], [30, 9], [44, 51]])} fill={ART.red.base} /><polygon points={pts([[30, 51], [56, 9], [70, 51]])} fill={ART.brass.base} />
+          <polygon points={pts([[56, 51], [78, 9], [87, 9], [87, 51]])} fill={ART.deepglass.base} /><circle cx="48" cy="28" r="10" fill={ART.brass.hi} opacity="0.9" /><circle cx="48" cy="28" r="5" fill={ART.red.shade} />
+          <polyline points={pts([[9, 40], [30, 30], [50, 44], [70, 24], [87, 34]])} fill="none" stroke={ART.pearl.hi} strokeWidth="1" opacity="0.8" />
+        </g>
+      )}
+      <rect x="9" y="9" width="78" height="42" fill="none" stroke={ART.brass.hi} strokeWidth="0.8" opacity="0.8" />
+      <Slab x={36} y={54} w={24} h={6} k={1} c="brass" o={0.8} /><text x="48" y="58.6" textAnchor="middle" fontSize="2.8" fill={ART.ink} fontWeight="700" {...PT}>{sky ? 'DUSK OVER 5120' : 'COMPOSITION IN GARNET'}</text>
+      <Rivets x={8} y={6} w={80} n={9} c="brass" /><Grime x={4} y={4} w={88} h={54} seed={961} n={3} op={0.12} /><Scuff x={6} y={6} w={84} h={48} seed={962} n={4} c="brass" />
+    </svg>
+  );
+}
+
+function PropHoloTheater() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={92} rx={58} ry={3} />
+      <Slab x={8} y={6} w={112} h={46} k={3} c="dark" o={1.2} />
+      <rect x="14" y="12" width="100" height="34" fill={ART.screen.cyan} />
+      <g style={{ animation: 'holo-flicker 2.8s ease-in-out infinite' }}>
+        <polygon points={pts([[14, 46], [114, 46], [114, 34], [90, 26], [70, 36], [50, 22], [30, 34], [14, 30]])} fill={S.blue} opacity="0.45" />
+        <circle cx="96" cy="22" r="7" fill={S.amberHi} opacity="0.85" />
+        <polygon points={pts([[44, 46], [44, 30], [52, 30], [52, 46]])} fill={S.cyanHi} opacity="0.6" /><polygon points={pts([[62, 46], [62, 26], [72, 26], [72, 46]])} fill={S.cyan} opacity="0.5" />
+        <rect x="14" y="12" width="100" height="1.4" fill={S.cyanHi} opacity="0.7" />
+        <text x="20" y="20" fontSize="4.4" fill={S.amberHi} fontWeight="700" {...PT}>NOW SHOWING</text>
+      </g>
+      <Glow cx={64} cy={30} rx={50} ry={14} c={S.cyan} opacity={0.3} />
+      {[10, 112].map((x) => <Bev key={x} t="polygon" points={pts([[x, 52], [x, 12], [x + 6, 12], [x + 6, 52]])} c="brass" o={0.8} />)}
+      <Bev t="polygon" points={pts([[14, 82], [14, 62], [114, 62], [114, 82], [102, 90], [26, 90]])} c="red" o={1.4} />
+      {[0, 1, 2, 3, 4, 5].map((i) => <ellipse key={i} cx={28 + i * 14.4} cy={72} rx="6" ry="3.4" fill={ART.red.hi} opacity="0.5" />)}
+      <Slab x={46} y={56} w={36} h={7} k={1.2} c="dark" o={0.9} /><Lights x={50} y={60} n={5} gap={6} seed={6} />
+      <Rivets x={16} y={86} w={96} n={12} c="brass" /><Seams x={14} y={62} w={100} h={28} cols={5} op={0.2} />
+      <Grime x={8} y={8} w={112} h={84} seed={971} n={4} op={0.14} /><Scuff x={12} y={12} w={104} h={76} seed={972} n={5} c="dark" />
+    </svg>
+  );
+}
+
+function PropLoungeRug() {
+  return (
+    <svg viewBox="0 0 160 96" width="160" height="96" style={PROP_STYLE}>
+      <Bev t="polygon" points={pts([[6, 10], [154, 10], [154, 86], [6, 86]])} c="red" o={1} />
+      <rect x="14" y="18" width="132" height="60" fill={ART.red.shade} /><rect x="14" y="18" width="132" height="60" fill="none" stroke={ART.brass.hi} strokeWidth="1.6" />
+      <rect x="22" y="26" width="116" height="44" fill="none" stroke={ART.brass.base} strokeWidth="1" />
+      {Array.from({ length: 11 }, (_, i) => <polygon key={i} points={pts([[22 + i * 11.6, 26], [28 + i * 11.6, 32], [22 + i * 11.6, 38], [16 + i * 11.6, 32]])} fill={ART.brass.base} opacity="0.85" transform="translate(6 0)" />)}
+      <polygon points={pts([[80, 30], [112, 48], [80, 66], [48, 48]])} fill={ART.brass.base} opacity="0.5" />
+      <polygon points={pts([[80, 36], [100, 48], [80, 60], [60, 48]])} fill={ART.red.base} /><circle cx="80" cy="48" r="5" fill={ART.brass.hi} />
+      {Array.from({ length: 24 }, (_, i) => <rect key={i} x={6 + i * 6.2} y="86" width="1.4" height="6" fill={ART.brass.hi} opacity="0.7" />)}
+      {Array.from({ length: 24 }, (_, i) => <rect key={i} x={6 + i * 6.2} y="4" width="1.4" height="6" fill={ART.brass.hi} opacity="0.7" />)}
+      <Seams x={14} y={18} w={132} h={60} cols={7} rows={3} op={0.12} /><Grime x={6} y={10} w={148} h={76} seed={981} n={4} op={0.1} /><Scuff x={8} y={12} w={144} h={72} seed={982} n={6} c="red" />
+    </svg>
+  );
+}
+
+function PropSoakPool() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={92} rx={58} ry={3} />
+      <Bev t="polygon" points={pts([[6, 90], [6, 26], [122, 26], [122, 90]])} c="stone" o={1.4} /><Seams x={6} y={26} w={116} h={64} cols={6} rows={3} op={0.22} />
+      <polygon points={pts([[16, 80], [16, 36], [112, 36], [112, 80]])} fill={ART.teal.shade} />
+      <polygon points={pts([[20, 76], [20, 40], [108, 40], [108, 76]])} fill={ART.teal.base} />
+      {[[30, 50, 24], [60, 58, 30], [86, 48, 20], [46, 68, 26], [92, 66, 18]].map(([x, y, w], i) => <ellipse key={i} cx={x} cy={y} rx={w * 0.5} ry="2" fill={S.cyanHi} opacity="0.22" style={{ animation: `holo-flicker ${2.6 + i * 0.5}s ease-in-out infinite` }} />)}
+      {[34, 62, 90].map((x, i) => <g key={i}><ellipse cx={x} cy="30" rx="8" ry="3" fill={S.white} opacity="0.14" style={{ animation: `steam-rise ${2.4 + i * 0.5}s ease-out ${i * 0.5}s infinite` }} /><ellipse cx={x + 3} cy="22" rx="6" ry="2.4" fill={S.white} opacity="0.1" style={{ animation: `steam-rise ${3.2 + i * 0.4}s ease-out ${i * 0.9}s infinite` }} /></g>)}
+      <Slab x={8} y={28} w={112} h={7} k={1.4} c="brass" o={0.8} />
+      {[24, 104].map((x) => <g key={x}><Bev t="polygon" points={pts([[x - 4, 44], [x + 4, 44], [x + 4, 54], [x - 4, 54]])} c="brass" o={0.8} /><circle cx={x} cy="49" r="1.6" fill={ART.ink} /></g>)}
+      <polygon points={pts([[100, 84], [118, 84], [118, 92], [100, 92]])} fill={ART.pearl.base} /><polygon points={pts([[102, 86], [116, 86], [116, 90], [102, 90]])} fill={ART.pearl.hi} />
+      <Rivets x={10} y={88} w={108} n={13} c="brass" /><Grime x={6} y={26} w={116} h={66} seed={991} n={3} op={0.14} /><Scuff x={8} y={28} w={112} h={60} seed={992} n={4} c="stone" />
+    </svg>
+  );
+}
+
+function PropDesignConsole() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={59} rx={24} ry={3} />
+      <Slab x={20} y={44} w={24} h={13} k={1.4} c="brass" /><Slab x={12} y={54} w={40} h={5} k={1.2} c="dark" o={0.9} />
+      <Bev t="polygon" points={pts([[8, 6], [56, 6], [60, 10], [60, 42], [56, 46], [8, 46], [4, 42], [4, 10]])} c="dark" o={1.2} />
+      <rect x="9" y="10" width="46" height="24" fill={ART.screen.cyan} />
+      <g style={{ animation: 'holo-flicker 3s ease-in-out infinite' }}>
+        <polygon points={pts([[14, 30], [32, 14], [50, 30]])} fill="none" stroke={S.cyanHi} strokeWidth="0.8" /><rect x="22" y="22" width="20" height="8" fill="none" stroke={S.cyan} strokeWidth="0.7" />
+        <line x1="32" y1="14" x2="32" y2="30" stroke={S.cyan} strokeWidth="0.5" opacity="0.7" /><rect x="29" y="25" width="6" height="5" fill={S.amberHi} opacity="0.7" />
+      </g>
+      <text x="32" y="17" textAnchor="middle" fontSize="2.8" fill={S.cyanHi} fontWeight="700" {...PT}>INTERIOR DESIGN</text>
+      {[ART.red.base, ART.brass.base, ART.deepglass.base, ART.sand.base, ART.moss.base].map((c, i) => <rect key={i} x={10 + i * 8.4} y="37" width="6" height="6" fill={c} />)}
+      <Rivets x={8} y={8} w={48} n={7} c="brass" /><Seams x={4} y={6} w={56} h={40} cols={2} op={0.2} />
+      <Grime x={4} y={6} w={56} h={52} seed={1001} n={3} op={0.16} /><Scuff x={8} y={10} w={48} h={34} seed={1002} n={4} c="dark" />
+    </svg>
+  );
+}
+// ===== PENTHOUSE PROPS END =====
+
+
+
+
 
 
 
@@ -13984,6 +14309,16 @@ const PROP_DEFS = {
   glass_overhang:       { w: 4, h: 2, ax: 1, ay: 1 },
   tint_console:         { w: 2, h: 2, ax: 0, ay: 1 },
   // SENATE DEFS END
+  // PENTHOUSE DEFS BEGIN
+  observatory_telescope: { w: 3, h: 3, ax: 1, ay: 2 },
+  garden_planter:        { w: 3, h: 2, ax: 1, ay: 1 },
+  art_pedestal:          { w: 2, h: 2, ax: 0, ay: 1 },
+  wall_art:              { w: 3, h: 2, ax: 1, ay: 1 },
+  holo_theater:          { w: 4, h: 3, ax: 1, ay: 2 },
+  lounge_rug:            { w: 5, h: 3, ax: 2, ay: 1, backdrop: true },
+  soak_pool:             { w: 4, h: 3, ax: 1, ay: 1 },
+  design_console:        { w: 2, h: 2, ax: 0, ay: 1 },
+  // PENTHOUSE DEFS END
 };
 
 const PropArt = React.memo(function PropArt({ kind, variant, active }) {
@@ -14141,6 +14476,16 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'glass_overhang': return <PropGlassOverhang />;
     case 'tint_console': return <PropTintConsole />;
     // SENATE CASES END
+    // PENTHOUSE CASES BEGIN
+    case 'observatory_telescope': return <PropObservatoryTelescope />;
+    case 'garden_planter': return <PropGardenPlanter />;
+    case 'art_pedestal': return <PropGalleryPedestal />;
+    case 'wall_art': return <PropWallArt variant={variant} />;
+    case 'holo_theater': return <PropHoloTheater />;
+    case 'lounge_rug': return <PropLoungeRug />;
+    case 'soak_pool': return <PropSoakPool />;
+    case 'design_console': return <PropDesignConsole />;
+    // PENTHOUSE CASES END
     default: return null;
   }
 });
@@ -14153,8 +14498,9 @@ function visiblePropObjects(zone, questFlags, completed) {
     if ((wo.requiresNoneFlags || []).some((f) => questFlags[f])) return;
     const k = wo.x + ',' + wo.y;
     const cur = byTile[k];
-    const unlocked = !wo.requiresFlag || questFlags[wo.requiresFlag];
-    if (!cur || (unlocked && wo.requiresFlag)) byTile[k] = wo;
+    const unlocked = (!wo.requiresFlag || questFlags[wo.requiresFlag]) && (wo.requiresAllFlags || []).every((f) => questFlags[f]);
+    if (wo.invisibleLocked && !unlocked) return;
+    if (!cur || (unlocked && (wo.requiresFlag || wo.requiresAllFlags))) byTile[k] = wo;
   });
   return Object.values(byTile);
 }
@@ -14669,6 +15015,7 @@ function VendorOverlay({ npc, inventory, credits, alignment, onBuy, onSell, onCl
         </div>
         <div style={{ color:'#E8C97A' }}>Credits: {credits}</div>
       </div>
+      {npc.vendorGreeting && <div style={{ color:'#9A9070', fontSize:'12px', fontStyle:'italic', marginBottom:'12px' }}>{npc.vendorGreeting}</div>}
 
       <div style={{ display:'flex', gap:'8px', marginBottom:'16px' }}>
         {['buy', 'sell'].map(tab => (
@@ -14923,11 +15270,65 @@ function PitFightOverlay({ onSuccess, onFailure, opponentName, opponentHp, accen
   );
 }
 
-function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, activeContracts, setActiveContracts, heat, setHeat, territories, setTerritories, credits, setCredits }) {
+// ===== PENTHOUSE DESIGN OVERLAY BEGIN =====
+function PenthouseDesignOverlay({ inventory, flags, onInstall, onRemove, onClose }) {
+  const [sel, setSel] = React.useState(0);
+  React.useEffect(() => {
+    const h = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [onClose]);
+  const has = (p) => inventory.some((i) => i.id === p.itemId);
+  const state = (p) => (flags[p.flag] ? 'installed' : has(p) ? 'cargo' : 'unowned');
+  const installed = PENTHOUSE_PACKAGES.filter((p) => flags[p.flag]);
+  const income = installed.reduce((s, p) => s + p.income, 0);
+  const decay = installed.reduce((s, p) => s + p.heatDecay, 0);
+  const p = PENTHOUSE_PACKAGES[sel];
+  const st = state(p);
+  const stColor = { installed: '#4CAF50', cargo: '#E8C97A', unowned: '#666' };
+  const stLabel = { installed: 'INSTALLED', cargo: 'IN CARGO, READY TO INSTALL', unowned: 'NOT OWNED' };
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: 'rgba(4,3,0,0.93)', zIndex: 29, display: 'flex', flexDirection: 'column', padding: '22px', fontFamily: 'monospace' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+        <div>
+          <div style={{ color: '#C8A000', fontSize: '18px', fontWeight: 'bold', letterSpacing: '0.12em' }}>PENTHOUSE INTERIOR DESIGN</div>
+          <div style={{ color: '#8A7A3A', fontSize: '12px', marginTop: '4px' }}>{installed.length} of {PENTHOUSE_PACKAGES.length} packages installed. Bonus income {income} cr and extra heat decay {decay} per Advance Time.</div>
+        </div>
+        <div onClick={onClose} style={{ alignSelf: 'flex-start', padding: '6px 18px', border: '1px solid #444', color: '#999', cursor: 'pointer', borderRadius: '4px', fontSize: '12px' }}>[ESC] Close</div>
+      </div>
+      <div style={{ display: 'flex', gap: '16px', flex: 1, overflow: 'hidden' }}>
+        <div style={{ width: '46%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {PENTHOUSE_PACKAGES.map((q, i) => {
+            const s = state(q);
+            return (
+              <div key={q.id} onClick={() => setSel(i)} style={{ padding: '8px 12px', border: `1px solid ${sel === i ? '#C8A000' : '#2A2410'}`, background: sel === i ? '#1E1A08' : 'transparent', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', borderRadius: '4px' }}>
+                <span style={{ color: '#DDD' }}>{q.name}</span>
+                <span style={{ color: stColor[s], fontSize: '11px' }}>{s === 'installed' ? 'INSTALLED' : s === 'cargo' ? 'READY' : 'LOCKED'}</span>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ flex: 1, borderLeft: '1px solid #2A2410', paddingLeft: '16px', overflowY: 'auto' }}>
+          <div style={{ color: '#E8C97A', fontSize: '16px', marginBottom: '6px' }}>{p.name}</div>
+          <div style={{ color: stColor[st], fontSize: '11px', marginBottom: '10px' }}>{stLabel[st]}</div>
+          <div style={{ color: '#BBB', fontSize: '12px', lineHeight: 1.5, marginBottom: '10px' }}>{p.blurb}</div>
+          <div style={{ color: '#8FD0C8', fontSize: '12px', lineHeight: 1.5, marginBottom: '10px' }}>Effect: {p.perk}</div>
+          <div style={{ color: '#888', fontSize: '11px', marginBottom: '14px' }}>Sold by {p.where} for {p.price} cr.</div>
+          {st === 'cargo' && <div onClick={() => onInstall(p)} style={{ display: 'inline-block', padding: '8px 22px', border: '1px solid #4CAF50', color: '#4CAF50', cursor: 'pointer', borderRadius: '4px', fontSize: '12px' }}>INSTALL PACKAGE</div>}
+          {st === 'installed' && <div onClick={() => onRemove(p)} style={{ display: 'inline-block', padding: '8px 22px', border: '1px solid #A66', color: '#C88', cursor: 'pointer', borderRadius: '4px', fontSize: '12px' }}>REMOVE AND RETURN TO CARGO</div>}
+          {st === 'unowned' && <div style={{ color: '#666', fontSize: '12px' }}>Buy this package from the merchant named above, then return here to install it.</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+// ===== PENTHOUSE DESIGN OVERLAY END =====
+
+function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, activeContracts, setActiveContracts, heat, setHeat, territories, setTerritories, credits, setCredits, incomeBonus = 0, heatDecayBonus = 0 }) {
   const [panel, setPanel] = React.useState('contracts');
   const [log, setLog] = React.useState([]);
   const addLog = (msg) => setLog(l => [`> ${msg}`, ...l].slice(0, 20));
-  const passiveIncome = territories.length * 120;
+  const passiveIncome = territories.length * 120 + incomeBonus;
   const availableAgents = roster.filter(a => a.status === 'available');
 
   const advanceTime = () => {
@@ -14951,8 +15352,8 @@ function SyndicateManagementOverlay({ onClose, roster, setRoster, contracts, act
     });
     setRoster(r => r.map(a => a.status === 'injured' && Math.random() > 0.5 ? { ...a, status: 'available' } : a));
     setCredits(c => c + passiveIncome);
-    setHeat(h => Math.max(0, h - 2));
-    addLog(`Passive income: +${passiveIncome} credits. Heat: ${Math.max(0, heat - 2 + resolved.reduce((s, ac) => s + ac.heatGenerated, 0))}.`);
+    setHeat(h => Math.max(0, h - 2 - heatDecayBonus));
+    addLog(`Passive income: +${passiveIncome} credits. Heat: ${Math.max(0, heat - 2 - heatDecayBonus + resolved.reduce((s, ac) => s + ac.heatGenerated, 0))}.`);
 
     // Dynamic Heat Event pipeline
     const currentHeat = heat;
@@ -18998,6 +19399,20 @@ function StarWarsRPG() {
     return [...prev, { ...entry, unread: true }];
   }), []);
 
+  const phPerks = React.useMemo(() => PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: 0, decay: 0 }), [questFlags]);
+  const installPenthousePackage = useCallback((pkg) => {
+    setInventory(prev => prev.flatMap(i => i.id !== pkg.itemId ? [i] : (i.qty > 1 ? [{ ...i, qty: i.qty - 1 }] : [])));
+    setFlag(pkg.flag);
+    if (PENTHOUSE_PACKAGES.every((q) => q.id === pkg.id || questFlagsRef.current[q.flag])) setFlag('ph_complete');
+    pushActionLog(`[Interior Design] ${pkg.name} installed. ${pkg.perk}`, 'penthouse');
+    if (pkg.id === 'skyview') unlockCodex(CODEX_ENTRIES['codex-ph-observatory']);
+  }, []);
+  const removePenthousePackage = useCallback((pkg) => {
+    setQuestFlags(prev => { const n = { ...prev }; delete n[pkg.flag]; return n; });
+    addItem(ITEMS[pkg.itemId]);
+    pushActionLog(`[Interior Design] ${pkg.name} removed and returned to your cargo.`, 'penthouse');
+  }, []);
+
   const travelToZone = useCallback((targetZoneId, targetPos) => {
     if (targetZoneId === 'penthouse' && !questFlagsRef.current.inheritance_active) {
       pushActionLog('The elevator requires authorization. Come back when you have it.', zoneId);
@@ -19048,7 +19463,7 @@ function StarWarsRPG() {
   useEffect(() => { questFlagsRef.current = questFlags; }, [questFlags]);
   useEffect(() => { setNpcPositions({}); encStepsRef.current = 0; patrolRef.current = {}; }, [zoneId]);
   useEffect(() => {
-    if (zoneId === 'senatorial_lounges') return;
+    if (zoneId === 'senatorial_lounges' || zoneId === 'penthouse') return;
     setQuestFlags((prev) => { if (!Object.keys(prev).some((k) => k.startsWith('buff_'))) return prev; const next = { ...prev }; Object.keys(next).forEach((k) => { if (k.startsWith('buff_')) delete next[k]; }); return next; });
   }, [zoneId]);
   useEffect(() => {
@@ -19295,7 +19710,7 @@ function StarWarsRPG() {
         return;
       }
 
-      const worldObjHere = zone.worldObjects?.find(wo => wo.x === x && wo.y === y && !(wo.requiresNoneFlags || []).some(f => questFlags[f]));
+      const worldObjHere = zone.worldObjects?.find(wo => wo.x === x && wo.y === y && !(wo.requiresNoneFlags || []).some(f => questFlags[f]) && !(wo.invisibleLocked && ((wo.requiresFlag && !questFlags[wo.requiresFlag]) || (wo.requiresAllFlags || []).some(f => !questFlags[f]))));
       if (worldObjHere) {
         if (worldObjHere.id.startsWith('airtaxi_')) {
           if (!questFlags.speeder_transit_unlocked) { pushActionLog('RESTRICTED TRANSIT: Sector clearance pass required.', zoneId); setPos({ x, y }); return; }
@@ -19657,7 +20072,8 @@ function StarWarsRPG() {
       {activeMinigame && activeMinigame.type === 'valve_override' && <ValveOverrideOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'willpower_override' && <WillpowerOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'pit_fight' && <PitFightOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} opponentName={activeMinigame.opponentName ?? 'Opponent'} opponentHp={activeMinigame.opponentHp ?? 5} accent={activeMinigame.accent ?? '#C03030'} />}
-      {activeMinigame && activeMinigame.type === 'syndicate_management' && <SyndicateManagementOverlay onClose={activeMinigame.onSuccess} roster={syndicateRoster} setRoster={setSyndicateRoster} contracts={syndicateContracts} activeContracts={syndicateActiveContracts} setActiveContracts={setSyndicateActiveContracts} heat={syndicateHeat} setHeat={setSyndicateHeat} territories={syndicateTerritories} setTerritories={setSyndicateTerritories} credits={credits} setCredits={setCredits} />}
+      {activeMinigame && activeMinigame.type === 'syndicate_management' && <SyndicateManagementOverlay onClose={activeMinigame.onSuccess} roster={syndicateRoster} setRoster={setSyndicateRoster} contracts={syndicateContracts} activeContracts={syndicateActiveContracts} setActiveContracts={setSyndicateActiveContracts} heat={syndicateHeat} setHeat={setSyndicateHeat} territories={syndicateTerritories} setTerritories={setSyndicateTerritories} credits={credits} setCredits={setCredits} incomeBonus={phPerks.income} heatDecayBonus={phPerks.decay} />}
+      {activeMinigame && activeMinigame.type === 'penthouse_design' && <PenthouseDesignOverlay inventory={inventory} flags={questFlags} onInstall={installPenthousePackage} onRemove={removePenthousePackage} onClose={activeMinigame.onSuccess} />}
       {activeMinigame && activeMinigame.type === 'sabacc' && <SabaccOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}
       {activeMinigame && activeMinigame.type === 'contraband_market' && <ContrabandMarketOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} heat={syndicateHeat} setHeat={setSyndicateHeat} credits={credits} setCredits={setCredits} />}
       {activeMinigame && activeMinigame.type === 'interrogation' && <InterrogationMatrixOverlay onSuccess={activeMinigame.onSuccess} onFailure={activeMinigame.onFailure} />}

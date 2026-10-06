@@ -6,6 +6,7 @@
  * Usage:
  *   node .claude/tools/zone-snapshot.js <planet> <zone> [x,y ...] [--out dir]
  *   node .claude/tools/zone-snapshot.js kuat kdy_landing_bay 9,6 24,12
+ *   node .claude/tools/zone-snapshot.js coruscant penthouse 19,12 --flags ph_skyview,ph_garden   (start with these quest flags set)
  * Each x,y is a player position (the camera centers on it, 20x13 tiles visible). With no
  * positions it shoots the spawn point. PNGs land in .claude/tools/snapshots/ by default.
  *
@@ -14,10 +15,12 @@
 const fs = require('fs');
 const path = require('path');
 const args = process.argv.slice(2);
+const flagIdx = args.indexOf('--flags');
+const startFlags = flagIdx >= 0 ? Object.fromEntries(args.splice(flagIdx, 2)[1].split(',').filter(Boolean).map((f) => [f, true])) : {};
 const outIdx = args.indexOf('--out');
 const outDir = path.resolve(outIdx >= 0 ? args.splice(outIdx, 2)[1] : path.join(__dirname, 'snapshots'));
 const [planet, zone, ...posArgs] = args;
-if (!planet || !zone) { console.error('usage: zone-snapshot.js <planet> <zone> [x,y ...] [--out dir]'); process.exit(2); }
+if (!planet || !zone) { console.error('usage: zone-snapshot.js <planet> <zone> [x,y ...] [--flags a,b] [--out dir]'); process.exit(2); }
 
 const Babel = require('@babel/standalone');
 const { chromium } = require('playwright-core');
@@ -30,6 +33,7 @@ const patches = [
   ['useState(() => PLANETS.coruscant.zones.spaceport.buildMap());', 'useState(() => PLANETS[window.__P].zones[window.__Z].buildMap());'],
   ['useState({ x: 14, y: 10 });', 'useState(window.__POS || PLANETS[window.__P].zones[window.__Z].spawnPos);'],
   ["const [planetId, setPlanetId] = useState('coruscant');", 'const [planetId, setPlanetId] = useState(window.__P);'],
+  ['const [questFlags, setQuestFlags] = useState({});', 'const [questFlags, setQuestFlags] = useState(window.__FLAGS || {});'],
 ];
 for (const [a, b] of patches) {
   if (!code.includes(a)) { console.error('Snapshot patch no longer matches the game source:\n  ' + a + '\nUpdate zone-snapshot.js to follow the refactor.'); process.exit(2); }
@@ -49,10 +53,10 @@ fs.writeFileSync(htmlPath, `<html><head><style>*{margin:0;padding:0;box-sizing:b
   for (const pos of positions) {
     const page = await browser.newPage({ viewport: { width: 700, height: 480 } });
     page.on('pageerror', (e) => errors.push(e.message));
-    await page.addInitScript(`window.__P=${JSON.stringify(planet)};window.__Z=${JSON.stringify(zone)};window.__POS=${JSON.stringify(pos)};`);
+    await page.addInitScript(`window.__P=${JSON.stringify(planet)};window.__Z=${JSON.stringify(zone)};window.__POS=${JSON.stringify(pos)};window.__FLAGS=${JSON.stringify(startFlags)};`);
     await page.goto('file://' + htmlPath);
     await page.waitForTimeout(800);
-    const file = path.join(outDir, `${zone}_${pos ? pos.x + '_' + pos.y : 'spawn'}.png`);
+    const file = path.join(outDir, `${zone}_${pos ? pos.x + '_' + pos.y : 'spawn'}${flagIdx >= 0 ? '_flags' : ''}.png`);
     await page.screenshot({ path: file, clip: { x: 16, y: 44, width: 660, height: 420 } });
     console.log('wrote ' + file);
     await page.close();

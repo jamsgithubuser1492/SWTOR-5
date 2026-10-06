@@ -415,3 +415,10 @@ Future candidates: apply the lighting pass to tactical enemy sprites, redraw leg
 - Palette for the Senate District: deep garnet velvet (`ART.red` and `ART.fabric`), electrum and gold leaf (`ART.brass`), obsidian (`ART.dark`), royal azure (`ART.deepglass`), warm sandstone (`ART.sand`), transparisteel blue tint (`ART.glass`).
 - New portrait kinds: `senator_horace`, `kuati_baroness`, `sis_agent`, `twilek_diplomat`, `alsakan_aristocrat`, `czerka_executive`, `lux_sommelier`, `sv_tray_droid`, `sweep_drone`, `black_sun_envoy`.
 - New keyframes: `skyline-lane`, `skyline-lane-rev`, `skyline-fly`, `skyline-fly-rev`, `cast-sweep`.
+
+## v7 changelog: Scylla Tower Penthouse and design packages
+
+- `PropSkylineVista` gained `night` and `nighthud` variants (ink to indigo sky, 70 twinkling stars, a pearl moon, denser lit windows). Use them for any late night window.
+- New props (all 3 tone `Bev`/`Slab` builds with greeble and wear): `observatory_telescope` (3 by 3), `garden_planter` (3 by 2, glowing blooms), `art_pedestal` via `PropGalleryPedestal` (2 by 2), `wall_art` (3 by 2, variants `skyline` and default), `holo_theater` (4 by 3), `lounge_rug` (5 by 3 backdrop), `soak_pool` (4 by 3, animated steam), `design_console` (2 by 2).
+- Reuse rules: warm brass, garnet red, stone and moss for domestic decor; teal water; cyan only for screens. Anything that glows uses `Glow` with low opacity.
+
