@@ -25,6 +25,8 @@ function GlobalAnimations() {
       @keyframes holo-flicker { 0%,100%{opacity:0.78;}50%{opacity:1;} }
       @keyframes prop-scan { from{transform:translateY(0);opacity:0.8;}to{transform:translateY(26px);opacity:0;} }
       @keyframes ship-blink { 0%,100%{opacity:0.15;}50%{opacity:1;} }
+      @keyframes tracer-fly { 0%{transform:translateX(-120px);opacity:0;}8%{opacity:1;}85%{opacity:1;}100%{transform:translateX(860px);opacity:0;} }
+      @keyframes ash-fall { 0%{transform:translate(0,-10px);opacity:0;}15%{opacity:0.8;}100%{transform:translate(-90px,380px);opacity:0;} }
       @keyframes ship-engine { 0%,100%{opacity:0.3;}50%{opacity:0.85;} }
       @keyframes ship-spark { 0%,100%{opacity:0;transform:scale(0.4);}20%{opacity:1;transform:scale(1.2);}60%{opacity:0.4;transform:scale(0.8);} }
     `}</style>
@@ -42,6 +44,11 @@ function carveRect(g, x1, y1, x2, y2, type = 'floor') {
   for (let y = y1; y <= y2; y++) for (let x = x1; x <= x2; x++) { if (g[y]?.[x]) g[y][x] = { type }; }
 }
 function pt(g, x, y, type) { if (g[y]?.[x]) g[y][x] = { type }; }
+// Build a grid from ASCII rows. # wall, . floor, D door, ~ lava, w water.
+function mapFromRows(rows) {
+  const T = { '#': 'wall', '.': 'floor', 'D': 'door', '~': 'lava', 'w': 'water' };
+  return rows.map((r) => Array.from(r, (c) => ({ type: T[c] || 'floor' })));
+}
 
 const SHIP_DEFS = {
   free_horizon:     { w: 6,  h: 5 },
@@ -4479,28 +4486,110 @@ const PLANETS = {
 
       city_outskirts_bador: {
         id: 'city_outskirts_bador', name: 'City Outskirts of Bador',
-        subtitle: 'Bador Moon · Civilian Sector',
-        width: 34, height: 20, spawnPos: { x: 16, y: 1 }, textureId: 'ferrowake',
-        accent: '#8B5E3C', accentGlow: 'rgba(139,94,60,0.25)', accentDim: '#42220E',
-        floorColor: '#22180C', floorAlt: '#2A1E0E', wallDark: '#0C0806', wallLight: '#181006',
-        bg: 'radial-gradient(circle at 30% 80%, #181008 0%, #0C0806 70%)', ambient: 'embers',
+        subtitle: 'Bador Moon · Breach-Point Alpha · Active War Zone',
+        width: 48, height: 32, spawnPos: { x: 14, y: 6 }, textureId: 'ferrowake',
+        accent: '#FF5500', accentGlow: 'rgba(255,85,0,0.28)', accentDim: '#5C2C16',
+        floorColor: '#1C1612', floorAlt: '#241C16', wallDark: '#0C0A08', wallLight: '#2A2420',
+        bg: 'radial-gradient(circle at 70% 20%, #2A1608 0%, #120C08 45%, #060403 100%)', ambient: 'warzone',
         decor: ['pipe', 'rubble'],
+        paAnnouncements: [
+          'All laborers shelter in place. Repeat, shelter in place. Do not approach the breach.',
+          'KDY Security reminds civilians that the Kuat Expansionist Front is a proscribed organization.',
+          'Mortar fire is expected to continue. This is not a drill.',
+          'Medical teams are available at the southwest redoubt. Bring your own bandages.',
+        ],
         doors: [
           { x: 14, y: 0,  targetZone: 'bador_main_base', targetPos: { x: 16, y: 26 }, label: 'KDY Main Base' },
           { x: 15, y: 0,  targetZone: 'bador_main_base', targetPos: { x: 17, y: 26 }, label: 'KDY Main Base' },
-          { x: 33, y: 10, targetZone: 'outpost_7', targetPos: { x: 1, y: 10 }, label: 'Outpost 7' },
-          { x: 33, y: 11, targetZone: 'outpost_7', targetPos: { x: 1, y: 11 }, label: 'Outpost 7' },
+          { x: 47, y: 14, targetZone: 'outpost_7', targetPos: { x: 1, y: 14 }, label: 'Outpost 7' },
+          { x: 47, y: 15, targetZone: 'outpost_7', targetPos: { x: 1, y: 15 }, label: 'Outpost 7' },
+          { x: 24, y: 31, targetZone: 'engine_wastes', targetPos: { x: 24, y: 1 }, label: 'Landspeeder Depot Gate', requiresFlag: 'gateway_unlocked', lockedMessage: 'The depot gate is sealed. It needs the KDY Transit Encryption Cylinder from Varek Korr.' },
+          { x: 25, y: 31, targetZone: 'engine_wastes', targetPos: { x: 25, y: 1 }, label: 'Landspeeder Depot Gate', requiresFlag: 'gateway_unlocked', lockedMessage: 'The depot gate is sealed. It needs the KDY Transit Encryption Cylinder from Varek Korr.' },
         ],
         worldObjects: [
-          { id: 'bador_republic_terminal', propArt: 'console', propVariant: 'republic_old', x: 10, y: 10, label: 'Abandoned Republic Terminal',
+          { id: 'out_vista_w', propArt: 'basalt_vista', propVariant: 'outskirts_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'KDY Perimeter Wall',
+            description: "The gleaming durasteel wall of the Kuat Drive Yards Surface Logistics Hub fills the north horizon, white towers lined with cyan windows. A breach glows orange at the gate, and black smoke plumes lean across a sky the color of old iron. Red and cyan tracer fire stitches the dark above the wall, and low on the horizon hangs the dark red parent world of this moon, a thin teal rim of atmosphere along its edge.", grantsCodex: 'codex-outskirts-war' },
+          { id: 'out_vista_e', propArt: 'basalt_vista', propVariant: 'outskirts_b', x: 36, y: 5, once: false, iconKind: 'vista', label: 'Shipyard Skyline in Smoke',
+            description: "East of the breach the wall climbs into crane arms and silent turbolaser mounts, all of it wrapped in smoke. A KEF mortar shell crosses the haze in a slow arc and drops somewhere behind the sniper catwalks. Every few seconds the dark planet flickers with a distant shipyard flash." },
+          { id: 'bador_republic_terminal', propArt: 'console', propVariant: 'republic_old', x: 9, y: 7, label: 'Abandoned Republic Terminal',
             description: 'A rusted Republic outpost terminal, decommissioned three years prior. The last logged entry is a distress call with no response on record.',
             once: true, grantsFlag: 'bador_republic_history', grantsCodex: 'codex-bador-history' },
-          { id: 'bador_supply_cache', propArt: 'crate_stack', propVariant: 'hidden', x: 26, y: 15, label: 'Hidden Supply Cache',
+          { id: 'bador_supply_cache', propArt: 'crate_stack', propVariant: 'hidden', x: 3, y: 29, label: 'Hidden Supply Cache',
             description: 'A hidden alcove in the collapsed wall. Someone has been using this as a supply drop.',
             once: true, requiresFlag: 'ghost_keel_active', grantsItem: 'cherit_logbook' },
+          { id: 'burnt_kdy_log', propArt: 'console', propVariant: 'derelict', x: 12, y: 8, once: true, iconKind: 'crate', label: 'Burnt KDY Log Terminal',
+            description: "A scorched KDY terminal at the breach, its casing blistered by plasma. The last cached log is a manifest of hyperdrive reactor cores moved out of Base Alpha before the KEF attack, and someone has circled the destination in grease pencil.", grantsItem: 'item_kdy_datapad_01', grantsFlag: 'kdy_manifest_found' },
+          { id: 'line_c_barricade_a', propArt: 'kdy_barricade', propVariant: 'kdy', x: 5, y: 11, once: false, iconKind: 'crate', label: 'Line C Barricade',
+            description: "A durasteel barricade scored by plasma burns. The white KDY paint has run to grey soot at the top, and each fresh hit melts another centimeter off the edge. Cover here is shrinking by the minute." },
+          { id: 'line_c_barricade_b', propArt: 'kdy_barricade', propVariant: 'kdy', x: 5, y: 16, once: false, iconKind: 'crate', label: 'Line C Barricade',
+            description: "A second barricade, half melted at the corner. A KDY trooper has written LAST ONE STANDING in marker on the inner face, and someone has crossed out the word LAST." },
+          { id: 'line_c_barricade_c', propArt: 'kdy_barricade', propVariant: 'kdy', x: 11, y: 13, once: false, iconKind: 'crate', label: 'Line C Barricade',
+            description: "The center of the defense line. Spent power cells crunch underfoot and two dead droids lean against the plating. Smoke curls up between the gaps and the bolts keep coming." },
+          { id: 'hackable_turret', propArt: 'auto_turret', propVariant: 'hostile', x: 9, y: 9, once: true, iconKind: 'terminal', label: 'Overheated Defense Turret',
+            description: "A KDY automated turret on the defense line, its barrel glowing dull orange and its sensor locked on the wrong target. A diagnostic panel shows a crashed targeting daemon. A good slicer could flip it from hostile to friendly suppressive fire and punch a hole in the KEF line.", requiresFlag: 'outskirts_started', lockedMessage: 'Speak to Squad Leader Kaelin first. She will want to know what you are about to do to her turret.', triggersMinigame: 'signal_siphon', grantsFlags: ['turret_sliced', 'outskirts_mortar_down'], thermalDeltaOnSuccess: 5 },
+          { id: 'hackable_turret_friendly', propArt: 'auto_turret', propVariant: 'friendly', x: 9, y: 9, once: false, iconKind: 'terminal', label: 'Turret (Friendly Suppression)',
+            description: "The slice held. The turret swings smoothly on its mount and throws long, steady bursts at the KEF line. It is the most dependable member of the defense.", requiresFlag: 'turret_sliced', invisibleLocked: true },
+          { id: 'fuel_conduit_main', propArt: 'fuel_conduit', propVariant: 'plain', x: 22, y: 15, once: true, iconKind: 'crate', label: 'Volatile Fuel Conduit',
+            description: "A fat orange pipeline running along the shanty wall, bleeding amber vapor from a cracked flange. It feeds the KEF mortar line. One breach charge and the whole alley goes up, the shanties with it. Captain Bevin has already marked it on the map.", requiresFlag: 'bevin_plan_flank', lockedMessage: 'Nothing about this pipe is safe to touch yet. Ask Captain Bevin for the flank plan first.', requiresNoneFlags: ['kef_fuel_detonated'], grantsFlags: ['kef_fuel_detonated', 'outskirts_mortar_down'], thermalDelta: 20 },
+          { id: 'fuel_conduit_burst', propArt: 'fuel_conduit', propVariant: 'burst', x: 22, y: 15, once: false, iconKind: 'crate', label: 'Burning Fuel Conduit',
+            description: "The flange tears open and a wall of fire rolls down the alley. KEF cover turns to slag, the shanties lean into the glow, and the shortcut through the burned alley is open. Somewhere ahead, people are shouting your name.", requiresFlag: 'kef_fuel_detonated', invisibleLocked: true },
+          { id: 'breach_choke', propArt: 'kdy_barricade', propVariant: 'scrap', x: 32, y: 14, once: true, iconKind: 'floor', label: 'KEF Breach Choke Point',
+            description: "The KEF forward barricade. Orange suits and scrap plating, dual rebreather filters glinting in the smoke. A shock squad holds the choke and any push will have to go through them.", requiresFlag: 'bevin_plan_push', lockedMessage: 'There is a shock squad past that barricade, and you have no plan for them yet. Speak to Captain Bevin.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'kef_shock_breacher', flavorText: 'You step into the open with Vanguard troops stacking behind you. Orange suits rise from behind the scrap barricade, plasma shotguns first. There is no cover here that will not melt.' }, grantsFlag: 'outskirts_mortar_down', thermalDeltaOnSuccess: 12 },
+          { id: 'kef_catwalk_1', propArt: 'catwalk_post', x: 38, y: 9, once: false, iconKind: 'crate', label: 'KEF Sniper Catwalk',
+            description: "A KEF sniper catwalk, bolted to the shantytown roofs with scavenged scaffolding. The rails are warm. Spent plasma cells lie in a neat row where a sniper has been waiting for hours." },
+          { id: 'kef_catwalk_2', propArt: 'catwalk_post', x: 43, y: 9, once: false, iconKind: 'crate', label: 'KEF Sniper Catwalk',
+            description: "The east catwalk gives a clean line of fire down the main street. Ladder rungs are polished by boots. Whoever held this roost left in a hurry, and a thermos is still steaming." },
+          { id: 'kef_catwalk_3', propArt: 'catwalk_post', x: 36, y: 14, once: false, iconKind: 'crate', label: 'KEF Sniper Catwalk',
+            description: "A low catwalk post at the edge of the mortar yard. A KEF spotter has chalked range marks on the rail. Elevation here would give any attacker a clean hit chance on the street below." },
+          { id: 'kef_mortar_pit', propArt: 'mortar_pit', x: 42, y: 19, once: true, iconKind: 'crate', label: 'KEF Mortar Pit',
+            description: "A ring of scrap plate and sandbags around a heavy mortar tube, still warm. Shell crates are stacked beside it, one lid open. On the lid someone has scrawled a prayer to a dead engineer. A spare breaching cutter hangs on a hook.", requiresFlag: 'outskirts_mortar_down', lockedMessage: 'The mortar crew is still alive. Silence the line first.', grantsItem: 'item_kef_cutter_01', grantsFlag: 'mortar_pit_searched' },
+          { id: 'kef_hidden_cache', propArt: 'crate_stack', propVariant: 'hidden', x: 45, y: 12, once: true, iconKind: 'crate', label: 'Hidden KEF Cache',
+            description: "A false panel in the shanty wall hides a stack of crates. Under a layer of rags lies a rolled blueprint, a half finished plasma cutter and a sealed envelope addressed to nobody. The blueprint shows the structure of a KDY heavy loader walker, with annotations in an engineer hand.", grantsFlag: 'kef_blueprint_found', grantsCodex: 'codex-kef' },
+          { id: 'hovel_1', propArt: 'shanty_hovel', propVariant: 'a', x: 19, y: 11, once: false, iconKind: 'crate', label: 'Cantina Shanty',
+            description: "CANTINA. A neon sign in pink Aurebesh buzzes above a door hung with blankets. The owner has not left. Inside, three drinkers sit very still, listening to the mortars." },
+          { id: 'hovel_2', propArt: 'shanty_hovel', propVariant: 'b', x: 24, y: 11, once: false, iconKind: 'crate', label: 'Droid Repairs',
+            description: "REPAIRS. A one man droid shop with a tarp for a roof and a patched protocol droid on the counter. The sign says OPEN even though nothing about this street is." },
+          { id: 'hovel_3', propArt: 'shanty_hovel', propVariant: 'c', x: 29, y: 11, once: false, iconKind: 'crate', label: 'Family Hovel',
+            description: "A family home. Washing hangs on a line across the alley and a child has chalked a speeder on the wall. The door is barricaded from inside with a cooking pot." },
+          { id: 'hovel_4', propArt: 'shanty_hovel', propVariant: 'c', x: 19, y: 19, once: false, iconKind: 'crate', label: 'Noodle Stall',
+            description: "NOODLES. A food stall folded into the shanty wall. The vendor has fled, but the broth is still warm and the sign still glows amber." },
+          { id: 'hovel_5', propArt: 'shanty_hovel', propVariant: 'a', x: 24, y: 19, once: false, iconKind: 'crate', label: 'Boarded Storefront',
+            description: "A shuttered storefront with a hand lettered notice: KDY LEFT US TO BURN. Someone has added a second line underneath: WE ARE NOT LEAVING." },
+          { id: 'hovel_6', propArt: 'shanty_hovel', propVariant: 'b', x: 29, y: 19, once: false, iconKind: 'crate', label: 'Makeshift Clinic',
+            description: "A makeshift clinic, three cots and a rack of bacta patches. Blood is drying on the floor. A medic droid has been left powered on, its voice looping a calm, polite warning." },
+          { id: 'hovel_7', propArt: 'shanty_hovel', propVariant: 'a', x: 17, y: 26, once: false, iconKind: 'crate', label: 'Laborer Barracks',
+            description: "A laborer barracks, bunks stacked four high behind a door that no longer closes. Work tunics hang from the rafters, all grey and ochre, all identical." },
+          { id: 'hovel_8', propArt: 'shanty_hovel', propVariant: 'c', x: 26, y: 26, once: false, iconKind: 'crate', label: 'Looted Warehouse',
+            description: "A warehouse stall, doors blown inward. The shelves are empty and fresh boot prints lead out the back, toward the sniper catwalks." },
+          { id: 'burning_wreck_1', propArt: 'burning_wreck', x: 16, y: 22, once: false, iconKind: 'crate', label: 'Burning Speeder Chassis',
+            description: "A wrecked speeder chassis burning from inside, thick smoke rolling off the fire. The heat shimmers the air for a full tile around it and the metal groans as it cools." },
+          { id: 'burning_wreck_2', propArt: 'burning_wreck', x: 35, y: 20, once: false, iconKind: 'crate', label: 'Burning Speeder Chassis',
+            description: "A wrecked speeder chassis burning from inside, thick smoke rolling off the fire. The heat shimmers the air for a full tile around it and the metal groans as it cools." },
+          { id: 'burning_wreck_3', propArt: 'burning_wreck', x: 27, y: 15, once: false, iconKind: 'crate', label: 'Burning Speeder Chassis',
+            description: "A wrecked speeder chassis burning from inside, thick smoke rolling off the fire. The heat shimmers the air for a full tile around it and the metal groans as it cools." },
+          { id: 'burning_wreck_4', propArt: 'burning_wreck', x: 12, y: 27, once: false, iconKind: 'crate', label: 'Burning Speeder Chassis',
+            description: "A wrecked speeder chassis burning from inside, thick smoke rolling off the fire. The heat shimmers the air for a full tile around it and the metal groans as it cools." },
+          { id: 'bevin_bacta', propArt: 'bacta_pod', x: 3, y: 24, once: false, iconKind: 'crate', label: 'Field Bacta Pod',
+            description: "A KDY field bacta pod set behind Line C. The glass is cracked, the fluid slightly cloudy, but the readout is green. Injured agents recover quickly here.", healsRoster: true },
+          { id: 'bevin_board', propArt: 'command_board', x: 8, y: 22, once: false, iconKind: 'terminal', label: 'Command Redoubt Display',
+            description: "A tactical board pinned with grease pencil. Barricade Line C is marked in white, the KEF mortar line in red. Captain Bevin has drawn an X over the fuel conduit and written FUN in the margin." },
+          { id: 'bevin_holo', propArt: 'sanctum_holo', x: 8, y: 26, once: false, iconKind: 'terminal', label: 'Redoubt Tactical Holo',
+            description: "A battered holo projector shows Breach-Point Alpha in cyan wireframe. KEF mortar arcs trace dotted red lines. The holo flickers each time a shell lands near the redoubt." },
+          { id: 'bevin_crates', propArt: 'crate_stack', propVariant: 'kdy', x: 11, y: 24, once: false, iconKind: 'crate', label: 'Ammunition and Power Crates',
+            description: "KDY supply caches stacked behind the Redoubt barricade. Power cell cases, grenade pods, a coil of heavy cable. Anyone who stands here long enough will find their weapon cooling faster.", thermalDelta: -8 },
+          { id: 'vault_shutter', propArt: 'kdy_barricade', propVariant: 'kdy', x: 31, y: 25, once: false, iconKind: 'floor', label: 'Mortar Fortress Blast Shutter',
+            description: "A heavy blast shutter in the wall of the Mortar Fortress Ammunition Vault, welded shut by KEF engineers. A burn mark shows where the breaching cutter will go. It is currently locked.", requiresFlag: 'outskirts_complete', lockedMessage: 'The shutter is welded from the inside. Finish the fight at Breach-Point Alpha first and Kaelin will give you the cutting codes.' },
+          { id: 'war_dredge', propArt: 'scout_walker', x: 39, y: 27, once: true, iconKind: 'floor', label: 'The War-Dredge',
+            description: "A KDY Mk.IV heavy loader walker stripped of its safety limiters and plated in welded scrap. Twin industrial plasma cutters on the arms, a triple tube mortar across the back and a pneumatic siege hammer on the right. The cockpit glows red. Varek Korr sits inside.", requiresFlag: 'outskirts_complete', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'varek_korr', flavorText: 'The War-Dredge lurches off its platform and the Aegis repulsor barrier snaps on in a flash of white. Mortar shells paint red circles on the floor. Overhead, an ammunition cart rattles along its rail. Use the cover. Use the carts.' }, grantsFlag: 'varek_defeated', thermalDeltaOnSuccess: 15 },
+          { id: 'vault_cover_a', propArt: 'repulsor_barricade', x: 35, y: 26, once: false, iconKind: 'crate', label: 'Vault Cover Line',
+            description: "Heavy concrete bunkers and repulsor plating, scarred by shrapnel. The cover is shallow, but it is the only cover you have." },
+          { id: 'vault_cart', propArt: 'crate_stack', propVariant: 'kdy', x: 44, y: 24, once: false, iconKind: 'crate', label: 'Unstable Ammunition Cart',
+            description: "An overhead rail cart packed with mortar shells. Its coupling has been loosened by hand. If something heavy hit the rail above the walker, the whole cart would drop." },
+          { id: 'landspeeder_depot_obj', propArt: 'landspeeder_depot', x: 24, y: 29, once: false, iconKind: 'terminal', label: 'KDY Landspeeder Depot',
+            description: "Three KDY-74 speeder bikes rest in their cradles under a cyan floodlight, engines ticking as they cool. A reader slot on the gate takes the Landspeeder Authorization Keycard. The cylinder from the Mortar Fortress is needed to unlock the blast doors beyond." },
         ],
         npcs: [
-          { id: 'bador_survivor', x: 16, y: 10, wander: 3, kind: 'generic', label: 'Bador Resident',
+          { id: 'bador_survivor', x: 22, y: 13, wander: 3, kind: 'generic', label: 'Bador Resident',
             repeatPrompt: 'They keep their distance. "I have told you what I know."',
             prompt: '"You are not KDY." They keep the wall behind them. "The new ones come in white armor. Three people from the south district left two weeks ago to investigate the engine sounds. We have not seen them."',
             choices: [
@@ -4508,52 +4597,317 @@ const PLANETS = {
               { text: 'Tell them to evacuate while they still can.', morality: 10, loyalty: { republic: 10 }, result: '"Evacuate to where? The shuttle is KDY property. They do not fly civilians." They look at you with something between gratitude and resignation. "Find out what it is. Maybe then someone will care."', grants: { flags: ['bador_evacuation_suggested'] } },
             ],
           },
+          { id: 'kaelin', x: 13, y: 9, kind: 'kdy_security_marine', label: 'Squad Leader Kaelin',
+            questNpc: true,
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_k_intro',
+                requiresNoneFlags: ['outskirts_started'],
+                prompt: "Squad Leader Kaelin drops behind a barricade, soot on her white armor, a bloody bandage over her left visor array. \"Keep your head down! KEF mortar rounds are chewing through our cover. What are you doing in a live fire zone, freelancer?\"",
+                repeatPrompt: "Kaelin does not look away from the barricade. \"Move, freelancer.\"",
+                choices: [
+                  { text: "I was sent to secure the perimeter. What is your status?", morality: 0, loyalty: {}, result: "\"Critical. They blew the main gate and our automated defenses are fried. If we do not clear those breach troopers they will overrun the lower residential level.\" She slaps a fresh cell into her rifle. \"Captain Bevin runs the redoubt to the southwest. Get your orders from him.\"", grants: { flags: ['outskirts_started', 'kaelin_met'], codex: ['codex-outskirts-war'] } },
+                  { text: "[Slice] I can re-route that overheated turret to suppress their firing line.", morality: 0, loyalty: {}, result: "Her visor flickers. \"The auto turret by the gate? It is cooked.\" She nods once. \"If you can flip it, do it. Bevin needs a clear lane.\"", grants: { flags: ['outskirts_started', 'kaelin_met', 'kaelin_turret_hint'] } },
+                  { text: "Get out of my way, KDY officer. I have my own objectives.", morality: -3, loyalty: {}, result: "She laughs with no humor. \"Everyone here has their own objectives. Most of them are dead.\" She turns away.", grants: { flags: ['kaelin_met'] } },
+                ],
+              },
+              {
+                id: 'phase_k_hold',
+                requiresAllFlags: ['outskirts_started'],
+                requiresNoneFlags: ['outskirts_mortar_down'],
+                prompt: "\"Captain Bevin is in the redoubt to the southwest. Take whatever plan he gives you. We need that mortar line silent, and we need it quickly.\"",
+                repeatPrompt: "\"The mortars are still firing. Go.\"",
+                choices: [
+                  { text: "Understood. I am on it.", morality: 0, loyalty: {}, result: "She nods. \"Good. Do not die in my street.\"" },
+                ],
+              },
+              {
+                id: 'phase_k_interrogate',
+                requiresAllFlags: ['outskirts_mortar_down'],
+                requiresNoneFlags: ['kef_prisoner_interrogated'],
+                prompt: "\"The mortar line has gone quiet. Did you hear me? Quiet.\" Kaelin lowers her rifle for the first time. \"There is a wounded KEF insurgent in the alley behind the cantina. He knows what their convoy is actually after. Get it out of him.\"",
+                repeatPrompt: "\"The prisoner is in the alley behind the cantina. Hurry.\"",
+                choices: [
+                  { text: "I will talk to him.", morality: 0, loyalty: {}, result: "\"Be quick. His friends are not done yet.\"" },
+                ],
+              },
+              {
+                id: 'phase_k_choice',
+                requiresAllFlags: ['kef_prisoner_interrogated'],
+                requiresNoneFlags: ['outskirts_complete'],
+                prompt: "Kaelin has been listening on the comm channel. \"Convoy of reactor cores. They are going to hit the lower residential level through the main gate grid.\" She looks at you, and the decision is on her face. \"Two options. I can overcharge the gate grid and fry every KEF fighter in the street. It will fry the trapped laborers too. Or you can lead a flank through the alleys and take the mortar crew by hand.\"",
+                repeatPrompt: "\"Decide, freelancer. Gate grid or alleys.\"",
+                choices: [
+                  { text: "[Ruthless] Overcharge the grid. End this now.", morality: -15, loyalty: { underworld: -10 }, result: "Massive electrical arcs sweep the street. The KEF assault wave goes down in a single flash, along with the laborers who were pinned behind the barricades. Kaelin commends your efficiency. The local people watch from their doorways in horror, and nobody says a word.", grants: { flags: ['outskirts_complete', 'outskirts_ruthless', 'civilians_killed_at_gate', 'main_gate_grid_fried'], items: ['kdy_landspeeder_auth'], thermal: 20 } },
+                  { text: "[Tactical] Flank through the alleys. We save the laborers.", morality: 15, loyalty: { republic: 10 }, result: "You lead a tight flank through the narrow alleys, cut through the KEF mortar crew by hand and bring the trapped laborers out through the smoke. In the mortar bunker you find a hazard insulation vest tucked behind the shell racks. Kaelin salutes. \"Better than I expected, freelancer.\"", grants: { flags: ['outskirts_complete', 'outskirts_tactical', 'civilians_saved_at_gate', 'kef_mortar_flanked'], items: ['item_thermal_gear_01', 'kdy_landspeeder_auth'], thermal: 8 } },
+                ],
+              },
+              {
+                id: 'phase_k_done',
+                requiresAllFlags: ['outskirts_complete'],
+                prompt: "Kaelin has taken off the bandage. Under it, a clean line of stitches. \"The Mortar Fortress is open to you now. Varek Korr is in there with his walker. When he is down, the depot gate opens. After that, the Engine Wastes.\"",
+                repeatPrompt: "Kaelin nods and keeps scanning the smoke.",
+                choices: [
+                  { text: "Thank you, Squad Leader.", morality: 0, loyalty: {}, result: "\"Keep the line behind you, freelancer.\"" },
+                ],
+              },
+            ],
+          },
+          { id: 'captain_bevin', x: 6, y: 22, kind: 'kdy_commander', label: 'Captain Bevin',
+            questNpc: true,
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_b_pre',
+                requiresNoneFlags: ['outskirts_started'],
+                prompt: "Captain Bevin stands under a battered holo projector, a red cybernetic optic painting readouts on the smoke. \"Tell me you spoke to Kaelin. She keeps the gate. I keep the line.\"",
+                repeatPrompt: "Bevin does not look away from the board. \"Kaelin. Then me.\"",
+                choices: [
+                  { text: "Not yet. I will go and find her.", morality: 0, loyalty: {}, result: "\"Do. Then come back and I will give you the plan.\"" },
+                ],
+              },
+              {
+                id: 'phase_b_plan',
+                requiresAllFlags: ['outskirts_started'],
+                requiresNoneFlags: ['bevin_plan_push', 'bevin_plan_flank', 'bevin_plan_turret'],
+                prompt: "\"Report in! KEF has us pinned behind barricade Line C. Their mortar team is chewing us up. What is your call?\" The optic traces a red line across the battlefield.",
+                repeatPrompt: "Bevin barks into his comm. \"I need an answer, freelancer.\"",
+                choices: [
+                  { text: "[Iron Wall] Spearhead the main breach push.", morality: 0, loyalty: {}, result: "\"That is what I like to hear! Vanguard squads, form up behind the freelancer! On my mark, ADVANCE!\" Four white armored troops lock shields behind you. The breach choke point is the barricade to the east.", grants: { flags: ['bevin_plan_push'] } },
+                  { text: "[Flank] Detonate the central fuel line.", morality: -4, loyalty: {}, result: "\"It will blow half the shantytown alley with it, but it will breach their line! Do it. We will sweep up the survivors.\" He marks the fuel conduit in the middle of the main street.", grants: { flags: ['bevin_plan_flank'] } },
+                  { text: "[Overwatch] Take the heavy turret and suppress the line.", morality: 0, loyalty: {}, result: "\"Copy that! Squad Three, lay down smoke and cover while the freelancer takes the emplacement!\" The hackable turret by the gate is yours.", grants: { flags: ['bevin_plan_turret'] } },
+                ],
+              },
+              {
+                id: 'phase_b_exec',
+                requiresAllFlags: ['outskirts_started'],
+                requiresNoneFlags: ['outskirts_mortar_down'],
+                requiresAnyFlag: ['bevin_plan_push', 'bevin_plan_flank', 'bevin_plan_turret'],
+                prompt: "\"The plan is set. Execute it. Every minute we wait, another laborer burns.\"",
+                repeatPrompt: "\"Execute the plan.\"",
+                choices: [
+                  { text: "Understood.", morality: 0, loyalty: {}, result: "\"Move.\"" },
+                ],
+              },
+              {
+                id: 'phase_b_done',
+                requiresAllFlags: ['outskirts_mortar_down'],
+                prompt: "\"The line is holding. For the first time since this started, the line is actually holding.\" Bevin taps his optic. \"Whatever you chose back there, I will remember it. Both ways.\"",
+                repeatPrompt: "\"Hold the line.\"",
+                choices: [
+                  { text: "Hold the line, Captain.", morality: 0, loyalty: {}, result: "\"Always.\"" },
+                ],
+              },
+            ],
+          },
+          { id: 'kef_wounded', x: 27, y: 13, kind: 'generic', label: 'Wounded KEF Insurgent',
+            questNpc: true,
+            requiresFlag: 'outskirts_mortar_down',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_kef_wounded',
+                requiresAllFlags: ['outskirts_mortar_down'],
+                requiresNoneFlags: ['kef_prisoner_interrogated'],
+                prompt: "A wounded KEF insurgent sits against a wall with a rebreather around his neck, orange suit torn. \"If you are going to kill me, do it quickly. I will not give you the convoy.\"",
+                repeatPrompt: "He stares at the ceiling of the alley. \"There is nothing more.\"",
+                choices: [
+                  { text: "[Intimidate] Tell me where the convoy is going, or you will be the first thing the fire reaches.", morality: -6, loyalty: {}, result: "He flinches. \"The reactor cores. They are going to the Engine Wastes, to a foundry that has no name. The Front is paying for them with every coin in this slum.\" His eyes close. \"Do what you want with me.\"", grants: { flags: ['kef_prisoner_interrogated', 'kef_prisoner_hurt'], thermal: 5, codex: ['codex-kef'] } },
+                  { text: "[Tend wounds] Let me look at that leg. Then we talk.", morality: 6, loyalty: { republic: 4 }, result: "You pack the wound with bacta and let him breathe. After a long time he speaks. \"The convoy takes the cores to the Engine Wastes. Not to attack KDY. To restart something old.\" He looks at you. \"You did not have to do that.\"", grants: { flags: ['kef_prisoner_interrogated', 'kef_prisoner_helped'], codex: ['codex-kef'] } },
+                  { text: "[Pay] I will pay for the truth. Two hundred credits.", morality: 0, loyalty: {}, result: "He takes the chips with a trembling hand. \"The cores. The Wastes. A foundry. That is everything I know.\"", grants: { flags: ['kef_prisoner_interrogated'], codex: ['codex-kef'] }, requires: { credits: 200 } },
+                ],
+              },
+              {
+                id: 'phase_kef_done',
+                requiresAllFlags: ['kef_prisoner_interrogated'],
+                prompt: "The wounded KEF fighter keeps his eyes closed. \"Go. I am done talking.\"",
+                repeatPrompt: "He does not move.",
+                choices: [
+                  { text: "Leave him in peace.", morality: 0, loyalty: {}, result: "He breathes slowly. You leave him in peace." },
+                ],
+              },
+            ],
+          },
+          { id: 'laborer_1', x: 20, y: 13, wander: 3, kind: 'generic', label: 'Panicked Laborer',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_l',
+                prompt: "The walls were supposed to keep us safe! They duck low and run for the nearest roof.",
+                repeatPrompt: "They are already gone.",
+                choices: [
+                  { text: "Tell them where the shelter is.", morality: 2, loyalty: {}, result: "They bolt toward the redoubt, ducking as a mortar lands behind them.", grants: { thermal: -1 } },
+                ],
+              },
+            ],
+          },
+          { id: 'laborer_2', x: 26, y: 18, wander: 3, kind: 'generic', label: 'Panicked Laborer',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_l',
+                prompt: "KDY left us to burn! They duck low and run for the nearest roof.",
+                repeatPrompt: "They are already gone.",
+                choices: [
+                  { text: "Tell them where the shelter is.", morality: 2, loyalty: {}, result: "They bolt toward the redoubt, ducking as a mortar lands behind them.", grants: { thermal: -1 } },
+                ],
+              },
+            ],
+          },
+          { id: 'laborer_3', x: 15, y: 18, wander: 3, kind: 'generic', label: 'Panicked Laborer',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_l',
+                prompt: "Please, the shelter is over there. Please. They duck low and run for the nearest roof.",
+                repeatPrompt: "They are already gone.",
+                choices: [
+                  { text: "Tell them where the shelter is.", morality: 2, loyalty: {}, result: "They bolt toward the redoubt, ducking as a mortar lands behind them.", grants: { thermal: -1 } },
+                ],
+              },
+            ],
+          },
+          { id: 'medic_tessin', x: 4, y: 26, kind: 'medic', label: 'KDY Combat Medic Tessin',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_m',
+                prompt: "Tessin kneels over a trooper, a medical droid humming at her shoulder. \"If you are hurt, the bacta pod is free. If you are not hurt, move, you are in my light.\"",
+                repeatPrompt: "\"Move.\"",
+                choices: [
+                  { text: "I will go.", morality: 0, loyalty: {}, result: "She never looks up." },
+                ],
+              },
+            ],
+          },
+          { id: 'varek_korr', x: 37, y: 28, kind: 'cyborg_mechanic', label: 'Commander Varek Korr',
+            questNpc: true,
+            requiresFlag: 'varek_defeated',
+            hideAfterFlags: ['varek_resolved'],
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_v',
+                requiresAllFlags: ['varek_defeated'],
+                requiresNoneFlags: ['varek_resolved'],
+                prompt: "Varek Korr is slumped against the dead walker, soot covered and bleeding, a glowing KDY encryption cylinder in his hand. \"Finish it, KDY mercenary. You think you are saving this city? You are just protecting the aristocrats who burn us for fuel.\"",
+                repeatPrompt: "Varek stares at you with something between hatred and relief.",
+                choices: [
+                  { text: "[Execute] Your war is over, Korr. The gate is opening.", morality: -12, loyalty: { underworld: -5 }, result: "\"For the Front,\" he whispers. The cylinder drops into your hand. Captain Bevin opens the armored blast gate on the comm, and the people in the street do not cheer.", grants: { flags: ['varek_executed', 'varek_resolved', 'gateway_unlocked'], items: ['kdy_transit_cylinder'], credits: 2500, thermal: 5 } },
+                  { text: "[Spare] Hand over the cylinder and the KEF bypass codes, and I will let you walk.", morality: 8, loyalty: { republic: 4 }, result: "He coughs and tosses a datapad. \"The codes will open your gate, but what is waiting in the Wastes will melt that armor off your bones.\" He staggers out the back, a shadow among shadows. The bypass schematic grants fire resistance in the Engine Wastes.", grants: { flags: ['varek_spared', 'varek_resolved', 'gateway_unlocked'], items: ['kdy_transit_cylinder', 'kef_bypass_schematic'] } },
+                ],
+              },
+            ],
+          },
         ],
-        collectibles: [{ id: 'bador_city_cache', x: 26, y: 3, label: 'Salvaged Survival Rations', reward: 150 }],
+        collectibles: [{ id: 'bador_city_cache', x: 22, y: 8, label: 'Salvaged Survival Rations', reward: 150 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 32, 18, 'floor');
-          carveRect(g, 3, 3, 8, 8, 'wall');
-          pt(g, 5, 3, 'floor'); pt(g, 6, 3, 'floor'); pt(g, 8, 5, 'floor'); pt(g, 8, 6, 'floor');
-          carveRect(g, 12, 3, 20, 8, 'wall');
-          pt(g, 15, 3, 'floor'); pt(g, 16, 3, 'floor'); pt(g, 20, 5, 'floor'); pt(g, 20, 6, 'floor');
-          carveRect(g, 22, 3, 30, 8, 'wall');
-          pt(g, 25, 3, 'floor'); pt(g, 26, 3, 'floor'); pt(g, 30, 5, 'floor'); pt(g, 30, 6, 'floor');
-          carveRect(g, 3, 12, 14, 18, 'wall');
-          pt(g, 6, 12, 'floor'); pt(g, 7, 12, 'floor'); pt(g, 10, 15, 'floor'); pt(g, 10, 16, 'floor');
+          carveRect(g, 14, 0, 15, 5, 'floor');
+          carveRect(g, 1, 5, 46, 30, 'floor');
+          [[19, 11], [24, 11], [29, 11], [19, 19], [24, 19], [29, 19], [17, 26], [26, 26]].forEach(([ax, ay]) => carveRect(g, ax - 1, ay - 2, ax + 1, ay - 1, 'wall'));
+          // Mortar Fortress Ammunition Vault (southeast)
+          carveRect(g, 31, 22, 46, 30, 'wall'); carveRect(g, 32, 23, 45, 29, 'floor'); pt(g, 31, 25, 'floor');
           pt(g, 14, 0, 'door'); pt(g, 15, 0, 'door');
-          pt(g, 33, 10, 'door'); pt(g, 33, 11, 'door');
+          pt(g, 47, 14, 'door'); pt(g, 47, 15, 'door');
+          pt(g, 24, 31, 'door'); pt(g, 25, 31, 'door');
           return g;
         },
       },
 
       engine_wastes: {
         id: 'engine_wastes', name: 'The Engine Wastes',
-        subtitle: 'Bador Moon · Glassed Crater Expanse',
-        width: 40, height: 22, spawnPos: { x: 2, y: 10 }, textureId: 'ferrowake',
-        accent: '#8A9090', accentGlow: 'rgba(138,144,144,0.22)', accentDim: '#3A4040',
-        floorColor: '#1E2020', floorAlt: '#252828', wallDark: '#0C0E0E', wallLight: '#141818',
-        bg: 'radial-gradient(circle at 60% 40%, #141818 0%, #080A0A 70%)', ambient: 'embers',
+        subtitle: 'Bador Moon · Mechanical Necropolis · The Titan Manifold',
+        width: 48, height: 36, spawnPos: { x: 2, y: 10 }, textureId: 'ferrowake',
+        accent: '#C4923E', accentGlow: 'rgba(196,146,62,0.26)', accentDim: '#4A433E',
+        floorColor: '#1A1614', floorAlt: '#221C18', wallDark: '#0A0809', wallLight: '#26201C',
+        bg: 'radial-gradient(circle at 60% 20%, #3A1E0A 0%, #141012 45%, #060506 100%)', ambient: 'forge',
         decor: ['rubble', 'slag'],
+        paAnnouncements: [
+          'Caution. Thermal exhaust venting in sectors four, five and nine.',
+          'The Titan Manifold is offline. Do not attempt to restart it.',
+          'Coolant reserves at eleven percent. This is a recording.',
+        ],
         doors: [
           { x: 0, y: 10, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 10 }, label: 'Sector 4' },
           { x: 0, y: 11, targetZone: 'bador_manufacturing', targetPos: { x: 34, y: 11 }, label: 'Sector 4' },
-          { x: 20, y: 21, targetZone: 'deep_caverns', targetPos: { x: 20, y: 1 }, label: 'Deep Caverns' },
-          { x: 21, y: 21, targetZone: 'deep_caverns', targetPos: { x: 21, y: 1 }, label: 'Deep Caverns' },
+          { x: 24, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 24, y: 30 }, label: 'Depot Blast Doors' },
+          { x: 25, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 25, y: 30 }, label: 'Depot Blast Doors' },
+          { x: 28, y: 35, targetZone: 'deep_caverns', targetPos: { x: 16, y: 1 }, label: 'Deep Caverns' },
+          { x: 29, y: 35, targetZone: 'deep_caverns', targetPos: { x: 17, y: 1 }, label: 'Deep Caverns' },
+          { x: 47, y: 16, targetZone: 'outpost_7', targetPos: { x: 22, y: 30 }, label: 'Outpost 7 Gateway' },
+          { x: 47, y: 17, targetZone: 'outpost_7', targetPos: { x: 23, y: 30 }, label: 'Outpost 7 Gateway' },
         ],
         worldObjects: [
-          { id: 'ion_storm_capacitor', propArt: 'capacitor_bank', x: 28, y: 6, label: 'Ion Storm Capacitor',
+          { id: 'wastes_vista_w', propArt: 'basalt_vista', propVariant: 'wastes_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Titan Manifold',
+            description: "Soot choked sky punctured by gigantic rusting pistons that beat irregularly like dying hearts. Copper and brass pipelines trace across crushed ironwork and furnace glow lights the haze from underneath. Somewhere in the dark a bell rings, flat and slow, with nothing to answer it.", grantsCodex: 'codex-engine-wastes' },
+          { id: 'wastes_vista_e', propArt: 'basalt_vista', propVariant: 'wastes_b', x: 36, y: 5, once: false, iconKind: 'vista', label: 'Silent Shear Skyline',
+            description: "To the east the mega engine blocks stand locked and cracked, venting white steam into a sky the color of old copper. The Silent Shear severed the primary fuel conduits and the wastes have been burning ever since. Far above, a depot blast door glows orange: the way back to the City Outskirts." },
+          { id: 'ion_storm_capacitor', propArt: 'capacitor_bank', x: 40, y: 8, label: 'Ion Storm Capacitor',
             description: 'A massive industrial capacitor bank still actively cycling. The discharge pattern is not natural — it is deliberately jamming sensor sweeps across a six-kilometer radius.',
             once: true, requiresFlag: 'ghost_keel_active',
             grantsFlag: 'jammer_found', grantsCodex: 'codex-engine-wastes' },
-          { id: 'scan_team_wreckage', propArt: 'scan_wreck', x: 34, y: 14, label: 'KDY Scan Team Wreckage',
+          { id: 'scan_team_wreckage', propArt: 'scan_wreck', x: 44, y: 15, label: 'KDY Scan Team Wreckage',
             description: 'The remains of the missing scan team. Their equipment is intact but deliberately disabled. No signs of combat. They were warned off.',
             once: true, requiresFlag: 'vael_briefed', grantsFlag: 'scan_team_fate_known' },
-          { id: 'glassed_crater_lake', propArt: 'crater_glass', x: 10, y: 6, label: 'Glassed Crater Lake',
+          { id: 'glassed_crater_lake', propArt: 'crater_glass', x: 6, y: 9, label: 'Glassed Crater Lake',
             description: 'A shallow basin of fused silica — evidence of catastrophic engine discharge centuries past. Something large once burned here and the ground remembers it.' },
+          { id: 'foundry_hatch_obj', propArt: 'foundry_hatch', x: 26, y: 12, once: false, iconKind: 'terminal', label: 'Combustion Foundry 09',
+            description: "A hollowed out combustion chamber hung over a dormant slag basin, sealed with heavy blast doors and lit from inside by warm blue coolant lamps. A hand painted sign reads FOUNDRY 09, NO SPARKS, NO SERMONS. This is the one safe place in the wastes.", grantsCodex: 'codex-engine-wastes' },
+          { id: 'bench_foundry', propArt: 'robotics_bench', x: 21, y: 15, once: false, iconKind: 'crate', label: 'Salvage Workbench',
+            description: "A long steel bench strewn with valve cores, melted gaskets and a half rebuilt pneumatic impact spanner. Soot stains every surface and a pair of welding goggles sit on a hook, still warm." },
+          { id: 'coolant_diag', propArt: 'fuel_diag_terminal', x: 33, y: 15, once: false, iconKind: 'crate', label: 'Coolant Diagnostics',
+            description: "A hand patched diagnostics terminal wired to the coolant lines. Readouts bounce between SAFE and CRITICAL. A strip of tape on the screen reads: IT IS NEVER SAFE." },
+          { id: 'piston_tower_1', propArt: 'piston_tower', x: 8, y: 18, once: false, iconKind: 'crate', label: 'Titan Piston',
+            description: "A colossal brass and copper piston, still beating, still slow. Every few seconds it slams down and the ground answers with a shudder. Steam bleeds from its flanges and rust runs in streaks down the housing." },
+          { id: 'piston_tower_2', propArt: 'piston_tower', x: 30, y: 22, once: false, iconKind: 'crate', label: 'Titan Piston',
+            description: "A colossal brass and copper piston, still beating, still slow. Every few seconds it slams down and the ground answers with a shudder. Steam bleeds from its flanges and rust runs in streaks down the housing." },
+          { id: 'piston_tower_3', propArt: 'piston_tower', x: 20, y: 31, once: false, iconKind: 'crate', label: 'Titan Piston',
+            description: "A colossal brass and copper piston, still beating, still slow. Every few seconds it slams down and the ground answers with a shudder. Steam bleeds from its flanges and rust runs in streaks down the housing." },
+          { id: 'boiler_hull_a', propArt: 'boiler_hull', x: 28, y: 28, once: false, iconKind: 'crate', label: 'Dead Boiler Hull',
+            description: "A burst boiler hull on its side. The interior glows a dull orange through the cracks. The nameplate has been scratched away and replaced with the word NO." },
+          { id: 'steam_vent_1', propArt: 'steam_vent_pipe', x: 21, y: 22, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
+            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+          { id: 'steam_vent_2', propArt: 'steam_vent_pipe', x: 28, y: 25, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
+            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+          { id: 'steam_vent_3', propArt: 'steam_vent_pipe', x: 24, y: 30, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
+            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+          { id: 'steam_vent_4', propArt: 'steam_vent_pipe', x: 36, y: 20, once: false, iconKind: 'crate', label: 'Steam Vent Pipe',
+            description: "A riveted copper pipe with a pressure valve. It idles, then hisses a warning, then vents a three tile jet of scalding steam that makes your armor ring. Walking past it announces you to every scanner in the wastes.", thermalDelta: 6 },
+          { id: 'valve_a', propArt: 'valve_wheel', propVariant: 'closed', x: 4, y: 23, once: true, iconKind: 'terminal', label: 'Pressure Valve Wheel (A)',
+            description: "A heavy brass valve wheel with three coolant crystals set into its spokes. It is stuck at a quarter turn. Rerouting the pressure here drains a flooded vault and opens the way to the core.", requiresFlag: 'vance_met', lockedMessage: 'The wheel is lockwired. You need Vance Crankshaft to explain the sequence first.', requiresNoneFlags: ['valve_a_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_a_done', thermalDeltaOnSuccess: 3 },
+          { id: 'valve_a_open', propArt: 'valve_wheel', propVariant: 'open', x: 4, y: 23, once: false, iconKind: 'terminal', label: 'Pressure Valve Wheel (A, Open)',
+            description: "The wheel spins freely now. The pressure line beyond it is empty and the pipe is cooling with a soft ticking sound.", requiresFlag: 'valve_a_done', invisibleLocked: true },
+          { id: 'valve_b', propArt: 'valve_wheel', propVariant: 'closed', x: 11, y: 25, once: true, iconKind: 'terminal', label: 'Pressure Valve Wheel (B)',
+            description: "A heavy brass valve wheel with three coolant crystals set into its spokes. It is stuck at a quarter turn. Rerouting the pressure here drains a flooded vault and opens the way to the core.", requiresFlag: 'vance_met', lockedMessage: 'The wheel is lockwired. You need Vance Crankshaft to explain the sequence first.', requiresNoneFlags: ['valve_b_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_b_done', thermalDeltaOnSuccess: 3 },
+          { id: 'valve_b_open', propArt: 'valve_wheel', propVariant: 'open', x: 11, y: 25, once: false, iconKind: 'terminal', label: 'Pressure Valve Wheel (B, Open)',
+            description: "The wheel spins freely now. The pressure line beyond it is empty and the pipe is cooling with a soft ticking sound.", requiresFlag: 'valve_b_done', invisibleLocked: true },
+          { id: 'valve_c', propArt: 'valve_wheel', propVariant: 'closed', x: 5, y: 31, once: true, iconKind: 'terminal', label: 'Pressure Valve Wheel (C)',
+            description: "A heavy brass valve wheel with three coolant crystals set into its spokes. It is stuck at a quarter turn. Rerouting the pressure here drains a flooded vault and opens the way to the core.", requiresFlag: 'vance_met', lockedMessage: 'The wheel is lockwired. You need Vance Crankshaft to explain the sequence first.', requiresNoneFlags: ['valve_c_done'], triggersMinigame: 'valve_override', grantsFlag: 'valve_c_done', thermalDeltaOnSuccess: 3 },
+          { id: 'valve_c_open', propArt: 'valve_wheel', propVariant: 'open', x: 5, y: 31, once: false, iconKind: 'terminal', label: 'Pressure Valve Wheel (C, Open)',
+            description: "The wheel spins freely now. The pressure line beyond it is empty and the pipe is cooling with a soft ticking sound.", requiresFlag: 'valve_c_done', invisibleLocked: true },
+          { id: 'boiler_core', propArt: 'crate_stack', propVariant: 'kdy', x: 11, y: 32, once: true, iconKind: 'crate', label: 'Boiler Core Vault',
+            description: "A sealed brass vault door at the heart of the Matrix, finally drained of slag. Inside, wrapped in oilcloth, a heavy brass wheel with three glowing blue coolant crystals and gear teeth along its rim: the Catalyst Governor Valve.", requiresAllFlags: ['valve_a_done', 'valve_b_done', 'valve_c_done'], lockedMessage: 'The vault door is pressure locked. Open all three valve wheels to drain the chamber.', grantsItem: 'catalyst_governor_valve', grantsFlag: 'governor_valve_acquired' },
+          { id: 'black_box_04', propArt: 'console', propVariant: 'derelict', x: 3, y: 26, once: true, iconKind: 'archive', label: 'Black Box Audio Cylinder 04',
+            description: "A battered audio cylinder from the Titan control spire, wedged between two cracked boiler plates. Its log is timestamped Shear Day plus three, in the voice of a tired engineer. Static interrupts the transcription twice.", requiresFlag: 'vance_met', lockedMessage: 'Nothing here makes sense to you yet. Vance Crankshaft might recognise it.', grantsFlag: 'black_box_found', grantsCodex: 'codex-black-box-04' },
+          { id: 'coolant_crystals', propArt: 'crate_stack', propVariant: 'kdy', x: 12, y: 22, once: true, iconKind: 'crate', label: 'Coolant Crystal Cluster',
+            description: "A cluster of blue coolant crystals growing along a cracked pipe, glowing faintly in the dark. Ground to powder they make a fine thermal insulator.", grantsItem: 'thermal_crystal_dust' },
+          { id: 'exhaust_cathedral_obj', propArt: 'exhaust_cathedral', x: 40, y: 29, once: false, iconKind: 'vista', label: 'The Exhaust Cathedral',
+            description: "A 500 meter exhaust cylinder, gothic and industrial, with triple piston assemblies cycling up its walls like organ pipes. The arch at its base glows ember orange. At its apex, the Arch Manifold Core and the story critical Audio Cylinder. Without the missing Governor Valve the central blast doors remain heat locked.", grantsCodex: 'codex-engine-wastes' },
+          { id: 'unchained_overseer_obj', propArt: 'piston_tower', x: 35, y: 32, once: true, iconKind: 'floor', label: 'The Unchained Overseer',
+            description: "A corrupted automated defense titan, bolted to the cathedral foundation and wound tight with snapped safety chains. Its lens burns a single cold blue point. Pneumatic pile drivers pull back as you approach.", requiresFlag: 'vance_met', lockedMessage: 'The cathedral doors are heat locked. Talk to Vance Crankshaft before you try the ascent.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'unchained_overseer', flavorText: 'The Overseer rips its chains free and the whole cathedral shakes. Pistons slam in staggered time. Steam shields snap up around its chest. There is no way around it, only through the pistons.' }, grantsFlag: 'overseer_defeated', thermalDeltaOnSuccess: 10 },
+          { id: 'governor_socket_empty', propArt: 'governor_socket', propVariant: 'empty', x: 44, y: 31, once: false, iconKind: 'terminal', label: 'Governor Valve Socket',
+            description: "A brass cradle at the apex console, three empty crystal sockets and a red lamp. You seat the Catalyst Governor Valve and turn it. The crystals flare cyan, the whole manifold exhales, steam vents roar and the pistons catch their rhythm. The Black Box transcript plays on every speaker: the engine did not fail from age. It was starved on purpose.", requiresFlag: 'overseer_defeated', lockedMessage: 'The apex is guarded. Deal with the Overseer first.', requires: { item: 'catalyst_governor_valve' }, requiresNoneFlags: ['manifest_restarted'], grantsFlags: ['manifest_restarted', 'engine_core_unlocked', 'vance_truth_known'], grantsCodex: 'codex-black-box-04', thermalDelta: -25 },
+          { id: 'governor_socket_installed', propArt: 'governor_socket', propVariant: 'installed', x: 44, y: 31, once: false, iconKind: 'terminal', label: 'Governor Valve (Installed)',
+            description: "The Catalyst Governor Valve sits in its cradle, three crystals glowing a steady cyan. The manifold hums at the right pitch for the first time since the Silent Shear. The apex console reads: ALL SYSTEMS NOMINAL.", requiresFlag: 'manifest_restarted', invisibleLocked: true },
+          { id: 'central_core_blast_doors', propArt: 'kdy_barricade', propVariant: 'kdy', x: 45, y: 21, once: false, iconKind: 'floor', label: 'Central Core Blast Doors',
+            description: "The ten meter thick blast doors to the Central Architect Core, heat locked since the Silent Shear. With the manifold restarted, the clamps release in a long pressure hiss. Beyond the threshold lies Zone 05, not yet charted.", requiresFlag: 'engine_core_unlocked', lockedMessage: 'The doors are heat locked. The manifold has to be restarted first.', grantsFlag: 'zone05_gate_open', grantsCredits: 800 },
+          { id: 'wastes_shrine', propArt: 'crate_stack', propVariant: 'hidden', x: 3, y: 16, once: true, iconKind: 'crate', label: 'Scrap Seer Shrine',
+            description: "A shrine of copper wire and canvas strips hung with tuning forks. A tin cup holds a handful of old credits left by travelers. A tiny bell rings when the pistons slam.", grantsFlag: 'wastes_shrine_visited' },
         ],
         npcs: [
-          { id: 'gharza', x: 32, y: 6, kind: 'trandoshan_sniper', label: 'Gharza',
+          { id: 'gharza', x: 38, y: 10, kind: 'trandoshan_sniper', label: 'Gharza',
             questNpc: true,
             hideAfterFlags: ['gharza_dead', 'gharza_recruited'],
             repeatPrompt: 'Gharza does not lower her rifle. "Move slowly."',
@@ -4564,57 +4918,278 @@ const PLANETS = {
               { text: 'Offer to pay her to stand down.', morality: -5, loyalty: { underworld: 8 }, result: '"I do not take buyouts from unknown parties." But she does not raise the rifle. "I take information. Tell me who hired you and I will decide whether you leave this field standing."', grants: { flags: ['gharza_negotiated'] } },
             ],
           },
+          { id: 'vance_crankshaft', x: 23, y: 14, kind: 'mechanic', label: 'Chief Specialist Vance Crankshaft',
+            questNpc: true,
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_vance_intro',
+                requiresNoneFlags: ['vance_met'],
+                prompt: "\"Hold it right there, friend. Soot on your boots, hands where I can see them.\" The man in the leather apron pushes a welding mask up onto his forehead, one hydraulic arm hissing. \"Vance Crankshaft. Former Chief Engineer of the Titan Engine. Do not ask me what happened, everyone asks.\"",
+                repeatPrompt: "Vance does not look up from his spanner. \"Ask me again when you have thought about it.\"",
+                choices: [
+                  { text: "What happened to the engine?", morality: 0, loyalty: {}, result: "\"Everyone asks, so I will say it plain.\" He wipes his gauge. \"A catastrophic event they call the Silent Shear. The primary fuel conduits cut, the engine blocks locked up and burst. They told us it was age. It was not age.\" He lowers his voice. \"Help me and I will show you the proof.\"", grants: { flags: ['vance_met'], codex: ['codex-engine-wastes'] } },
+                  { text: "I am here for the Governor Valve. I hear it is missing.", morality: 0, loyalty: {}, result: "\"Then you know more than most.\" He nods slowly. \"The Catalyst Governor Valve. Sealed in the Dead Boiler Matrix, behind three pressure locks. I can tell you the sequence.\"", grants: { flags: ['vance_met'] } },
+                ],
+              },
+              {
+                id: 'phase_vance_work',
+                requiresAllFlags: ['vance_met'],
+                requiresNoneFlags: ['governor_valve_acquired'],
+                prompt: "\"The Matrix is to the southwest, across the slag bridge. Three valve wheels, one vault. Turn them in order and the chamber drains. Do not touch the black box cylinder with a bare hand. It still hums.\"",
+                repeatPrompt: "\"Valves first, then the vault, then the cathedral.\"",
+                choices: [
+                  { text: "Show me how to resist the heat.", morality: 0, loyalty: {}, result: "\"Thermal shielding. I can craft you a vest if you have the dust. Coolant crystals, ground fine. There is a cluster in the Matrix.\"", grants: { flags: ['vance_gear_hint'] } },
+                  { text: "[Craft] Here is the Thermal Crystal Dust. Make me a vest.", morality: 0, loyalty: {}, result: "He weighs the dust in his palm. A flash of the blowtorch tip, a quick clamp of brass, and he hands over a heavy vest lined with crystal. \"There. You can walk the wastes without cooking, mostly.\"", grants: { flags: ['thermal_gear_crafted'], items: ['item_thermal_gear_01'], thermal: -10 }, requires: { item: 'thermal_crystal_dust' } },
+                ],
+              },
+              {
+                id: 'phase_vance_valve',
+                requiresAllFlags: ['governor_valve_acquired'],
+                requiresNoneFlags: ['overseer_defeated'],
+                prompt: "\"You have it?\" His voice cracks. \"The Governor. By the Titan. Then the Exhaust Cathedral is next. The Overseer is waiting at the base. Climb the pistons if you must, but get that valve to the apex socket.\"",
+                repeatPrompt: "\"The Overseer, then the socket.\"",
+                choices: [
+                  { text: "I will take the Overseer down.", morality: 0, loyalty: {}, result: "\"Mind the chains. They snap.\"" },
+                ],
+              },
+              {
+                id: 'phase_vance_install',
+                requiresAllFlags: ['overseer_defeated'],
+                requiresNoneFlags: ['manifest_restarted'],
+                prompt: "\"The Overseer is down. The socket is at the apex. Go. Install it.\"",
+                repeatPrompt: "\"The socket, friend.\"",
+                choices: [
+                  { text: "On my way.", morality: 0, loyalty: {}, result: "He grips his spanner until his knuckles whiten." },
+                ],
+              },
+              {
+                id: 'phase_vance_done',
+                requiresAllFlags: ['manifest_restarted'],
+                prompt: "\"I can feel it from here. The rhythm is back.\" Vance leans on the bench and for a moment the cynicism slips. \"The command came from the Arch Architect Sanctum. They cut the coolant and welded the hatches. They wanted the lower city to bake. That is who we work for, it turns out.\"",
+                repeatPrompt: "\"Zone Five is open. Be careful.\"",
+                choices: [
+                  { text: "What do we do about it?", morality: 0, loyalty: {}, result: "\"The blast doors are open. Zone Five lies beyond. That is where the sanctum is.\" He turns the gauge slowly. \"Take care of yourself out there.\"", grants: { flags: ['vance_truth_known'] } },
+                ],
+              },
+            ],
+          },
+          { id: 'scrap_seer_lora', x: 30, y: 14, kind: 'archivist', label: 'Scrap-Seer Lora',
+            questNpc: true,
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_lora_a',
+                requiresNoneFlags: ['lora_met'],
+                prompt: "The woman hovers a hand's breadth above the floor, a brass resonator mask where her face should be. When she speaks, the mask turns vibration into a voice. \"I am Lora. I tune the Titan. The Titan is... disquiet.\" A faint hammer tap, a low note.",
+                repeatPrompt: "The mask turns toward you, silent.",
+                choices: [
+                  { text: "What does the Titan say?", morality: 0, loyalty: {}, result: "\"It says the shear was not an accident. It says someone is still listening to it.\" The mask tilts. \"It says some components are missing. You will find them below, in the Matrix.\"", grants: { flags: ['lora_met'] } },
+                  { text: "Tell me about the Voice of the Titan.", morality: 0, loyalty: {}, result: "\"A low frequency that the old engineers heard as a pulse. I hear it as a song. It is dying.\" She extends a copper wrapped hand. \"Strike the bell if you wish to hear it.\"", grants: { flags: ['lora_met'] } },
+                ],
+              },
+              {
+                id: 'phase_lora_b',
+                requiresAllFlags: ['lora_met'],
+                requiresNoneFlags: ['manifest_restarted'],
+                prompt: "\"The Titan hums higher when you are near. It knows you carry something that belongs to it.\"",
+                repeatPrompt: "\"Listen.\"",
+                choices: [
+                  { text: "The Governor Valve?", morality: 0, loyalty: {}, result: "\"It calls it by another name. But yes.\"" },
+                ],
+              },
+              {
+                id: 'phase_lora_c',
+                requiresAllFlags: ['manifest_restarted'],
+                prompt: "\"It is quiet now. For the first time in a long time. Thank you, tuner.\" The hammer strikes once, a clean, pure note.",
+                repeatPrompt: "\"Listen.\"",
+                choices: [
+                  { text: "Take care, Scrap Seer.", morality: 0, loyalty: {}, result: "\"And you.\"" },
+                ],
+              },
+            ],
+          },
+          { id: 'foundry_quartermaster', x: 18, y: 14, kind: 'zabrak_techwright', label: 'Quartermaster Dessa',
+            isVendor: true, vendorFaction: 'underworld', repeatable: true,
+            vendorStock: ['pressurized_igniter', 'thermal_crystal_dust', 'plasma_grenades', 'field_rations'],
+            vendorGreeting: 'Dessa weighs a crystal on a pocket scale and does not look up. Foundry prices, no haggling.',
+            repeatPrompt: 'Dessa wipes her hands on her apron and waits.',
+            prompt: '"Foundry prices, soldier. No haggling, no sparks."',
+            choices: [] },
+          { id: 'scavenger_1', x: 19, y: 18, wander: 2, kind: 'nautolan_engineer', label: 'Scavenger Engineer',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_x',
+                prompt: "The valves are older than the city. Nobody knows who turned them last. They keep working.",
+                repeatPrompt: "They are busy.",
+                choices: [
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod, wary but not hostile." },
+                ],
+              },
+            ],
+          },
+          { id: 'scavenger_2', x: 32, y: 18, wander: 2, kind: 'zero_g_welder', label: 'Exiled Mechanic',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_x',
+                prompt: "Keep your voice down near the cathedral. It listens. They keep working.",
+                repeatPrompt: "They are busy.",
+                choices: [
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod, wary but not hostile." },
+                ],
+              },
+            ],
+          },
+          { id: 'renegade_droid', x: 26, y: 18, wander: 2, kind: 'droid', label: 'Renegade Automaton',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_x',
+                prompt: "I severed my link to the overmind. I do not recommend the silence. They keep working.",
+                repeatPrompt: "They are busy.",
+                choices: [
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod, wary but not hostile." },
+                ],
+              },
+            ],
+          },
         ],
-        collectibles: [{ id: 'wastes_salvage', x: 6, y: 18, label: 'KDY Engine Debris Component', reward: 400 }],
+        collectibles: [{ id: 'wastes_salvage', x: 3, y: 12, label: 'KDY Engine Debris Component', reward: 400 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 38, 20, 'floor');
-                    for (let wx = 22; wx <= 30; wx++) { pt(g, wx, 14, 'lava'); pt(g, wx, 15, 'lava'); }
-          pt(g, 25, 14, 'floor'); pt(g, 26, 14, 'floor');
-          carveRect(g, 36, 2, 38, 10, 'wall');
-          pt(g, 36, 4, 'floor'); pt(g, 36, 5, 'floor');
+          carveRect(g, 24, 0, 25, 5, 'floor');
+          carveRect(g, 1, 5, 46, 34, 'floor');
+          // slag river with two bridges
+          for (let y = 6; y <= 33; y++) { if ((y >= 10 && y <= 12) || (y >= 26 && y <= 28)) continue; pt(g, 15, y, 'lava'); pt(g, 16, y, 'lava'); }
+          // Combustion Foundry 09 facade (north center)
+          carveRect(g, 20, 6, 32, 11, 'wall');
+          // Dead Boiler Matrix (southwest): walled complex with inner maze walls
+          carveRect(g, 1, 19, 14, 34, 'wall'); carveRect(g, 2, 20, 13, 33, 'floor');
+          carveRect(g, 6, 20, 6, 26, 'wall'); pt(g, 6, 24, 'floor');
+          carveRect(g, 9, 27, 9, 33, 'wall'); pt(g, 9, 30, 'floor');
+          pt(g, 14, 27, 'floor');
+          // Exhaust Cathedral massif (southeast)
+          carveRect(g, 35, 22, 44, 28, 'wall');
+          pt(g, 24, 0, 'door'); pt(g, 25, 0, 'door');
           pt(g, 0, 10, 'door'); pt(g, 0, 11, 'door');
-          pt(g, 20, 21, 'door'); pt(g, 21, 21, 'door');
+          pt(g, 28, 35, 'door'); pt(g, 29, 35, 'door');
+          pt(g, 47, 16, 'door'); pt(g, 47, 17, 'door');
           return g;
         },
       },
 
       outpost_7: {
         id: 'outpost_7', name: 'Outpost 7',
-        subtitle: 'Bador Moon · Resistance Encampment',
-        width: 32, height: 22, spawnPos: { x: 1, y: 10 }, textureId: 'ferrowake',
-        accent: '#C4813A', accentGlow: 'rgba(196,129,58,0.26)', accentDim: '#5A3010',
-        floorColor: '#201810', floorAlt: '#281E12', wallDark: '#0C0A06', wallLight: '#181206',
-        bg: 'radial-gradient(circle at 30% 60%, #18140A 0%, #0C0A06 70%)', ambient: 'embers',
+        subtitle: 'Bador Moon · The Iron Trench · KDY Black Site',
+        width: 48, height: 32, spawnPos: { x: 2, y: 14 }, textureId: 'ferrowake',
+        accent: '#00E5FF', accentGlow: 'rgba(0,229,255,0.20)', accentDim: '#1A3A40',
+        floorColor: '#16181B', floorAlt: '#1E2124', wallDark: '#0A0A0D', wallLight: '#262A30',
+        bg: 'radial-gradient(circle at 50% 10%, #12262A 0%, #0A0F12 50%, #040607 100%)', ambient: 'basalt_mist',
         decor: ['pipe', 'cargo_crate', 'rubble'],
+        paAnnouncements: [
+          'Outpost 7 does not exist. If you can read this, do not discuss it.',
+          'Thermal discipline. Repeat, thermal discipline. Suppress all unnecessary signature.',
+          'Resupply is overdue. Rations remain at two thirds.',
+          'Pathfinders report a patrol shift on the north ridge. Hold fire.',
+        ],
         doors: [
-          { x: 0, y: 10, targetZone: 'city_outskirts_bador', targetPos: { x: 32, y: 10 }, label: 'City Outskirts' },
-          { x: 0, y: 11, targetZone: 'city_outskirts_bador', targetPos: { x: 32, y: 11 }, label: 'City Outskirts' },
-          { x: 31, y: 11, targetZone: 'deep_caverns', targetPos: { x: 1, y: 11 }, label: 'Deep Caverns' },
-          { x: 31, y: 12, targetZone: 'deep_caverns', targetPos: { x: 1, y: 12 }, label: 'Deep Caverns' },
+          { x: 0, y: 14, targetZone: 'city_outskirts_bador', targetPos: { x: 46, y: 14 }, label: 'City Outskirts' },
+          { x: 0, y: 15, targetZone: 'city_outskirts_bador', targetPos: { x: 46, y: 15 }, label: 'City Outskirts' },
+          { x: 47, y: 14, targetZone: 'deep_caverns', targetPos: { x: 1, y: 11 }, label: 'Deep Caverns' },
+          { x: 47, y: 15, targetZone: 'deep_caverns', targetPos: { x: 1, y: 12 }, label: 'Deep Caverns' },
+          { x: 22, y: 31, targetZone: 'engine_wastes', targetPos: { x: 46, y: 16 }, label: 'Gateway to the Engine Wastes', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway is sealed. Operation Sundown has not cleared it.' },
+          { x: 23, y: 31, targetZone: 'engine_wastes', targetPos: { x: 46, y: 17 }, label: 'Gateway to the Engine Wastes', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway is sealed. Operation Sundown has not cleared it.' },
         ],
         worldObjects: [
-          { id: 'outpost7_holoboard', propArt: 'board', propVariant: 'resistance', x: 8, y: 9, label: 'Resistance Planning Board',
+          { id: 'o7_vista_w', propArt: 'basalt_vista', propVariant: 'ravine_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Iron Trench Ravine',
+            description: "A volcanic basalt ravine wedge cut deep into hostile ground. Tall dark spires of rock rise out of rolling teal fog, each one wrapped in wet shadow, and a thin crescent moon hangs over the rim. Camouflage mesh sags between the cliffs to hide the lights below. The air is damp and smells of hot stone.", grantsCodex: 'codex-iron-trench' },
+          { id: 'o7_vista_e', propArt: 'basalt_vista', propVariant: 'ravine_b', x: 36, y: 5, once: false, iconKind: 'vista', label: 'Basalt Spires and Sensor Fog',
+            description: "Further east the ravine narrows into a gorge of sheer black columns. Geothermal steam seeps through cracks in the floor and the fog carries it upward in slow, pale ribbons. Far above, sub bass thuds mark distant turbolaser fire filtering through kilometers of rock." },
+          { id: 'outpost7_holoboard', propArt: 'board', propVariant: 'resistance', x: 12, y: 28, label: 'Resistance Planning Board',
             description: 'Hand-drawn maps of the cavern system, supplemented with stolen KDY grid data. Someone has been planning this longer than Tanner implied.',
             once: true, requiresFlag: 'ghost_keel_active',
             grantsFlag: 'cavern_maps_found', grantsCodex: 'codex-outpost7-resistance' },
-          { id: 'outpost7_armory', propArt: 'crate_stack', propVariant: 'resist', x: 26, y: 9, label: 'Hidden Arms Cache',
+          { id: 'outpost7_armory', propArt: 'crate_stack', propVariant: 'resist', x: 3, y: 11, label: 'Hidden Arms Cache',
             description: 'Pre-war blasters, bacta packs, and a cracked slicer spike. Someone prepared for a long stay.',
             once: true, grantsFlag: 'outpost7_armory_raided' },
-          { id: 'outpost7_rebreather', propArt: 'rebreather_rack', x: 16, y: 18, label: 'Rebreather Station',
+          { id: 'outpost7_rebreather', propArt: 'rebreather_rack', x: 3, y: 9, label: 'Rebreather Station',
             description: 'Emergency atmospheric gear for the cavern descent. The mix is calibrated for the nitrogen-heavy deep cavern air.',
             once: true, grantsFlag: 'rebreather_equipped' },
+          { id: 'o7_camo', propArt: 'camo_netting', x: 24, y: 9, once: false, iconKind: 'vista', label: 'Camouflage Netting',
+            description: "Heavy camouflage mesh drapes the length of LZ Delta, filtering the hard light into soft pools. Moisture drips from its edges onto the wet durasteel pad." },
+          { id: 'o7_drop_speeder', propArt: 'drop_speeder', x: 19, y: 11, once: false, iconKind: 'crate', label: 'KDY V-19 Drop Speeder',
+            description: "A KDY V-19 drop speeder with its engine housing open for repairs. Hydraulics hiss under the hood and a trail of orange sparks drips from an arc welder onto the wet floor. The cockpit is empty and the keys are in the ignition." },
+          { id: 'o7_weapon_crate', propArt: 'crate_stack', propVariant: 'kdy', x: 28, y: 11, once: false, iconKind: 'crate', label: 'Weapon Reload Crate',
+            description: "A KDY weapon reload crate. Power cells, grenade pods, a coil of heavy cable, all of it sized for a heavy trooper. The lid closes with a satisfying clunk.", thermalDelta: 0 },
+          { id: 'o7_barricade_a', propArt: 'repulsor_barricade', x: 8, y: 16, once: false, iconKind: 'crate', label: 'Modular Repulsor Barricade',
+            description: "Pitted plates on glowing cyan repulsor bases. The barricade hums quietly, ready to be dragged into any gap in the trench line." },
+          { id: 'o7_barricade_b', propArt: 'repulsor_barricade', x: 14, y: 16, once: false, iconKind: 'crate', label: 'Modular Repulsor Barricade',
+            description: "A second barricade, the paint scored by shrapnel from an earlier raid. A tally of marks is scratched into the top edge." },
+          { id: 'o7_barricade_c', propArt: 'repulsor_barricade', x: 34, y: 16, once: false, iconKind: 'crate', label: 'Modular Repulsor Barricade',
+            description: "The east flank barricade. The base lights are a slightly different shade of cyan. Somebody replaced one of the repulsors with a salvaged part." },
+          { id: 'o7_barricade_d', propArt: 'repulsor_barricade', x: 40, y: 16, once: false, iconKind: 'crate', label: 'Modular Repulsor Barricade',
+            description: "The last barricade before the gorge. The plates here are thicker, and a hand painted arrow points west with the word HOME." },
+          { id: 'o7_eweb', propArt: 'eweb_turret', propVariant: 'plain', x: 20, y: 15, once: false, iconKind: 'crate', label: 'Trench E-Web Emplacement',
+            description: "A fixed position E-Web heavy repeater with a heat gauge. The barrel is cool and the sights are aligned to the gap in the barricade line. A power coupling on the left side is waiting for a source.", requiresNoneFlags: ['o7_socket_linked'] },
+          { id: 'o7_eweb_linked', propArt: 'eweb_turret', propVariant: 'linked', x: 20, y: 15, once: false, iconKind: 'crate', label: 'Trench E-Web Emplacement (Overclocked)',
+            description: "The E-Web hums at the edge of a scream. Cyan current runs through the coupling and the gauge reads times four. It will burn out in a hundred seconds and nobody will care.", requiresFlag: 'o7_socket_linked', invisibleLocked: true },
+          { id: 'o7_exo_socket', propArt: 'exo_socket', x: 22, y: 17, once: true, iconKind: 'terminal', label: 'Exo-Suit Charging Socket',
+            description: "A heavy duty charging socket wired to the trench power bus. A thick cable locks into any compatible suit, and the readout shows POWER LINKED. Doing so drains your shield recharge but sends everything to the nearest E-Web.", grantsFlag: 'o7_socket_linked', thermalDelta: 4 },
+          { id: 'o7_steam_a', propArt: 'steam_grate', x: 12, y: 18, once: true, iconKind: 'crate', label: 'Trench Drain Grate',
+            description: "A drain grate with a yellow warning decal etched into the steel. Steam vents upward in thick white bursts that mask a soldier from every thermal scanner within ten meters.", thermalDelta: -4 },
+          { id: 'o7_steam_b', propArt: 'steam_grate', x: 36, y: 19, once: true, iconKind: 'crate', label: 'Trench Drain Grate',
+            description: "Another drain, venting geothermal steam. The metal around it is warm to the touch and the condensation slides off in slow drops.", thermalDelta: -4 },
+          { id: 'o7_catwalk', propArt: 'catwalk_post', x: 30, y: 18, once: false, iconKind: 'crate', label: 'Overhead Trench Beam',
+            description: "A heavy structural beam over the trench, rigged with a sniper perch. A sniper rifle rests against the rail. A tiny micro recon drone sits in a cradle, charging." },
+          { id: 'sundown_s1_hard', propArt: 'repulsor_barricade', propVariant: 'stage', x: 26, y: 17, once: true, iconKind: 'floor', label: 'Trench Breach Point',
+            description: "The center of the Iron Trench. Red mortar markers paint the floor and KEF shock breachers are charging down the line with thermal shields up.", requiresFlag: 'sundown_started', lockedMessage: 'The trench is quiet. Operation Sundown has not begun.', requiresNoneFlags: ['o7_socket_linked', 'sundown_s1_done'], triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'kef_breach_wave', flavorText: 'The alarm sounds, 110 decibels off the basalt. Six shock breachers and four jump troopers hit the line together. Mortars paint the floor red. You have no extra power on the E-Web and no extra time.' }, grantsFlag: 'sundown_s1_done', thermalDeltaOnSuccess: 8 },
+          { id: 'sundown_s1_easy', propArt: 'repulsor_barricade', propVariant: 'stage', x: 26, y: 17, once: true, iconKind: 'floor', label: 'Trench Breach Point (E-Web Online)',
+            description: "The overclocked E-Web throws a wall of cyan plasma down the trench. KEF breachers hit the line and fall back burning. This is the easy way.", requiresAllFlags: ['sundown_started', 'o7_socket_linked'], requiresNoneFlags: ['sundown_s1_done'], invisibleLocked: true, triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'kef_shock_breacher', flavorText: 'The E-Web howls. A wall of cyan plasma pins the breachers against their own shields. You step into the gap and finish what the cannon started.' }, grantsFlag: 'sundown_s1_done', thermalDeltaOnSuccess: 5 },
+          { id: 'sundown_s2_full', propArt: 'scout_walker', x: 31, y: 12, once: true, iconKind: 'floor', label: 'KEF Repulsor Sledge Tank',
+            description: "A KEF repulsor sledge tank crashes through the camouflage netting and lands in the center of LZ Delta, crushing a supply crate. Its frontal scatter shield eats ninety percent of direct fire and a thermal plasma carpet is already turning the pad into a hazard zone.", requiresFlag: 'sundown_s1_done', lockedMessage: 'The LZ is clear. There is no tank, not yet.', requiresNoneFlags: ['tank_weakened', 'sundown_s2_done'], triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'kef_sledge_tank', flavorText: 'The sledge tank rotates its cannon tower and the frontal shield flares white. No grenades, no steam, no trick. You will have to out last it.' }, grantsFlag: 'sundown_s2_done', thermalDeltaOnSuccess: 10 },
+          { id: 'sundown_s2_weak', propArt: 'scout_walker', x: 31, y: 12, once: true, iconKind: 'floor', label: 'KEF Repulsor Sledge Tank (Crippled)',
+            description: "The tank hits the pad listing to one side, hover skirts guttering. Either a plasma grenade went under the skirts or the geothermal steam has overheated its intake. The cannon tower grinds, but the core is exposed.", requiresAllFlags: ['sundown_s1_done', 'tank_weakened'], requiresNoneFlags: ['sundown_s2_done'], invisibleLocked: true, triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'kef_sledge_tank_crippled', flavorText: 'The sledge tank hits the pad with its engines screaming. Its hover skirts are gone and its rear intake is wide open. Lock on the core and end it.' }, grantsFlag: 'sundown_s2_done', thermalDeltaOnSuccess: 5 },
+          { id: 'sundown_s3_hacked', propArt: 'kdy_barricade', propVariant: 'kdy', x: 23, y: 29, once: true, iconKind: 'floor', label: 'Gateway Blast Door (Turrets Hacked)',
+            description: "The hacked turrets flanking the gateway sweep the retreat route clean. KEF reinforcements fall in the doorway and nobody fires back. The lever is yours.", requiresAllFlags: ['sundown_s2_done', 'vaelis_turrets_hacked'], requiresNoneFlags: ['sundown_complete'], invisibleLocked: true, grantsFlags: ['sundown_complete', 'sundown_s3_done'], thermalDelta: -100 },
+          { id: 'sundown_s3_flank', propArt: 'kdy_barricade', propVariant: 'kdy', x: 23, y: 29, once: true, iconKind: 'floor', label: 'Gateway Blast Door (Side Hatch)',
+            description: "Captain Lyra opens a side maintenance hatch and your squad ambushes the gate guards from behind. They never saw you coming.", requiresAllFlags: ['sundown_s2_done', 'vaelis_spared'], requiresNoneFlags: ['vaelis_turrets_hacked', 'sundown_complete'], invisibleLocked: true, triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'kef_gate_guards_flanked', flavorText: 'The hatch opens with a hiss. Your squad pours into the maintenance corridor and hits the gate guards from behind. They scramble for cover that faces the wrong way.' }, grantsFlags: ['sundown_complete', 'sundown_s3_done'], thermalDeltaOnSuccess: -100 },
+          { id: 'sundown_s3_full', propArt: 'kdy_barricade', propVariant: 'kdy', x: 23, y: 29, once: true, iconKind: 'floor', label: 'Gateway Blast Door',
+            description: "The colossal gateway to the Engine Wastes. KEF forces are dug in on the far side with fortified cover, and a manual lockdown lever stands at the center of the door, past six gate guards.", requiresFlag: 'sundown_s2_done', lockedMessage: 'The gateway is quiet. The tank has to fall first.', requiresNoneFlags: ['vaelis_turrets_hacked', 'vaelis_spared', 'sundown_complete'], triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'kef_gate_guards', flavorText: 'Major Coop rallies the squads: Follow the freelancer! Breach that gateway! The gate guards fire from fortified cover and the lever is thirty meters away.' }, grantsFlags: ['sundown_complete', 'sundown_s3_done'], thermalDeltaOnSuccess: -100 },
+          { id: 'o7_enc_array', propArt: 'enc_array', x: 4, y: 24, once: false, iconKind: 'crate', label: 'High Bandwidth Encryption Array',
+            description: "Pulsing server racks wrapped in high tech wire conduits, the main burst encryption array for Outpost 7. Cyan lights chase down the racks and a soft electric hum fills the bunker. The array has not transmitted in three weeks." },
+          { id: 'o7_holotable', propArt: 'sanctum_holo', x: 8, y: 27, once: false, iconKind: 'terminal', label: 'Tactical Holotable',
+            description: "A 3D map of the Engine Wastes expands over the table in cyan wireframe, target nodes flashing red. The glow throws blue light across Major Coop. The routes to the Exhaust Cathedral are marked in amber.", grantsCodex: 'codex-iron-trench' },
+          { id: 'o7_field_desk', propArt: 'field_desk', x: 12, y: 24, once: false, iconKind: 'crate', label: 'Major Coop Field Desk',
+            description: "Datapads, a scorched helmet and a sidearm in a locking holster. A plate of cold ration bars sits untouched. Under the helmet, a photograph of a woman and a child, face down." },
+          { id: 'fusion_lever_amber', propArt: 'fusion_lever', propVariant: 'amber', x: 20, y: 23, once: true, iconKind: 'terminal', label: 'Fusion Diverter Lever',
+            description: "A lever over the buried fusion generator. Pull it and the trench lights swap from amber to deep blue, the guns spin down and the stealth arrays wake. The base goes quiet. KEF scanners stop seeing a lit window.", requiresNoneFlags: ['o7_stealth_power'], grantsFlag: 'o7_stealth_power', thermalDelta: -20 },
+          { id: 'fusion_lever_blue', propArt: 'fusion_lever', propVariant: 'blue', x: 20, y: 23, once: false, iconKind: 'terminal', label: 'Fusion Diverter Lever (Stealth)',
+            description: "The lever is locked in the blue position. The trench lights glow a calm blue and the guns are silent. The base is a shadow.", requiresFlag: 'o7_stealth_power', invisibleLocked: true },
+          { id: 'geothermal_terminal', propArt: 'console', propVariant: 'substation', x: 26, y: 23, once: true, iconKind: 'terminal', label: 'Geothermal Vent Release Terminal',
+            description: "A rugged terminal wired to the geothermal manifold. A few precise commands and the base can blast scalding steam into any intake it chooses. Operation Sundown planners already have the tank in mind.", requiresFlag: 'o7_coop_briefed', lockedMessage: 'Major Coop has not cleared you for the manifold yet.', triggersMinigame: 'valve_override', grantsFlags: ['geothermal_siphon_done', 'base_resource_high', 'tank_weakened'], thermalDeltaOnSuccess: -10 },
+          { id: 'o7_steam_c', propArt: 'steam_grate', x: 22, y: 27, once: true, iconKind: 'crate', label: 'Manifold Grate',
+            description: "A manifold grate with a faded decal. Steam curls up through the slats and drifts toward the roof of the plant.", thermalDelta: -4 },
+          { id: 'o7_steam_d', propArt: 'steam_grate', x: 28, y: 27, once: true, iconKind: 'crate', label: 'Manifold Grate',
+            description: "A second grate. The metal ticks as it cools.", thermalDelta: -4 },
+          { id: 'brig_cell_1', propArt: 'brig_cell', x: 38, y: 26, once: false, iconKind: 'floor', label: 'Containment Cell Three',
+            description: "A small energy field cell. The forcefield hums a low note and the energy cuffs on the prisoner glow red. Inside, a man in a torn hazard orange jumpsuit paces three steps each way." },
+          { id: 'brig_cell_2', propArt: 'brig_cell', propVariant: 'empty', x: 42, y: 26, once: false, iconKind: 'floor', label: 'Containment Cell Four',
+            description: "An empty cell. The cot is neatly made and a mug sits on the shelf. Someone expected a guest." },
+          { id: 'brig_switch', propArt: 'console', propVariant: 'dispatch', x: 35, y: 23, once: true, iconKind: 'terminal', label: 'Brig Forcefield Switch',
+            description: "A switch panel with a hand painted label: CELL THREE. The forcefield hum drops a pitch when you press it and the barrier dissolves. The prisoner stops pacing and stares at the open air.", grantsFlag: 'brig_open' },
         ],
         npcs: [
-          { id: 'pilot_outpost_salk', x: 24, y: 12, kind: 'kdy_pilot', label: 'Pilot Iro Salk (KDY Shuttle)', triggersOverlay: 'shuttle',
+          { id: 'pilot_outpost_salk', x: 25, y: 11, kind: 'kdy_pilot', label: 'Pilot Iro Salk (KDY Shuttle)', triggersOverlay: 'shuttle',
             greeting: '\"Forward pad, Outpost 7. I can lift you to the Main Base or the Array on your word.\"',
             repeatPrompt: 'The pilot taps the shuttle manifest and waits for a destination.',
             prompt: 'A KDY shuttle pilot in the blue Kuati flight uniform.', choices: [] },
-          { id: 'outpost_guard_brae', x: 14, y: 12, wander: 4, kind: 'kdy_security_marine', label: 'Outpost Guard Brae',
+          { id: 'outpost_guard_brae', x: 14, y: 15, wander: 4, kind: 'kdy_security_marine', label: 'Outpost Guard Brae',
             repeatPrompt: 'Brae nods and keeps scanning the horizon.',
             prompt: 'A KDY guard with a rebreather strapped to his collar patrols the Outpost 7 lights, watching the dark beyond them.',
             choices: [ { text: 'Ask if the road east is safe.', morality: 0, loyalty: {}, result: '\"Nothing here is safe. But clear a sector and it stays clear. That is the arrangement.\"' } ] },
-          { id: 'slicer_nix', x: 20, y: 10, wander: 2, kind: 'slicer', label: 'Slicer Nix',
+          { id: 'slicer_nix', x: 5, y: 27, wander: 2, kind: 'slicer', label: 'Slicer Nix',
             questNpc: true,
             requiresFlag: 'ghost_keel_active',
             hideAfterFlags: ['nix_dead'],
@@ -4625,28 +5200,189 @@ const PLANETS = {
               { text: 'Tell Nix about Gharza in the Engine Wastes.', morality: 5, loyalty: { republic: 5 }, result: '"I know her clearance code. She was on Tanner\'s initial contractor list, then removed." A pause. "She was removed because someone at Level Eight overrode the contract. She is not working for Tanner. She is working for the Architect."', grants: { flags: ['nix_consulted', 'gharza_architect_connection'] } },
             ],
           },
-          { id: 'outpost7_contact', x: 9, y: 14, wander: 2, kind: 'generic', label: 'Resistance Contact',
+          { id: 'outpost7_contact', x: 24, y: 26, wander: 2, kind: 'generic', label: 'Resistance Contact',
             repeatPrompt: '"The caverns run deep. Trust the maps."',
             prompt: '"We have been watching Sector 4 for two cycles. KDY is building something that does not appear in any public commission. The shell of a capital ship, assembling in pieces." He spreads the hand-drawn maps. "The final components are in the deep caverns, stored in a decommissioned Republic survey station. Something is already there — and it has been there longer than KDY knows."',
             choices: [
               { text: 'Ask how they got this information.', morality: 0, loyalty: {}, result: '"Engineer Vorn. He was not told what the total project was until three months ago. He started talking to us the day he realized." He taps the map. "He is still inside. Treat him carefully."', grants: { flags: ['resistance_vorn_connection'] } },
             ],
           },
+          { id: 'major_coop', x: 8, y: 23, kind: 'kdy_commander', label: 'Major Coop',
+            questNpc: true,
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_coop_intro',
+                requiresNoneFlags: ['o7_coop_briefed'],
+                prompt: "Major Coop stands at the holotable with a cold cigar in his teeth, a blast scar running across his left cheek. \"Sensors show a patrol shift, Captain Lyra says. Outpost 7 does not exist until the primary strike force clears hyperspace.\" He looks up. \"And who are you?\"",
+                repeatPrompt: "Coop does not look up from the holotable.",
+                choices: [
+                  { text: "Someone Commander Vael sent.", morality: 0, loyalty: {}, result: "\"Good. We have been radio silent for three weeks and running low on everything.\" He taps the holotable. \"I need a heavy hand and a quiet head. Operation Sundown goes live when High Command signals. Until then, we prepare.\"", grants: { flags: ['o7_coop_briefed'], codex: ['codex-iron-trench'] } },
+                  { text: "I am here to help.", morality: 0, loyalty: {}, result: "He measures you with a long look. \"Then listen.\"", grants: { flags: ['o7_coop_briefed'], codex: ['codex-iron-trench'] } },
+                ],
+              },
+              {
+                id: 'phase_coop_prep_a',
+                requiresAllFlags: ['o7_coop_briefed'],
+                requiresNoneFlags: ['convoy_raid_done', 'sundown_started'],
+                prompt: "\"Three things before Sundown. One, the KEF supply convoy twelve kilometers north: a raid would restock us and make our guns bigger. It will also make us loud. Two, the geothermal siphon, a terminal in the plant. Quiet and clean. Three, the prisoner in the brig. He knows the turret codes.\"",
+                repeatPrompt: "\"Convoy, siphon, prisoner. Choose.\"",
+                choices: [
+                  { text: "[Convoy Raid] Plan the raid.", morality: 0, loyalty: {}, result: "\"You take the convoy and I take the credit. Bring me back grenades.\" He looks pleased and a little worried. The comm crackles with a countdown.", grants: { flags: [], thermal: 25 }, triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'kef_convoy_guard', flavorText: 'The convoy rolls into the gorge under cover of fog. You wait on the ridge until the lead truck is exactly where you want it, then you open fire. The guards drop from the cab with their rifles up.' }, onSuccessFlags: ['convoy_raid_done', 'base_resource_high', 'tank_weakened'] },
+                  { text: "[Begin] Start Operation Sundown.", morality: 0, loyalty: {}, result: "\"You are certain?\" He puts down the cigar. \"Then sound the alarm.\" A 110 decibel siren echoes off the basalt walls. KEF scouts will be here within minutes.", grants: { flags: ['sundown_started'], thermal: 15 } },
+                  { text: "I need more time.", morality: 0, loyalty: {}, result: "\"Time is the only thing we are short of. But fine.\"" },
+                ],
+              },
+              {
+                id: 'phase_coop_prep_b',
+                requiresAllFlags: ['convoy_raid_done'],
+                requiresNoneFlags: ['sundown_started'],
+                prompt: "\"You brought the convoy supplies back. Heavy plasma grenades, fresh bacta, a full ammunition cache.\" He sets the grenade bandolier on the holotable. \"We are ready, aren't we?\"",
+                repeatPrompt: "\"Grenades are on the table. Ready when you are.\"",
+                choices: [
+                  { text: "[Begin] Start Operation Sundown.", morality: 0, loyalty: {}, result: "\"Sound the alarm.\" A 110 decibel siren echoes off the basalt walls. KEF scouts will be here within minutes.", grants: { flags: ['sundown_started'], thermal: 15, items: ['plasma_grenades'] } },
+                  { text: "I need more time.", morality: 0, loyalty: {}, result: "\"I will be here.\"" },
+                ],
+              },
+              {
+                id: 'phase_coop_go',
+                requiresAllFlags: ['sundown_started'],
+                requiresNoneFlags: ['sundown_complete'],
+                prompt: "The siren is still wailing. Coop is already checking his rifle. \"Trench, then the tank, then the gateway. Follow the heavy. All squads, on me.\"",
+                repeatPrompt: "\"Trench. Tank. Gateway.\"",
+                choices: [
+                  { text: "Understood, Major.", morality: 0, loyalty: {}, result: "\"Move.\"" },
+                ],
+              },
+              {
+                id: 'phase_coop_done',
+                requiresAllFlags: ['sundown_complete'],
+                prompt: "The gateway is sealed behind you. The siren is silent. Coop stands in front of the holotable with his hands on the edge. \"Outpost 7 does not exist.\" He almost smiles. \"But Operation Sundown does.\"",
+                repeatPrompt: "\"The gateway is open. Go.\"",
+                choices: [
+                  { text: "Thank you, Major.", morality: 0, loyalty: {}, result: "\"Go north. The Engine Wastes await.\"" },
+                ],
+              },
+            ],
+          },
+          { id: 'captain_lyra', x: 30, y: 17, kind: 'kdy_ring_sec', label: 'Captain Lyra',
+            questNpc: true,
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_lyra',
+                prompt: "A figure drops from the overhead beam in a basalt patterned ghillie shroud, triple optic helmet glowing emerald. \"Captain Lyra, Pathfinder Lead. Keep your voice down. Thermal reading is the only thing that gets us killed.\"",
+                repeatPrompt: "\"Stay cold.\"",
+                choices: [
+                  { text: "What is the thermal situation?", morality: 0, loyalty: {}, result: "\"Every shot you fire, every step in the open, every alarm you trip adds to the signature. Above thirty, KEF hunter killers. Above sixty, they drop artillery on the ridge.\" She lifts the rifle an inch. \"Stay cold.\"", grants: { flags: ['lyra_met'] } },
+                ],
+              },
+            ],
+          },
+          { id: 'pathfinder_1', x: 14, y: 19, wander: 2, kind: 'kdy_security_marine', label: 'KDY Pathfinder',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_x',
+                prompt: "Tripwires are clean on the north ridge. For now. They go back to work.",
+                repeatPrompt: "They are busy.",
+                choices: [
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod and keep working." },
+                ],
+              },
+            ],
+          },
+          { id: 'pathfinder_2', x: 38, y: 18, wander: 2, kind: 'kdy_security_marine', label: 'KDY Pathfinder',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_x',
+                prompt: "I smell smoke from the east. Not ours. They go back to work.",
+                repeatPrompt: "They are busy.",
+                choices: [
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod and keep working." },
+                ],
+              },
+            ],
+          },
+          { id: 'engineer_1', x: 22, y: 12, wander: 2, kind: 'zero_g_welder', label: 'Combat Engineer',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_x',
+                prompt: "Mind the sparks. The drop speeder will outlive us all. They go back to work.",
+                repeatPrompt: "They are busy.",
+                choices: [
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod and keep working." },
+                ],
+              },
+            ],
+          },
+          { id: 'engineer_2', x: 17, y: 9, wander: 2, kind: 'zero_g_welder', label: 'Combat Engineer',
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_x',
+                prompt: "Welding mask, welding apron, welding speeder. My whole life is welding. They go back to work.",
+                repeatPrompt: "They are busy.",
+                choices: [
+                  { text: "Leave them to it.", morality: 0, loyalty: {}, result: "They nod and keep working." },
+                ],
+              },
+            ],
+          },
+          { id: 'officer_vaelis', x: 38, y: 25, kind: 'generic', label: 'Officer Vaelis (KEF Logistics)',
+            questNpc: true,
+            hideAfterFlags: ['vaelis_spared', 'vaelis_decoy', 'vaelis_executed'],
+            repeatable: true,
+            phases: [
+              {
+                id: 'phase_v_locked',
+                requiresNoneFlags: ['brig_open'],
+                prompt: "A man in a torn hazard orange KEF jumpsuit paces behind a crackling blue field, hands bound in glowing red energy cuffs. He tests the perimeter with a gloved finger and a tiny arc of blue sparks answers. \"If you came to talk, talk. If you came to kill me, the field is in the way.\"",
+                repeatPrompt: "Vaelis stares at the field.",
+                choices: [
+                  { text: "Who are you?", morality: 0, loyalty: {}, result: "\"Vaelis. Logistics. I count crates for people who do not like me.\" He flicks a spark off the field. \"Open the cell and ask me again.\"" },
+                ],
+              },
+              {
+                id: 'phase_v_open',
+                requiresAllFlags: ['brig_open'],
+                requiresNoneFlags: ['vaelis_decided'],
+                prompt: "The field is down. Vaelis stands in the open cell with his cuffed hands in front of him. \"Right. You have questions. The turret override code. The convoy route. The supply schedule. I know all of it. Which shall it be, and what do I get?\"",
+                repeatPrompt: "Vaelis waits for your answer.",
+                choices: [
+                  { text: "[Force] Give me the turret override codes. Now.", morality: -8, loyalty: {}, result: "He breaks quickly. \"Eight seven nine four, two one, delta. Hit the override panel at the gateway and the turrets will switch sides.\" He stares at the floor. \"I will not forget this.\"", grants: { flags: ['vaelis_interrogated', 'vaelis_turrets_hacked', 'vaelis_decided'], thermal: 5 } },
+                  { text: "[Deal] Tell me about the maintenance hatch at the gateway. I will let you walk.", morality: 8, loyalty: { republic: 3 }, result: "\"There is a side hatch. Unmarked, west of the main door.\" He lets out a breath. \"Captain Lyra knows it. Take it and you will come out behind the guards.\" You loosen the cuffs. He walks out into the dark.", grants: { flags: ['vaelis_spared', 'vaelis_decided'] } },
+                  { text: "[Decoy] Release him with false codes. KEF will chase him.", morality: -2, loyalty: {}, result: "You send him out the back with a datapad of codes that lead nowhere. KEF hunter squads will spend the night trailing him across the basalt. Somewhere, a scanner follows a ghost.", grants: { flags: ['vaelis_decoy', 'vaelis_decided'], thermal: -20 } },
+                  { text: "[Execute] This ends here.", morality: -12, loyalty: {}, result: "The energy cuffs go dark. Vaelis does not move. The brig is very quiet and the outpost is very loud.", grants: { flags: ['vaelis_executed', 'vaelis_decided'], thermal: 10 } },
+                ],
+              },
+              {
+                id: 'phase_v_done',
+                requiresAllFlags: ['vaelis_decided'],
+                prompt: "Vaelis sits on the cot with his cuffed hands between his knees. \"I told you everything. Leave me be.\"",
+                repeatPrompt: "Vaelis does not move.",
+                choices: [
+                  { text: "Leave him.", morality: 0, loyalty: {}, result: "He does not look up." },
+                ],
+              },
+            ],
+          },
         ],
-        collectibles: [{ id: 'outpost7_intel', x: 8, y: 14, label: 'Resistance Survey Notes', reward: 300 }],
+        collectibles: [{ id: 'outpost7_intel', x: 18, y: 28, label: 'Resistance Survey Notes', reward: 300 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 30, 20, 'floor');
-          carveRect(g, 3, 3, 12, 8, 'wall');
-          pt(g, 7, 3, 'floor'); pt(g, 8, 3, 'floor'); pt(g, 12, 5, 'floor'); pt(g, 12, 6, 'floor');
-          carveRect(g, 18, 3, 28, 8, 'wall');
-          pt(g, 22, 3, 'floor'); pt(g, 23, 3, 'floor'); pt(g, 28, 5, 'floor'); pt(g, 28, 6, 'floor');
-          carveRect(g, 3, 14, 14, 20, 'wall');
-          pt(g, 8, 14, 'floor'); pt(g, 9, 14, 'floor'); pt(g, 14, 16, 'floor'); pt(g, 14, 17, 'floor');
-          carveRect(g, 22, 14, 30, 20, 'wall');
-          pt(g, 26, 14, 'floor'); pt(g, 26, 18, 'floor');
-          pt(g, 0, 10, 'door'); pt(g, 0, 11, 'door');
-          pt(g, 31, 11, 'door'); pt(g, 31, 12, 'door');
+          carveRect(g, 1, 5, 46, 30, 'floor');
+          // Armory and Staging Bay (west)
+          carveRect(g, 1, 7, 15, 13, 'wall'); carveRect(g, 2, 8, 14, 12, 'floor'); pt(g, 8, 13, 'floor');
+          // Command Bunker (southwest)
+          carveRect(g, 1, 21, 15, 29, 'wall'); carveRect(g, 2, 22, 14, 28, 'floor'); pt(g, 15, 25, 'floor');
+          // Sub-Level Brig (southeast)
+          carveRect(g, 32, 21, 45, 29, 'wall'); carveRect(g, 33, 22, 44, 28, 'floor'); pt(g, 32, 25, 'floor');
+          pt(g, 0, 14, 'door'); pt(g, 0, 15, 'door');
+          pt(g, 47, 14, 'door'); pt(g, 47, 15, 'door');
+          pt(g, 22, 31, 'door'); pt(g, 23, 31, 'door');
           return g;
         },
       },
@@ -4660,10 +5396,10 @@ const PLANETS = {
         bg: 'radial-gradient(circle at 50% 50%, #100C18 0%, #060410 70%)', ambient: 'mist',
         decor: ['rubble', 'moss'],
         doors: [
-          { x: 16, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 20, y: 20 }, label: 'Engine Wastes' },
-          { x: 17, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 21, y: 20 }, label: 'Engine Wastes' },
-          { x: 0, y: 11,  targetZone: 'outpost_7', targetPos: { x: 30, y: 11 }, label: 'Outpost 7' },
-          { x: 0, y: 12,  targetZone: 'outpost_7', targetPos: { x: 30, y: 12 }, label: 'Outpost 7' },
+          { x: 16, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 28, y: 34 }, label: 'Engine Wastes' },
+          { x: 17, y: 0,  targetZone: 'engine_wastes', targetPos: { x: 29, y: 34 }, label: 'Engine Wastes' },
+          { x: 0, y: 11,  targetZone: 'outpost_7', targetPos: { x: 46, y: 14 }, label: 'Outpost 7' },
+          { x: 0, y: 12,  targetZone: 'outpost_7', targetPos: { x: 46, y: 15 }, label: 'Outpost 7' },
           { x: 33, y: 11, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 11 }, label: 'Zora IV Wreckage' },
           { x: 33, y: 12, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 12 }, label: 'Zora IV Wreckage' },
         ],
@@ -6186,6 +6922,45 @@ function AmbientLayer({ kind, accent }) {
       </div>
     );
   }
+  if (kind === 'warzone') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 22 }, (_, i) => (
+          <div key={'a' + i} style={{ position:'absolute',left:`${(i*37)%110}%`,top:'-3%',width:`${2+(i%3)}px`,height:`${2+(i%3)}px`,borderRadius:'50%',background:i%4===0?'rgba(255,120,40,0.85)':'rgba(190,190,190,0.5)',animation:`ash-fall ${5+(i%6)}s linear ${(i*0.45)%5}s infinite` }} />
+        ))}
+        {Array.from({ length: 7 }, (_, i) => (
+          <div key={'t' + i} style={{ position:'absolute',left:0,top:`${10+((i*13)%62)}%`,width:'46px',height:'2px',background:i%2?'#00E5FF':'#FF2A1A',boxShadow:i%2?'0 0 8px #00E5FF':'0 0 8px #FF2A1A',animation:`tracer-fly ${1.1+(i%3)*0.35}s linear ${(i*0.9)%4}s infinite`,transform:i%2?'scaleX(-1)':'none' }} />
+        ))}
+        <div style={{ position:'absolute',left:0,right:0,bottom:0,height:'34%',background:'rgba(20,10,6,0.28)',filter:'blur(14px)' }} />
+      </div>
+    );
+  }
+  if (kind === 'basalt_mist') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 7 }, (_, i) => (
+          <div key={'f' + i} style={{ position:'absolute',left:`${(i*23)%80-10}%`,top:`${(i*17)%70}%`,width:'46%',height:'22%',background:'rgba(150,200,190,0.07)',filter:'blur(22px)',animation:`mist-drift ${9+(i%4)*2}s ease-in-out ${i*1.3}s infinite` }} />
+        ))}
+        {Array.from({ length: 16 }, (_, i) => (
+          <div key={'m' + i} style={{ position:'absolute',left:`${(i*31)%100}%`,top:`${(i*19)%96}%`,width:'2px',height:'2px',borderRadius:'50%',background:'rgba(190,235,225,0.45)',animation:`twinkle ${3+(i%4)}s ease-in-out ${i*0.4}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',inset:0,background:'rgba(8,20,22,0.18)' }} />
+      </div>
+    );
+  }
+  if (kind === 'forge') {
+    return (
+      <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none' }}>
+        {Array.from({ length: 24 }, (_, i) => (
+          <div key={'e' + i} style={{ position:'absolute',left:`${(i*29)%100}%`,bottom:'-2%',width:`${2+(i%3)}px`,height:`${2+(i%3)}px`,borderRadius:'50%',background:i%3?'rgba(255,140,40,0.9)':'rgba(255,200,90,0.9)',animation:`embers-drift ${4+(i%6)}s ease-out ${(i*0.5)%6}s infinite` }} />
+        ))}
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={'s' + i} style={{ position:'absolute',left:`${(i*27+5)%90}%`,bottom:`${(i*11)%30}%`,width:'60px',height:'60px',borderRadius:'50%',background:'rgba(220,230,235,0.08)',filter:'blur(12px)',animation:`steam-rise ${4+(i%3)}s ease-out ${i*1.1}s infinite` }} />
+        ))}
+        <div style={{ position:'absolute',inset:0,background:'rgba(255,85,0,0.05)',animation:'door-pulse 3.2s ease-in-out infinite' }} />
+      </div>
+    );
+  }
   if (kind === 'dust') {
     return (
       <div style={{ position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',opacity:0.6 }}>
@@ -6334,6 +7109,18 @@ function AlignmentPanel({ alignment }) {
 }
 
 const ITEMS = {
+  // BADOR ITEMS BEGIN
+  item_kdy_datapad_01:        { id:'item_kdy_datapad_01',        name:'Scorched KDY Manifest',                 type:'quest',      iconKind:'datapad',  value:150, description:'Encircled coordinates detail a shipment of hyperdrive reactor cores moved out of Base Alpha before the KEF attack.' },
+  item_thermal_gear_01:       { id:'item_thermal_gear_01',       name:'Hazard Insulation Vest',                type:'gear',       iconKind:'gear',     value:300, description:'Grants thermal resistance. Crucial for the Engine Wastes test fires and the long walk to the Exhaust Cathedral.' },
+  kdy_landspeeder_auth:       { id:'kdy_landspeeder_auth',       name:'Landspeeder Authorization Keycard',     type:'quest',      iconKind:'keycard',  value:0,   description:'A KDY keycard that opens the depot gate at the eastern edge of the City Outskirts.' },
+  kdy_transit_cylinder:       { id:'kdy_transit_cylinder',       name:'KDY Transit Encryption Cylinder',       type:'quest',      iconKind:'keycard',  value:0,   description:'A glowing cylinder holding the gateway codes for the heavy blast doors to the Engine Wastes.' },
+  kef_bypass_schematic:       { id:'kef_bypass_schematic',       name:'KEF Bypass Schematic',                  type:'gear',       iconKind:'datapad',  value:200, description:'Varek Korr hand drawn plans for thermal shielding. Grants fire resistance in the Engine Wastes.' },
+  catalyst_governor_valve:    { id:'catalyst_governor_valve',    name:'Catalyst Governor Valve',               type:'quest',      iconKind:'gear',     value:0,   description:'A heavy brass wheel set with three glowing blue coolant crystals. The missing component that stabilizes the manifold in the Exhaust Cathedral.' },
+  thermal_crystal_dust:       { id:'thermal_crystal_dust',       name:'Thermal Crystal Dust',                  type:'consumable', iconKind:'supply',   value:120, description:'Fine blue dust ground from coolant crystals. Vance uses it in heat shielding.' },
+  pressurized_igniter:        { id:'pressurized_igniter',        name:'Pressurized Igniter',                   type:'weapon',     iconKind:'gear',     value:280, description:'Fires a directional plasma flare. Clears steam vents and lights very bad ideas.' },
+  plasma_grenades:            { id:'plasma_grenades',            name:'Heavy Plasma Grenades',                 type:'consumable', iconKind:'supply',   value:350, description:'A bandolier of heavy plasma grenades taken from a KEF convoy. Throw one under a repulsor skirt.' },
+  item_kef_cutter_01:         { id:'item_kef_cutter_01',         name:'KEF Industrial Breaching Cutter',      type:'weapon',     iconKind:'gear',     value:450, description:'Modified heavy cutter. Deals high damage against armored targets and can slice open sealed doors in Outpost 7.' },
+  // BADOR ITEMS END
   // PH ITEMS BEGIN
   ph_pkg_skyview: { id:'ph_pkg_skyview', name:'Penthouse Package: Observatory Deck', type:'quest', iconKind:'datapad', value:1800, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. A cut crystal night sky filter for the transparisteel wall, plus a brass refractor on a tripod. Voss swears the moons look closer.' },
   ph_pkg_tint: { id:'ph_pkg_tint', name:'Penthouse Package: Smart Glass Suite', type:'quest', iconKind:'datapad', value:1200, description:'An installable design package for the Scylla Tower Penthouse. Use the Interior Design console in your penthouse to install it. The same polarization console the senators use, tuned for a criminal clientele. The glass goes obsidian on command.' },
@@ -6471,6 +7258,24 @@ const PENTHOUSE_PACKAGES = [
 // ===== PENTHOUSE PACKAGES END =====
 
 const CODEX_ENTRIES = {
+  // BADOR CODEX BEGIN
+  'codex-outskirts-war': {
+    id:'codex-outskirts-war', title:'Breach-Point Alpha', category:'lore',
+    summary:'The war in the shadow of the Kuat Drive Yards wall.',
+    body:['The City Outskirts began as a temporary camp for migrant shipyard workers, laborers and indentured tech slaves. It grew into a shantytown of rusted corrugated plating, habitation cubes and exposed conduit, all of it crowded under the gleaming durasteel wall of the KDY Surface Logistics Hub.','When the Kuat Expansionist Front detonated improvised plasma charges along the perimeter, the camp became a war zone. KDY Security holds Line C from behind scorched barricades. KEF shock squads hold the mortar line from rooftop catwalks. Between them are the people who have nowhere else to go.','At night the sky above the wall is stitched with red and cyan tracer fire, and the dark parent world of the moon hangs low and red on the horizon.'] },
+  'codex-kef': {
+    id:'codex-kef', title:'The Kuat Expansionist Front', category:'dossier',
+    summary:'An armed insurgency against KDY and its Republic contracts.',
+    body:['The KEF is a radical insurgency fighting the corporate oligarchy of Kuat Drive Yards. Its shock squads wear hazard orange insulated jumpsuits under makeshift durasteel plates and carry industrial plasma cutters and stolen carbines.','They are not only saboteurs. Intercepted manifests suggest the Front is moving hyperdrive reactor cores toward the Engine Wastes, to restart something old rather than to attack KDY.'] },
+  'codex-black-box-04': {
+    id:'codex-black-box-04', title:'Black Box Cylinder 04', category:'lore',
+    summary:'The sabotage confession of Lead Mechanic Vance.',
+    body:['This is Lead Mechanic Vance. Timestamp: Shear Day plus three. The core did not overheat. It was starved on purpose.','The command signal came directly from the Arch Architect Sanctum. They cut the primary coolant lines from the outside and welded the override hatches shut. They wanted the lower city to bake.','If anyone finds this cylinder, do not try to restart the outer ring until you have bypassed the hardline safety cutoff at the Exhaust Cathedral.'] },
+  'codex-iron-trench': {
+    id:'codex-iron-trench', title:'Outpost 7: The Iron Trench', category:'dossier',
+    summary:'A hidden KDY forward incursion base wedge cut into a basalt ravine.',
+    body:['Outpost 7 was established as a covert, hardened forward staging post in a sensor shadow zone. It is carved into volcanic basalt and shielded by thermal dampening arrays.','Thermal signature is everything here. Above thirty percent, KEF hunter killer squads sweep the perimeter. Above sixty, they drop mortar rounds on the ridge. Every shot, every alarm and every raid raises it. The Fusion Diverter Lever, the trench steam grates and decoys lower it.','Operation Sundown is the strike the outpost exists for: a simultaneous hit on the local power grid and communications array, launched when High Command gives the signal.'] },
+  // BADOR CODEX END
   // PH CODEX BEGIN
   'codex-ph-design': {
     id:'codex-ph-design', title:'Penthouse Interior Design', category:'dossier',
@@ -6953,7 +7758,7 @@ const KDY_SHUTTLE_DESTINATIONS = [
   { id: 'ring_landing', name: 'Orbital Ring Landing Bay', level: 'Kuat Orbital Array', cost: 0, requiredFlag: null,          targetZone: 'kdy_landing_bay',     targetPos: { x: 26, y: 11 } },
   { id: 'ring_suites',  name: 'Executive Private Suites', level: 'Kuat Orbital Array', cost: 0, requiredFlag: 'vaelen_cleared', targetZone: 'kuat_private_suites', targetPos: { x: 25, y: 10 } },
   { id: 'bador_base',   name: 'KDY Main Base',            level: 'Bador Moon, Sector Control', cost: 0, requiredFlag: 'tanner_briefed', targetZone: 'bador_main_base', targetPos: { x: 10, y: 14 } },
-  { id: 'bador_fwd',    name: 'Outpost 7 Forward Pad',    level: 'Bador Moon, Eastern Reach',  cost: 0, requiredFlag: 'bador_landed',   targetZone: 'outpost_7',       targetPos: { x: 23, y: 12 } },
+  { id: 'bador_fwd',    name: 'Outpost 7 Forward Pad',    level: 'Bador Moon, Eastern Reach',  cost: 0, requiredFlag: 'bador_landed',   targetZone: 'outpost_7',       targetPos: { x: 26, y: 12 } },
 ];
 
 const SHUTTLE_ARRIVAL_TEXT = 'The transition from the pristine, silent luxury of the Kuat Orbital Array to the surface of Bador is a jarring shock to the senses. As your shuttle breaches the thin, violet tinged atmosphere, the sheer scale of the industrial devastation becomes apparent. The KDY Main Base is a fortress carved directly into the glassed bedrock. The air outside the shuttle tastes of ozone and copper, forcing you to rely on the rebreather integrated into your collar. You are escorted through a series of heavy durasteel airlocks, moving from the blasted exterior into the sterile, blue lit tactical operations center. Holographic tactical maps flicker with red conflict zones.';
@@ -14142,6 +14947,548 @@ function PropDesignConsole() {
   );
 }
 // ===== PENTHOUSE PROPS END =====
+// ===== BADOR WAR PROPS BEGIN =====
+// Wide basalt, wall and furnace backdrops for the Bador surface zones. One 24 by 5 tile strip, tiled across the zone top.
+function PropBasaltVista({ variant = 'ravine_a' }) {
+  const S = ART.signal;
+  const fam = variant.split('_')[0];
+  const seed = variant.endsWith('b') ? 7 : variant.endsWith('c') ? 13 : 3;
+  const r = rng(seed);
+  const W = 768;
+  const bands = fam === 'ravine' ? [[0, 40, ART.ink], [40, 80, ART.dark.shade], [80, 112, ART.teal.shade], [112, 160, ART.teal.base]]
+    : fam === 'outskirts' ? [[0, 36, ART.ink], [36, 72, ART.dark.shade], [72, 104, ART.bronze.shade], [104, 160, ART.rust.shade]]
+      : [[0, 34, ART.ink], [34, 70, ART.dark.shade], [70, 100, ART.rust.shade], [100, 160, ART.copper.shade]];
+  const spires = Array.from({ length: fam === 'ravine' ? 15 : 8 }, () => ({ x: r() * W, w: 14 + r() * 34, h: 38 + r() * 92, lean: (r() - 0.5) * 8 }));
+  const stars = Array.from({ length: 40 }, () => ({ x: r() * W, y: r() * 52, s: 0.5 + r() * 0.8, d: r() * 3 }));
+  return (
+    <svg viewBox="0 0 768 160" width="768" height="160" style={PROP_STYLE}>
+      {bands.map(([y0, y1, c], i) => <rect key={i} x="0" y={y0} width={W} height={y1 - y0 + 1} fill={c} />)}
+      {fam !== 'wastes' && stars.map((st, i) => <circle key={i} cx={st.x} cy={st.y} r={st.s} fill={S.kyber} opacity="0.6" style={{ animation: `ship-blink ${2 + st.d}s ease-in-out ${st.d}s infinite` }} />)}
+      {fam === 'ravine' && (
+        <g>
+          <circle cx="560" cy="44" r="26" fill={ART.pearl.base} opacity="0.9" /><circle cx="574" cy="38" r="24" fill={ART.dark.shade} />
+          <circle cx="552" cy="48" r="2.4" fill={ART.pearl.shade} opacity="0.5" />
+          {spires.map((p, i) => (
+            <g key={i}>
+              <polygon points={pts([[p.x - p.w / 2, 140], [p.x - p.w * 0.28 + p.lean, 140 - p.h], [p.x + p.w * 0.1 + p.lean, 140 - p.h - 12], [p.x + p.w * 0.34 + p.lean, 140 - p.h * 0.7], [p.x + p.w / 2, 140]])} fill={ART.dark.shade} />
+              <polygon points={pts([[p.x + p.w * 0.1 + p.lean, 140 - p.h - 12], [p.x + p.w * 0.34 + p.lean, 140 - p.h * 0.7], [p.x + p.w / 2, 140], [p.x + p.w * 0.1, 140]])} fill={ART.dark.base} />
+              <polyline points={pts([[p.x - p.w * 0.28 + p.lean, 140 - p.h], [p.x - p.w / 2, 140]])} fill="none" stroke={ART.teal.hi} strokeWidth="0.8" opacity="0.5" />
+            </g>
+          ))}
+          {[[60, 96, 220], [330, 110, 260], [560, 92, 180]].map(([x, y, w], i) => <ellipse key={i} cx={x} cy={y} rx={w / 2} ry="9" fill={S.kyber} opacity="0.1" style={{ animation: `steam-rise ${6 + i * 1.5}s ease-out ${i}s infinite` }} />)}
+        </g>
+      )}
+      {fam === 'outskirts' && (
+        <g>
+          <circle cx="620" cy="118" r="96" fill={ART.teal.base} opacity="0.4" /><circle cx="618" cy="120" r="92" fill={ART.copper.shade} /><circle cx="590" cy="100" r="60" fill={ART.bronze.shade} opacity="0.8" />
+          <polygon points={pts([[560, 70], [610, 58], [650, 72], [700, 90], [640, 96]])} fill={ART.rust.shade} opacity="0.7" />
+          {[0, 1, 2, 3, 4, 5].map((i) => <rect key={i} x={20 + i * 128} y={92 - (i % 2) * 14} width={112} height={68 + (i % 2) * 14} fill={ART.hull.shade} />)}
+          {[0, 1, 2, 3, 4, 5].map((i) => <rect key={'c' + i} x={20 + i * 128} y={92 - (i % 2) * 14} width={112} height="5" fill={ART.hull.base} />)}
+          {[0, 1, 2, 3, 4, 5].map((i) => <polygon key={'t' + i} points={pts([[40 + i * 128, 92 - (i % 2) * 14], [48 + i * 128, 66 - (i % 2) * 14], [88 + i * 128, 66 - (i % 2) * 14], [96 + i * 128, 92 - (i % 2) * 14]])} fill={ART.hull.base} />)}
+          {Array.from({ length: 24 }, (_, i) => <rect key={'w' + i} x={30 + i * 32} y={108 + (i % 3) * 10} width="5" height="2.4" fill={S.cyan} opacity="0.6" />)}
+          <polygon points={pts([[436, 160], [448, 96], [512, 96], [524, 160]])} fill={ART.ink} /><polygon points={pts([[452, 160], [460, 118], [500, 118], [508, 160]])} fill={S.orange} opacity="0.7" style={{ animation: 'ship-engine 2.2s ease-in-out infinite' }} />
+          {[[120, 38], [300, 30], [480, 44]].map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="46" ry="14" fill={ART.dark.base} opacity="0.7" style={{ animation: `steam-rise ${5 + i}s ease-out ${i * 1.3}s infinite` }} />)}
+          {[[60, 54, 380, 80, S.redHi], [700, 40, 420, 84, S.cyanHi], [200, 30, 560, 74, S.redHi]].map(([x1, y1, x2, y2, c], i) => <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={c} strokeWidth="0.9" opacity="0.6" style={{ animation: `holo-flicker ${0.9 + i * 0.4}s ease-in-out infinite` }} />)}
+        </g>
+      )}
+      {fam === 'wastes' && (
+        <g>
+          <rect x="0" y="96" width={W} height="64" fill={ART.dark.shade} />
+          {[[40, 30], [200, 46], [360, 26], [520, 50], [680, 34]].map(([x, h], i) => (
+            <g key={i}>
+              <rect x={x} y={96 - h * 2} width="26" height={h * 2 + 20} fill={ART.dark.base} /><rect x={x} y={96 - h * 2} width="6" height={h * 2 + 20} fill={ART.dark.hi} opacity="0.5" />
+              <rect x={x - 5} y={96 - h * 2 - 6} width="36" height="8" fill={ART.copper.shade} /><rect x={x - 5} y={96 - h * 2 - 6} width="36" height="2" fill={ART.copper.base} />
+              <rect x={x + 8} y={96 - h * 2 + 12} width="10" height="3" fill={S.orange} opacity="0.8" style={{ animation: `ship-engine ${1.5 + i * 0.3}s ease-in-out infinite` }} />
+            </g>
+          ))}
+          {[[110, 14], [440, 18], [610, 12]].map(([x, rr], i) => <g key={i}><circle cx={x} cy="80" r={rr * 2} fill={ART.brass.shade} /><circle cx={x} cy="80" r={rr * 2 - 5} fill={ART.dark.shade} /><circle cx={x} cy="80" r="4" fill={ART.brass.base} /></g>)}
+          {seed === 7 && <g><polygon points={pts([[0, 160], [0, 90], [70, 90], [70, 160]])} fill={ART.ink} /><polygon points={pts([[6, 160], [6, 104], [64, 104], [64, 160]])} fill={S.orange} opacity="0.5" style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} /></g>}
+          <polygon points={pts([[0, 150], [120, 138], [260, 148], [420, 136], [600, 150], [768, 140], [768, 160], [0, 160]])} fill={S.orange} opacity="0.55" />
+          {[[80, 40], [330, 34], [590, 44]].map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="52" ry="16" fill={ART.ink} opacity="0.5" style={{ animation: `steam-rise ${5 + i}s ease-out ${i * 1.2}s infinite` }} />)}
+        </g>
+      )}
+      <rect x="0" y="146" width={W} height="14" fill={ART.dark.shade} /><rect x="0" y="146" width={W} height="2" fill={fam === 'ravine' ? ART.teal.shade : ART.rust.shade} />
+      <Rivets x={6} y={152} w={756} n={48} c="dark" /><Seams x={0} y={146} w={W} h={14} cols={24} op={0.3} />
+      <Grime x={0} y={100} w={W} h={60} seed={2101} n={10} op={0.12} /><Scuff x={0} y={146} w={W} h={14} seed={2102} n={12} c="dark" />
+    </svg>
+  );
+}
+
+function PropKdyBarricade({ variant }) {
+  const S = ART.signal, scrap = variant === 'scrap';
+  const body = scrap ? 'rust' : 'hull';
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={42} ry={3} />
+      <Bev t="polygon" points={pts([[6, 56], [6, 24], [16, 14], [80, 14], [90, 24], [90, 56]])} c={body} o={1.4} />
+      <rect x="10" y="26" width="76" height="3" fill={scrap ? ART.rust.shade : ART.hull.shade} opacity="0.7" />
+      {!scrap && <Hazard x={10} y={44} w={76} h={8} opacity={0.9} />}
+      {scrap && [14, 36, 58].map((x, i) => <polygon key={i} points={pts([[x, 52], [x + 4, 30], [x + 20, 34], [x + 18, 52]])} fill={ART.dark.base} opacity="0.7" />)}
+      {[[22, 20], [52, 18], [70, 22]].map(([x, y], i) => <g key={i}><circle cx={x} cy={y + 12} r="4" fill={ART.ink} opacity="0.7" /><circle cx={x} cy={y + 12} r="2.2" fill={S.orange} opacity="0.75" style={{ animation: `ship-engine ${1.6 + i * 0.4}s ease-in-out infinite` }} /></g>)}
+      <polygon points={pts([[40, 14], [46, 4], [56, 14]])} fill={ART.dark.base} opacity="0.5" />
+      <Greeble x={12} y={18} w={70} h={10} seed={2111} n={6} c={scrap ? 'rust' : 'hull'} /><Rivets x={10} y={20} w={76} n={9} c={body} /><Seams x={6} y={14} w={84} h={42} cols={4} rows={1} op={0.3} />
+      <Grime x={6} y={14} w={84} h={46} seed={2112} n={6} op={0.2} /><Scuff x={8} y={16} w={80} h={40} seed={2113} n={6} c={body} />
+    </svg>
+  );
+}
+
+function PropAutoTurret({ variant }) {
+  const S = ART.signal, ok = variant === 'friendly', lamp = ok ? S.cyanHi : S.red, glow = ok ? S.cyan : S.red;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={24} ry={3} />
+      <Slab x={10} y={42} w={44} h={14} k={2} c="dark" o={1.2} /><Hazard x={13} y={50} w={38} h={4} opacity={0.85} />
+      <Bev t="polygon" points={pts([[18, 42], [22, 22], [42, 22], [46, 42]])} c="steel" o={1} />
+      <Bev t="polygon" points={pts([[22, 24], [26, 12], [38, 12], [42, 24]])} c="dark" o={0.8} />
+      <rect x="40" y="14" width="22" height="4" fill={ART.dark.shade} /><rect x="40" y="14" width="22" height="1.2" fill={ART.steel.hi} />
+      <rect x="40" y="19" width="22" height="3" fill={ART.dark.shade} />
+      <circle cx="32" cy="18" r="4" fill={ART.ink} /><circle cx="32" cy="18" r="2.6" fill={lamp} style={{ animation: 'holo-flicker 1.3s ease-in-out infinite' }} /><Glow cx={32} cy={18} r={11} c={glow} opacity={0.4} />
+      <rect x="14" y="30" width="6" height="12" fill={ART.ink} /><rect x="15" y={42 - (ok ? 4 : 10)} width="4" height={ok ? 4 : 10} fill={ok ? S.cyan : S.orange} />
+      <Vent x={44} y={30} w={8} h={8} n={3} /><Lights x={24} y={46} n={4} gap={5} seed={5} />
+      <Rivets x={13} y={44} w={38} n={7} c="dark" /><Seams x={10} y={42} w={44} h={14} cols={3} op={0.3} />
+      <Grime x={10} y={12} w={44} h={44} seed={2121} n={4} op={0.2} /><Scuff x={14} y={14} w={36} h={36} seed={2122} n={5} c="steel" />
+    </svg>
+  );
+}
+
+function PropShantyHovel({ variant = 'a' }) {
+  const S = ART.signal;
+  const sign = { a: [S.magenta, 'CANTINA'], b: [S.cyanHi, 'REPAIRS'], c: [S.amberHi, 'NOODLES'] }[variant] || [S.magenta, 'OPEN'];
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={92} rx={42} ry={3} />
+      <Bev t="polygon" points={pts([[6, 90], [6, 34], [90, 34], [90, 90]])} c="rust" o={1.4} />
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <line key={i} x1={10 + i * 10.4} y1="36" x2={10 + i * 10.4} y2="88" stroke={ART.rust.shade} strokeWidth="1.2" opacity="0.7" />)}
+      <Bev t="polygon" points={pts([[2, 36], [14, 20], [82, 18], [94, 36]])} c="copper" o={1} />
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => <line key={i} x1={14 + i * 10} y1="22" x2={10 + i * 11} y2="35" stroke={ART.copper.shade} strokeWidth="1" opacity="0.8" />)}
+      <rect x="12" y="46" width="22" height="18" fill={ART.screen.amber} /><rect x="14" y="48" width="18" height="14" fill={S.amber} opacity="0.35" style={{ animation: 'holo-flicker 3.4s ease-in-out infinite' }} />
+      <Bev t="polygon" points={pts([[58, 90], [58, 52], [78, 52], [78, 90]])} c="dark" o={0.8} /><rect x="60" y="54" width="16" height="34" fill={ART.ink} opacity="0.8" />
+      <Slab x={16} y={24} w={62} h={9} k={1.2} c="dark" o={0.8} /><rect x="18" y="26" width="58" height="5" fill={ART.screen.off} />
+      <text x="47" y="30.4" textAnchor="middle" fontSize="4.6" fill={sign[0]} fontWeight="700" {...PT} style={{ animation: 'holo-flicker 2s ease-in-out infinite' }}>{sign[1]}</text>
+      <Cable d="M80 36 C86 44, 88 52, 84 60" c={ART.dark.base} w={1.6} />
+      <Greeble x={10} y={68} w={46} h={20} seed={2131} n={7} c="rust" /><Lights x={14} y={80} n={4} gap={6} seed={6} /><Rivets x={10} y={38} w={76} n={9} c="rust" /><Seams x={6} y={34} w={84} h={56} cols={3} op={0.2} />
+      <Grime x={6} y={34} w={84} h={56} seed={2132} n={7} op={0.22} /><Scuff x={8} y={36} w={80} h={50} seed={2133} n={6} c="rust" />
+    </svg>
+  );
+}
+
+function PropBurningWreck() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={42} ry={3} />
+      <Bev t="polygon" points={pts([[6, 54], [10, 34], [30, 26], [64, 24], [88, 40], [90, 54]])} c="dark" o={1.2} />
+      <polygon points={pts([[16, 36], [32, 28], [60, 26], [60, 40], [20, 42]])} fill={ART.rust.base} /><polygon points={pts([[20, 38], [34, 30], [58, 28], [58, 36]])} fill={ART.rust.hi} opacity="0.6" />
+      <circle cx="24" cy="54" r="7" fill={ART.ink} /><circle cx="24" cy="54" r="3.6" fill={ART.dark.hi} /><circle cx="74" cy="54" r="7" fill={ART.ink} /><circle cx="74" cy="54" r="3.6" fill={ART.dark.hi} />
+      <polygon points={pts([[40, 28], [46, 8], [52, 20], [58, 4], [64, 24], [60, 30]])} fill={S.orange} style={{ animation: 'holo-flicker 0.9s ease-in-out infinite' }} /><polygon points={pts([[46, 28], [50, 16], [54, 24], [58, 14], [60, 28]])} fill={S.amberHi} style={{ animation: 'holo-flicker 0.6s ease-in-out infinite' }} />
+      <Glow cx={52} cy={24} r={26} c={S.orange} opacity={0.5} style={{ animation: 'ship-engine 1.2s ease-in-out infinite' }} />
+      <ellipse cx="56" cy="8" rx="14" ry="5" fill={ART.ink} opacity="0.5" style={{ animation: 'steam-rise 3.4s ease-out infinite' }} />
+      <Vent x={68} y={36} w={10} h={8} n={3} /><Greeble x={12} y={36} w={20} h={14} seed={2141} n={4} c="dark" /><Rivets x={10} y={50} w={76} n={9} c="dark" /><Seams x={6} y={34} w={84} h={20} cols={3} op={0.3} />
+      <Grime x={6} y={26} w={84} h={30} seed={2142} n={6} op={0.3} /><Scuff x={8} y={30} w={80} h={24} seed={2143} n={5} c="rust" />
+    </svg>
+  );
+}
+
+function PropFuelConduit({ variant }) {
+  const S = ART.signal, burst = variant === 'burst';
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={60} rx={56} ry={3} />
+      <Bev t="polygon" points={pts([[2, 44], [2, 26], [126, 26], [126, 44]])} c="copper" o={1.2} />
+      {[24, 54, 84, 108].map((x) => <Bev key={x} t="polygon" points={pts([[x, 48], [x, 22], [x + 6, 22], [x + 6, 48]])} c="dark" o={0.8} />)}
+      <Hazard x={4} y={38} w={120} h={5} opacity={0.9} />
+      <circle cx="40" cy="34" r="6" fill={ART.ink} /><circle cx="40" cy="34" r="4.4" fill={S.red} /><Bev t="polygon" points={pts([[36, 30], [44, 30], [44, 38], [36, 38]])} c="brass" o={0.5} />
+      <circle cx="96" cy="34" r="6" fill={ART.ink} /><circle cx="96" cy="34" r="4.4" fill={burst ? S.orange : S.cyan} style={{ animation: 'holo-flicker 1.4s ease-in-out infinite' }} />
+      {burst && <g><polygon points={pts([[66, 28], [60, 8], [70, 18], [74, 2], [80, 24], [72, 30]])} fill={S.orange} style={{ animation: 'holo-flicker 0.8s ease-in-out infinite' }} /><Glow cx={70} cy={20} r={24} c={S.orange} opacity={0.45} /></g>}
+      {[10, 70].map((x) => <rect key={x} x={x} y="46" width="20" height="10" fill={ART.dark.base} />)}
+      <Rivets x={6} y={29} w={116} n={14} c="copper" /><Seams x={2} y={26} w={124} h={18} cols={8} op={0.35} /><Lights x={12} y={49} n={3} gap={5} seed={7} /><Greeble x={4} y={46} w={120} h={10} seed={2151} n={5} c="dark" />
+      <Grime x={2} y={26} w={124} h={30} seed={2152} n={6} op={0.25} /><Scuff x={4} y={28} w={118} h={20} seed={2153} n={6} c="copper" />
+    </svg>
+  );
+}
+
+function PropMortarPit() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={90} rx={42} ry={4} />
+      <polygon points={pts(ngon(48, 66, 42, 22, 10))} fill={ART.dark.shade} />
+      <polygon points={pts(ngon(48, 62, 38, 19, 10))} fill={ART.rust.shade} />
+      {Array.from({ length: 10 }, (_, i) => { const a = (i / 10) * Math.PI * 2; return <Bev key={i} t="polygon" points={pts([[48 + Math.cos(a) * 36 - 6, 62 + Math.sin(a) * 18], [48 + Math.cos(a) * 36 - 6, 52 + Math.sin(a) * 18], [48 + Math.cos(a) * 36 + 6, 52 + Math.sin(a) * 18], [48 + Math.cos(a) * 36 + 6, 62 + Math.sin(a) * 18]])} c="concrete" o={0.6} />; })}
+      <Bev t="polygon" points={pts([[40, 64], [44, 30], [52, 30], [56, 64]])} c="dark" o={1} />
+      <polygon points={pts([[46, 30], [48, 8], [52, 8], [54, 30]])} fill={ART.steel.base} /><rect x="44" y="26" width="12" height="4" fill={ART.brass.base} />
+      <rect x="30" y="68" width="14" height="10" fill={ART.wood.base} /><rect x="30" y="68" width="14" height="2" fill={ART.wood.hi} /><Hazard x={52} y={70} w={16} h={7} opacity={0.9} />
+      <circle cx="48" cy="9" r="3" fill={S.orange} style={{ animation: 'ship-blink 1.1s ease-in-out infinite' }} /><Glow cx={48} cy={9} r={12} c={S.orange} opacity={0.4} />
+      <Greeble x={34} y={50} w={28} h={14} seed={2161} n={5} c="dark" /><Rivets x={16} y={72} w={64} n={8} c="rust" /><Seams x={14} y={50} w={68} h={30} cols={4} op={0.25} /><Lights x={40} y={74} n={4} gap={4} seed={8} />
+      <Grime x={8} y={30} w={80} h={56} seed={2162} n={6} op={0.25} /><Scuff x={14} y={34} w={68} h={46} seed={2163} n={6} c="rust" />
+    </svg>
+  );
+}
+
+function PropCatwalkPost() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={92} rx={40} ry={3} />
+      {[12, 80].map((x) => <Bev key={x} t="polygon" points={pts([[x, 92], [x, 34], [x + 5, 34], [x + 5, 92]])} c="rust" o={0.8} />)}
+      {[44, 60, 76].map((y) => <line key={y} x1="14" y1={y} x2="82" y2={y + 10} stroke={ART.rust.base} strokeWidth="1.4" opacity="0.7" />)}
+      <Bev t="polygon" points={pts([[4, 38], [4, 28], [92, 28], [92, 38]])} c="steel" o={1.2} />
+      {Array.from({ length: 12 }, (_, i) => <rect key={i} x={8 + i * 7.2} y="30" width="4" height="6" fill={ART.dark.shade} opacity="0.7" />)}
+      <line x1="4" y1="14" x2="92" y2="14" stroke={ART.rust.hi} strokeWidth="1.4" /><line x1="4" y1="20" x2="92" y2="20" stroke={ART.rust.base} strokeWidth="1.2" />
+      {[4, 28, 52, 76, 92].map((x) => <rect key={x} x={x} y="14" width="2.2" height="16" fill={ART.rust.base} />)}
+      <polygon points={pts([[56, 28], [60, 12], [72, 12], [76, 28]])} fill={ART.dark.base} /><rect x="70" y="14" width="22" height="3" fill={ART.dark.shade} /><circle cx="64" cy="18" r="2" fill={S.orange} style={{ animation: 'ship-blink 1.6s ease-in-out infinite' }} />
+      <rect x="22" y="38" width="4" height="54" fill={ART.dark.base} />{[44, 54, 64, 74, 84].map((y) => <rect key={y} x="18" y={y} width="12" height="1.6" fill={ART.steel.base} />)}
+      <Vent x={36} y={40} w={14} h={8} n={3} /><Lights x={36} y={52} n={5} gap={4} seed={9} /><Greeble x={6} y={30} w={40} h={6} seed={2171} n={4} c="steel" /><Rivets x={6} y={33} w={84} n={11} c="steel" /><Seams x={4} y={28} w={88} h={10} cols={6} op={0.3} />
+      <Grime x={4} y={28} w={88} h={64} seed={2172} n={7} op={0.22} /><Scuff x={6} y={30} w={84} h={58} seed={2173} n={6} c="rust" />
+    </svg>
+  );
+}
+
+function PropLandspeederDepot() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 160 96" width="160" height="96" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={90} rx={72} ry={4} />
+      <Bev t="polygon" points={pts([[4, 88], [4, 40], [156, 40], [156, 88]])} c="hull" o={1.4} />
+      <Hazard x={4} y={40} w={152} h={5} opacity={0.9} /><Slab x={40} y={12} w={80} h={20} k={2} c="dark" o={1.2} />
+      <rect x="44" y="15" width="72" height="14" fill={ART.screen.off} /><text x="80" y="25" textAnchor="middle" fontSize="7" fill={S.amberHi} fontWeight="700" {...PT}>KDY LANDSPEEDER DEPOT</text>
+      {[16, 64, 112].map((x, i) => (
+        <g key={x}>
+          <Bev t="polygon" points={pts([[x, 82], [x + 4, 56], [x + 30, 54], [x + 34, 70], [x + 30, 82]])} c="steel" o={0.9} />
+          <polygon points={pts([[x + 20, 56], [x + 38, 50], [x + 40, 58], [x + 24, 62]])} fill={ART.deepglass.base} /><rect x={x + 2} y="76" width="30" height="3" fill={ART.dark.shade} />
+          <circle cx={x + 8} cy="82" r="3" fill={S.cyan} style={{ animation: `ship-engine ${1.4 + i * 0.3}s ease-in-out infinite` }} /><Glow cx={x + 8} cy={84} r={7} c={S.cyan} opacity={0.4} />
+        </g>
+      ))}
+      <Bev t="polygon" points={pts([[60, 88], [60, 62], [100, 62], [100, 88]])} c="dark" o={0.9} /><Lights x={66} y={66} n={6} gap={5} seed={10} />
+      <Greeble x={8} y={46} w={146} h={8} seed={2181} n={10} c="hull" /><Rivets x={8} y={44} w={144} n={18} c="hull" /><Seams x={4} y={40} w={152} h={48} cols={7} op={0.25} /><Vent x={130} y={56} w={20} h={14} n={4} />
+      <Grime x={4} y={40} w={152} h={52} seed={2182} n={8} op={0.2} /><Scuff x={6} y={44} w={148} h={44} seed={2183} n={8} c="hull" />
+    </svg>
+  );
+}
+
+function PropEwebTurret({ variant }) {
+  const S = ART.signal, linked = variant === 'linked';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={24} ry={3} />
+      <Slab x={12} y={44} w={40} h={12} k={2} c="dark" o={1} />
+      {[14, 46].map((x) => <polygon key={x} points={pts([[32, 40], [x, 58], [x + 4, 58], [34, 40]])} fill={ART.steel.base} />)}
+      <Bev t="polygon" points={pts([[20, 40], [22, 24], [42, 24], [44, 40]])} c="steel" o={1} />
+      <rect x="40" y="26" width="22" height="5" fill={ART.dark.shade} /><rect x="40" y="26" width="22" height="1.4" fill={ART.steel.hi} /><rect x="40" y="32" width="22" height="3" fill={ART.dark.shade} />
+      {linked && <Glow cx={62} cy={29} r={8} c={S.cyan} opacity={0.7} />}
+      <rect x="14" y="26" width="8" height="14" fill={ART.ink} /><rect x="15" y={40 - (linked ? 12 : 5)} width="6" height={linked ? 12 : 5} fill={linked ? S.cyan : S.amber} />
+      <rect x="24" y="28" width="14" height="6" fill={ART.screen.cyan} /><text x="31" y="32.6" textAnchor="middle" fontSize="3.2" fill={linked ? S.cyanHi : S.amberHi} fontWeight="700" {...PT}>{linked ? 'x4 LINKED' : 'HEAT 12'}</text>
+      <Vent x={24} y={36} w={14} h={5} n={2} /><Lights x={22} y={46} n={5} gap={4.5} seed={11} /><Rivets x={14} y={52} w={36} n={6} c="dark" /><Seams x={12} y={44} w={40} h={12} cols={3} op={0.3} /><Greeble x={22} y={26} w={18} h={4} seed={2191} n={3} c="steel" />
+      <Grime x={12} y={24} w={40} h={32} seed={2192} n={4} op={0.22} /><Scuff x={14} y={26} w={36} h={26} seed={2193} n={5} c="steel" />
+    </svg>
+  );
+}
+
+function PropExoSocket() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={22} ry={3} />
+      <Slab x={14} y={44} w={36} h={12} k={2} c="dark" o={1} /><Hazard x={16} y={52} w={32} h={3} opacity={0.85} />
+      <Bev t="polygon" points={pts([[20, 46], [20, 14], [44, 14], [44, 46]])} c="steel" o={1.2} />
+      <rect x="24" y="18" width="16" height="16" fill={ART.ink} /><circle cx="32" cy="26" r="6" fill={ART.dark.base} /><circle cx="32" cy="26" r="3.6" fill={ART.dark.shade} /><circle cx="32" cy="26" r="1.6" fill={S.cyanHi} style={{ animation: 'holo-flicker 1.2s ease-in-out infinite' }} />
+      <Glow cx={32} cy={26} r={12} c={S.cyan} opacity={0.35} />
+      <rect x="24" y="36" width="16" height="6" fill={ART.screen.cyan} /><text x="32" y="40.8" textAnchor="middle" fontSize="3" fill={S.cyanHi} fontWeight="700" {...PT}>POWER LINK</text>
+      <Cable d="M44 30 C56 30, 58 44, 52 54" c={ART.dark.base} w={2.4} /><Vent x={22} y={16} w={6} h={3} n={2} /><Lights x={24} y={48} n={5} gap={4} seed={12} /><Rivets x={22} y={44} w={20} n={4} c="steel" /><Seams x={20} y={14} w={24} h={32} rows={2} op={0.3} /><Greeble x={22} y={34} w={20} h={2} seed={2201} n={2} c="steel" />
+      <Grime x={14} y={14} w={36} h={42} seed={2202} n={4} op={0.22} /><Scuff x={18} y={16} w={28} h={34} seed={2203} n={5} c="steel" />
+    </svg>
+  );
+}
+
+function PropRepulsorBarricade() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={42} ry={3} />
+      <Bev t="polygon" points={pts([[8, 50], [8, 20], [88, 20], [88, 50]])} c="dark" o={1.4} />
+      {[12, 36, 60].map((x, i) => <g key={x}><rect x={x} y="24" width="22" height="22" fill={ART.dark.base} /><rect x={x} y="24" width="22" height="2" fill={ART.dark.hi} /><circle cx={x + 11} cy="36" r="2" fill={ART.dark.shade} /></g>)}
+      {[16, 40, 64].map((x, i) => <g key={x}><rect x={x} y="50" width="14" height="5" fill={ART.dark.shade} /><rect x={x + 1} y="53" width="12" height="2.4" fill={S.cyan} style={{ animation: `ship-engine ${1.6 + i * 0.3}s ease-in-out infinite` }} /><Glow cx={x + 7} cy={56} rx={14} ry={3} c={S.cyan} opacity={0.4} /></g>)}
+      <Hazard x={8} y={18} w={80} h={4} opacity={0.85} />
+      <Lights x={14} y={28} n={3} gap={24} seed={13} /><Greeble x={10} y={24} w={76} h={20} seed={2211} n={6} c="dark" /><Rivets x={10} y={46} w={76} n={9} c="dark" /><Seams x={8} y={20} w={80} h={30} cols={3} op={0.35} /><Vent x={78} y={26} w={8} h={8} n={3} />
+      <Grime x={8} y={18} w={80} h={36} seed={2212} n={6} op={0.25} /><Scuff x={10} y={22} w={76} h={26} seed={2213} n={6} c="steel" />
+    </svg>
+  );
+}
+
+function PropDropSpeeder() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={90} rx={56} ry={4} />
+      <Bev t="polygon" points={pts([[8, 74], [16, 46], [48, 34], [100, 34], [120, 56], [118, 74]])} c="hull" o={1.4} />
+      <polygon points={pts([[26, 46], [50, 38], [70, 38], [70, 54], [28, 56]])} fill={ART.deepglass.base} /><polygon points={pts([[30, 48], [50, 42], [62, 42], [62, 48]])} fill={ART.deepglass.hi} opacity="0.5" />
+      <polygon points={pts([[76, 40], [98, 40], [112, 56], [76, 56]])} fill={ART.dark.shade} /><Vent x={80} y={44} w={26} h={10} n={4} />
+      <rect x="74" y="12" width="40" height="24" fill={ART.dark.base} /><rect x="74" y="12" width="40" height="3" fill={ART.dark.hi} /><circle cx="94" cy="28" r="7" fill={ART.ink} /><circle cx="94" cy="28" r="4" fill={S.orange} style={{ animation: 'ship-engine 1.8s ease-in-out infinite' }} />
+      <Hazard x={10} y={66} w={104} h={5} opacity={0.9} />
+      {[30, 90].map((x, i) => <g key={x}><Slab x={x - 12} y={72} w={24} h={8} k={1.4} c="dark" o={0.8} /><rect x={x - 10} y="78" width="20" height="2.4" fill={S.cyan} style={{ animation: `ship-engine ${1.4 + i * 0.3}s ease-in-out infinite` }} /><Glow cx={x} cy={84} rx={18} ry={3} c={S.cyan} opacity={0.4} /></g>)}
+      <text x="40" y="64" fontSize="4.4" fill={ART.ink} fontWeight="700" {...PT}>KDY V-19 DROP</text>
+      <Greeble x={14} y={50} w={60} h={14} seed={2221} n={6} c="hull" /><Rivets x={12} y={60} w={100} n={14} c="hull" /><Seams x={8} y={34} w={112} h={40} cols={6} rows={1} op={0.25} /><Lights x={80} y={60} n={6} gap={5} seed={14} />
+      <Grime x={8} y={34} w={112} h={46} seed={2222} n={7} op={0.22} /><Scuff x={10} y={38} w={108} h={38} seed={2223} n={8} c="hull" />
+    </svg>
+  );
+}
+
+function PropCamoNetting() {
+  return (
+    <svg viewBox="0 0 256 128" width="256" height="128" style={PROP_STYLE}>
+      <polygon points={pts([[8, 8], [248, 12], [250, 70], [220, 88], [180, 84], [150, 120], [100, 110], [70, 118], [30, 96], [6, 64]])} fill={ART.canvas.shade} opacity="0.72" />
+      <polygon points={pts([[20, 14], [120, 12], [110, 54], [60, 66], [26, 52]])} fill={ART.canvas.base} opacity="0.55" />
+      <polygon points={pts([[130, 20], [240, 24], [236, 66], [190, 74], [140, 56]])} fill={ART.dark.base} opacity="0.55" />
+      {Array.from({ length: 18 }, (_, i) => <line key={i} x1={10 + i * 14} y1="8" x2={10 + i * 14 + (i % 3) * 6} y2={90 + (i % 4) * 8} stroke={ART.dark.hi} strokeWidth="0.7" opacity="0.45" />)}
+      {[22, 44, 66, 88].map((y) => <line key={y} x1="6" y1={y} x2="250" y2={y + 4} stroke={ART.dark.hi} strokeWidth="0.7" opacity="0.45" />)}
+      <Rivets x={10} y={10} w={236} n={16} c="steel" /><Seams x={6} y={8} w={244} h={90} cols={8} rows={2} op={0.2} /><Lights x={30} y={96} n={5} gap={40} seed={15} />
+      <Grime x={6} y={8} w={244} h={110} seed={2231} n={8} op={0.15} /><Scuff x={10} y={12} w={236} h={100} seed={2232} n={8} c="canvas" />
+    </svg>
+  );
+}
+
+function PropSteamGrate() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={56} rx={24} ry={3} />
+      <Bev t="polygon" points={pts([[8, 54], [8, 24], [56, 24], [56, 54]])} c="dark" o={1.2} />
+      <Hazard x={8} y={22} w={48} h={4} opacity={0.9} />
+      {[0, 1, 2, 3, 4, 5].map((i) => <rect key={i} x="14" y={30 + i * 3.8} width="36" height="1.8" fill={ART.ink} />)}
+      {[22, 32, 42].map((x, i) => <g key={x}><ellipse cx={x} cy="22" rx="8" ry="4" fill={ART.pearl.base} opacity="0.4" style={{ animation: `steam-rise ${2.2 + i * 0.5}s ease-out ${i * 0.6}s infinite` }} /><ellipse cx={x + 3} cy="12" rx="6" ry="3" fill={ART.pearl.base} opacity="0.3" style={{ animation: `steam-rise ${3 + i * 0.4}s ease-out ${i * 0.9}s infinite` }} /></g>)}
+      <circle cx="12" cy="50" r="1.8" fill={S.orange} style={{ animation: 'ship-blink 1.4s ease-in-out infinite' }} />
+      <Vent x={44} y={44} w={8} h={7} n={2} /><Lights x={16} y={50} n={4} gap={5} seed={16} /><Rivets x={10} y={28} w={44} n={6} c="dark" /><Seams x={8} y={24} w={48} h={30} cols={3} op={0.3} /><Greeble x={10} y={26} w={44} h={3} seed={2241} n={3} c="dark" />
+      <Grime x={8} y={24} w={48} h={30} seed={2242} n={4} op={0.3} /><Scuff x={10} y={26} w={44} h={26} seed={2243} n={4} c="dark" />
+    </svg>
+  );
+}
+
+function PropFusionLever({ variant }) {
+  const S = ART.signal, blue = variant === 'blue';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={22} ry={3} />
+      <Slab x={12} y={38} w={40} h={18} k={2} c="steel" o={1.2} /><Hazard x={14} y={52} w={36} h={3} opacity={0.85} />
+      <Bev t="polygon" points={pts([[16, 40], [16, 20], [48, 20], [48, 40]])} c="dark" o={1} />
+      <rect x="20" y="24" width="24" height="8" fill={ART.screen.off} /><rect x="22" y="26" width="20" height="4" fill={blue ? S.blue : S.amber} opacity="0.7" style={{ animation: 'holo-flicker 1.6s ease-in-out infinite' }} />
+      <text x="32" y="22.6" textAnchor="middle" fontSize="2.6" fill={S.cyanHi} fontWeight="700" {...PT}>FUSION DIVERTER</text>
+      <polygon points={pts([[30, 40], [34, 40], [40, 12], [36, 12]])} fill={ART.steel.base} /><circle cx="38" cy="10" r="4" fill={S.red} /><circle cx="38" cy="10" r="2" fill={S.redHi} />
+      <polyline points={pts([[40, 14], [44, 8], [42, 4], [48, 0]])} fill="none" stroke={S.amberHi} strokeWidth="0.9" opacity="0.8" style={{ animation: 'ship-spark 1.2s ease-in-out infinite' }} />
+      <Lights x={18} y={44} n={5} gap={6} seed={17} colors={blue ? ['cyan'] : ['amber', 'red']} /><Vent x={42} y={42} w={8} h={6} n={2} /><Rivets x={14} y={40} w={36} n={6} c="steel" /><Seams x={12} y={38} w={40} h={18} cols={3} op={0.3} /><Greeble x={14} y={34} w={14} h={3} seed={2251} n={2} c="steel" />
+      <Grime x={12} y={20} w={40} h={36} seed={2252} n={4} op={0.22} /><Scuff x={14} y={22} w={36} h={30} seed={2253} n={5} c="steel" />
+    </svg>
+  );
+}
+
+function PropBrigCell({ variant }) {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 96" width="96" height="96" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={90} rx={40} ry={3} />
+      <Slab x={6} y={20} w={84} h={68} k={2.5} c="dark" o={1.4} />
+      <rect x="12" y="26" width="72" height="56" fill={ART.screen.cyan} />
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => <rect key={i} x={16 + i * 7.6} y="26" width="2.2" height="56" fill={S.cyan} opacity="0.7" style={{ animation: `holo-flicker ${1.2 + (i % 3) * 0.3}s ease-in-out infinite` }} />)}
+      <Glow cx={48} cy={54} rx={40} ry={28} c={S.cyan} opacity={0.3} />
+      <Bev t="polygon" points={pts([[16, 76], [16, 66], [46, 66], [46, 76]])} c="steel" o={0.6} /><rect x="16" y="64" width="30" height="3" fill={ART.fabric.base} />
+      {variant !== 'empty' && <g><circle cx="68" cy="58" r="5" fill={ART.skin.dark} opacity="0.7" /><rect x="63" y="62" width="10" height="14" fill={ART.rust.base} opacity="0.8" /><rect x="62" y="70" width="12" height="3" fill={S.red} style={{ animation: 'ship-blink 1.2s ease-in-out infinite' }} /></g>}
+      <Slab x={36} y={10} w={24} h={10} k={1.4} c="steel" o={0.8} /><rect x="40" y="13" width="16" height="4" fill={ART.screen.off} /><text x="48" y="16.4" textAnchor="middle" fontSize="3" fill={S.cyanHi} fontWeight="700" {...PT}>CELL 3</text>
+      <Vent x={76} y={22} w={10} h={6} n={2} /><Lights x={12} y={84} n={6} gap={6} seed={18} /><Rivets x={10} y={22} w={76} n={9} c="dark" /><Seams x={6} y={20} w={84} h={68} cols={3} op={0.3} /><Greeble x={8} y={84} w={80} h={3} seed={2261} n={4} c="dark" />
+      <Grime x={6} y={20} w={84} h={68} seed={2262} n={6} op={0.25} /><Scuff x={8} y={22} w={80} h={62} seed={2263} n={6} c="dark" />
+    </svg>
+  );
+}
+
+function PropEncArray() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={60} rx={42} ry={3} />
+      {[8, 34, 60].map((x, i) => (
+        <g key={x}>
+          <Slab x={x} y={8} w={26} h={48} k={2} c="dark" o={1.2} /><rect x={x + 3} y="12" width="20" height="40" fill={ART.screen.cyan} />
+          {Array.from({ length: 7 }, (_, j) => <rect key={j} x={x + 5} y={15 + j * 5.2} width={10 + ((i + j) % 3) * 3} height="2.4" fill={j % 3 ? S.cyan : S.green} opacity="0.8" style={{ animation: `ship-blink ${1.2 + ((i + j) % 4) * 0.4}s ease-in-out infinite` }} />)}
+          <Cable d={`M${x + 13} 52 C${x + 13} 58, ${x + 24} 60, ${x + 30} 58`} c={ART.dark.base} w={1.6} />
+        </g>
+      ))}
+      <Vent x={84} y={14} w={8} h={10} n={3} /><Lights x={12} y={54} n={9} gap={9} seed={19} /><Rivets x={10} y={10} w={72} n={9} c="dark" /><Seams x={8} y={8} w={80} h={48} cols={2} op={0.35} /><Greeble x={10} y={50} w={76} h={4} seed={2271} n={4} c="dark" />
+      <Grime x={8} y={8} w={80} h={48} seed={2272} n={5} op={0.22} /><Scuff x={10} y={10} w={76} h={44} seed={2273} n={5} c="dark" />
+    </svg>
+  );
+}
+
+function PropFieldDesk() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 64" width="96" height="64" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={58} rx={40} ry={3} />
+      <Bev t="polygon" points={pts([[6, 56], [6, 24], [90, 24], [90, 56]])} c="steel" o={1.4} />
+      <Slab x={4} y={20} w={88} h={8} k={1.4} c="dark" o={1} />
+      <rect x="14" y="14" width="18" height="8" fill={ART.paper.base} /><rect x="14" y="14" width="18" height="1.4" fill={ART.paper.hi} /><rect x="36" y="12" width="14" height="10" fill={ART.screen.cyan} /><rect x="38" y="14" width="10" height="3" fill={S.cyan} opacity="0.8" style={{ animation: 'holo-flicker 2.4s ease-in-out infinite' }} />
+      <path d="M58 22 C58 10, 76 10, 76 22 Z" fill={ART.dark.base} /><path d="M60 20 C60 13, 74 13, 74 20 Z" fill={ART.dark.shade} /><polygon points={pts([[62, 14], [70, 14], [68, 12]])} fill={ART.rust.base} opacity="0.7" />
+      <rect x="78" y="16" width="10" height="5" fill={ART.dark.shade} /><rect x="80" y="14" width="4" height="3" fill={ART.steel.base} />
+      <Bev t="polygon" points={pts([[12, 56], [12, 34], [40, 34], [40, 56]])} c="dark" o={0.8} /><rect x="14" y="42" width="24" height="2" fill={ART.steel.base} /><circle cx="26" cy="38" r="1.4" fill={S.amberHi} />
+      <Hazard x={46} y={46} w={40} h={5} opacity={0.85} />
+      <Lights x={48} y={32} n={5} gap={8} seed={20} /><Vent x={78} y={34} w={8} h={8} n={3} /><Rivets x={10} y={26} w={76} n={9} c="steel" /><Seams x={6} y={24} w={84} h={32} cols={4} op={0.3} /><Greeble x={46} y={34} w={30} h={8} seed={2281} n={4} c="steel" />
+      <Grime x={6} y={24} w={84} h={32} seed={2282} n={5} op={0.25} /><Scuff x={8} y={26} w={80} h={28} seed={2283} n={5} c="steel" />
+    </svg>
+  );
+}
+
+function PropScoutWalker() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 128" width="128" height="128" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={122} rx={52} ry={4} />
+      {[30, 90].map((x) => <g key={x}><Bev t="polygon" points={pts([[x - 6, 110], [x - 4, 70], [x + 4, 70], [x + 8, 110]])} c="dark" o={0.9} /><Bev t="polygon" points={pts([[x - 16, 122], [x - 14, 108], [x + 16, 108], [x + 18, 122]])} c="steel" o={0.9} /><circle cx={x} cy="70" r="5" fill={ART.brass.base} /></g>)}
+      <Bev t="polygon" points={pts([[24, 70], [30, 38], [56, 22], [92, 26], [104, 50], [100, 72]])} c="hull" o={1.4} />
+      <polygon points={pts([[36, 54], [48, 36], [70, 34], [74, 52]])} fill={ART.deepglass.base} /><polygon points={pts([[40, 50], [50, 40], [64, 38], [64, 46]])} fill={ART.deepglass.hi} opacity="0.5" />
+      <rect x="86" y="44" width="28" height="5" fill={ART.dark.shade} /><rect x="86" y="44" width="28" height="1.4" fill={ART.steel.hi} /><rect x="86" y="52" width="24" height="4" fill={ART.dark.shade} />
+      <Hazard x={26} y={64} w={70} h={5} opacity={0.9} /><rect x="78" y="30" width="12" height="10" fill={ART.dark.base} /><circle cx="84" cy="35" r="3" fill={S.orange} style={{ animation: 'ship-blink 1.4s ease-in-out infinite' }} />
+      <text x="40" y="62" fontSize="4.4" fill={ART.ink} fontWeight="700" {...PT}>KDY SCOUT 07</text>
+      <Vent x={58} y={44} w={16} h={12} n={4} /><Greeble x={26} y={44} w={30} h={16} seed={2291} n={6} c="hull" /><Rivets x={26} y={66} w={72} n={10} c="hull" /><Seams x={24} y={22} w={80} h={50} cols={5} rows={1} op={0.25} /><Lights x={90} y={60} n={4} gap={5} seed={21} />
+      <Grime x={20} y={22} w={90} h={100} seed={2292} n={8} op={0.22} /><Scuff x={24} y={26} w={80} h={92} seed={2293} n={8} c="hull" />
+    </svg>
+  );
+}
+
+function PropPistonTower() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 96 160" width="96" height="160" style={PROP_STYLE}>
+      <PropShadow cx={48} cy={154} rx={40} ry={4} />
+      <Slab x={10} y={134} w={76} h={22} k={3} c="dark" o={1.4} /><Hazard x={12} y={148} w={72} h={5} opacity={0.9} />
+      <Bev t="polygon" points={pts([[24, 136], [24, 18], [72, 18], [72, 136]])} c="copper" o={1.6} />
+      <rect x="30" y="24" width="10" height="108" fill={ART.copper.shade} opacity="0.6" />
+      <g style={{ animation: 'prop-scan 3.4s ease-in-out infinite alternate' }}>
+        <Bev t="polygon" points={pts([[38, 70], [38, 30], [58, 30], [58, 70]])} c="steel" o={1} /><rect x="44" y="8" width="8" height="26" fill={ART.steel.base} /><rect x="44" y="8" width="3" height="26" fill={ART.steel.hi} />
+        <Slab x={30} y={66} w={36} h={12} k={1.6} c="brass" o={0.9} /><Rivets x={34} y={72} w={28} n={5} c="brass" />
+      </g>
+      {[40, 96, 120].map((y) => <Slab key={y} x={20} y={y} w={56} h={8} k={1.4} c="brass" o={0.8} />)}
+      {[34, 62].map((x, i) => <g key={x}><circle cx={x} cy="108" r="6" fill={ART.ink} /><circle cx={x} cy="108" r="4" fill={S.orange} style={{ animation: `ship-engine ${1.4 + i * 0.5}s ease-in-out infinite` }} /><Glow cx={x} cy={108} r={11} c={S.orange} opacity={0.4} /></g>)}
+      <ellipse cx="50" cy="6" rx="16" ry="5" fill={ART.pearl.base} opacity="0.4" style={{ animation: 'steam-rise 3s ease-out infinite' }} />
+      <Vent x={54} y={84} w={16} h={10} n={4} /><Greeble x={26} y={26} w={44} h={8} seed={2301} n={6} c="copper" /><Rivets x={26} y={132} w={44} n={7} c="copper" /><Seams x={24} y={18} w={48} h={118} cols={2} rows={4} op={0.3} /><Lights x={30} y={140} n={6} gap={7} seed={22} />
+      <Grime x={10} y={18} w={76} h={138} seed={2302} n={9} op={0.28} /><Scuff x={22} y={20} w={52} h={116} seed={2303} n={8} c="copper" />
+    </svg>
+  );
+}
+
+function PropValveWheel({ variant }) {
+  const S = ART.signal, open = variant === 'open';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={22} ry={3} />
+      <Slab x={14} y={44} w={36} h={12} k={2} c="dark" o={1} /><Bev t="polygon" points={pts([[26, 46], [26, 24], [38, 24], [38, 46]])} c="copper" o={0.9} />
+      <g transform={open ? 'rotate(45 32 22)' : 'rotate(0 32 22)'}>
+        <circle cx="32" cy="22" r="17" fill={ART.brass.shade} /><circle cx="32" cy="22" r="14.5" fill={ART.brass.base} /><circle cx="32" cy="22" r="10" fill={ART.dark.shade} />
+        {[0, 60, 120].map((a) => <rect key={a} x="29.4" y="6" width="5.2" height="32" fill={ART.brass.hi} transform={`rotate(${a} 32 22)`} />)}
+        <circle cx="32" cy="22" r="3.6" fill={ART.brass.hi} />
+      </g>
+      {[[20, 12], [44, 12], [32, 36]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2.2" fill={open ? S.cyan : S.amberHi} style={{ animation: `ship-blink ${1.4 + i * 0.4}s ease-in-out infinite` }} />)}
+      <Lights x={20} y={50} n={4} gap={6} seed={23} colors={open ? ['cyan'] : ['amber', 'red']} /><Vent x={42} y={46} w={6} h={6} n={2} /><Rivets x={16} y={46} w={32} n={5} c="dark" /><Seams x={14} y={44} w={36} h={12} cols={3} op={0.3} /><Greeble x={16} y={52} w={30} h={3} seed={2311} n={3} c="dark" />
+      <Grime x={14} y={6} w={36} h={50} seed={2312} n={4} op={0.22} /><Scuff x={18} y={8} w={28} h={44} seed={2313} n={4} c="brass" />
+    </svg>
+  );
+}
+
+function PropSteamVentPipe() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={22} ry={3} />
+      <Slab x={14} y={44} w={36} h={12} k={2} c="dark" o={1} />
+      <Bev t="polygon" points={pts([[22, 46], [22, 22], [42, 22], [42, 46]])} c="copper" o={1.2} />
+      <Slab x={18} y={18} w={28} h={7} k={1.2} c="brass" o={0.9} /><Slab x={18} y={34} w={28} h={5} k={1} c="brass" o={0.7} />
+      <circle cx="32" cy="30" r="5" fill={ART.ink} /><circle cx="32" cy="30" r="3.4" fill={S.red} style={{ animation: 'ship-blink 1s ease-in-out infinite' }} />
+      {[24, 32, 40].map((x, i) => <g key={x}><ellipse cx={x} cy="14" rx="7" ry="4" fill={ART.pearl.base} opacity="0.45" style={{ animation: `steam-rise ${1.8 + i * 0.4}s ease-out ${i * 0.5}s infinite` }} /><ellipse cx={x + 2} cy="5" rx="6" ry="3" fill={ART.pearl.base} opacity="0.3" style={{ animation: `steam-rise ${2.4 + i * 0.4}s ease-out ${i * 0.7}s infinite` }} /></g>)}
+      <Hazard x={16} y={50} w={32} h={4} opacity={0.9} /><Vent x={36} y={38} w={8} h={5} n={2} /><Lights x={18} y={47} n={5} gap={6} seed={24} /><Rivets x={22} y={24} w={20} n={4} c="copper" /><Seams x={22} y={22} w={20} h={24} rows={2} op={0.3} /><Greeble x={24} y={38} w={14} h={3} seed={2321} n={2} c="copper" />
+      <Grime x={14} y={18} w={36} h={38} seed={2322} n={4} op={0.28} /><Scuff x={20} y={20} w={24} h={26} seed={2323} n={4} c="copper" />
+    </svg>
+  );
+}
+
+function PropFoundryHatch() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 160 128" width="160" height="128" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={122} rx={72} ry={4} />
+      <Bev t="polygon" points={pts([[6, 118], [6, 40], [30, 14], [130, 14], [154, 40], [154, 118]])} c="bronze" o={1.6} />
+      <polygon points={pts([[22, 112], [22, 46], [40, 28], [120, 28], [138, 46], [138, 112]])} fill={ART.dark.shade} />
+      <polygon points={pts([[40, 112], [40, 50], [54, 38], [106, 38], [120, 50], [120, 112]])} fill={ART.ink} />
+      <polygon points={pts([[44, 112], [44, 54], [56, 42], [104, 42], [116, 54], [116, 112]])} fill={S.cyan} opacity="0.2" style={{ animation: 'holo-flicker 2.6s ease-in-out infinite' }} />
+      {[48, 62, 76, 90, 104].map((x) => <rect key={x} x={x} y="48" width="2" height="64" fill={ART.steel.base} opacity="0.7" />)}
+      <Slab x={52} y={4} w={56} h={14} k={2} c="dark" o={1} /><rect x="56" y="7" width="48" height="8" fill={ART.screen.cyan} /><text x="80" y="13" textAnchor="middle" fontSize="5.2" fill={S.cyanHi} fontWeight="700" {...PT}>FOUNDRY 09</text>
+      {[16, 136].map((x, i) => <g key={x}><circle cx={x} cy="58" r="6" fill={ART.ink} /><circle cx={x} cy="58" r="4" fill={S.cyan} style={{ animation: `ship-engine ${1.5 + i * 0.4}s ease-in-out infinite` }} /><Glow cx={x} cy={58} r={14} c={S.cyan} opacity={0.4} /></g>)}
+      <Hazard x={8} y={108} w={144} h={8} opacity={0.9} />
+      <Greeble x={10} y={20} w={140} h={14} seed={2331} n={9} c="bronze" /><Rivets x={10} y={44} w={140} n={18} c="bronze" /><Seams x={6} y={14} w={148} h={104} cols={6} rows={1} op={0.25} /><Vent x={126} y={68} w={18} h={22} n={5} /><Lights x={20} y={100} n={8} gap={8} seed={25} />
+      <Grime x={6} y={14} w={148} h={108} seed={2332} n={9} op={0.25} /><Scuff x={10} y={18} w={140} h={98} seed={2333} n={9} c="bronze" />
+    </svg>
+  );
+}
+
+function PropExhaustCathedral() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 256 224" width="256" height="224" style={PROP_STYLE}>
+      <PropShadow cx={128} cy={216} rx={116} ry={5} />
+      <Bev t="polygon" points={pts([[28, 214], [40, 90], [74, 60], [182, 60], [216, 90], [228, 214]])} c="dark" o={2} />
+      <polygon points={pts([[60, 210], [66, 94], [88, 74], [168, 74], [190, 94], [196, 210]])} fill={ART.rust.shade} />
+      {[78, 106, 134, 162].map((x, i) => <g key={x}><rect x={x} y="40" width="18" height="170" fill={ART.copper.base} /><rect x={x} y="40" width="5" height="170" fill={ART.copper.hi} opacity="0.7" /><rect x={x - 3} y={74 + i * 8} width="24" height="10" fill={ART.brass.base} /><rect x={x - 3} y={74 + i * 8} width="24" height="2.4" fill={ART.brass.hi} /></g>)}
+      <polygon points={pts([[100, 42], [128, 4], [156, 42]])} fill={ART.dark.base} /><polygon points={pts([[112, 42], [128, 14], [144, 42]])} fill={ART.dark.hi} opacity="0.5" />
+      <ellipse cx="128" cy="8" rx="34" ry="8" fill={ART.ink} opacity="0.5" style={{ animation: 'steam-rise 4s ease-out infinite' }} />
+      <polygon points={pts([[96, 214], [96, 150], [112, 130], [144, 130], [160, 150], [160, 214]])} fill={ART.ink} /><polygon points={pts([[104, 214], [104, 154], [116, 138], [140, 138], [152, 154], [152, 214]])} fill={S.orange} opacity="0.35" style={{ animation: 'ship-engine 2.4s ease-in-out infinite' }} />
+      {[[46, 150], [210, 150], [46, 110], [210, 110]].map(([x, y], i) => <g key={i}><circle cx={x} cy={y} r="6" fill={ART.ink} /><circle cx={x} cy={y} r="4" fill={S.orange} style={{ animation: `ship-blink ${1.3 + i * 0.3}s ease-in-out infinite` }} /><Glow cx={x} cy={y} r={15} c={S.orange} opacity={0.4} /></g>)}
+      <Slab x={84} y={92} w={88} h={14} k={2} c="dark" o={1} /><text x="128" y="102.6" textAnchor="middle" fontSize="6" fill={S.amberHi} fontWeight="700" {...PT}>EXHAUST CATHEDRAL</text>
+      <Hazard x={30} y={204} w={196} h={8} opacity={0.9} />
+      <Greeble x={40} y={64} w={176} h={22} seed={2341} n={12} c="dark" /><Rivets x={40} y={196} w={176} n={22} c="dark" /><Seams x={28} y={60} w={200} h={154} cols={7} rows={3} op={0.2} /><Vent x={170} y={116} w={26} h={30} n={6} /><Lights x={60} y={190} n={10} gap={14} seed={26} />
+      <Grime x={28} y={40} w={200} h={174} seed={2342} n={12} op={0.28} /><Scuff x={32} y={44} w={192} h={166} seed={2343} n={12} c="dark" />
+    </svg>
+  );
+}
+
+function PropBoilerHull() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={90} rx={56} ry={4} />
+      <Bev t="polygon" points={pts([[8, 84], [8, 36], [24, 18], [104, 18], [120, 36], [120, 84]])} c="copper" o={1.6} />
+      {[26, 52, 78, 100].map((x) => <rect key={x} x={x} y="18" width="4" height="66" fill={ART.copper.shade} opacity="0.7" />)}
+      <circle cx="64" cy="48" r="16" fill={ART.dark.shade} /><circle cx="64" cy="48" r="12" fill={ART.ink} /><circle cx="64" cy="48" r="8" fill={S.orange} opacity="0.4" style={{ animation: 'ship-engine 2s ease-in-out infinite' }} />
+      <Glow cx={64} cy={48} r={26} c={S.orange} opacity={0.35} />
+      <circle cx="26" cy="64" r="6" fill={ART.ink} /><circle cx="26" cy="64" r="3.6" fill={S.cyan} style={{ animation: 'holo-flicker 1.6s ease-in-out infinite' }} /><circle cx="102" cy="64" r="6" fill={ART.ink} /><circle cx="102" cy="64" r="3.6" fill={S.red} style={{ animation: 'ship-blink 1.2s ease-in-out infinite' }} />
+      <Slab x={44} y={72} w={40} h={10} k={1.4} c="brass" o={0.8} /><rect x="48" y="74" width="32" height="6" fill={ART.screen.amber} /><text x="64" y="79" textAnchor="middle" fontSize="3.6" fill={S.amberHi} fontWeight="700" {...PT}>DEAD BOILER</text>
+      <Hazard x={10} y={82} w={108} h={4} opacity={0.9} />
+      <Vent x={96} y={26} w={16} h={12} n={4} /><Greeble x={12} y={22} w={80} h={10} seed={2351} n={7} c="copper" /><Rivets x={12} y={34} w={104} n={14} c="copper" /><Seams x={8} y={18} w={112} h={66} cols={5} op={0.3} /><Lights x={14} y={78} n={4} gap={6} seed={27} />
+      <Grime x={8} y={18} w={112} h={70} seed={2352} n={8} op={0.28} /><Scuff x={12} y={22} w={104} h={60} seed={2353} n={8} c="copper" />
+    </svg>
+  );
+}
+
+function PropGovernorSocket({ variant }) {
+  const S = ART.signal, on = variant === 'installed';
+  return (
+    <svg viewBox="0 0 64 64" width="64" height="64" style={PROP_STYLE}>
+      <PropShadow cx={32} cy={58} rx={22} ry={3} />
+      <Slab x={12} y={42} w={40} h={14} k={2} c="dark" o={1.2} /><Hazard x={14} y={52} w={36} h={3} opacity={0.85} />
+      <Bev t="polygon" points={pts([[20, 44], [20, 16], [44, 16], [44, 44]])} c="brass" o={1.2} />
+      <circle cx="32" cy="28" r="12" fill={ART.dark.shade} />
+      {on ? (
+        <g><circle cx="32" cy="28" r="11" fill={ART.brass.base} />{[0, 60, 120].map((a) => <rect key={a} x="29.8" y="18" width="4.4" height="20" fill={ART.brass.hi} transform={`rotate(${a} 32 28)`} />)}{[[26, 24], [38, 24], [32, 36]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2.4" fill={S.cyan} style={{ animation: `holo-flicker ${1.2 + i * 0.3}s ease-in-out infinite` }} />)}<Glow cx={32} cy={28} r={20} c={S.cyan} opacity={0.45} /></g>
+      ) : (
+        <g><circle cx="32" cy="28" r="8" fill={ART.ink} /><circle cx="32" cy="28" r="3" fill={S.red} style={{ animation: 'ship-blink 1.1s ease-in-out infinite' }} /></g>
+      )}
+      <Slab x={22} y={46} w={20} h={6} k={1} c="steel" o={0.6} /><text x="32" y="50.6" textAnchor="middle" fontSize="2.8" fill={ART.ink} fontWeight="700" {...PT}>{on ? 'GOVERNOR OK' : 'GOVERNOR OFF'}</text>
+      <Vent x={46} y={22} w={5} h={8} n={3} /><Lights x={14} y={40} n={5} gap={6} seed={28} /><Rivets x={22} y={18} w={20} n={4} c="brass" /><Seams x={20} y={16} w={24} h={28} cols={1} op={0.3} /><Greeble x={22} y={40} w={20} h={3} seed={2361} n={3} c="brass" />
+      <Grime x={12} y={16} w={40} h={40} seed={2362} n={4} op={0.25} /><Scuff x={16} y={18} w={32} h={34} seed={2363} n={4} c="brass" />
+    </svg>
+  );
+}
+// ===== BADOR WAR PROPS END =====
+
+
+
+
+
+
 
 
 
@@ -14319,6 +15666,35 @@ const PROP_DEFS = {
   soak_pool:             { w: 4, h: 3, ax: 1, ay: 1 },
   design_console:        { w: 2, h: 2, ax: 0, ay: 1 },
   // PENTHOUSE DEFS END
+  // BADOR WAR DEFS BEGIN
+  basalt_vista:          { w: 24, h: 5, ax: 12, ay: 4, backdrop: true },
+  kdy_barricade:         { w: 3, h: 2, ax: 1, ay: 1 },
+  auto_turret:           { w: 2, h: 2, ax: 0, ay: 1 },
+  shanty_hovel:          { w: 3, h: 3, ax: 1, ay: 2 },
+  burning_wreck:         { w: 3, h: 2, ax: 1, ay: 1 },
+  fuel_conduit:          { w: 4, h: 2, ax: 1, ay: 1 },
+  mortar_pit:            { w: 3, h: 3, ax: 1, ay: 2 },
+  catwalk_post:          { w: 3, h: 3, ax: 1, ay: 2 },
+  landspeeder_depot:     { w: 5, h: 3, ax: 2, ay: 2 },
+  eweb_turret:           { w: 2, h: 2, ax: 0, ay: 1 },
+  exo_socket:            { w: 2, h: 2, ax: 0, ay: 1 },
+  repulsor_barricade:    { w: 3, h: 2, ax: 1, ay: 1 },
+  drop_speeder:          { w: 4, h: 3, ax: 1, ay: 2 },
+  camo_netting:          { w: 8, h: 4, ax: 4, ay: 3, backdrop: true },
+  steam_grate:           { w: 2, h: 2, ax: 0, ay: 1 },
+  fusion_lever:          { w: 2, h: 2, ax: 0, ay: 1 },
+  brig_cell:             { w: 3, h: 3, ax: 1, ay: 2 },
+  enc_array:             { w: 3, h: 2, ax: 1, ay: 1 },
+  field_desk:            { w: 3, h: 2, ax: 1, ay: 1 },
+  scout_walker:          { w: 4, h: 4, ax: 1, ay: 3 },
+  piston_tower:          { w: 3, h: 5, ax: 1, ay: 4 },
+  valve_wheel:           { w: 2, h: 2, ax: 0, ay: 1 },
+  steam_vent_pipe:       { w: 2, h: 2, ax: 0, ay: 1 },
+  foundry_hatch:         { w: 5, h: 4, ax: 2, ay: 3 },
+  exhaust_cathedral:     { w: 8, h: 7, ax: 4, ay: 6, backdrop: true },
+  boiler_hull:           { w: 4, h: 3, ax: 1, ay: 2 },
+  governor_socket:       { w: 2, h: 2, ax: 0, ay: 1 },
+  // BADOR WAR DEFS END
 };
 
 const PropArt = React.memo(function PropArt({ kind, variant, active }) {
@@ -14486,6 +15862,35 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'soak_pool': return <PropSoakPool />;
     case 'design_console': return <PropDesignConsole />;
     // PENTHOUSE CASES END
+    // BADOR WAR CASES BEGIN
+    case 'basalt_vista': return <PropBasaltVista variant={variant} />;
+    case 'kdy_barricade': return <PropKdyBarricade variant={variant} />;
+    case 'auto_turret': return <PropAutoTurret variant={variant} />;
+    case 'shanty_hovel': return <PropShantyHovel variant={variant} />;
+    case 'burning_wreck': return <PropBurningWreck />;
+    case 'fuel_conduit': return <PropFuelConduit variant={variant} />;
+    case 'mortar_pit': return <PropMortarPit />;
+    case 'catwalk_post': return <PropCatwalkPost />;
+    case 'landspeeder_depot': return <PropLandspeederDepot />;
+    case 'eweb_turret': return <PropEwebTurret variant={variant} />;
+    case 'exo_socket': return <PropExoSocket />;
+    case 'repulsor_barricade': return <PropRepulsorBarricade />;
+    case 'drop_speeder': return <PropDropSpeeder />;
+    case 'camo_netting': return <PropCamoNetting />;
+    case 'steam_grate': return <PropSteamGrate />;
+    case 'fusion_lever': return <PropFusionLever variant={variant} />;
+    case 'brig_cell': return <PropBrigCell variant={variant} />;
+    case 'enc_array': return <PropEncArray />;
+    case 'field_desk': return <PropFieldDesk />;
+    case 'scout_walker': return <PropScoutWalker />;
+    case 'piston_tower': return <PropPistonTower />;
+    case 'valve_wheel': return <PropValveWheel variant={variant} />;
+    case 'steam_vent_pipe': return <PropSteamVentPipe />;
+    case 'foundry_hatch': return <PropFoundryHatch />;
+    case 'exhaust_cathedral': return <PropExhaustCathedral />;
+    case 'boiler_hull': return <PropBoilerHull />;
+    case 'governor_socket': return <PropGovernorSocket variant={variant} />;
+    // BADOR WAR CASES END
     default: return null;
   }
 });
@@ -16235,6 +17640,22 @@ const AI_COMBAT_PROFILES = {
   unit_8x:              { aggression:65, cover:50, flank:40, overwatch:90, optRange:5, name:'Unit 8-X',                  hp:10, shield:4, accent:'#B8D4E8' },
   kdy_security_guard:   { aggression:45, cover:75, flank:35, overwatch:65, optRange:4, name:'KDY Security Guard',          hp:6,  shield:3, accent:'#4A7A9B' },
   trandoshan_hunter:    { aggression:70, cover:55, flank:85, overwatch:70, optRange:5, name:'Trandoshan Hunter',            hp:7,  shield:1, accent:'#5A7050' },
+  // BADOR PROFILES BEGIN
+  kef_shock_breacher:   { aggression:85, cover:25, flank:45, overwatch:15, optRange:2, name:'KEF Shock-Breacher',        hp:6,  shield:2, accent:'#FF5500' },
+  kef_breach_wave:      { aggression:85, cover:30, flank:60, overwatch:20, optRange:2, name:'KEF Breach Wave',            hp:9,  shield:3, accent:'#FF5500' },
+  kef_jump_trooper:     { aggression:75, cover:20, flank:95, overwatch:10, optRange:2, name:'KEF Jump-Trooper',          hp:4,  shield:0, accent:'#FF8A2A' },
+  kef_mortar_specialist:{ aggression:40, cover:85, flank:10, overwatch:90, optRange:6, name:'KEF Mortar Specialist',     hp:4,  shield:1, accent:'#E04A1A' },
+  kef_hunter_killer:    { aggression:70, cover:35, flank:80, overwatch:60, optRange:4, name:'KEF Hunter-Killer Droid',   hp:5,  shield:2, accent:'#FF3030' },
+  kef_convoy_guard:     { aggression:55, cover:70, flank:40, overwatch:60, optRange:4, name:'KEF Convoy Guard',          hp:6,  shield:2, accent:'#FF5500' },
+  kef_gate_guards:      { aggression:60, cover:80, flank:30, overwatch:70, optRange:4, name:'KEF Gate Guards',           hp:7,  shield:3, accent:'#FF5500' },
+  kef_gate_guards_flanked:{ aggression:40, cover:30, flank:10, overwatch:20, optRange:3, name:'KEF Gate Guards (Ambushed)', hp:4, shield:1, accent:'#FF5500' },
+  kef_sledge_tank:      { aggression:70, cover:10, flank:20, overwatch:85, optRange:5, name:'KEF Repulsor-Sledge Tank',  hp:14, shield:6, accent:'#FF3300' },
+  kef_sledge_tank_crippled:{ aggression:60, cover:10, flank:10, overwatch:70, optRange:4, name:'KEF Repulsor-Sledge Tank (Crippled)', hp:8, shield:2, accent:'#FF3300' },
+  varek_korr:           { aggression:65, cover:55, flank:50, overwatch:65, optRange:4, name:'Varek Korr and the War-Dredge', hp:14, shield:5, accent:'#FF5500' },
+  furnace_husk:         { aggression:90, cover:5,  flank:20, overwatch:0,  optRange:2, name:'Furnace Husk',               hp:8,  shield:2, accent:'#FF7A1A' },
+  piston_sentinel:      { aggression:50, cover:70, flank:15, overwatch:80, optRange:2, name:'Piston Sentinel',            hp:11, shield:5, accent:'#C4923E' },
+  unchained_overseer:   { aggression:75, cover:40, flank:30, overwatch:80, optRange:4, name:'The Unchained Overseer',     hp:16, shield:6, accent:'#2B7895' },
+  // BADOR PROFILES END
 };
 
 const ENCOUNTER_TABLE = {
@@ -16253,10 +17674,10 @@ const ENCOUNTER_TABLE = {
 const BADOR_COMBAT_ZONES = {
   bador_manufacturing: { need: 2, rate: 7, pool: ['syndicate_thug', 'trandoshan_hunter', 'desperate_scrapper'],
     flavor: ['Raiders have slipped through a cut fence in the Sector 4 gantries. They are stripping the assembly line for parts, and you are in the way.', 'A looter crew drops from the catwalk above the fabrication floor, weapons already up.'] },
-  city_outskirts_bador: { need: 2, rate: 7, pool: ['syndicate_thug', 'desperate_scrapper', 'trandoshan_hunter'],
-    flavor: ['Survivors turned scavengers box you in between two collapsed shopfronts. They want your gear more than they want to talk.', 'A Trandoshan hunting party has been tracking the base patrols. You are the easier mark.'] },
-  engine_wastes: { need: 3, rate: 9, pool: ['trandoshan_hunter', 'desperate_scrapper', 'syndicate_thug'],
-    flavor: ['Engine slag crunches under boots that are not yours. Hunters rise from behind a dead thruster bell.', 'Something sparks in the wreckage ahead. Scrappers, and they have the high ground.'] },
+  city_outskirts_bador: { need: 3, rate: 8, pool: ['kef_shock_breacher', 'desperate_scrapper', 'kef_jump_trooper'],
+    flavor: ['A KEF breach squad comes through the smoke between two burning hovels, orange suits glowing in the firelight.', 'A jump trooper drops from a rooftop and lands in a crouch with a plasma shotgun already leveled.', 'Mortar rounds walk down the street and a KEF fire team uses the confusion to move on you.'] },
+  engine_wastes: { need: 3, rate: 9, pool: ['furnace_husk', 'piston_sentinel', 'trandoshan_hunter', 'desperate_scrapper'],
+    flavor: ['A furnace husk drags itself out of the slag, chest door glowing white, and aims straight at you.', 'A piston sentinel steps off its plinth. Steam hisses from its back stacks as the pile drivers come up.', 'Engine slag crunches under boots that are not yours. Hunters rise from behind a dead thruster bell.'] },
   deep_caverns: { need: 3, rate: 9, pool: ['unit_8x', 'trandoshan_hunter', 'desperate_scrapper'],
     flavor: ['A red optic blinks awake in the cavern dark. The old defense droid has not stopped patrolling.', 'Echoes carry a clatter of armor from the tunnel mouth. You are not alone down here.'] },
   zora_iv_wreckage: { need: 2, rate: 8, pool: ['unit_8x', 'trandoshan_hunter', 'desperate_scrapper'],
@@ -16338,6 +17759,22 @@ function getEncounterFlavor(zoneId, profileKey) {
 }
 
 const COMBAT_LOOT = {
+  // BADOR LOOT BEGIN
+  kef_shock_breacher: { credits:[60,120], itemChance:0.4, items:[{id:'loot_kef_plasma_shotgun',name:'KEF Plasma Shotgun',type:'weapon',iconKind:'gear',value:380,description:'A scavenged industrial shotgun with the safety clip cut off.'}] },
+  kef_breach_wave: { credits:[90,160], itemChance:0.45, items:[{id:'loot_breach_shield',name:'Scorched Thermal Shield',type:'gear',iconKind:'gear',value:420,description:'A battered thermal shield plate with fresh scoring.'}] },
+  kef_jump_trooper: { credits:[50,100], itemChance:0.35, items:[{id:'loot_kef_jump_pack',name:'Spent Jump Pack',type:'gear',iconKind:'gear',value:260,description:'A rocket pack, half empty and fully loud.'}] },
+  kef_mortar_specialist: { credits:[70,130], itemChance:0.4, items:[{id:'loot_kef_mortar_sight',name:'Mortar Spotting Optic',type:'gear',iconKind:'gear',value:320,description:'A calibrated optic still glowing with a target solution.'}] },
+  kef_hunter_killer: { credits:[80,140], itemChance:0.4, items:[{id:'loot_hk_servo',name:'Hunter-Killer Servo Core',type:'gear',iconKind:'gear',value:340,description:'A tracking servo that would make a very good alarm clock.'}] },
+  kef_convoy_guard: { credits:[70,130], itemChance:0.4, items:[{id:'loot_convoy_manifest',name:'KEF Convoy Manifest',type:'quest',iconKind:'datapad',value:220,description:'A cargo list for the convoy you just ruined.'}] },
+  kef_gate_guards: { credits:[80,150], itemChance:0.4, items:[{id:'loot_gate_codes',name:'KEF Gate Codes',type:'quest',iconKind:'keycard',value:260,description:'Handwritten gate codes in a trembling hand.'}] },
+  kef_gate_guards_flanked: { credits:[50,100], itemChance:0.3, items:[{id:'loot_gate_rations',name:'Dropped Field Rations',type:'consumable',iconKind:'supply',value:40,description:'They never saw you coming.'}] },
+  kef_sledge_tank: { credits:[180,320], itemChance:0.7, items:[{id:'loot_sledge_core',name:'Repulsor Sledge Core',type:'gear',iconKind:'gear',value:900,description:'A burnt out repulsor coil, still warm.'}] },
+  kef_sledge_tank_crippled: { credits:[140,260], itemChance:0.6, items:[{id:'loot_sledge_plate',name:'Sledge Armor Plate',type:'gear',iconKind:'gear',value:600,description:'A thick plate scored by a dozen hits.'}] },
+  varek_korr: { credits:[250,420], itemChance:0.85, items:[{id:'loot_war_dredge_core',name:'War-Dredge Core Coil',type:'gear',iconKind:'gear',value:700,description:'The overcharged core coil from the War-Dredge. Still warm, still dangerous.'}] },
+  furnace_husk: { credits:[70,130], itemChance:0.4, items:[{id:'loot_slag_residue',name:'Cooled Slag Residue',type:'consumable',iconKind:'supply',value:150,description:'Dense, warm and unexpectedly valuable to a forge.'}] },
+  piston_sentinel: { credits:[120,220], itemChance:0.55, items:[{id:'loot_brass_plate',name:'Sentinel Brass Plate',type:'gear',iconKind:'gear',value:520,description:'Tarnished brass from a construct that was never meant to retire.'}] },
+  unchained_overseer: { credits:[260,440], itemChance:0.9, items:[{id:'item_titan_cylinder_ring',name:'Titan Cylinder Ring',type:'gear',iconKind:'gear',value:800,description:'An ancient signet ring proving engineering rank.'}] },
+  // BADOR LOOT END
   csf_swat:             { credits:[90,160],  itemChance:0.45, items:[{id:'loot_csf_stun_baton',name:'CSF Stun Baton',type:'weapon',iconKind:'gear',value:200,description:'Regulation CSF close-quarters weapon. Still carries a charge.'},{id:'loot_csf_access_chip',name:'CSF Access Chip',type:'gear',iconKind:'keycard',value:350,description:'Biometric-coded to a SWAT officer. Crackable.'},{id:'loot_tactical_stim',name:'Tactical Stim',type:'consumable',iconKind:'supply',value:120,description:'Military-grade stim. Restores combat readiness fast.'}] },
   csf_scout:            { credits:[60,110],  itemChance:0.35, items:[{id:'loot_scout_earpiece',name:'CSF Scout Earpiece',type:'gear',iconKind:'gear',value:180,description:'Encrypted channel. 48-hour window before they rotate the key.'},{id:'loot_det_round',name:'Det Round x2',type:'consumable',iconKind:'supply',value:90,description:'Compact explosive rounds. Useful.'}] },
   black_sun_striker:    { credits:[70,140],  itemChance:0.40, items:[{id:'loot_vibro_knife',name:'Vibro-Knife',type:'weapon',iconKind:'gear',value:250,description:'Black Sun manufacture. Serrated edge still carries a charge.'},{id:'loot_black_sun_sigil',name:'Black Sun Sigil',type:'quest',iconKind:'keycard',value:150,description:'Proof of gang membership. Useful for bluffing at checkpoints.'}] },
@@ -19339,6 +20776,27 @@ function StarWarsRPG() {
     if (BADOR_SURFACE_ZONES.includes(zoneId)) {
       if (!questFlags.bador_pass_issued) return '[BADOR] Check in with Lieutenant Vane on the landing deck and collect your Base Access Pass.';
       if (!questFlags.vael_briefed) return '[BADOR] Yellow Alert. Report to Commander Vael in the Tactical Sanctum inside Main HQ.';
+      if (zoneId === 'city_outskirts_bador') {
+        if (!questFlags.outskirts_started) return '[OUTSKIRTS] Firestorm at the Perimeter: reach Squad Leader Kaelin at the breach.';
+        if (!questFlags.outskirts_mortar_down) return '[OUTSKIRTS] Get Captain Bevin\'s plan at the redoubt, then silence the KEF mortar line (push, flank or slice the turret).';
+        if (!questFlags.kef_prisoner_interrogated) return '[OUTSKIRTS] Question the wounded KEF insurgent in the alley behind the cantina.';
+        if (!questFlags.outskirts_complete) return '[OUTSKIRTS] Tell Kaelin your decision: overcharge the gate grid or flank through the alleys.';
+        if (!questFlags.varek_resolved) return '[OUTSKIRTS] Silence the Iron Thunder: open the Mortar Fortress vault in the southeast and face Varek Korr.';
+        return '[OUTSKIRTS] The depot gate is open. Take the landspeeder south to the Engine Wastes.';
+      }
+      if (zoneId === 'engine_wastes') {
+        if (!questFlags.vance_met) return '[WASTES] Find Combustion Foundry 09 and speak to Vance Crankshaft.';
+        if (!questFlags.governor_valve_acquired) return '[WASTES] Drain the Dead Boiler Matrix (three valve wheels) and take the Catalyst Governor Valve.';
+        if (!questFlags.overseer_defeated) return '[WASTES] Defeat the Unchained Overseer at the base of the Exhaust Cathedral.';
+        if (!questFlags.manifest_restarted) return '[WASTES] Seat the Governor Valve in the apex socket to restart the manifold.';
+        return '[WASTES] The central blast doors are open. Zone Five lies beyond.';
+      }
+      if (zoneId === 'outpost_7') {
+        if (!questFlags.o7_coop_briefed) return '[OUTPOST 7] Report to Major Coop in the command bunker.';
+        if (!questFlags.sundown_started) return '[OUTPOST 7] Prepare. Raid the convoy, siphon the geothermal vents, question the prisoner, keep your thermal signature low. Then tell Coop to begin Operation Sundown.';
+        if (!questFlags.sundown_complete) return '[SUNDOWN] Hold the Iron Trench, destroy the sledge tank at LZ Delta, then breach the gateway.';
+        return '[OUTPOST 7] Sundown is complete. The gateway to the Engine Wastes is open.';
+      }
       if (!questFlags.scan_team_fate_known) return '[BADOR] Find the lost scan team and the overdue supply skiff. Sweep Sector 4 and the Engine Wastes.';
     }
     if (questFlags.syndicateManagement_active && !questFlags.syndicate_first_contract_run) return '[SYNDICATE] Open the War Table at the Penthouse and run your first contract.';
@@ -19388,6 +20846,17 @@ function StarWarsRPG() {
 
   const setFlag = useCallback((key) => setQuestFlags((prev) => ({ ...prev, [key]: true })), []);
 
+  // Thermal Signature (0 to 100) on Bador: how loud the player is. Stored in questFlags so it saves with everything else.
+  const addThermal = useCallback((d) => {
+    setQuestFlags((prev) => {
+      const cur = prev.thermal_index || 0; const n = Math.max(0, Math.min(100, cur + d));
+      if (n === cur) return prev;
+      return { ...prev, thermal_index: n, thermal_30: n >= 30, thermal_60: n >= 60 };
+    });
+    pushActionLog(`[THERMAL SIGNATURE] ${d > 0 ? 'Rising' : 'Falling'} (${d > 0 ? '+' : ''}${d}).`, 'bador');
+  }, [pushActionLog]);
+
+
   const addItem = useCallback((itemDef) => setInventory(prev => {
     const ex = prev.find(i => i.id === itemDef.id);
     if (ex) return prev.map(i => i.id === itemDef.id ? { ...i, qty: (i.qty || 1) + 1 } : i);
@@ -19425,6 +20894,7 @@ function StarWarsRPG() {
       setMap(newZone.buildMap());
       setPos(targetPos);
       setTransitioning(false);
+      if (BADOR_SURFACE_ZONES.includes(targetZoneId)) setQuestFlags((prev) => { const c = prev.thermal_index || 0; if (!c) return prev; const n = Math.max(0, c - 5); return { ...prev, thermal_index: n, thermal_30: n >= 30, thermal_60: n >= 60 }; });
       pushActionLog(`Entered ${newZone.name}.`, targetZoneId);
     }, 400);
   }, [planetId, pushActionLog]);
@@ -19605,6 +21075,7 @@ function StarWarsRPG() {
     }
     if (choice.requires?.credits) setCredits((c) => c - choice.requires.credits);
     if (choice.grants?.credits) setCredits((c) => c + choice.grants.credits);
+    if (choice.grants?.thermal) addThermal(choice.grants.thermal);
     [].concat(choice.grants?.questFlags || []).forEach((f) => setFlag(f));
     // A choice that grants nothing (a deferral, a "not yet") must not burn a phase that has a real progression choice.
     const grantsAny = (c) => c.grants && ((c.grants.flags || []).length || (c.grants.items || []).length || (c.grants.codex || []).length || c.grants.credits || c.grants.questFlags);
@@ -19629,7 +21100,7 @@ function StarWarsRPG() {
         onSuccess: (loot) => { [].concat(choice.onSuccessFlags || []).forEach((f) => setFlag(f)); if (loot && loot.credits) { setCredits((c) => c + loot.credits); pushActionLog(`+${loot.credits} credits recovered from the engagement.`, zoneId); } if (loot && loot.item) addItem(loot.item); pushActionLog('Engagement concluded.', zoneId); setActiveMinigame(null); },
         onFailure: () => { pushActionLog('You fell back. The attempt failed.', zoneId); setActiveMinigame(null); } });
     }
-  }, [zoneId, pushActionLog, setFlag, addItem, unlockCodex, activeDialogue]);
+  }, [zoneId, pushActionLog, setFlag, addItem, unlockCodex, activeDialogue, addThermal]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -19735,6 +21206,7 @@ function StarWarsRPG() {
             pushActionLog(`[${worldObjHere.label}] ${woDesc}`, zoneId);
           }
           if (worldObjHere.healsRoster) setSyndicateRoster(r => r.map(a => a.status === 'injured' ? { ...a, status: 'available' } : a));
+          if (worldObjHere.thermalDelta) addThermal(worldObjHere.thermalDelta);
           if (worldObjHere.heatDelta) setSyndicateHeat(h => Math.max(0, Math.min(100, h + worldObjHere.heatDelta)));
           if (worldObjHere.grantsCredits && !worldObjHere.triggersMinigame) setCredits(c => c + worldObjHere.grantsCredits);
           if (worldObjHere.grantsItem && ITEMS[worldObjHere.grantsItem]) {
@@ -19748,6 +21220,7 @@ function StarWarsRPG() {
               if (worldObjHere.grantsCodex && CODEX_ENTRIES[worldObjHere.grantsCodex]) unlockCodex(CODEX_ENTRIES[worldObjHere.grantsCodex]);
               if (worldObjHere.once) setCompletedInteractions(prev => new Set([...prev, worldObjHere.id]));
               if (worldObjHere.heatDeltaOnSuccess) setSyndicateHeat(h => Math.max(0, Math.min(100, h + worldObjHere.heatDeltaOnSuccess)));
+              if (worldObjHere.thermalDeltaOnSuccess) addThermal(worldObjHere.thermalDeltaOnSuccess);
               if (loot && loot.credits) { setCredits(c => c + loot.credits); pushActionLog(`+${loot.credits} credits recovered from the engagement.`, zoneId); }
               if (loot && loot.item) { addItem(loot.item); pushActionLog(`Salvaged: ${loot.item.name}`, zoneId); }
               pushActionLog(`[${worldObjHere.label}] Engagement concluded.`, zoneId);
@@ -19787,9 +21260,12 @@ function StarWarsRPG() {
       const _bz = BADOR_COMBAT_ZONES[zoneId];
       if (_bz && !questFlags[`bador_cleared_${zoneId}`] && !activeMinigame) {
         encStepsRef.current += 1;
-        if (encStepsRef.current >= BADOR_ENCOUNTER_MIN_STEPS && Math.random() * 100 < _bz.rate) {
+        const _th = questFlags.thermal_index || 0;
+        const _rate = _bz.rate * (_th >= 60 ? 2 : _th >= 30 ? 1.5 : 1);
+        if (encStepsRef.current >= BADOR_ENCOUNTER_MIN_STEPS && Math.random() * 100 < _rate) {
           encStepsRef.current = 0;
-          const _bKey = _bz.pool[Math.floor(Math.random() * _bz.pool.length)];
+          const _pool = _th >= 60 ? [..._bz.pool, 'kef_shock_breacher', 'kef_mortar_specialist'] : _th >= 30 ? [..._bz.pool, 'kef_hunter_killer'] : _bz.pool;
+          const _bKey = _pool[Math.floor(Math.random() * _pool.length)];
           setActiveMinigame({
             type: 'tactical_combat',
             opponentProfile: _bKey,
@@ -19797,6 +21273,7 @@ function StarWarsRPG() {
             onSuccess: (loot) => {
               const _cr = loot ? loot.credits : 100;
               setCredits(c => c + _cr);
+              addThermal(4);
               if (loot && loot.item) addItem(loot.item);
               let wins = 0;
               for (let i = 1; i <= _bz.need; i++) if (questFlagsRef.current[`bador_won_${zoneId}_${i}`]) wins = i;
@@ -19862,6 +21339,7 @@ function StarWarsRPG() {
         <div>
           <span style={{ fontSize:16,fontWeight:600,color:zone.accent,textShadow:`0 0 12px ${zone.accentGlow}` }}>{zone.name}</span>
           <span style={{ fontSize:11,color:'#7A7F94',marginLeft:10 }}>{zone.subtitle}</span>
+          {BADOR_SURFACE_ZONES.includes(zoneId) && (questFlags.thermal_index || 0) > 0 && <span style={{ fontSize:10,marginLeft:10,letterSpacing:'0.12em',color: questFlags.thermal_60 ? '#FF4A2A' : questFlags.thermal_30 ? '#FFB844' : '#7FD0FF' }}>THERMAL {questFlags.thermal_index}%</span>}
           {BADOR_COMBAT_ZONES[zoneId] && (questFlags[`bador_cleared_${zoneId}`]
             ? <span style={{ fontSize:10,color:'#3AFF8A',marginLeft:10,letterSpacing:'0.12em' }}>ZONE CLEARED</span>
             : <span style={{ fontSize:10,color:'#FF6A4A',marginLeft:10,letterSpacing:'0.12em' }}>ACTIVE COMBAT ZONE</span>)}

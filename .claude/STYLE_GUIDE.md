@@ -422,3 +422,10 @@ Future candidates: apply the lighting pass to tactical enemy sprites, redraw leg
 - New props (all 3 tone `Bev`/`Slab` builds with greeble and wear): `observatory_telescope` (3 by 3), `garden_planter` (3 by 2, glowing blooms), `art_pedestal` via `PropGalleryPedestal` (2 by 2), `wall_art` (3 by 2, variants `skyline` and default), `holo_theater` (4 by 3), `lounge_rug` (5 by 3 backdrop), `soak_pool` (4 by 3, animated steam), `design_console` (2 by 2).
 - Reuse rules: warm brass, garnet red, stone and moss for domestic decor; teal water; cyan only for screens. Anything that glows uses `Glow` with low opacity.
 
+## v8 changelog: Bador war zones
+
+- New backdrop `basalt_vista` (24 by 5 tiles, three families): `ravine_*` teal fog, black basalt spires, crescent moon; `outskirts_*` KDY white wall, orange breach, dark parent world and tracer streaks; `wastes_*` piston silhouettes and furnace glow. Tile it left to right; draw the doorway into the art.
+- New ambient layers: `warzone` (falling ash, red and cyan tracers), `basalt_mist` (cold teal fog banks), `forge` (rising embers and steam).
+- New props (27): `kdy_barricade`, `auto_turret`, `shanty_hovel`, `burning_wreck`, `fuel_conduit`, `mortar_pit`, `catwalk_post`, `landspeeder_depot`, `eweb_turret`, `exo_socket`, `repulsor_barricade`, `drop_speeder`, `camo_netting`, `steam_grate`, `fusion_lever`, `brig_cell`, `enc_array`, `field_desk`, `scout_walker`, `piston_tower`, `valve_wheel`, `steam_vent_pipe`, `foundry_hatch`, `exhaust_cathedral`, `boiler_hull`, `governor_socket`, `basalt_vista`.
+- Colour: rust, copper and hazard orange for the KEF and the wastes, hull white with cyan lamps for KDY, gunmetal with wet cyan light for Outpost 7. Orange glow means danger, cyan means safe or owned.
+
