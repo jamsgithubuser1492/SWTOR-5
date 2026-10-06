@@ -4829,8 +4829,8 @@ const PLANETS = {
           { x: 25, y: 0, targetZone: 'city_outskirts_bador', targetPos: { x: 25, y: 30 }, label: 'Depot Blast Doors' },
           { x: 40, y: 0, targetZone: 'outpost_7', targetPos: { x: 22, y: 30 }, label: 'Outpost 7 Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway tunnel to Outpost 7 is shut tight from this side. It opens once Operation Sundown breaks the line.' },
           { x: 41, y: 0, targetZone: 'outpost_7', targetPos: { x: 23, y: 30 }, label: 'Outpost 7 Gateway', requiresFlag: 'sundown_complete', lockedMessage: 'The gateway tunnel to Outpost 7 is shut tight from this side. It opens once Operation Sundown breaks the line.' },
-          { x: 47, y: 21, targetZone: 'deep_caverns', targetPos: { x: 1, y: 11 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'The Zone Five descent is sealed behind the central blast doors. Restart the manifold and open them first.' },
-          { x: 47, y: 22, targetZone: 'deep_caverns', targetPos: { x: 1, y: 12 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'The Zone Five descent is sealed behind the central blast doors. Restart the manifold and open them first.' },
+          { x: 47, y: 21, targetZone: 'deep_caverns', targetPos: { x: 1, y: 14 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'The Zone Five descent is sealed behind the central blast doors. Restart the manifold and open them first.' },
+          { x: 47, y: 22, targetZone: 'deep_caverns', targetPos: { x: 1, y: 15 }, label: 'Zone Five Descent', requiresFlag: 'zone05_gate_open', lockedMessage: 'The Zone Five descent is sealed behind the central blast doors. Restart the manifold and open them first.' },
         ],
         worldObjects: [
           { id: 'wastes_vista_w', propArt: 'basalt_vista', propVariant: 'wastes_a', x: 12, y: 5, once: false, iconKind: 'vista', label: 'The Titan Manifold',
@@ -5380,16 +5380,16 @@ const PLANETS = {
       deep_caverns: {
         id: 'deep_caverns', name: 'Deep Caverns of Bador',
         subtitle: 'Bador Moon · Sub-Surface Grid 9-1',
-        width: 34, height: 22, spawnPos: { x: 2, y: 11 }, textureId: 'verdanth',
+        width: 48, height: 30, spawnPos: { x: 2, y: 14 }, textureId: 'verdanth',
         accent: '#5A4B8A', accentGlow: 'rgba(90,75,138,0.28)', accentDim: '#28204A',
         floorColor: '#14101E', floorAlt: '#1A1426', wallDark: '#080610', wallLight: '#100C18',
         bg: 'radial-gradient(circle at 50% 50%, #100C18 0%, #060410 70%)', ambient: 'mist',
         decor: ['rubble', 'moss'],
         doors: [
-          { x: 0, y: 11,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 21 }, label: 'Engine Wastes' },
-          { x: 0, y: 12,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 22 }, label: 'Engine Wastes' },
-          { x: 33, y: 11, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 11 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
-          { x: 33, y: 12, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 12 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
+          { x: 0, y: 14,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 21 }, label: 'Engine Wastes' },
+          { x: 0, y: 15,  targetZone: 'engine_wastes', targetPos: { x: 46, y: 22 }, label: 'Engine Wastes' },
+          { x: 47, y: 14, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 16 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
+          { x: 47, y: 15, targetZone: 'zora_iv_wreckage', targetPos: { x: 1, y: 17 }, label: 'Zora IV Wreckage', requiresAnyFlag: ['cavern_path_clear'], lockedMessage: 'A heavy security shutter blocks the passage to the wreck. The guardian droid still controls it.' },
         ],
         worldObjects: [
           { id: 'republic_survey_cache', propArt: 'crate_stack', propVariant: 'survey', x: 18, y: 12, label: 'Republic Survey Station Cache',
@@ -5416,18 +5416,12 @@ const PLANETS = {
             ],
           },
         ],
-        collectibles: [{ id: 'cavern_survey_data', x: 8, y: 4, label: 'Deep Survey Geological Record', reward: 350 }],
+        collectibles: [{ id: 'cavern_survey_data', x: 8, y: 8, label: 'Deep Survey Geological Record', reward: 350 }],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 32, 20, 'floor');
-          for (let cx = 4; cx <= 14; cx++) { pt(g, cx, 9, 'water'); pt(g, cx, 10, 'water'); }
-          pt(g, 8, 9, 'floor'); pt(g, 9, 9, 'floor');
-          for (let cz = 20; cz <= 28; cz++) { pt(g, cz, 14, 'water'); pt(g, cz, 15, 'water'); }
-          pt(g, 23, 14, 'floor'); pt(g, 24, 14, 'floor');
-          carveRect(g, 28, 2, 32, 8, 'wall');
-          pt(g, 30, 2, 'floor'); pt(g, 31, 2, 'floor');
-          pt(g, 0, 11, 'door'); pt(g, 0, 12, 'door');
-          pt(g, 33, 11, 'door'); pt(g, 33, 12, 'door');
+          carveRect(g, 1, 5, 46, 28, 'floor');
+          pt(g, 0, 14, 'door'); pt(g, 0, 15, 'door');
+          pt(g, 47, 14, 'door'); pt(g, 47, 15, 'door');
           return g;
         },
       },
@@ -5435,14 +5429,14 @@ const PLANETS = {
       zora_iv_wreckage: {
         id: 'zora_iv_wreckage', name: 'Abandoned Capital Ship — Zora IV',
         subtitle: 'Bador Moon · Grid 9-1 · Final Approach',
-        width: 34, height: 24, spawnPos: { x: 2, y: 11 }, textureId: 'ferrowake',
+        width: 48, height: 32, spawnPos: { x: 2, y: 16 }, textureId: 'ferrowake',
         accent: '#B8D4E8', accentGlow: 'rgba(184,212,232,0.25)', accentDim: '#485868',
         floorColor: '#141C24', floorAlt: '#1A2430', wallDark: '#080C10', wallLight: '#101820',
         bg: 'radial-gradient(circle at 50% 30%, #101820 0%, #060C10 70%)', ambient: 'traffic',
         decor: ['girder', 'pipe'],
         doors: [
-          { x: 0, y: 11, targetZone: 'deep_caverns', targetPos: { x: 32, y: 11 }, label: 'Deep Caverns' },
-          { x: 0, y: 12, targetZone: 'deep_caverns', targetPos: { x: 32, y: 12 }, label: 'Deep Caverns' },
+          { x: 0, y: 16, targetZone: 'deep_caverns', targetPos: { x: 46, y: 14 }, label: 'Deep Caverns' },
+          { x: 0, y: 17, targetZone: 'deep_caverns', targetPos: { x: 46, y: 15 }, label: 'Deep Caverns' },
         ],
         worldObjects: [
           { id: 'hypercore_chamber', propArt: 'hypercore', x: 28, y: 12, label: 'Experimental Hypercore Chamber',
@@ -5486,16 +5480,8 @@ const PLANETS = {
         ],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
-          carveRect(g, 1, 1, 32, 22, 'ship_hull');
-          carveRect(g, 3, 3, 30, 20, 'floor');
-          for (let hx = 3; hx <= 16; hx++) pt(g, hx, 1, 'ship_ramp');
-          for (let hx = 18; hx <= 30; hx++) pt(g, hx, 1, 'ship_ramp');
-          for (let hy = 1; hy <= 22; hy++) { pt(g, 1, hy, 'ship_hull'); pt(g, 32, hy, 'ship_hull'); }
-          carveRect(g, 3, 8, 14, 16, 'wall');
-          pt(g, 3, 12, 'floor'); pt(g, 4, 12, 'floor'); pt(g, 5, 12, 'floor'); pt(g, 6, 12, 'floor');
-          pt(g, 14, 10, 'floor'); pt(g, 14, 11, 'floor'); pt(g, 14, 12, 'floor');
-          pt(g, 0, 11, 'door'); pt(g, 0, 12, 'door');
-          carveRect(g, 1, 11, 2, 12, 'floor'); carveRect(g, 7, 12, 13, 12, 'floor'); // airlock and the corridor into the main bay
+          carveRect(g, 1, 5, 46, 30, 'floor');
+          pt(g, 0, 16, 'door'); pt(g, 0, 17, 'door');
           return g;
         },
       },
