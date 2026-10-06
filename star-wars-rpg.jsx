@@ -4416,13 +4416,19 @@ const PLANETS = {
       },
 
       bador_manufacturing: {
-        id: 'bador_manufacturing', name: 'KDY Manufacturing Facilities — Sector 4',
-        subtitle: 'Bador Moon · Restricted Zone',
+        id: 'bador_manufacturing', name: 'KDY Manufacturing Facilities, Sector 4',
+        subtitle: 'Bador Moon · Fabrication Works · Restricted Zone',
         width: 44, height: 30, spawnPos: { x: 2, y: 14 }, textureId: 'ferrowake',
         accent: '#D4762C', accentGlow: 'rgba(212,118,44,0.28)', accentDim: '#6A3010',
         floorColor: '#251A0E', floorAlt: '#2E2010', wallDark: '#0E0A06', wallLight: '#1A1208',
-        bg: 'radial-gradient(circle at 50% 70%, #1A1008 0%, #0A0804 70%)', ambient: 'embers',
+        bg: 'radial-gradient(circle at 50% 12%, #2A1408 0%, #140C06 50%, #070403 100%)', ambient: 'foundry',
         decor: ['pipe', 'girder', 'slag'],
+        paAnnouncements: [
+          'Attention Sector 4 personnel. Shift quota stands at one hundred and fourteen percent. Surplus is a privilege.',
+          'Foundry Four will pour in five minutes. Stand clear of the spout.',
+          'Reminder: the east gate is closed to day crew after the shift horn. Thank you for your cooperation.',
+          'The Slag Line freight lock remains dead. Do not attempt to power the tunnel.',
+        ],
         doors: [
           { x: 0, y: 14, targetZone: 'bador_main_base', targetPos: { x: 42, y: 13 }, label: 'Main Base' },
           { x: 0, y: 15, targetZone: 'bador_main_base', targetPos: { x: 42, y: 14 }, label: 'Main Base' },
@@ -4430,50 +4436,400 @@ const PLANETS = {
           { x: 43, y: 17, targetZone: 'engine_wastes', targetPos: { x: 1, y: 11 }, label: 'Slag Line Freight Tunnel', requiresFlag: 'manifest_restarted', lockedMessage: 'The Slag Line freight lock is sealed. The tunnel beyond runs to the Engine Wastes and stays dead until the Titan Manifold is restarted.' },
         ],
         worldObjects: [
-          { id: 'assembly_line_terminal', propArt: 'console', propVariant: 'assembly', x: 20, y: 6, label: 'Assembly Line Override Terminal',
-            description: 'An unauthorized modification routes assembly output to an off-manifest storage bay. The override code is not in the KDY standard library.',
-            triggersMinigame: 'terminal_slicing', requiresFlag: 'ghost_keel_active',
+          // ---- vista and signage ----
+          { id: 'mfg_vista', propArt: 'bvista_44x5', propVariant: 'foundry_a', x: 22, y: 5, once: false, iconKind: 'vista', label: 'Sector 4 Foundry Skyline',
+            description: 'Foundry stacks and cooling towers rise into a smoke dark sky, gantries slung between them, an orange slag glow along the ground. Sector 4 never stops pouring.', grantsCodex: 'codex-mfg-sector4' },
+          { id: 'mfg_sign_main', propArt: 'facility_sign', propVariant: 'mfg', x: 4, y: 18, once: false, iconKind: 'crate', label: 'Fabrication Works Sign',
+            description: 'SECTOR 4 FABRICATION, SHIFT QUOTA 114 PCT. Someone has underlined the 114 in red grease pencil and added a question mark.' },
+          { id: 'mfg_sign_slag', propArt: 'facility_sign', propVariant: 'slag', x: 41, y: 15, once: false, iconKind: 'crate', label: 'Slag Line Freight Lock Sign',
+            description: 'SLAG LINE FREIGHT LOCK, TUNNEL DEAD. The sign is newer than the lock. Whoever hung it did not expect the lock to open again.' },
+          { id: 'mfg_slag_gate', propArt: 'security_gate', x: 40, y: 18, once: false, iconKind: 'crate', label: 'Slag Line Freight Lock',
+            description: 'A heavy freight lock at the east end, hazard striped and welded shut. Its status light is red. The tunnel beyond stays dead until the Titan Manifold turns over.' },
+          // ---- Rhea\'s Gantry ----
+          { id: 'mfg_quota_board', propArt: 'board', propVariant: 'mfg_quota', x: 3, y: 7, once: false, iconKind: 'crate', label: 'Shift Quota Board',
+            description: 'Two hundred and twelve names on the day roll, three hundred and forty badge swipes logged. The difference is circled in red grease pencil.', grantsCodex: 'codex-mfg-night-shift' },
+          { id: 'mfg_gantry', propArt: 'catwalk_junction', x: 3, y: 10, once: false, iconKind: 'crate', label: 'Line Gantry Junction',
+            description: 'A catwalk junction over the head of the line, rails worn bright by boots, a scanner cradle bolted to the post.' },
+          { id: 'mfg_gantry_bench', propArt: 'workbench', propVariant: 'arms', x: 7, y: 10, once: false, iconKind: 'crate', label: 'Coupling Bench',
+            description: 'A bench strewn with gantry couplings, torque wrenches and a cold flask. One coupling is stamped with a section number and nothing else.' },
+          { id: 'mfg_gantry_vent', propArt: 'steam_vent', x: 9, y: 11, once: false, iconKind: 'crate', label: 'Gantry Steam Vent',
+            description: 'A floor vent breathing hot steam across the catwalk. The paint around it has blistered off.' },
+          { id: 'mfg_gantry_drums', propArt: 'drum_array', x: 2, y: 12, once: false, iconKind: 'crate', label: 'Quench Oil Drums',
+            description: 'A rack of quench oil drums stencilled with the Kuat wheel. One has been used as a seat.' },
+          // ---- Production Line Hall ----
+          { id: 'mfg_belt_1', propArt: 'mfg_conveyor', propVariant: 'plates', x: 14, y: 7, once: false, iconKind: 'crate', label: 'Line 1 Conveyor',
+            description: 'A conveyor belt carrying stacked hull plate, amber chevrons marching along the bed. Class C plate, stamped and counted.' },
+          { id: 'mfg_belt_2', propArt: 'mfg_conveyor', propVariant: 'ingots', x: 18, y: 7, once: false, iconKind: 'crate', label: 'Line 1 Ingot Feed',
+            description: 'The same belt, now carrying three glowing ingots straight from the foundry. The heat shimmers a full tile above them.' },
+          { id: 'mfg_belt_3', propArt: 'mfg_conveyor', propVariant: 'plates', x: 22, y: 7, once: false, iconKind: 'crate', label: 'Line 2 Conveyor',
+            description: 'A second belt of stacked plate. The plate here is thicker than anything a cruiser needs.' },
+          { id: 'mfg_belt_4', propArt: 'mfg_conveyor', propVariant: 'ingots', x: 26, y: 7, once: false, iconKind: 'crate', label: 'Line 2 Ingot Feed',
+            description: 'More hot ingots, running toward the cradles. Whatever they feed, it is hungry.' },
+          { id: 'mfg_cradle_a', propArt: 'mfg_cradle', x: 16, y: 12, once: false, iconKind: 'crate', label: 'Assembly Cradle One',
+            description: 'A hazard striped cradle holds a ribbed hull section, half plated, a welding arc flickering at one rib. The plate reads SECTION 11, NO REGISTRY. It is far too large for any ship this yard may build.', grantsCodex: 'codex-mfg-section-eleven' },
+          { id: 'mfg_cradle_b', propArt: 'mfg_cradle', propVariant: 'b', x: 28, y: 12, once: false, iconKind: 'crate', label: 'Assembly Cradle Two',
+            description: 'A second cradle, the section younger than its twin. Only a few plates cling to the ribs. The plate reads SECTION 12, NO REGISTRY.' },
+          { id: 'mag_lev_crane', propArt: 'maglev_crane', x: 22, y: 10, label: 'Mag-Lev Cargo Crane',
+            description: 'A five ton crane magnetized to the ceiling rail. The routing manifest reads: PERSONAL CONSIGNMENT.' },
+          { id: 'mfg_shift_board', propArt: 'board', propVariant: 'mfg_shift', x: 22, y: 12, once: false, iconKind: 'crate', label: 'Production Schedule',
+            description: 'Lines one and two list Class C plate. Cradle one lists SECTION 11 and cradle two SECTION 12, the last row circled in red.' },
+          { id: 'assembly_line_terminal', propArt: 'console', propVariant: 'assembly', x: 19, y: 11, label: 'Assembly Line Override Terminal',
+            description: 'An unauthorized modification routes assembly output to an off manifest storage bay. The override code is not in the KDY standard library.',
+            lockedMessage: 'The override is locked behind Ghost Keel clearance. Commander Vael at Bador HQ can brief you.',
+            triggersMinigame: 'terminal_slicing', minigameConfig: { difficulty: 3 }, requiresFlag: 'ghost_keel_active',
             once: true, grantsFlag: 'assembly_override_accessed', grantsItem: 'corrupt_manifest' },
-          { id: 'mag_lev_crane', propArt: 'maglev_crane', x: 18, y: 6, label: 'Mag-Lev Cargo Crane',
-            description: 'A five-ton crane magnetized to the ceiling rail. The routing manifest reads: PERSONAL CONSIGNMENT.' },
-          { id: 'krax_manifest_safe', propArt: 'crate_stack', propVariant: 'lockbox', x: 29, y: 16, label: 'Overseer\'s Manifest Safe',
-            description: 'A heavy durasteel lockbox welded to the floor. The serial number has been removed.',
-            once: true, requiresFlag: 'krax_revealed',
-            grantsFlag: 'overseer_safe_opened', grantsItem: 'ion_charged_coils' },
+          { id: 'assembly_line_terminal_done', propArt: 'console', propVariant: 'assembly_done', x: 19, y: 11, once: false, iconKind: 'terminal', label: 'Assembly Override (Active)',
+            description: 'The override is live. Somewhere east, a false panel has slid open on a room that was never on the floor plan.', requiresFlag: 'assembly_override_accessed', invisibleLocked: true },
+          { id: 'mfg_offcuts', propArt: 'scrap_bin', x: 12, y: 12, once: false, iconKind: 'crate', label: 'Offcut Bin',
+            description: 'A bin of cut plate and trimmings. Every offcut carries the same retired stamp.' },
+          // ---- Foundry Floor ----
+          { id: 'mfg_piston', propArt: 'piston_tower', x: 35, y: 8, once: false, iconKind: 'crate', label: 'Hammer Piston Tower',
+            description: 'A copper piston tower hammering a plate on the anvil below. Two orange vent lamps glow at its waist.' },
+          { id: 'mfg_boiler', propArt: 'boiler_hull', x: 40, y: 8, once: false, iconKind: 'crate', label: 'Foundry Boiler',
+            description: 'A copper boiler hull with a glowing furnace eye and a sign reading DEAD BOILER. It is warm. Someone has been running it anyway.' },
+          { id: 'mfg_forge', propArt: 'mfg_forge', x: 36, y: 12, once: false, iconKind: 'crate', label: 'Foundry Four Crucible',
+            description: 'A furnace with a molten mouth, a pour spout and a chimney. The plate reads FOUNDRY 4. White hot iron runs from the spout into a trough.' },
+          { id: 'mfg_valve', propArt: 'valve_wheel', x: 41, y: 11, once: false, iconKind: 'crate', label: 'Coolant Valve Wheel',
+            description: 'A brass valve wheel on a copper stand, three amber lamps blinking. It controls coolant to the crucible and sticks.' },
+          { id: 'mfg_steam', propArt: 'steam_vent_pipe', x: 33, y: 11, once: false, iconKind: 'crate', label: 'Relief Stack',
+            description: 'A relief stack with a red warning lamp, venting steam in three slow plumes.' },
+          // ---- Thoroughfare ----
+          { id: 'mfg_arch', propArt: 'scanner_arch', propVariant: 'customs', x: 12, y: 17, once: false, iconKind: 'crate', label: 'Entry Scanner Arch',
+            description: 'A scanner arch at the thoroughfare mouth. Its log counts day crew in. Nothing is counting anyone out.' },
+          { id: 'mfg_vent_a', propArt: 'steam_vent', x: 6, y: 16, once: false, iconKind: 'crate', label: 'Thoroughfare Steam Vent',
+            description: 'A floor vent breathing steam across the lane. The grating is hot enough to feel through boots.' },
+          { id: 'mfg_grate', propArt: 'floor_grate', x: 18, y: 16, once: false, iconKind: 'crate', label: 'Slag Drain Grate',
+            description: 'A drain grate with a dull orange glow underneath. Cooled slag has crusted around the bars.' },
+          { id: 'mfg_post', propArt: 'guard_post', x: 24, y: 18, once: false, iconKind: 'crate', label: 'Security Post',
+            description: 'A KDY security post with a rack of rebreathers and a log board. Two cold cups sit on the sill.' },
+          { id: 'mfg_pipe', propArt: 'leaking_pipe', propVariant: 'coolant', x: 33, y: 18, once: false, iconKind: 'crate', label: 'Leaking Coolant Line',
+            description: 'A coolant line weeping a pale blue film across the floor. Nobody has patched it in weeks.' },
+          // ---- Cargo lift and dock ----
+          { id: 'mfg_lift', propArt: 'cargo_lift', x: 3, y: 22, once: false, iconKind: 'crate', label: 'Freight Lift Two',
+            description: 'A freight lift with a worn deck and a hazard rail. The call panel shows a stop labelled B, on no floor.' },
+          { id: 'mfg_lift_log', propArt: 'board', propVariant: 'mfg_lift', x: 7, y: 22, once: false, iconKind: 'crate', label: 'Cargo Lift Log',
+            description: 'The lift log lists two night cycles with a sealed pallet each, at 02:10 and 03:40. The stop is B. There is no floor B.' },
+          { id: 'mfg_containers', propArt: 'container_stack', x: 10, y: 22, once: false, iconKind: 'crate', label: 'Outbound Containers',
+            description: 'A stack of outbound containers, plated and sealed. The manifest tags say PERSONAL CONSIGNMENT.' },
+          { id: 'mfg_crane_arm', propArt: 'crane_arm', x: 6, y: 27, once: false, iconKind: 'crate', label: 'Dock Crane',
+            description: 'A dock crane arm parked over the loading bay, hook down, a pallet still hanging from the chains.' },
+          { id: 'mfg_dock_crates', propArt: 'crate_stack', propVariant: 'agri', x: 2, y: 26, once: false, iconKind: 'crate', label: 'Ration Crates',
+            description: 'Ration crates stacked three high, lids pried open and re-sealed. The ration count does not match the day roll.' },
+          { id: 'mfg_dock_drums', propArt: 'drum_array', x: 11, y: 26, once: false, iconKind: 'crate', label: 'Fuel Drums',
+            description: 'A rack of fuel drums with fresh hazard tape. They are lighter than they should be.' },
+          // ---- Engineering Bay ----
+          { id: 'mfg_eng_bench', propArt: 'workbench', propVariant: 'slicing', x: 16, y: 22, once: false, iconKind: 'crate', label: 'Engineering Bench',
+            description: 'A slicing bench strewn with data cores and a half stripped drive housing. The housing is much larger than any shuttle needs.' },
+          { id: 'mfg_eng_servers', propArt: 'server_stack', propVariant: 'republic', x: 21, y: 23, once: false, iconKind: 'crate', label: 'Drawing Servers',
+            description: 'A stack of drawing servers humming under their covers. The cooling vents are blocked with rags.' },
+          { id: 'mfg_eng_junction', propArt: 'junction_box', propVariant: 'vent', x: 19, y: 22, once: false, iconKind: 'crate', label: 'Power Junction',
+            description: 'A junction box with its door taped open and a handwritten note: DO NOT RESET, THE ARCHIVE WILL NOT COME BACK.' },
+          { id: 'mfg_eng_cabinet', propArt: 'archive_cabinet', propVariant: 'ledger', x: 15, y: 26, once: false, iconKind: 'crate', label: 'Drawing Cabinet',
+            description: 'A cabinet of rolled drawings. Every file is signed in the same hand, a retired signature Vorn will not read aloud.' },
+          { id: 'mfg_eng_tap', propArt: 'power_tap', x: 18, y: 28, once: false, iconKind: 'crate', label: 'Bay Power Tap',
+            description: 'A heavy power tap feeding the drawing servers directly from the foundry bus.' },
+          { id: 'mfg_eng_terminal', propArt: 'console', propVariant: 'mfg_eng', x: 22, y: 27, label: 'Engineering Archive Terminal',
+            description: 'Fourteen assembly sequence files, one frame, no registry. Every drawing is stamped with the same retired signature. The last view was logged at night.',
+            requiresFlag: 'vorn_consulted', lockedMessage: 'The archive wants a name and a reason. Lead Engineer Vorn might supply both.',
+            once: true, grantsFlag: 'mfg_sequence_read', grantsItem: 'mfg_assembly_files', grantsCodex: 'codex-mfg-pocket-frame' },
+          { id: 'mfg_eng_terminal_done', propArt: 'console', propVariant: 'mfg_eng_done', x: 22, y: 27, once: false, iconKind: 'terminal', label: 'Engineering Archive (Copied)',
+            description: 'The archive is copied. The view log shows nothing odd, which is the oddest thing in the room.', requiresFlag: 'mfg_sequence_read', invisibleLocked: true },
+          // ---- Overseer's glass office ----
+          { id: 'mfg_office_glass', propArt: 'mfg_glass', x: 28, y: 20, once: false, iconKind: 'crate', label: "Overseer's Glass Office",
+            description: 'A glass fronted office over the thoroughfare, amber blinds half drawn, a sign reading OVERSEER SECTOR 4 and APPOINTMENTS ONLY. Two brass counters flank the door.' },
+          { id: 'mfg_office_desk', propArt: 'field_desk', x: 29, y: 22, once: false, iconKind: 'crate', label: "Krax's Desk",
+            description: 'A broad desk made for four arms, covered in manifest tablets, a quota chart and a half eaten ration bar.' },
+          { id: 'mfg_office_console', propArt: 'console', propVariant: 'mfg_office', x: 26, y: 24, once: false, iconKind: 'terminal', label: 'Overseer Routing Console',
+            description: 'Quota stands at 114 percent, surplus routed, night crew 128, authorized K. Krax. The console is not locked. Krax does not think anyone reads it.' },
+          { id: 'mfg_office_monitors', propArt: 'monitor_wall', x: 28, y: 28, once: false, iconKind: 'terminal', label: 'Floor Monitors',
+            description: 'A wall of camera feeds of the foundry, cradles and thoroughfare. The feed for the east end has been swapped for a loop.' },
+          { id: 'mfg_office_archive', propArt: 'archive_cabinet', propVariant: 'dossier', x: 32, y: 22, once: false, iconKind: 'crate', label: 'Personnel Cabinet',
+            description: 'A cabinet of personnel files. The night crew drawer is empty and its lock has been drilled out.' },
+          { id: 'krax_manifest_safe', propArt: 'crate_stack', propVariant: 'lockbox', x: 32, y: 27, label: "Overseer's Manifest Safe",
+            description: 'A heavy durasteel lockbox welded to the floor. The serial number has been removed. Inside, stolen reactor coils and a private ledger.',
+            once: true, requiresFlag: 'krax_revealed', lockedMessage: 'The lockbox is welded shut and Krax watches it. He has to be made to open up first.',
+            grantsFlag: 'overseer_safe_opened', grantsItem: 'ion_charged_coils', grantsCredits: 600 },
+          { id: 'mfg_krax_wreck', propArt: 'scrap_bin', x: 27, y: 26, once: true, iconKind: 'crate', label: "Krax's Loader Frame Wreckage",
+            description: 'The smoking remains of a four clamp loader frame, hydraulic fluid pooling across the office floor. The harness is still intact. It still hums.',
+            requiresFlag: 'krax_defeated', invisibleLocked: true, grantsItem: 'mfg_four_arm_harness', grantsCredits: 500, grantsCodex: 'codex-mfg-krax-fall' },
+          // ---- Storage Bay B ----
+          { id: 'mfg_bay_medic', propArt: 'medic_crate', x: 35, y: 22, once: false, iconKind: 'crate', label: 'Sealed Med Crate',
+            description: 'A medical crate with a fresh seal and a stencilled KDY number. It has been stationed here far longer than the room has existed on paper.' },
+          { id: 'mfg_bay_cargo', propArt: 'cargo_container', x: 41, y: 22, once: false, iconKind: 'crate', label: 'Pallet Container',
+            description: 'A pallet container marked ROUTINE STORES. The seal is new. The stamp is the retired one.' },
+          { id: 'mfg_bay_panel', propArt: 'crate_stack', propVariant: 'false_panel', x: 38, y: 24, once: false, iconKind: 'crate', label: 'False Wall Panel',
+            description: 'A wall panel that does not match the others. The seams are too clean and the rivets are fresh, as if the wall were put up to be forgotten.',
+            requiresNoneFlags: ['assembly_override_accessed'] },
+          { id: 'mfg_bay_vault', propArt: 'vault_door', x: 38, y: 24, once: false, iconKind: 'crate', label: 'Storage Bay B Door',
+            description: 'The false panel has slid aside on a vault door, its bolts drawn. Beyond it lies Storage Bay B, a room that is on no floor plan.',
+            requiresFlag: 'assembly_override_accessed', invisibleLocked: true },
+          { id: 'mfg_keel', propArt: 'mfg_keel', x: 38, y: 27, once: false, iconKind: 'crate', label: 'Forged Keel Plate',
+            description: 'A forged keel plate on a hazard skid, stencilled GK-01 KEEL in red and NO COMMISSION NUMBER below. Five clamps hold it. Its lamps are lit, as if it were waiting.',
+            requiresFlag: 'assembly_override_accessed', invisibleLocked: true, grantsCodex: 'codex-mfg-bay-b' },
+          { id: 'mfg_bay_core', propArt: 'console', propVariant: 'mfg_bay', x: 41, y: 28, label: 'Bay B Manifest Core',
+            description: 'The core logs every shipment out of Storage Bay B. Two hundred and twelve consignments, no manifest, all routed to grid nine one. The lock is military grade.',
+            requiresFlag: 'assembly_override_accessed', invisibleLocked: true,
+            triggersMinigame: 'terminal_slicing', minigameConfig: { difficulty: 5 },
+            once: true, grantsFlag: 'mfg_bay_proof', grantsItem: 'mfg_bay_manifest' },
+          { id: 'mfg_bay_core_done', propArt: 'console', propVariant: 'mfg_bay_done', x: 41, y: 28, once: false, iconKind: 'terminal', label: 'Bay B Core (Extracted)',
+            description: 'The ledger is yours. Two hundred and twelve entries, every one approved by Overseer Krax. Time to ask him about it.', requiresFlag: 'mfg_bay_proof', invisibleLocked: true },
         ],
         npcs: [
-          { id: 'assembly_tech_rhea', x: 12, y: 10, wander: 4, kind: 'mechanic', label: 'Assembly Tech Rhea',
+          { id: 'assembly_tech_rhea', x: 5, y: 8, wander: 2, kind: 'mechanic', label: 'Assembly Tech Rhea',
             repeatPrompt: 'Rhea ducks under the gantry and keeps working.',
-            prompt: 'A line technician in a sealed jumpsuit checks gantry couplings with a handheld scanner.',
-            choices: [ { text: 'Ask about the assembly line.', morality: 0, loyalty: {}, result: '\"Half the line is dark. Parts go missing, raiders cut the fences. Keep your eyes up.\"' } ] },
-          { id: 'overseer_krax', x: 22, y: 9, kind: 'besalisk_boss', label: 'Overseer Krax',
+            phases: [
+              {
+                id: 'phase_r1',
+                prompt: 'Rhea ducks under the gantry, scanner chirping. "Half the line is dark. Raiders cut the fences, parts go missing. Mind your head."',
+                repeatPrompt: 'Rhea ducks under the gantry and keeps working.',
+                choices: [
+                  { text: 'Ask about the assembly line.', morality: 0, loyalty: {}, result: '"Plate in, plate out, quota up. Day shift I understand." She glances at the east gate. "Night shift I only count."' },
+                  { text: 'Ask what she counts after the horn.', morality: 3, loyalty: { republic: 3 }, result: '"Badges, no faces. Sealed suits, loaders not on my register." She thumbs a slate into your hand. "My count. Do not get me fired."', grants: { flags: ['mfg_night_shift_known'], items: ['mfg_night_roster'], codex: ['codex-mfg-night-shift'] } },
+                ],
+              },
+              {
+                id: 'phase_r2',
+                requiresAllFlags: ['mfg_night_shift_known'],
+                prompt: 'Rhea keeps her eyes on the scanner. "If the night crew ever answers for this, remember I only counted."',
+                repeatPrompt: 'Rhea does not look up. "I only counted."',
+                choices: [
+                  { text: 'Promise to keep her name out of it.', morality: 2, loyalty: {}, result: '"Good." The scanner chirps. "Section eleven was bolted to its cradle three weeks ago. Section twelve is next."' },
+                ],
+              },
+              {
+                id: 'phase_r_expose',
+                requiresAllFlags: ['mfg_end_expose'],
+                prompt: 'Rhea waves at the dark cradles. "Vael\'s marines took the night badges and nobody was hurt. The line is quiet. I do not know what to do with quiet."',
+                repeatPrompt: 'Rhea scans a coupling that no longer matters.',
+                choices: [
+                  { text: 'Tell her the line can finally be honest.', morality: 3, loyalty: { republic: 2 }, result: '"Honest is slow." She almost smiles. "I will take slow."' },
+                ],
+              },
+              {
+                id: 'phase_r_amnesty',
+                requiresAllFlags: ['mfg_workers_cleared'],
+                prompt: 'Rhea meets your eyes for the first time. "They questioned the night crew and let them go. My count did that. I owe you."',
+                repeatPrompt: 'Rhea nods at you across the line.',
+                choices: [
+                  { text: 'Accept the credit chip she offers.', morality: 2, loyalty: { republic: 4 }, result: 'She presses a chip into your palm. "Section pay. Spend it somewhere that is not here." Three hundred credits, honestly earned.', grants: { credits: 300 } },
+                ],
+              },
+              {
+                id: 'phase_r_blackmail',
+                requiresAllFlags: ['mfg_end_blackmail'],
+                prompt: 'Rhea works with her head down. "Krax pays the line bonus again. I do not ask where from."',
+                repeatPrompt: 'Rhea does not ask where the bonus came from.',
+                choices: [
+                  { text: 'Tell her not to.', morality: -3, loyalty: { underworld: 2 }, result: 'She flinches, then nods. The scanner chirps. "Section twelve closes tonight. Someone will want to know."' },
+                ],
+              },
+              {
+                id: 'phase_r_fight',
+                requiresAllFlags: ['mfg_end_fight'],
+                prompt: 'The foundry hums quieter. Rhea sits on a cold cradle step. "Krax is gone. The night crew did not come back. I do not miss them."',
+                repeatPrompt: 'Rhea sits on the cradle step and watches the dark line.',
+                choices: [
+                  { text: 'Ask what happens to the line.', morality: 0, loyalty: {}, result: '"Quota will drop to what it should be." She shrugs. "Or somebody will fill the seat."' },
+                ],
+              },
+            ],
+          },
+          { id: 'overseer_krax', x: 29, y: 24, kind: 'besalisk_boss', label: 'Overseer Krax',
             questNpc: true,
             requiresFlag: 'vael_briefed',
-            hideAfterFlags: ['krax_exposed'],
+            hideAfterFlags: ['krax_exposed', 'krax_defeated'],
+            repeatable: true,
             repeatPrompt: 'Krax\'s four arms keep moving across different controls. "Inspections by appointment, not by ambush."',
-            prompt: 'The Besalisk does not stop moving. Four arms, four simultaneous tasks. He speaks without looking at you. "Freelancer. I was told to expect an inspection liaison." A pause — one beat too long. "Sector 4 is on schedule. All output is logged. Whatever anomaly your survey team flagged will be explained by thermal variance in the smelting array."',
-            choices: [
-              { text: 'Ask about the off-manifest routing code.', morality: 0, loyalty: {}, result: 'Two of his four arms freeze. The other two keep moving, slower. "Routing variance. Standard redundancy protocol." He meets your eyes for the first time. "I would not probe further without clearance from KDY Operations Level Six."', grants: { flags: ['krax_pressure_applied'] } },
-              { text: 'Tell him you have Level Six clearance.', morality: -10, loyalty: { underworld: 8 }, result: 'He stares. Then a slow exhale. "Then you already know what this line is producing." He lowers his voice. "If you are who you say you are, we are on the same side. Come back when your handlers have confirmed."', grants: { flags: ['krax_suspicious', 'krax_level6_bluff'] } },
-              { text: 'Tell him the scan team never came back.', morality: 5, loyalty: { republic: 5 }, result: '"I know." The most honest thing he has said. He picks up a manifest tablet, not looking at it. "That was not my order. I want you to know that." He sets it down. "Come back without an audience."', grants: { flags: ['krax_revealed'] } },
+            phases: [
+              {
+                id: 'phase_k1',
+                prompt: 'Four arms, four tasks, no eye contact. "Freelancer. I was told to expect an inspection liaison." A beat too long. "Sector 4 is on schedule. Thermal variance explains your anomalies."',
+                repeatPrompt: 'Krax\'s four arms keep moving across different controls. "Inspections by appointment, not by ambush."',
+                choices: [
+                  { text: 'Ask about the off manifest routing code.', morality: 0, loyalty: {}, result: 'Two arms freeze, two slow. "Routing variance. Standard redundancy." He meets your eyes. "Probe further and you will need clearance from Operations Level Six."', grants: { flags: ['krax_pressure_applied'] } },
+                  { text: 'Tell him you have Level Six clearance.', morality: -10, loyalty: { underworld: 8 }, result: '"Then you know what this line produces." He lowers his voice. "Come back when your handlers confirm."', grants: { flags: ['krax_suspicious', 'krax_level6_bluff'] } },
+                  { text: 'Tell him the scan team never came back.', morality: 5, loyalty: { republic: 5 }, result: '"I know. That was not my order." He sets the tablet down. "Come back without an audience."', grants: { flags: ['krax_revealed'] } },
+                  { text: 'Leave him to his work.', morality: 0, loyalty: {}, result: 'Krax does not look up. Four arms keep working. The line behind you does not slow.' },
+                ],
+              },
+              {
+                id: 'phase_k2',
+                requiresAllFlags: ['mfg_bay_proof'],
+                requiresNoneFlags: ['mfg_resolved'],
+                prompt: 'You lay the Bay B ledger on his desk. Four arms stop at once. "Who else has seen this?" His voice is very quiet.',
+                repeatPrompt: 'Krax waits, arms folded, for you to name a price or a charge.',
+                choices: [
+                  { text: '[Expose] Hand the ledger to Commander Vael.', morality: 12, loyalty: { republic: 10 }, requires: { item: 'mfg_bay_manifest' }, result: 'You ping Vael on the desk comm. Marines reach the door before Krax finishes his sentence. He goes quietly, cursing the Senate. Joint seal and 1500 credits are yours.', grants: { flags: ['mfg_resolved', 'mfg_end_expose', 'mfg_krax_gone', 'krax_exposed', 'krax_revealed'], items: ['mfg_inspector_seal'], credits: 1500, codex: ['codex-mfg-arrest'] } },
+                  { text: '[Expose] Ledger and Rhea\'s roster. The night crew testifies.', morality: 18, loyalty: { republic: 14 }, requires: { item: 'mfg_night_roster' }, result: 'Vael takes Krax and the roster. The night crew is questioned, not charged. Rhea will hear before shift change. Joint seal and 1800 credits.', grants: { flags: ['mfg_resolved', 'mfg_end_expose', 'mfg_krax_gone', 'mfg_workers_cleared', 'krax_exposed', 'krax_revealed'], items: ['mfg_inspector_seal'], credits: 1800, codex: ['codex-mfg-arrest'] } },
+                  { text: '[Blackmail] Name your price, Krax. The Syndicate is listening.', morality: -15, loyalty: { underworld: 15 }, requires: { item: 'mfg_bay_manifest' }, result: 'Krax agrees to a standing tithe. +2000 credits now and +150 credits each Advance Time at the War Table. He signs without reading.', grants: { flags: ['mfg_resolved', 'mfg_end_blackmail', 'mfg_tithe', 'krax_revealed'], items: ['mfg_tithe_ledger'], credits: 2000, codex: ['codex-mfg-tithe'] } },
+                  { text: '[Blackmail] Set his own stolen coils beside the ledger.', morality: -18, loyalty: { underworld: 18 }, requires: { item: 'ion_charged_coils' }, result: 'Krax goes grey. The tithe doubles: +3500 credits now and +250 credits each Advance Time at the War Table. He does not argue.', grants: { flags: ['mfg_resolved', 'mfg_end_blackmail', 'mfg_tithe', 'mfg_tithe_rich', 'krax_revealed'], items: ['mfg_tithe_ledger'], credits: 3500, codex: ['codex-mfg-tithe'] } },
+                  { text: '[Fight] Tell him no one is leaving this office.', morality: -5, loyalty: {}, result: 'Krax slams the pit alarm. The office floor opens and loader enforcers climb out, clamps open.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'mfg_enforcers', flavorText: 'Krax slams the pit alarm. Hatches drop open around the office and loader enforcers climb out with their clamp arms open. Use the desk and the pillars. The enforcers hit in pairs.' }, onSuccessFlags: ['mfg_enforcers_down'] },
+                  { text: 'Pick up the ledger and walk away.', morality: 0, loyalty: {}, defer: true, result: 'You collect the ledger. Krax does not breathe until the door closes behind you.' },
+                ],
+              },
+              {
+                id: 'phase_k3',
+                requiresAllFlags: ['mfg_bay_proof', 'mfg_enforcers_down'],
+                requiresNoneFlags: ['mfg_resolved'],
+                prompt: 'The last enforcer stops moving. Krax bolts a loader frame to his back, four clamps closing. "Fifteen years. You will not take it from me."',
+                repeatPrompt: 'Krax stands in his loader frame, steam venting from the joints.',
+                choices: [
+                  { text: '[Fight] End it.', morality: -3, loyalty: {}, result: 'The frame lurches off its stand and the floor shudders. Krax roars over the alarm, all four clamps swinging.', triggersMinigame: 'tactical_combat', minigameConfig: { opponentProfile: 'mfg_krax', flavorText: 'Krax lurches forward in the heavy loader frame, four clamps swinging. Hydraulics scream. The frame is slow, but nothing in the room is safe from it. Use the cover and break its pace.' }, onSuccessFlags: ['krax_defeated', 'mfg_resolved', 'mfg_end_fight', 'mfg_krax_gone', 'krax_exposed', 'krax_revealed'] },
+                  { text: 'Back out of the office.', morality: 0, loyalty: {}, defer: true, result: 'You back out of the office. Krax lets you go and does not follow. He is waiting.' },
+                ],
+              },
+              {
+                id: 'phase_k4',
+                requiresAllFlags: ['mfg_end_blackmail'],
+                prompt: 'Krax signs a transfer without looking up. "Quota is met. The tithe is on time. Your share clears every cycle. We never speak of Bay B."',
+                repeatPrompt: 'Krax does not look up. "Your share clears every cycle."',
+                choices: [
+                  { text: 'Remind him who is watching.', morality: -3, loyalty: { underworld: 3 }, result: 'His arms go still for exactly one breath. "I know." He does not say who he fears more.' },
+                ],
+              },
             ],
           },
-          { id: 'lead_engineer_vorn', x: 8, y: 16, wander: 2, kind: 'mechanic', label: 'Lead Engineer Vorn',
-            repeatPrompt: 'Vorn has his hands inside a conduit housing. "These assemblies are above civilian spec. Someone had authorization."',
-            prompt: '"You are not KDY clearance." He wipes his hands on a rag that does not help. "But you are not CSF either." He looks at the assembly line. "I have been building components for a frame that does not appear in the current-cycle shiplist. No registry, no commission number. I am told it is a classified project. I am starting to wonder who classified it."',
-            choices: [
-              { text: 'Ask what class of vessel the components are for.', morality: 5, loyalty: { republic: 8 }, result: '"The plating specs and drive housing dimensions — I built those before. Mandator-class dreadnaught. Pocket configuration." He shakes his head. "Nobody builds pocket dreadnaughts without a full Senate appropriation."', grants: { flags: ['vorn_consulted', 'dreadnaught_class_known'] } },
-              { text: 'Offer him credits to share the technical files.', morality: -8, loyalty: { underworld: 10 }, result: 'He looks at the credit chip for a long time. "Log access only. I am not handing over drive specs." He pockets the chip. "Assembly sequence files are on the engineering terminal. Krax does not check it between shifts."', grants: { flags: ['vorn_bribed', 'vorn_consulted'] } },
+          { id: 'mfg_acting_overseer', x: 30, y: 25, kind: 'kdy_guild_overseer', label: 'Acting Overseer Tallis',
+            requiresFlag: 'mfg_krax_gone',
+            repeatPrompt: 'Tallis reads another manifest twice.',
+            phases: [
+              {
+                id: 'phase_t1',
+                prompt: 'The acting overseer reads every manifest twice. "Joint seal on every door. Whatever Krax built, it stays in its cradle until someone senior decides."',
+                repeatPrompt: 'Tallis reads another manifest twice.',
+                choices: [
+                  { text: 'Ask about the unfinished sections.', morality: 0, loyalty: {}, result: '"Sealed, catalogued, guarded." A pause. "Vael decides what a pocket dreadnought is worth. So does whoever pays Vael."' },
+                ],
+              },
+              {
+                id: 'phase_t_fight',
+                requiresAllFlags: ['mfg_end_fight'],
+                prompt: 'Tallis steps around the scorch marks on the office floor. "Nobody asked who fought him. I will write down that no one did."',
+                repeatPrompt: 'Tallis steps around the scorch marks.',
+                choices: [
+                  { text: 'Say it was self defense.', morality: 0, loyalty: {}, result: '"Of course it was." Tallis does not blink. "The line starts again at dawn."' },
+                ],
+              },
             ],
           },
+          { id: 'lead_engineer_vorn', x: 18, y: 24, wander: 2, kind: 'mechanic', label: 'Lead Engineer Vorn',
+            repeatPrompt: 'Vorn has his hands inside a conduit housing. "These assemblies are above civilian spec."',
+            phases: [
+              {
+                id: 'phase_v1',
+                prompt: 'Vorn has his arm inside a conduit housing. "You are not KDY clearance." He squints. "But you are not CSF either. These parts are above civilian spec."',
+                repeatPrompt: 'Vorn has his hands inside a conduit housing. "These assemblies are above civilian spec."',
+                choices: [
+                  { text: 'Ask what class of vessel the parts are for.', morality: 5, loyalty: { republic: 8 }, result: '"Mandator class plating, pocket configuration. I built it once before." He shakes his head. "Nobody builds that without a Senate appropriation. The archive is behind me."', grants: { flags: ['vorn_consulted', 'dreadnaught_class_known'], codex: ['codex-mfg-pocket-frame'] } },
+                  { text: 'Offer him 200 credits for the technical files.', morality: -8, loyalty: { underworld: 10 }, requires: { credits: 200 }, result: 'He studies the chip a long time. "Log access only. No drive specs." He pockets it. "The archive terminal is behind me. Krax does not check it between shifts."', grants: { flags: ['vorn_bribed', 'vorn_consulted'] } },
+                  { text: 'Say you are only looking around.', morality: 0, loyalty: {}, result: '"Look at the plate, then." He nods at the cradles. "Count the sections and tell me I am wrong."' },
+                ],
+              },
+              {
+                id: 'phase_v2',
+                requiresAllFlags: ['vorn_consulted'],
+                prompt: 'Vorn keeps working. "Archive terminal is behind me. Copy what you want. Krax never checks it between shifts."',
+                repeatPrompt: 'Vorn waves a rag at the archive terminal.',
+                choices: [
+                  { text: 'Ask why he is helping.', morality: 2, loyalty: {}, result: '"Because I signed for fourteen sections and was never told the fifteenth was a ship."' },
+                ],
+              },
+              {
+                id: 'phase_v_expose',
+                requiresAllFlags: ['mfg_end_expose'],
+                prompt: 'Vorn wipes his hands. "Section twelve is cold. Vael wants every drawing for the inquiry. You made me proud of a bad job."',
+                repeatPrompt: 'Vorn labels another drawing for Vael\'s inquiry.',
+                choices: [
+                  { text: 'Ask what happens to the sections.', morality: 0, loyalty: {}, result: '"Vael\'s engineers take them apart. Or somebody finishes them." He does not say which.' },
+                ],
+              },
+              {
+                id: 'phase_v_blackmail',
+                requiresAllFlags: ['mfg_end_blackmail'],
+                prompt: 'Vorn will not look at you. "Surplus still ships, now to someone else. I only build what I am told."',
+                repeatPrompt: 'Vorn keeps his eyes on the conduit.',
+                choices: [
+                  { text: 'Tell him the Syndicate pays on time.', morality: -2, loyalty: { underworld: 2 }, result: '"Krax paid on time too." Vorn tightens a coupling. "Until he did not."' },
+                ],
+              },
+              {
+                id: 'phase_v_fight',
+                requiresAllFlags: ['mfg_end_fight'],
+                prompt: 'Vorn leans on a dead cradle. "Krax was a hard man, but he was our hard man. The line is mine now. I would like to build a freighter."',
+                repeatPrompt: 'Vorn leans on a dead cradle.',
+                choices: [
+                  { text: 'Wish him luck with the freighter.', morality: 2, loyalty: {}, result: '"Luck is for people with permits." He smiles at the cradle. "Thank you."' },
+                ],
+              },
+            ],
+          },
+          // ---- ambient life ----
+          { id: 'mfg_dock_foreman', x: 9, y: 24, kind: 'kdy_logistics_officer', label: 'Dock Foreman Teska',
+            repeatPrompt: 'Teska ticks another pallet off her slate.',
+            prompt: 'Teska ticks pallets off a slate without breaking stride. "Outbound is outbound. If it is sealed, I do not open it. If it is not sealed, I seal it."',
+            choices: [ { text: 'Ask about the night lift.', morality: 0, loyalty: {}, result: '"What lift?" She does not look up. "Lift two is out of service at night. It has been for three years."' } ] },
+          { id: 'mfg_loader_a', x: 4, y: 24, wander: 2, kind: 'binary_loader', label: 'Loader Unit LD-11',
+            repeatPrompt: 'LD-11 repeats its cycle. "LOAD. LOAD. LOAD."',
+            prompt: 'A boxy teal loader droid stacks pallets with a dull, even clatter. "LOAD. LOAD. LOAD."',
+            choices: [ { text: 'Ask where the pallets go.', morality: 0, loyalty: {}, result: '"OUTBOUND." A pause. "SOME OUTBOUND. SOME B."' } ] },
+          { id: 'mfg_power_droid', x: 2, y: 28, kind: 'gnk_power', label: 'Power Droid GNK-4',
+            repeatPrompt: 'GNK-4 wobbles on. "Gonk."',
+            prompt: 'A squat power droid shuffles beside the crates, trailing a cable. "Gonk. Gonk."',
+            choices: [ { text: 'Pat its casing.', morality: 0, loyalty: {}, result: 'The droid hums a half note and wobbles off toward the foundry bus.' } ] },
+          { id: 'mfg_welder', x: 13, y: 10, wander: 1, kind: 'zero_g_welder', label: 'Line Welder Brask',
+            repeatPrompt: 'Brask flips the visor down and strikes an arc.',
+            prompt: 'A welder in a scorched visor hangs from a harness over the cradle. "Section eleven again. Eleven sections, one hull. Do not ask me to do the math."',
+            choices: [ { text: 'Ask what the hull is for.', morality: 0, loyalty: {}, result: '"Big." He flips the visor down. "That is all I was told. That is all I want."' } ] },
+          { id: 'mfg_foundry_hand', x: 39, y: 10, wander: 1, kind: 'zabrak_techwright', label: 'Foundry Hand Orro',
+            repeatPrompt: 'Orro wipes soot from his brow and pours again.',
+            prompt: 'A Zabrak techwright with soot to the elbows leans on a pour ladle. "One hundred and fourteen percent. Last month it was a hundred and ten. Guess who got older."',
+            choices: [ { text: 'Ask what happens to the surplus.', morality: 0, loyalty: {}, result: '"Goes east." He nods at the thoroughfare. "Ends up where surplus goes. Do not follow it."' } ] },
+          { id: 'mfg_guard_office', x: 30, y: 18, kind: 'kdy_security_marine', label: 'KDY Security Marine Hale',
+            repeatPrompt: 'Hale keeps his eyes front. "Overseer sees visitors by appointment."',
+            prompt: 'A KDY marine in white plate stands to attention outside the glass office. "Overseer\'s office. Appointments only." His eyes track you anyway.',
+            choices: [ { text: 'Say Vael sent you.', morality: 0, loyalty: {}, result: 'He steps half a pace aside. "Then go in. Do not touch the safe."' } ] },
+          { id: 'mfg_guard_patrol', x: 33, y: 9, patrol: [[33, 9], [41, 9]], kind: 'kdy_ring_sec', label: 'Ring Security Officer Dax',
+            repeatPrompt: 'Dax resumes his walk along the foundry rail.',
+            prompt: 'A ring security officer in a heat mantle walks the foundry rail. "Keep to the painted lines. Slag does not forgive."',
+            choices: [ { text: 'Ask about the east gate.', morality: 0, loyalty: {}, result: '"Closed after the horn. Not my post." He taps the badge on his chest. "Not my business either."' } ] },
+          { id: 'mfg_k_droid', x: 15, y: 15, patrol: [[15, 15], [31, 15]], kind: 'k_series_droid', label: 'K-Series Inspection Automaton K-07',
+            repeatPrompt: 'K-07 pans its lens and walks on. "Proceed."',
+            prompt: 'A K-series automaton paces the thoroughfare, red lens sweeping the floor. "Cleared visitor. Remain in the lit area."',
+            choices: [ { text: 'Stand still and be scanned.', morality: 0, loyalty: {}, result: 'The lens sweeps boots to collar. "Cleared." A pause of exactly one second. "East gate is not a lit area."' } ] },
+          { id: 'mfg_nautolan', x: 15, y: 24, kind: 'nautolan_engineer', label: 'Engineer Zhaan',
+            repeatPrompt: 'Zhaan flicks the schematic aside and rubs his head tendrils.',
+            prompt: 'A Nautolan engineer scrolls a schematic past his eyes, head tendrils twitching. "The pressure curves are wrong for a freighter. Right for something else."',
+            choices: [ { text: 'Ask what the something else is.', morality: 0, loyalty: {}, result: '"I am an engineer. I say what the numbers say." He taps the screen. "They say hull."' } ] },
         ],
         collectibles: [
-          { id: 'sector4_hull_fragment', x: 32, y: 8, label: 'Forged Star Destroyer Hull Plating', reward: 800 },
+          { id: 'sector4_hull_fragment', x: 31, y: 11, label: 'Forged Star Destroyer Hull Plating', reward: 800 },
           { id: 'sector4_assembly_log', x: 10, y: 8, label: 'Assembly Sequence Log', reward: 300 },
         ],
         buildMap() {
           const g = emptyGrid(this.width, this.height);
           carveRect(g, 1, 5, 42, 28, 'floor');
+          // north band partitions: gantry | production hall | foundry
+          carveRect(g, 11, 5, 11, 12, 'wall'); carveRect(g, 11, 8, 11, 9, 'floor');
+          carveRect(g, 32, 5, 32, 12, 'wall'); carveRect(g, 32, 8, 32, 9, 'floor');
+          // north divider with four exits to the thoroughfare
+          carveRect(g, 1, 13, 42, 13, 'wall');
+          [[5, 6], [16, 17], [25, 26], [37, 38]].forEach(([a, b]) => carveRect(g, a, 13, b, 13, 'floor'));
+          // south divider with four entries
+          carveRect(g, 1, 19, 42, 19, 'wall');
+          [[3, 8], [17, 18], [28, 29], [38, 39]].forEach(([a, b]) => carveRect(g, a, 19, b, 19, 'floor'));
+          // south band partitions: dock | engineering | office | storage bay
+          carveRect(g, 13, 20, 13, 28, 'wall');
+          carveRect(g, 24, 20, 24, 28, 'wall');
+          carveRect(g, 34, 20, 34, 28, 'wall');
+          // hidden vault inside storage bay B
+          carveRect(g, 35, 24, 42, 24, 'wall'); carveRect(g, 38, 24, 39, 24, 'floor');
+          // solid heavy machinery (the anchor row stays walkable)
+          carveRect(g, 13, 6, 28, 6, 'wall');          // conveyor lines
+          carveRect(g, 14, 9, 18, 11, 'wall');         // cradle one
+          carveRect(g, 26, 9, 30, 11, 'wall');         // cradle two
+          carveRect(g, 34, 5, 36, 7, 'wall');          // piston tower
+          carveRect(g, 39, 6, 42, 7, 'wall');          // boiler
+          carveRect(g, 35, 10, 38, 11, 'wall');        // crucible
           pt(g, 0, 14, 'door'); pt(g, 0, 15, 'door');
           pt(g, 43, 16, 'door'); pt(g, 43, 17, 'door');
           return g;
@@ -7795,6 +8151,14 @@ const ITEMS = {
   front_cavern_rebreather:    { id:'front_cavern_rebreather',    name:'Cavern Rebreather',                     type:'gear',       iconKind:'gear',     value:250, description:'Emergency gear whose mix suits the nitrogen heavy air of the deep caverns.' },
   front_vorn_chit:            { id:'front_vorn_chit',            name:'Survey Route Chit',                     type:'quest',      iconKind:'keycard',  value:0,   description:'A scratched brass chit stamped with a survey grid. Engineer Vorn will know it.' },
   // FRONT ITEMS END
+  // MFG ITEMS BEGIN
+  mfg_night_roster:           { id:'mfg_night_roster',           name:'Night Shift Roster Slate',              type:'quest',      iconKind:'datapad',  value:0,    description:'Rhea\'s private slate. Two hundred and twelve names on the payroll, three hundred and forty badge swipes after the shift horn. One hundred and twenty eight of them belong to nobody.' },
+  mfg_assembly_files:         { id:'mfg_assembly_files',         name:'Assembly Sequence Files',               type:'quest',      iconKind:'datapad',  value:0,    description:'Vorn\'s engineering archive, copied to a chip. Fourteen hull sections, one frame, no registry number. Every drawing is stamped with the same retired signature.' },
+  mfg_bay_manifest:           { id:'mfg_bay_manifest',           name:'Bay B Consignment Ledger',              type:'quest',      iconKind:'datapad',  value:0,    description:'The off manifest ledger from Storage Bay B. Two hundred and twelve consignments, each routed to grid nine one, each approved by Overseer Krax.' },
+  mfg_inspector_seal:         { id:'mfg_inspector_seal',         name:'Joint Inspector\'s Seal',                type:'gear',       iconKind:'keycard',  value:900,  description:'A Republic and KDY joint inspection seal, struck for the Sector 4 audit. Doors open for it and clerks stop asking questions.' },
+  mfg_tithe_ledger:           { id:'mfg_tithe_ledger',           name:'Krax\'s Tithe Ledger',                   type:'quest',      iconKind:'datapad',  value:0,    description:'A neat ledger of every payment Krax has agreed to make. The first line reads: to the Syndicate, each cycle, without fail.' },
+  mfg_four_arm_harness:       { id:'mfg_four_arm_harness',       name:'Besalisk Four Arm Harness',             type:'gear',       iconKind:'gear',     value:1100, description:'A reinforced loader harness with four hydraulic clamps, torn from Krax\'s frame. It still hums when you pick it up.' },
+  // MFG ITEMS END
   comlink:                    { id:'comlink',                    name:'Comlink',                               type:'gear',       iconKind:'tool',     value:0,   description:'Encrypted comlink. Jon is on speed-dial.' },
   field_rations:              { id:'field_rations',              name:'Field Rations',                         type:'consumable', iconKind:'supply',   value:5,   description:'Tasteless. Effective.' },
   stolen_manifest:            { id:'stolen_manifest',            name:'Scylla Freight Manifest',               type:'quest',      iconKind:'datapad',  value:150, description:'Encrypted cargo log from Docking Bay 14. Lists Phrik alloy and Jedi archive crates as cargo, both reported destroyed in a dock fire. Someone is lying.' },
@@ -8098,6 +8462,72 @@ const CODEX_ENTRIES = {
     summary:'A KDY clearance with no name and a forty three year history.',
     body:['Level Eight is the highest clearance in the KDY registry. Four accounts hold it. Three belong to living officers.','The fourth has been active for forty three years and has never been assigned to a person. Its signature pattern matches the Chief Architect KDY buried after the Drayen Massacre, a man the records say died with his drafting team.'] },
   // FRONT CODEX END
+  // MFG CODEX BEGIN
+  'codex-mfg-sector4': {
+    id:'codex-mfg-sector4', title:'Sector 4 Fabrication Works', category:'lore',
+    summary:'Where Kuat Drive Yards pours a moon into hull plate.',
+    body:[
+      'The Sector 4 Fabrication Works sit east of the Main Base, a foundry district of stacks, gantries and conveyor lines that once cast prototype plating for the Orbital Array. On paper it still does.',
+      'The day shift is two hundred and twelve workers on a quota that never drops below one hundred and ten percent. Nobody says what happens to the surplus. Nobody has asked in three years.',
+    ],
+  },
+  'codex-mfg-night-shift': {
+    id:'codex-mfg-night-shift', title:'The Night Shift', category:'story',
+    summary:'Workers who clock in after the horn and are on nobody\'s roster.',
+    body:[
+      'When the last horn sounds, the line lights stay on. Badges that belong to no employee swipe through the east gate and the cradles start to glow.',
+      'Rhea has counted them for months. She never saw a face. The night crew wears sealed suits, and the loaders that walk with them are not on the equipment register either.',
+    ],
+  },
+  'codex-mfg-pocket-frame': {
+    id:'codex-mfg-pocket-frame', title:'Pocket Dreadnought Frames', category:'lore',
+    summary:'A capital ship folded into a hull the size of a heavy cruiser.',
+    body:[
+      'A pocket dreadnought carries dreadnought armor and a dreadnought reactor on a frame trimmed to fit a smaller shipyard cradle. It is cheaper to hide and far harder to stop.',
+      'Mandator class plating and drive housing are a known KDY pattern. A frame built from them, in sections, with no commission number, is not a refit. It is a ship that was never meant to be counted.',
+    ],
+  },
+  'codex-mfg-section-eleven': {
+    id:'codex-mfg-section-eleven', title:'Section Eleven', category:'story',
+    summary:'Half a hull in a cradle, and the other half somewhere else.',
+    body:[
+      'The cradles hold ribbed hull sections stamped with a section number and nothing else. This one reads eleven. The assembly log says there are fourteen.',
+      'Each section is too big for any ship Sector 4 is allowed to build. Laid end to end, the fourteen would make a keel eighteen hundred meters long.',
+    ],
+  },
+  'codex-mfg-bay-b': {
+    id:'codex-mfg-bay-b', title:'Storage Bay B', category:'story',
+    summary:'The room that is not on the floor plan.',
+    body:[
+      'Storage Bay B has no door on any blueprint. It sits behind a false panel at the east end of the facility, and its only visitor is the cargo lift that cycles at night.',
+      'Inside is a forged keel plate, a manifest core and a ledger. Every shipment that left Sector 4 off the books passed through this room. Every approval carries the same four hand signature.',
+    ],
+  },
+  'codex-mfg-arrest': {
+    id:'codex-mfg-arrest', title:'The Overseer Answers', category:'story',
+    summary:'Krax is taken to Commander Vael in irons.',
+    body:[
+      'Overseer Krax did not run. He asked for his tablet, asked for his lawyer, and asked who had told. Commander Vael\'s marines gave him none of the three.',
+      'Sector 4 now has an acting overseer and a joint inspector\'s seal on every door. The night shift is under review. Whoever signed Krax\'s orders has not been named, and Krax is not saying.',
+    ],
+  },
+  'codex-mfg-tithe': {
+    id:'codex-mfg-tithe', title:'Krax\'s Tithe', category:'dossier',
+    summary:'A standing payment from a frightened man.',
+    body:[
+      'Krax agreed to the terms because the alternative was a Republic cell. Each cycle a share of Sector 4 surplus is routed to a Syndicate account under a maintenance code.',
+      'The arrangement is quiet, steady and entirely dependent on Krax staying afraid. It is the kind of income a crime lord learns to love and to watch.',
+    ],
+  },
+  'codex-mfg-krax-fall': {
+    id:'codex-mfg-krax-fall', title:'The Fall of Overseer Krax', category:'story',
+    summary:'A Besalisk in a loader frame, and what is left of both.',
+    body:[
+      'Krax bolted a heavy loader frame to his own back and fought like a man defending a lifetime of work. The loader enforcers fell first. He did not outlast them by much.',
+      'The foundry went quiet for the first time in three years. The night crew badges stopped swiping. What they were building is still in the cradles.',
+    ],
+  },
+  // MFG CODEX END
   'codex-jon-network': {
     id:'codex-jon-network', title:"Jon's Smuggling Network", category:'dossier',
     summary:'An old friend operating in the Coruscant underworld.',
@@ -12097,6 +12527,14 @@ const CONSOLE_CFG = {
   republic_old: { l:'desk',  body:'concrete', scr:'amber', g:'cog',   t:'REPUBLIC OUTPOST',     r:['DECOMMISSIONED 3 YR','LAST ENTRY: DISTRESS','RESPONSE: NONE LOGGED'], d:['cracked','soot'] },
   architect:    { l:'desk',  body:'brass',    scr:'amber', g:'eye',   t:'ARCHITECT PERSONAL',   r:['ACCESS LOGS: 43 YRS','STATUS: UNLOCKED','LAST USER EXPECTED','SOMEONE TO COME'], d:['flicker'] },
   substation:   { l:'wall',  body:'rust',     scr:'amber', g:'gear',  t:'SUB-STATION 3',        r:['THERMAL HAZARDS','AMBIENT CONTROL','STATUS: HOLDING'], d:['hazard'] },
+  // MFG CONSOLE BEGIN
+  assembly_done:  { l:'desk',  body:'steel',    scr:'green', g:'gear',  t:'OVERRIDE ACTIVE',      r:['BAY B: PANEL UNSEALED','CODE: ACCEPTED','OUTPUT LOG: COPIED','NO ALARM RAISED'], d:['hazard'] },
+  mfg_eng:        { l:'desk',  body:'steel',    scr:'cyan',  g:'cog',   t:'ENGINEERING ARCHIVE',  r:['SEQUENCE FILES: 14','FRAME: NO REGISTRY','KEEL: 1800 M','LAST VIEWED: NIGHT'], d:['cables'] },
+  mfg_eng_done:   { l:'desk',  body:'steel',    scr:'green', g:'cog',   t:'ARCHIVE COPIED',       r:['14 FILES: COPIED','VIEW LOG: CLEARED','LOOKS UNTOUCHED'], d:['cables'] },
+  mfg_bay:        { l:'wall',  body:'dark',     scr:'red',   g:'eye',   t:'BAY B MANIFEST CORE',  r:['CONSIGNMENTS: 212','MANIFEST: NONE','DEST: GRID NINE ONE','ACCESS: SEALED'], d:['redlights'] },
+  mfg_bay_done:   { l:'wall',  body:'dark',     scr:'green', g:'eye',   t:'LEDGER EXTRACTED',     r:['212 ENTRIES: COPIED','APPROVED: KRAX','COPY: YOURS'], d:['redlights'] },
+  mfg_office:     { l:'desk',  body:'brass',    scr:'amber', g:'coin',  t:'OVERSEER ROUTING',     r:['QUOTA: 114 PCT','SURPLUS: ROUTED','NIGHT CREW: 128','AUTH: KRAX K'], d:['note'] },
+  // MFG CONSOLE END
 };
 
 function PropConsole({ variant }) {
@@ -12367,6 +12805,11 @@ const BOARD_LIST = {
   manifest:   { scr:'amber', t:'MAG-RAIL FREIGHT CARS',  r:['14-B  AGRICULTURAL  1.2 T','14-B  CLEARED IND  3.8 T','WEIGHT MISMATCH: 11 DAYS','FLAG: OPEN'], hl:2 },
   prisoners:  { scr:'red',   t:'PRISONER TRANSFER LOG',  r:['DETAINEES: 4','2 TO LEVEL 001: NO REASON','1 RELEASED: SENATE AUTH','ACTIVE: RIANNA T  SUB-3 B'], hl:3 },
   cellog:     { scr:'cyan',  t:'CELL BLOCK LOG',         r:['ENTRY 847','GREY COAT  NO ID CHIP','OFFSITE: DIRECTIVE 1182-C','AUTH: [REDACTED]'], hl:3 },
+  // MFG BOARD BEGIN
+  mfg_quota:  { scr:'amber', t:'SECTOR 4 QUOTA',         r:['DAY SHIFT: 212 ON ROLL','QUOTA: 114 PCT','NIGHT BADGES: 340','ROLL AFTER HORN: 0'], hl:3, red:true },
+  mfg_lift:   { scr:'cyan',  t:'CARGO LIFT LOG',         r:['LIFT 2: NIGHT CYCLES','02:10  PALLET SEALED','03:40  PALLET SEALED','STOP: B  (NO FLOOR)'], hl:3 },
+  mfg_shift:  { scr:'amber', t:'PRODUCTION SCHEDULE',    r:['LINE 1  CLASS C PLATE','LINE 2  CLASS C PLATE','CRADLE 1  SECTION 11','CRADLE 2  SECTION 12'], hl:2, red:true },
+  // MFG BOARD END
 };
 
 function PropBoard({ variant }) {
@@ -15186,6 +15629,8 @@ function PropFacilitySign({ variant }) {
     trike: { t: "TRIKE'S ROBOTICS", s: 'REPAIR · UPGRADES', c: 'copper', f: 9.4 },
     barracks: { t: 'WEAPONS BARRACKS', s: 'ARMORY · RANGE', c: 'red', f: 9 },
     hq: { t: 'KDY MAIN HQ', s: 'PASS REQUIRED', c: 'deepglass', f: 11 },
+    mfg: { t: 'SECTOR 4 FABRICATION', s: 'SHIFT QUOTA 114 PCT', c: 'rust', f: 7.6 },
+    slag: { t: 'SLAG LINE FREIGHT LOCK', s: 'TUNNEL DEAD', c: 'dark', f: 7 },
   }[variant] || { t: 'KDY BADOR', s: 'FORWARD HUB', c: 'steel' };
   return (
     <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
@@ -16576,6 +17021,124 @@ function PropWstBlastDoors({ variant }) {
 }
 // ===== BADOR WAR PROPS END =====
 
+// ===== MFG PROPS BEGIN =====
+function PropMfgConveyor({ variant }) {
+  const S = ART.signal, hot = variant === 'ingots';
+  return (
+    <svg viewBox="0 0 128 64" width="128" height="64" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={60} rx={58} ry={3} />
+      {[10, 112].map((x) => <Bev key={x} t="polygon" points={pts([[x, 58], [x, 40], [x + 6, 40], [x + 6, 58]])} c="steel" o={0.7} />)}
+      <Slab x={2} y={30} w={124} h={22} k={3} c="dark" o={1.2} />
+      <rect x="6" y="34" width="116" height="12" fill={ART.ink} />
+      {Array.from({ length: 14 }, (_, i) => <polygon key={i} points={pts([[10 + i * 8, 35], [14 + i * 8, 35], [18 + i * 8, 40], [14 + i * 8, 45], [10 + i * 8, 45], [14 + i * 8, 40]])} fill={ART.amber.base} opacity="0.8" style={{ animation: `ship-blink ${2.4 + (i % 3) * 0.5}s steps(2) infinite` }} />)}
+      <Slab x={2} y={26} w={124} h={6} k={1.4} c="steel" o={0.9} />
+      {hot ? (
+        <g>
+          {[16, 52, 88].map((x, i) => <g key={x}><Slab x={x} y={14} w={24} h={14} k={2} c="rust" o={1} /><rect x={x + 3} y="16" width="18" height="4" fill={S.orange} /><Glow cx={x + 12} cy={20} r={18} c={S.orange} opacity={0.45} style={{ animation: `ship-engine ${1.8 + i * 0.4}s ease-in-out infinite` }} /></g>)}
+        </g>
+      ) : (
+        <g>
+          {[[14, 12, 30], [48, 8, 34], [86, 14, 28]].map(([x, y, w]) => <g key={x}><Slab x={x} y={y} w={w} h={16} k={2} c="hull" o={1} /><Slab x={x + 3} y={y - 5} w={w - 8} h={7} k={1.4} c="steel" o={0.8} /><Seams x={x} y={y} w={w} h={16} cols={2} op={0.4} /></g>)}
+        </g>
+      )}
+      <Hazard x={6} y={50} w={116} h={4} opacity={0.9} />
+      <Vent x={104} y={32} w={14} h={8} n={3} /><Lights x={10} y={56} n={8} gap={14} seed={31} /><Rivets x={6} y={29} w={116} n={16} c="steel" /><Seams x={2} y={30} w={124} h={22} cols={7} op={0.3} /><Greeble x={8} y={46} w={90} h={4} seed={3101} n={5} c="dark" />
+      <Grime x={2} y={14} w={124} h={44} seed={3102} n={7} op={0.26} /><Scuff x={4} y={16} w={118} h={36} seed={3103} n={7} c="steel" />
+    </svg>
+  );
+}
+
+function PropMfgCradle({ variant }) {
+  const S = ART.signal, younger = variant === 'b';
+  const ribs = [30, 44, 58, 72, 86, 100, 114, 128];
+  const top = (x) => 34 + Math.abs(x - 80) * 0.45;
+  return (
+    <svg viewBox="0 0 160 128" width="160" height="128" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={122} rx={72} ry={4} />
+      <Slab x={6} y={106} w={148} h={14} k={3} c="dark" o={1.2} /><Hazard x={10} y={114} w={140} h={4} opacity={0.9} />
+      {[6, 142].map((x) => <g key={x}><Bev t="polygon" points={pts([[x, 108], [x, 16], [x + 12, 16], [x + 12, 108]])} c="amber" o={1.2} /><Seams x={x} y={16} w={12} h={92} rows={7} op={0.4} /></g>)}
+      <Slab x={2} y={8} w={156} h={10} k={1.6} c="amber" o={1} />
+      <Bev t="polygon" points={pts([[24, 106], [24, 62], [46, 36], [114, 36], [136, 62], [136, 106]])} c="dark" o={1.4} />
+      <polygon points={pts([[30, 104], [30, 64], [48, 42], [112, 42], [130, 64], [130, 104]])} fill={ART.ink} />
+      {ribs.map((x) => <rect key={x} x={x - 2.5} y={top(x) + 4} width="5" height={104 - top(x) - 4} fill={ART.steel.base} />)}
+      {ribs.map((x) => <rect key={'h' + x} x={x - 2.5} y={top(x) + 4} width="1.8" height={104 - top(x) - 4} fill={ART.steel.hi} opacity="0.7" />)}
+      {(younger ? [[26, 86, 22, 18], [50, 84, 24, 20]] : [[26, 66, 22, 18], [26, 86, 22, 18], [50, 42, 24, 18], [50, 62, 24, 20], [50, 84, 24, 20], [76, 40, 20, 20], [76, 62, 20, 16]]).map(([x, y, w, h], i) => <g key={i}><Slab x={x} y={y} w={w} h={h} k={1.6} c="hull" o={0.9} /><Seams x={x} y={y} w={w} h={h} rows={1} op={0.35} /></g>)}
+      <circle cx="102" cy="58" r="3.4" fill={S.amberHi} style={{ animation: 'ship-blink 0.9s steps(2) infinite' }} /><Glow cx={102} cy={58} r={16} c={S.orange} opacity={0.5} />
+      <Slab x={52} y={88} w={56} h={14} k={1.4} c="steel" o={0.9} />
+      <text x="80" y="95" textAnchor="middle" fontSize="5.6" fill={ART.ink} fontWeight="700" {...PT}>{younger ? 'SECTION 12' : 'SECTION 11'}</text>
+      <text x="80" y="100" textAnchor="middle" fontSize="2.8" fill={ART.red.base} fontWeight="700" {...PT}>NO REGISTRY</text>
+      <Vent x={118} y={72} w={10} h={14} n={4} /><Lights x={14} y={110} n={10} gap={14} seed={32} /><Rivets x={24} y={64} w={112} n={14} c="steel" /><Greeble x={26} y={20} w={110} h={12} seed={3201} n={8} c="amber" /><Seams x={24} y={36} w={112} h={70} cols={6} op={0.2} />
+      <Grime x={6} y={8} w={148} h={112} seed={3202} n={10} op={0.28} /><Scuff x={26} y={40} w={108} h={64} seed={3203} n={9} c="steel" />
+    </svg>
+  );
+}
+
+function PropMfgForge() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 128 96" width="128" height="96" style={PROP_STYLE}>
+      <PropShadow cx={64} cy={90} rx={56} ry={4} />
+      <Bev t="polygon" points={pts([[86, 64], [90, 8], [112, 8], [116, 64]])} c="dark" o={1.4} />
+      <ellipse cx="102" cy="6" rx="14" ry="4" fill={ART.pearl.base} opacity="0.4" style={{ animation: 'steam-rise 3.2s ease-out infinite' }} />
+      <Bev t="polygon" points={pts([[8, 86], [8, 42], [26, 24], [102, 24], [120, 42], [120, 86]])} c="rust" o={1.6} />
+      <polygon points={pts([[28, 82], [28, 52], [40, 40], [88, 40], [100, 52], [100, 82]])} fill={ART.dark.shade} />
+      <polygon points={pts([[34, 82], [34, 54], [44, 44], [84, 44], [94, 54], [94, 82]])} fill={ART.ink} />
+      <polygon points={pts([[38, 82], [38, 56], [46, 48], [82, 48], [90, 56], [90, 82]])} fill={S.orange} opacity="0.55" style={{ animation: 'ship-engine 2.2s ease-in-out infinite' }} />
+      <polygon points={pts([[46, 82], [46, 62], [52, 56], [76, 56], [82, 62], [82, 82]])} fill={S.amberHi} opacity="0.5" />
+      <Glow cx={64} cy={62} r={38} c={S.orange} opacity={0.4} />
+      <Bev t="polygon" points={pts([[100, 56], [124, 56], [124, 66], [100, 66]])} c="copper" o={0.9} />
+      <rect x="118" y="66" width="4" height="18" fill={S.orange} opacity="0.9" style={{ animation: 'ship-engine 1.4s ease-in-out infinite' }} />
+      <Slab x={104} y={82} w={20} h={6} k={1.2} c="rust" o={0.8} />
+      <Slab x={38} y={26} w={52} h={11} k={1.6} c="dark" o={1} />
+      <text x="64" y="34" textAnchor="middle" fontSize="5" fill={S.amberHi} fontWeight="700" {...PT}>FOUNDRY 4</text>
+      <Hazard x={10} y={84} w={90} h={4} opacity={0.9} />
+      <Vent x={10} y={48} w={14} h={16} n={4} /><Lights x={14} y={78} n={4} gap={6} seed={33} /><Rivets x={12} y={40} w={104} n={14} c="rust" /><Seams x={8} y={24} w={112} h={62} cols={5} op={0.28} /><Greeble x={12} y={28} w={22} h={10} seed={3301} n={5} c="rust" />
+      <Grime x={8} y={8} w={112} h={80} seed={3302} n={9} op={0.3} /><Scuff x={12} y={26} w={104} h={56} seed={3303} n={8} c="rust" />
+    </svg>
+  );
+}
+
+function PropMfgGlass() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 160 64" width="160" height="64" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={61} rx={72} ry={2.6} />
+      <Bev t="polygon" points={pts([[2, 30], [2, 0], [158, 0], [158, 30]])} c="dark" o={1} />
+      {[[6, 4, 52], [130, 4, 24]].map(([x, y, w], i) => <g key={i}><rect x={x} y={y} width={w} height="24" fill={ART.glass.shade} /><rect x={x + 1.5} y={y + 1.5} width={w - 3} height="21" fill={ART.amber.base} opacity="0.55" /><rect x={x + 1.5} y={y + 1.5} width={w - 3} height="5" fill={ART.glass.hi} opacity="0.5" />{Array.from({ length: Math.floor(w / 8) }, (_, k) => <rect key={k} x={x + 4 + k * 8} y={y + 8} width="4" height="14" fill={ART.dark.base} opacity="0.7" />)}</g>)}
+      <Bev t="polygon" points={pts([[62, 2], [130, 2], [130, 16], [62, 16]])} c="dark" o={0.8} />
+      <text x="96" y="9.6" textAnchor="middle" fontSize="4.4" fill={S.amberHi} fontWeight="700" {...PT}>OVERSEER SECTOR 4</text>
+      <text x="96" y="14" textAnchor="middle" fontSize="2.6" fill={S.redHi} {...PT}>APPOINTMENTS ONLY</text>
+      <Hazard x={62} y={20} w={68} h={3} opacity={0.9} />
+      <Slab x={4} y={36} w={56} h={22} k={2.4} c="brass" o={1} /><Slab x={128} y={36} w={28} h={22} k={2.4} c="brass" o={1} />
+      <rect x="8" y="40" width="48" height="4" fill={ART.brass.hi} opacity="0.7" /><rect x="132" y="40" width="20" height="4" fill={ART.brass.hi} opacity="0.7" />
+      <rect x="14" y="46" width="14" height="7" fill={ART.screen.amber} /><rect x="16" y="48" width="10" height="1.4" fill={S.amberHi} /><rect x="16" y="50.4" width="7" height="1.4" fill={S.amberHi} />
+      <Lights x={36} y={50} n={4} gap={5} seed={34} /><Vent x={136} y={46} w={12} h={7} n={3} />
+      <Rivets x={6} y={33} w={150} n={18} c="brass" /><Seams x={4} y={36} w={152} h={22} cols={5} op={0.25} /><Greeble x={6} y={4} w={150} h={3} seed={3401} n={5} c="dark" />
+      <Grime x={2} y={0} w={156} h={60} seed={3402} n={7} op={0.26} /><Scuff x={4} y={36} w={152} h={22} seed={3403} n={6} c="brass" />
+    </svg>
+  );
+}
+
+function PropMfgKeel() {
+  const S = ART.signal;
+  return (
+    <svg viewBox="0 0 160 96" width="160" height="96" style={PROP_STYLE}>
+      <PropShadow cx={80} cy={90} rx={72} ry={4} />
+      <Slab x={6} y={74} w={148} h={14} k={3} c="dark" o={1.2} /><Hazard x={10} y={82} w={140} h={4} opacity={0.9} />
+      {[20, 50, 80, 110, 136].map((x) => <Slab key={x} x={x} y={62} w={8} h={16} k={1.2} c="steel" o={0.8} />)}
+      <Bev t="polygon" points={pts([[8, 70], [24, 40], [62, 24], [138, 24], [154, 46], [150, 70]])} c="hull" o={1.6} />
+      <polygon points={pts([[28, 62], [40, 44], [66, 34], [132, 34], [142, 48], [138, 62]])} fill={ART.steel.base} />
+      <polygon points={pts([[28, 62], [40, 44], [66, 34], [74, 34], [66, 62]])} fill={ART.steel.hi} opacity="0.6" />
+      <text x="88" y="53" textAnchor="middle" fontSize="8" fill={ART.red.base} fontWeight="700" {...PT}>GK-01 KEEL</text>
+      <text x="88" y="61" textAnchor="middle" fontSize="3.2" fill={ART.ink} fontWeight="700" {...PT}>NO COMMISSION NUMBER</text>
+      {[[18, 66], [146, 62]].map(([x, y], i) => <g key={i}><circle cx={x} cy={y} r="2.4" fill={S.amberHi} style={{ animation: `ship-blink ${1.2 + i * 0.4}s steps(2) infinite` }} /><Glow cx={x} cy={y} r={9} c={S.amber} opacity={0.4} /></g>)}
+      <Vent x={118} y={26} w={14} h={7} n={3} /><Lights x={30} y={78} n={9} gap={12} seed={35} /><Rivets x={20} y={32} w={120} n={14} c="hull" /><Greeble x={66} y={26} w={50} h={6} seed={3501} n={6} c="hull" /><Seams x={8} y={24} w={146} h={46} cols={8} rows={1} op={0.3} />
+      <Grime x={6} y={24} w={148} h={64} seed={3502} n={9} op={0.28} /><Scuff x={10} y={28} w={140} h={42} seed={3503} n={9} c="hull" />
+    </svg>
+  );
+}
+// ===== MFG PROPS END =====
+
 
 
 
@@ -16809,6 +17372,13 @@ const PROP_DEFS = {
   cav_guardian_chassis:  { w: 3, h: 3, ax: 1, ay: 2 },
   cav_gate_shutter:      { w: 2, h: 4, ax: 0, ay: 3, backdrop: true },
   // CAVERN DEFS END
+  // MFG DEFS BEGIN
+  mfg_conveyor:          { w: 4, h: 2, ax: 1, ay: 1 },
+  mfg_cradle:            { w: 5, h: 4, ax: 2, ay: 3 },
+  mfg_forge:             { w: 4, h: 3, ax: 1, ay: 2 },
+  mfg_glass:             { w: 5, h: 2, ax: 2, ay: 1 },
+  mfg_keel:              { w: 5, h: 3, ax: 2, ay: 2 },
+  // MFG DEFS END
 };
 
 const PropArt = React.memo(function PropArt({ kind, variant, active }) {
@@ -17027,6 +17597,13 @@ const PropArt = React.memo(function PropArt({ kind, variant, active }) {
     case 'cav_guardian_chassis': return <PropCavChassis variant={variant} />;
     case 'cav_gate_shutter': return <PropCavShutter variant={variant} />;
     // CAVERN CASES END
+    // MFG CASES BEGIN
+    case 'mfg_conveyor': return <PropMfgConveyor variant={variant} />;
+    case 'mfg_cradle': return <PropMfgCradle variant={variant} />;
+    case 'mfg_forge': return <PropMfgForge />;
+    case 'mfg_glass': return <PropMfgGlass />;
+    case 'mfg_keel': return <PropMfgKeel />;
+    // MFG CASES END
     default: return null;
   }
 });
@@ -19730,6 +20307,10 @@ const AI_COMBAT_PROFILES = {
   ghost_keel_warden:    { aggression:80, cover:55, flank:60, overwatch:90, optRange:5, name:'Warden Prime',               hp:24, shield:8, accent:'#FF4040' },
   wst_gharza:           { aggression:45, cover:85, flank:60, overwatch:90, optRange:6, name:'Gharza, Trandoshan Sniper',  hp:9,  shield:2, accent:'#5A7050' },
   // BADOR PROFILES END
+  // MFG PROFILES BEGIN
+  mfg_enforcers:        { aggression:75, cover:45, flank:40, overwatch:55, optRange:3, name:'Krax\'s Loader Enforcers',     hp:10, shield:4, accent:'#D4762C' },
+  mfg_krax:             { aggression:70, cover:55, flank:55, overwatch:70, optRange:3, name:'Overseer Krax and the Loader Frame', hp:16, shield:6, accent:'#D4762C' },
+  // MFG PROFILES END
 };
 
 const ENCOUNTER_TABLE = {
@@ -19854,6 +20435,10 @@ const COMBAT_LOOT = {
   ghost_keel_warden: { credits:[500,900], itemChance:1, items:[{id:'loot_warden_prime_actuator',name:'Warden Prime Actuator',type:'gear',iconKind:'gear',value:2000,description:'The pressure actuator from the Warden Prime\'s arm. Dense, Republic grade, still warm.'}] },
   wst_gharza: { credits:[300,520], itemChance:0.9, items:[{id:'loot_wst_trandoshan_rifle',name:'Trandoshan Long Rifle',type:'weapon',iconKind:'gear',value:650,description:'A long barreled hunting rifle with a notched stock. Fifteen notches. The newest is fresh.'}] },
   // BADOR LOOT END
+  // MFG LOOT BEGIN
+  mfg_enforcers: { credits:[120,200], itemChance:0.5, items:[{id:'loot_mfg_clamp_gauntlet',name:'Loader Clamp Gauntlet',type:'gear',iconKind:'gear',value:480,description:'A hydraulic clamp gauntlet, built for pallets and used on people.'}] },
+  mfg_krax: { credits:[320,520], itemChance:0.9, items:[{id:'loot_mfg_overseer_keycard',name:'Overseer Master Keycard',type:'gear',iconKind:'keycard',value:900,description:'Krax\'s master card for every door in Sector 4, scorched at one corner.'}] },
+  // MFG LOOT END
   csf_swat:             { credits:[90,160],  itemChance:0.45, items:[{id:'loot_csf_stun_baton',name:'CSF Stun Baton',type:'weapon',iconKind:'gear',value:200,description:'Regulation CSF close-quarters weapon. Still carries a charge.'},{id:'loot_csf_access_chip',name:'CSF Access Chip',type:'gear',iconKind:'keycard',value:350,description:'Biometric-coded to a SWAT officer. Crackable.'},{id:'loot_tactical_stim',name:'Tactical Stim',type:'consumable',iconKind:'supply',value:120,description:'Military-grade stim. Restores combat readiness fast.'}] },
   csf_scout:            { credits:[60,110],  itemChance:0.35, items:[{id:'loot_scout_earpiece',name:'CSF Scout Earpiece',type:'gear',iconKind:'gear',value:180,description:'Encrypted channel. 48-hour window before they rotate the key.'},{id:'loot_det_round',name:'Det Round x2',type:'consumable',iconKind:'supply',value:90,description:'Compact explosive rounds. Useful.'}] },
   black_sun_striker:    { credits:[70,140],  itemChance:0.40, items:[{id:'loot_vibro_knife',name:'Vibro-Knife',type:'weapon',iconKind:'gear',value:250,description:'Black Sun manufacture. Serrated edge still carries a charge.'},{id:'loot_black_sun_sigil',name:'Black Sun Sigil',type:'quest',iconKind:'keycard',value:150,description:'Proof of gang membership. Useful for bluffing at checkpoints.'}] },
@@ -23221,7 +23806,7 @@ function StarWarsRPG() {
     return [...prev, { ...entry, unread: true }];
   }), []);
 
-  const phPerks = React.useMemo(() => { const base = PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: 0, decay: 0 }); return questFlags.syndicate_flagship_active ? { income: base.income + 400, decay: base.decay + 1 } : base; }, [questFlags]);
+  const phPerks = React.useMemo(() => { const base = PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: (questFlags.mfg_tithe_rich ? 250 : questFlags.mfg_tithe ? 150 : 0), decay: 0 }); return questFlags.syndicate_flagship_active ? { income: base.income + 400, decay: base.decay + 1 } : base; }, [questFlags]);
   const installPenthousePackage = useCallback((pkg) => {
     setInventory(prev => prev.flatMap(i => i.id !== pkg.itemId ? [i] : (i.qty > 1 ? [{ ...i, qty: i.qty - 1 }] : [])));
     setFlag(pkg.flag);
