@@ -435,3 +435,8 @@ Future candidates: apply the lighting pass to tactical enemy sprites, redraw leg
 - Eight unit glyphs (`CQUnitGlyph`), flat three tone SVG silhouettes in the faction colour: cyan for the player, red for Black Sun, amber for the Exchange, blue white for the CSF.
 - Sixteen themed sector illustrations (`CQScene`), one per sector theme, in the same cel lit noir palette. Owner is shown with a coloured border and pennant, never by recolouring the scene.
 - Battle boards use a pseudo 3D tiled floor with animated hazards, and rooftop ornaments per theme. Orange glow means danger, cyan means owned or safe.
+
+## v10 changelog: Bador environment pass
+- New backdrop family `bvista_*` (moonbase, foundry, cavern, hullbay, ring, hqwindow) in the same flat banded cel lit style as `basalt_vista`, with animated lamps, steam and sparks. New props: `keel_frame`, `warden_prime`, `memorial_plinth` plus the zone props added by the Cavern, Manufacturing, Wastes and Base work.
+- New ambient layers: `moonbase` (violet dust, searchlight sweeps), `foundry` (sparks, soot, weld flashes), `cavern` (spores, drips, crystal pulse), `wreck` (arcs, red emergency pulse, vapor), `ringdeck`.
+- Colour: violet and rose dusk for the moonbase, copper and slag orange for the foundry, violet kyber and teal water for the caverns, steel and emergency red for the dead dreadnought, black space with gold array lamps for the ring.
