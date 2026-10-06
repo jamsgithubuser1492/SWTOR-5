@@ -82,8 +82,8 @@ Holonet Archivist writes a drawable description, Systems Architect or Art Direct
 **New mini-game:**
 Systems Architect builds it as an overlay component and wires it to a trigger in the keydown handler.
 
-**New Conquest sector or unit:**
-Modify `CONQUEST_SECTORS_INIT` or `CONQUEST_UNIT_TYPES` constants (defined around line 5357). All Conquest logic lives in `CoruscantConquestOverlay` (~lines 8317 onward).
+**New Conquest sector, unit or building:**
+Edit the `CQ` engine (between the `CONQUEST ENGINE` markers: `UNITS`, `BUILDINGS`, `SECTOR_LIST`, `THEMES`) and add a glyph or scene in `CONQUEST UI ART`. See the Coruscant Conquest Mode section.
 
 ---
 
@@ -97,7 +97,6 @@ Modify `CONQUEST_SECTORS_INIT` or `CONQUEST_UNIT_TYPES` constants (defined aroun
 - World objects use big set piece art built from the ART KIT (all of Coruscant and KDY; reuse the prop library in STYLE_GUIDE section 7 before drawing anything new) (`Bev`, `Glow`, `Hazard`, `PropShadow`, `ART` palette; no gradients or outlines): add `propArt: 'kind'` (and optional `propVariant`) to the object, give the kind a footprint in `PROP_DEFS` (w, h, plus ax, ay = the object's tile inside the footprint) and a case in `PropArt()`. The art is visual only, drawn behind NPCs and the player. Never place an object or NPC on a `wall` tile (movement is blocked before interaction). Bump the `?v=` on the script tag in `index.html` when you push so browsers drop cached copies
 - Door pairs must be symmetric — each side lists the other as `targetZone`/`targetPos`
 - All React hooks inside `CoruscantConquestOverlay` must use the `React.useState` / `React.useEffect` form — no shorthand destructuring (single-file Babel constraint)
-- `MapView` inside `CoruscantConquestOverlay` is called as a direct function `MapView()` rather than via `React.createElement(MapView, null)` to prevent remount on every render
 
 ---
 
@@ -188,94 +187,58 @@ Beyond the 7 tile types, the canvas renderer supports world objects with these v
 
 ---
 
-## Coruscant Conquest Mode
+## Coruscant Conquest Mode (v2)
 
-A turn-based strategy overlay accessed from the Sector Control Holo in the penthouse zone.
+A full turn-based strategy game with a tactical battle layer, opened from the Sector Control Holo in the penthouse (`triggersMinigame: 'conquest'`, component `CoruscantConquestOverlay({ onSuccess, onFailure, startCredits })`, a fixed full screen overlay).
 
-### Architecture
+### Architecture (all in `star-wars-rpg.jsx`, spliced between marker comments)
 
-All Conquest code lives in two places:
-
-1. **Constants** (~line 5357): `CONQUEST_SECTORS_INIT`, `CONQUEST_FACTION_DATA`, `CONQUEST_UNIT_TYPES`, `CONQUEST_BUILDINGS`
-2. **Component** (~line 8317): `function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits })`
-
-### Map
-
-16 sectors arranged in a vertical hierarchy from Apex Tier (top) to Depths (bottom):
-
-| Sector ID | Name | Tier | Starting Owner |
-|---|---|---|---|
-| `sky_lounges` | Senatorial Sky-Lounges L.5100 | Apex | Black Sun HQ |
-| `senate_district` | Senate District | Upper Core | Black Sun |
-| `upper_levels` | Upper Levels | Upper Core | Neutral |
-| `senate_precinct` | Senate Precinct L.1900 | Legislature | CSF |
-| `lower_promenade` | Lower Promenade L.1100 | Commerce Belt | Neutral |
-| `slicer_alley` | Slicer Alleyway L.1150 | Data Nexus | Neutral |
-| `rep_midlevels` | Republic Mid-Levels | Mid-Layers | Neutral |
-| `csf_hub` | CSF Training Hub L.1222 | Enforcement | CSF HQ |
-| `the_works` | The Works L.005 | Industrial | Exchange |
-| `ind_midlevels` | Industrial Mid-Levels | Factory Belt | Neutral |
-| `sub_spaceport` | Sub-Surface Spaceport | Docking Ring | Neutral |
-| `shadow_town` | Shadow Town L.1312 | Underworld | Player HQ |
-| `sub_l2_west` | Sub-Surface L2 West Market | Black Market | Neutral |
-| `freight_hub` | Sector 4 Freight Hub L.088 | Logistics | Exchange HQ |
-| `undercity` | Undercity | Depths | Neutral |
-| `undercity_out` | Undercity Outskirts | Depths | Neutral |
-
-HQ sectors (`isHQ` field set) cannot be captured by any faction.
-
-### Unit Types
-
-| Key | Name | atkCP | defCP | Cost |
-|---|---|---|---|---|
-| `inf` | Enforcer Infantry | 10 | 12 | 150 CR |
-| `snp` | Covert Marksman | 25 | 20 | 350 CR + 1 PWR |
-| `tnk` | Assault Tank | 75 | 90 | 1200 CR + 5 PWR |
-| `med` | Field Medic | 5 | 15 | 250 CR |
-| `drd` | Combat Droid | 35 | 35 | 700 CR + 2 PWR |
-| `spc` | Speeder Cavalry | 45 | 25 | 500 CR + 1 PWR |
-
-### Buildings
-
-| ID | Name | defMult | atkMult | incBonus | Cost |
-|---|---|---|---|---|---|
-| `bunker` | Reinforced Bunker | 1.25 | 1.00 | 0 | 600 CR |
-| `turret` | Auto Turret Nest | 1.40 | 1.00 | 0 | 850 CR |
-| `rally` | War Rally Point | 1.00 | 1.20 | 0 | 700 CR |
-| `armory` | Weapons Armory | 1.00 | 1.15 | 0 | 900 CR |
-| `relay` | Black Market Relay | 1.00 | 1.00 | +200 | 1200 CR |
-| `slicehub` | Slicing Hub | 1.00 | 1.00 | +250 | 800 CR |
-| `substat` | Power Sub-Station | 1.00 | 1.00 | 0 | 500 CR (grants +3 PWR/turn) |
-| `medbay` | Field Medical Bay | 1.10 | 1.00 | 0 | 600 CR |
-
-### Combat
-
-When the player attacks a sector, a choice screen appears:
-
-- **Auto-Resolve:** Compares `stagAtkPow()` vs defender `garDefPow(sec)`. Player wins if attack > defense.
-- **Manual Tactical:** Launches `TacticalGridCombatOverlay` for a full grid combat session.
-
-Helper functions:
-- `garAtkPow(sec)` — garrison attack power with building atkMult applied
-- `garDefPow(sec)` — garrison defense power with building defMult applied
-- `stagAtkPow()` — staging area attack power (no building bonus on offense)
-
-### Save System
-
-State saved to `localStorage` key `swtor5_conquest_v1` on every state change via `useEffect`. Restored via lazy `useState` initializers on component mount. Fields persisted: `sectors`, `relations`, `res`, `staging`, `turn`, `heat`, `log`, `selectedSec`. A Reset Campaign button in the header clears localStorage and restores defaults.
-
-### Win Condition
-
-Reaching 7,000 CR/turn income triggers victory. The income display turns green when approaching this threshold.
-
-### Crisis Cards (every 3 turns)
-
-| Title | Effect |
+| Marker block | Contents |
 |---|---|
-| CSF Sector Sweep | Heat +5, income reduced 30% |
-| Power Conduit Rupture | Power reserve -8 |
-| Underworld Cartel War | Recruits 30% cheaper next turn |
-| Black Market Windfall | +500 CR bonus |
+| `CONQUEST ENGINE BEGIN/END` | `const CQ = (() => {...})()`: pure plain JSON state, no React. `CQ.UNITS`, `CQ.BUILDINGS`, `CQ.FACTIONS`, `CQ.SECTORS`/`SECTOR_LIST` (16 sectors with x, y, theme, owner, garrison, lore), `CQ.WIN_INCOME` (10000), `CQ.THEMES` (battlefield themes), `CQ.tb` (tactical battle engine), `CQ.camp` (campaign engine) |
+| `CONQUEST UI ART` | `CQUnitGlyph` (SVG unit glyphs), `CQScene` (16 themed sector illustrations) |
+| `CONQUEST UI MAP` | `CQMap` (layered Coruscant cross-section, pennants, garrison strips, slot pips, animated attack lanes, intel fog) |
+| `CONQUEST UI BATTLE` and `BATTLE CONTROLLER` | `CQBattleBoard` (pseudo 3D board, hazards, particles, projectiles), `CQBattle` (deployment, selected unit panel, abilities, orbital, AI animation loop, results) |
+| `CONQUEST UI MAIN` | `CoruscantConquestOverlay` (header, sector panel with Overview, Recruit, Build, Move tabs, attack planner with forecast, defense alert, Empire, Diplomacy, Codex, turn report, victory modal) |
+
+Edit inside the markers. Hooks must use the `React.useState` / `React.useEffect` form. Save key `swtor5_conquest_v2` (the v1 save is ignored). Test hooks: `window.__cqState` (campaign state) and `window.__cqBattle` (live battle).
+
+### Campaign rules
+
+- State: `{ v, turn, cr, pwr, heat, rel, sec: { id: { owner, gar, bld, tired } }, log, crisis, discount, pending, over, brownout, stats, seq }`.
+- Units are recruited into a specific sector and stay there. Advanced units need a building in the same sector. Units that moved or fought are tired until the turn ends. Moving costs 20 CR per unit between adjacent sectors you own.
+- Each sector has 4 building slots (+1 with a Command Center) and a garrison cap of 12 (Barracks and Command Center raise it).
+- Attacking: select an enemy sector next to one of yours and press PLAN ATTACK. Pick units from every adjacent owned sector, see a forecast (12 simulated battles), then play a Tactical Battle or Auto-Resolve. Faction HQs (`isHQ`) cannot be captured. Attacking a faction costs relation (-12).
+- Enemy AI (Black Sun, Exchange, CSF): `factionEconomy` recruits and builds, `aiAttack` marches 65% of a garrison. AI versus AI and neutral fights resolve headless. When the AI hits your sector, `st.pending` blocks End Turn until you defend (tactical) or auto-resolve.
+- Economy: income from sectors and buildings, payroll per unit each turn (`ucr`), power generation versus upkeep (a deficit causes brownout, income -25%), heat rises each turn and per attack (at 100 the CSF raids). Unpaid payroll makes units desert.
+- Win: income of `CQ.WIN_INCOME` (10000) or more at the end of a turn. Crisis cards every 3 turns (Sector Sweep, Conduit Rupture, Cartel War, Windfall, Informant Tip-off and more).
+
+### Units (`CQ.UNITS`)
+
+| Key | Name | Cost | Needs | HP | ATK | Notes |
+|---|---|---|---|---|---|---|
+| `inf` | Enforcer Infantry | 150 | none | 12 | 4 | cheap line unit, suppress |
+| `gam` | Gamorrean Bruiser | 400 | Barracks | 24 | 8 | melee smash |
+| `snp` | Covert Marksman | 350 + 1 PWR | none | 8 | 8 | steady aim |
+| `med` | Field Medic | 250 | none | 10 | 2 | heals allies |
+| `spc` | Speeder Cavalry | 500 + 1 PWR | Motor Pool | 14 | 6 | charge |
+| `drd` | Combat Droid | 700 + 2 PWR | Droid Foundry | 18 | 6 | overcharge |
+| `tnk` | Assault Tank | 1200 + 5 PWR | Motor Pool | 36 | 10 | shell and barrage, heavy armor |
+| `wlk` | Scout Walker | 2200 + 6 PWR | War College | 48 | 10 | top tier |
+
+Each unit also has payroll (`ucr`) per turn. The units you build in a sector are the ones you deploy in that sector's battles.
+
+### Buildings (`CQ.BUILDINGS`, 21 in four groups)
+
+Economy: Black Market Relay, Slicing Hub, Syndicate Casino (needs Relay), Spice Refinery (needs Relay, heat), Syndicate Exchange Tower (needs Relay and Slicing Hub, the big earner), Safehouse Network. Power: Power Sub-Station, Fusion Reactor (needs Sub-Station). Military: Enforcer Barracks, Motor Pool, Droid Foundry, War College (needs Barracks and Motor Pool), Command Center (extra slot and cap, needs Barracks). Battle: War Rally Point, Weapons Armory, Reinforced Bunker, Auto Turret Nest, Shield Generator (needs Sub-Station), Field Medical Bay, Intelligence Hub (reveals adjacent garrisons and sharpens forecasts), Orbital Battery (needs Fusion Reactor, one 3 by 3 strike per battle).
+
+### Tactical battles (`CQ.tb`)
+
+30 by 18 procedural maps per sector theme (pillars, blocks, market, containers, landing pad, river, maze; tile codes f, w, c cover, h hazard, x void, plus a command node). Attackers deploy on the left (x 1 to 3), defenders on the right. The attacker moves first, 22 round limit. The attacker wins by wiping out the defenders or holding the node for 2 own turns with no enemy within 2 tiles. Damage is attack minus armor minus cover with chip damage and variance. Building effects: bunker cover ring, turrets, shield, medbay healing, orbital strike, rally, armory, veterans. Defender reserves arrive in waves (cap 14 on the field). Casualties carry back to the campaign, medbays revive 40%.
+
+### Balance tooling
+
+A Node harness can load the engine by concatenating the `CQ` IIFE and running `CQ.camp`, `CQ.tb.autoBattle` and `CQ.camp.forecast` headless (fuzz for NaN, negative counts, HQ flips, unit conservation, battle termination, map connectivity, and smart bot campaigns). Last measured: the economy focused bot wins about 2 in 3 games around turn 35.
 
 ---
 
@@ -301,7 +264,7 @@ All features listed here are live in `star-wars-rpg.jsx` on `main`.
 | `pit_fight` | (via `tactical_combat`) | `malak_pit_entrance` world object in `shadow_town` | Wired to tactical grid combat with `malak_enforcer` profile |
 | `tactical_combat` | `TacticalGridCombatOverlay` | Multiple zone encounters | Full 8x6 grid, cover, flanking, overwatch |
 | `syndicate_management` | `SyndicateManagementOverlay` | War Table in `penthouse` | Agent roster, contracts, heat, territory income |
-| `coruscant_conquest` | `CoruscantConquestOverlay` | Sector Control Holo in `penthouse` | 16-sector strategy mode, localStorage save |
+| `coruscant_conquest` | `CoruscantConquestOverlay` | Sector Control Holo in `penthouse` | 16-sector strategy game with units, 21 buildings, AI factions and tactical battles, localStorage save v2 |
 
 ### Zones (all traversable)
 
@@ -352,5 +315,4 @@ Future sessions may add:
 - Expanded Black Sun alliance questline with Malis (currently stops at flag grant)
 - Sith underground questline continuation from Kesh contact
 - Exchange trade monopoly resolution questline from Karrn deal
-- More Conquest buildings and a defensive siege mechanic when HQs are threatened
-- Dynamic NPC patrol routes (currently all NPCs are stationary)
+- Conquest: siege events when HQs are threatened, hero units, campaign scenarios and a skirmish mode
