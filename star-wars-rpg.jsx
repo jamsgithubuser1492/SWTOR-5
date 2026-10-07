@@ -21424,24 +21424,24 @@ const AI_COMBAT_PROFILES = {
   kef_gate_guards_flanked:{ aggression:40, cover:30, flank:10, overwatch:20, optRange:3, name:'KEF Gate Guards (Ambushed)', hp:4, shield:1, accent:'#FF5500' },
   kef_sledge_tank:      { aggression:70, cover:10, flank:20, overwatch:85, optRange:5, name:'KEF Repulsor-Sledge Tank',  hp:14, shield:6, accent:'#FF3300' },
   kef_sledge_tank_crippled:{ aggression:60, cover:10, flank:10, overwatch:70, optRange:4, name:'KEF Repulsor-Sledge Tank (Crippled)', hp:8, shield:2, accent:'#FF3300' },
-  varek_korr:           { aggression:65, cover:55, flank:50, overwatch:65, optRange:4, name:'Varek Korr and the War-Dredge', hp:14, shield:5, accent:'#FF5500' },
+  varek_korr:           { aggression:65, cover:55, flank:50, overwatch:65, optRange:4, name:'Varek Korr and the War-Dredge', hp:14, shield:5, accent:'#FF5500', regen:1, enrageAt:0.4, enrageShots:1 },
   furnace_husk:         { aggression:90, cover:5,  flank:20, overwatch:0,  optRange:2, name:'Furnace Husk',               hp:8,  shield:2, accent:'#FF7A1A' },
   piston_sentinel:      { aggression:50, cover:70, flank:15, overwatch:80, optRange:2, name:'Piston Sentinel',            hp:11, shield:5, accent:'#C4923E' },
-  unchained_overseer:   { aggression:75, cover:40, flank:30, overwatch:80, optRange:4, name:'The Unchained Overseer',     hp:16, shield:6, accent:'#2B7895' },
-  cav_unit_8x_guard:    { aggression:60, cover:85, flank:45, overwatch:80, optRange:4, name:'Gate Sentinel Escort',       hp:12, shield:5, accent:'#7A5CC8' },
-  cav_unit_8x_boss:     { aggression:72, cover:60, flank:35, overwatch:95, optRange:5, name:'Unit 8-X, Gate Warden',      hp:16, shield:6, accent:'#B8D4E8' },
-  zora_hull_wardens:    { aggression:70, cover:75, flank:50, overwatch:85, optRange:4, name:'Zora Hull Sentinels',        hp:14, shield:5, accent:'#B8D4E8' },
-  ghost_keel_warden:    { aggression:80, cover:55, flank:60, overwatch:90, optRange:5, name:'Warden Prime',               hp:24, shield:8, accent:'#FF4040' },
-  wst_gharza:           { aggression:45, cover:85, flank:60, overwatch:90, optRange:6, name:'Gharza, Trandoshan Sniper',  hp:9,  shield:2, accent:'#5A7050' },
+  unchained_overseer:   { aggression:75, cover:40, flank:30, overwatch:80, optRange:4, name:'The Unchained Overseer',     hp:16, shield:6, accent:'#2B7895', regen:1, enrageAt:0.4, enrageShots:1 },
+  cav_unit_8x_guard:    { aggression:60, cover:85, flank:45, overwatch:80, optRange:4, name:'Gate Sentinel Escort',       hp:12, shield:5, accent:'#7A5CC8', dmg:1, regen:1 },
+  cav_unit_8x_boss:     { aggression:72, cover:60, flank:35, overwatch:95, optRange:5, name:'Unit 8-X, Gate Warden',      hp:16, shield:6, accent:'#B8D4E8', regen:1, enrageAt:0.4, enrageShots:1 },
+  zora_hull_wardens:    { aggression:70, cover:75, flank:50, overwatch:85, optRange:4, name:'Zora Hull Sentinels',        hp:14, shield:5, accent:'#B8D4E8', dmg:1, regen:1 },
+  ghost_keel_warden:    { aggression:80, cover:55, flank:60, overwatch:90, optRange:5, name:'Warden Prime',               hp:24, shield:8, accent:'#FF4040', regen:1, enrageAt:0.3, enrageShots:1 },
+  wst_gharza:           { aggression:45, cover:85, flank:60, overwatch:90, optRange:6, name:'Gharza, Trandoshan Sniper',  hp:12,  shield:2, accent:'#5A7050', dmg:1 },
   // BADOR PROFILES END
   // MFG PROFILES BEGIN
-  mfg_enforcers:        { aggression:75, cover:45, flank:40, overwatch:55, optRange:3, name:'Krax\'s Loader Enforcers',     hp:10, shield:4, accent:'#D4762C' },
-  mfg_krax:             { aggression:70, cover:55, flank:55, overwatch:70, optRange:3, name:'Overseer Krax and the Loader Frame', hp:16, shield:6, accent:'#D4762C' },
+  mfg_enforcers:        { aggression:75, cover:45, flank:40, overwatch:55, optRange:3, name:'Krax\'s Loader Enforcers',     hp:12, shield:4, accent:'#D4762C', dmg:1, regen:1 },
+  mfg_krax:             { aggression:70, cover:55, flank:55, overwatch:70, optRange:3, name:'Overseer Krax and the Loader Frame', hp:16, shield:6, accent:'#D4762C', regen:1, enrageAt:0.4, enrageShots:1 },
   // MFG PROFILES END
   // RING PROFILES BEGIN
-  ring_vaelen_sentinel: { aggression:40, cover:85, flank:15, overwatch:85, optRange:3, name:'Captain Vaelen',                 hp:12, shield:5, accent:'#E8D090' },
-  ring_sec_riot_squad:  { aggression:60, cover:75, flank:35, overwatch:55, optRange:3, name:'Ring-Sec Riot Squad',            hp:9,  shield:3, accent:'#4A7A9B' },
-  ring_isb_krennis:     { aggression:55, cover:80, flank:55, overwatch:80, optRange:4, name:'Commander Krennis and ISB Aides', hp:13, shield:4, accent:'#7A8A68' },
+  ring_vaelen_sentinel: { aggression:40, cover:85, flank:15, overwatch:85, optRange:3, name:'Captain Vaelen',                 hp:12, shield:5, accent:'#E8D090', dmg:1, regen:1 },
+  ring_sec_riot_squad:  { aggression:60, cover:75, flank:35, overwatch:55, optRange:3, name:'Ring-Sec Riot Squad',            hp:12,  shield:3, accent:'#4A7A9B', dmg:1 },
+  ring_isb_krennis:     { aggression:55, cover:80, flank:55, overwatch:80, optRange:4, name:'Commander Krennis and ISB Aides', hp:13, shield:4, accent:'#7A8A68', dmg:1, regen:1 },
   // RING PROFILES END
 };
 
@@ -23124,25 +23124,32 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
       logs.push(`${profile.name} takes overwatch position.`);
     }
 
+    // Boss traits: extra shots per turn, bonus damage, shield regeneration and an enrage threshold.
+    if (profile.regen && eSh < profile.shield) { eSh = Math.min(profile.shield, eSh + profile.regen); logs.push(`${profile.name} shields recharge (+${profile.regen}).`); }
+    const enraged = !!(profile.enrageAt && eHp <= profile.hp * profile.enrageAt);
+    if (enraged && !g.eEnraged) logs.push(`${profile.name} is damaged and goes to full power!`);
+    const shots = (profile.shots || 1) + (enraged ? (profile.enrageShots || 1) : 0);
     if (hasLoS(eRow, eCol, g.pRow, g.pCol)) {
-      const hit = Math.random() * 100 < calcHit(eRow, eCol, g.pRow, g.pCol, eBlind > 0);
-      if (hit) {
-        const fl = isFlank(eRow, eCol, g.pRow, g.pCol);
-        const dmg = fl ? 3 : 2;
-        const r = applyDmg(pSh, pHp, dmg); pSh = r.sh; pHp = r.hp;
-        logs.push(`${profile.name} fires${fl ? ' (flanking)' : ''} — ${dmg} damage!`);
-        if (pHp <= 0) {
-          upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW, steam: newSteam, phase: 'outcome', outcome: 'loss', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs, 'You are down. Retreat!'] });
-          return;
+      for (let sh = 0; sh < shots; sh++) {
+        const hit = Math.random() * 100 < calcHit(eRow, eCol, g.pRow, g.pCol, eBlind > 0);
+        if (hit) {
+          const fl = isFlank(eRow, eCol, g.pRow, g.pCol);
+          const dmg = (fl ? 3 : 2) + (profile.dmg || 0);
+          const r = applyDmg(pSh, pHp, dmg); pSh = r.sh; pHp = r.hp;
+          logs.push(`${profile.name} fires${fl ? ' (flanking)' : ''} — ${dmg} damage!`);
+          if (pHp <= 0) {
+            upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW, eEnraged: enraged, steam: newSteam, phase: 'outcome', outcome: 'loss', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs, 'You are down. Retreat!'] });
+            return;
+          }
+        } else {
+          logs.push(`${profile.name} fires and misses.`);
         }
-      } else {
-        logs.push(`${profile.name} fires and misses.`);
       }
     } else {
       logs.push(`${profile.name} advances — no clear line of sight.`);
     }
 
-    upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW, steam: newSteam, phase: 'player', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs] });
+    upd({ eRow, eCol, eHp, eSh, pHp, pSh, eBlind, eOW, eEnraged: enraged, steam: newSteam, phase: 'player', turn: g.turn + 1, ap: 3, log: [...g.log.slice(-2), ...logs] });
   }
 
   React.useEffect(() => {
@@ -23332,6 +23339,7 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
         <div style={{ color: '#AAA', fontSize: '0.65rem', maxWidth: 440, textAlign: 'center', lineHeight: 1.9, border: '1px solid #1A1A2A', background: '#06060F', padding: '12px 16px' }}>
           {flavorText || 'A hostile contact has you cornered. There is no talking your way out of this.'}
         </div>
+        {(profile.shots > 1 || profile.dmg || profile.regen || profile.enrageAt) && <div style={{ color: profile.accent, fontSize: '0.55rem', maxWidth: 440, textAlign: 'center' }}>THREAT: {[profile.shots > 1 ? `${profile.shots} shots a turn` : '', profile.dmg ? `+${profile.dmg} damage` : '', profile.regen ? `shields recharge ${profile.regen} a turn` : '', profile.enrageAt ? 'goes to full power when badly hurt' : ''].filter(Boolean).join(', ')}</div>}
         <div style={{ display: 'flex', gap: 16 }}>
           <button onClick={() => upd({ phase: 'player' })} style={{ background: '#C8A000', color: '#000', border: 'none', padding: '0.5rem 2.5rem', cursor: 'pointer', fontSize: '0.8rem', fontFamily: "'IBM Plex Mono',monospace", fontWeight: 'bold' }}>FIGHT!</button>
           <button onClick={onFailure} style={{ background: '#1A0A0A', color: '#888', border: '1px solid #333', padding: '0.5rem 2rem', cursor: 'pointer', fontSize: '0.8rem', fontFamily: "'IBM Plex Mono',monospace" }}>Run</button>
