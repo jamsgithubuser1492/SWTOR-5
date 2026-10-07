@@ -3690,7 +3690,7 @@ const PLANETS = {
                 prompt: `Dalin looks calmer. "The Board has frozen all Bador contract payments pending the audit. Someone upstairs is not sleeping tonight."`,
                 repeatPrompt: `"The audit moves. Slowly, on purpose."`,
                 choices: [ { text: `Ask what the freeze means for Bador.`, morality: 0, loyalty: {}, defer: true,
-                  result: `"Less supply to the Base. More pressure on Commander Vael. You will feel it on the surface."` } ] },
+                  result: `"Less supply to the Base, more pressure on Commander Vael. Contractors on Bador are dumping stock for cash. You will feel it on the surface, in the prices."` } ] },
             ],
           },
           { id: 'tanner', x: 18, y: 13, kind: 'broker', label: 'Tanner',
@@ -9177,6 +9177,29 @@ const ITEMS = {
 };
 
 // ===== PENTHOUSE PACKAGES BEGIN =====
+// Kuat and Bador world effects: ending and quest outcome flags that change the running game, not just the text.
+// income and decay feed the Syndicate War Table, vendor is a price multiplier for vendors in a scope, cool is extra thermal cooling on every Bador zone entry.
+const KUAT_WORLD_EFFECTS = {
+  guild_audit_filed:         { label: 'Guild audit freezes Bador payments', text: 'Contractors dump stock for cash. Bador vendors sell 25 percent cheaper.', vendor: { scope: 'bador', pct: 0.25 } },
+  isb_taps_revoked:          { label: 'ISB wiretaps revoked', text: 'Heat falls 1 faster at the War Table.', decay: 1 },
+  czerka_expelled:           { label: 'Czerka expelled from the ring', text: 'Ring vendors lose their markup and sell 15 percent cheaper.', vendor: { scope: 'ring', pct: 0.15 } },
+  czerka_record_sold:        { label: 'Czerka retainer', text: '+300 passive income at the War Table.', income: 300 },
+  union_sold_czerka:         { label: 'Czerka kickback', text: '+250 passive income at the War Table.', income: 250 },
+  union_review_board:        { label: 'Review Board seated', text: 'Labor peace: ring vendors sell 10 percent cheaper.', vendor: { scope: 'ring', pct: 0.10 } },
+  union_strike_called:       { label: 'Dock strike', text: 'KDY security is stretched thin. Heat falls 1 faster.', decay: 1 },
+  garrok_partnered:          { label: 'Garrok partnership', text: '+200 passive income at the War Table.', income: 200 },
+  garrok_exposed:            { label: 'Sector House exposed', text: 'The ring talks about someone else. Heat falls 1 faster.', decay: 1 },
+  jaxen_freed:               { label: 'Jaxen\'s routes', text: '+150 passive income from his smuggling routes.', income: 150 },
+  krennis_bought:            { label: 'Krennis on the payroll', text: 'ISB sweeps look away. Heat falls 1 faster.', decay: 1 },
+  kdy_transit_rights_active: { label: 'KDY transit rights', text: 'Your thermal signature falls an extra 10 on every Bador zone entry.', cool: 10 },
+  ring_safety_certified:     { label: 'Ring Safety certified', text: 'Inspector credentials: thermal falls an extra 5 on every Bador zone entry.', cool: 5 },
+  front_sundown_shared:      { label: 'The Pathfinders owe you', text: 'They mask your trail. Thermal falls an extra 5 on every Bador zone entry.', cool: 5 },
+  front_outskirts_relief:    { label: 'Grateful Outskirts merchants', text: 'Bador vendors sell 10 percent cheaper.', vendor: { scope: 'bador', pct: 0.10 } },
+  mfg_workers_cleared:       { label: 'Night crew amnesty', text: 'Loyal crews slip you discounts. Bador vendors sell 10 percent cheaper.', vendor: { scope: 'bador', pct: 0.10 } },
+};
+const worldEffectsOf = (flags) => Object.keys(KUAT_WORLD_EFFECTS).filter((f) => flags && flags[f]).map((f) => KUAT_WORLD_EFFECTS[f]);
+const vendorWorldDiscount = (flags, zoneId) => worldEffectsOf(flags).reduce((m, e) => (e.vendor && ((e.vendor.scope === 'bador' && BADOR_SURFACE_ZONES.includes(zoneId)) || (e.vendor.scope === 'ring' && KDY_RING_ZONES.includes(zoneId)) || e.vendor.scope === 'all') ? m * (1 - e.vendor.pct) : m), 1);
+
 const PENTHOUSE_PACKAGES = [
   { id: 'skyview', flag: 'ph_skyview', itemId: 'ph_pkg_skyview', name: 'Observatory Deck', price: 1800, income: 0, heatDecay: 0,
     where: 'Ilmara Voss, Sky-Market', perk: 'The viewport turns to a star dusted night. A brass telescope joins the deck and logs a star codex.',
@@ -19214,7 +19237,7 @@ function FloorTilePattern({ kind }) {
   return null;
 }
 
-function VendorOverlay({ npc, inventory, credits, alignment, onBuy, onSell, onClose }) {
+function VendorOverlay({ npc, inventory, credits, alignment, onBuy, onSell, onClose, flags = {}, zoneId = '' }) {
   const [activeTab, setActiveTab] = React.useState('buy');
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [feedback, setFeedback] = React.useState('');
@@ -19228,7 +19251,8 @@ function VendorOverlay({ npc, inventory, credits, alignment, onBuy, onSell, onCl
   const faction = npc.vendorFaction || 'underworld';
   const rep = alignment?.loyalty?.[faction] || 0;
   const tier = rep >= 41 ? 'honored' : rep >= 11 ? 'favored' : rep <= -51 ? 'hostile' : 'neutral';
-  const discount = tier === 'honored' ? 0.70 : tier === 'favored' ? 0.85 : 1.0;
+  const worldDisc = vendorWorldDiscount(flags, zoneId);
+  const discount = (tier === 'honored' ? 0.70 : tier === 'favored' ? 0.85 : 1.0) * worldDisc;
 
   const stock = (npc.vendorStock || []).map(id => typeof id === 'string' ? ITEMS[id] : id).filter(Boolean);
 
@@ -19254,7 +19278,7 @@ function VendorOverlay({ npc, inventory, credits, alignment, onBuy, onSell, onCl
         <div>
           <div style={{ color:'#E8C97A', fontSize:'18px', fontWeight:'bold' }}>{npc.label}</div>
           <div style={{ color: tierColor[tier], fontSize:'12px', marginTop:'4px' }}>
-            Reputation: {tier.toUpperCase()} {tier !== 'neutral' && tier !== 'hostile' && `(${Math.round((1 - discount) * 100)}% discount)`}
+            Reputation: {tier.toUpperCase()} {tier !== 'hostile' && discount < 1 && `(${Math.round((1 - discount) * 100)}% discount${worldDisc < 1 ? ', world effects included' : ''})`}
           </div>
         </div>
         <div style={{ color:'#E8C97A' }}>Credits: {credits}</div>
@@ -24932,7 +24956,10 @@ function StarWarsRPG() {
     setActionLog((prev) => [{ text: msg, zone: zoneLabel || '' }, ...prev.slice(0, 49)]);
   }, []);
 
-  const setFlag = useCallback((key) => setQuestFlags((prev) => ({ ...prev, [key]: true })), []);
+  const setFlag = useCallback((key) => {
+    if (KUAT_WORLD_EFFECTS[key] && !questFlagsRef.current[key]) pushActionLog(`[WORLD EFFECT] ${KUAT_WORLD_EFFECTS[key].label}. ${KUAT_WORLD_EFFECTS[key].text}`, 'kuat');
+    setQuestFlags((prev) => ({ ...prev, [key]: true }));
+  }, []);
 
   // Thermal Signature (0 to 100) on Bador: how loud the player is. Stored in questFlags so it saves with everything else.
   const addThermal = useCallback((d) => {
@@ -24956,7 +24983,7 @@ function StarWarsRPG() {
     return [...prev, { ...entry, unread: true }];
   }), []);
 
-  const phPerks = React.useMemo(() => { const base = PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: (questFlags.mfg_tithe_rich ? 250 : questFlags.mfg_tithe ? 150 : 0), decay: 0 }); return questFlags.syndicate_flagship_active ? { income: base.income + 400, decay: base.decay + 1 } : base; }, [questFlags]);
+  const phPerks = React.useMemo(() => { const base = PENTHOUSE_PACKAGES.reduce((a, p) => (questFlags[p.flag] ? { income: a.income + p.income, decay: a.decay + p.heatDecay } : a), { income: (questFlags.mfg_tithe_rich ? 250 : questFlags.mfg_tithe ? 150 : 0), decay: 0 }); const withFlagship = questFlags.syndicate_flagship_active ? { income: base.income + 400, decay: base.decay + 1 } : base; return worldEffectsOf(questFlags).reduce((a, e) => ({ income: a.income + (e.income || 0), decay: a.decay + (e.decay || 0) }), withFlagship); }, [questFlags]);
   const installPenthousePackage = useCallback((pkg) => {
     setInventory(prev => prev.flatMap(i => i.id !== pkg.itemId ? [i] : (i.qty > 1 ? [{ ...i, qty: i.qty - 1 }] : [])));
     setFlag(pkg.flag);
@@ -24982,7 +25009,7 @@ function StarWarsRPG() {
       setMap(newZone.buildMap());
       setPos(targetPos);
       setTransitioning(false);
-      if (BADOR_SURFACE_ZONES.includes(targetZoneId)) setQuestFlags((prev) => { const c = prev.thermal_index || 0; if (!c) return prev; const n = Math.max(0, c - 5); return { ...prev, thermal_index: n, thermal_30: n >= 30, thermal_60: n >= 60 }; });
+      if (BADOR_SURFACE_ZONES.includes(targetZoneId)) setQuestFlags((prev) => { const c = prev.thermal_index || 0; if (!c) return prev; const n = Math.max(0, c - 5 - worldEffectsOf(prev).reduce((a, e) => a + (e.cool || 0), 0)); return { ...prev, thermal_index: n, thermal_30: n >= 30, thermal_60: n >= 60 }; });
       pushActionLog(`Entered ${newZone.name}.`, targetZoneId);
     }, 400);
   }, [planetId, pushActionLog]);
@@ -25631,6 +25658,8 @@ function StarWarsRPG() {
           inventory={inventory}
           credits={credits}
           alignment={alignment}
+          flags={questFlags}
+          zoneId={zoneId}
           onBuy={(item, price) => { setCredits(c => c - price); addItem(item); }}
           onSell={(item, price) => { setCredits(c => c + price); setInventory(prev => { const idx = prev.findIndex(i => i.id === item.id); if (idx === -1) return prev; const updated = [...prev]; if (updated[idx].qty > 1) { updated[idx] = { ...updated[idx], qty: updated[idx].qty - 1 }; } else { updated.splice(idx, 1); } return updated; }); }}
           onClose={() => { setShowVendor(false); setActiveVendorNpc(null); }}
