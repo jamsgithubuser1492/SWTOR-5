@@ -19353,6 +19353,8 @@ function resolveDialoguePhase(npc, questFlags) {
 
 
 
+
+
 // ===== CONQUEST ENGINE BEGIN =====
 // Coruscant Conquest v2: a pure, testable strategy engine. No React in here. State is plain JSON.
 // Campaign layer: sectors, garrisons, buildings, economy, enemy factions.
@@ -23427,6 +23429,8 @@ function TacticalGridCombatOverlay({ onSuccess, onFailure, opponentProfile, flav
 
 
 
+
+
 // ===== CONQUEST UI ART BEGIN =====
 const CQ_INK = '#0B1018', CQ_LIGHT = '#E8EEF8';
 // Unit glyphs: one flat silhouette per unit type. Used on the map, in panels and as battle tokens.
@@ -23506,8 +23510,9 @@ function CQUnitStrip({ gar, x, y, max = 5 }) {
     </g>
   );
 }
-function CQMap({ st, sel, onSelect, intelOf }) {
+function CQMap({ st, sel, onSelect, intelOf, vw = 1060 }) {
   const [hover, setHover] = React.useState(null);
+  const sx = vw / 1060;
   const list = CQ.SECTOR_LIST;
   const selSec = sel && CQ.SECTORS[sel];
   const attackable = (id) => !CQ.camp.canAttack(st, id);
@@ -23516,7 +23521,7 @@ function CQMap({ st, sel, onSelect, intelOf }) {
   list.forEach((d) => d.adj.forEach((a) => { const k = [d.id, a].sort().join('|'); if (!seen.has(k)) { seen.add(k); edges.push([d, CQ.SECTORS[a]]); } }));
   const col = (o) => (CQ.FACTIONS[o] || CQ.FACTIONS.neutral).color;
   return (
-    <svg viewBox="0 0 1060 740" style={{ width: '100%', display: 'block', background: '#050810', borderRadius: 8 }}>
+    <svg viewBox={`0 0 ${vw} 740`} preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%', display: 'block', background: '#050810', borderRadius: 8 }}>
       <defs>
         <linearGradient id="cqSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1E1236" /><stop offset="0.45" stopColor="#0C1220" /><stop offset="1" stopColor="#050A08" /></linearGradient>
         <pattern id="cqWin" width="14" height="12" patternUnits="userSpaceOnUse"><rect x="2" y="2" width="4" height="5" fill="#FFD890" opacity="0.13" /><rect x="8" y="5" width="3" height="4" fill="#7FD0FF" opacity="0.09" /></pattern>
@@ -23524,14 +23529,14 @@ function CQMap({ st, sel, onSelect, intelOf }) {
         <filter id="cqGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" /></filter>
         <marker id="cqArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#FF5468" /></marker>
       </defs>
-      <rect width="1060" height="740" fill="url(#cqSky)" />
+      <rect width={vw} height="740" fill="url(#cqSky)" />
       {/* distant towers */}
-      {Array.from({ length: 26 }, (_, i) => { const x = i * 42 - 10, h = 40 + ((i * 53) % 90); return <rect key={i} x={x} y={0} width={28 + (i % 3) * 8} height={h} fill="#10162A" opacity="0.8" />; })}
+      {Array.from({ length: Math.round(26 * sx) }, (_, i) => { const x = i * 42 - 10, h = 40 + ((i * 53) % 90); return <rect key={i} x={x} y={0} width={28 + (i % 3) * 8} height={h} fill="#10162A" opacity="0.8" />; })}
       {CQ_TIERS.map((t, i) => (
         <g key={t.name}>
-          <rect x="0" y={t.y - 56} width="1060" height="112" fill={t.a} opacity="0.55" />
-          <rect x="0" y={t.y - 56} width="1060" height="112" fill={i < 3 ? 'url(#cqWin)' : 'url(#cqPipe)'} />
-          <rect x="0" y={t.y - 56} width="1060" height="1.4" fill={t.glow} opacity="0.35" />
+          <rect x="0" y={t.y - 56} width={vw} height="112" fill={t.a} opacity="0.55" />
+          <rect x="0" y={t.y - 56} width={vw} height="112" fill={i < 3 ? 'url(#cqWin)' : 'url(#cqPipe)'} />
+          <rect x="0" y={t.y - 56} width={vw} height="1.4" fill={t.glow} opacity="0.35" />
           <text x="12" y={t.y - 40} fontSize="10" fontFamily="monospace" fontWeight="700" fill={t.glow} opacity="0.9" letterSpacing="2">{t.name}</text>
           <text x="12" y={t.y - 28} fontSize="8" fontFamily="monospace" fill={t.glow} opacity="0.5">{t.lvl}</text>
         </g>
@@ -23539,13 +23544,13 @@ function CQMap({ st, sel, onSelect, intelOf }) {
       {/* lanes between adjacent sectors */}
       {edges.map(([a, b]) => {
         const oa = st.sec[a.id].owner, ob = st.sec[b.id].owner; const same = oa === ob && oa !== 'neutral'; const front = (oa === 'player') !== (ob === 'player') && (oa === 'player' || ob === 'player');
-        return <line key={a.id + b.id} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={same ? col(oa) : front ? '#FF5468' : '#2A3448'} strokeWidth={same ? 2.4 : 1.6} opacity={same ? 0.7 : front ? 0.75 : 0.9} strokeDasharray={same ? '' : '6 5'}>{front && <animate attributeName="stroke-dashoffset" from="22" to="0" dur="1.4s" repeatCount="indefinite" />}</line>;
+        return <line key={a.id + b.id} x1={a.x * sx} y1={a.y} x2={b.x * sx} y2={b.y} stroke={same ? col(oa) : front ? '#FF5468' : '#2A3448'} strokeWidth={same ? 2.4 : 1.6} opacity={same ? 0.7 : front ? 0.75 : 0.9} strokeDasharray={same ? '' : '6 5'}>{front && <animate attributeName="stroke-dashoffset" from="22" to="0" dur="1.4s" repeatCount="indefinite" />}</line>;
       })}
       {/* attack arrows from your adjacent sectors to the selected target */}
-      {sources.map((s) => { const t = CQ.SECTORS[sel]; const dx = t.x - s.x, dy = t.y - s.y, d = Math.hypot(dx, dy) || 1; const x1 = s.x + (dx / d) * 54, y1 = s.y + (dy / d) * 36, x2 = t.x - (dx / d) * 62, y2 = t.y - (dy / d) * 42; return <path key={s.id} d={`M${x1} ${y1} L${x2} ${y2}`} stroke="#FF5468" strokeWidth="3" strokeDasharray="9 6" markerEnd="url(#cqArrow)" fill="none">{<animate attributeName="stroke-dashoffset" from="30" to="0" dur="0.9s" repeatCount="indefinite" />}</path>; })}
+      {sources.map((s0) => { const s = { ...s0, x: s0.x * sx }; const t0 = CQ.SECTORS[sel]; const t = { ...t0, x: t0.x * sx }; const dx = t.x - s.x, dy = t.y - s.y, d = Math.hypot(dx, dy) || 1; const x1 = s.x + (dx / d) * 54, y1 = s.y + (dy / d) * 36, x2 = t.x - (dx / d) * 62, y2 = t.y - (dy / d) * 42; return <path key={s.id} d={`M${x1} ${y1} L${x2} ${y2}`} stroke="#FF5468" strokeWidth="3" strokeDasharray="9 6" markerEnd="url(#cqArrow)" fill="none">{<animate attributeName="stroke-dashoffset" from="30" to="0" dur="0.9s" repeatCount="indefinite" />}</path>; })}
       {list.map((d) => {
         const s = st.sec[d.id]; const own = s.owner, c = col(own); const isSel = d.id === sel, canAtk = own !== 'player' && attackable(d.id), seeing = intelOf(d.id);
-        const x0 = d.x - 66, y0 = d.y - 42; const fx = CQ.camp.fx(s); const pw = CQ.camp.power(s.gar);
+        const x0 = d.x * sx - 66, y0 = d.y - 42; const fx = CQ.camp.fx(s); const pw = CQ.camp.power(s.gar);
         return (
           <g key={d.id} onClick={() => onSelect(d.id)} onMouseEnter={() => setHover(d.id)} onMouseLeave={() => setHover(null)} style={{ cursor: 'pointer' }}>
             {(isSel || hover === d.id) && <rect x={x0 - 5} y={y0 - 5} width="142" height="94" rx="10" fill="none" stroke={isSel ? '#00FFC8' : '#FFFFFF'} strokeWidth={isSel ? 2.4 : 1.2} strokeDasharray={isSel ? '7 4' : ''} opacity={isSel ? 1 : 0.5}>{isSel && <animate attributeName="stroke-dashoffset" from="22" to="0" dur="1.6s" repeatCount="indefinite" />}</rect>}
@@ -23560,7 +23565,7 @@ function CQMap({ st, sel, onSelect, intelOf }) {
             {d.isHQ && <text x={x0 + 124} y={y0 + 14} fontSize="12" textAnchor="end" fill="#FFD36A">★</text>}
             <rect x={x0 + 82} y={y0 + 34} width="48" height="13" rx="3" fill="#060A12" opacity="0.8" />
             <text x={x0 + 106} y={y0 + 44} fontSize="9" textAnchor="middle" fontFamily="monospace" fontWeight="700" fill="#FFD36A">{d.income + fx.income}¢</text>
-            <text x={x0 + 6} y={y0 + 61} fontSize="8.6" fontFamily="monospace" fontWeight="700" fill="#EAF0FF">{d.name.length > 22 ? d.name.slice(0, 21) + '…' : d.name}</text>
+            <text x={x0 + 6} y={y0 + 61} fontSize="8.6" fontFamily="monospace" fontWeight="700" fill="#EAF0FF" textLength={d.name.length * 5.2 > 120 ? 120 : undefined} lengthAdjust="spacingAndGlyphs">{d.name}</text>
             {own === 'player' || seeing ? <CQUnitStrip gar={s.gar} x={x0 + 6} y={y0 + 68} /> : <text x={x0 + 6} y={y0 + 77} fontSize="8" fontFamily="monospace" fill={pw / 45 > 28 ? '#FF8A8A' : '#B8C0D4'}>? {CQ.camp.band(pw).toUpperCase()}</text>}
             {Array.from({ length: CQ.camp.slots(s) }, (_, i) => <rect key={i} x={x0 + 100 + i * 6.4} y={y0 + 70} width="5" height="8" rx="1" fill={s.bld[i] ? '#FFD36A' : '#1C2638'} stroke="#0A1020" strokeWidth="0.5" />)}
             {s.tired && CQ.camp.total(s.tired) > 0 && own === 'player' && <text x={x0 + 126} y={y0 + 61} fontSize="7" textAnchor="end" fontFamily="monospace" fill="#FF9A5A">SPENT {CQ.camp.total(s.tired)}</text>}
@@ -23916,6 +23921,9 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
   const [moveUnits, setMoveUnits] = React.useState({});
   const [codexTab, setCodexTab] = React.useState('howto');
   const toastT = React.useRef(null);
+  const mapBox = React.useRef(null);
+  const [vw, setVw] = React.useState(1060);
+  React.useEffect(() => { const el = mapBox.current; if (!el || !window.ResizeObserver) return undefined; const measure = () => { const w = el.clientWidth, h = el.clientHeight; if (h > 80 && w > 80) setVw(Math.max(1060, Math.min(1560, Math.round(740 * w / h)))); }; measure(); const ro = new window.ResizeObserver(measure); ro.observe(el); return () => ro.disconnect(); }, [tab]);
   React.useEffect(() => { window.__cqState = st; }); // test hook for automated playtests
   React.useEffect(() => { try { localStorage.setItem(SAVE_KEY, JSON.stringify(st)); } catch (e) { /* storage blocked */ } }, [st]);
   const flash = (m) => { setToast(m); clearTimeout(toastT.current); toastT.current = setTimeout(() => setToast(''), 3200); };
@@ -23952,7 +23960,7 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
     setReport({ title: 'ASSAULT REPORT (AUTO-RESOLVED)', lines: [out.summary, `Fought ${out.result.rounds} rounds.`] });
   };
   const runForecast = () => {
-    const p = planner; if (!p || planTotal(p) === 0) return; const f = CQ.camp.forecast(st, p.targetId, { bySrc: p.bySrc }, 12, Math.random);
+    const p = planner; if (!p) return; if (planTotal(p) === 0) { flash('Commit at least one unit first.'); return; } const f = CQ.camp.forecast(st, p.targetId, { bySrc: p.bySrc }, 12, Math.random);
     const known = intelOf(p.targetId); const noise = known ? 0 : Math.round((Math.random() - 0.5) * 36); setPlanner({ ...p, forecast: { ...f, winPct: Math.max(0, Math.min(100, f.winPct + noise)), rough: !known } });
   };
   // ---- defense
@@ -24126,8 +24134,8 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
   );
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 70, background: 'radial-gradient(circle at 50% -10%, #14203A 0%, #070A12 55%, #04060B 100%)', color: '#E0E8F8', fontFamily: 'monospace', overflow: 'auto' }}>
-      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '10px 14px 24px' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 70, background: 'radial-gradient(circle at 50% -10%, #14203A 0%, #070A12 55%, #04060B 100%)', color: '#E0E8F8', fontFamily: 'monospace', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 2000, height: '100%', display: 'flex', flexDirection: 'column', margin: '0 auto', padding: '8px 14px 10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 8 }}>
           <div><div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '0.18em', color: '#2FC8FF' }}>CORUSCANT CONQUEST</div><div style={{ fontSize: 10, color: '#6A7898', letterSpacing: '0.2em' }}>TURN {st.turn} · LEVELS 5100 TO DEPTHS</div></div>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginLeft: 'auto', fontSize: 13 }}>
@@ -24143,11 +24151,8 @@ function CoruscantConquestOverlay({ onSuccess, onFailure, startCredits }) {
           {tabBtn('map', 'Map')}{tabBtn('empire', 'Empire')}{tabBtn('diplomacy', 'Diplomacy')}{tabBtn('codex', 'Codex')}
           <button style={cqBtn(st.pending ? '#FF5468' : '#34D86A', false, { marginLeft: 'auto', padding: '9px 22px', fontSize: 13 })} onClick={endTurn}>{st.pending ? '⚠ RESOLVE ASSAULT' : `END TURN ${st.turn} ▶`}</button>
         </div>
-        {tab === 'map' && <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 380px', gap: 12, alignItems: 'start' }}><CQMap st={st} sel={sel} onSelect={(id) => { setSel(id); setPtab('overview'); }} intelOf={intelOf} />{sectorPanel()}</div>}
-        {tab === 'empire' && empireTab()}
-        {tab === 'diplomacy' && diplomacyTab()}
-        {tab === 'codex' && codexView()}
-        <div style={{ ...CQ_PANEL, marginTop: 10, maxHeight: 110, overflowY: 'auto', padding: 8 }}>{st.log.slice(0, 12).map((l, i) => <div key={i} style={{ fontSize: 11, color: i === 0 ? '#2FC8FF' : '#6A7898', borderBottom: '1px solid #0E1626', padding: '2px 0' }}>{l}</div>)}</div>
+        {tab === 'map' && <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 360px', gap: 12, flex: 1, minHeight: 0 }}><div ref={mapBox} style={{ minHeight: 0, minWidth: 0, height: '100%' }}><CQMap st={st} sel={sel} vw={vw} onSelect={(id) => { setSel(id); setPtab('overview'); }} intelOf={intelOf} /></div><div style={{ minHeight: 0, overflowY: 'auto' }}>{sectorPanel()}        <div style={{ ...CQ_PANEL, marginTop: 10, maxHeight: 150, overflowY: 'auto', padding: 8 }}>{st.log.slice(0, 12).map((l, i) => <div key={i} style={{ fontSize: 11, color: i === 0 ? '#2FC8FF' : '#6A7898', borderBottom: '1px solid #0E1626', padding: '2px 0' }}>{l}</div>)}</div></div></div>}
+        {tab !== 'map' && <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>{tab === 'empire' && empireTab()}{tab === 'diplomacy' && diplomacyTab()}{tab === 'codex' && codexView()}        <div style={{ ...CQ_PANEL, marginTop: 10, maxHeight: 110, overflowY: 'auto', padding: 8 }}>{st.log.slice(0, 12).map((l, i) => <div key={i} style={{ fontSize: 11, color: i === 0 ? '#2FC8FF' : '#6A7898', borderBottom: '1px solid #0E1626', padding: '2px 0' }}>{l}</div>)}</div></div>}
       </div>
       {toast && <div style={{ position: 'fixed', left: '50%', bottom: 26, transform: 'translateX(-50%)', zIndex: 120, background: '#2A1A08', border: '1px solid #FFA03A', color: '#FFD890', padding: '9px 18px', borderRadius: 6, fontSize: 13, maxWidth: '90vw' }}>{toast}</div>}
       {planner && !battleCtx && plannerView()}
